@@ -376,8 +376,7 @@
 
       </div>
 
-
-<div>
+ <div>
     <svg>
         <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-1"></text>
         <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-2"></text>
@@ -385,7 +384,6 @@
         <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-4"></text>
     </svg>
 </div>
-
 <script>
 function showtime(){
     var noatime = new Date();
@@ -397,14 +395,12 @@ function showtime(){
     s=checktime(s);
   return h+":"+m+":"+s;
 }
-
 function checktime(x){
   if(x<10){
     x="0"+x;
   }
   return x;
 }
-
 var div1=document.getElementsByTagName("text");
 setInterval(function(){
   for (var i in div1){
