@@ -1283,7 +1283,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #9e3652;
+  background: #ff57b0;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2709,5 +2709,57 @@ body {
   body {
     background-image: url("https://ziyuan.lruihao.cn/images/bg_cell.png");
     background-size: cover;
+  }
+}
+.words {
+  font-size: 50px;
+  font-weight: bold;
+  text-transform: uppercase;
+  fill: none;
+  stroke-width: 3px;
+  stroke-dasharray: 35, 125;
+  animation-name: drawing;
+  animation-duration: 6s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+.words-1 {
+  stroke: #00bfff;
+  text-shadow: 0 0 15px #00bfff;
+  animation-delay: -1.5s;
+}
+.words-2 {
+  stroke: #20b2aa;
+  text-shadow: 0 0 15px #20b2aa;
+  animation-delay: -3s;
+}
+.words-3 {
+  stroke: #ffa500;
+  text-shadow: 0 0 15px #ffa500;
+  animation-delay: -4.5s;
+}
+.words-4 {
+  stroke: #800080;
+  text-shadow: 0 0 15px #800080;
+  animation-delay: -6s;
+}
+@-moz-keyframes drawing {
+  100% {
+    stroke-dashoffset: -160;
+  }
+}
+@-webkit-keyframes drawing {
+  100% {
+    stroke-dashoffset: -160;
+  }
+}
+@-o-keyframes drawing {
+  100% {
+    stroke-dashoffset: -160;
+  }
+}
+@keyframes drawing {
+  100% {
+    stroke-dashoffset: -160;
   }
 }
