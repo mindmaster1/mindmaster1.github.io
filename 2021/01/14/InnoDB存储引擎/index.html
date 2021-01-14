@@ -21,31 +21,40 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="The world favors the underdog,and I would be the bad guy">
-<meta property="og:type" content="website">
-<meta property="og:title" content="一只小码农">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="InnoDB存储引擎InnoDB体系架构 InnoDB存储引擎有多个内存块，这些内存块组成了一个大的内存池 后台线程的主要作用就是负责刷新内存池中的数据，保证缓存池中的内存缓存的是最近的数据。此外，还将已经修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下，InnoDB可以恢复运行到最佳状态。 后台线程（InnDB是一个多线程模型)#####Master Thread 作用： ​">
+<meta property="og:type" content="article">
+<meta property="og:title" content="InnoDB存储引擎">
+<meta property="og:url" content="http://example.com/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/index.html">
 <meta property="og:site_name" content="一只小码农">
-<meta property="og:description" content="The world favors the underdog,and I would be the bad guy">
+<meta property="og:description" content="InnoDB存储引擎InnoDB体系架构 InnoDB存储引擎有多个内存块，这些内存块组成了一个大的内存池 后台线程的主要作用就是负责刷新内存池中的数据，保证缓存池中的内存缓存的是最近的数据。此外，还将已经修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下，InnoDB可以恢复运行到最佳状态。 后台线程（InnDB是一个多线程模型)#####Master Thread 作用： ​">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="c:/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114112823026.png">
+<meta property="og:image" content="c:/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114114130216.png">
+<meta property="og:image" content="c:/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114114405936.png">
+<meta property="og:image" content="c:/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114131120313.png">
+<meta property="og:image" content="c:/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114133522544.png">
+<meta property="og:image" content="c:/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114133412580.png">
+<meta property="article:published_time" content="2021-01-14T13:56:15.000Z">
+<meta property="article:modified_time" content="2021-01-14T05:58:01.518Z">
 <meta property="article:author" content="邢浩东">
-<meta property="article:tag" content="个人博客">
+<meta property="article:tag" content="InnoDB存储引擎">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114112823026.png">
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>一只小码农</title>
+  <title>InnoDB存储引擎 | 一只小码农</title>
   
 
 
@@ -216,9 +225,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -234,10 +244,9 @@
       <meta itemprop="name" content="一只小码农">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/" class="post-title-link" itemprop="url">InnoDB存储引擎</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          InnoDB存储引擎
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -260,6 +269,13 @@
             </span>
 
           
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
   
   <span class="post-meta-item">
     
@@ -298,7 +314,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="C:\Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
+        <h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="C:\Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
 <p>InnoDB存储引擎有多个内存块，这些内存块组成了一个大的内存池</p>
 <p>后台线程的主要作用就是负责刷新内存池中的数据，保证缓存池中的内存缓存的是最近的数据。此外，还将已经修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下，InnoDB可以恢复运行到最佳状态。</p>
 <h4 id="后台线程（InnDB是一个多线程模型"><a href="#后台线程（InnDB是一个多线程模型" class="headerlink" title="后台线程（InnDB是一个多线程模型)"></a>后台线程（InnDB是一个多线程模型)</h4><p>#####Master Thread</p>
@@ -335,233 +351,79 @@
 <p><img data-src="C:\Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133412580.png" alt="image-20210114133412580"></p>
 <p><strong>为什么要对朴素的LRU算法进行改良</strong>？</p>
 <h5 id="重做日志缓存"><a href="#重做日志缓存" class="headerlink" title="重做日志缓存"></a>重做日志缓存</h5><h5 id="额外的内存池"><a href="#额外的内存池" class="headerlink" title="额外的内存池"></a>额外的内存池</h5>
-      
     </div>
 
     
     
     
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
       
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/OIP.jfif">
-      <meta itemprop="name" content="邢浩东">
-      <meta itemprop="description" content="The world favors the underdog,and I would be the bad guy">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="一只小码农">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">双指针问题</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-01-14 08:46:19 / 修改时间：03:06:55" itemprop="dateCreated datePublished" datetime="2021-01-14T08:46:19Z">2021-01-14</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>4.4k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>4 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+        <div class="reward-container">
+  <div>谢谢你的支持哦，继续加油.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
       
-          <p>链表+双指针知识总结</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="邢浩东 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="邢浩东 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
         
-      
-    </div>
 
-    
-    
-    
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>邢浩东
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/" title="InnoDB存储引擎">http://example.com/2021/01/14/InnoDB存储引擎/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-%E9%82%A2%E6%B5%A9%E4%B8%9C/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-邢浩东</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/tags/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/" rel="tag"># InnoDB存储引擎</a>
+          </div>
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/13/%E9%93%BE%E8%A1%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/OIP.jfif">
-      <meta itemprop="name" content="邢浩东">
-      <meta itemprop="description" content="The world favors the underdog,and I would be the bad guy">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="一只小码农">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/13/%E9%93%BE%E8%A1%A8/" class="post-title-link" itemprop="url">链表</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-01-13 12:03:14 / 修改时间：07:22:58" itemprop="dateCreated datePublished" datetime="2021-01-13T12:03:14Z">2021-01-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/01/13/%E9%93%BE%E8%A1%A8/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/01/13/%E9%93%BE%E8%A1%A8/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>7.7k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>7 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>链表知识的学习</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/01/13/%E9%93%BE%E8%A1%A8/">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/" rel="prev" title="双指针问题">
+      <i class="fa fa-chevron-left"></i> 双指针问题
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
       </footer>
+    
   </article>
   
   
-  
-
-
   
 
 
 
           </div>
           
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -608,6 +470,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E"><span class="nav-number">1.</span> <span class="nav-text">InnoDB存储引擎</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB%E4%BD%93%E7%B3%BB%E6%9E%B6%E6%9E%84"><span class="nav-number">1.1.</span> <span class="nav-text">InnoDB体系架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8E%E5%8F%B0%E7%BA%BF%E7%A8%8B%EF%BC%88InnDB%E6%98%AF%E4%B8%80%E4%B8%AA%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.1.</span> <span class="nav-text">后台线程（InnDB是一个多线程模型)</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#IO-Therad"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">IO Therad</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Purge-Thread"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">Purge Thread</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Page-Cleaner-Thread"><span class="nav-number">1.1.1.3.</span> <span class="nav-text">Page Cleaner Thread</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E5%AD%98"><span class="nav-number">1.1.2.</span> <span class="nav-text">内存</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E6%B1%A0"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">缓存池</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E6%B1%A0%E4%B8%AD%E7%BC%93%E5%AD%98%E7%9A%84%E6%95%B0%E6%8D%AE%E9%A1%B5%E7%B1%BB%E5%9E%8B%EF%BC%9A"><span class="nav-number">1.1.2.1.1.</span> <span class="nav-text">缓存池中缓存的数据页类型：</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#LRU-LIST-%E3%80%81FREE-LIST-%E3%80%81FLUSH-LIST"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">LRU LIST 、FREE LIST 、FLUSH LIST</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%87%8D%E5%81%9A%E6%97%A5%E5%BF%97%E7%BC%93%E5%AD%98"><span class="nav-number">1.1.2.3.</span> <span class="nav-text">重做日志缓存</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%A2%9D%E5%A4%96%E7%9A%84%E5%86%85%E5%AD%98%E6%B1%A0"><span class="nav-number">1.1.2.4.</span> <span class="nav-text">额外的内存池</span></a></li></ol></li></ol></li></ol></li></ol></div>
 
       </div>
       <!--/noindex-->
