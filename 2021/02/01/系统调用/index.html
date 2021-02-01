@@ -21,27 +21,22 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="InnoDB存储引擎的初探">
+  <meta name="description" content="Linux内核系统调用知识总结">
 <meta property="og:type" content="article">
-<meta property="og:title" content="InnoDB存储引擎">
-<meta property="og:url" content="http://example.com/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/index.html">
+<meta property="og:title" content="系统调用">
+<meta property="og:url" content="http://example.com/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/index.html">
 <meta property="og:site_name" content="一只小码农">
-<meta property="og:description" content="InnoDB存储引擎的初探">
+<meta property="og:description" content="Linux内核系统调用知识总结">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114112823026.png">
-<meta property="og:image" content="http://example.com/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114114130216.png">
-<meta property="og:image" content="http://example.com/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114114405936.png">
-<meta property="og:image" content="http://example.com/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114131120313.png">
-<meta property="og:image" content="http://example.com/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114133522544.png">
-<meta property="og:image" content="http://example.com/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114133412580.png">
-<meta property="article:published_time" content="2021-01-14T13:56:15.000Z">
-<meta property="article:modified_time" content="2021-01-15T09:36:03.753Z">
+<meta property="og:image" content="http://example.com/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/OIP1.jpg">
+<meta property="article:published_time" content="2021-02-01T14:54:44.000Z">
+<meta property="article:modified_time" content="2021-02-01T09:32:24.339Z">
 <meta property="article:author" content="邢浩东">
-<meta property="article:tag" content="InnoDB存储引擎">
+<meta property="article:tag" content="Linux系统内核设计">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114112823026.png">
+<meta name="twitter:image" content="http://example.com/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/OIP1.jpg">
 
-<link rel="canonical" href="http://example.com/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/">
+<link rel="canonical" href="http://example.com/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/">
 
 
 <script id="page-configurations">
@@ -54,7 +49,7 @@
   };
 </script>
 
-  <title>InnoDB存储引擎 | 一只小码农</title>
+  <title>系统调用 | 一只小码农</title>
   
 
 
@@ -232,7 +227,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/OIP.jfif">
@@ -245,7 +240,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          InnoDB存储引擎
+          系统调用
         </h1>
 
         <div class="post-meta">
@@ -254,23 +249,17 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2021-01-14 13:56:15" itemprop="dateCreated datePublished" datetime="2021-01-14T13:56:15Z">2021-01-14</time>
+              <time title="创建时间：2021-02-01 14:54:44 / 修改时间：09:32:24" itemprop="dateCreated datePublished" datetime="2021-02-01T14:54:44Z">2021-02-01</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-01-15 09:36:03" itemprop="dateModified" datetime="2021-01-15T09:36:03Z">2021-01-15</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">MySQL数据库</span></a>
+                  <a href="/categories/Linux%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E7%9B%B8%E5%85%B3/" itemprop="url" rel="index"><span itemprop="name">Linux系统内核相关</span></a>
                 </span>
             </span>
 
@@ -290,8 +279,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/" itemprop="commentCount"></span>
+    <a title="valine" href="/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -301,7 +290,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.7k</span>
+              <span>2.6k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -310,7 +299,7 @@
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
               <span>2 分钟</span>
             </span>
-            <div class="post-description">InnoDB存储引擎的初探</div>
+            <div class="post-description">Linux内核系统调用知识总结</div>
 
         </div>
       </header>
@@ -321,43 +310,82 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
-<p>InnoDB存储引擎有多个内存块，这些内存块组成了一个大的内存池</p>
-<p>后台线程的主要作用就是负责刷新内存池中的数据，保证缓存池中的内存缓存的是最近的数据。此外，还将已经修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下，InnoDB可以恢复运行到最佳状态。</p>
-<h4 id="后台线程（InnDB是一个多线程模型"><a href="#后台线程（InnDB是一个多线程模型" class="headerlink" title="后台线程（InnDB是一个多线程模型)"></a>后台线程（InnDB是一个多线程模型)</h4><p>#####Master Thread</p>
-<p><strong>作用：</strong></p>
-<p>​    一个非常核心的后台进程，负责将缓存池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓存、UNDO页的回收等。</p>
-<h5 id="IO-Therad"><a href="#IO-Therad" class="headerlink" title="IO Therad"></a>IO Therad</h5><p>  在InnoDB存储引擎中大量使用了AIO（Async IO）—异步时间非阻塞IO，这样可以极大程度上提高数据库的性能。IO Thread的主要工作就是负责这些IO请求的回调</p>
-<p>共有四个IO Thread:write 、read、insert buffer、log IO thread</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114130216.png" alt="image-20210114114130216"></p>
-<p>通过命令SHOW ENGINE INNODB STASTUS\G来观察IO Thread</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114405936.png" alt="image-20210114114405936"></p>
-<p>有四个write和read IO Thread</p>
-<p>通过innodb_read_io_threads和innodb_write_io_threads参数来进行设置</p>
-<h5 id="Purge-Thread"><a href="#Purge-Thread" class="headerlink" title="Purge Thread"></a>Purge Thread</h5><p><strong>作用</strong>：</p>
-<p>​    Purge Thread回收已经使用并且已经分配的undo页（事务提交之后，其所使用的Undolog可能就不再需要）</p>
-<p>用户需要在<strong>MySQL数据库的配置文件</strong>中添加如下命令来启用独立的Purge Thread: </p>
-<p>​        innodb_purge_threads=1</p>
-<h5 id="Page-Cleaner-Thread"><a href="#Page-Cleaner-Thread" class="headerlink" title="Page Cleaner Thread"></a>Page Cleaner Thread</h5><p><strong>作用</strong>：</p>
-<p>​    将脏页的刷新操作放在单独的线程中完成。减轻Master Thread的工作以及对于用户查询线程的阻塞</p>
-<h4 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h4><h5 id="缓存池"><a href="#缓存池" class="headerlink" title="缓存池"></a>缓存池</h5><p>Innodb存储引擎是基于磁盘存储的（Disk-base Database），将其中的记录按照页来管理。</p>
-<p>缓存池的出现，就是为了解决CPU速度和磁盘速度之间的差异，通过内存的速度来弥补磁盘速度较慢对数据库性能的影响。读取文件时，首先判断给文件是否在缓存池中（没有就去磁盘上找）。</p>
-<p>在修改缓存池中的页时，先以一定频率刷新到缓存池上，然后通过Checkpoint刷新回磁盘。</p>
-<p>数据库服务器最好采用64位操作系统，可以使用更多的内存（512GB），32位（只有64GB）。</p>
-<p>缓存池的配置通过参数innodb_buffer_pool_size来设置。</p>
-<h6 id="缓存池中缓存的数据页类型："><a href="#缓存池中缓存的数据页类型：" class="headerlink" title="缓存池中缓存的数据页类型："></a>缓存池中缓存的数据页类型：</h6><p>​    索引页、数据页、Undo页、插入缓存页、自适应哈希索引页（adaptive hash index）、InnoDB存储的锁信息、数据字典信息等。</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114131120313.png" alt="image-20210114131120313"></p>
-<p><strong>允许有多个缓存池实例</strong>：每个页根据hashcode平均分配到不同的缓存池实例中，减少数据库内部资源的竞争，增加数据库的并发能力。可以通过inodb_buffer_pool_instances来进行配置，通过命令SHOW ENGINE INNODB STATUS可以观察到每个缓存池实例对象运行的状态，还可以通过查看表InnoDB_BUFFER_POOL_STATS来观察缓存的状态(要求在information_schema架构下)</p>
-<h5 id="LRU-LIST-、FREE-LIST-、FLUSH-LIST"><a href="#LRU-LIST-、FREE-LIST-、FLUSH-LIST" class="headerlink" title="LRU LIST 、FREE LIST 、FLUSH LIST"></a>LRU LIST 、FREE LIST 、FLUSH LIST</h5><p><strong>LRU</strong>算法用来管理已经读取的页</p>
-<p>数据库中的缓存池是通过LRU（Latest Recent Used,最近最少使用）算法来管理内部的各种类型的页。</p>
-<p><strong>LRU解释</strong>：将最频繁使用的页放在LRU列表的前端，最少使用的页放在LRU列表的尾端。当缓存池不能存放新读取到的页时，将优先删除列表尾端的页（默认大小为16KB）。</p>
-<p><strong>改进</strong>：</p>
-<p>1、（midpoint insertion strategy）：InnoDB中在LRU中加入了midpoint位置，将新读取到的页放在midpoint，而不是直接放在LRU列表首部。<strong>默认位置在LRU列表长度63%处</strong>（可以通过innodb_old_blocks_pct来控制）</p>
-<p>2、设置了参数innodb_old_blocks_time,用于表示页读取到mid位置后需要等待多久才会加入到LRU列表的热端</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133522544.png" alt="image-20210114133522544"></p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133412580.png" alt="image-20210114133412580"></p>
-<p><strong>为什么要对朴素的LRU算法进行改良</strong>？</p>
-<h5 id="重做日志缓存"><a href="#重做日志缓存" class="headerlink" title="重做日志缓存"></a>重做日志缓存</h5><h5 id="额外的内存池"><a href="#额外的内存池" class="headerlink" title="额外的内存池"></a>额外的内存池</h5>
+        <h2 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h2><h3 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h3><p>系统调用是内核与用户进程进行交互的一组接口，这些接口让应用程序受限制的访问硬件设备，提供了创建新进程并与已有进程进行交互通信的机制，也提供了申请操作系统其他资源的能力。</p>
+<p>系统调用在Linux系统中的地位如下图所示：</p>
+<img data-src="/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/OIP1.jpg" class>
+
+<h3 id="2-与内核通信"><a href="#2-与内核通信" class="headerlink" title="2.与内核通信"></a>2.与内核通信</h3><p>系统调用在用户空间进程和硬件设备之间添加了一个中间层。这样的中间层有如下作用：</p>
+<blockquote>
+<p>1.为用户空间提供了一种硬件的抽象接口。</p>
+</blockquote>
+<blockquote>
+<p>2.系统调用确保了系统的稳定与安全。内核可以作为硬件设备与用户空间之间的中间人，基于权限、用户类型和一些其他的规则对需要进行的访问做出裁决。</p>
+</blockquote>
+<blockquote>
+<p>3.避免用户空间的应用程序对硬件资源随意访问而内核一无所知，这样既无法实现多任务和虚拟内存，也不能确保良好的稳定性和安全性。</p>
+</blockquote>
+<p><strong>Linux中：系统调用是用户空间访问内核的唯一手段—-除了异常和陷入外，它们是内核唯一的合法入口</strong></p>
+<h3 id="3-API、POSIX、C库"><a href="#3-API、POSIX、C库" class="headerlink" title="3.API、POSIX、C库"></a>3.API、POSIX、C库</h3><p>应用程序通过在用户空间实现的应用编程接口（API）而不是直接通过系统调用。</p>
+<blockquote>
+<p>1.API实际上并不需要与内核提供的系统调用一一对应，程序员只跟API打交道。</p>
+<p>2.内核只跟系统调用打交道，库函数以及应用程序如何使用系统调用不是内核所关心的。</p>
+<p>3.API可以实现成一个系统调用，也可以实现多个系统调用，甚至也可以不实现系统调用。</p>
+</blockquote>
+<p>在UNIX中，最流行的应用编程接口是基于POSIX标准的。</p>
+<p>Linux系统调用作为C库的一部分提供。C库实现了Unix系统的主要API，包括标准C库函数和系统调用接口，此外，C库提供了POSIX的绝大部分API。</p>
+<h3 id="4-系统调用-syscall"><a href="#4-系统调用-syscall" class="headerlink" title="4.系统调用(syscall)"></a>4.系统调用(syscall)</h3><p><strong>通过在C库中定义的函数调用来执行</strong></p>
+<p>系统调用在出现错误的时候C库会将错误码写入errno全局变量。通过调用perror()库函数，可以把该变量翻译成用户可以理解的错误字符串。</p>
+<p>为了保证32为操作系统和64位操作系统的兼容，系统调用在用户空间和内核空间有着不同的返回值类型。用户空间为int，内核空间为long。系统调用在内核中前面会加上sys_。例如：返回当前进程PID的系统调用get_pid（）在内核中被定义为sys_getpid()。</p>
+<h4 id="4-1系统调用号"><a href="#4-1系统调用号" class="headerlink" title="4.1系统调用号"></a>4.1系统调用号</h4><p>在Linux中，每个系统调用都会被赋予一个系统调用号（独一无二的）。进程在执行系统调用时，不需要提及系统调用的名称，只需要使用系统调用号即可。</p>
+<p><strong>系统调用号相当重要，一旦分配好就不能再更改，因为会导致之前编译好的应用程序崩溃。</strong>即使这个系统调用被删除，它所占用的系统调用号也不允许被回收利用。</p>
+<p>内核记录了系统调用表中的所有已经注册过的系统调用的列表，存储在sys_call_table中，这个表为每一个有效的</p>
+<p>系统调用指定了唯一的系统调用号。</p>
+<h4 id="4-2系统调用的性能"><a href="#4-2系统调用的性能" class="headerlink" title="4.2系统调用的性能"></a>4.2系统调用的性能</h4><p>Linux系统调用比其他许多的操作系统执行要快。原因如下：</p>
+<blockquote>
+<p>1.Linux很短的上下文切换时间，进出内核都被优化的极为高效。</p>
+<p>2.系统调用处理程序和每个系统调用本身非常简洁。</p>
+</blockquote>
+<h3 id="5-系统调用处理程序"><a href="#5-系统调用处理程序" class="headerlink" title="5.系统调用处理程序"></a>5.系统调用处理程序</h3><p>应用程序通过<strong>软中断</strong>的方式来告诉内核自己期望执行一个系统调用，希望系统当前可以从用户态切换到内核态，这样内核就可以代表应用程序在内核空间中执行系统调用。</p>
+<p><strong>软中断</strong>：通过引起一个异常来促使系统切换到内核态前去执行异常处理程序。此时的异常处理程序其实就是<strong>系统调用处理程序</strong>。</p>
+<p>在X86系统中预定义的软中断是中断号128，通过int $0x80来触发中断。这条指令会触发一个异常导致系统切换到内核态并执行128号异常处理程序（系统调用处理程序）。</p>
+<h4 id="5-1指定恰当的系统调用"><a href="#5-1指定恰当的系统调用" class="headerlink" title="5.1指定恰当的系统调用"></a>5.1指定恰当的系统调用</h4><p>在陷入内核空间时，要将系统调用号传给内核空间。X86系统，系统调用号是通过eax寄存器传递给内核的。system_call()函数通过将给定的系统调用号与NR_syscalls做比较来检查其有效性。大于或者等于NR_syscalls，函数就返回-ENOSYS,否则，执行相应的系统调用。</p>
+<p>系统调用表中的表项是以64位类型存放的，所以内核需要将给定的系统调用号乘4，然后用所得结果在表中查询位置。</p>
+<h4 id="5-2参数传递"><a href="#5-2参数传递" class="headerlink" title="5.2参数传递"></a>5.2参数传递</h4><p>部分系统调用除了系统调用号之外，还需要传入一些外部参数，在发生陷入的时候，一并传给内核，同样是放在寄存器中。<strong>给用户空间的返回值同样是通过寄存器来传递的</strong></p>
+<h3 id="6-系统调用的实现"><a href="#6-系统调用的实现" class="headerlink" title="6.系统调用的实现"></a>6.系统调用的实现</h3><h4 id="6-1实现系统调用"><a href="#6-1实现系统调用" class="headerlink" title="6.1实现系统调用"></a>6.1实现系统调用</h4><p>要求：</p>
+<ul>
+<li>Linux中不提倡采用多用途的系统调用（一个系统调用通过传递不同的参数值来完成选择的工作）</li>
+<li>系统调用的接口应该力求简洁，参数尽量少。提供标志参数以确保向前兼容。</li>
+<li>系统调用的设计越通用越好。</li>
+</ul>
+<h4 id="6-2参数验证"><a href="#6-2参数验证" class="headerlink" title="6.2参数验证"></a>6.2参数验证</h4><p>系统调用必须检查参数是否合法有效。系统调用在内核空间中执行，任由用户将不合法的输入传递给内核，系统大的安全和稳定性将面临考验。进程不能让内核访问那些他没有权限访问的数据。</p>
+<ul>
+<li>与文件IO有关的系统调用需要检查文件描述符是否有效，与进程有关的函数必须检查提供的PID是否有效。</li>
+<li>检查用户提供的指针是否有效<ul>
+<li>指针指向的内存区域只能属于用户空间，进程不能告诉内核去读内核空间中的数据。</li>
+<li>指针指向的内存区域在自己的进程中，不能让内核去读其他进程中的数据。</li>
+<li>进程不能越过内存访问限制（可读、可写、可执行）</li>
+</ul>
+</li>
+<li>检查是否有合法权限</li>
+</ul>
+<p>内核提供了两个方法来完成必须的检查和内核空间与用户空间之间的数据来回拷贝</p>
+<ul>
+<li>写入：copy_to_user()</li>
+<li>读取：copy_from_user()</li>
+</ul>
+<p>这两个方法可能会引起阻塞。当包含用户数据的页被换出到硬盘上而不是在物理内存上的时候，进程会休眠，直到缺页处理程序将该页从硬盘从新换回物理内存。</p>
+<h3 id="7-系统调用上下文"><a href="#7-系统调用上下文" class="headerlink" title="7.系统调用上下文"></a>7.系统调用上下文</h3><p>在进程调用系统调用时，会有进程上下文。既可以被抢占也可以休眠。</p>
+<p>可以休眠说明系统调用可以利用内核提供的绝大部分功能。可以被抢占说明该系统调用时可重入的（新的进程同样可以使用相同的系统调用）。</p>
+<p>系统调用返回时，控制权仍然在system_call()中，它最终会负责切换到内核工作空间，并让用户进程继续执行下去。</p>
+<h4 id="7-1绑定一个系统调用的最后步骤"><a href="#7-1绑定一个系统调用的最后步骤" class="headerlink" title="7.1绑定一个系统调用的最后步骤"></a>7.1绑定一个系统调用的最后步骤</h4><blockquote>
+<p>1.在系统调用表中的最后加入一个表项。从0开始算起，系统调用在表中的位置就是他的系统调用号。</p>
+</blockquote>
+<blockquote>
+<p>2.系统调用必须被编译进内核映像（不能被编译成模块）</p>
+</blockquote>
+<h4 id="7-2从用户空间访问系统调用"><a href="#7-2从用户空间访问系统调用" class="headerlink" title="7.2从用户空间访问系统调用"></a>7.2从用户空间访问系统调用</h4><p>系统调用靠的时C库的支持，用户程序通过包含标准头文件并和C库链接，就可以使用系统调用。</p>
+<p><strong>Linux新系统调用增添频率很低，说明Linux系统是一个相对较为稳定并且功能已经较为完善的操作系统</strong></p>
+
     </div>
 
     
@@ -394,7 +422,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://example.com/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/" title="InnoDB存储引擎">http://example.com/2021/01/14/InnoDB存储引擎/</a>
+    <a href="http://example.com/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" title="系统调用">http://example.com/2021/02/01/系统调用/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-%E9%82%A2%E6%B5%A9%E4%B8%9C/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-邢浩东</a> 许可协议。转载请注明出处！
@@ -405,7 +433,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/" rel="tag"># InnoDB存储引擎</a>
+              <a href="/tags/Linux%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1/" rel="tag"># Linux系统内核设计</a>
           </div>
 
         
@@ -414,13 +442,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/" rel="prev" title="双指针问题">
-      <i class="fa fa-chevron-left"></i> 双指针问题
+    <a href="/2021/01/22/%E9%98%BF%E9%87%8C%E4%BA%91ECS%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="prev" title="阿里云ECS部署服务器">
+      <i class="fa fa-chevron-left"></i> 阿里云ECS部署服务器
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/01/16/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/" rel="next" title="类文件结构">
-      类文件结构 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -480,7 +505,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E"><span class="nav-number">1.</span> <span class="nav-text">InnoDB存储引擎</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB%E4%BD%93%E7%B3%BB%E6%9E%B6%E6%9E%84"><span class="nav-number">1.1.</span> <span class="nav-text">InnoDB体系架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8E%E5%8F%B0%E7%BA%BF%E7%A8%8B%EF%BC%88InnDB%E6%98%AF%E4%B8%80%E4%B8%AA%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.1.</span> <span class="nav-text">后台线程（InnDB是一个多线程模型)</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#IO-Therad"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">IO Therad</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Purge-Thread"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">Purge Thread</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Page-Cleaner-Thread"><span class="nav-number">1.1.1.3.</span> <span class="nav-text">Page Cleaner Thread</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E5%AD%98"><span class="nav-number">1.1.2.</span> <span class="nav-text">内存</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E6%B1%A0"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">缓存池</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E6%B1%A0%E4%B8%AD%E7%BC%93%E5%AD%98%E7%9A%84%E6%95%B0%E6%8D%AE%E9%A1%B5%E7%B1%BB%E5%9E%8B%EF%BC%9A"><span class="nav-number">1.1.2.1.1.</span> <span class="nav-text">缓存池中缓存的数据页类型：</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#LRU-LIST-%E3%80%81FREE-LIST-%E3%80%81FLUSH-LIST"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">LRU LIST 、FREE LIST 、FLUSH LIST</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%87%8D%E5%81%9A%E6%97%A5%E5%BF%97%E7%BC%93%E5%AD%98"><span class="nav-number">1.1.2.3.</span> <span class="nav-text">重做日志缓存</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%A2%9D%E5%A4%96%E7%9A%84%E5%86%85%E5%AD%98%E6%B1%A0"><span class="nav-number">1.1.2.4.</span> <span class="nav-text">额外的内存池</span></a></li></ol></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">系统调用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">1.概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%B8%8E%E5%86%85%E6%A0%B8%E9%80%9A%E4%BF%A1"><span class="nav-number">1.2.</span> <span class="nav-text">2.与内核通信</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-API%E3%80%81POSIX%E3%80%81C%E5%BA%93"><span class="nav-number">1.3.</span> <span class="nav-text">3.API、POSIX、C库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8-syscall"><span class="nav-number">1.4.</span> <span class="nav-text">4.系统调用(syscall)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%B7"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1系统调用号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E6%80%A7%E8%83%BD"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2系统调用的性能</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F"><span class="nav-number">1.5.</span> <span class="nav-text">5.系统调用处理程序</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1%E6%8C%87%E5%AE%9A%E6%81%B0%E5%BD%93%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="nav-number">1.5.1.</span> <span class="nav-text">5.1指定恰当的系统调用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92"><span class="nav-number">1.5.2.</span> <span class="nav-text">5.2参数传递</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.6.</span> <span class="nav-text">6.系统调用的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#6-1%E5%AE%9E%E7%8E%B0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="nav-number">1.6.1.</span> <span class="nav-text">6.1实现系统调用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-2%E5%8F%82%E6%95%B0%E9%AA%8C%E8%AF%81"><span class="nav-number">1.6.2.</span> <span class="nav-text">6.2参数验证</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="nav-number">1.7.</span> <span class="nav-text">7.系统调用上下文</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#7-1%E7%BB%91%E5%AE%9A%E4%B8%80%E4%B8%AA%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E6%9C%80%E5%90%8E%E6%AD%A5%E9%AA%A4"><span class="nav-number">1.7.1.</span> <span class="nav-text">7.1绑定一个系统调用的最后步骤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-2%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E8%AE%BF%E9%97%AE%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="nav-number">1.7.2.</span> <span class="nav-text">7.2从用户空间访问系统调用</span></a></li></ol></li></ol></li></ol></div>
 
       </div>
       <!--/noindex-->
