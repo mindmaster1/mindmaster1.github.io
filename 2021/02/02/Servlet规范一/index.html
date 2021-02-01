@@ -21,22 +21,31 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="Linux内核系统调用知识总结">
+  <meta name="description" content="Servlet规范学习总结第一部分">
 <meta property="og:type" content="article">
-<meta property="og:title" content="系统调用">
-<meta property="og:url" content="http://example.com/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/index.html">
+<meta property="og:title" content="Servlet规范一">
+<meta property="og:url" content="http://example.com/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/index.html">
 <meta property="og:site_name" content="一只小码农">
-<meta property="og:description" content="Linux内核系统调用知识总结">
+<meta property="og:description" content="Servlet规范学习总结第一部分">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/OIP1.jpg">
-<meta property="article:published_time" content="2021-02-01T14:54:44.000Z">
-<meta property="article:modified_time" content="2021-02-01T09:32:24.339Z">
+<meta property="og:image" content="http://example.com/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/01.png">
+<meta property="og:image" content="http://example.com/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/02.png">
+<meta property="og:image" content="http://example.com/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/03.png">
+<meta property="og:image" content="http://example.com/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/04.png">
+<meta property="og:image" content="http://example.com/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/05.png">
+<meta property="og:image" content="http://example.com/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/06.png">
+<meta property="og:image" content="http://example.com/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/07.png">
+<meta property="og:image" content="http://example.com/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/08.png">
+<meta property="og:image" content="http://example.com/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/09.png">
+<meta property="og:image" content="http://example.com/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/10.png">
+<meta property="article:published_time" content="2021-02-01T20:22:40.000Z">
+<meta property="article:modified_time" content="2021-02-01T12:38:47.085Z">
 <meta property="article:author" content="邢浩东">
-<meta property="article:tag" content="Linux系统内核设计">
+<meta property="article:tag" content="Servlet规范">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/OIP1.jpg">
+<meta name="twitter:image" content="http://example.com/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/01.png">
 
-<link rel="canonical" href="http://example.com/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/">
+<link rel="canonical" href="http://example.com/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/">
 
 
 <script id="page-configurations">
@@ -49,7 +58,7 @@
   };
 </script>
 
-  <title>系统调用 | 一只小码农</title>
+  <title>Servlet规范一 | 一只小码农</title>
   
 
 
@@ -227,7 +236,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/OIP.jfif">
@@ -240,7 +249,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          系统调用
+          Servlet规范一
         </h1>
 
         <div class="post-meta">
@@ -251,7 +260,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2021-02-01 14:54:44 / 修改时间：09:32:24" itemprop="dateCreated datePublished" datetime="2021-02-01T14:54:44Z">2021-02-01</time>
+              <time title="创建时间：2021-02-01 20:22:40 / 修改时间：12:38:47" itemprop="dateCreated datePublished" datetime="2021-02-01T20:22:40Z">2021-02-01</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -259,7 +268,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E7%9B%B8%E5%85%B3/" itemprop="url" rel="index"><span itemprop="name">Linux系统内核相关</span></a>
+                  <a href="/categories/JavaWeb/" itemprop="url" rel="index"><span itemprop="name">JavaWeb</span></a>
                 </span>
             </span>
 
@@ -279,8 +288,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" itemprop="commentCount"></span>
+    <a title="valine" href="/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -290,16 +299,16 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>2.6k</span>
+              <span>3.9k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>4 分钟</span>
             </span>
-            <div class="post-description">Linux内核系统调用知识总结</div>
+            <div class="post-description">Servlet规范学习总结第一部分</div>
 
         </div>
       </header>
@@ -310,81 +319,75 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h2><h3 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h3><p>系统调用是内核与用户进程进行交互的一组接口，这些接口让应用程序受限制的访问硬件设备，提供了创建新进程并与已有进程进行交互通信的机制，也提供了申请操作系统其他资源的能力。</p>
-<p>系统调用在Linux系统中的地位如下图所示：</p>
-<img data-src="/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/OIP1.jpg" class>
+        <h2 id="Servlet规范（一）"><a href="#Servlet规范（一）" class="headerlink" title="Servlet规范（一）"></a>Servlet规范（一）</h2><h3 id="一、Servlet基础"><a href="#一、Servlet基础" class="headerlink" title="一、Servlet基础"></a>一、Servlet基础</h3><p>宏观地讲，Servlet 是连接 Web 服务器与服务端 Java 程序的协议，是一种通信规范。这个规范是以一套接口的形式体现的。 通常来说，Servlet 是宏观上 Servlet 规范中的一个具体的接口，Servlet 规范中包含一套接口。而 Servlet 接口仅仅是其中之一。 微观地讲，Servlet 是 Servlet 接口实现类的一个实例对象，是运行在服务器上的一段 Java 小程序，即 Server Applet，也就是 Servlet 这个单词的来历。Servlet 的主要功能是根据客户 端提交的请求，调用服务器端相关 Java 代码，完成对请求的处理与运算。</p>
+ <img data-src="/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/01.png" class>
 
-<h3 id="2-与内核通信"><a href="#2-与内核通信" class="headerlink" title="2.与内核通信"></a>2.与内核通信</h3><p>系统调用在用户空间进程和硬件设备之间添加了一个中间层。这样的中间层有如下作用：</p>
-<blockquote>
-<p>1.为用户空间提供了一种硬件的抽象接口。</p>
-</blockquote>
-<blockquote>
-<p>2.系统调用确保了系统的稳定与安全。内核可以作为硬件设备与用户空间之间的中间人，基于权限、用户类型和一些其他的规则对需要进行的访问做出裁决。</p>
-</blockquote>
-<blockquote>
-<p>3.避免用户空间的应用程序对硬件资源随意访问而内核一无所知，这样既无法实现多任务和虚拟内存，也不能确保良好的稳定性和安全性。</p>
-</blockquote>
-<p><strong>Linux中：系统调用是用户空间访问内核的唯一手段—-除了异常和陷入外，它们是内核唯一的合法入口</strong></p>
-<h3 id="3-API、POSIX、C库"><a href="#3-API、POSIX、C库" class="headerlink" title="3.API、POSIX、C库"></a>3.API、POSIX、C库</h3><p>应用程序通过在用户空间实现的应用编程接口（API）而不是直接通过系统调用。</p>
-<blockquote>
-<p>1.API实际上并不需要与内核提供的系统调用一一对应，程序员只跟API打交道。</p>
-<p>2.内核只跟系统调用打交道，库函数以及应用程序如何使用系统调用不是内核所关心的。</p>
-<p>3.API可以实现成一个系统调用，也可以实现多个系统调用，甚至也可以不实现系统调用。</p>
-</blockquote>
-<p>在UNIX中，最流行的应用编程接口是基于POSIX标准的。</p>
-<p>Linux系统调用作为C库的一部分提供。C库实现了Unix系统的主要API，包括标准C库函数和系统调用接口，此外，C库提供了POSIX的绝大部分API。</p>
-<h3 id="4-系统调用-syscall"><a href="#4-系统调用-syscall" class="headerlink" title="4.系统调用(syscall)"></a>4.系统调用(syscall)</h3><p><strong>通过在C库中定义的函数调用来执行</strong></p>
-<p>系统调用在出现错误的时候C库会将错误码写入errno全局变量。通过调用perror()库函数，可以把该变量翻译成用户可以理解的错误字符串。</p>
-<p>为了保证32为操作系统和64位操作系统的兼容，系统调用在用户空间和内核空间有着不同的返回值类型。用户空间为int，内核空间为long。系统调用在内核中前面会加上sys_。例如：返回当前进程PID的系统调用get_pid（）在内核中被定义为sys_getpid()。</p>
-<h4 id="4-1系统调用号"><a href="#4-1系统调用号" class="headerlink" title="4.1系统调用号"></a>4.1系统调用号</h4><p>在Linux中，每个系统调用都会被赋予一个系统调用号（独一无二的）。进程在执行系统调用时，不需要提及系统调用的名称，只需要使用系统调用号即可。</p>
-<p><strong>系统调用号相当重要，一旦分配好就不能再更改，因为会导致之前编译好的应用程序崩溃。</strong>即使这个系统调用被删除，它所占用的系统调用号也不允许被回收利用。</p>
-<p>内核记录了系统调用表中的所有已经注册过的系统调用的列表，存储在sys_call_table中，这个表为每一个有效的</p>
-<p>系统调用指定了唯一的系统调用号。</p>
-<h4 id="4-2系统调用的性能"><a href="#4-2系统调用的性能" class="headerlink" title="4.2系统调用的性能"></a>4.2系统调用的性能</h4><p>Linux系统调用比其他许多的操作系统执行要快。原因如下：</p>
-<blockquote>
-<p>1.Linux很短的上下文切换时间，进出内核都被优化的极为高效。</p>
-<p>2.系统调用处理程序和每个系统调用本身非常简洁。</p>
-</blockquote>
-<h3 id="5-系统调用处理程序"><a href="#5-系统调用处理程序" class="headerlink" title="5.系统调用处理程序"></a>5.系统调用处理程序</h3><p>应用程序通过<strong>软中断</strong>的方式来告诉内核自己期望执行一个系统调用，希望系统当前可以从用户态切换到内核态，这样内核就可以代表应用程序在内核空间中执行系统调用。</p>
-<p><strong>软中断</strong>：通过引起一个异常来促使系统切换到内核态前去执行异常处理程序。此时的异常处理程序其实就是<strong>系统调用处理程序</strong>。</p>
-<p>在X86系统中预定义的软中断是中断号128，通过int $0x80来触发中断。这条指令会触发一个异常导致系统切换到内核态并执行128号异常处理程序（系统调用处理程序）。</p>
-<h4 id="5-1指定恰当的系统调用"><a href="#5-1指定恰当的系统调用" class="headerlink" title="5.1指定恰当的系统调用"></a>5.1指定恰当的系统调用</h4><p>在陷入内核空间时，要将系统调用号传给内核空间。X86系统，系统调用号是通过eax寄存器传递给内核的。system_call()函数通过将给定的系统调用号与NR_syscalls做比较来检查其有效性。大于或者等于NR_syscalls，函数就返回-ENOSYS,否则，执行相应的系统调用。</p>
-<p>系统调用表中的表项是以64位类型存放的，所以内核需要将给定的系统调用号乘4，然后用所得结果在表中查询位置。</p>
-<h4 id="5-2参数传递"><a href="#5-2参数传递" class="headerlink" title="5.2参数传递"></a>5.2参数传递</h4><p>部分系统调用除了系统调用号之外，还需要传入一些外部参数，在发生陷入的时候，一并传给内核，同样是放在寄存器中。<strong>给用户空间的返回值同样是通过寄存器来传递的</strong></p>
-<h3 id="6-系统调用的实现"><a href="#6-系统调用的实现" class="headerlink" title="6.系统调用的实现"></a>6.系统调用的实现</h3><h4 id="6-1实现系统调用"><a href="#6-1实现系统调用" class="headerlink" title="6.1实现系统调用"></a>6.1实现系统调用</h4><p>要求：</p>
+<h4 id="1-Servlet生命周期"><a href="#1-Servlet生命周期" class="headerlink" title="1.Servlet生命周期"></a>1.Servlet生命周期</h4><p>所谓 Servlet 生命周期是指，Servlet 对象的创建、Servlet 对象的初始化、Servlet 对象服 务的执行，及最终 Servlet 对象被销毁的整个过程。</p>
+ <img data-src="/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/02.png" class>
+
+<p>Servlet 的整个生命周期过程的执行，均由 Web 服务器负责管理。即 Servlet 从创建到服 务到销毁的整个过程中方法的调用，都是由 Web 服务器负责调用执行，程序员无法控制其 执行流程。 但程序员可以获取到 Servlet 的这些生命周期时间点，并可以指定让 Servlet 做一些具体 业务相关的事情。</p>
+<p>#####1.1Servlet生命周期执行流程</p>
+ <img data-src="/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/03.png" class>
+
+<p>Servlet 生命周期方法的执行流程： </p>
+<p>（1）当请求发送到 Web 容器后，Web 容器会解析请求 URL，并从中分离出 Servlet 对应的 URI。 </p>
+<p>（2）根据分离出的 URI，通过 web.xml 中配置的 URI 与 Servlet 的映射关系，找到要执行的 Servlet，即找到用于处理该请求的 Servlet。 </p>
+<p>（3）若该 Servlet 不存在，则调用该 Servlet 的无参构造器、init()方法，实例化该 Servlet。 然后执行 service()方法。 </p>
+<p>（4）若该 Servlet 已经被创建，则直接调用 service()方法。 </p>
+<p>（5）当 Web 容器被关闭，或该应用被关闭，则调用执行 destroy()方法，销毁 Servlet 实例。</p>
+<img data-src="/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/04.png" class>
+
+<p>对于以上代码的运行，注意以下几个时间点： </p>
+<p>（1）项目部署后启动服务器，发现并没有执行 Servlet 的无参构造器方法，说明在 Web 容 器启动时并没有创建             Servlet 对象。 </p>
+<p>（2）用户提交请求后，马上可以看到无参构造器、init()方法、service()方法均执行。 </p>
+<p>（3）刷新页面，发现只会执行 service()方法，每刷新一次，即每提交一次请求，就会执行 一次 service()方法。 （4）让另外一个浏览器也发出同样的请求，会发现只执行 service()方法，而无参构造器、init() 方法均未执行。 （5）正常关闭 Tomcat（使用 stop server 关闭，不能使用 Terminate 关闭），发现 destroy()方 法也会执行。</p>
+<h5 id="1-2Servlet特征"><a href="#1-2Servlet特征" class="headerlink" title="1.2Servlet特征"></a>1.2Servlet特征</h5><p>（1）Servlet 是单例多线程的。 </p>
+<p>（2）一个 Servlet 实例只会执行一次无参构造器与 init()方法，并且是在第一次访问时执行。 </p>
+<p>（3）用户每提交一次对当前 Servlet 的请求，就会执行一次 service()方法。 </p>
+<p>（4）一个 Servlet 实例只会执行一次 destroy()方法，在应用停止时执行。</p>
+<p>（5）由于 Servlet 是单例多线程的，所以为了保证其线程安全性，一般情况下是不为 Servlet 类定义可修改的成员         变量的。因为每个线程均可修改这个成员变量，会出现线程安全问题。 </p>
+<p>（6）默认情况下，Servlet 在 Web 容器启动时是不会被实例化的。</p>
+<h5 id="1-3Web-容器启动时创建-Servlet-实例"><a href="#1-3Web-容器启动时创建-Servlet-实例" class="headerlink" title="1.3Web 容器启动时创建 Servlet 实例"></a>1.3Web 容器启动时创建 Servlet 实例</h5><img data-src="/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/05.png" class>
+
+<p>在中添加的<load-on-startup>作用是，标记是否在Web服务器（这里是Tomcat） 启动时创建并初始化这个 Servlet 实例，即是否在 Web 服务器启动时调用执行该 Servlet 的无 参构造器方法与 init()方法，而不是在真正访问时才创建。 它的值必须是一个整数。</load-on-startup></p>
 <ul>
-<li>Linux中不提倡采用多用途的系统调用（一个系统调用通过传递不同的参数值来完成选择的工作）</li>
-<li>系统调用的接口应该力求简洁，参数尽量少。提供标志参数以确保向前兼容。</li>
-<li>系统调用的设计越通用越好。</li>
-</ul>
-<h4 id="6-2参数验证"><a href="#6-2参数验证" class="headerlink" title="6.2参数验证"></a>6.2参数验证</h4><p>系统调用必须检查参数是否合法有效。系统调用在内核空间中执行，任由用户将不合法的输入传递给内核，系统大的安全和稳定性将面临考验。进程不能让内核访问那些他没有权限访问的数据。</p>
-<ul>
-<li>与文件IO有关的系统调用需要检查文件描述符是否有效，与进程有关的函数必须检查提供的PID是否有效。</li>
-<li>检查用户提供的指针是否有效<ul>
-<li>指针指向的内存区域只能属于用户空间，进程不能告诉内核去读内核空间中的数据。</li>
-<li>指针指向的内存区域在自己的进程中，不能让内核去读其他进程中的数据。</li>
-<li>进程不能越过内存访问限制（可读、可写、可执行）</li>
-</ul>
+<li><p>当值大于等于 0 时，表示容器在启动时就加载并初始化这个 Servlet，数值越小，该 Servlet 的优先级就越高，其被创建的也就越早；</p>
 </li>
-<li>检查是否有合法权限</li>
+<li><p>当值小于 0 或者没有指定时，则表示该 Servlet 在真正被使用时才会去创建。</p>
+</li>
+<li><p>当值相同时，容器会自己选择创建顺序。</p>
+</li>
 </ul>
-<p>内核提供了两个方法来完成必须的检查和内核空间与用户空间之间的数据来回拷贝</p>
+<p>#####1.4Web容器中的两个Map方法</p>
+<p>当 Servlet 实例被创建好后被放在了哪里？web.xml 中 URI 与 Servlet 的映射关系反映到 内存中是以什么形式存在呢？ 当 Servlet 实例被创建好后，会将该 Servlet 实例的引用存放到一个 Map 集合中。该 Map 集合的 key 为 URI，而 value 则为 Servlet 实例的引用，即 Map&lt;String,value&gt;。当 Web 容器 从用户请求中分离出 URI 后，会首先到这个 Map 中查找是否存在其所对应的 value。若存在， 则直接调用其 service()方法。若不存在，则需要创建该 Servlet 实例。</p>
+<p> 若请求的 Servlet 实例不存在，Web 容器又是根据什么创建这个 Servlet 实例的呢？在 Web 容器的内存中，还存在一个 Map 集合。该 Map 集合的 key 为 URI，而 value 则为 web.xml 中配置的与之对应的 Servlet 的全限定性类名，即 Map&lt;String,value&gt;。 当Web容器从用户请求中分离出URI后，到第一个Map中又没有找到其所对应的Servlet 实例，则会马上查找这第二个 Map，从中找到其所对应的类名，再根据反射机制，创建这 个 Servlet 实例。然后再将这个创建好的 Servlet 的引用放入到第一个 Map 中</p>
+<p>#####1.5关于getServletInfo方法</p>
+<p>Servlet 接口中的方法 getServletInfo()，是由程序没自己定义的有关当前 Servlet 的一些基本信息，不属于Servlet 生命周期中的方法。对程序的运行没有任何影响与作用。仅仅是返 回一些让他人阅读的信息而已。</p>
+<h4 id="2-ServletConfig"><a href="#2-ServletConfig" class="headerlink" title="2.ServletConfig"></a>2.ServletConfig</h4><h5 id="2-1什么是ServletConfig"><a href="#2-1什么是ServletConfig" class="headerlink" title="2.1什么是ServletConfig"></a>2.1什么是ServletConfig</h5><p>在 Servlet 接口的 init()方法中具有唯一的一个参数 ServletConfig。ServletConfig 是个接口， 顾名思义，就是 Servlet 配置，即在 web.xml 中对当前 Servlet 类的配置信息。Servlet 规范将 Servlet 的配置信息全部封装到了 ServletConfig 接口对象中。 在 Web 容器调用 init()方法时，Web 容器首先会将 web.xml 中当前 Servlet 类的配置信息 封装为一个对象。这个对象的类型实现了 ServletConfig 接口，Web 容器会将这个对象传递给 init()方法中的 ServletConfig 参数。</p>
+<h5 id="2-2获取ServletConfig对象"><a href="#2-2获取ServletConfig对象" class="headerlink" title="2.2获取ServletConfig对象"></a>2.2获取ServletConfig对象</h5><p>由于 ServletConfig 中可以获取到 Servlet 的初始化参数，获取到 ServletContext 对象，而 这些参数与对象在进行业务逻辑处理时，即执行 service()方法时需要经常访问，很重要，所 以 ServletConfig 对象也就显得很重要了。 由于 ServletConfig 对象是 Web 容器通过 init()方法传递给当前 Servlet 类的，而 init()方法 只会在 Servlet 对象初始化时调用一次。所以，需要在 init()方法中将 ServletConfig 对象传递 给 Servlet 的 ServletConfig 成员变量，这样 service()方法即可使用 ServletConfig 对象了。也就 是说，我们需要在 Servlet 中声明一个 ServletConfig 成员变量。 若在 Servlet 中声明一个 ServletConfig 成员变量，是否会存在线程安全问题呢？因为 Servlet 是单例多线程的。只要在 Servlet 中不为 ServletConfig 对象提供其它修改方法，其值 只能由 Web 容器通过 init()方法进行赋值，那么 ServletConfig 对象就不存在线程安全问题。 因为对于所有线程来说，ServletConfig 对象是只读的，不能修改。</p>
+<h5 id="2-3ServletConfig中的方法"><a href="#2-3ServletConfig中的方法" class="headerlink" title="2.3ServletConfig中的方法"></a>2.3ServletConfig中的方法</h5><img data-src="/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/06.png" class>
+
+<img data-src="/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/07.png" class>
+
 <ul>
-<li>写入：copy_to_user()</li>
-<li>读取：copy_from_user()</li>
+<li><p>getInitParameter()：获取指定名称的初始化参数值。例如 getInitParameter(“myDBDriver”); 会返回字符串“com.mysql.jdbc.Driver”。 </p>
+</li>
+<li><p>getInitParameterNames()：获取当前 Servlet 所有的初始化参数名称。其返回值为枚举类 型 Enumeration。</p>
+</li>
+<li><p>getServletName()：获取当前 Servlet 的中指定的 Servlet 名 称。如上图中的 ServletName 为“hello-servlet”。  </p>
+</li>
+<li><p>getServletContext()：获取到当前 Servlet 的上下文对象 ServletContext。这是个非常重要 的对象。</p>
+</li>
 </ul>
-<p>这两个方法可能会引起阻塞。当包含用户数据的页被换出到硬盘上而不是在物理内存上的时候，进程会休眠，直到缺页处理程序将该页从硬盘从新换回物理内存。</p>
-<h3 id="7-系统调用上下文"><a href="#7-系统调用上下文" class="headerlink" title="7.系统调用上下文"></a>7.系统调用上下文</h3><p>在进程调用系统调用时，会有进程上下文。既可以被抢占也可以休眠。</p>
-<p>可以休眠说明系统调用可以利用内核提供的绝大部分功能。可以被抢占说明该系统调用时可重入的（新的进程同样可以使用相同的系统调用）。</p>
-<p>系统调用返回时，控制权仍然在system_call()中，它最终会负责切换到内核工作空间，并让用户进程继续执行下去。</p>
-<h4 id="7-1绑定一个系统调用的最后步骤"><a href="#7-1绑定一个系统调用的最后步骤" class="headerlink" title="7.1绑定一个系统调用的最后步骤"></a>7.1绑定一个系统调用的最后步骤</h4><blockquote>
-<p>1.在系统调用表中的最后加入一个表项。从0开始算起，系统调用在表中的位置就是他的系统调用号。</p>
-</blockquote>
-<blockquote>
-<p>2.系统调用必须被编译进内核映像（不能被编译成模块）</p>
-</blockquote>
-<h4 id="7-2从用户空间访问系统调用"><a href="#7-2从用户空间访问系统调用" class="headerlink" title="7.2从用户空间访问系统调用"></a>7.2从用户空间访问系统调用</h4><p>系统调用靠的时C库的支持，用户程序通过包含标准头文件并和C库链接，就可以使用系统调用。</p>
-<p><strong>Linux新系统调用增添频率很低，说明Linux系统是一个相对较为稳定并且功能已经较为完善的操作系统</strong></p>
+<p>#####2.4ServletConfig的特征</p>
+<p>对于不同的Servlet，Tomcat会为其创建不同的ServletConfig，用于封装各自的配置信息。 也就是说，一个 Servlet 就会有其对应的一个 ServletConfig 对象；有几个 Servlet，将会产生 几个 ServletConfig 对象。</p>
+<h5 id="2-5项目部署"><a href="#2-5项目部署" class="headerlink" title="2.5项目部署"></a>2.5项目部署</h5><img data-src="/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/08.png" class>
+
+<img data-src="/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/09.png" class>
+
+<img data-src="/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/10.png" class>
+
+<p><strong>运行结论</strong>：<br>从对 ServletConfig 对象的输出结果可以看出，Tomcat 容器对 ServletConfig 接口的实现类为 org.apache.catalina.core.StandardWrapperFacade。当然，这个实现类是谁不重要，重要的是要理解，不同的 Web 容器，对该 ServletConfig 的实现类是不同的。但它们的共同特点是， 均实现了 Servlet 规范，实现了 ServletConfig 接口。</p>
 
     </div>
 
@@ -422,7 +425,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://example.com/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" title="系统调用">http://example.com/2021/02/01/系统调用/</a>
+    <a href="http://example.com/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/" title="Servlet规范一">http://example.com/2021/02/02/Servlet规范一/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-%E9%82%A2%E6%B5%A9%E4%B8%9C/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-邢浩东</a> 许可协议。转载请注明出处！
@@ -433,7 +436,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Linux%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1/" rel="tag"># Linux系统内核设计</a>
+              <a href="/tags/Servlet%E8%A7%84%E8%8C%83/" rel="tag"># Servlet规范</a>
           </div>
 
         
@@ -442,13 +445,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/01/22/%E9%98%BF%E9%87%8C%E4%BA%91ECS%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="prev" title="阿里云ECS部署服务器">
-      <i class="fa fa-chevron-left"></i> 阿里云ECS部署服务器
+    <a href="/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" rel="prev" title="系统调用">
+      <i class="fa fa-chevron-left"></i> 系统调用
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/" rel="next" title="Servlet规范一">
-      Servlet规范一 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -508,7 +508,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">系统调用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">1.概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%B8%8E%E5%86%85%E6%A0%B8%E9%80%9A%E4%BF%A1"><span class="nav-number">1.2.</span> <span class="nav-text">2.与内核通信</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-API%E3%80%81POSIX%E3%80%81C%E5%BA%93"><span class="nav-number">1.3.</span> <span class="nav-text">3.API、POSIX、C库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8-syscall"><span class="nav-number">1.4.</span> <span class="nav-text">4.系统调用(syscall)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%B7"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1系统调用号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E6%80%A7%E8%83%BD"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2系统调用的性能</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F"><span class="nav-number">1.5.</span> <span class="nav-text">5.系统调用处理程序</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1%E6%8C%87%E5%AE%9A%E6%81%B0%E5%BD%93%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="nav-number">1.5.1.</span> <span class="nav-text">5.1指定恰当的系统调用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92"><span class="nav-number">1.5.2.</span> <span class="nav-text">5.2参数传递</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.6.</span> <span class="nav-text">6.系统调用的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#6-1%E5%AE%9E%E7%8E%B0%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="nav-number">1.6.1.</span> <span class="nav-text">6.1实现系统调用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-2%E5%8F%82%E6%95%B0%E9%AA%8C%E8%AF%81"><span class="nav-number">1.6.2.</span> <span class="nav-text">6.2参数验证</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="nav-number">1.7.</span> <span class="nav-text">7.系统调用上下文</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#7-1%E7%BB%91%E5%AE%9A%E4%B8%80%E4%B8%AA%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E6%9C%80%E5%90%8E%E6%AD%A5%E9%AA%A4"><span class="nav-number">1.7.1.</span> <span class="nav-text">7.1绑定一个系统调用的最后步骤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-2%E4%BB%8E%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E8%AE%BF%E9%97%AE%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="nav-number">1.7.2.</span> <span class="nav-text">7.2从用户空间访问系统调用</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Servlet%E8%A7%84%E8%8C%83%EF%BC%88%E4%B8%80%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">Servlet规范（一）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81Servlet%E5%9F%BA%E7%A1%80"><span class="nav-number">1.1.</span> <span class="nav-text">一、Servlet基础</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Servlet%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.Servlet生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2Servlet%E7%89%B9%E5%BE%81"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">1.2Servlet特征</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-3Web-%E5%AE%B9%E5%99%A8%E5%90%AF%E5%8A%A8%E6%97%B6%E5%88%9B%E5%BB%BA-Servlet-%E5%AE%9E%E4%BE%8B"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">1.3Web 容器启动时创建 Servlet 实例</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-ServletConfig"><span class="nav-number">1.1.2.</span> <span class="nav-text">2.ServletConfig</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1%E4%BB%80%E4%B9%88%E6%98%AFServletConfig"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">2.1什么是ServletConfig</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2%E8%8E%B7%E5%8F%96ServletConfig%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">2.2获取ServletConfig对象</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-3ServletConfig%E4%B8%AD%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.2.3.</span> <span class="nav-text">2.3ServletConfig中的方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-5%E9%A1%B9%E7%9B%AE%E9%83%A8%E7%BD%B2"><span class="nav-number">1.1.2.4.</span> <span class="nav-text">2.5项目部署</span></a></li></ol></li></ol></li></ol></li></ol></div>
 
       </div>
       <!--/noindex-->

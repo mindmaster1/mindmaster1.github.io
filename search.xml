@@ -120,6 +120,86 @@
       </tags>
   </entry>
   <entry>
+    <title>Servlet规范一</title>
+    <url>/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/</url>
+    <content><![CDATA[<h2 id="Servlet规范（一）"><a href="#Servlet规范（一）" class="headerlink" title="Servlet规范（一）"></a>Servlet规范（一）</h2><h3 id="一、Servlet基础"><a href="#一、Servlet基础" class="headerlink" title="一、Servlet基础"></a>一、Servlet基础</h3><p>宏观地讲，Servlet 是连接 Web 服务器与服务端 Java 程序的协议，是一种通信规范。这个规范是以一套接口的形式体现的。 通常来说，Servlet 是宏观上 Servlet 规范中的一个具体的接口，Servlet 规范中包含一套接口。而 Servlet 接口仅仅是其中之一。 微观地讲，Servlet 是 Servlet 接口实现类的一个实例对象，是运行在服务器上的一段 Java 小程序，即 Server Applet，也就是 Servlet 这个单词的来历。Servlet 的主要功能是根据客户 端提交的请求，调用服务器端相关 Java 代码，完成对请求的处理与运算。</p>
+ <img data-src="/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/01.png" class>
+
+<h4 id="1-Servlet生命周期"><a href="#1-Servlet生命周期" class="headerlink" title="1.Servlet生命周期"></a>1.Servlet生命周期</h4><p>所谓 Servlet 生命周期是指，Servlet 对象的创建、Servlet 对象的初始化、Servlet 对象服 务的执行，及最终 Servlet 对象被销毁的整个过程。</p>
+ <img data-src="/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/02.png" class>
+
+<p>Servlet 的整个生命周期过程的执行，均由 Web 服务器负责管理。即 Servlet 从创建到服 务到销毁的整个过程中方法的调用，都是由 Web 服务器负责调用执行，程序员无法控制其 执行流程。 但程序员可以获取到 Servlet 的这些生命周期时间点，并可以指定让 Servlet 做一些具体 业务相关的事情。</p>
+<p>#####1.1Servlet生命周期执行流程</p>
+ <img data-src="/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/03.png" class>
+
+<p>Servlet 生命周期方法的执行流程： </p>
+<p>（1）当请求发送到 Web 容器后，Web 容器会解析请求 URL，并从中分离出 Servlet 对应的 URI。 </p>
+<p>（2）根据分离出的 URI，通过 web.xml 中配置的 URI 与 Servlet 的映射关系，找到要执行的 Servlet，即找到用于处理该请求的 Servlet。 </p>
+<p>（3）若该 Servlet 不存在，则调用该 Servlet 的无参构造器、init()方法，实例化该 Servlet。 然后执行 service()方法。 </p>
+<p>（4）若该 Servlet 已经被创建，则直接调用 service()方法。 </p>
+<p>（5）当 Web 容器被关闭，或该应用被关闭，则调用执行 destroy()方法，销毁 Servlet 实例。</p>
+<img data-src="/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/04.png" class>
+
+<p>对于以上代码的运行，注意以下几个时间点： </p>
+<p>（1）项目部署后启动服务器，发现并没有执行 Servlet 的无参构造器方法，说明在 Web 容 器启动时并没有创建             Servlet 对象。 </p>
+<p>（2）用户提交请求后，马上可以看到无参构造器、init()方法、service()方法均执行。 </p>
+<p>（3）刷新页面，发现只会执行 service()方法，每刷新一次，即每提交一次请求，就会执行 一次 service()方法。 （4）让另外一个浏览器也发出同样的请求，会发现只执行 service()方法，而无参构造器、init() 方法均未执行。 （5）正常关闭 Tomcat（使用 stop server 关闭，不能使用 Terminate 关闭），发现 destroy()方 法也会执行。</p>
+<h5 id="1-2Servlet特征"><a href="#1-2Servlet特征" class="headerlink" title="1.2Servlet特征"></a>1.2Servlet特征</h5><p>（1）Servlet 是单例多线程的。 </p>
+<p>（2）一个 Servlet 实例只会执行一次无参构造器与 init()方法，并且是在第一次访问时执行。 </p>
+<p>（3）用户每提交一次对当前 Servlet 的请求，就会执行一次 service()方法。 </p>
+<p>（4）一个 Servlet 实例只会执行一次 destroy()方法，在应用停止时执行。</p>
+<p>（5）由于 Servlet 是单例多线程的，所以为了保证其线程安全性，一般情况下是不为 Servlet 类定义可修改的成员         变量的。因为每个线程均可修改这个成员变量，会出现线程安全问题。 </p>
+<p>（6）默认情况下，Servlet 在 Web 容器启动时是不会被实例化的。</p>
+<h5 id="1-3Web-容器启动时创建-Servlet-实例"><a href="#1-3Web-容器启动时创建-Servlet-实例" class="headerlink" title="1.3Web 容器启动时创建 Servlet 实例"></a>1.3Web 容器启动时创建 Servlet 实例</h5><img data-src="/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/05.png" class>
+
+<p>在中添加的<load-on-startup>作用是，标记是否在Web服务器（这里是Tomcat） 启动时创建并初始化这个 Servlet 实例，即是否在 Web 服务器启动时调用执行该 Servlet 的无 参构造器方法与 init()方法，而不是在真正访问时才创建。 它的值必须是一个整数。</load-on-startup></p>
+<ul>
+<li><p>当值大于等于 0 时，表示容器在启动时就加载并初始化这个 Servlet，数值越小，该 Servlet 的优先级就越高，其被创建的也就越早；</p>
+</li>
+<li><p>当值小于 0 或者没有指定时，则表示该 Servlet 在真正被使用时才会去创建。</p>
+</li>
+<li><p>当值相同时，容器会自己选择创建顺序。</p>
+</li>
+</ul>
+<p>#####1.4Web容器中的两个Map方法</p>
+<p>当 Servlet 实例被创建好后被放在了哪里？web.xml 中 URI 与 Servlet 的映射关系反映到 内存中是以什么形式存在呢？ 当 Servlet 实例被创建好后，会将该 Servlet 实例的引用存放到一个 Map 集合中。该 Map 集合的 key 为 URI，而 value 则为 Servlet 实例的引用，即 Map&lt;String,value&gt;。当 Web 容器 从用户请求中分离出 URI 后，会首先到这个 Map 中查找是否存在其所对应的 value。若存在， 则直接调用其 service()方法。若不存在，则需要创建该 Servlet 实例。</p>
+<p> 若请求的 Servlet 实例不存在，Web 容器又是根据什么创建这个 Servlet 实例的呢？在 Web 容器的内存中，还存在一个 Map 集合。该 Map 集合的 key 为 URI，而 value 则为 web.xml 中配置的与之对应的 Servlet 的全限定性类名，即 Map&lt;String,value&gt;。 当Web容器从用户请求中分离出URI后，到第一个Map中又没有找到其所对应的Servlet 实例，则会马上查找这第二个 Map，从中找到其所对应的类名，再根据反射机制，创建这 个 Servlet 实例。然后再将这个创建好的 Servlet 的引用放入到第一个 Map 中</p>
+<p>#####1.5关于getServletInfo方法</p>
+<p>Servlet 接口中的方法 getServletInfo()，是由程序没自己定义的有关当前 Servlet 的一些基本信息，不属于Servlet 生命周期中的方法。对程序的运行没有任何影响与作用。仅仅是返 回一些让他人阅读的信息而已。</p>
+<h4 id="2-ServletConfig"><a href="#2-ServletConfig" class="headerlink" title="2.ServletConfig"></a>2.ServletConfig</h4><h5 id="2-1什么是ServletConfig"><a href="#2-1什么是ServletConfig" class="headerlink" title="2.1什么是ServletConfig"></a>2.1什么是ServletConfig</h5><p>在 Servlet 接口的 init()方法中具有唯一的一个参数 ServletConfig。ServletConfig 是个接口， 顾名思义，就是 Servlet 配置，即在 web.xml 中对当前 Servlet 类的配置信息。Servlet 规范将 Servlet 的配置信息全部封装到了 ServletConfig 接口对象中。 在 Web 容器调用 init()方法时，Web 容器首先会将 web.xml 中当前 Servlet 类的配置信息 封装为一个对象。这个对象的类型实现了 ServletConfig 接口，Web 容器会将这个对象传递给 init()方法中的 ServletConfig 参数。</p>
+<h5 id="2-2获取ServletConfig对象"><a href="#2-2获取ServletConfig对象" class="headerlink" title="2.2获取ServletConfig对象"></a>2.2获取ServletConfig对象</h5><p>由于 ServletConfig 中可以获取到 Servlet 的初始化参数，获取到 ServletContext 对象，而 这些参数与对象在进行业务逻辑处理时，即执行 service()方法时需要经常访问，很重要，所 以 ServletConfig 对象也就显得很重要了。 由于 ServletConfig 对象是 Web 容器通过 init()方法传递给当前 Servlet 类的，而 init()方法 只会在 Servlet 对象初始化时调用一次。所以，需要在 init()方法中将 ServletConfig 对象传递 给 Servlet 的 ServletConfig 成员变量，这样 service()方法即可使用 ServletConfig 对象了。也就 是说，我们需要在 Servlet 中声明一个 ServletConfig 成员变量。 若在 Servlet 中声明一个 ServletConfig 成员变量，是否会存在线程安全问题呢？因为 Servlet 是单例多线程的。只要在 Servlet 中不为 ServletConfig 对象提供其它修改方法，其值 只能由 Web 容器通过 init()方法进行赋值，那么 ServletConfig 对象就不存在线程安全问题。 因为对于所有线程来说，ServletConfig 对象是只读的，不能修改。</p>
+<h5 id="2-3ServletConfig中的方法"><a href="#2-3ServletConfig中的方法" class="headerlink" title="2.3ServletConfig中的方法"></a>2.3ServletConfig中的方法</h5><img data-src="/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/06.png" class>
+
+<img data-src="/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/07.png" class>
+
+<ul>
+<li><p>getInitParameter()：获取指定名称的初始化参数值。例如 getInitParameter(“myDBDriver”); 会返回字符串“com.mysql.jdbc.Driver”。 </p>
+</li>
+<li><p>getInitParameterNames()：获取当前 Servlet 所有的初始化参数名称。其返回值为枚举类 型 Enumeration。</p>
+</li>
+<li><p>getServletName()：获取当前 Servlet 的中指定的 Servlet 名 称。如上图中的 ServletName 为“hello-servlet”。  </p>
+</li>
+<li><p>getServletContext()：获取到当前 Servlet 的上下文对象 ServletContext。这是个非常重要 的对象。</p>
+</li>
+</ul>
+<p>#####2.4ServletConfig的特征</p>
+<p>对于不同的Servlet，Tomcat会为其创建不同的ServletConfig，用于封装各自的配置信息。 也就是说，一个 Servlet 就会有其对应的一个 ServletConfig 对象；有几个 Servlet，将会产生 几个 ServletConfig 对象。</p>
+<h5 id="2-5项目部署"><a href="#2-5项目部署" class="headerlink" title="2.5项目部署"></a>2.5项目部署</h5><img data-src="/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/08.png" class>
+
+<img data-src="/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/09.png" class>
+
+<img data-src="/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/10.png" class>
+
+<p><strong>运行结论</strong>：<br>从对 ServletConfig 对象的输出结果可以看出，Tomcat 容器对 ServletConfig 接口的实现类为 org.apache.catalina.core.StandardWrapperFacade。当然，这个实现类是谁不重要，重要的是要理解，不同的 Web 容器，对该 ServletConfig 的实现类是不同的。但它们的共同特点是， 均实现了 Servlet 规范，实现了 ServletConfig 接口。</p>
+]]></content>
+      <categories>
+        <category>JavaWeb</category>
+      </categories>
+      <tags>
+        <tag>Servlet规范</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>双指针问题</title>
     <url>/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/</url>
     <content><![CDATA[<h2 id="环形列表I"><a href="#环形列表I" class="headerlink" title="环形列表I"></a>环形列表I</h2><h3 id="题目说明"><a href="#题目说明" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，判断链表中是否有环。</p>
@@ -224,6 +304,61 @@
       </tags>
   </entry>
   <entry>
+    <title>链表刷题总结（easy篇）</title>
+    <url>/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<h1 id="链表知识刷题总结（easy篇）"><a href="#链表知识刷题总结（easy篇）" class="headerlink" title="链表知识刷题总结（easy篇）"></a>链表知识刷题总结（easy篇）</h1><p>###1.返回链表的倒数第k个结点</p>
+<p>###题目描述：</p>
+<p>实现一种算法，找出单向链表中倒数第 k 个节点。返回该节点的值。</p>
+<p>注意：本题相对原题稍作改动</p>
+<p>示例：</p>
+<p>输入： 1-&gt;2-&gt;3-&gt;4-&gt;5 和 k = 2<br>输出： 4<br>说明：</p>
+<p>给定的 k 保证是有效的。</p>
+<h3 id="题解："><a href="#题解：" class="headerlink" title="题解："></a>题解：</h3><h4 id="题解一-双指针"><a href="#题解一-双指针" class="headerlink" title="题解一:双指针"></a>题解一:双指针</h4><p> 这题要求链表的倒数第k个节点，最简单的方式就是使用两个指针，第一个指针先移动k步，然后第二个指针再从头开始，这个时候这两个指针同时移动，当第一个指针到链表的末尾的时候，返回第二个指针即可</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">kthToLast</span><span class="params">(ListNode head, <span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">        ListNode first = head;</span><br><span class="line">    	ListNode second = head;</span><br><span class="line">    </span><br><span class="line">    	<span class="keyword">while</span>(k-- &gt;<span class="number">0</span>)&#123;</span><br><span class="line">            first = first.next;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="keyword">while</span>(first!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            first =  first.next;</span><br><span class="line">            second = second.next;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="keyword">return</span> second.val;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>####题解二：使用栈求解(一看到倒数某某元素，要先想到栈)</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">kthTolast</span><span class="params">(ListNode head , <span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">        Stack&lt;ListNode&gt; stack = <span class="keyword">new</span> stack&lt;&gt;();</span><br><span class="line">        <span class="comment">//链表结点压栈处理</span></span><br><span class="line">        <span class="keyword">while</span>(head!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            stack.push(head);</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//出栈串成新的链表</span></span><br><span class="line">        ListNode firstnode = stack.pop();</span><br><span class="line">        <span class="keyword">while</span>(--k&gt;<span class="number">0</span>)&#123;</span><br><span class="line">            ListNode temp = stack.pop();</span><br><span class="line">            temp.next = firstNode;     <span class="comment">//这一步是不必要的，除非要求返回最后一个到倒数第k个结点链表，需要从新连接构建</span></span><br><span class="line">            firstNode = temp;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> firstnode.val;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="2-删除中间结点"><a href="#2-删除中间结点" class="headerlink" title="2.删除中间结点"></a>2.删除中间结点</h3><h4 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h4><h4 id="题解：-1"><a href="#题解：-1" class="headerlink" title="题解："></a>题解：</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="3-合并两个有序列表"><a href="#3-合并两个有序列表" class="headerlink" title="3.合并两个有序列表"></a>3.合并两个有序列表</h3><h4 id="题目描述：-1"><a href="#题目描述：-1" class="headerlink" title="题目描述："></a>题目描述：</h4><p>将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。 </p>
+<p>示例 1：</p>
+<p><img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120112941925.png" alt="image-20210120112941925"></p>
+<p>输入：l1 = [1,2,4], l2 = [1,3,4]<br>输出：[1,1,2,3,4,4]<br>示例 2：</p>
+<p>输入：l1 = [], l2 = []<br>输出：[]<br>示例 3：</p>
+<p>输入：l1 = [], l2 = [0]<br>输出：[0]</p>
+<h4 id="题解：-2"><a href="#题解：-2" class="headerlink" title="题解："></a>题解：</h4><h5 id="题解一：递归"><a href="#题解一：递归" class="headerlink" title="题解一：递归"></a>题解一：递归</h5><p>思路</p>
+<p>我们可以如下递归地定义两个链表里的 merge 操作（忽略边界情况，比如空链表等）：<br>    <img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120113648210.png" alt="image-20210120113648210"></p>
+<p>也就是说，两个链表头部值较小的一个节点与剩下元素的 merge 操作结果合并。</p>
+<p>算法</p>
+<p>我们直接将以上递归过程建模，同时需要考虑边界情况。</p>
+<p>如果 l1 或者 l2 一开始就是空链表 ，那么没有任何操作需要合并，所以我们只需要返回非空链表。否则，我们要判断 l1 和 l2 哪一个链表的头节点的值更小，然后递归地决定下一个添加到结果里的节点。如果两个链表有一个为空，递归结束</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">mergeTwoLists</span><span class="params">(ListNode l1, ListNode l2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (l1 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> l2;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (l2 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> l1;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (l1.val &lt; l2.val) &#123;</span><br><span class="line">            l1.next = mergeTwoLists(l1.next, l2);</span><br><span class="line">            <span class="keyword">return</span> l1;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            l2.next = mergeTwoLists(l1, l2.next);</span><br><span class="line">            <span class="keyword">return</span> l2;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析："><a href="#复杂度分析：" class="headerlink" title="复杂度分析："></a>复杂度分析：</h5><h3 id="4-回文链表"><a href="#4-回文链表" class="headerlink" title="4.回文链表"></a>4.回文链表</h3><p>####题目描述</p>
+<h4 id="题解：-3"><a href="#题解：-3" class="headerlink" title="题解："></a>题解：</h4><p>#####题解一：将链表中的值复制到数组中在用双指针</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isPalindrome</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        List&lt;Interger&gt; vals = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//将链表中的值赋值到数组中</span></span><br><span class="line">        ListNode currentNode = head;</span><br><span class="line">        <span class="keyword">while</span>(currentNode != <span class="keyword">null</span>)&#123;</span><br><span class="line">            vals.add(currentNode.val);        <span class="comment">//复制的是currentNode的值，而不是其本身</span></span><br><span class="line">            currentNode = currentNode.next;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//使用双指针判断回文</span></span><br><span class="line">        <span class="keyword">int</span> front=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> back = vals.size()-<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(front&lt;back)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!vals.get(front).equals(vals.get(back)))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            front++;</span><br><span class="line">            back--;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析：-1"><a href="#复杂度分析：-1" class="headerlink" title="复杂度分析："></a>复杂度分析：</h5><p><img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120205633023.png" alt="image-20210120205633023"></p>
+<h5 id="题解二：递归"><a href="#题解二：递归" class="headerlink" title="题解二：递归"></a>题解二：递归</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>链表</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>系统调用</title>
     <url>/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/</url>
     <content><![CDATA[<h2 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h2><h3 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h3><p>系统调用是内核与用户进程进行交互的一组接口，这些接口让应用程序受限制的访问硬件设备，提供了创建新进程并与已有进程进行交互通信的机制，也提供了申请操作系统其他资源的能力。</p>
@@ -310,6 +445,70 @@
       </tags>
   </entry>
   <entry>
+    <title>阿里云ECS部署服务器</title>
+    <url>/2021/01/22/%E9%98%BF%E9%87%8C%E4%BA%91ECS%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
+    <content><![CDATA[<h2 id="阿里云ECS部署Tomcat、Nginx服务器"><a href="#阿里云ECS部署Tomcat、Nginx服务器" class="headerlink" title="阿里云ECS部署Tomcat、Nginx服务器"></a>阿里云ECS部署Tomcat、Nginx服务器</h2><h3 id="Nginx服务器"><a href="#Nginx服务器" class="headerlink" title="Nginx服务器"></a>Nginx服务器</h3><p>####一、简介</p>
+<p>Nginx是一款轻量级的网页服务器、反向代理服务器。相较于Apache、lighttpd具有占有内存少，稳定性高等优势。它最常的用途是提供反向代理服务。</p>
+<h4 id="二、安装"><a href="#二、安装" class="headerlink" title="二、安装"></a>二、安装</h4><h2 id="1、准备工作"><a href="#1、准备工作" class="headerlink" title="1、准备工作"></a>1、准备工作</h2><p>Nginx的安装依赖于以下三个包，意思就是在安装Nginx之前首先必须安装一下的三个包，注意安装顺序如下：</p>
+<p>　　1 SSL功能需要openssl库，直接通过yum安装: #yum install openssl</p>
+<p>　　2 gzip模块需要zlib库，直接通过yum安装: #yum install zlib</p>
+<p>　　3 rewrite模块需要pcre库，直接通过yum安装: #yum install pcre</p>
+<h2 id="2、安装Nginx依赖项和Nginx"><a href="#2、安装Nginx依赖项和Nginx" class="headerlink" title="2、安装Nginx依赖项和Nginx"></a>2、安装Nginx依赖项和Nginx</h2><p>1 、使用yum安装nginx需要包括Nginx的库，安装Nginx的库</p>
+<p>rpm -Uvh <a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm">http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm</a></p>
+<p>2 、使用下面命令安装nginx</p>
+<p> yum install nginx</p>
+<p>3、 启动Nginx</p>
+<p>service nginx start（Centos 6.0）,如果是Centos7.0以上，使用systemctl start nginx启动。</p>
+<p>4、直接浏览器访问localhost就会出现Nginx的欢迎界面表示你安装成功了，否则就是安装失败了</p>
+<p>　　默认80端口加入防火墙访问白名单中：firewall-cmd –permanent –zone=public –add-port=80/tcp</p>
+<p>　　使用firewall-cmd –reload命令使其生效</p>
+<p>5、配置Nginx</p>
+<p>CentOS安装Nginx后，安装在了 /etc/nginx/目录下，你可以打开/etc/nginx/conf.d/default/conf查看里面的配置，包括监听端口，域名和nginx访问的根目录</p>
+<p><strong>如果出现nginx启动之后，通过自己服务器的公网IP地址无法访问，是服务器端口没有开放访问权限的缘故，可以参考博客：<a href="https://blog.csdn.net/inite/article/details/73658214">https://blog.csdn.net/inite/article/details/73658214</a></strong></p>
+<p>####三、配置</p>
+<p>以上安装方法nginx的配置文件位于</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;usr&#x2F;local&#x2F;nginx&#x2F;conf&#x2F;nginx.conf</span><br></pre></td></tr></table></figure>
+<p>Nginx配置文件常见结构的从外到内依次是「http」「server」「location」等等，缺省的继承关系是从外到内，也就是说内层块会自动获取外层块的值作为缺省值。</p>
+<h5 id="Server"><a href="#Server" class="headerlink" title="Server"></a>Server</h5><p>接收请求的服务器需要将不同的请求按规则转发到不同的后端服务器上，在 nginx 中我们可以通过构建虚拟主机（server）的概念来将这些不同的服务配置隔离。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  localhost;</span><br><span class="line">root   html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>例如我们笔戈玩下的两个子项目 passport 和 wan 就可以通过在 nginx 的配置文件中配置两个 server，servername 分别为 passport.bigertech.com 和 wan.bigertech.com。这样的话不同的 url 请求就会对应到 nginx 相应的设置，转发到不同的后端服务器上。</p>
+<p>这里的 listen 指监听端口，server_name 用来指定IP或域名，多个域名对应统一规则可以空格分开，index 用于设定访问的默认首页地址，root 指令用于指定虚拟主机的网页跟目录，这个地方可以是相对地址也可以是绝对地址。</p>
+<p>通常情况下我们可以在 nginx.conf 中配置多个server，对不同的请求进行设置。就像这样：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  host1;</span><br><span class="line">root   html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  host2;</span><br><span class="line">root   &#x2F;data&#x2F;www&#x2F;html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是当 server 超过2个时，建议将不同对虚拟主机的配置放在另一个文件中，然后通过在主配置文件 nginx.conf 加上 include 指令包含进来。更便于管理。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">include vhosts&#x2F;*.conf;</span><br></pre></td></tr></table></figure>
+<p>就可以把vhosts的文件都包含进去啦。</p>
+<p>#####Localtion</p>
+<p>每个 url 请求都会对应的一个服务，nginx 进行处理转发或者是本地的一个文件路径，或者是其他服务器的一个服务路径。而这个路径的匹配是通过 location 来进行的。我们可以将 server 当做对应一个域名进行的配置，而 location 是在一个域名下对更精细的路径进行配置。</p>
+<p>以上面的例子，可以将root和index指令放到一个location中，那么只有在匹配到这个location时才会访问root后的内容：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> location &#x2F; &#123;</span><br><span class="line">      root   &#x2F;data&#x2F;www&#x2F;host2;</span><br><span class="line">      index  index.html index.htm;</span><br><span class="line">  &#125;</span><br><span class="line">location 匹配规则</span><br><span class="line"></span><br><span class="line">~      波浪线表示执行一个正则匹配，区分大小写</span><br><span class="line">~*    表示执行一个正则匹配，不区分大小写</span><br><span class="line">^~    ^~表示普通字符匹配，如果该选项匹配，只匹配该选项，不匹配别的选项，一般用来匹配目录</span><br><span class="line">&#x3D;      进行普通字符精确匹配</span><br><span class="line">匹配例子：</span><br><span class="line"></span><br><span class="line">  location  &#x3D; &#x2F; &#123;</span><br><span class="line"># 只匹配&quot;&#x2F;&quot;.</span><br><span class="line">[ configuration A ] </span><br><span class="line">  &#125;</span><br><span class="line">location  &#x2F; &#123;</span><br><span class="line"># 匹配任何请求，因为所有请求都是以&quot;&#x2F;&quot;开始</span><br><span class="line"># 但是更长字符匹配或者正则表达式匹配会优先匹配</span><br><span class="line">[ configuration B ] </span><br><span class="line">&#125;</span><br><span class="line">location ^~ &#x2F;images&#x2F; &#123;</span><br><span class="line"> #匹配任何以 &#x2F;images&#x2F; 开始的请求，并停止匹配 其它location</span><br><span class="line">[ configuration C ] </span><br><span class="line">&#125;</span><br><span class="line">location ~* \.(gif|jpg|jpeg)$ &#123;</span><br><span class="line"># 匹配以 gif, jpg, or jpeg结尾的请求. </span><br><span class="line"># 但是所有 &#x2F;images&#x2F; 目录的请求将由 [Configuration C]处理.   </span><br><span class="line">[ configuration D ] </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">请求:</span><br><span class="line">&#x2F; -&gt; 符合configuration A</span><br><span class="line">&#x2F;documents&#x2F;document.html -&gt; 符合configuration B</span><br><span class="line">&#x2F;images&#x2F;1.gif -&gt; 符合configuration C</span><br><span class="line">&#x2F;documents&#x2F;1.jpg -&gt;符合 configuration D</span><br></pre></td></tr></table></figure>
+<p>#####静态文件映射</p>
+<p>访问文件的配置主要有 root 和 aliasp’s 两个指令。这两个指令的区别容易弄混：</p>
+<p>alias<br>alias后跟的指定目录是准确的，并且末尾必须加 /。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F;c&#x2F; &#123;</span><br><span class="line">    alias &#x2F;a&#x2F;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果访问站点<a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://location/c">http://location/c</a>访问的就是/a/目录下的站点信息。</p>
+<p>#####root</p>
+<p>root后跟的指定目录是上级目录，并且该上级目录下要含有和location后指定名称的同名目录才行。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F;c&#x2F; &#123;</span><br><span class="line">    root &#x2F;a&#x2F;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这时访问站点<a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://location/c">http://location/c</a>访问的就是/a/c目录下的站点信息。</p>
+<p>如果你需要将这个目录展开，在这个location的末尾加上「autoindex on; 」就可以了</p>
+<p>#####转发</p>
+<p>配置起来很简单比如我要将所有的请求到转移到真正提供服务的一台机器的 8001 端口，只要这样：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">proxy_pass 172.16.1.1:8001;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样访问host时，就都被转发到 172.16.1.1的8001端口去了。</p>
+<p>#####负载均衡</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">upstream myserver; &#123;</span><br><span class="line">ip_hash;    </span><br><span class="line">server 172.16.1.1:8001;</span><br><span class="line">server 172.16.1.2:8002;</span><br><span class="line">server 172.16.1.3;</span><br><span class="line">server 172.16.1.4;</span><br><span class="line">&#125;</span><br><span class="line">location &#x2F; &#123;</span><br><span class="line">proxy_pass http:&#x2F;&#x2F;myserver;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们在 upstream 中指定了一组机器，并将这个组命名为 myserver，这样在 proxypass 中只要将请求转移到 myserver 这个 upstream 中我们就实现了在四台机器的反向代理加负载均衡。其中的 ip_hash 指明了我们均衡的方式是按照用户的 ip 地址进行分配。另外还有轮询、指定权重轮询、fair、url_hash几种调度算法。</p>
+<p>###Tomcat服务器</p>
+<h4 id="一、下载Tomcat"><a href="#一、下载Tomcat" class="headerlink" title="一、下载Tomcat"></a>一、下载Tomcat</h4>]]></content>
+      <categories>
+        <category>Java web</category>
+      </categories>
+      <tags>
+        <tag>-Java web -Linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>链表</title>
     <url>/2021/01/13/%E9%93%BE%E8%A1%A8/</url>
     <content><![CDATA[<h2 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h2><h3 id="单链表"><a href="#单链表" class="headerlink" title="单链表"></a>单链表</h3><p>单链表中的每个结点不仅包含值，还包含链接到下一个结点的引用字段。通过这种方式，单链表将所有结点按顺序组织起来。习惯于用头节点来代表整个单链表。</p>
@@ -384,125 +583,6 @@
       </categories>
       <tags>
         <tag>链表</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>链表刷题总结（easy篇）</title>
-    <url>/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/</url>
-    <content><![CDATA[<h1 id="链表知识刷题总结（easy篇）"><a href="#链表知识刷题总结（easy篇）" class="headerlink" title="链表知识刷题总结（easy篇）"></a>链表知识刷题总结（easy篇）</h1><p>###1.返回链表的倒数第k个结点</p>
-<p>###题目描述：</p>
-<p>实现一种算法，找出单向链表中倒数第 k 个节点。返回该节点的值。</p>
-<p>注意：本题相对原题稍作改动</p>
-<p>示例：</p>
-<p>输入： 1-&gt;2-&gt;3-&gt;4-&gt;5 和 k = 2<br>输出： 4<br>说明：</p>
-<p>给定的 k 保证是有效的。</p>
-<h3 id="题解："><a href="#题解：" class="headerlink" title="题解："></a>题解：</h3><h4 id="题解一-双指针"><a href="#题解一-双指针" class="headerlink" title="题解一:双指针"></a>题解一:双指针</h4><p> 这题要求链表的倒数第k个节点，最简单的方式就是使用两个指针，第一个指针先移动k步，然后第二个指针再从头开始，这个时候这两个指针同时移动，当第一个指针到链表的末尾的时候，返回第二个指针即可</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">kthToLast</span><span class="params">(ListNode head, <span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">        ListNode first = head;</span><br><span class="line">    	ListNode second = head;</span><br><span class="line">    </span><br><span class="line">    	<span class="keyword">while</span>(k-- &gt;<span class="number">0</span>)&#123;</span><br><span class="line">            first = first.next;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="keyword">while</span>(first!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            first =  first.next;</span><br><span class="line">            second = second.next;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="keyword">return</span> second.val;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<p>####题解二：使用栈求解(一看到倒数某某元素，要先想到栈)</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">kthTolast</span><span class="params">(ListNode head , <span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">        Stack&lt;ListNode&gt; stack = <span class="keyword">new</span> stack&lt;&gt;();</span><br><span class="line">        <span class="comment">//链表结点压栈处理</span></span><br><span class="line">        <span class="keyword">while</span>(head!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            stack.push(head);</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//出栈串成新的链表</span></span><br><span class="line">        ListNode firstnode = stack.pop();</span><br><span class="line">        <span class="keyword">while</span>(--k&gt;<span class="number">0</span>)&#123;</span><br><span class="line">            ListNode temp = stack.pop();</span><br><span class="line">            temp.next = firstNode;     <span class="comment">//这一步是不必要的，除非要求返回最后一个到倒数第k个结点链表，需要从新连接构建</span></span><br><span class="line">            firstNode = temp;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> firstnode.val;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="2-删除中间结点"><a href="#2-删除中间结点" class="headerlink" title="2.删除中间结点"></a>2.删除中间结点</h3><h4 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h4><h4 id="题解：-1"><a href="#题解：-1" class="headerlink" title="题解："></a>题解：</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="3-合并两个有序列表"><a href="#3-合并两个有序列表" class="headerlink" title="3.合并两个有序列表"></a>3.合并两个有序列表</h3><h4 id="题目描述：-1"><a href="#题目描述：-1" class="headerlink" title="题目描述："></a>题目描述：</h4><p>将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。 </p>
-<p>示例 1：</p>
-<p><img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120112941925.png" alt="image-20210120112941925"></p>
-<p>输入：l1 = [1,2,4], l2 = [1,3,4]<br>输出：[1,1,2,3,4,4]<br>示例 2：</p>
-<p>输入：l1 = [], l2 = []<br>输出：[]<br>示例 3：</p>
-<p>输入：l1 = [], l2 = [0]<br>输出：[0]</p>
-<h4 id="题解：-2"><a href="#题解：-2" class="headerlink" title="题解："></a>题解：</h4><h5 id="题解一：递归"><a href="#题解一：递归" class="headerlink" title="题解一：递归"></a>题解一：递归</h5><p>思路</p>
-<p>我们可以如下递归地定义两个链表里的 merge 操作（忽略边界情况，比如空链表等）：<br>    <img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120113648210.png" alt="image-20210120113648210"></p>
-<p>也就是说，两个链表头部值较小的一个节点与剩下元素的 merge 操作结果合并。</p>
-<p>算法</p>
-<p>我们直接将以上递归过程建模，同时需要考虑边界情况。</p>
-<p>如果 l1 或者 l2 一开始就是空链表 ，那么没有任何操作需要合并，所以我们只需要返回非空链表。否则，我们要判断 l1 和 l2 哪一个链表的头节点的值更小，然后递归地决定下一个添加到结果里的节点。如果两个链表有一个为空，递归结束</p>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">mergeTwoLists</span><span class="params">(ListNode l1, ListNode l2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (l1 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> l2;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (l2 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> l1;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (l1.val &lt; l2.val) &#123;</span><br><span class="line">            l1.next = mergeTwoLists(l1.next, l2);</span><br><span class="line">            <span class="keyword">return</span> l1;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            l2.next = mergeTwoLists(l1, l2.next);</span><br><span class="line">            <span class="keyword">return</span> l2;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析："><a href="#复杂度分析：" class="headerlink" title="复杂度分析："></a>复杂度分析：</h5><h3 id="4-回文链表"><a href="#4-回文链表" class="headerlink" title="4.回文链表"></a>4.回文链表</h3><p>####题目描述</p>
-<h4 id="题解：-3"><a href="#题解：-3" class="headerlink" title="题解："></a>题解：</h4><p>#####题解一：将链表中的值复制到数组中在用双指针</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isPalindrome</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        List&lt;Interger&gt; vals = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//将链表中的值赋值到数组中</span></span><br><span class="line">        ListNode currentNode = head;</span><br><span class="line">        <span class="keyword">while</span>(currentNode != <span class="keyword">null</span>)&#123;</span><br><span class="line">            vals.add(currentNode.val);        <span class="comment">//复制的是currentNode的值，而不是其本身</span></span><br><span class="line">            currentNode = currentNode.next;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//使用双指针判断回文</span></span><br><span class="line">        <span class="keyword">int</span> front=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> back = vals.size()-<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(front&lt;back)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!vals.get(front).equals(vals.get(back)))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            front++;</span><br><span class="line">            back--;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析：-1"><a href="#复杂度分析：-1" class="headerlink" title="复杂度分析："></a>复杂度分析：</h5><p><img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120205633023.png" alt="image-20210120205633023"></p>
-<h5 id="题解二：递归"><a href="#题解二：递归" class="headerlink" title="题解二：递归"></a>题解二：递归</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>数据结构</category>
-      </categories>
-      <tags>
-        <tag>链表</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>阿里云ECS部署服务器</title>
-    <url>/2021/01/22/%E9%98%BF%E9%87%8C%E4%BA%91ECS%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
-    <content><![CDATA[<h2 id="阿里云ECS部署Tomcat、Nginx服务器"><a href="#阿里云ECS部署Tomcat、Nginx服务器" class="headerlink" title="阿里云ECS部署Tomcat、Nginx服务器"></a>阿里云ECS部署Tomcat、Nginx服务器</h2><h3 id="Nginx服务器"><a href="#Nginx服务器" class="headerlink" title="Nginx服务器"></a>Nginx服务器</h3><p>####一、简介</p>
-<p>Nginx是一款轻量级的网页服务器、反向代理服务器。相较于Apache、lighttpd具有占有内存少，稳定性高等优势。它最常的用途是提供反向代理服务。</p>
-<h4 id="二、安装"><a href="#二、安装" class="headerlink" title="二、安装"></a>二、安装</h4><h2 id="1、准备工作"><a href="#1、准备工作" class="headerlink" title="1、准备工作"></a>1、准备工作</h2><p>Nginx的安装依赖于以下三个包，意思就是在安装Nginx之前首先必须安装一下的三个包，注意安装顺序如下：</p>
-<p>　　1 SSL功能需要openssl库，直接通过yum安装: #yum install openssl</p>
-<p>　　2 gzip模块需要zlib库，直接通过yum安装: #yum install zlib</p>
-<p>　　3 rewrite模块需要pcre库，直接通过yum安装: #yum install pcre</p>
-<h2 id="2、安装Nginx依赖项和Nginx"><a href="#2、安装Nginx依赖项和Nginx" class="headerlink" title="2、安装Nginx依赖项和Nginx"></a>2、安装Nginx依赖项和Nginx</h2><p>1 、使用yum安装nginx需要包括Nginx的库，安装Nginx的库</p>
-<p>rpm -Uvh <a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm">http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm</a></p>
-<p>2 、使用下面命令安装nginx</p>
-<p> yum install nginx</p>
-<p>3、 启动Nginx</p>
-<p>service nginx start（Centos 6.0）,如果是Centos7.0以上，使用systemctl start nginx启动。</p>
-<p>4、直接浏览器访问localhost就会出现Nginx的欢迎界面表示你安装成功了，否则就是安装失败了</p>
-<p>　　默认80端口加入防火墙访问白名单中：firewall-cmd –permanent –zone=public –add-port=80/tcp</p>
-<p>　　使用firewall-cmd –reload命令使其生效</p>
-<p>5、配置Nginx</p>
-<p>CentOS安装Nginx后，安装在了 /etc/nginx/目录下，你可以打开/etc/nginx/conf.d/default/conf查看里面的配置，包括监听端口，域名和nginx访问的根目录</p>
-<p><strong>如果出现nginx启动之后，通过自己服务器的公网IP地址无法访问，是服务器端口没有开放访问权限的缘故，可以参考博客：<a href="https://blog.csdn.net/inite/article/details/73658214">https://blog.csdn.net/inite/article/details/73658214</a></strong></p>
-<p>####三、配置</p>
-<p>以上安装方法nginx的配置文件位于</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;usr&#x2F;local&#x2F;nginx&#x2F;conf&#x2F;nginx.conf</span><br></pre></td></tr></table></figure>
-<p>Nginx配置文件常见结构的从外到内依次是「http」「server」「location」等等，缺省的继承关系是从外到内，也就是说内层块会自动获取外层块的值作为缺省值。</p>
-<h5 id="Server"><a href="#Server" class="headerlink" title="Server"></a>Server</h5><p>接收请求的服务器需要将不同的请求按规则转发到不同的后端服务器上，在 nginx 中我们可以通过构建虚拟主机（server）的概念来将这些不同的服务配置隔离。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  localhost;</span><br><span class="line">root   html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>例如我们笔戈玩下的两个子项目 passport 和 wan 就可以通过在 nginx 的配置文件中配置两个 server，servername 分别为 passport.bigertech.com 和 wan.bigertech.com。这样的话不同的 url 请求就会对应到 nginx 相应的设置，转发到不同的后端服务器上。</p>
-<p>这里的 listen 指监听端口，server_name 用来指定IP或域名，多个域名对应统一规则可以空格分开，index 用于设定访问的默认首页地址，root 指令用于指定虚拟主机的网页跟目录，这个地方可以是相对地址也可以是绝对地址。</p>
-<p>通常情况下我们可以在 nginx.conf 中配置多个server，对不同的请求进行设置。就像这样：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  host1;</span><br><span class="line">root   html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  host2;</span><br><span class="line">root   &#x2F;data&#x2F;www&#x2F;html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>但是当 server 超过2个时，建议将不同对虚拟主机的配置放在另一个文件中，然后通过在主配置文件 nginx.conf 加上 include 指令包含进来。更便于管理。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">include vhosts&#x2F;*.conf;</span><br></pre></td></tr></table></figure>
-<p>就可以把vhosts的文件都包含进去啦。</p>
-<p>#####Localtion</p>
-<p>每个 url 请求都会对应的一个服务，nginx 进行处理转发或者是本地的一个文件路径，或者是其他服务器的一个服务路径。而这个路径的匹配是通过 location 来进行的。我们可以将 server 当做对应一个域名进行的配置，而 location 是在一个域名下对更精细的路径进行配置。</p>
-<p>以上面的例子，可以将root和index指令放到一个location中，那么只有在匹配到这个location时才会访问root后的内容：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> location &#x2F; &#123;</span><br><span class="line">      root   &#x2F;data&#x2F;www&#x2F;host2;</span><br><span class="line">      index  index.html index.htm;</span><br><span class="line">  &#125;</span><br><span class="line">location 匹配规则</span><br><span class="line"></span><br><span class="line">~      波浪线表示执行一个正则匹配，区分大小写</span><br><span class="line">~*    表示执行一个正则匹配，不区分大小写</span><br><span class="line">^~    ^~表示普通字符匹配，如果该选项匹配，只匹配该选项，不匹配别的选项，一般用来匹配目录</span><br><span class="line">&#x3D;      进行普通字符精确匹配</span><br><span class="line">匹配例子：</span><br><span class="line"></span><br><span class="line">  location  &#x3D; &#x2F; &#123;</span><br><span class="line"># 只匹配&quot;&#x2F;&quot;.</span><br><span class="line">[ configuration A ] </span><br><span class="line">  &#125;</span><br><span class="line">location  &#x2F; &#123;</span><br><span class="line"># 匹配任何请求，因为所有请求都是以&quot;&#x2F;&quot;开始</span><br><span class="line"># 但是更长字符匹配或者正则表达式匹配会优先匹配</span><br><span class="line">[ configuration B ] </span><br><span class="line">&#125;</span><br><span class="line">location ^~ &#x2F;images&#x2F; &#123;</span><br><span class="line"> #匹配任何以 &#x2F;images&#x2F; 开始的请求，并停止匹配 其它location</span><br><span class="line">[ configuration C ] </span><br><span class="line">&#125;</span><br><span class="line">location ~* \.(gif|jpg|jpeg)$ &#123;</span><br><span class="line"># 匹配以 gif, jpg, or jpeg结尾的请求. </span><br><span class="line"># 但是所有 &#x2F;images&#x2F; 目录的请求将由 [Configuration C]处理.   </span><br><span class="line">[ configuration D ] </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">请求:</span><br><span class="line">&#x2F; -&gt; 符合configuration A</span><br><span class="line">&#x2F;documents&#x2F;document.html -&gt; 符合configuration B</span><br><span class="line">&#x2F;images&#x2F;1.gif -&gt; 符合configuration C</span><br><span class="line">&#x2F;documents&#x2F;1.jpg -&gt;符合 configuration D</span><br></pre></td></tr></table></figure>
-<p>#####静态文件映射</p>
-<p>访问文件的配置主要有 root 和 aliasp’s 两个指令。这两个指令的区别容易弄混：</p>
-<p>alias<br>alias后跟的指定目录是准确的，并且末尾必须加 /。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F;c&#x2F; &#123;</span><br><span class="line">    alias &#x2F;a&#x2F;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果访问站点<a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://location/c">http://location/c</a>访问的就是/a/目录下的站点信息。</p>
-<p>#####root</p>
-<p>root后跟的指定目录是上级目录，并且该上级目录下要含有和location后指定名称的同名目录才行。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F;c&#x2F; &#123;</span><br><span class="line">    root &#x2F;a&#x2F;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这时访问站点<a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://location/c">http://location/c</a>访问的就是/a/c目录下的站点信息。</p>
-<p>如果你需要将这个目录展开，在这个location的末尾加上「autoindex on; 」就可以了</p>
-<p>#####转发</p>
-<p>配置起来很简单比如我要将所有的请求到转移到真正提供服务的一台机器的 8001 端口，只要这样：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">proxy_pass 172.16.1.1:8001;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这样访问host时，就都被转发到 172.16.1.1的8001端口去了。</p>
-<p>#####负载均衡</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">upstream myserver; &#123;</span><br><span class="line">ip_hash;    </span><br><span class="line">server 172.16.1.1:8001;</span><br><span class="line">server 172.16.1.2:8002;</span><br><span class="line">server 172.16.1.3;</span><br><span class="line">server 172.16.1.4;</span><br><span class="line">&#125;</span><br><span class="line">location &#x2F; &#123;</span><br><span class="line">proxy_pass http:&#x2F;&#x2F;myserver;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们在 upstream 中指定了一组机器，并将这个组命名为 myserver，这样在 proxypass 中只要将请求转移到 myserver 这个 upstream 中我们就实现了在四台机器的反向代理加负载均衡。其中的 ip_hash 指明了我们均衡的方式是按照用户的 ip 地址进行分配。另外还有轮询、指定权重轮询、fair、url_hash几种调度算法。</p>
-<p>###Tomcat服务器</p>
-<h4 id="一、下载Tomcat"><a href="#一、下载Tomcat" class="headerlink" title="一、下载Tomcat"></a>一、下载Tomcat</h4>]]></content>
-      <categories>
-        <category>Java web</category>
-      </categories>
-      <tags>
-        <tag>-Java web -Linux</tag>
       </tags>
   </entry>
 </search>
