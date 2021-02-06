@@ -21,20 +21,28 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="The world favors the underdog,and I would be the bad guy">
+  <meta name="description" content="有关红队的小知识">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HTTP代理">
-<meta property="og:url" content="http://example.com/2021/02/03/HTTP%E4%BB%A3%E7%90%86/index.html">
+<meta property="og:title" content="红队攻防入门1">
+<meta property="og:url" content="http://example.com/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/index.html">
 <meta property="og:site_name" content="一只小码农">
-<meta property="og:description" content="The world favors the underdog,and I would be the bad guy">
+<meta property="og:description" content="有关红队的小知识">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-02-02T17:43:18.000Z">
-<meta property="article:modified_time" content="2021-02-02T09:43:18.859Z">
+<meta property="og:image" content="http://example.com/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F1.png">
+<meta property="og:image" content="http://example.com/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F2.jpg">
+<meta property="og:image" content="http://example.com/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F3.jpg">
+<meta property="og:image" content="http://example.com/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F5.jpg">
+<meta property="og:image" content="http://example.com/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F6.jpg">
+<meta property="og:image" content="http://example.com/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F7.jpg">
+<meta property="og:image" content="http://example.com/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F8.jpg">
+<meta property="article:published_time" content="2021-02-06T13:32:09.000Z">
+<meta property="article:modified_time" content="2021-02-06T05:49:30.690Z">
 <meta property="article:author" content="邢浩东">
-<meta property="article:tag" content="个人博客">
+<meta property="article:tag" content="红队攻防">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F1.png">
 
-<link rel="canonical" href="http://example.com/2021/02/03/HTTP%E4%BB%A3%E7%90%86/">
+<link rel="canonical" href="http://example.com/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/">
 
 
 <script id="page-configurations">
@@ -47,7 +55,7 @@
   };
 </script>
 
-  <title>HTTP代理 | 一只小码农</title>
+  <title>红队攻防入门1 | 一只小码农</title>
   
 
 
@@ -225,7 +233,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/03/HTTP%E4%BB%A3%E7%90%86/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/OIP.jfif">
@@ -238,7 +246,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          HTTP代理
+          红队攻防入门1
         </h1>
 
         <div class="post-meta">
@@ -249,7 +257,16 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2021-02-02 17:43:18 / 修改时间：09:43:18" itemprop="dateCreated datePublished" datetime="2021-02-02T17:43:18Z">2021-02-02</time>
+              <time title="创建时间：2021-02-06 13:32:09 / 修改时间：05:49:30" itemprop="dateCreated datePublished" datetime="2021-02-06T13:32:09Z">2021-02-06</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" itemprop="url" rel="index"><span itemprop="name">网络安全</span></a>
+                </span>
             </span>
 
           
@@ -268,8 +285,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2021/02/03/HTTP%E4%BB%A3%E7%90%86/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/02/03/HTTP%E4%BB%A3%E7%90%86/" itemprop="commentCount"></span>
+    <a title="valine" href="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -279,15 +296,16 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>0</span>
+              <span>2.6k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>2 分钟</span>
             </span>
+            <div class="post-description">有关红队的小知识</div>
 
         </div>
       </header>
@@ -298,7 +316,90 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <h2 id="红队攻防入门1–初识红队"><a href="#红队攻防入门1–初识红队" class="headerlink" title="红队攻防入门1–初识红队"></a>红队攻防入门1–初识红队</h2><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F1.png" class>
+
+<p>###红队概念</p>
+<p><strong>红队（Red Team）即安全团队最大化模拟真实世界里面的入侵事件，采用入侵者的战术、技术、流程，以此来检验蓝队（Blue Team）的威胁检测和应急响应的机制和效率，最终帮助企业真正提高整个安全建设、安全运营、安全管理等能力。</strong></p>
+<p>####1.1红队VS渗透测试</p>
+<p>在企业内部的一般的渗透测试，很多就是点到为止，并不会被授予很多的权限。而红队整体来看，在合法合规的前提下，在充分沟通的前提下，授权范围会更加广泛，真实程度更加贴合实战。</p>
+<img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F2.jpg" class>
+
+<h4 id="1-2红队VS蓝队"><a href="#1-2红队VS蓝队" class="headerlink" title="1.2红队VS蓝队"></a>1.2红队VS蓝队</h4><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F3.jpg" class>
+
+<p>无论是Red Team 还是Blue Team,这些概念都来自真实的战争领域。</p>
+<blockquote>
+<p>作为红队，是以攻击方的方式做安全工作的，常见的技术概念有APT攻击、渗透测试、零日漏洞、武器开发。</p>
+</blockquote>
+<blockquote>
+<p>作为蓝队，则以防御方的方式做安全工作，是安全合规、安全运营、应急响应、态势感知、威胁情报等等。</p>
+</blockquote>
+<p>####1.3 红队常用模型框架</p>
+ 
+
+
+
+<p>#####1.3.1渗透测试执行标准PTES</p>
+<img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F5.jpg" class>
+
+<p>PTES中文全名【渗透测试执行标准】，他是有2010年由业界网络安全专家共同发起并定义的规范，目标是希望为企业和安全服务商，指定整个渗透测试的标准流程，方便大家工作和沟通。</p>
+<p>PTES 包括 7 个标准步骤，即前期交互、情报收集、威胁建模、漏洞分析、渗透利用、报告输出等，一般的渗透测试工作，基本都绕不开这些步骤，可以看成一个标准的工作流。</p>
+<p><strong>① 前期交互</strong></p>
+<p>前期交互阶段，我们得先拿到客户的授权，并且了解授权范围多少？渗透目标是谁？期望目标是什么？</p>
+<p>这些都是前期交互阶段要沟通好的。</p>
+<p><strong>② 情报搜集</strong></p>
+<p>情报搜集阶段，即根据上面的授权、范围、目标等信息，开始进行一些情报搜集工作。</p>
+<p>无论是主动搜集还是被动搜集，我们得知道对方开了哪个端口、提供了什么服务、这些服务的软件版本是什么、这些软件是否曾经出现过漏洞？</p>
+<p><strong>③ 威胁建模</strong></p>
+<p>哪些信息是真正有价值的？哪个口子用什么攻击方法？哪条攻击路径是最大可能的？</p>
+<p>根据情报搜集的汇总，我们得制定出接下来的「作战计划」。</p>
+<p>这些就是在威胁建模阶段要分析出来的。</p>
+<p><strong>④ 漏洞分析</strong></p>
+<p>结合以上情报搜集和威胁建模阶段，此阶段我们要判断出哪些漏洞是最有可能拿到对方权限，打通攻击路径的。</p>
+<p>哪些漏洞的攻击效果最佳？</p>
+<p>哪些漏洞有最新的工具？</p>
+<p>哪些漏洞需要自研渗透代码？</p>
+<p><strong>⑤ 渗透利用</strong></p>
+<p>前面 4 个阶段都不算真正 Hack 进目标系统，而这个阶段则是真正对目标进行渗透攻击，通过漏洞对应的利用工具等，获取目标控制权。</p>
+<p><strong>⑥ 后渗透</strong></p>
+<p>在拿到控制权限之后，为了避免对方发现，还需要进行后渗透，实现更持久地控制，更深层次地执行任务。</p>
+<p>比如进程迁移、隧道建立、数据获取、擦除痕迹等。</p>
+<p><strong>⑦ 报告输出</strong></p>
+<p>最后阶段就是输出一份安全报告，即写明渗透测试工作中，企业 IT 基础系统所存在的漏洞和风险点。</p>
+<p>以上便是 PTES 渗透测试执行标准。</p>
+<h5 id="1-3-2网络杀伤链Cyber-Kill-Chain"><a href="#1-3-2网络杀伤链Cyber-Kill-Chain" class="headerlink" title="1.3.2网络杀伤链Cyber Kill Chain"></a>1.3.2网络杀伤链Cyber Kill Chain</h5><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F6.jpg" class>
+
+<p>网络杀伤链的英文全名是 Cyber Kill Chain，这是 2011 年洛克希德马丁公司提出的网络攻击模型。</p>
+<p>跟真实世界的入侵者，对一个目标系统进行攻击的每个阶段都是一一映射的。</p>
+<p>这里也分为 7 个步骤 =&gt;</p>
+<p><strong>第 1 步，目标侦察，</strong>跟前面 PTES 情报收集阶段是差不多的；</p>
+<p><strong>第 2 步，武器研制，</strong>编写各种工具/后门/病毒 Exp / Weapon / Malware；</p>
+<p><strong>第 3 步，载荷投递，</strong>通过水坑鱼叉等攻击方式将武器散播出去（<strong>投毒</strong>）；</p>
+<p><strong>第 4 步，渗透利用，</strong>通过<strong>漏洞利用</strong>获取对方控制器；</p>
+<p><strong>第 5 步，安装执行</strong>，在目标系统将<strong>后门木马</strong>跑起来；</p>
+<p><strong>第 6 步，命令控制，</strong>对目标来进行<strong>持久化控制</strong>；</p>
+<p><strong>第 7 步，任务执行，</strong>即开始执行<strong>窃取数据、破坏系统</strong>等。</p>
+<p>以上便是网络杀伤链，相比 PTES 更加贴合实战阶段。</p>
+<h5 id="1-3-3MITRE-ATT-amp-CK框架"><a href="#1-3-3MITRE-ATT-amp-CK框架" class="headerlink" title="1.3.3MITRE ATT&amp;CK框架"></a>1.3.3MITRE ATT&amp;CK框架</h5><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F7.jpg" class>
+
+<p>「<strong>ATT&amp;CK 框架</strong>」，由 MITRE 公司于 2013 年提出来的一个通用知识框架，中文名叫做「<strong>对抗战术、技术、常识</strong> 」 。</p>
+<p>ATT&amp;CK 框架是基于真实网络空间攻防案例及数据，采用军事战争中的 <strong>TTPs （Tactics, Techniques &amp; Procedures）</strong>方法论，重新编排的网络安全知识体系，目的是建立一套网络安全的通用语言。</p>
+<p>举例，大家经常听到的什么 APT 攻击、威胁情报、态势感知等等，无论个人还是企业，理解上不尽相同，总会有一些偏差的。</p>
+<p>有了 ATT&amp;CK 框架，大家不会存在太大的偏差，红队具体怎么去攻击的，蓝队具体到怎么去防御的，使用 ATT&amp;CK 矩阵可以将每个细节标记出来，攻击路线和防御过程都可以图形展现出来，攻防双方就有了一套通用语言了。</p>
+<p>网络安全行业的组织、机构、厂家，每年都会造各种 ”新词“，但 MITRE 这个组织推的这套框架，兼具实战和学术价值，具备广泛的应用场景，对安全行业的发展推动是实实在在的。</p>
+<p>我认为，在未来 5 年也好 10 年也好 ，它可能会成为一个事实上的标准。</p>
+<p>这里看一下左上角图片，它整体有三个部分，一个是 PRE ATT&amp;CK，一个是 ATT&amp;CK for Enterprise，一个是 ATT&amp;CK for Mobile，我们学习和研究时，核心放在 ATT&amp;CK forEnterprise 即可。</p>
+<p>大家可以看到，其实左边这里面，也有侦查、武器化、载荷传递、利用、控制、执行、维持等等阶段，是不是跟前面介绍的网络杀伤链是一样的呢？</p>
+<p>是的，你可以这么简单理解，其实 ATT&amp;CK 这个框架，刚开始就是在杀伤链的基础上，提供了更加具体的、更细颗粒度的战术、技术、文档、工具、描述等等。</p>
+<p>因此，如果要深入学习红队，平常可以多逛逛去 ATT&amp;CK 框架官网。</p>
+<img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F8.jpg" class>
+
+<p>接下来，我们来重点看一下 ATT&amp;CK for Enterprise。</p>
+<p>这张图里面，横轴代表是战术（Tactics），最新版本里横轴包括的战术有 12 个（原来是 10 个），纵轴代表的是技术（Techniques）有 156 个技术 272 个子技术。</p>
+<p>前面我们提到了，它是基于 TTPs 方法来描述的，所以非常标准和通用。</p>
+<p>在实际的红蓝对抗、威胁情报分析、安全差距评估等工作场景中，都可以用得上。</p>
+<p>另外补充一点，这 12 个战术从左到右，也是按照网络杀伤链的路径来编排的，包括初始访问、执行、持久化、权限提升、防御绕过、凭证访问、发现、横向移动、收集、命令控制、数据获取、影响。</p>
+<p>每一个战术下面包括很多技术，每个技术有详细的过程，包括独立的编号、描述、工具等。</p>
+
     </div>
 
     
@@ -335,7 +436,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://example.com/2021/02/03/HTTP%E4%BB%A3%E7%90%86/" title="HTTP代理">http://example.com/2021/02/03/HTTP代理/</a>
+    <a href="http://example.com/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/" title="红队攻防入门1">http://example.com/2021/02/06/红队攻防入门1/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-%E9%82%A2%E6%B5%A9%E4%B8%9C/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-邢浩东</a> 许可协议。转载请注明出处！
@@ -345,6 +446,9 @@
 
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2/" rel="tag"># 红队攻防</a>
+          </div>
 
         
 
@@ -352,13 +456,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/02/03/HTTP%E7%BC%93%E5%AD%98/" rel="prev" title="HTTP缓存">
-      <i class="fa fa-chevron-left"></i> HTTP缓存
+    <a href="/2021/02/06/SVN%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F/" rel="prev" title="SVN版本控制系统">
+      <i class="fa fa-chevron-left"></i> SVN版本控制系统
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/02/03/%E4%B8%AD%E6%96%AD/" rel="next" title="中断">
-      中断 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -418,6 +519,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81%E2%80%93%E5%88%9D%E8%AF%86%E7%BA%A2%E9%98%9F"><span class="nav-number">1.</span> <span class="nav-text">红队攻防入门1–初识红队</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2%E7%BA%A2%E9%98%9FVS%E8%93%9D%E9%98%9F"><span class="nav-number">1.0.1.</span> <span class="nav-text">1.2红队VS蓝队</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-3-2%E7%BD%91%E7%BB%9C%E6%9D%80%E4%BC%A4%E9%93%BECyber-Kill-Chain"><span class="nav-number">1.0.1.1.</span> <span class="nav-text">1.3.2网络杀伤链Cyber Kill Chain</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-3-3MITRE-ATT-amp-CK%E6%A1%86%E6%9E%B6"><span class="nav-number">1.0.1.2.</span> <span class="nav-text">1.3.3MITRE ATT&amp;CK框架</span></a></li></ol></li></ol></li></ol></li></ol></div>
 
       </div>
       <!--/noindex-->
