@@ -18,30 +18,30 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"www.mindmaster.top","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="InnoDB存储引擎的初探">
 <meta property="og:type" content="article">
 <meta property="og:title" content="InnoDB存储引擎">
-<meta property="og:url" content="http://example.com/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/index.html">
+<meta property="og:url" content="https://www.mindmaster.top/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/index.html">
 <meta property="og:site_name" content="一只小码农">
 <meta property="og:description" content="InnoDB存储引擎的初探">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114112823026.png">
-<meta property="og:image" content="http://example.com/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114114130216.png">
-<meta property="og:image" content="http://example.com/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114114405936.png">
-<meta property="og:image" content="http://example.com/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114131120313.png">
-<meta property="og:image" content="http://example.com/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114133522544.png">
-<meta property="og:image" content="http://example.com/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114133412580.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114112823026.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114114130216.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114114405936.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114131120313.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114133522544.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114133412580.png">
 <meta property="article:published_time" content="2021-01-14T13:56:15.000Z">
 <meta property="article:modified_time" content="2021-01-15T09:36:03.753Z">
 <meta property="article:author" content="邢浩东">
 <meta property="article:tag" content="InnoDB存储引擎">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114112823026.png">
+<meta name="twitter:image" content="https://www.mindmaster.top/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20210114112823026.png">
 
-<link rel="canonical" href="http://example.com/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/">
+<link rel="canonical" href="https://www.mindmaster.top/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/">
 
 
 <script id="page-configurations">
@@ -145,7 +145,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">20</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">21</span></a>
 
   </li>
         <li class="menu-item menu-item-movies">
@@ -232,7 +232,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/">
+    <link itemprop="mainEntityOfPage" href="https://www.mindmaster.top/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/OIP.jfif">
@@ -364,6 +364,13 @@
     
     
       
+  <div class="popular-posts-header">相关文章推荐</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2021\02\14\Undo页与redo页\" rel="bookmark">Undo页与redo页</a></div>
+        <div class="popular-posts-excerpt"><p>MySQL UNDO Log与REDO Log的介绍</p></div>
+    </li>
+  </ul>
 
         <div class="reward-container">
   <div>谢谢你的支持哦，继续加油.</div>
@@ -394,7 +401,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://example.com/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/" title="InnoDB存储引擎">http://example.com/2021/01/14/InnoDB存储引擎/</a>
+    <a href="https://www.mindmaster.top/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/" title="InnoDB存储引擎">https://www.mindmaster.top/2021/01/14/InnoDB存储引擎/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-%E9%82%A2%E6%B5%A9%E4%B8%9C/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-邢浩东</a> 许可协议。转载请注明出处！
@@ -497,7 +504,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">21</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -615,13 +622,13 @@ setInterval(function(){
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">37k</span>
+    <span title="站点总字数">40k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">34 分钟</span>
+    <span title="站点阅读时长">37 分钟</span>
 </div>
 
 
