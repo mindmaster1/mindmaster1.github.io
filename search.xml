@@ -138,6 +138,11 @@
       </tags>
   </entry>
   <entry>
+    <title>SVN版本控制系统</title>
+    <url>/2021/02/06/SVN%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Nginx服务器的使用</title>
     <url>/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<h1 id="Nginx服务器使用"><a href="#Nginx服务器使用" class="headerlink" title="Nginx服务器使用"></a>Nginx服务器使用</h1><h2 id="内容概览"><a href="#内容概览" class="headerlink" title="内容概览"></a>内容概览</h2><h3 id="1、nginx简介"><a href="#1、nginx简介" class="headerlink" title="1、nginx简介"></a>1、nginx简介</h3><p>（1）介绍nginx的应用场景和具体可以做什么事情</p>
@@ -208,11 +213,6 @@
       <tags>
         <tag>Nginx服务器</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>SVN版本控制系统</title>
-    <url>/2021/02/06/SVN%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Servlet规范一</title>
@@ -357,11 +357,6 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>初识递归</title>
-    <url>/2021/02/03/%E5%88%9D%E8%AF%86%E9%80%92%E5%BD%92/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>双指针问题</title>
     <url>/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/</url>
     <content><![CDATA[<h2 id="环形列表I"><a href="#环形列表I" class="headerlink" title="环形列表I"></a>环形列表I</h2><h3 id="题目说明"><a href="#题目说明" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，判断链表中是否有环。</p>
@@ -442,33 +437,9 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>类文件结构</title>
-    <url>/2021/01/16/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</url>
-    <content><![CDATA[<p>#类文件结构</p>
-<h2 id="虚拟机的无关性"><a href="#虚拟机的无关性" class="headerlink" title="虚拟机的无关性"></a>虚拟机的无关性</h2><p>Java的宣传口号是: <strong><em>WRITE ONCE , RUN ANYWHREE</em></strong></p>
-<p>java虚拟机力求实现的两种无关性：</p>
-<ol>
-<li><p>平台无关性</p>
-<p>各种不同平台的虚拟机与所有平台都统一使用的程序存储格式——–字节码（ByteCode）是构成平台无关性的基础，虚拟机可以载入同一种平台无关的字节码。</p>
-</li>
-<li><p>语言无关性：</p>
-<p><strong>举例</strong>：除了Java之外，Clojure、Groovy、JRuby、Jython、Scala都可以在Java虚拟机上运行</p>
-<p>实现语言无关性的基础是Java虚拟机不与任何语言绑定，只与**<em>“Class文件”这种特殊的二进制文件格式**</em>相关联，Class文件包含了Java虚拟机指令集和符号表以及若干其他辅助信息，在Class文件中使用了许多强制性的语法和结构化约束，任何一门语言都可以表示为被JAVA虚拟机锁接受的有效的Class文件。虚拟机只关心Class文件本身，而不关心Class文件的来源是哪种语言。</p>
-<p>在Class文件中，各种关键字、变量、和运算符号的语义都是有多条字节码命令组合而成的，字节码命令所能提供的语义描述能力必然要比java语言本身更为强大，所以Java虚拟机提供的支持远比java语言本身强大。</p>
-</li>
-</ol>
-<h2 id="Class类文件的结构"><a href="#Class类文件的结构" class="headerlink" title="Class类文件的结构"></a>Class类文件的结构</h2><p>Class文件是一组以8位字节为基础单位的二进制流，各个数据项目严格的按照顺序紧凑的排列在Class文件中，中间没有任何的分隔符，这使得整个Class文件中存储的内容几乎全是程序运行的必要数据，没有空隙存在。</p>
-<p>Class文件格式采用一种类似于C语言中struct的伪结构来进行存储数据：包括<strong>无符号数+表</strong></p>
-<p>1、无符号数：基本数据类型</p>
-<p>2、表：有多个无符号数或者其他表作为数据项构成的复合数据类型，习惯性的以__info结尾。表用于描述有层次关系的复合结构的数据。整个class文件本质上就是一张表。</p>
-<h3 id="magic-numer与class文件版本"><a href="#magic-numer与class文件版本" class="headerlink" title="magic numer与class文件版本"></a>magic numer与class文件版本</h3><h3 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h3><h3 id="访问标志"><a href="#访问标志" class="headerlink" title="访问标志"></a>访问标志</h3><h3 id="类索引、父类索引、接口索引集合"><a href="#类索引、父类索引、接口索引集合" class="headerlink" title="类索引、父类索引、接口索引集合"></a>类索引、父类索引、接口索引集合</h3><h3 id="字段表集合"><a href="#字段表集合" class="headerlink" title="字段表集合"></a>字段表集合</h3><h3 id="方法表集合"><a href="#方法表集合" class="headerlink" title="方法表集合"></a>方法表集合</h3><p>###属性表集合</p>
-]]></content>
-      <categories>
-        <category>JVM虚拟机</category>
-      </categories>
-      <tags>
-        <tag>JAVA</tag>
-      </tags>
+    <title>初识递归</title>
+    <url>/2021/02/03/%E5%88%9D%E8%AF%86%E9%80%92%E5%BD%92/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>系统调用</title>
@@ -554,6 +525,35 @@
       </categories>
       <tags>
         <tag>Linux系统内核设计</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>类文件结构</title>
+    <url>/2021/01/16/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</url>
+    <content><![CDATA[<p>#类文件结构</p>
+<h2 id="虚拟机的无关性"><a href="#虚拟机的无关性" class="headerlink" title="虚拟机的无关性"></a>虚拟机的无关性</h2><p>Java的宣传口号是: <strong><em>WRITE ONCE , RUN ANYWHREE</em></strong></p>
+<p>java虚拟机力求实现的两种无关性：</p>
+<ol>
+<li><p>平台无关性</p>
+<p>各种不同平台的虚拟机与所有平台都统一使用的程序存储格式——–字节码（ByteCode）是构成平台无关性的基础，虚拟机可以载入同一种平台无关的字节码。</p>
+</li>
+<li><p>语言无关性：</p>
+<p><strong>举例</strong>：除了Java之外，Clojure、Groovy、JRuby、Jython、Scala都可以在Java虚拟机上运行</p>
+<p>实现语言无关性的基础是Java虚拟机不与任何语言绑定，只与**<em>“Class文件”这种特殊的二进制文件格式**</em>相关联，Class文件包含了Java虚拟机指令集和符号表以及若干其他辅助信息，在Class文件中使用了许多强制性的语法和结构化约束，任何一门语言都可以表示为被JAVA虚拟机锁接受的有效的Class文件。虚拟机只关心Class文件本身，而不关心Class文件的来源是哪种语言。</p>
+<p>在Class文件中，各种关键字、变量、和运算符号的语义都是有多条字节码命令组合而成的，字节码命令所能提供的语义描述能力必然要比java语言本身更为强大，所以Java虚拟机提供的支持远比java语言本身强大。</p>
+</li>
+</ol>
+<h2 id="Class类文件的结构"><a href="#Class类文件的结构" class="headerlink" title="Class类文件的结构"></a>Class类文件的结构</h2><p>Class文件是一组以8位字节为基础单位的二进制流，各个数据项目严格的按照顺序紧凑的排列在Class文件中，中间没有任何的分隔符，这使得整个Class文件中存储的内容几乎全是程序运行的必要数据，没有空隙存在。</p>
+<p>Class文件格式采用一种类似于C语言中struct的伪结构来进行存储数据：包括<strong>无符号数+表</strong></p>
+<p>1、无符号数：基本数据类型</p>
+<p>2、表：有多个无符号数或者其他表作为数据项构成的复合数据类型，习惯性的以__info结尾。表用于描述有层次关系的复合结构的数据。整个class文件本质上就是一张表。</p>
+<h3 id="magic-numer与class文件版本"><a href="#magic-numer与class文件版本" class="headerlink" title="magic numer与class文件版本"></a>magic numer与class文件版本</h3><h3 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h3><h3 id="访问标志"><a href="#访问标志" class="headerlink" title="访问标志"></a>访问标志</h3><h3 id="类索引、父类索引、接口索引集合"><a href="#类索引、父类索引、接口索引集合" class="headerlink" title="类索引、父类索引、接口索引集合"></a>类索引、父类索引、接口索引集合</h3><h3 id="字段表集合"><a href="#字段表集合" class="headerlink" title="字段表集合"></a>字段表集合</h3><h3 id="方法表集合"><a href="#方法表集合" class="headerlink" title="方法表集合"></a>方法表集合</h3><p>###属性表集合</p>
+]]></content>
+      <categories>
+        <category>JVM虚拟机</category>
+      </categories>
+      <tags>
+        <tag>JAVA</tag>
       </tags>
   </entry>
   <entry>
@@ -654,12 +654,12 @@
 <p>作为蓝队，则以防御方的方式做安全工作，是安全合规、安全运营、应急响应、态势感知、威胁情报等等。</p>
 </blockquote>
 <p>####1.3 红队常用模型框架</p>
- 
+ <img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F4.jpg" class>
 
 
 
 <p>#####1.3.1渗透测试执行标准PTES</p>
-<img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F5.jpg" class>
+
 
 <p>PTES中文全名【渗透测试执行标准】，他是有2010年由业界网络安全专家共同发起并定义的规范，目标是希望为企业和安全服务商，指定整个渗透测试的标准流程，方便大家工作和沟通。</p>
 <p>PTES 包括 7 个标准步骤，即前期交互、情报收集、威胁建模、漏洞分析、渗透利用、报告输出等，一般的渗透测试工作，基本都绕不开这些步骤，可以看成一个标准的工作流。</p>
