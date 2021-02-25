@@ -6,9 +6,195 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
+    <title>InnoDB存储引擎</title>
+    <url>/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
+    <content><![CDATA[<h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
+<p>InnoDB存储引擎有多个内存块，这些内存块组成了一个大的内存池</p>
+<p>后台线程的主要作用就是负责刷新内存池中的数据，保证缓存池中的内存缓存的是最近的数据。此外，还将已经修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下，InnoDB可以恢复运行到最佳状态。</p>
+<h4 id="后台线程（InnDB是一个多线程模型"><a href="#后台线程（InnDB是一个多线程模型" class="headerlink" title="后台线程（InnDB是一个多线程模型)"></a>后台线程（InnDB是一个多线程模型)</h4><p>#####Master Thread</p>
+<p><strong>作用：</strong></p>
+<p>​    一个非常核心的后台进程，负责将缓存池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓存、UNDO页的回收等。</p>
+<h5 id="IO-Therad"><a href="#IO-Therad" class="headerlink" title="IO Therad"></a>IO Therad</h5><p>  在InnoDB存储引擎中大量使用了AIO（Async IO）—异步时间非阻塞IO，这样可以极大程度上提高数据库的性能。IO Thread的主要工作就是负责这些IO请求的回调</p>
+<p>共有四个IO Thread:write 、read、insert buffer、log IO thread</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114130216.png" alt="image-20210114114130216"></p>
+<p>通过命令SHOW ENGINE INNODB STASTUS\G来观察IO Thread</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114405936.png" alt="image-20210114114405936"></p>
+<p>有四个write和read IO Thread</p>
+<p>通过innodb_read_io_threads和innodb_write_io_threads参数来进行设置</p>
+<h5 id="Purge-Thread"><a href="#Purge-Thread" class="headerlink" title="Purge Thread"></a>Purge Thread</h5><p><strong>作用</strong>：</p>
+<p>​    Purge Thread回收已经使用并且已经分配的undo页（事务提交之后，其所使用的Undolog可能就不再需要）</p>
+<p>用户需要在<strong>MySQL数据库的配置文件</strong>中添加如下命令来启用独立的Purge Thread: </p>
+<p>​        innodb_purge_threads=1</p>
+<h5 id="Page-Cleaner-Thread"><a href="#Page-Cleaner-Thread" class="headerlink" title="Page Cleaner Thread"></a>Page Cleaner Thread</h5><p><strong>作用</strong>：</p>
+<p>​    将脏页的刷新操作放在单独的线程中完成。减轻Master Thread的工作以及对于用户查询线程的阻塞</p>
+<h4 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h4><h5 id="缓存池"><a href="#缓存池" class="headerlink" title="缓存池"></a>缓存池</h5><p>Innodb存储引擎是基于磁盘存储的（Disk-base Database），将其中的记录按照页来管理。</p>
+<p>缓存池的出现，就是为了解决CPU速度和磁盘速度之间的差异，通过内存的速度来弥补磁盘速度较慢对数据库性能的影响。读取文件时，首先判断给文件是否在缓存池中（没有就去磁盘上找）。</p>
+<p>在修改缓存池中的页时，先以一定频率刷新到缓存池上，然后通过Checkpoint刷新回磁盘。</p>
+<p>数据库服务器最好采用64位操作系统，可以使用更多的内存（512GB），32位（只有64GB）。</p>
+<p>缓存池的配置通过参数innodb_buffer_pool_size来设置。</p>
+<h6 id="缓存池中缓存的数据页类型："><a href="#缓存池中缓存的数据页类型：" class="headerlink" title="缓存池中缓存的数据页类型："></a>缓存池中缓存的数据页类型：</h6><p>​    索引页、数据页、Undo页、插入缓存页、自适应哈希索引页（adaptive hash index）、InnoDB存储的锁信息、数据字典信息等。</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114131120313.png" alt="image-20210114131120313"></p>
+<p><strong>允许有多个缓存池实例</strong>：每个页根据hashcode平均分配到不同的缓存池实例中，减少数据库内部资源的竞争，增加数据库的并发能力。可以通过inodb_buffer_pool_instances来进行配置，通过命令SHOW ENGINE INNODB STATUS可以观察到每个缓存池实例对象运行的状态，还可以通过查看表InnoDB_BUFFER_POOL_STATS来观察缓存的状态(要求在information_schema架构下)</p>
+<h5 id="LRU-LIST-、FREE-LIST-、FLUSH-LIST"><a href="#LRU-LIST-、FREE-LIST-、FLUSH-LIST" class="headerlink" title="LRU LIST 、FREE LIST 、FLUSH LIST"></a>LRU LIST 、FREE LIST 、FLUSH LIST</h5><p><strong>LRU</strong>算法用来管理已经读取的页</p>
+<p>数据库中的缓存池是通过LRU（Latest Recent Used,最近最少使用）算法来管理内部的各种类型的页。</p>
+<p><strong>LRU解释</strong>：将最频繁使用的页放在LRU列表的前端，最少使用的页放在LRU列表的尾端。当缓存池不能存放新读取到的页时，将优先删除列表尾端的页（默认大小为16KB）。</p>
+<p><strong>改进</strong>：</p>
+<p>1、（midpoint insertion strategy）：InnoDB中在LRU中加入了midpoint位置，将新读取到的页放在midpoint，而不是直接放在LRU列表首部。<strong>默认位置在LRU列表长度63%处</strong>（可以通过innodb_old_blocks_pct来控制）</p>
+<p>2、设置了参数innodb_old_blocks_time,用于表示页读取到mid位置后需要等待多久才会加入到LRU列表的热端</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133522544.png" alt="image-20210114133522544"></p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133412580.png" alt="image-20210114133412580"></p>
+<p><strong>为什么要对朴素的LRU算法进行改良</strong>？</p>
+<h5 id="重做日志缓存"><a href="#重做日志缓存" class="headerlink" title="重做日志缓存"></a>重做日志缓存</h5><h5 id="额外的内存池"><a href="#额外的内存池" class="headerlink" title="额外的内存池"></a>额外的内存池</h5>]]></content>
+      <categories>
+        <category>MySQL数据库</category>
+      </categories>
+      <tags>
+        <tag>InnoDB存储引擎</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>HTTP缓存</title>
     <url>/2021/02/03/HTTP%E7%BC%93%E5%AD%98/</url>
     <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Java内存区域与内存溢出异常</title>
+    <url>/2021/02/05/Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/</url>
+    <content><![CDATA[<h3 id="1-内存管理那些事"><a href="#1-内存管理那些事" class="headerlink" title="1.内存管理那些事"></a>1.内存管理那些事</h3><p>C、C++：在内存管理领域，没有所谓的内存动态分配机制和垃圾收集技术，他们即拥有每一个对象的所有权，又担负着每一个对象从开始到终结的维护责任。</p>
+<p>Java：在虚拟机自动内存管理机制的帮助下，不再需要为每一个new的对象写相配对的delete和free代码，也不容易出现内存泄漏和内存溢出的问题。</p>
+<p>关于这两者之间对于内存管理之间的区别，从语言本身来说，指针的使用就可以表明二者在内存管理、使用、维护上的巨大差异。</p>
+<h3 id="2-运行时数据区域"><a href="#2-运行时数据区域" class="headerlink" title="2.运行时数据区域"></a>2.运行时数据区域</h3><p>Java虚拟机在执行Java程序的同时会把他创建的内存分为若干个不同的数据区域，如下图所示：</p>
+<img data-src="/2021/02/05/Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/%E6%95%B0%E6%8D%AE%E5%8C%BA.png" class>
+
+<h4 id="2-1程序计数器-Program-Counter-Register"><a href="#2-1程序计数器-Program-Counter-Register" class="headerlink" title="2.1程序计数器(Program Counter Register)"></a>2.1程序计数器(Program Counter Register)</h4><p>这是一块较小的内存区域。可以看作是当前线程所执行的字节码的行号指示器。字节码解释器工作时，就是通过改变这个计数器的值来选取下一条需要执行的字节码指令，包括分支、循环、判断、跳转、异常处理、线程恢复等基础功能都需要依赖该计数器来完成。</p>
+<p>Java虚拟机的多线程是通过线程轮流切换并分配处理器执行时间的方式实现的，在任何一个时刻，一个处理器指挥执行一条线程中的指令。<strong>为了线程切换后可以恢复到正确的执行位置，每条线程都需要有一个独立的程序计数器，且各个线程之间计数器互相不影响，独立存储</strong>。所以说程序计数器是线程私有的一块内存。</p>
+<p><em>这是一个在Java虚拟机规范中没有规定任何OutOfMemoryError情况的区域。</em></p>
+<ul>
+<li><p>如果线程执行的是Java方法，计数器记录的是正在执行的虚拟机字节码指令的地址；</p>
+</li>
+<li><p>如果正在执行的是Native方法，这个计数器值为空(Undefined)。</p>
+</li>
+</ul>
+<h4 id="2-2Java虚拟机栈-Java-Virtual-Machine-Stacks"><a href="#2-2Java虚拟机栈-Java-Virtual-Machine-Stacks" class="headerlink" title="2.2Java虚拟机栈(Java Virtual Machine Stacks)"></a>2.2Java虚拟机栈(Java Virtual Machine Stacks)</h4><p>Java虚拟机栈是线程私有的，生命周期与线程相同。</p>
+<blockquote>
+<p>虚拟机栈描述的是**<em>Java方法**</em>执行的内存模型：每个方法在执行的同时会创建一个栈桢(Stack Frame)用于存储局部变量表、操作数栈、动态链接、方法出口等信息。每一个方法从调用直至执行完成的过程，就对应着一个栈桢在虚拟机栈中从出栈到入栈。</p>
+</blockquote>
+<p>局部变量表存放了：</p>
+<ul>
+<li><p>编译时期可知的各种基本数据类型（boolean\byte\char\short\int\float\long\duoble）</p>
+</li>
+<li><p>对象引用（reference类型，不等同于对象本身，可能是一个指向对象起始地址的引用指针，也可能是指向一个代表对象的句柄和其他与此对象相关的位置）</p>
+</li>
+<li><p>returnAddress类型(指向了一条字节码指令的地址)。</p>
+</li>
+</ul>
+<p>该区域可能会出现的异常情况：</p>
+<p>1.StackOverFlowError:线程请求的栈深度大于虚拟机所允许的深度</p>
+<p>2.OutOfMemoryError: 如果虚拟机可以实现动态扩展，但是在扩展时无法申请到足够的内存。</p>
+<p>####2.3本地方法栈(Native Method Stack)</p>
+<p>本地方法栈与虚拟机栈发挥的作用很相似，区别就是虚拟机栈为虚拟机执行Java方法（也就是字节码服务），而本地方法作为虚拟机使用到的Native方法服务。具体的虚拟机可以自由实现。HotSpot虚拟机将本地方法栈和虚拟机栈合二为一。它的异常类型同样是上述两种。</p>
+<h4 id="2-4Java堆"><a href="#2-4Java堆" class="headerlink" title="2.4Java堆"></a>2.4Java堆</h4><p>Java堆(Java Heap)是Java虚拟机管理内存区域中最大的一块。Java堆是被所有线程共享的一块儿内存区域，在虚拟机启动时被创建。</p>
+<p><strong>此内存区域的唯一目的就是存放对象实例，几乎所有的对象实例都在这里分配内存。</strong></p>
+<p>Java堆是垃圾收集器管理的主要区域，被称为GC堆(Garbage Collected Heap)。</p>
+<blockquote>
+<p>从内存回收的角度来看，基于现在收集器基本上都采用分代收集算法，Java堆可以细分为新生代和老年代；再细致一点有Eden空间、From Survivor空间、To Survivor空间</p>
+</blockquote>
+<blockquote>
+<p>从内存分配的角度来看，线程共享的Java堆可能划分出多个线程私有的分配缓冲区(<strong>Thread Local Allocation Buffer   TLAB</strong>)。</p>
+</blockquote>
+<p><strong><em>不论如何划分，都与存放内容无关无论哪个区域，存放的都是对象实例</em></strong>，进一步划分的目的是为了更好的回收内存，或者更快的分配内存</p>
+<p>根据Java虚拟机规范的规定，Java堆可以处于物理上不连续的内存空间中，只要逻辑上连续的即可。</p>
+<p>在实现时，既可以实现成固定大小的，也可以是可扩展的，不过主流的虚拟机都是按照可扩展来实现的（控制参数：-Xmx和-Xms控制）。如果堆中没有内存可以完成实例分配，并且堆也无法扩展时，将会抛出OutOfMemoryError异常。</p>
+<h4 id="2-5方法区-Method-Area"><a href="#2-5方法区-Method-Area" class="headerlink" title="2.5方法区(Method Area)"></a>2.5方法区(Method Area)</h4><p>方法区与Java堆一样，是各个线程所共享的内存区域，<strong>用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据</strong>。虽然Java虚拟机规范把方法区描述成为堆的一个逻辑部分，但是方法区还有一个别名叫做Non-Heap，目的就是与堆区分开。</p>
+<p>Java虚拟机堆方法区的限制十分宽松，除了和Java堆一样不需要连续的内存和可以选择固定大小或者可扩展外，还可以选择不实现垃圾收集。但并非意味着数据进入了方法去就永久存在，这个区域的回收目标主要是针对常量池的回收和对类型的卸载，而回收的成绩难以令人满意，尤其是类型的卸载，条件更是相当苛刻，但是，<strong>这个区域的回收确实是必要的</strong>，可以一定程度上避免内存泄漏。</p>
+<p>当方法区无法满足内存分配要求时，会报出OutOfMemoryError异常。</p>
+<h4 id="2-6运行时常量池-Runtime-Constant-Pool"><a href="#2-6运行时常量池-Runtime-Constant-Pool" class="headerlink" title="2.6运行时常量池(Runtime Constant Pool)"></a>2.6运行时常量池(Runtime Constant Pool)</h4><p>运行时常量池是方法区的一部分。Class文件中除了有类的版本、字段、方法、接口等描述信息外，还有一项就是常量池(Constant Pool Table），用于存放<strong>编译期生成的各种字面量和符号引用</strong>，这部分内容将在类加载后进入方法区的运行时常量池中存放。</p>
+<ul>
+<li><p>对于运行时常量池，Java虚拟机规范并没有做任何细节的要求，不同的虚拟机提供厂商实现的虚拟机可以按站自己的需要来实现这个内存区域。除了保存Class文件中描述的符号引用外，还会将翻译的直接引用也存储在运行时常量池中。</p>
+</li>
+<li><p>运行时常量池相对于class文件常量池的另一个重要特征是具备动态性，Java语言并不要求常量一定只能在编译期产生，也就是说并非预置于Class文件中常量池的内容才可以进入方法去运行时常量池，运行期间也可能将新的常量放入池中。例如String类的intern()方法。</p>
+</li>
+<li><p>运行时常量池会受到方法区内存的限制，当常量池无法申请到内存是会报OutOfMemoryError异常。</p>
+</li>
+</ul>
+<h4 id="2-7直接内存"><a href="#2-7直接内存" class="headerlink" title="2.7直接内存"></a>2.7直接内存</h4><p>直接内存就是本机的物理内存，服务器管理员在配置虚拟机参数时，要根据实际内存设置-Xmx等参数信息，避免使得各个内存区域大于物理内存限制，从而导致动态扩展时出现OutOfMemoryError异常。</p>
+]]></content>
+      <categories>
+        <category>JVM虚拟机</category>
+      </categories>
+      <tags>
+        <tag>Java内存区域</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Maven学习笔记</title>
+    <url>/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/</url>
+    <content><![CDATA[<h2 id="IDEA编辑器集成maven环境"><a href="#IDEA编辑器集成maven环境" class="headerlink" title="IDEA编辑器集成maven环境"></a>IDEA编辑器集成maven环境</h2><p>###设置Maven版本</p>
+<ul>
+<li> 设置Maven版本–选择下载好的maven版本（⽬录选到bin⽬录的上⼀级⽬录）</li>
+</ul>
+
+
+ <img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven2.png" class>
+
+<ul>
+<li><p>设置settings.xml文件</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven3.png" class>
+
+</li>
+</ul>
+<h3 id="Maven项目的创建"><a href="#Maven项目的创建" class="headerlink" title="Maven项目的创建"></a>Maven项目的创建</h3><ul>
+<li><p>选择Maven,设置JDK版本，选择maven项目里的模板</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven4.png" class>
+</li>
+<li><p>设置项目里的GroupID和ArtifactID</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven5.png" class>
+</li>
+<li><p>检查项目的Maven环境</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven6.png" class>
+</li>
+<li><p>项目的目录结构</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven7.png" class>
+
+</li>
+</ul>
+<p>###项目的编译</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven8.png" class>
+
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven9.png" class>
+
+<ul>
+<li>执⾏编译命令，两个图标分别代表”普通模式”和”调试模式”</li>
+</ul>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven10.png" class>
+
+<h3 id="创建WEB项目"><a href="#创建WEB项目" class="headerlink" title="创建WEB项目"></a>创建WEB项目</h3><p>创建web项目与创建普通Java项目步骤基本一致，区别在于选择Maven模板（WEB项目选择webapp)</p>
+<h4 id="启动项目"><a href="#启动项目" class="headerlink" title="启动项目"></a>启动项目</h4><ul>
+<li><p>修改相关版本</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- JDK的版本修改为1.8 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">maven.compiler.target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.target</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- junit的版本修改为4.12 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.12<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>删除pluginManagement标签</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 将这个标签及标签中的内容全部删除 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line">...</span><br><span class="line"><span class="tag">&lt;/<span class="name">pluginManagement</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>添加web部署的插件</p>
+<p>1.jetty插件</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置在plugins标签中 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mortbay.jetty<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-jetty-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">version</span>&gt;</span>6.1.25<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">		 <span class="comment">&lt;!-- 热部署，每10秒扫描⼀次 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">scanIntervalSeconds</span>&gt;</span>10<span class="tag">&lt;/<span class="name">scanIntervalSeconds</span>&gt;</span></span><br><span class="line">		 <span class="comment">&lt;!-- 可指定当前项⽬的站点名 --&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">contextPath</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">contextPath</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">connectors</span>&gt;</span></span><br><span class="line">			 &lt;connector</span><br><span class="line">implementation=&quot;org.mortbay.jetty.nio.SelectChannelConnector&quot;&gt;</span><br><span class="line"> <span class="tag">&lt;<span class="name">port</span>&gt;</span>9090<span class="tag">&lt;/<span class="name">port</span>&gt;</span> <span class="comment">&lt;!-- 设置启动的端⼝号 --&gt;</span></span><br><span class="line"> 			 <span class="tag">&lt;/<span class="name">connector</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">connectors</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<p>  2.tomcat插件</p>
+  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置在plugins标签中 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.tomcat.maven<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>tomcat7-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">port</span>&gt;</span>8081<span class="tag">&lt;/<span class="name">port</span>&gt;</span> <span class="comment">&lt;!-- 启动端⼝ 默认:8080 --&gt;</span></span><br><span class="line"> 		 <span class="tag">&lt;<span class="name">path</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">path</span>&gt;</span> <span class="comment">&lt;!-- 项⽬的站点名，即对外访问路径 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">uriEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">uriEncoding</span>&gt;</span> <span class="comment">&lt;!-- 字符集编码 默认：ISO-8859-1 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">server</span>&gt;</span>tomcat7<span class="tag">&lt;/<span class="name">server</span>&gt;</span> <span class="comment">&lt;!-- 服务器名称 --&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+  <img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven11.png" class>
+
+
+
+<p>**maven依赖仓库：<a href="https://mvnrepository.com/">https://mvnrepository.com/</a> **</p>
+]]></content>
+      <categories>
+        <category>项目工具</category>
+      </categories>
+      <tags>
+        <tag>Maven</tag>
+      </tags>
   </entry>
   <entry>
     <title>Maven学习笔记&lt;一&gt;</title>
@@ -181,122 +367,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Java内存区域与内存溢出异常</title>
-    <url>/2021/02/05/Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/</url>
-    <content><![CDATA[<h3 id="1-内存管理那些事"><a href="#1-内存管理那些事" class="headerlink" title="1.内存管理那些事"></a>1.内存管理那些事</h3><p>C、C++：在内存管理领域，没有所谓的内存动态分配机制和垃圾收集技术，他们即拥有每一个对象的所有权，又担负着每一个对象从开始到终结的维护责任。</p>
-<p>Java：在虚拟机自动内存管理机制的帮助下，不再需要为每一个new的对象写相配对的delete和free代码，也不容易出现内存泄漏和内存溢出的问题。</p>
-<p>关于这两者之间对于内存管理之间的区别，从语言本身来说，指针的使用就可以表明二者在内存管理、使用、维护上的巨大差异。</p>
-<h3 id="2-运行时数据区域"><a href="#2-运行时数据区域" class="headerlink" title="2.运行时数据区域"></a>2.运行时数据区域</h3><p>Java虚拟机在执行Java程序的同时会把他创建的内存分为若干个不同的数据区域，如下图所示：</p>
-<img data-src="/2021/02/05/Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/%E6%95%B0%E6%8D%AE%E5%8C%BA.png" class>
-
-<h4 id="2-1程序计数器-Program-Counter-Register"><a href="#2-1程序计数器-Program-Counter-Register" class="headerlink" title="2.1程序计数器(Program Counter Register)"></a>2.1程序计数器(Program Counter Register)</h4><p>这是一块较小的内存区域。可以看作是当前线程所执行的字节码的行号指示器。字节码解释器工作时，就是通过改变这个计数器的值来选取下一条需要执行的字节码指令，包括分支、循环、判断、跳转、异常处理、线程恢复等基础功能都需要依赖该计数器来完成。</p>
-<p>Java虚拟机的多线程是通过线程轮流切换并分配处理器执行时间的方式实现的，在任何一个时刻，一个处理器指挥执行一条线程中的指令。<strong>为了线程切换后可以恢复到正确的执行位置，每条线程都需要有一个独立的程序计数器，且各个线程之间计数器互相不影响，独立存储</strong>。所以说程序计数器是线程私有的一块内存。</p>
-<p><em>这是一个在Java虚拟机规范中没有规定任何OutOfMemoryError情况的区域。</em></p>
-<ul>
-<li><p>如果线程执行的是Java方法，计数器记录的是正在执行的虚拟机字节码指令的地址；</p>
-</li>
-<li><p>如果正在执行的是Native方法，这个计数器值为空(Undefined)。</p>
-</li>
-</ul>
-<h4 id="2-2Java虚拟机栈-Java-Virtual-Machine-Stacks"><a href="#2-2Java虚拟机栈-Java-Virtual-Machine-Stacks" class="headerlink" title="2.2Java虚拟机栈(Java Virtual Machine Stacks)"></a>2.2Java虚拟机栈(Java Virtual Machine Stacks)</h4><p>Java虚拟机栈是线程私有的，生命周期与线程相同。</p>
-<blockquote>
-<p>虚拟机栈描述的是**<em>Java方法**</em>执行的内存模型：每个方法在执行的同时会创建一个栈桢(Stack Frame)用于存储局部变量表、操作数栈、动态链接、方法出口等信息。每一个方法从调用直至执行完成的过程，就对应着一个栈桢在虚拟机栈中从出栈到入栈。</p>
-</blockquote>
-<p>局部变量表存放了：</p>
-<ul>
-<li><p>编译时期可知的各种基本数据类型（boolean\byte\char\short\int\float\long\duoble）</p>
-</li>
-<li><p>对象引用（reference类型，不等同于对象本身，可能是一个指向对象起始地址的引用指针，也可能是指向一个代表对象的句柄和其他与此对象相关的位置）</p>
-</li>
-<li><p>returnAddress类型(指向了一条字节码指令的地址)。</p>
-</li>
-</ul>
-<p>该区域可能会出现的异常情况：</p>
-<p>1.StackOverFlowError:线程请求的栈深度大于虚拟机所允许的深度</p>
-<p>2.OutOfMemoryError: 如果虚拟机可以实现动态扩展，但是在扩展时无法申请到足够的内存。</p>
-<p>####2.3本地方法栈(Native Method Stack)</p>
-<p>本地方法栈与虚拟机栈发挥的作用很相似，区别就是虚拟机栈为虚拟机执行Java方法（也就是字节码服务），而本地方法作为虚拟机使用到的Native方法服务。具体的虚拟机可以自由实现。HotSpot虚拟机将本地方法栈和虚拟机栈合二为一。它的异常类型同样是上述两种。</p>
-<h4 id="2-4Java堆"><a href="#2-4Java堆" class="headerlink" title="2.4Java堆"></a>2.4Java堆</h4><p>Java堆(Java Heap)是Java虚拟机管理内存区域中最大的一块。Java堆是被所有线程共享的一块儿内存区域，在虚拟机启动时被创建。</p>
-<p><strong>此内存区域的唯一目的就是存放对象实例，几乎所有的对象实例都在这里分配内存。</strong></p>
-<p>Java堆是垃圾收集器管理的主要区域，被称为GC堆(Garbage Collected Heap)。</p>
-<blockquote>
-<p>从内存回收的角度来看，基于现在收集器基本上都采用分代收集算法，Java堆可以细分为新生代和老年代；再细致一点有Eden空间、From Survivor空间、To Survivor空间</p>
-</blockquote>
-<blockquote>
-<p>从内存分配的角度来看，线程共享的Java堆可能划分出多个线程私有的分配缓冲区(<strong>Thread Local Allocation Buffer   TLAB</strong>)。</p>
-</blockquote>
-<p><strong><em>不论如何划分，都与存放内容无关无论哪个区域，存放的都是对象实例</em></strong>，进一步划分的目的是为了更好的回收内存，或者更快的分配内存</p>
-<p>根据Java虚拟机规范的规定，Java堆可以处于物理上不连续的内存空间中，只要逻辑上连续的即可。</p>
-<p>在实现时，既可以实现成固定大小的，也可以是可扩展的，不过主流的虚拟机都是按照可扩展来实现的（控制参数：-Xmx和-Xms控制）。如果堆中没有内存可以完成实例分配，并且堆也无法扩展时，将会抛出OutOfMemoryError异常。</p>
-<h4 id="2-5方法区-Method-Area"><a href="#2-5方法区-Method-Area" class="headerlink" title="2.5方法区(Method Area)"></a>2.5方法区(Method Area)</h4><p>方法区与Java堆一样，是各个线程所共享的内存区域，<strong>用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据</strong>。虽然Java虚拟机规范把方法区描述成为堆的一个逻辑部分，但是方法区还有一个别名叫做Non-Heap，目的就是与堆区分开。</p>
-<p>Java虚拟机堆方法区的限制十分宽松，除了和Java堆一样不需要连续的内存和可以选择固定大小或者可扩展外，还可以选择不实现垃圾收集。但并非意味着数据进入了方法去就永久存在，这个区域的回收目标主要是针对常量池的回收和对类型的卸载，而回收的成绩难以令人满意，尤其是类型的卸载，条件更是相当苛刻，但是，<strong>这个区域的回收确实是必要的</strong>，可以一定程度上避免内存泄漏。</p>
-<p>当方法区无法满足内存分配要求时，会报出OutOfMemoryError异常。</p>
-<h4 id="2-6运行时常量池-Runtime-Constant-Pool"><a href="#2-6运行时常量池-Runtime-Constant-Pool" class="headerlink" title="2.6运行时常量池(Runtime Constant Pool)"></a>2.6运行时常量池(Runtime Constant Pool)</h4><p>运行时常量池是方法区的一部分。Class文件中除了有类的版本、字段、方法、接口等描述信息外，还有一项就是常量池(Constant Pool Table），用于存放<strong>编译期生成的各种字面量和符号引用</strong>，这部分内容将在类加载后进入方法区的运行时常量池中存放。</p>
-<ul>
-<li><p>对于运行时常量池，Java虚拟机规范并没有做任何细节的要求，不同的虚拟机提供厂商实现的虚拟机可以按站自己的需要来实现这个内存区域。除了保存Class文件中描述的符号引用外，还会将翻译的直接引用也存储在运行时常量池中。</p>
-</li>
-<li><p>运行时常量池相对于class文件常量池的另一个重要特征是具备动态性，Java语言并不要求常量一定只能在编译期产生，也就是说并非预置于Class文件中常量池的内容才可以进入方法去运行时常量池，运行期间也可能将新的常量放入池中。例如String类的intern()方法。</p>
-</li>
-<li><p>运行时常量池会受到方法区内存的限制，当常量池无法申请到内存是会报OutOfMemoryError异常。</p>
-</li>
-</ul>
-<h4 id="2-7直接内存"><a href="#2-7直接内存" class="headerlink" title="2.7直接内存"></a>2.7直接内存</h4><p>直接内存就是本机的物理内存，服务器管理员在配置虚拟机参数时，要根据实际内存设置-Xmx等参数信息，避免使得各个内存区域大于物理内存限制，从而导致动态扩展时出现OutOfMemoryError异常。</p>
-]]></content>
-      <categories>
-        <category>JVM虚拟机</category>
-      </categories>
-      <tags>
-        <tag>Java内存区域</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>InnoDB存储引擎</title>
-    <url>/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
-    <content><![CDATA[<h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
-<p>InnoDB存储引擎有多个内存块，这些内存块组成了一个大的内存池</p>
-<p>后台线程的主要作用就是负责刷新内存池中的数据，保证缓存池中的内存缓存的是最近的数据。此外，还将已经修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下，InnoDB可以恢复运行到最佳状态。</p>
-<h4 id="后台线程（InnDB是一个多线程模型"><a href="#后台线程（InnDB是一个多线程模型" class="headerlink" title="后台线程（InnDB是一个多线程模型)"></a>后台线程（InnDB是一个多线程模型)</h4><p>#####Master Thread</p>
-<p><strong>作用：</strong></p>
-<p>​    一个非常核心的后台进程，负责将缓存池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓存、UNDO页的回收等。</p>
-<h5 id="IO-Therad"><a href="#IO-Therad" class="headerlink" title="IO Therad"></a>IO Therad</h5><p>  在InnoDB存储引擎中大量使用了AIO（Async IO）—异步时间非阻塞IO，这样可以极大程度上提高数据库的性能。IO Thread的主要工作就是负责这些IO请求的回调</p>
-<p>共有四个IO Thread:write 、read、insert buffer、log IO thread</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114130216.png" alt="image-20210114114130216"></p>
-<p>通过命令SHOW ENGINE INNODB STASTUS\G来观察IO Thread</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114405936.png" alt="image-20210114114405936"></p>
-<p>有四个write和read IO Thread</p>
-<p>通过innodb_read_io_threads和innodb_write_io_threads参数来进行设置</p>
-<h5 id="Purge-Thread"><a href="#Purge-Thread" class="headerlink" title="Purge Thread"></a>Purge Thread</h5><p><strong>作用</strong>：</p>
-<p>​    Purge Thread回收已经使用并且已经分配的undo页（事务提交之后，其所使用的Undolog可能就不再需要）</p>
-<p>用户需要在<strong>MySQL数据库的配置文件</strong>中添加如下命令来启用独立的Purge Thread: </p>
-<p>​        innodb_purge_threads=1</p>
-<h5 id="Page-Cleaner-Thread"><a href="#Page-Cleaner-Thread" class="headerlink" title="Page Cleaner Thread"></a>Page Cleaner Thread</h5><p><strong>作用</strong>：</p>
-<p>​    将脏页的刷新操作放在单独的线程中完成。减轻Master Thread的工作以及对于用户查询线程的阻塞</p>
-<h4 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h4><h5 id="缓存池"><a href="#缓存池" class="headerlink" title="缓存池"></a>缓存池</h5><p>Innodb存储引擎是基于磁盘存储的（Disk-base Database），将其中的记录按照页来管理。</p>
-<p>缓存池的出现，就是为了解决CPU速度和磁盘速度之间的差异，通过内存的速度来弥补磁盘速度较慢对数据库性能的影响。读取文件时，首先判断给文件是否在缓存池中（没有就去磁盘上找）。</p>
-<p>在修改缓存池中的页时，先以一定频率刷新到缓存池上，然后通过Checkpoint刷新回磁盘。</p>
-<p>数据库服务器最好采用64位操作系统，可以使用更多的内存（512GB），32位（只有64GB）。</p>
-<p>缓存池的配置通过参数innodb_buffer_pool_size来设置。</p>
-<h6 id="缓存池中缓存的数据页类型："><a href="#缓存池中缓存的数据页类型：" class="headerlink" title="缓存池中缓存的数据页类型："></a>缓存池中缓存的数据页类型：</h6><p>​    索引页、数据页、Undo页、插入缓存页、自适应哈希索引页（adaptive hash index）、InnoDB存储的锁信息、数据字典信息等。</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114131120313.png" alt="image-20210114131120313"></p>
-<p><strong>允许有多个缓存池实例</strong>：每个页根据hashcode平均分配到不同的缓存池实例中，减少数据库内部资源的竞争，增加数据库的并发能力。可以通过inodb_buffer_pool_instances来进行配置，通过命令SHOW ENGINE INNODB STATUS可以观察到每个缓存池实例对象运行的状态，还可以通过查看表InnoDB_BUFFER_POOL_STATS来观察缓存的状态(要求在information_schema架构下)</p>
-<h5 id="LRU-LIST-、FREE-LIST-、FLUSH-LIST"><a href="#LRU-LIST-、FREE-LIST-、FLUSH-LIST" class="headerlink" title="LRU LIST 、FREE LIST 、FLUSH LIST"></a>LRU LIST 、FREE LIST 、FLUSH LIST</h5><p><strong>LRU</strong>算法用来管理已经读取的页</p>
-<p>数据库中的缓存池是通过LRU（Latest Recent Used,最近最少使用）算法来管理内部的各种类型的页。</p>
-<p><strong>LRU解释</strong>：将最频繁使用的页放在LRU列表的前端，最少使用的页放在LRU列表的尾端。当缓存池不能存放新读取到的页时，将优先删除列表尾端的页（默认大小为16KB）。</p>
-<p><strong>改进</strong>：</p>
-<p>1、（midpoint insertion strategy）：InnoDB中在LRU中加入了midpoint位置，将新读取到的页放在midpoint，而不是直接放在LRU列表首部。<strong>默认位置在LRU列表长度63%处</strong>（可以通过innodb_old_blocks_pct来控制）</p>
-<p>2、设置了参数innodb_old_blocks_time,用于表示页读取到mid位置后需要等待多久才会加入到LRU列表的热端</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133522544.png" alt="image-20210114133522544"></p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133412580.png" alt="image-20210114133412580"></p>
-<p><strong>为什么要对朴素的LRU算法进行改良</strong>？</p>
-<h5 id="重做日志缓存"><a href="#重做日志缓存" class="headerlink" title="重做日志缓存"></a>重做日志缓存</h5><h5 id="额外的内存池"><a href="#额外的内存池" class="headerlink" title="额外的内存池"></a>额外的内存池</h5>]]></content>
-      <categories>
-        <category>MySQL数据库</category>
-      </categories>
-      <tags>
-        <tag>InnoDB存储引擎</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Nginx服务器的使用</title>
     <url>/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<h1 id="Nginx服务器使用"><a href="#Nginx服务器使用" class="headerlink" title="Nginx服务器使用"></a>Nginx服务器使用</h1><h2 id="内容概览"><a href="#内容概览" class="headerlink" title="内容概览"></a>内容概览</h2><h3 id="1、nginx简介"><a href="#1、nginx简介" class="headerlink" title="1、nginx简介"></a>1、nginx简介</h3><p>（1）介绍nginx的应用场景和具体可以做什么事情</p>
@@ -454,6 +524,17 @@
       </tags>
   </entry>
   <entry>
+    <title>Spring学习第一跳</title>
+    <url>/2021/02/03/Spring%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E8%B7%B3/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>spring框架</category>
+      </categories>
+      <tags>
+        <tag>spring框架</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Undo页与redo页</title>
     <url>/2021/02/14/Undo%E9%A1%B5%E4%B8%8Eredo%E9%A1%B5/</url>
     <content><![CDATA[<h2 id="Undo-Log"><a href="#Undo-Log" class="headerlink" title="Undo Log"></a>Undo Log</h2><p>是为了实现事务的原子性，在MySQL数据库InnoDB存储引擎中，还用Undo Log来实现多版本并发控制(简称：MVCC)。</p>
@@ -486,17 +567,6 @@
       </categories>
       <tags>
         <tag>InnoDB存储引擎</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Spring学习第一跳</title>
-    <url>/2021/02/03/Spring%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E8%B7%B3/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>spring框架</category>
-      </categories>
-      <tags>
-        <tag>spring框架</tag>
       </tags>
   </entry>
   <entry>
@@ -546,18 +616,13 @@
       </tags>
   </entry>
   <entry>
-    <title>初识动态规划</title>
-    <url>/2021/02/03/%E5%88%9D%E8%AF%86%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>垃圾收集器与内存分配策略</title>
-    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>初识递归</title>
     <url>/2021/02/03/%E5%88%9D%E8%AF%86%E9%80%92%E5%BD%92/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>初识动态规划</title>
+    <url>/2021/02/03/%E5%88%9D%E8%AF%86%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -634,6 +699,11 @@
         <tag>链表</tag>
         <tag>双指针</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>垃圾收集器与内存分配策略</title>
+    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>类文件结构</title>
