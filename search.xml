@@ -248,18 +248,97 @@
   <entry>
     <title>Maven学习笔记</title>
     <url>/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-3/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[<h3 id="Maven仓库的基本概念"><a href="#Maven仓库的基本概念" class="headerlink" title="Maven仓库的基本概念"></a>Maven仓库的基本概念</h3><p> 当第⼀次运⾏Maven命令的时候， 你需要Internet链接， 因为它需要从⽹上下载⼀些⽂件。 那么它从 哪⾥下载呢？ 它是从Maven默认的远程库下载的。 这个远程仓库有Maven的核⼼插件和可供下载的jar⽂件。</p>
+<p>对于Maven来说， 仓库只分为两类： 本地仓库和远程仓库。</p>
+<p>当Maven根据坐标寻找构件的时候，它⾸先会查看本地仓库，如果本地仓库存在，则直接使⽤； 如果 本地没有，Maven就会去远程仓库查找，发现需要的构件之后，下载到本地仓库再使⽤。 如果本地仓库和远程仓库都没有，Maven就会报错。 </p>
+<p>远程仓库分为三种： 中央仓库，私服， 其他公共库。</p>
+<ul>
+<li><p>中央仓库：默认配置下，Maven下载jar包的地⽅。</p>
+<blockquote>
+<p>由于原始的本地仓库是空的，maven必须知道⾄少⼀个可⽤的远程仓库，才能执⾏maven命令的时候 下载到需要的构件。中央仓库就是这样⼀个默认的远程仓库。 maven-model-builder-3.3.9.jar maven⾃动的 jar 中包含了⼀个 超级POM。定义了默认中央仓库的位 置。 中央仓库包含了2000多个开源项⽬，接收每天1亿次以上的访问</p>
+</blockquote>
+</li>
+<li><p>私服：是另⼀种特殊的远程仓库，为了节省带宽和时间，应该在局域⽹内架设⼀个私有的仓库服务器， ⽤其代理所有外部的远程仓库。 内部的项⽬还能部署到私服上供其他项⽬使用</p>
+<blockquote>
+<p>私服是⼀种特殊的远程仓库，它是架设在局域⽹内的仓库服务， 私服代理⼴域⽹上的远程仓库，供局 域⽹内的maven⽤户使⽤。 当maven需要下载构件时， 它去私服当中找，如果私服没有， 则从外部远 程仓库下载，并缓存在私服上， 再为maven提供。 此外，⼀些⽆法从外部仓库下载的构件也能从本地上传到私服提供局域⽹中其他⼈使⽤</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">repositories</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">snapshots</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">enabled</span>&gt;</span>true<span class="tag">&lt;/<span class="name">enabled</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;/<span class="name">snapshots</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">id</span>&gt;</span>public<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>Public Repositories<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://192.168.0.96:8081/content/groups/public/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">id</span>&gt;</span>getui-nexus<span class="tag">&lt;/<span class="name">id</span>&gt;</span>       				<span class="tag">&lt;<span class="name">url</span>&gt;</span>http://mvn.gt.igexin.com/nexus/content/repositories/releases/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">repositories</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<p>公司内部为何需要建立私服：</p>
+<blockquote>
+<p>节省⾃⼰的外⽹带宽 加速maven构建 部署第三⽅控件 提⾼稳定性 降低中央仓库的负荷</p>
+</blockquote>
+<p>常用的阿里云仓库配置，需要修改settings.xml文件</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus-aliyun<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">name</span>&gt;</span>Nexus aliyun<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+<p>⼀般来说，在Maven项⽬⽬录下，没有诸如lib/这样⽤来存放依赖⽂件的⽬录。 当Maven在执⾏编译或 测试时，如果需要使⽤依赖⽂件，它总是基于坐标使⽤本地仓库的依赖⽂件。</p>
+<p>每个⽤户在⾃⼰的⽤户⽬录下都有⼀个路径名为.m2/repository/的仓库⽬录。 有时候， 因为某些原因（⽐如c盘空间不⾜）,需要修改本地仓库⽬录地址。</p>
+<p>对于仓库路径的修改，可以通过maven 配置⽂件conf ⽬录下settings.xml来指定仓库路径。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置到指定⽬录中，路径的斜杆不要写反 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">settings</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">localRepository</span>&gt;</span>D:/m2/repository<span class="tag">&lt;/<span class="name">localRepository</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+<h3 id="Maven依赖的基本概念"><a href="#Maven依赖的基本概念" class="headerlink" title="Maven依赖的基本概念"></a>Maven依赖的基本概念</h3><p>根元素project下的dependencies可以包含多个 dependence元素，以声明多个依赖。每个依赖都应该包含以下元素：</p>
+<ol>
+<li><p>groupId, artifactId, version : 依赖的基本坐标， 对于任何⼀个依赖来说，基本坐标是最重要的， Maven根据坐标才能找到需要的依赖。</p>
+</li>
+<li><p>Type： 依赖的类型，⼤部分情况下不需要声明。 默认值为jar</p>
+</li>
+<li><p>Scope： 依赖范围（compile,test,provided,runtime,system）</p>
+</li>
+</ol>
+<blockquote>
+<p>compile：编译依赖范围</p>
+</blockquote>
+<p>如果没有指定，就会默认使⽤该依赖范围。使⽤此依赖范围的Maven依赖，对于编译、测 试、运⾏三种classpath都有效。</p>
+<blockquote>
+<p>test：测试依赖范围</p>
+</blockquote>
+<p>使⽤此依赖范围的Maven依赖，只对于测试classpath有效，在编译主代码或者运⾏项⽬的使 ⽤时将⽆法使⽤此类依赖。典型的例⼦就是JUnit，它只有在编译测试代码及运⾏测试的时候才需要</p>
+<blockquote>
+<p>provided：已提供依赖范围</p>
+</blockquote>
+<p>使⽤此依赖范围的Maven依赖，对于编译和测试classpath有效，但在运⾏时⽆效。典型的例 ⼦是servlet-api，编译和测试项⽬的时候需要该依赖，但在运⾏项⽬的时候，由于容器已经提供，就不需要Maven重复地引⼊⼀遍(如：servlet-api)。</p>
+<blockquote>
+<p>runtime：运行时依赖范围</p>
+</blockquote>
+<p>使⽤此依赖范围的Maven依赖，对于测试和运⾏classpath有效，但在编译主代码时⽆效。典 型的例⼦是JDBC驱动实现，项⽬主代码的编译只需要JDK提供的JDBC接⼝，只有在执⾏测 试或者运⾏项⽬的时候才需要实现上述接⼝的具体JDBC驱动。</p>
+<blockquote>
+<p>system：系统依赖范围</p>
+</blockquote>
+<p>该依赖与三种classpath的关系，和provided依赖范围完全⼀致。但是，使⽤system范围依赖 时必须通过systemPath元素显式地指定依赖⽂件的路径。由于此类依赖不是通过Maven仓库 解析的，⽽且往往与本机系统绑定，可能造成构建的不可移植，因此应该谨慎使⽤。</p>
+<ol start="4">
+<li><p>Optional：标记依赖是否可选</p>
+</li>
+<li><p>Exclusions： ⽤来排除传递性依赖。</p>
+</li>
+</ol>
+<h3 id="Maven依赖的依赖范围"><a href="#Maven依赖的依赖范围" class="headerlink" title="Maven依赖的依赖范围"></a>Maven依赖的依赖范围</h3><p>⾸先需要知道，Maven在编译项⽬主代码的时候需要使⽤⼀套classpath。 ⽐如：编译项⽬代码的时候 需要⽤到spring-core, 该⽂件以依赖的⽅式被引⼊到classpath中。 其次， Maven在执⾏测试的时候会使 ⽤另外⼀套classpath。 如：junit。</p>
+<p>最后在实际运⾏项⽬时，⼜会使⽤⼀套classpath， spring-core需要在该classpath中，⽽junit不需要。</p>
+<p>那么依赖范围就是⽤来控制依赖与这三种classpath(编译classpath，测试classpath，运⾏时classpath)的 关系， Maven有以下⼏种依赖范围：<strong>（如上所述）</strong></p>
+<h3 id="传递性依赖"><a href="#传递性依赖" class="headerlink" title="传递性依赖"></a>传递性依赖</h3><p>传递依赖机制， 让我们在使⽤某个jar的时候就不⽤去考虑它依赖了什么。也不⽤担⼼引⼊多余的依 赖。 Maven会解析各个直接依赖的POM，将那些必要的间接依赖，以传递性依赖的形式引⼊到当前项⽬中。</p>
+<p><strong>注意：传递依赖有可能产生冲突</strong></p>
+<p>冲突场景”</p>
+<blockquote>
+<p>A–&gt;B—&gt;C (2.0) </p>
+<p>A–&gt;E—&gt;C (1.0)</p>
+</blockquote>
+<p>如果A下同时存在两个不同version的C，冲突！！（选取同时适合A、B的版本）</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">version</span>&gt;</span>xxx<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+]]></content>
       <categories>
         <category>项目工具</category>
       </categories>
       <tags>
         <tag>Maven</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>MongoDB数据库</title>
-    <url>/2021/02/25/MongoDB%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Maven学习笔记&lt;一&gt;</title>
@@ -430,6 +509,11 @@
       <tags>
         <tag>Maven</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>MongoDB数据库</title>
+    <url>/2021/02/25/MongoDB%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Mybatis框架</title>
@@ -785,6 +869,17 @@
       </tags>
   </entry>
   <entry>
+    <title>Spring学习第一跳</title>
+    <url>/2021/02/03/Spring%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E8%B7%B3/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>spring框架</category>
+      </categories>
+      <tags>
+        <tag>spring框架</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Tomcat服务器</title>
     <url>/2021/02/25/Tomcat%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
     <content><![CDATA[]]></content>
@@ -877,17 +972,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Spring学习第一跳</title>
-    <url>/2021/02/03/Spring%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E8%B7%B3/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>spring框架</category>
-      </categories>
-      <tags>
-        <tag>spring框架</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>初识动态规划</title>
     <url>/2021/02/03/%E5%88%9D%E8%AF%86%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/</url>
     <content><![CDATA[]]></content>
@@ -973,11 +1057,6 @@
       </tags>
   </entry>
   <entry>
-    <title>垃圾收集器与内存分配策略</title>
-    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>类文件结构</title>
     <url>/2021/01/16/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</url>
     <content><![CDATA[<p>#类文件结构</p>
@@ -1004,6 +1083,97 @@
       </categories>
       <tags>
         <tag>JAVA</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>垃圾收集器与内存分配策略</title>
+    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>系统调用</title>
+    <url>/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/</url>
+    <content><![CDATA[<h2 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h2><h3 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h3><p>系统调用是内核与用户进程进行交互的一组接口，这些接口让应用程序受限制的访问硬件设备，提供了创建新进程并与已有进程进行交互通信的机制，也提供了申请操作系统其他资源的能力。</p>
+<p>系统调用在Linux系统中的地位如下图所示：</p>
+<img data-src="/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/OIP1.jpg" class>
+
+<h3 id="2-与内核通信"><a href="#2-与内核通信" class="headerlink" title="2.与内核通信"></a>2.与内核通信</h3><p>系统调用在用户空间进程和硬件设备之间添加了一个中间层。这样的中间层有如下作用：</p>
+<blockquote>
+<p>1.为用户空间提供了一种硬件的抽象接口。</p>
+</blockquote>
+<blockquote>
+<p>2.系统调用确保了系统的稳定与安全。内核可以作为硬件设备与用户空间之间的中间人，基于权限、用户类型和一些其他的规则对需要进行的访问做出裁决。</p>
+</blockquote>
+<blockquote>
+<p>3.避免用户空间的应用程序对硬件资源随意访问而内核一无所知，这样既无法实现多任务和虚拟内存，也不能确保良好的稳定性和安全性。</p>
+</blockquote>
+<p><strong>Linux中：系统调用是用户空间访问内核的唯一手段—-除了异常和陷入外，它们是内核唯一的合法入口</strong></p>
+<h3 id="3-API、POSIX、C库"><a href="#3-API、POSIX、C库" class="headerlink" title="3.API、POSIX、C库"></a>3.API、POSIX、C库</h3><p>应用程序通过在用户空间实现的应用编程接口（API）而不是直接通过系统调用。</p>
+<blockquote>
+<p>1.API实际上并不需要与内核提供的系统调用一一对应，程序员只跟API打交道。</p>
+<p>2.内核只跟系统调用打交道，库函数以及应用程序如何使用系统调用不是内核所关心的。</p>
+<p>3.API可以实现成一个系统调用，也可以实现多个系统调用，甚至也可以不实现系统调用。</p>
+</blockquote>
+<p>在UNIX中，最流行的应用编程接口是基于POSIX标准的。</p>
+<p>Linux系统调用作为C库的一部分提供。C库实现了Unix系统的主要API，包括标准C库函数和系统调用接口，此外，C库提供了POSIX的绝大部分API。</p>
+<h3 id="4-系统调用-syscall"><a href="#4-系统调用-syscall" class="headerlink" title="4.系统调用(syscall)"></a>4.系统调用(syscall)</h3><p><strong>通过在C库中定义的函数调用来执行</strong></p>
+<p>系统调用在出现错误的时候C库会将错误码写入errno全局变量。通过调用perror()库函数，可以把该变量翻译成用户可以理解的错误字符串。</p>
+<p>为了保证32为操作系统和64位操作系统的兼容，系统调用在用户空间和内核空间有着不同的返回值类型。用户空间为int，内核空间为long。系统调用在内核中前面会加上sys_。例如：返回当前进程PID的系统调用get_pid（）在内核中被定义为sys_getpid()。</p>
+<h4 id="4-1系统调用号"><a href="#4-1系统调用号" class="headerlink" title="4.1系统调用号"></a>4.1系统调用号</h4><p>在Linux中，每个系统调用都会被赋予一个系统调用号（独一无二的）。进程在执行系统调用时，不需要提及系统调用的名称，只需要使用系统调用号即可。</p>
+<p><strong>系统调用号相当重要，一旦分配好就不能再更改，因为会导致之前编译好的应用程序崩溃。</strong>即使这个系统调用被删除，它所占用的系统调用号也不允许被回收利用。</p>
+<p>内核记录了系统调用表中的所有已经注册过的系统调用的列表，存储在sys_call_table中，这个表为每一个有效的</p>
+<p>系统调用指定了唯一的系统调用号。</p>
+<h4 id="4-2系统调用的性能"><a href="#4-2系统调用的性能" class="headerlink" title="4.2系统调用的性能"></a>4.2系统调用的性能</h4><p>Linux系统调用比其他许多的操作系统执行要快。原因如下：</p>
+<blockquote>
+<p>1.Linux很短的上下文切换时间，进出内核都被优化的极为高效。</p>
+<p>2.系统调用处理程序和每个系统调用本身非常简洁。</p>
+</blockquote>
+<h3 id="5-系统调用处理程序"><a href="#5-系统调用处理程序" class="headerlink" title="5.系统调用处理程序"></a>5.系统调用处理程序</h3><p>应用程序通过<strong>软中断</strong>的方式来告诉内核自己期望执行一个系统调用，希望系统当前可以从用户态切换到内核态，这样内核就可以代表应用程序在内核空间中执行系统调用。</p>
+<p><strong>软中断</strong>：通过引起一个异常来促使系统切换到内核态前去执行异常处理程序。此时的异常处理程序其实就是<strong>系统调用处理程序</strong>。</p>
+<p>在X86系统中预定义的软中断是中断号128，通过int $0x80来触发中断。这条指令会触发一个异常导致系统切换到内核态并执行128号异常处理程序（系统调用处理程序）。</p>
+<h4 id="5-1指定恰当的系统调用"><a href="#5-1指定恰当的系统调用" class="headerlink" title="5.1指定恰当的系统调用"></a>5.1指定恰当的系统调用</h4><p>在陷入内核空间时，要将系统调用号传给内核空间。X86系统，系统调用号是通过eax寄存器传递给内核的。system_call()函数通过将给定的系统调用号与NR_syscalls做比较来检查其有效性。大于或者等于NR_syscalls，函数就返回-ENOSYS,否则，执行相应的系统调用。</p>
+<p>系统调用表中的表项是以64位类型存放的，所以内核需要将给定的系统调用号乘4，然后用所得结果在表中查询位置。</p>
+<h4 id="5-2参数传递"><a href="#5-2参数传递" class="headerlink" title="5.2参数传递"></a>5.2参数传递</h4><p>部分系统调用除了系统调用号之外，还需要传入一些外部参数，在发生陷入的时候，一并传给内核，同样是放在寄存器中。<strong>给用户空间的返回值同样是通过寄存器来传递的</strong></p>
+<h3 id="6-系统调用的实现"><a href="#6-系统调用的实现" class="headerlink" title="6.系统调用的实现"></a>6.系统调用的实现</h3><h4 id="6-1实现系统调用"><a href="#6-1实现系统调用" class="headerlink" title="6.1实现系统调用"></a>6.1实现系统调用</h4><p>要求：</p>
+<ul>
+<li>Linux中不提倡采用多用途的系统调用（一个系统调用通过传递不同的参数值来完成选择的工作）</li>
+<li>系统调用的接口应该力求简洁，参数尽量少。提供标志参数以确保向前兼容。</li>
+<li>系统调用的设计越通用越好。</li>
+</ul>
+<h4 id="6-2参数验证"><a href="#6-2参数验证" class="headerlink" title="6.2参数验证"></a>6.2参数验证</h4><p>系统调用必须检查参数是否合法有效。系统调用在内核空间中执行，任由用户将不合法的输入传递给内核，系统大的安全和稳定性将面临考验。进程不能让内核访问那些他没有权限访问的数据。</p>
+<ul>
+<li>与文件IO有关的系统调用需要检查文件描述符是否有效，与进程有关的函数必须检查提供的PID是否有效。</li>
+<li>检查用户提供的指针是否有效<ul>
+<li>指针指向的内存区域只能属于用户空间，进程不能告诉内核去读内核空间中的数据。</li>
+<li>指针指向的内存区域在自己的进程中，不能让内核去读其他进程中的数据。</li>
+<li>进程不能越过内存访问限制（可读、可写、可执行）</li>
+</ul>
+</li>
+<li>检查是否有合法权限</li>
+</ul>
+<p>内核提供了两个方法来完成必须的检查和内核空间与用户空间之间的数据来回拷贝</p>
+<ul>
+<li>写入：copy_to_user()</li>
+<li>读取：copy_from_user()</li>
+</ul>
+<p>这两个方法可能会引起阻塞。当包含用户数据的页被换出到硬盘上而不是在物理内存上的时候，进程会休眠，直到缺页处理程序将该页从硬盘从新换回物理内存。</p>
+<h3 id="7-系统调用上下文"><a href="#7-系统调用上下文" class="headerlink" title="7.系统调用上下文"></a>7.系统调用上下文</h3><p>在进程调用系统调用时，会有进程上下文。既可以被抢占也可以休眠。</p>
+<p>可以休眠说明系统调用可以利用内核提供的绝大部分功能。可以被抢占说明该系统调用时可重入的（新的进程同样可以使用相同的系统调用）。</p>
+<p>系统调用返回时，控制权仍然在system_call()中，它最终会负责切换到内核工作空间，并让用户进程继续执行下去。</p>
+<h4 id="7-1绑定一个系统调用的最后步骤"><a href="#7-1绑定一个系统调用的最后步骤" class="headerlink" title="7.1绑定一个系统调用的最后步骤"></a>7.1绑定一个系统调用的最后步骤</h4><blockquote>
+<p>1.在系统调用表中的最后加入一个表项。从0开始算起，系统调用在表中的位置就是他的系统调用号。</p>
+</blockquote>
+<blockquote>
+<p>2.系统调用必须被编译进内核映像（不能被编译成模块）</p>
+</blockquote>
+<h4 id="7-2从用户空间访问系统调用"><a href="#7-2从用户空间访问系统调用" class="headerlink" title="7.2从用户空间访问系统调用"></a>7.2从用户空间访问系统调用</h4><p>系统调用靠的时C库的支持，用户程序通过包含标准头文件并和C库链接，就可以使用系统调用。</p>
+<p><strong>Linux新系统调用增添频率很低，说明Linux系统是一个相对较为稳定并且功能已经较为完善的操作系统</strong></p>
+]]></content>
+      <categories>
+        <category>Linux系统内核相关</category>
+      </categories>
+      <tags>
+        <tag>Linux系统内核设计</tag>
       </tags>
   </entry>
   <entry>
@@ -1098,92 +1268,6 @@
       </categories>
       <tags>
         <tag>红队攻防</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>系统调用</title>
-    <url>/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/</url>
-    <content><![CDATA[<h2 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h2><h3 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h3><p>系统调用是内核与用户进程进行交互的一组接口，这些接口让应用程序受限制的访问硬件设备，提供了创建新进程并与已有进程进行交互通信的机制，也提供了申请操作系统其他资源的能力。</p>
-<p>系统调用在Linux系统中的地位如下图所示：</p>
-<img data-src="/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/OIP1.jpg" class>
-
-<h3 id="2-与内核通信"><a href="#2-与内核通信" class="headerlink" title="2.与内核通信"></a>2.与内核通信</h3><p>系统调用在用户空间进程和硬件设备之间添加了一个中间层。这样的中间层有如下作用：</p>
-<blockquote>
-<p>1.为用户空间提供了一种硬件的抽象接口。</p>
-</blockquote>
-<blockquote>
-<p>2.系统调用确保了系统的稳定与安全。内核可以作为硬件设备与用户空间之间的中间人，基于权限、用户类型和一些其他的规则对需要进行的访问做出裁决。</p>
-</blockquote>
-<blockquote>
-<p>3.避免用户空间的应用程序对硬件资源随意访问而内核一无所知，这样既无法实现多任务和虚拟内存，也不能确保良好的稳定性和安全性。</p>
-</blockquote>
-<p><strong>Linux中：系统调用是用户空间访问内核的唯一手段—-除了异常和陷入外，它们是内核唯一的合法入口</strong></p>
-<h3 id="3-API、POSIX、C库"><a href="#3-API、POSIX、C库" class="headerlink" title="3.API、POSIX、C库"></a>3.API、POSIX、C库</h3><p>应用程序通过在用户空间实现的应用编程接口（API）而不是直接通过系统调用。</p>
-<blockquote>
-<p>1.API实际上并不需要与内核提供的系统调用一一对应，程序员只跟API打交道。</p>
-<p>2.内核只跟系统调用打交道，库函数以及应用程序如何使用系统调用不是内核所关心的。</p>
-<p>3.API可以实现成一个系统调用，也可以实现多个系统调用，甚至也可以不实现系统调用。</p>
-</blockquote>
-<p>在UNIX中，最流行的应用编程接口是基于POSIX标准的。</p>
-<p>Linux系统调用作为C库的一部分提供。C库实现了Unix系统的主要API，包括标准C库函数和系统调用接口，此外，C库提供了POSIX的绝大部分API。</p>
-<h3 id="4-系统调用-syscall"><a href="#4-系统调用-syscall" class="headerlink" title="4.系统调用(syscall)"></a>4.系统调用(syscall)</h3><p><strong>通过在C库中定义的函数调用来执行</strong></p>
-<p>系统调用在出现错误的时候C库会将错误码写入errno全局变量。通过调用perror()库函数，可以把该变量翻译成用户可以理解的错误字符串。</p>
-<p>为了保证32为操作系统和64位操作系统的兼容，系统调用在用户空间和内核空间有着不同的返回值类型。用户空间为int，内核空间为long。系统调用在内核中前面会加上sys_。例如：返回当前进程PID的系统调用get_pid（）在内核中被定义为sys_getpid()。</p>
-<h4 id="4-1系统调用号"><a href="#4-1系统调用号" class="headerlink" title="4.1系统调用号"></a>4.1系统调用号</h4><p>在Linux中，每个系统调用都会被赋予一个系统调用号（独一无二的）。进程在执行系统调用时，不需要提及系统调用的名称，只需要使用系统调用号即可。</p>
-<p><strong>系统调用号相当重要，一旦分配好就不能再更改，因为会导致之前编译好的应用程序崩溃。</strong>即使这个系统调用被删除，它所占用的系统调用号也不允许被回收利用。</p>
-<p>内核记录了系统调用表中的所有已经注册过的系统调用的列表，存储在sys_call_table中，这个表为每一个有效的</p>
-<p>系统调用指定了唯一的系统调用号。</p>
-<h4 id="4-2系统调用的性能"><a href="#4-2系统调用的性能" class="headerlink" title="4.2系统调用的性能"></a>4.2系统调用的性能</h4><p>Linux系统调用比其他许多的操作系统执行要快。原因如下：</p>
-<blockquote>
-<p>1.Linux很短的上下文切换时间，进出内核都被优化的极为高效。</p>
-<p>2.系统调用处理程序和每个系统调用本身非常简洁。</p>
-</blockquote>
-<h3 id="5-系统调用处理程序"><a href="#5-系统调用处理程序" class="headerlink" title="5.系统调用处理程序"></a>5.系统调用处理程序</h3><p>应用程序通过<strong>软中断</strong>的方式来告诉内核自己期望执行一个系统调用，希望系统当前可以从用户态切换到内核态，这样内核就可以代表应用程序在内核空间中执行系统调用。</p>
-<p><strong>软中断</strong>：通过引起一个异常来促使系统切换到内核态前去执行异常处理程序。此时的异常处理程序其实就是<strong>系统调用处理程序</strong>。</p>
-<p>在X86系统中预定义的软中断是中断号128，通过int $0x80来触发中断。这条指令会触发一个异常导致系统切换到内核态并执行128号异常处理程序（系统调用处理程序）。</p>
-<h4 id="5-1指定恰当的系统调用"><a href="#5-1指定恰当的系统调用" class="headerlink" title="5.1指定恰当的系统调用"></a>5.1指定恰当的系统调用</h4><p>在陷入内核空间时，要将系统调用号传给内核空间。X86系统，系统调用号是通过eax寄存器传递给内核的。system_call()函数通过将给定的系统调用号与NR_syscalls做比较来检查其有效性。大于或者等于NR_syscalls，函数就返回-ENOSYS,否则，执行相应的系统调用。</p>
-<p>系统调用表中的表项是以64位类型存放的，所以内核需要将给定的系统调用号乘4，然后用所得结果在表中查询位置。</p>
-<h4 id="5-2参数传递"><a href="#5-2参数传递" class="headerlink" title="5.2参数传递"></a>5.2参数传递</h4><p>部分系统调用除了系统调用号之外，还需要传入一些外部参数，在发生陷入的时候，一并传给内核，同样是放在寄存器中。<strong>给用户空间的返回值同样是通过寄存器来传递的</strong></p>
-<h3 id="6-系统调用的实现"><a href="#6-系统调用的实现" class="headerlink" title="6.系统调用的实现"></a>6.系统调用的实现</h3><h4 id="6-1实现系统调用"><a href="#6-1实现系统调用" class="headerlink" title="6.1实现系统调用"></a>6.1实现系统调用</h4><p>要求：</p>
-<ul>
-<li>Linux中不提倡采用多用途的系统调用（一个系统调用通过传递不同的参数值来完成选择的工作）</li>
-<li>系统调用的接口应该力求简洁，参数尽量少。提供标志参数以确保向前兼容。</li>
-<li>系统调用的设计越通用越好。</li>
-</ul>
-<h4 id="6-2参数验证"><a href="#6-2参数验证" class="headerlink" title="6.2参数验证"></a>6.2参数验证</h4><p>系统调用必须检查参数是否合法有效。系统调用在内核空间中执行，任由用户将不合法的输入传递给内核，系统大的安全和稳定性将面临考验。进程不能让内核访问那些他没有权限访问的数据。</p>
-<ul>
-<li>与文件IO有关的系统调用需要检查文件描述符是否有效，与进程有关的函数必须检查提供的PID是否有效。</li>
-<li>检查用户提供的指针是否有效<ul>
-<li>指针指向的内存区域只能属于用户空间，进程不能告诉内核去读内核空间中的数据。</li>
-<li>指针指向的内存区域在自己的进程中，不能让内核去读其他进程中的数据。</li>
-<li>进程不能越过内存访问限制（可读、可写、可执行）</li>
-</ul>
-</li>
-<li>检查是否有合法权限</li>
-</ul>
-<p>内核提供了两个方法来完成必须的检查和内核空间与用户空间之间的数据来回拷贝</p>
-<ul>
-<li>写入：copy_to_user()</li>
-<li>读取：copy_from_user()</li>
-</ul>
-<p>这两个方法可能会引起阻塞。当包含用户数据的页被换出到硬盘上而不是在物理内存上的时候，进程会休眠，直到缺页处理程序将该页从硬盘从新换回物理内存。</p>
-<h3 id="7-系统调用上下文"><a href="#7-系统调用上下文" class="headerlink" title="7.系统调用上下文"></a>7.系统调用上下文</h3><p>在进程调用系统调用时，会有进程上下文。既可以被抢占也可以休眠。</p>
-<p>可以休眠说明系统调用可以利用内核提供的绝大部分功能。可以被抢占说明该系统调用时可重入的（新的进程同样可以使用相同的系统调用）。</p>
-<p>系统调用返回时，控制权仍然在system_call()中，它最终会负责切换到内核工作空间，并让用户进程继续执行下去。</p>
-<h4 id="7-1绑定一个系统调用的最后步骤"><a href="#7-1绑定一个系统调用的最后步骤" class="headerlink" title="7.1绑定一个系统调用的最后步骤"></a>7.1绑定一个系统调用的最后步骤</h4><blockquote>
-<p>1.在系统调用表中的最后加入一个表项。从0开始算起，系统调用在表中的位置就是他的系统调用号。</p>
-</blockquote>
-<blockquote>
-<p>2.系统调用必须被编译进内核映像（不能被编译成模块）</p>
-</blockquote>
-<h4 id="7-2从用户空间访问系统调用"><a href="#7-2从用户空间访问系统调用" class="headerlink" title="7.2从用户空间访问系统调用"></a>7.2从用户空间访问系统调用</h4><p>系统调用靠的时C库的支持，用户程序通过包含标准头文件并和C库链接，就可以使用系统调用。</p>
-<p><strong>Linux新系统调用增添频率很低，说明Linux系统是一个相对较为稳定并且功能已经较为完善的操作系统</strong></p>
-]]></content>
-      <categories>
-        <category>Linux系统内核相关</category>
-      </categories>
-      <tags>
-        <tag>Linux系统内核设计</tag>
       </tags>
   </entry>
   <entry>
