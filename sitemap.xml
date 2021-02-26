@@ -11,7 +11,7 @@
   <url>
     <loc>https://www.mindmaster.top/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6-1/</loc>
     
-    <lastmod>2021-02-25</lastmod>
+    <lastmod>2021-02-26</lastmod>
     
   </url>
   
@@ -382,13 +382,6 @@
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/tags/spring%E6%A1%86%E6%9E%B6/</loc>
-    <lastmod>2021-02-26</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://www.mindmaster.top/tags/Tomcat/</loc>
     <lastmod>2021-02-26</lastmod>
     <changefreq>daily</changefreq>
@@ -397,6 +390,13 @@
   
   <url>
     <loc>https://www.mindmaster.top/tags/%E4%B8%AD%E6%96%AD/</loc>
+    <lastmod>2021-02-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.mindmaster.top/tags/spring%E6%A1%86%E6%9E%B6/</loc>
     <lastmod>2021-02-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -424,14 +424,14 @@
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/tags/Linux%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1/</loc>
+    <loc>https://www.mindmaster.top/tags/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2/</loc>
     <lastmod>2021-02-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/tags/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2/</loc>
+    <loc>https://www.mindmaster.top/tags/Linux%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1/</loc>
     <lastmod>2021-02-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -489,14 +489,14 @@
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/categories/spring%E6%A1%86%E6%9E%B6/</loc>
+    <loc>https://www.mindmaster.top/categories/Linux%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E7%9B%B8%E5%85%B3/</loc>
     <lastmod>2021-02-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/categories/Linux%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E7%9B%B8%E5%85%B3/</loc>
+    <loc>https://www.mindmaster.top/categories/spring%E6%A1%86%E6%9E%B6/</loc>
     <lastmod>2021-02-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
