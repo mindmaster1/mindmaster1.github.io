@@ -28,11 +28,16 @@
 <meta property="og:site_name" content="一只小码农">
 <meta property="og:description" content="对Tomcat第一阶段学习的总结">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.mindmaster.top/2021/02/25/Tomcat%E6%9C%8D%E5%8A%A1%E5%99%A8/01.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/02/25/Tomcat%E6%9C%8D%E5%8A%A1%E5%99%A8/02.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/02/25/Tomcat%E6%9C%8D%E5%8A%A1%E5%99%A8/03.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/02/25/Tomcat%E6%9C%8D%E5%8A%A1%E5%99%A8/04.png">
 <meta property="article:published_time" content="2021-02-25T15:46:32.000Z">
-<meta property="article:modified_time" content="2021-02-25T07:47:41.947Z">
+<meta property="article:modified_time" content="2021-02-27T06:11:46.366Z">
 <meta property="article:author" content="邢浩东">
 <meta property="article:tag" content="Tomcat">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.mindmaster.top/2021/02/25/Tomcat%E6%9C%8D%E5%8A%A1%E5%99%A8/01.png">
 
 <link rel="canonical" href="https://www.mindmaster.top/2021/02/25/Tomcat%E6%9C%8D%E5%8A%A1%E5%99%A8/">
 
@@ -247,10 +252,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-02-25 15:46:32 / 修改时间：07:47:41" itemprop="dateCreated datePublished" datetime="2021-02-25T15:46:32Z">2021-02-25</time>
+              <time title="创建时间：2021-02-25 15:46:32" itemprop="dateCreated datePublished" datetime="2021-02-25T15:46:32Z">2021-02-25</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-02-27 06:11:46" itemprop="dateModified" datetime="2021-02-27T06:11:46Z">2021-02-27</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -288,14 +299,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>0</span>
+              <span>8.8k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>8 分钟</span>
             </span>
             <div class="post-description">对Tomcat第一阶段学习的总结</div>
 
@@ -308,7 +319,125 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <h2 id="CATALINA-HOME-与CATALINA-BASE的区别"><a href="#CATALINA-HOME-与CATALINA-BASE的区别" class="headerlink" title="CATALINA_HOME 与CATALINA_BASE的区别"></a>CATALINA_HOME 与CATALINA_BASE的区别</h2><p><strong>如何创建多个Tomcat服务器实例</strong></p>
+<p>到底CATALINA_HOME和CATALINA_BASE有什么区别呢，之前因为都是小打小闹的在服务器上安装一个tomcat就得了，然后根据前人的配置，将CATALINA_HOME和CATALINA_BASE两个值设为了tomcat的目录（其实此处描述很不精确），今天无意间看到了公司的安装文档说明，里面提到了多个tomcat实例运行的配置，才弄明白到底这两者之间有什么区别。</p>
+<p>我们可以从Tomcat 5.5的配置文档（<a target="_blank" rel="noopener" href="http://tomcat.apache.org/tomcat-5.5-doc/config/host.html%EF%BC%89">http://tomcat.apache.org/tomcat-5.5-doc/config/host.html）</a> 中找到答案：</p>
+<p>The description below uses the variable name $CATALINA_HOME to refer to the directory into which you have installed Tomcat 5, and is the base directory against which most relative paths are resolved. However, if you have configured Tomcat 5 for multiple instances by setting a CATALINA_BASE directory, you should use $CATALINA_BASE instead of $CATALINA_HOME for each of these references.</p>
+<p>从这段描述可以看出CATALINA_HOME和CATALINA_BASE的区别。简单的说，CATALINA_HOME是Tomcat的安装目 录，CATALINA_BASE是Tomcat的工作目录。如果我们想要运行Tomcat的 多个实例，但是不想安装多个Tomcat软件副本。那么我们可以配置多个工作 目录，每个运行实例独占一个工作目录，但是共享同一个安装目录。</p>
+<p>Tomcat每个运行实例需要使用自己的conf、logs、temp、webapps、work和shared目录，因此CATALINA_BASE就 指向这些目录。 而其他目录主要包括了Tomcat的二进制文件和脚本，CATALINA_HOME就指向这些目录。</p>
+<p>如果我们希望再运行另一个Tomcat实例，那么我们可以建立一个目录，把conf、logs、temp、webapps、work和shared拷贝 到该目录下，然后让CATALINA_BASE指向该目录即可。</p>
+<p>在一台服务器上，可以运行多个tomcat实例，不需要安装多个tomcat，可以采用不同的用户，以test用户为例，拷贝/usr/local/apache-tomcat-6.0.18目录到/home/test下，删除/home/test/apache-tomcat-6.0.18/bin子目录（此目录不需要），编辑/home/test/.bash_profile文件,设置CATALINA_HOME指向刚才的安装目录/usr/local/apache-tomcat-6.0.18,设置JAVA_HOME指向刚才的安装目录/usr/java/jdk1.6.0_11。设置CATALINA_BASE指向/home/test/apache-tomcat-6.0.18，设置CATALINA_OPTS跟/root/.bash_profile的一致（jmx管理端口用不同的端口号）</p>
+<h2 id="bat和-sh文件的区别"><a href="#bat和-sh文件的区别" class="headerlink" title=".bat和.sh文件的区别"></a>.bat和.sh文件的区别</h2><p>bat文件是<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/dos/32025">dos</a>下的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%89%B9%E5%A4%84%E7%90%86%E6%96%87%E4%BB%B6/5363369">批处理文件</a>。批处理文件是无格式的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%96%87%E6%9C%AC%E6%96%87%E4%BB%B6/747597">文本文件</a>，它包含一条或多条<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%91%BD%E4%BB%A4/13020279">命令</a>。它的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%96%87%E4%BB%B6%E6%89%A9%E5%B1%95%E5%90%8D/1270230">文件扩展名</a>为 .bat 或 .cmd。在命令提示下输入批处理文件的名称，或者双击该批处理文件，系统就会调用cmd.exe按照该文件中各个命令出现的顺序来逐个运行它们 [1] 。使用批处理文件（也被称为<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%89%B9%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F/2192936">批处理程序</a>或<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E8%84%9A%E6%9C%AC/399">脚本</a>），可以简化日常或重复性任务。入侵者常常通过批处理文件的编写来实现多工具的组合入侵、自动入侵及结果提取等功能。</p>
+<p>sh文件是UNIX/LINUX 操作系统的脚本文件，用记事本就可以打开。</p>
+<h2 id="Tomcat安装对Java配置的要求"><a href="#Tomcat安装对Java配置的要求" class="headerlink" title="Tomcat安装对Java配置的要求"></a>Tomcat安装对Java配置的要求</h2><p>【问题】</p>
+<p>Tomcat的启动到底需要JDK还是JRE呢？</p>
+<p>【环境】</p>
+<p>电脑上装有JDK和JRE，还有解压缩的Tomcat</p>
+<p>【尝试】</p>
+<p>1.当环境变量中没有JAVA_HOME和JRE_HOME，但是Path中有JDK的bin目录，也就是说cmd下java和javac命令都可以执行，</p>
+<p>此时进入Tomcat的bin目录下执行startup.bat会提示无JRE_HOME或JAVA_HOME，见图：<br> <img data-src="/2021/02/25/Tomcat%E6%9C%8D%E5%8A%A1%E5%99%A8/01.png" class></p>
+<p>2.给环境变量中添加JRE_HOME之后在执行startup.bat，Tomcat启动成功，见图：</p>
+<p>JRE_HOME：<br> <img data-src="/2021/02/25/Tomcat%E6%9C%8D%E5%8A%A1%E5%99%A8/02.png" class><br>Tomcat启动：</p>
+<img data-src="/2021/02/25/Tomcat%E6%9C%8D%E5%8A%A1%E5%99%A8/03.png" class>
+
+<p>3.将JRE_HOME删除之后，添加JAVA_HOME，执行startup.bat，Tomcat启动成功，见图：</p>
+<p>JAVA_HOME：<br> <img data-src="/2021/02/25/Tomcat%E6%9C%8D%E5%8A%A1%E5%99%A8/04.png" class></p>
+<p>Tomcat启动：</p>
+
+
+<p>【总结】</p>
+<p>1.Tomcat启动需要环境变量中有JRE_HOME或者JAVA_HOME；</p>
+<p>2.有JRE_HOME就可以启动说明Tomcat只需要JRE就可以运行；<br>3.Tomcat安装和启动：a.安装JRE并添加JRE_HOME，b.安装并解压缩Tomcat，c.运行startup.bat</p>
+<h2 id="Tomcat下第一个webapp的部署"><a href="#Tomcat下第一个webapp的部署" class="headerlink" title="Tomcat下第一个webapp的部署"></a>Tomcat下第一个webapp的部署</h2><p>在描述如何组织源代码目录之前，检查Web应用程序的运行时组织非常有用。在Servlet API规范2.2版之前，服务器平台之间几乎没有一致性。但是，要求符合2.2（或更高版本）规范的服务器接受标准格式的 <em>Web应用程序存档</em>，</p>
+<p>Web应用程序被定义为标准布局中目录和文件的层次结构。可以以“未打包”形式（其中每个目录和文件分别存在于文件系统中）或以称为Web ARchive或WAR文件的“打包”形式来访问这种层次结构。前一种格式在开发期间更有用，而后一种格式在分发要安装的应用程序时使用</p>
+<p>Web应用程序层次结构的顶级目录也是应用程序的 <em>文档根</em>。在这里，您将放置构成应用程序用户界面的HTML文件和JSP页面。当系统管理员将您的应用程序部署到特定服务器上时，他或她会为您的应用程序分配<em>上下文路径</em>，因此，如果系统管理员将您的应用程序分配给上下文路径 <code>/catalog</code>，则引用的请求URI 将从您的文档根目录<code>/catalog/index.html</code>检索<code>index.html</code>文件。</p>
+<h3 id="标准目录布局"><a href="#标准目录布局" class="headerlink" title="标准目录布局"></a>标准目录布局</h3><p>为了便于以所需格式创建Web应用程序存档文件，可以将Web应用程序的“可执行”文件（即Tomcat在执行应用程序时实际使用的文件）安排在与WAR格式本身。为此，您将在应用程序的“文档根目录”目录中获得以下内容：</p>
+<ul>
+<li><strong>.html。</strong> jsp<strong>等</strong>-HTML和JSP页面以及应用程序的客户端浏览器必须可见的其他文件（例如JavaScript，样式表文件和图像）。在较大的应用程序中，您可以选择将这些文件划分为子目录层次结构，但是对于较小的应用程序，通常只为这些文件维护一个目录要简单得多。</li>
+</ul>
+<ul>
+<li>*<em>/WEB-INF/web.xml-**您的应用程序的</em>Web应用程序部署描述符*。这是一个XML文件，描述了组成应用程序的servlet和其他组件，以及您希望服务器为您强制执行的所有初始化参数和容器管理的安全性约束。 </li>
+</ul>
+<ul>
+<li><strong>/ WEB-INF / classes /</strong> -此目录包含您的应用程序所需的所有Java类文件（和相关资源），包括未合并到JAR文件中的servlet和非servlet类。如果您的类被组织为Java包，则必须在目录层次结构下将其反映出来 <code>/WEB-INF/classes/</code>。例如，一个名为的Java类 <code>com.mycompany.mypackage.MyServlet</code> 将需要存储在一个名为的文件中 <code>/WEB-INF/classes/com/mycompany/mypackage/MyServlet.class</code>。</li>
+</ul>
+<ul>
+<li><strong>/ WEB-INF / lib /</strong> -此目录包含JAR文件，这些文件包含您的应用程序所需的Java类文件（和相关资源），例如第三方类库或JDBC驱动程序。</li>
+</ul>
+<p>当您将应用程序安装到Tomcat（或任何其他2.2或更高版本的Servlet容器）中时，该<code>WEB-INF/classes/</code> 目录中的类以及该目录中找到的JAR文件中的所有类对于 <code>WEB-INF/lib/</code>您的特定Web应用程序中的其他类都是可见的。因此，如果在这些位置之一中包含所有必需的库类（请确保检查许可证以获取对您使用的任何第三方库的再发行权），则将简化Web应用程序的安装-无需对系统进行任何调整类路径（或在服务器中安装全局库文件）将是必需的。</p>
+<h3 id="共享库文件"><a href="#共享库文件" class="headerlink" title="共享库文件"></a>共享库文件</h3><p>像大多数servlet容器一样，Tomcat还支持一种机制，可以一次安装库JAR文件（或解压缩的类），并使它们对所有已安装的Web应用程序可见（不必包含在Web应用程序本身中）。“<a target="_blank" rel="noopener" href="https://tomcat.apache.org/tomcat-10.0-doc/class-loader-howto.html">类装入器方法”</a>文档中介绍了有关Tomcat如何查找和共享此类的详细信息 。在Tomcat安装中，共享代码通常使用的位置是 <strong>$ CATALINA_HOME / lib</strong>。放置在此处的JAR文件对于Web应用程序和内部Tomcat代码均可见。这是放置应用程序或内部Tomcat使用（例如DataSourceRealm）所需的JDBC驱动程序的好地方。</p>
+<h3 id="web应用程序部署描述符"><a href="#web应用程序部署描述符" class="headerlink" title="web应用程序部署描述符"></a>web应用程序部署描述符</h3><p>该<code>/WEB-INF/web.xml</code>文件包含您的应用程序的Web应用程序部署描述符。就像文件名扩展名所暗示的那样，此文件是XML文档，定义了服务器需要了解的与应用程序有关的所有内容（<em>上下文路径</em>除外，该<em>上下文路径</em>是在部署应用程序时由系统管理员分配的），预计将提供开发工具来为您创建和编辑部署描述符。同时，为了提供一个起点，提供了一个<a target="_blank" rel="noopener" href="https://tomcat.apache.org/tomcat-10.0-doc/appdev/web.xml.txt">基本的web.xml文件</a> 。该文件包含描述每个包含元素目的的注释。</p>
+<p><strong>注释说明（DTD文档类型描述符）</strong></p>
+<p> Servlet规范包括用于Web应用程序部署描述符的文档类型描述符（DTD），并且Tomcat在处理应用程序的<code>/WEB-INF/web.xml</code>文件时会强制执行此处定义的规则 。特别是，你<strong>必须</strong>由DTD定义的顺序输入你的描述符元素（如<code>&lt;filter&gt;</code>， <code>&lt;servlet&gt;</code>和<code>&lt;servlet-mapping&gt;</code>由DTD定义的顺序。</p>
+<h2 id="具体的使用Tomcat进行部署"><a href="#具体的使用Tomcat进行部署" class="headerlink" title="具体的使用Tomcat进行部署"></a>具体的使用Tomcat进行部署</h2><p><em>下面的描述使用变量名$ CATALINA_BASE来引用可解决大多数**</em>相对路径*<em>的基本目录。如果尚未通过设置CATALINA_BASE目录为多个实例配置Tomcat，则$ CATALINA_BASE将设置为$ CATALINA_HOME的值，该目录已将Tomcat安装到该目录中。</em></p>
+<h3 id="JAR和WAR包的区别"><a href="#JAR和WAR包的区别" class="headerlink" title="JAR和WAR包的区别"></a>JAR和WAR包的区别</h3><p>war是一个web模块，其中需要包括WEB-INF，是可以直接运行的WEB模块。而jar一般只是包括一些class文件，在声明了Main_class之后是可以用java命令运行的.<br>它们都是压缩的包,拿Tomcat来说,将war文件包放置它的\webapps\目录下，启动Tomcat,这个包可以自动进行解压，也就是你的web目录，相当于发布了。</p>
+<p>war包:是做好一个web应用后，通常是网站，打成包部署到容器中。<br>jar包：通常是开发时要引用通用类，打成包便于存放管理。<br>ear包：企业级应用，通常是EJB打成ear包。</p>
+<p>所有的包都是用jar打的，只不过目标文件的扩展名不一样。<br>WAR是Sun提出的一种Web应用程序格式，与JAR类似，也是许多文件的一个压缩包。这个包中的文件按一定目录结构来组织：通常其根目录下包含有Html和Jsp文件或者包含这两种文件的目录，另外还会有一个WEB-INF目录，这个目录很重要。通常在WEB-INF目录下有一个web.xml文件和一个classes目录，web.xml是这个应用的配置文件，而classes目录下则包含编译好的Servlet类和Jsp或Servlet所依赖的其它类（如JavaBean）。通常这些所依赖的类也可以打包成JAR放到WEB-INF下的lib目录下，当然也可以放到系统的CLASSPATH中，但那样移植和管理起来不方便。</p>
+<h3 id="Tomcat-Web应用程序部署"><a href="#Tomcat-Web应用程序部署" class="headerlink" title="Tomcat Web应用程序部署"></a>Tomcat Web应用程序部署</h3><p>部署是用于将Web应用程序（第三方WAR或您自己的自定义Web应用程序）安装到Tomcat服务器的过程的术语。</p>
+<p>Web应用程序部署可以在Tomcat服务器中以多种方式完成。</p>
+<ul>
+<li>静态地 在启动Tomcat之前先设置Web应用程序</li>
+<li>动态地 通过直接操作已经部署的Web应用程序（依靠<em>自动部署</em> 功能）或通过使用Tomcat Manager Web应用程序远程</li>
+</ul>
+<p>在<a target="_blank" rel="noopener" href="https://tomcat.apache.org/tomcat-10.0-doc/manager-howto.html">Tomcat管理器</a>是一个可以交互使用（通过HTML GUI）或以编程方式（通过基于URL的API）来部署和管理Web应用程序的Web应用程序。</p>
+<p>有多种方法可以执行依赖于Manager Web应用程序的部署。Apache Tomcat提供了用于Apache Ant构建工具的任务。 <a target="_blank" rel="noopener" href="https://tomcat.apache.org/maven-plugin.html">Apache Tomcat Maven插件</a> 项目提供了与Apache Maven的集成。还有一个名为Client Deployer的工具，可以从命令行使用它，并提供其他功能，例如编译和验证Web应用程序以及将Web应用程序打包到Web应用程序资源（WAR）文件中。</p>
+<h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><p>静态部署Web应用程序不需要安装，因为Tomcat是开箱即用的。尽管需要某些配置（如<a target="_blank" rel="noopener" href="https://tomcat.apache.org/tomcat-10.0-doc/manager-howto.html">Tomcat Manager手册</a>中所述），但使用Tomcat Manager进行部署功能也不需要进行任何安装 。但是，如果您想使用Tomcat Client Deployer（TCD），则需要进行安装。</p>
+<p>TCD没有与Tomcat核心发行版一起打包，因此必须从“下载”区域单独下载。该下载通常标有 <em>apache-tomcat-10.0.x-deployer</em>。</p>
+<h4 id="上下文"><a href="#上下文" class="headerlink" title="上下文"></a>上下文</h4><p>在谈论Web应用程序的部署时，需要理解<em>上下文</em>的概念 。上下文是Tomcat所谓的Web应用程序。</p>
+<p>为了在Tomcat中配置上下文， 需要<em>上下文描述符</em>。上下文描述符只是一个XML文件，其中包含与Tomcat相关的Context配置，例如命名资源或会话管理器配置。在早期版本的Tomcat中，上下文描述符配置的内容通常存储在Tomcat的主要配置文件<em>server.xml中，</em>但是现在不建议这样做（尽管目前仍然可以使用）。</p>
+<p>上下文描述符不仅帮助Tomcat知道如何配置上下文，而且其他工具（例如Tomcat Manager和TCD）经常使用这些上下文描述符来正确执行其角色。</p>
+<p>上下文描述符的位置为：</p>
+<ol>
+<li>$ CATALINA_BASE / conf / [引擎名称] / [主机名] / [webappname] .xml</li>
+<li>$ CATALINA_BASE / webapps / [webappname] /META-INF/context.xml</li>
+</ol>
+<p>（1）中的文件名为[webappname] .xml，但（2）中的文件命名为context.xml。如果未为上下文提供上下文描述符，则Tomcat使用默认值配置上下文。</p>
+<h3 id="部署方式"><a href="#部署方式" class="headerlink" title="部署方式"></a>部署方式</h3><h4 id="静态部署：在Tomcat启动时进行部署"><a href="#静态部署：在Tomcat启动时进行部署" class="headerlink" title="静态部署：在Tomcat启动时进行部署"></a>静态部署：在Tomcat启动时进行部署</h4><p>如果您对使用Tomcat Manager或TCD不感兴趣，则需要将Web应用程序静态部署到Tomcat，然后再启动Tomcat。您将Web应用程序部署到此类型的部署的位置称为“ <code>appBase</code>每个主机指定的位置”。您可以将所谓的<em>爆炸式Web应用程序</em>（即未压缩的<em>Web应用程序）</em>复制到此位置，也可以将压缩的Web应用程序资源.WAR文件复制到该位置。</p>
+<p><code>appBase</code>仅在主机<code>deployOnStartup</code>属性为“ true”时，才会在Tomcat启动时部署 由主机（默认主机为“ localhost”）属性（默认appBase为“ $ CATALINA_BASE / webapps”）指定的位置中存在的Web应用程序。</p>
+<p>在这种情况下，将在Tomcat启动时执行以下部署顺序：</p>
+<ol>
+<li>任何上下文描述符都将首先部署。</li>
+<li>然后将部署未由任何上下文描述符引用的爆炸性Web应用程序。如果他们在appBase中具有关联的.WAR文件，并且该文件比分解的Web应用程序新，则分解的目录将被删除，并且将从.WAR重新部署该Webapp。</li>
+<li>.WAR文件将被部署</li>
+</ol>
+<h4 id="动态部署：对正在运行的Tomcat服务器上进行部署"><a href="#动态部署：对正在运行的Tomcat服务器上进行部署" class="headerlink" title="动态部署：对正在运行的Tomcat服务器上进行部署"></a>动态部署：对正在运行的Tomcat服务器上进行部署</h4><p>可以将Web应用程序部署到正在运行的Tomcat服务器。</p>
+<p>如果Host<code>autoDeploy</code>属性为“ true”，则Host将尝试根据需要动态地部署和更新Web应用程序，例如，如果将新的.WAR放到了.WAR中<code>appBase</code>。为此，主机需要启用后台处理，这是默认配置。</p>
+<p><code>autoDeploy</code> 设置为“ true”，并且正在运行的Tomcat允许：</p>
+<ul>
+<li>部署.WAR文件复制到主机中<code>appBase</code>。</li>
+<li>部署爆炸性Web应用程序，并将其复制到Host中<code>appBase</code>。</li>
+<li>当提供新的.WAR时，重新部署已经从.WAR部署的Web应用程序。在这种情况下，将删除爆炸的Web应用程序，然后再次扩展.WAR。请注意，如果配置了主机，则不会以<code>unpackWARs</code> 设置为“ false”的属性爆炸.WAR ，在这种情况下，Web应用程序将简单地重新部署为压缩归档文件，则不会发生爆炸。</li>
+<li>如果/WEB-INF/web.xml文件（或定义为WatchedResource的任何其他资源）已更新，则重新加载Web应用程序。</li>
+<li>如果更新了从中部署Web应用程序的上下文描述符文件，则重新部署Web应用程序。</li>
+<li>如果更新了Web应用程序使用的全局或每个主机的上下文描述符文件，则重新部署从属Web应用程序。</li>
+<li>如果将上下文描述符文件（文件名与先前部署的Web应用程序的Context路径相对应）添加到该<code>$CATALINA_BASE/conf/[enginename]/[hostname]/</code> 目录中，则重新部署该Web应用程序 。</li>
+<li>如果删除了Web应用程序的文档库（docBase），则将其取消部署。请注意，在Windows上，这假定启用了防锁定功能（请参阅上下文配置），否则无法删除正在运行的Web应用程序的资源。</li>
+</ul>
+<p>请注意，也可以在加载程序中配置Web应用程序的重新加载，在这种情况下，将跟踪已加载的类以进行更改。</p>
+<h4 id="Tomcat-Manager-使用Tomcat管理器进行部署"><a href="#Tomcat-Manager-使用Tomcat管理器进行部署" class="headerlink" title="Tomcat Manager: 使用Tomcat管理器进行部署"></a>Tomcat Manager: 使用Tomcat管理器进行部署</h4><h4 id="TCD-使用客户端部署程序包进行部署"><a href="#TCD-使用客户端部署程序包进行部署" class="headerlink" title="TCD: 使用客户端部署程序包进行部署"></a>TCD: 使用客户端部署程序包进行部署</h4><p>可以使用Tomcat Client Deployer来实现Web应用程序的部署。这是一个软件包，可用于验证，编译，压缩为.WAR并将Web应用程序部署到生产或开发Tomcat服务器。应当注意，此功能使用Tomcat管理器，因此目标Tomcat服务器应正在运行。</p>
+<p>假定用户将熟悉使用Apache TCD的Apache Ant。Apache Ant是一个脚本化的构建工具。TCD预先打包了一个构建脚本以供使用。只需要对Apache Ant有一定的了解（如本页面前面列出的安装，并且熟悉使用操作系统命令外壳程序和配置环境变量）。</p>
+<p>TCD包括Ant任务，在部署之前用于JSP编译的Jasper页面编译器，以及验证Web应用程序上下文描述符的任务。验证程序任务（类 <code>org.apache.catalina.ant.ValidatorTask</code>）仅允许一个参数：展开的Web应用程序的基本路径。</p>
+<p>TCD使用爆炸的Web应用程序作为输入（请参阅下面使用的属性列表）。通过部署程序以编程方式部署的Web应用程序可能在中包含Context Descriptor <code>/META-INF/context.xml</code>。</p>
+<p>TCD包含一个现成的Ant脚本，其目标如下：</p>
+<ul>
+<li><code>compile</code>（默认）：编译和验证Web应用程序。这可以独立使用，不需要运行中的Tomcat服务器。编译后的应用程序将仅在关联的 <em>Tomcat XYZ</em>服务器版本上运行，并且不能保证可以在另一个Tomcat版本上运行，因为Jasper生成的代码取决于其运行时组件。还应注意，此目标还将自动编译位于<code>/WEB-INF/classes</code>Web应用程序文件夹中的任何Java源文件 。</li>
+<li><code>deploy</code>：将Web应用程序（已编译或未编译）部署到Tomcat服务器。</li>
+<li><code>undeploy</code>：取消部署Web应用程序</li>
+<li><code>start</code>：启动Web应用程序</li>
+<li><code>reload</code>：重新加载Web应用程序</li>
+<li><code>stop</code>：停止Web应用程序</li>
+</ul>
+<p>为了配置部署，请<code>deployer.properties</code>在TCD安装目录根目录中创建一个名为的文件。在此文件中，每行添加以下“名称=值”对：</p>
+<p>此外，您将需要确保已为目标Tomcat Manager（TCD使用的目标用户）设置了用户，否则TCD将不会通过Tomcat Manager进行身份验证，并且部署将失败。为此，请参见“ Tomcat管理器”页面。</p>
+<ul>
+<li><code>build</code>：默认情况下，使用的构建文件夹为 <code>$&#123;build&#125;/webapp/$&#123;path&#125;</code>（<code>$&#123;build&#125;</code>，默认情况下，指向<code>$&#123;basedir&#125;/build</code>）。<code>compile</code>目标执行结束后，Web应用程序.WAR将位于 <code>$&#123;build&#125;/webapp/$&#123;path&#125;.war</code>。</li>
+<li><code>webapp</code>：包含展开的Web应用程序的目录，将对其进行编译和验证。默认情况下，该文件夹为 <code>myapp</code>。</li>
+<li><code>path</code>：默认情况下，Web应用程序的已部署上下文路径<code>/myapp</code>。</li>
+<li><code>url</code>：指向正在运行的Tomcat服务器的Tomcat Manager Web应用程序的绝对URL，它将用于部署和取消部署Web应用程序。默认情况下，部署者将尝试访问在localhost上运行的Tomcat实例 <code>http://localhost:8080/manager/text</code>。</li>
+<li><code>username</code>：Tomcat Manager用户名（用户应具有manager-script角色）</li>
+<li><code>password</code>：Tomcat管理器密码。</li>
+</ul>
+
     </div>
 
     
@@ -431,6 +560,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#CATALINA-HOME-%E4%B8%8ECATALINA-BASE%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.</span> <span class="nav-text">CATALINA_HOME 与CATALINA_BASE的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bat%E5%92%8C-sh%E6%96%87%E4%BB%B6%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">2.</span> <span class="nav-text">.bat和.sh文件的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tomcat%E5%AE%89%E8%A3%85%E5%AF%B9Java%E9%85%8D%E7%BD%AE%E7%9A%84%E8%A6%81%E6%B1%82"><span class="nav-number">3.</span> <span class="nav-text">Tomcat安装对Java配置的要求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tomcat%E4%B8%8B%E7%AC%AC%E4%B8%80%E4%B8%AAwebapp%E7%9A%84%E9%83%A8%E7%BD%B2"><span class="nav-number">4.</span> <span class="nav-text">Tomcat下第一个webapp的部署</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%87%E5%87%86%E7%9B%AE%E5%BD%95%E5%B8%83%E5%B1%80"><span class="nav-number">4.1.</span> <span class="nav-text">标准目录布局</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B1%E4%BA%AB%E5%BA%93%E6%96%87%E4%BB%B6"><span class="nav-number">4.2.</span> <span class="nav-text">共享库文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#web%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E9%83%A8%E7%BD%B2%E6%8F%8F%E8%BF%B0%E7%AC%A6"><span class="nav-number">4.3.</span> <span class="nav-text">web应用程序部署描述符</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E7%9A%84%E4%BD%BF%E7%94%A8Tomcat%E8%BF%9B%E8%A1%8C%E9%83%A8%E7%BD%B2"><span class="nav-number">5.</span> <span class="nav-text">具体的使用Tomcat进行部署</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JAR%E5%92%8CWAR%E5%8C%85%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">5.1.</span> <span class="nav-text">JAR和WAR包的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tomcat-Web%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E9%83%A8%E7%BD%B2"><span class="nav-number">5.2.</span> <span class="nav-text">Tomcat Web应用程序部署</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">5.2.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="nav-number">5.2.2.</span> <span class="nav-text">上下文</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E6%96%B9%E5%BC%8F"><span class="nav-number">5.3.</span> <span class="nav-text">部署方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E9%83%A8%E7%BD%B2%EF%BC%9A%E5%9C%A8Tomcat%E5%90%AF%E5%8A%A8%E6%97%B6%E8%BF%9B%E8%A1%8C%E9%83%A8%E7%BD%B2"><span class="nav-number">5.3.1.</span> <span class="nav-text">静态部署：在Tomcat启动时进行部署</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E9%83%A8%E7%BD%B2%EF%BC%9A%E5%AF%B9%E6%AD%A3%E5%9C%A8%E8%BF%90%E8%A1%8C%E7%9A%84Tomcat%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E8%BF%9B%E8%A1%8C%E9%83%A8%E7%BD%B2"><span class="nav-number">5.3.2.</span> <span class="nav-text">动态部署：对正在运行的Tomcat服务器上进行部署</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Tomcat-Manager-%E4%BD%BF%E7%94%A8Tomcat%E7%AE%A1%E7%90%86%E5%99%A8%E8%BF%9B%E8%A1%8C%E9%83%A8%E7%BD%B2"><span class="nav-number">5.3.3.</span> <span class="nav-text">Tomcat Manager: 使用Tomcat管理器进行部署</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TCD-%E4%BD%BF%E7%94%A8%E5%AE%A2%E6%88%B7%E7%AB%AF%E9%83%A8%E7%BD%B2%E7%A8%8B%E5%BA%8F%E5%8C%85%E8%BF%9B%E8%A1%8C%E9%83%A8%E7%BD%B2"><span class="nav-number">5.3.4.</span> <span class="nav-text">TCD: 使用客户端部署程序包进行部署</span></a></li></ol></li></ol></li></ol></div>
 
       </div>
       <!--/noindex-->
@@ -565,13 +695,13 @@ setInterval(function(){
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">63k</span>
+    <span title="站点总字数">72k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">58 分钟</span>
+    <span title="站点阅读时长">1:06</span>
 </div>
 
 
