@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Ajax异步传输</title>
-    <url>/2021/02/25/Ajax%E5%BC%82%E6%AD%A5%E4%BC%A0%E8%BE%93/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>Java web</category>
-      </categories>
-      <tags>
-        <tag>Ajax</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Cookie</title>
     <url>/2021/02/25/Cookie/</url>
     <content><![CDATA[]]></content>
@@ -20,6 +9,17 @@
       </categories>
       <tags>
         <tag>Cookie</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Ajax异步传输</title>
+    <url>/2021/02/25/Ajax%E5%BC%82%E6%AD%A5%E4%BC%A0%E8%BE%93/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Java web</category>
+      </categories>
+      <tags>
+        <tag>Ajax</tag>
       </tags>
   </entry>
   <entry>
@@ -44,7 +44,7 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>IOC控制反转</title>
+    <title>IOC创建对象</title>
     <url>/2021/02/28/IOC%E6%8E%A7%E5%88%B6%E5%8F%8D%E8%BD%AC/</url>
     <content><![CDATA[<h2 id="IOC"><a href="#IOC" class="headerlink" title="IOC"></a>IOC</h2><p>控制反转（<strong>IoC，Inversion of Control</strong>），是一个概念，是一种思想。指将传统上由程序代 码直接操控的对象调用权交给容器，通过容器来实现对象的装配和管理。控制反转就是对对 象控制权的转移，从程序代码本身反转到了外部容器。通过容器实现对象的创建，属性赋值， 依赖的管理。</p>
 <p>IoC 是一个概念，是一种思想，其实现方式多种多样。当前比较流行的实现方式是依赖 注入。应用广泛。</p>
@@ -140,7 +140,7 @@
 </ul>
 ]]></content>
       <categories>
-        <category>spring</category>
+        <category>spring框架</category>
       </categories>
       <tags>
         <tag>spring</tag>
@@ -1173,6 +1173,92 @@
   <entry>
     <title>垃圾收集器与内存分配策略</title>
     <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>基于XML的DI</title>
+    <url>/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/</url>
+    <content><![CDATA[<h2 id="基于XML的DI"><a href="#基于XML的DI" class="headerlink" title="基于XML的DI"></a>基于XML的DI</h2> <img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/01.png" class>
+
+<p>bean 实例在调用无参构造器创建对象后，就要对 bean 对象的属性进行初始化。初始化 是由容器自动完成的，称为注入。</p>
+<p>根据注入方式的不同，常用的有两类：set注入、构造注入</p>
+<h3 id="set注入"><a href="#set注入" class="headerlink" title="set注入"></a>set注入</h3><blockquote>
+<p>set注入</p>
+</blockquote>
+<p>set注入，又叫设值注入，通过<strong>setter 方法</strong>传入被调用者的实例。这种注入方式简单、 直观，因而在 Spring 的依赖注入中大量使用。</p>
+<ul>
+<li><h4 id="简单类型"><a href="#简单类型" class="headerlink" title="简单类型"></a>简单类型</h4></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">student</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setEmail</span><span class="params">(String email)</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;myemail:&quot;</span> + email);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;studenet&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, age=&quot;</span> + age +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>配置文件</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"> <span class="comment">&lt;!--声明student对象--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;mystudent&quot;</span>  <span class="attr">class</span>=<span class="string">&quot;com.bytedance.ba01.student&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;张三&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;age&quot;</span> <span class="attr">value</span>=<span class="string">&quot;12&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;email&quot;</span> <span class="attr">value</span>=<span class="string">&quot;xinghaodong123@163.com&quot;</span>/&gt;</span></span><br><span class="line"><span class="comment">&lt;!--说明不一定是属性才可以注入，spring关心的只是name对应的有没有set方法，有即可设置--&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>创建java.util.Date，并设置初始的日期时间</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;bean id=<span class="string">&quot;mydate&quot;</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">&quot;java.util.Date&quot;</span>&gt;</span><br><span class="line">        &lt;property name=<span class="string">&quot;time&quot;</span> value=<span class="string">&quot;123&quot;</span>/&gt;</span><br><span class="line">&lt;!--Date类里面有setTime方法--&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+
+
+<ul>
+<li><h4 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h4></li>
+</ul>
+<p>当指定 bean 的某属性值为另一 bean 的实例时，通过 ref 指定它们间的引用关系。ref 的值必须为某 bean 的 id 值。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line">    <span class="keyword">private</span> School school;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//setter</span></span><br><span class="line">    <span class="comment">//toString()</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;mystudent&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.bytedance.ba02.student&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;lisi&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;age&quot;</span> <span class="attr">value</span>=<span class="string">&quot;12&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;email&quot;</span> <span class="attr">value</span>=<span class="string">&quot;22&quot;</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;myschool&quot;</span> <span class="attr">ref</span>=<span class="string">&quot;myschool&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 声明school对象--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;myschool&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.bytedance.ba02.school&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;北京大学&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;address&quot;</span> <span class="attr">value</span>=<span class="string">&quot;北京市海淀区&quot;</span>/&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="构造注入"><a href="#构造注入" class="headerlink" title="构造注入"></a>构造注入</h3><p>构造注入是指，在构造调用者实例的同时，完成被调用者的实例化。即使用构造器设置依赖关系。</p>
+ <img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/02.png" class>
+
+
+
+<p>标签中用于指定参数的属性有：</p>
+<p> ➢ name：指定参数名称。 </p>
+<p>➢ index：指明该参数对应着构造器的第几个参数，从 0 开始。不过，该属性不要也行， 但要注意，若参数类型相同，或之间有包含关系，则需要保证赋值顺序要与构造器中的参数 顺序一致。</p>
+ <img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/03.png" class>
+
+
+
+<h3 id="引用类型属性自动注入"><a href="#引用类型属性自动注入" class="headerlink" title="引用类型属性自动注入"></a>引用类型属性自动注入</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">引用类型的自动注入</span><br><span class="line">spring框架根据某些规则可以给“引用类型”赋值，自动注入，不需要程序员再给引用类型赋值了</span><br><span class="line">使用的规则常用的是byName,byType</span><br><span class="line">1.byName(按名称注入)：Java类中引用类型的属性名称和spring容器中（配置文件）&lt;bean&gt;的id的名称一样，数据类型一样，这样的容器中的bean，spring能够赋值给引用类型</span><br><span class="line">    语法规则：</span><br><span class="line">    &lt;bean id&#x3D;&quot;xx&quot;,class&#x3D;&quot;yy&quot; autowire&#x3D;&quot;byname&quot;&gt;</span><br><span class="line">        简单类型属性赋值</span><br><span class="line">     &lt;&#x2F;bean&gt;</span><br><span class="line"></span><br><span class="line">2.byType(按照类型注入)：Java类中引用类型的数据类型和spring容器中（配置文件）&lt;bean&gt;的class属性是同源关系，这样的bean,spring能够赋值给引用类型</span><br><span class="line">    同源就是一类的意思：</span><br><span class="line">    1.java类中引用类型的数据类型和bean的class的值是一样的</span><br><span class="line">    2.Java类中的引用类型的数据类型和bean的class的值是父子类关系</span><br><span class="line">    3.java类中的引用类型的数据类型和bean的class的值是接口与实现类的关系</span><br></pre></td></tr></table></figure>
+ <img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/04.png" class>
+
+
+
+<p>具体说明：</p>
+<ul>
+<li><h4 id="byName方式自动注入"><a href="#byName方式自动注入" class="headerlink" title="byName方式自动注入"></a>byName方式自动注入</h4><p>当配置文件中被调用者 bean 的 id 值与代码中调用者 bean 类的属性名相同时，可使用 byName 方式，让容器自动将被调用者 bean 注入给调用者 bean。容器是通过调用者的 bean 类的引用类型属性名与配置文件的被调用者 bean 的 id 进行比较而实现自动注入的。</p>
+<img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/05.png" class>
+
+
+
+</li>
+</ul>
+<ul>
+<li><h4 id="byType自动注入"><a href="#byType自动注入" class="headerlink" title="byType自动注入"></a>byType自动注入</h4><p>使用 byType 方式自动注入，要求：配置文件中被调用者 bean 的 class 属性指定的类， 要与代码中调用者 bean 类的某引用类型属性类型同源。即要么相同，要么有 is-a 关系（子 类，或是实现类）。但这样的同源的被调用 bean 只能有一个。多于一个，容器就不知该匹配哪一个了。</p>
+<img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/06.png" class>
+
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">如果出现同源类在XML文件中出现两个类，只能保留一个，否则会出现BeanDefinitionParsingException异常</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="为应用指定多个Spring配置文件"><a href="#为应用指定多个Spring配置文件" class="headerlink" title="为应用指定多个Spring配置文件"></a>为应用指定多个Spring配置文件</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> spring-total表示主配置文件：用以包含其他的配置文件，主配置文件一般是不定义对象的。</span><br><span class="line">       语法：&lt;import resource&#x3D;&quot;其他配置文件的路径&quot;&#x2F;&gt;</span><br><span class="line">       关键字：“classpath”：表示类路径（class文件所在的目录的target路径下;）</span><br><span class="line">       在spring的配置文件中要指定其他文件的位置，需要使用classpath，告诉spring到哪里去加载读取文件</span><br><span class="line">        </span><br><span class="line">在具有包含关系的配置文件中，可以使用通配符（*：表示任意字符） 且这些文件必须在resources下面的一级目录下 。 </span><br><span class="line">使用多配置文件时，不能将主文件自身包括进自生主文件</span><br></pre></td></tr></table></figure>
+ <img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/07.png" class>
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>spring框架</category>
+      </categories>
+      <tags>
+        <tag>IOC</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>基础注解的DI</title>
+    <url>/2021/02/28/%E5%9F%BA%E7%A1%80%E6%B3%A8%E8%A7%A3%E7%9A%84DI/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
