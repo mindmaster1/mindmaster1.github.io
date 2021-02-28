@@ -44,6 +44,109 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
+    <title>IOC控制反转</title>
+    <url>/2021/02/28/IOC%E6%8E%A7%E5%88%B6%E5%8F%8D%E8%BD%AC/</url>
+    <content><![CDATA[<h2 id="IOC"><a href="#IOC" class="headerlink" title="IOC"></a>IOC</h2><p>控制反转（<strong>IoC，Inversion of Control</strong>），是一个概念，是一种思想。指将传统上由程序代 码直接操控的对象调用权交给容器，通过容器来实现对象的装配和管理。控制反转就是对对 象控制权的转移，从程序代码本身反转到了外部容器。通过容器实现对象的创建，属性赋值， 依赖的管理。</p>
+<p>IoC 是一个概念，是一种思想，其实现方式多种多样。当前比较流行的实现方式是依赖 注入。应用广泛。</p>
+<blockquote>
+<p>依赖注入</p>
+</blockquote>
+<p><strong>依赖</strong>：classA 类中含有 classB 的实例，在 classA 中调用 classB 的方法完成功能，即 classA 对 classB 有依赖。</p>
+<blockquote>
+<p>Ioc 的实现：</p>
+</blockquote>
+<p> ➢ 依赖注入：DI(Dependency Injection)，程序代码不做定位查询，这些工作由容器自行 完成。</p>
+<p>依赖注入 DI 是指程序运行过程中，若需要调用另一个对象协助时，无须在代码中创建被调用者，而是依赖于外部容器，<u>由外部容器创建后传递给程序</u>。</p>
+<p>Spring 的依赖注入对调用者与被调用者几乎没有任何要求，完全支持对象之间依赖关 的管理。</p>
+<p>Spring 容器是一个超级大工厂，负责创建、管理所有的 Java 对象，这些 Java 对象被称为 Bean。Spring 容器管理着容器中 Bean 之间的依赖关系，Spring 使用“依赖注入”的方式 来管理 Bean 之间的依赖关系。使用 IoC 实现对象之间的解耦和。</p>
+<h3 id="开发工具准备"><a href="#开发工具准备" class="headerlink" title="开发工具准备"></a>开发工具准备</h3><blockquote>
+<p>开发工具：idea2017 以上  依赖管理：maven3 以上     jdk:1.8 以上</p>
+</blockquote>
+<p>需要设置maven本机仓库</p>
+ <img data-src="/2021/02/28/IOC%E6%8E%A7%E5%88%B6%E5%8F%8D%E8%BD%AC/01.png" class>
+
+
+
+<h3 id="Spring的第一个程序"><a href="#Spring的第一个程序" class="headerlink" title="Spring的第一个程序"></a>Spring的第一个程序</h3><h4 id="创建Maven项目"><a href="#创建Maven项目" class="headerlink" title="创建Maven项目"></a>创建Maven项目</h4> <img data-src="/2021/02/28/IOC%E6%8E%A7%E5%88%B6%E5%8F%8D%E8%BD%AC/02.png" class>
+
+
+
+<h4 id="引入maven依赖pom-xml"><a href="#引入maven依赖pom-xml" class="headerlink" title="引入maven依赖pom.xml"></a>引入maven依赖pom.xml</h4><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-context<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>5.2.5.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line"> 				<span class="tag">&lt;<span class="name">source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line"> 				<span class="tag">&lt;<span class="name">target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="定义接口与实体类"><a href="#定义接口与实体类" class="headerlink" title="定义接口与实体类"></a>定义接口与实体类</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">SomeService</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">doSome</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SomeServiceImpl</span> <span class="keyword">implements</span> <span class="title">SomeService</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">SomeServiceImpl</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>();</span><br><span class="line">		System.out.println(<span class="string">&quot;SomeServiceImpl无参数构造方法&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSome</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	System.out.println(<span class="string">&quot;====业务方法doSome()===&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="创建spring配置文件"><a href="#创建spring配置文件" class="headerlink" title="创建spring配置文件"></a>创建spring配置文件</h4><p>在 src/main/resources/目录现创建一个 xml 文件，文件名可以随意，但 Spring 建议的名称为applicationContext.xml。</p>
+<p>spring 配置中需要加入约束文件才能正常使用，约束文件是 xsd 扩展名。</p>
+ <img data-src="/2021/02/28/IOC%E6%8E%A7%E5%88%B6%E5%8F%8D%E8%BD%AC/03.png" class>
+
+<img data-src="/2021/02/28/IOC%E6%8E%A7%E5%88%B6%E5%8F%8D%E8%BD%AC/04.png" class>
+
+<p><bean>：用于定义一个实例对象。一个实例对应一个 bean 元素</bean></p>
+<p><strong>id</strong>：该属性是 Bean 实例的唯一标识，程序通过 id 属性访问 Bean，Bean 与 Bean 间的依 赖关系也是通过 id 属性关联的。</p>
+<p><strong>class</strong>：指定该 Bean 所属的类，注意这里只能是类，不能是接口。</p>
+<h4 id="定义测试类"><a href="#定义测试类" class="headerlink" title="定义测试类"></a>定义测试类</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test2</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line"> <span class="comment">//spring创建对象默认调用的是类的无参数构造方法</span></span><br><span class="line"> <span class="comment">//使用spring创建好的对象</span></span><br><span class="line"> <span class="comment">//指定spring配置文件的名称</span></span><br><span class="line">     String config = <span class="string">&quot;beans.xml&quot;</span>;</span><br><span class="line"> <span class="comment">//创建表示spring容器的对象，ApplicationContext,表示spring容器，通过容器加载对象</span></span><br><span class="line">     <span class="comment">//ClassPathXmlApplicationContext:表示从类路径中加载spring的配置文件</span></span><br><span class="line">     ApplicationContext ac = <span class="keyword">new</span> ClassPathXmlApplicationContext(config);  <span class="comment">//Spring创建对象时机：在创建spring容器时，创建spring配置文件中的所有对象</span></span><br><span class="line"></span><br><span class="line">     <span class="comment">//从容器中获取对象，需要调用对象的方法</span></span><br><span class="line">     <span class="comment">//getbean(&quot;配置文件中的bean的id值&quot;),返回的是object类型，需要强转一下</span></span><br><span class="line">     SomeService service = (SomeService) ac.getBean(<span class="string">&quot;someService&quot;</span>);</span><br><span class="line"></span><br><span class="line">     service.dosome();</span><br><span class="line"> &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="使用spring创建非自定义类对象"><a href="#使用spring创建非自定义类对象" class="headerlink" title="使用spring创建非自定义类对象"></a>使用spring创建非自定义类对象</h4><p>spring 配置文件加入 java.util.Date 定义：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;myDate&quot;</span> <span class="attr">class</span>=<span class="string">&quot;java.util.Date&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<p>MyTest 测试类中： 调用 getBean(“myDate”); 获取日期类对象。</p>
+<h4 id="容器接口和实现类"><a href="#容器接口和实现类" class="headerlink" title="容器接口和实现类"></a>容器接口和实现类</h4><blockquote>
+<p>ApplicationContext接口（容器）</p>
+</blockquote>
+<p>ApplicationContext 用于加载 Spring 的配置文件，在程序中充当“容器”的角色。其实现类有两个。</p>
+ <img data-src="/2021/02/28/IOC%E6%8E%A7%E5%88%B6%E5%8F%8D%E8%BD%AC/05.png" class>
+
+
+
+<ul>
+<li><p>配置文件在类路径下</p>
+<p>若 Spring 配置文件存放在项目的类路径下，则使用 ClassPathXmlApplicationContext 实现 类进行加载。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test02</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">//spring配置文件在类路径下(classpath)</span></span><br><span class="line">    String resource = <span class="string">&quot;applicationContext.xml&quot;</span>;</span><br><span class="line">    ApplicationContext ac = ClassPathXmlApplicationContext(resource);</span><br><span class="line">    SomeService service = (SomeService) ac.getbean(<span class="string">&quot;someService&quot;</span>);</span><br><span class="line">    service.dosome();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<ul>
+<li><p>ApplicationContext容器中对象的装配时机</p>
+<p>ApplicationContext 容器，会在容器对象初始化时，将其中的所有对象一次性全部装配好。 以后代码中若要使用到这些对象，只需从内存中直接获取即可。执行效率较高。但占用内存。</p>
+</li>
+<li><p>使用spring容器创建的Java对象</p>
+<img data-src="/2021/02/28/IOC%E6%8E%A7%E5%88%B6%E5%8F%8D%E8%BD%AC/06.png" class>
+
+
+
+</li>
+</ul>
+<ul>
+<li><p>使用spring提供的方法获取对象信息</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//获取Spring容器中Java对象的信息</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test3</span><span class="params">()</span></span>&#123;</span><br><span class="line">        String config = <span class="string">&quot;beans.xml&quot;</span>;</span><br><span class="line">        ApplicationContext ac = <span class="keyword">new</span> ClassPathXmlApplicationContext(config); <span class="comment">//这里的参数传入不能加双引号</span></span><br><span class="line">        <span class="comment">//使用spring提供的方法，获取容器中定义的对象的数量与名称</span></span><br><span class="line">        <span class="keyword">int</span> nums = ac.getBeanDefinitionCount();</span><br><span class="line">        System.out.println(<span class="string">&quot;容器中定义的对象数量&quot;</span>+nums);</span><br><span class="line"></span><br><span class="line">        String[] beanDefinitionNames = ac.getBeanDefinitionNames();</span><br><span class="line">        <span class="keyword">for</span>(String name:beanDefinitionNames)&#123;</span><br><span class="line">            System.out.println(name);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>spring</category>
+      </categories>
+      <tags>
+        <tag>spring</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>InnoDB存储引擎</title>
     <url>/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
     <content><![CDATA[<h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
@@ -778,17 +881,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Session</title>
-    <url>/2021/02/25/Session/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>Java web</category>
-      </categories>
-      <tags>
-        <tag>Session</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Servlet规范一</title>
     <url>/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/</url>
     <content><![CDATA[<h2 id="Servlet规范（一）"><a href="#Servlet规范（一）" class="headerlink" title="Servlet规范（一）"></a>Servlet规范（一）</h2><h3 id="一、Servlet基础"><a href="#一、Servlet基础" class="headerlink" title="一、Servlet基础"></a>一、Servlet基础</h3><p>宏观地讲，Servlet 是连接 Web 服务器与服务端 Java 程序的协议，是一种通信规范。这个规范是以一套接口的形式体现的。 通常来说，Servlet 是宏观上 Servlet 规范中的一个具体的接口，Servlet 规范中包含一套接口。而 Servlet 接口仅仅是其中之一。 微观地讲，Servlet 是 Servlet 接口实现类的一个实例对象，是运行在服务器上的一段 Java 小程序，即 Server Applet，也就是 Servlet 这个单词的来历。Servlet 的主要功能是根据客户 端提交的请求，调用服务器端相关 Java 代码，完成对请求的处理与运算。</p>
@@ -869,6 +961,17 @@
       </tags>
   </entry>
   <entry>
+    <title>Session</title>
+    <url>/2021/02/25/Session/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Java web</category>
+      </categories>
+      <tags>
+        <tag>Session</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Spring学习第一跳</title>
     <url>/2021/02/03/Spring%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E8%B7%B3/</url>
     <content><![CDATA[<h2 id="初识Spring"><a href="#初识Spring" class="headerlink" title="初识Spring"></a>初识Spring</h2><h3 id="Spring框架概述"><a href="#Spring框架概述" class="headerlink" title="Spring框架概述"></a>Spring框架概述</h3><p>Spring 是于 2003 年兴起的一个轻量级的 Java 开发框架，它是为了解决企业应用开发的复杂性而创建的。Spring 的核心是控制反转（IoC）和面向切面编程（AOP）。Spring 是可 以在 Java SE/EE 中使用的轻量级开源框架。</p>
@@ -890,7 +993,7 @@
 <p>Spring 不排斥各种优秀的开源框架，相反 Spring 可以降低各种框架的使用难度，Spring 提供了对各种优秀框架（如 Struts,Hibernate、MyBatis）等的直接支持。简化框架的使用。 Spring 像插线板一样，其他框架是插头，可以容易的组合到一起。需要使用哪个框架，就把 这个插头放入插线板。不需要可以轻易的移除。</p>
 </li>
 </ul>
-<h3 id="Spring体系结构"><a href="#Spring体系结构" class="headerlink" title="Spring体系结构"></a>Spring体系结构</h3>
+<h3 id="Spring体系结构"><a href="#Spring体系结构" class="headerlink" title="Spring体系结构"></a>Spring体系结构</h3><img data-src="/2021/02/03/Spring%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E8%B7%B3/image.png" class>
 
 <p>Spring 由 20 多个模块组成，它们可以分为数据访问/集成（Data Access/Integration）、 Web、面向切面编程（AOP, Aspects）、提供JVM的代理（Instrumentation）、消息发送（Messaging）、 核心容器（Core Container）和测试（Test）。</p>
 ]]></content>
@@ -937,11 +1040,6 @@
       </tags>
   </entry>
   <entry>
-    <title>初识动态规划</title>
-    <url>/2021/02/03/%E5%88%9D%E8%AF%86%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>中断</title>
     <url>/2021/02/03/%E4%B8%AD%E6%96%AD/</url>
     <content><![CDATA[<h3 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h3><p>中断使得硬件得以发出通知给处理器，是一种变内核主动为硬件主动的方式。中断本质上是一种特殊的电信号。硬件在生成中断的时候并不需要考虑与处理器的时钟同步，即中断可以随时产生，<strong>内核随时可能因为新到来的中断而被打断</strong>。</p>
@@ -986,6 +1084,11 @@
       <tags>
         <tag>中断</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>初识动态规划</title>
+    <url>/2021/02/03/%E5%88%9D%E8%AF%86%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>初识递归</title>
