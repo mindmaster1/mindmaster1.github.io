@@ -21,17 +21,17 @@
     var CONFIG = {"hostname":"www.mindmaster.top","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="The world favors the underdog,and I would be the bad guy">
+  <meta name="description" content="对传统MVC架构的理解">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MVC框架">
 <meta property="og:url" content="https://www.mindmaster.top/2021/03/02/MVC%E6%A1%86%E6%9E%B6/index.html">
 <meta property="og:site_name" content="一只小码农">
-<meta property="og:description" content="The world favors the underdog,and I would be the bad guy">
+<meta property="og:description" content="对传统MVC架构的理解">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-03-02T08:46:11.000Z">
-<meta property="article:modified_time" content="2021-03-02T00:46:11.951Z">
+<meta property="article:modified_time" content="2021-03-08T06:17:42.385Z">
 <meta property="article:author" content="邢浩东">
-<meta property="article:tag" content="个人博客">
+<meta property="article:tag" content="架构模式">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="https://www.mindmaster.top/2021/03/02/MVC%E6%A1%86%E6%9E%B6/">
@@ -128,12 +128,12 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">26</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">27</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-braille fa-fw"></i>分类<span class="badge">14</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-braille fa-fw"></i>分类<span class="badge">16</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
@@ -247,9 +247,24 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-03-02 08:46:11 / 修改时间：00:46:11" itemprop="dateCreated datePublished" datetime="2021-03-02T08:46:11Z">2021-03-02</time>
+              <time title="创建时间：2021-03-02 08:46:11" itemprop="dateCreated datePublished" datetime="2021-03-02T08:46:11Z">2021-03-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-08 06:17:42" itemprop="dateModified" datetime="2021-03-08T06:17:42Z">2021-03-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%A1%B9%E7%9B%AE%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">项目架构</span></a>
+                </span>
             </span>
 
           
@@ -279,15 +294,16 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>0</span>
+              <span>2.9k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>3 分钟</span>
             </span>
+            <div class="post-description">对传统MVC架构的理解</div>
 
         </div>
       </header>
@@ -298,13 +314,105 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <h2 id="MVC的定义"><a href="#MVC的定义" class="headerlink" title="MVC的定义"></a>MVC的定义</h2><p><strong>MVC模式</strong>（Model–view–controller）是软件工程中的一种<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84">软件架构</a>模式，把软件系统分为三个基本部分：模型（Model）、视图（View）和控制器（Controller）。</p>
+<p><strong>MVC模式</strong>的目的是实现一种动态的程序设计，使后续对程序的修改和扩展简化，并且使程序某一部分的重复利用成为可能。除此之外，此模式透过对复杂度的简化，使程序结构更加直观。软件系统透过对自身基本部分分离的同时也赋予了各个基本部分应有的功能。专业人员可以依据自身的专长分组。</p>
+<ul>
+<li><p>模型（Model） - 程序员编写程序应有的功能（实现算法等等）、数据库专家进行数据管理和数据库设计(可以实现具体的功能)。</p>
+</li>
+<li><p>视图（View） - 界面设计人员进行图形界面设计。</p>
+</li>
+<li><p>控制器（Controller）- 负责转发请求，对请求进行处理。</p>
+
+
+
+
+
+
+</li>
+</ul>
+<h2 id="MVC三者之间详细说明与联系"><a href="#MVC三者之间详细说明与联系" class="headerlink" title="MVC三者之间详细说明与联系"></a>MVC三者之间详细说明与联系</h2><p>###详细说明</p>
+<p>MVC模式在概念上强调 Model, View, Controller 的分离，各个模块也遵循着由 Controller 来处理消息，Model 掌管数据源，View 负责资料显示的职责分离原则，因此在实现上，MVC 模式的 Framework 通常会将 MVC 三个部分分离实现：</p>
+<blockquote>
+<p>Model 负责资料访问，较现代的 Framework 都会建议使用独立的资料对象 (DTO, POCO, POJO 等) 来替代弱类型的集合对象。资料访问的代码会使用 Data Access 的代码或是 ORM-based Framework，也可以进一步使用 Repository Pattern 与 Unit of Works Pattern 来切割数据源的相依性。</p>
+</blockquote>
+<blockquote>
+<p>Controller 负责处理消息，较高端的 Framework 会有一个默认的实现来作为 Controller 的基础，例如 Spring 的 DispatcherServlet 或是 ASP.NET MVC 的 Controller 等，在职责分离原则的基础上，每个 Controller 负责的部分不同，因此会将各个 Controller 切割成不同的文件以利维护</p>
+</blockquote>
+<blockquote>
+<p>View 负责显示资料，这个部分多为前端应用，而 Controller 会有一个机制将处理的结果 (可能是 Model, 集合或是状态等) 交给 View，然后由 View 来决定怎么显示。例如 Spring Framework 使用 JSP 或相应技术，ASP.NET MVC 则使用 Razor 处理资料的显示。</p>
+</blockquote>
+<h3 id="联系"><a href="#联系" class="headerlink" title="联系"></a>联系</h3><ul>
+<li>View 传送指令到 Controller</li>
+<li>Controller 完成业务逻辑后，要求 Model 改变状态</li>
+<li>Model 将新的数据发送到 View，用户得到反馈</li>
+<li>所有通信都是单向的。View和Model之间的通信是通过Controller来作为桥梁的，也就是说View和Model并不是直接通信；</li>
+<li>需要服务器端配合，JavaScript可以在前端修改服务器渲染后的数据，所有通信都是单向的，提交一次反馈一次，通信一次相互制约。</li>
+</ul>
+<h2 id="MVC的优点与缺点"><a href="#MVC的优点与缺点" class="headerlink" title="MVC的优点与缺点"></a>MVC的优点与缺点</h2><blockquote>
+<p>优点</p>
+</blockquote>
+<ul>
+<li>多个 View 能共享一个 Model    <ul>
+<li>同一个Web应用程序会提供多种用户界面，例如用户希望既能够通过浏览器来收发电子邮件 ，还希望通过手机来访问电子邮箱，这就要求Web网站同时能提供<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/Internet">Internet</a>界面和<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/WAP">WAP</a>界面。在MVC设计模式中， Model 响应用户请求并返回响应数据，View 负责格式化数据并把它们呈现给用户，业务逻辑和表示层分离，同一个 Model 可以被不同的 View 重用，所以大大提高了代码的可重用性。</li>
+</ul>
+</li>
+<li>Controller 是自包含（self-contained,指高独立内聚）的对象，与 Model 和 View 保持相对独立，所以可以方便的改变应用程序的数据层和业务规则。<ul>
+<li>把数据库从<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/MySQL">MySQL</a>移植到<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/Oracle">Oracle</a>，或者把<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/RDBMS">RDBMS</a>数据源改变成<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/LDAP">LDAP</a>数据源，只需改变 Model 即可。一旦正确地实现了控制器，不管数据来自数据库还是<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/LDAP">LDAP</a>服务器，View 都会正确地显示它们。由于MVC模式的三个模块相互独立，改变其中一个不会影响其他两个，所以依据这种设计思想能构造良好的少互扰性的构件，<strong>降低了耦合度</strong></li>
+</ul>
+</li>
+<li>Controller 提高了应用程序的灵活性和可配置性<ul>
+<li>Controller 可以用来连接不同的 Model 和 View 去完成用户的需求，也可以构造应用程序提供强有力的手段。给定一些可重用的 Model 、 View 和Controller 可以根据用户的需求选择适当的 Model 进行处理，然后选择适当的的 View 将处理结果显示给用户。</li>
+</ul>
+</li>
+<li>增强了软件工程所要求的可测试性(Testablity)<ul>
+<li>MVC-based 的应用程序在良好的职责分离的设计下，各个部分可独立行使<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95">单元测试</a>，有利于与企业内的自动化测试、<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%8C%81%E7%BA%8C%E6%95%B4%E5%90%88">持续集成</a> (Continuous Integration) 与<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/w/index.php?title=%E6%8C%81%E7%BA%8C%E7%99%BC%E8%A1%8C&action=edit&redlink=1">持续发行</a> (Continuous Delivery) 流程集成，减少应用程序改版部署所需的时间。</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>缺点</p>
+</blockquote>
+<ul>
+<li>不适合小型中等规模的应用程序；</li>
+<li>增加了系统结果和实现的复杂性；</li>
+<li>View和Model之间不匹配，用户界面和流程要考虑易用性，用户体验优化同时考虑业务流程的精确和无错。</li>
+<li>Controler和Model之间界线不清，什么样的逻辑是界面逻辑，什么样的逻辑是业务逻辑，很难定义清楚。没有明确的定义；</li>
+<li>View的变化不能完全由Model控制，即Observer模式不足以支持复杂的用户交互。这其实要求VC之间要有依赖。牵一发而动全身，数据，显示不分离，Controller，Model联系过于紧密。</li>
+</ul>
+<h2 id="扩展：MVP"><a href="#扩展：MVP" class="headerlink" title="扩展：MVP"></a>扩展：MVP</h2><h3 id="定义："><a href="#定义：" class="headerlink" title="定义："></a>定义：</h3><p>MVP（Model-View-Presenter）是MVC的改良模式，由IBM的子公司Taligent提出。和MVC的相同之处在于：Controller/Presenter负责业务逻辑，Model管理数据，View负责显示。只不过是将 Controller 改名为 Presenter，同时改变了通信方向。</p>
+<h2 id="MVP的特点"><a href="#MVP的特点" class="headerlink" title="MVP的特点"></a>MVP的特点</h2><ul>
+<li>M、V、P之间双向通信。</li>
+<li>View 与 Model 不通信，都通过 Presenter 传递。Presenter完全把Model和View进行了分离，主要的程序逻辑在Presenter里实现。</li>
+<li>View 非常薄，不部署任何业务逻辑，称为”被动视图”（Passive View），即没有任何主动性，而 Presenter非常厚，所有逻辑都部署在那里。</li>
+<li>Presenter与具体的View是没有直接关联的，而是通过<strong>定义好的接口</strong>进行交互，从而使得在变更View时候可以保持Presenter的不变，这样就可以重用。不仅如此，还可以编写测试用的View，模拟用户的各种操作，从而实现对Presenter的测试–从而不需要使用自动化的测试工具。</li>
+</ul>
+<h3 id="MVP的优缺点"><a href="#MVP的优缺点" class="headerlink" title="MVP的优缺点"></a>MVP的优缺点</h3><blockquote>
+<p>MVP的优点</p>
+</blockquote>
+<ul>
+<li>模型与视图完全分离，我们可以修改视图而不影响模型；</li>
+<li>可以更高效地使用模型，因为所有的交互都发生在一个地方——Presenter内部；</li>
+<li>我们可以将一个Presenter用于多个视图，而不需要改变Presenter的逻辑。这个特性非常的有用，因为视图的变化总是比模型的变化频繁；</li>
+<li>如果我们把逻辑放在Presenter中，那么我们就可以脱离用户接口来测试这些逻辑（单元测试）。</li>
+</ul>
+<blockquote>
+<p>MVP的缺点</p>
+</blockquote>
+<p>视图和Presenter的交互会过于频繁，使得他们的联系过于紧密。也就是说，一旦视图变更了，presenter也要变更。</p>
+
     </div>
 
     
     
     
       
+  <div class="popular-posts-header">相关文章推荐</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2021\03\02\MVVM框架\" rel="bookmark">MVVM框架</a></div>
+        <div class="popular-posts-excerpt"><p>对MVVM架构的理解</p></div>
+    </li>
+  </ul>
 
         <div class="reward-container">
   <div>谢谢你的支持哦，继续加油.</div>
@@ -345,6 +453,9 @@
 
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F/" rel="tag"># 架构模式</a>
+          </div>
 
         
 
@@ -418,6 +529,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#MVC%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-number">1.</span> <span class="nav-text">MVC的定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MVC%E4%B8%89%E8%80%85%E4%B9%8B%E9%97%B4%E8%AF%A6%E7%BB%86%E8%AF%B4%E6%98%8E%E4%B8%8E%E8%81%94%E7%B3%BB"><span class="nav-number">2.</span> <span class="nav-text">MVC三者之间详细说明与联系</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%81%94%E7%B3%BB"><span class="nav-number">2.1.</span> <span class="nav-text">联系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MVC%E7%9A%84%E4%BC%98%E7%82%B9%E4%B8%8E%E7%BC%BA%E7%82%B9"><span class="nav-number">3.</span> <span class="nav-text">MVC的优点与缺点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A9%E5%B1%95%EF%BC%9AMVP"><span class="nav-number">4.</span> <span class="nav-text">扩展：MVP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%EF%BC%9A"><span class="nav-number">4.1.</span> <span class="nav-text">定义：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MVP%E7%9A%84%E7%89%B9%E7%82%B9"><span class="nav-number">5.</span> <span class="nav-text">MVP的特点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MVP%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="nav-number">5.1.</span> <span class="nav-text">MVP的优缺点</span></a></li></ol></li></ol></div>
 
       </div>
       <!--/noindex-->
@@ -441,13 +553,13 @@
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">16</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-count">27</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -552,13 +664,13 @@ setInterval(function(){
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">93k</span>
+    <span title="站点总字数">105k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">1:25</span>
+    <span title="站点阅读时长">1:35</span>
 </div>
 
 
