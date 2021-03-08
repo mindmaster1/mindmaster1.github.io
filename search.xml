@@ -65,53 +65,6 @@
       </tags>
   </entry>
   <entry>
-    <title>InnoDB存储引擎</title>
-    <url>/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
-    <content><![CDATA[<h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
-<p>InnoDB存储引擎有多个内存块，这些内存块组成了一个大的内存池</p>
-<p>后台线程的主要作用就是负责刷新内存池中的数据，保证缓存池中的内存缓存的是最近的数据。此外，还将已经修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下，InnoDB可以恢复运行到最佳状态。</p>
-<h4 id="后台线程（InnDB是一个多线程模型"><a href="#后台线程（InnDB是一个多线程模型" class="headerlink" title="后台线程（InnDB是一个多线程模型)"></a>后台线程（InnDB是一个多线程模型)</h4><p>#####Master Thread</p>
-<p><strong>作用：</strong></p>
-<p>​    一个非常核心的后台进程，负责将缓存池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓存、UNDO页的回收等。</p>
-<h5 id="IO-Therad"><a href="#IO-Therad" class="headerlink" title="IO Therad"></a>IO Therad</h5><p>  在InnoDB存储引擎中大量使用了AIO（Async IO）—异步时间非阻塞IO，这样可以极大程度上提高数据库的性能。IO Thread的主要工作就是负责这些IO请求的回调</p>
-<p>共有四个IO Thread:write 、read、insert buffer、log IO thread</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114130216.png" alt="image-20210114114130216"></p>
-<p>通过命令SHOW ENGINE INNODB STASTUS\G来观察IO Thread</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114405936.png" alt="image-20210114114405936"></p>
-<p>有四个write和read IO Thread</p>
-<p>通过innodb_read_io_threads和innodb_write_io_threads参数来进行设置</p>
-<h5 id="Purge-Thread"><a href="#Purge-Thread" class="headerlink" title="Purge Thread"></a>Purge Thread</h5><p><strong>作用</strong>：</p>
-<p>​    Purge Thread回收已经使用并且已经分配的undo页（事务提交之后，其所使用的Undolog可能就不再需要）</p>
-<p>用户需要在<strong>MySQL数据库的配置文件</strong>中添加如下命令来启用独立的Purge Thread: </p>
-<p>​        innodb_purge_threads=1</p>
-<h5 id="Page-Cleaner-Thread"><a href="#Page-Cleaner-Thread" class="headerlink" title="Page Cleaner Thread"></a>Page Cleaner Thread</h5><p><strong>作用</strong>：</p>
-<p>​    将脏页的刷新操作放在单独的线程中完成。减轻Master Thread的工作以及对于用户查询线程的阻塞</p>
-<h4 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h4><h5 id="缓存池"><a href="#缓存池" class="headerlink" title="缓存池"></a>缓存池</h5><p>Innodb存储引擎是基于磁盘存储的（Disk-base Database），将其中的记录按照页来管理。</p>
-<p>缓存池的出现，就是为了解决CPU速度和磁盘速度之间的差异，通过内存的速度来弥补磁盘速度较慢对数据库性能的影响。读取文件时，首先判断给文件是否在缓存池中（没有就去磁盘上找）。</p>
-<p>在修改缓存池中的页时，先以一定频率刷新到缓存池上，然后通过Checkpoint刷新回磁盘。</p>
-<p>数据库服务器最好采用64位操作系统，可以使用更多的内存（512GB），32位（只有64GB）。</p>
-<p>缓存池的配置通过参数innodb_buffer_pool_size来设置。</p>
-<h6 id="缓存池中缓存的数据页类型："><a href="#缓存池中缓存的数据页类型：" class="headerlink" title="缓存池中缓存的数据页类型："></a>缓存池中缓存的数据页类型：</h6><p>​    索引页、数据页、Undo页、插入缓存页、自适应哈希索引页（adaptive hash index）、InnoDB存储的锁信息、数据字典信息等。</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114131120313.png" alt="image-20210114131120313"></p>
-<p><strong>允许有多个缓存池实例</strong>：每个页根据hashcode平均分配到不同的缓存池实例中，减少数据库内部资源的竞争，增加数据库的并发能力。可以通过inodb_buffer_pool_instances来进行配置，通过命令SHOW ENGINE INNODB STATUS可以观察到每个缓存池实例对象运行的状态，还可以通过查看表InnoDB_BUFFER_POOL_STATS来观察缓存的状态(要求在information_schema架构下)</p>
-<h5 id="LRU-LIST-、FREE-LIST-、FLUSH-LIST"><a href="#LRU-LIST-、FREE-LIST-、FLUSH-LIST" class="headerlink" title="LRU LIST 、FREE LIST 、FLUSH LIST"></a>LRU LIST 、FREE LIST 、FLUSH LIST</h5><p><strong>LRU</strong>算法用来管理已经读取的页</p>
-<p>数据库中的缓存池是通过LRU（Latest Recent Used,最近最少使用）算法来管理内部的各种类型的页。</p>
-<p><strong>LRU解释</strong>：将最频繁使用的页放在LRU列表的前端，最少使用的页放在LRU列表的尾端。当缓存池不能存放新读取到的页时，将优先删除列表尾端的页（默认大小为16KB）。</p>
-<p><strong>改进</strong>：</p>
-<p>1、（midpoint insertion strategy）：InnoDB中在LRU中加入了midpoint位置，将新读取到的页放在midpoint，而不是直接放在LRU列表首部。<strong>默认位置在LRU列表长度63%处</strong>（可以通过innodb_old_blocks_pct来控制）</p>
-<p>2、设置了参数innodb_old_blocks_time,用于表示页读取到mid位置后需要等待多久才会加入到LRU列表的热端</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133522544.png" alt="image-20210114133522544"></p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133412580.png" alt="image-20210114133412580"></p>
-<p><strong>为什么要对朴素的LRU算法进行改良</strong>？</p>
-<h5 id="重做日志缓存"><a href="#重做日志缓存" class="headerlink" title="重做日志缓存"></a>重做日志缓存</h5><h5 id="额外的内存池"><a href="#额外的内存池" class="headerlink" title="额外的内存池"></a>额外的内存池</h5>]]></content>
-      <categories>
-        <category>MySQL数据库</category>
-      </categories>
-      <tags>
-        <tag>InnoDB存储引擎</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>IOC创建对象</title>
     <url>/2021/02/28/IOC%E6%8E%A7%E5%88%B6%E5%8F%8D%E8%BD%AC/</url>
     <content><![CDATA[<h2 id="IOC"><a href="#IOC" class="headerlink" title="IOC"></a>IOC</h2><p>控制反转（<strong>IoC，Inversion of Control</strong>），是一个概念，是一种思想。指将传统上由程序代 码直接操控的对象调用权交给容器，通过容器来实现对象的装配和管理。控制反转就是对对 象控制权的转移，从程序代码本身反转到了外部容器。通过容器实现对象的创建，属性赋值， 依赖的管理。</p>
@@ -215,6 +168,53 @@
       </tags>
   </entry>
   <entry>
+    <title>InnoDB存储引擎</title>
+    <url>/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
+    <content><![CDATA[<h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
+<p>InnoDB存储引擎有多个内存块，这些内存块组成了一个大的内存池</p>
+<p>后台线程的主要作用就是负责刷新内存池中的数据，保证缓存池中的内存缓存的是最近的数据。此外，还将已经修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下，InnoDB可以恢复运行到最佳状态。</p>
+<h4 id="后台线程（InnDB是一个多线程模型"><a href="#后台线程（InnDB是一个多线程模型" class="headerlink" title="后台线程（InnDB是一个多线程模型)"></a>后台线程（InnDB是一个多线程模型)</h4><p>#####Master Thread</p>
+<p><strong>作用：</strong></p>
+<p>​    一个非常核心的后台进程，负责将缓存池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓存、UNDO页的回收等。</p>
+<h5 id="IO-Therad"><a href="#IO-Therad" class="headerlink" title="IO Therad"></a>IO Therad</h5><p>  在InnoDB存储引擎中大量使用了AIO（Async IO）—异步时间非阻塞IO，这样可以极大程度上提高数据库的性能。IO Thread的主要工作就是负责这些IO请求的回调</p>
+<p>共有四个IO Thread:write 、read、insert buffer、log IO thread</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114130216.png" alt="image-20210114114130216"></p>
+<p>通过命令SHOW ENGINE INNODB STASTUS\G来观察IO Thread</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114405936.png" alt="image-20210114114405936"></p>
+<p>有四个write和read IO Thread</p>
+<p>通过innodb_read_io_threads和innodb_write_io_threads参数来进行设置</p>
+<h5 id="Purge-Thread"><a href="#Purge-Thread" class="headerlink" title="Purge Thread"></a>Purge Thread</h5><p><strong>作用</strong>：</p>
+<p>​    Purge Thread回收已经使用并且已经分配的undo页（事务提交之后，其所使用的Undolog可能就不再需要）</p>
+<p>用户需要在<strong>MySQL数据库的配置文件</strong>中添加如下命令来启用独立的Purge Thread: </p>
+<p>​        innodb_purge_threads=1</p>
+<h5 id="Page-Cleaner-Thread"><a href="#Page-Cleaner-Thread" class="headerlink" title="Page Cleaner Thread"></a>Page Cleaner Thread</h5><p><strong>作用</strong>：</p>
+<p>​    将脏页的刷新操作放在单独的线程中完成。减轻Master Thread的工作以及对于用户查询线程的阻塞</p>
+<h4 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h4><h5 id="缓存池"><a href="#缓存池" class="headerlink" title="缓存池"></a>缓存池</h5><p>Innodb存储引擎是基于磁盘存储的（Disk-base Database），将其中的记录按照页来管理。</p>
+<p>缓存池的出现，就是为了解决CPU速度和磁盘速度之间的差异，通过内存的速度来弥补磁盘速度较慢对数据库性能的影响。读取文件时，首先判断给文件是否在缓存池中（没有就去磁盘上找）。</p>
+<p>在修改缓存池中的页时，先以一定频率刷新到缓存池上，然后通过Checkpoint刷新回磁盘。</p>
+<p>数据库服务器最好采用64位操作系统，可以使用更多的内存（512GB），32位（只有64GB）。</p>
+<p>缓存池的配置通过参数innodb_buffer_pool_size来设置。</p>
+<h6 id="缓存池中缓存的数据页类型："><a href="#缓存池中缓存的数据页类型：" class="headerlink" title="缓存池中缓存的数据页类型："></a>缓存池中缓存的数据页类型：</h6><p>​    索引页、数据页、Undo页、插入缓存页、自适应哈希索引页（adaptive hash index）、InnoDB存储的锁信息、数据字典信息等。</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114131120313.png" alt="image-20210114131120313"></p>
+<p><strong>允许有多个缓存池实例</strong>：每个页根据hashcode平均分配到不同的缓存池实例中，减少数据库内部资源的竞争，增加数据库的并发能力。可以通过inodb_buffer_pool_instances来进行配置，通过命令SHOW ENGINE INNODB STATUS可以观察到每个缓存池实例对象运行的状态，还可以通过查看表InnoDB_BUFFER_POOL_STATS来观察缓存的状态(要求在information_schema架构下)</p>
+<h5 id="LRU-LIST-、FREE-LIST-、FLUSH-LIST"><a href="#LRU-LIST-、FREE-LIST-、FLUSH-LIST" class="headerlink" title="LRU LIST 、FREE LIST 、FLUSH LIST"></a>LRU LIST 、FREE LIST 、FLUSH LIST</h5><p><strong>LRU</strong>算法用来管理已经读取的页</p>
+<p>数据库中的缓存池是通过LRU（Latest Recent Used,最近最少使用）算法来管理内部的各种类型的页。</p>
+<p><strong>LRU解释</strong>：将最频繁使用的页放在LRU列表的前端，最少使用的页放在LRU列表的尾端。当缓存池不能存放新读取到的页时，将优先删除列表尾端的页（默认大小为16KB）。</p>
+<p><strong>改进</strong>：</p>
+<p>1、（midpoint insertion strategy）：InnoDB中在LRU中加入了midpoint位置，将新读取到的页放在midpoint，而不是直接放在LRU列表首部。<strong>默认位置在LRU列表长度63%处</strong>（可以通过innodb_old_blocks_pct来控制）</p>
+<p>2、设置了参数innodb_old_blocks_time,用于表示页读取到mid位置后需要等待多久才会加入到LRU列表的热端</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133522544.png" alt="image-20210114133522544"></p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133412580.png" alt="image-20210114133412580"></p>
+<p><strong>为什么要对朴素的LRU算法进行改良</strong>？</p>
+<h5 id="重做日志缓存"><a href="#重做日志缓存" class="headerlink" title="重做日志缓存"></a>重做日志缓存</h5><h5 id="额外的内存池"><a href="#额外的内存池" class="headerlink" title="额外的内存池"></a>额外的内存池</h5>]]></content>
+      <categories>
+        <category>MySQL数据库</category>
+      </categories>
+      <tags>
+        <tag>InnoDB存储引擎</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java内存区域与内存溢出异常</title>
     <url>/2021/02/05/Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/</url>
     <content><![CDATA[<h3 id="1-内存管理那些事"><a href="#1-内存管理那些事" class="headerlink" title="1.内存管理那些事"></a>1.内存管理那些事</h3><p>C、C++：在内存管理领域，没有所谓的内存动态分配机制和垃圾收集技术，他们即拥有每一个对象的所有权，又担负着每一个对象从开始到终结的维护责任。</p>
@@ -281,6 +281,22 @@
       </categories>
       <tags>
         <tag>Java内存区域</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java高并发JUC</title>
+    <url>/2021/02/25/Java%E9%AB%98%E5%B9%B6%E5%8F%91JUC/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Listener</title>
+    <url>/2021/02/25/Listener/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Java web</category>
+      </categories>
+      <tags>
+        <tag>Listener</tag>
       </tags>
   </entry>
   <entry>
@@ -380,20 +396,66 @@
       </tags>
   </entry>
   <entry>
-    <title>Listener</title>
-    <url>/2021/02/25/Listener/</url>
-    <content><![CDATA[]]></content>
+    <title>MVVM框架</title>
+    <url>/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/</url>
+    <content><![CDATA[<p>一个软件或者 APP都是服务于某种需求，这称之为“业务需求”。随着业务需求的增多、软件会变得越来越庞大，越来越复杂。所以就会设计一套完整的架构设计、研发流程以及质量管理体系来保证整个研发过程。“架构设计”是一个非常大的话题，它涉及到各方面，近年来前端一个明显的开发趋势就是架构从传统的 MVC 模式向 MVVM 模式迁移，这里来谈谈——MVVM模式。</p>
+<h2 id="什么是MVVM"><a href="#什么是MVVM" class="headerlink" title="什么是MVVM"></a>什么是MVVM</h2><blockquote>
+<p>MVVM（Model–View–Viewmodel）是一种软件架构模式。<br>MVVM有助于将图形用户界面的开发与业务逻辑或后端逻辑（数据模型）的开发分离开，这是通过标记语言或GUI代码实现的。MVVM的视图模型是一个值转换器， 这意味着视图模型负责从模型中暴露（转换）数据对象，以便轻松管理和呈现对象。在这方面，视图模型比视图做得更多，并且处理大部分视图的显示逻辑。 视图模型可以实现中介者模式，组织对视图所支持的用例集的后端逻辑的访问</p>
+</blockquote>
+<p><a href="https://zh.wikipedia.org/wiki/MVVM">想要了解更多关于MVVM的定义，点击访问维基百科</a></p>
+<h2 id="MVVM涉及到的概念"><a href="#MVVM涉及到的概念" class="headerlink" title="MVVM涉及到的概念"></a>MVVM涉及到的概念</h2><ul>
+<li>M(odel)层：模型，定义数据结构。</li>
+<li>C(ontroller)层：实现业务逻辑，数据的增删改查。在MVVM模式中一般把C层算在M层中，（只有在理想的双向绑定模式下，Controller 才会完全的消失。这种理想状态一般不存在）</li>
+<li>ViewModel层：顾名思义是视图View的模型、映射和显示逻辑（如if for等，非业务逻辑），另外绑定器也在此层。ViewModel是基于视图开发的一套模型，如果你的应用是给盲人用的，那么也可以开发一套基于Audio的模型AudioModel。</li>
+<li>V(iew)层：将ViewModel通过特定的GUI展示出来，并在GUI控件上绑定视图交互事件，V(iew)一般由MVVM框架自动生成在浏览器中。</li>
+</ul>
+<h2 id="MVVM的工作机制"><a href="#MVVM的工作机制" class="headerlink" title="MVVM的工作机制"></a>MVVM的工作机制</h2><p>在MVVM架构下，View 和 Model 之间其实并没有直接的联系，而是通<strong>过ViewModel进行交互</strong>，Model 和 ViewModel 之间的交互是*<u>双向</u>*的， 因此View 数据的变化会同步到Model中，而Model 数据的变化也会立即反应到View 上。</p>
+<p>ViewModel 通过双向数据绑定把 View 层和 Model 层连接了起来。ViewModel里面包含DOM Listeners(数据监听)和Data Bindings(数据绑定)，DOM Listeners和Data Bindings是实现双向绑定的关键。</p>
+<blockquote>
+<p>DOM Listeners监听页面所有View层DOM元素的变化，当发生变化，Model层的数据随之变化；</p>
+</blockquote>
+<blockquote>
+<p>Data Bindings监听Model层的数据，当数据发生变化，View层的DOM元素随之变化。</p>
+</blockquote>
+<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/01.png" class>
+
+
+
+<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/02.png" class>
+
+
+
+<h2 id="MVVM模式的优缺点"><a href="#MVVM模式的优缺点" class="headerlink" title="MVVM模式的优缺点"></a>MVVM模式的优缺点</h2><p>MVVM模式相较于原先的MVP模式至少省下30%编码量，甚至能省下70%DOM操作，因为用MVP模式的话主要是在进行DOM操作</p>
+<blockquote>
+<p>优点</p>
+</blockquote>
+<ul>
+<li><strong>低耦合</strong>。View可以独立于Model变化和修改，一个ViewModel可以绑定到不同的View上，当View变化的时候Model可以不变，当Model变化的时候View也可以不变。</li>
+<li><strong>可重用性</strong>。可以把一些视图的逻辑放在ViewModel里面，让很多View重用这段视图逻辑。</li>
+<li>独立开发。开发人员可以专注与业务逻辑和数据的开发(ViewModel)。设计人员可以专注于界面(View)的设计。</li>
+<li><strong>可测试性</strong>。可以针对ViewModel来对界面(View)进行测试</li>
+</ul>
+<blockquote>
+<p>缺点</p>
+</blockquote>
+<ul>
+<li>学习成本高。</li>
+<li>DEBUG困难</li>
+<li>实现MVVM的开销对于简单的UI操作是过度的。而对于更大的应用来说，推广ViewModel将变得更加困难，非常大的应用程序中的数据绑定会导致相当大的内存消耗。</li>
+</ul>
+<h2 id="MVVM应用场景"><a href="#MVVM应用场景" class="headerlink" title="MVVM应用场景"></a>MVVM应用场景</h2><ul>
+<li>针对具有复杂交互逻辑的前端应用</li>
+<li>提供基础的架构抽象</li>
+<li>通过Ajax数据持久化，保证前端用户体验</li>
+</ul>
+<h2 id="常见的MVVM框架"><a href="#常见的MVVM框架" class="headerlink" title="常见的MVVM框架"></a>常见的MVVM框架</h2><p>Vue.js   AngularJs，ReactJs</p>
+]]></content>
       <categories>
-        <category>Java web</category>
+        <category>基础架构</category>
       </categories>
       <tags>
-        <tag>Listener</tag>
+        <tag>架构模式</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Java高并发JUC</title>
-    <url>/2021/02/25/Java%E9%AB%98%E5%B9%B6%E5%8F%91JUC/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Maven学习笔记</title>
@@ -558,68 +620,6 @@
       </categories>
       <tags>
         <tag>Maven</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MVVM框架</title>
-    <url>/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/</url>
-    <content><![CDATA[<p>一个软件或者 APP都是服务于某种需求，这称之为“业务需求”。随着业务需求的增多、软件会变得越来越庞大，越来越复杂。所以就会设计一套完整的架构设计、研发流程以及质量管理体系来保证整个研发过程。“架构设计”是一个非常大的话题，它涉及到各方面，近年来前端一个明显的开发趋势就是架构从传统的 MVC 模式向 MVVM 模式迁移，这里来谈谈——MVVM模式。</p>
-<h2 id="什么是MVVM"><a href="#什么是MVVM" class="headerlink" title="什么是MVVM"></a>什么是MVVM</h2><blockquote>
-<p>MVVM（Model–View–Viewmodel）是一种软件架构模式。<br>MVVM有助于将图形用户界面的开发与业务逻辑或后端逻辑（数据模型）的开发分离开，这是通过标记语言或GUI代码实现的。MVVM的视图模型是一个值转换器， 这意味着视图模型负责从模型中暴露（转换）数据对象，以便轻松管理和呈现对象。在这方面，视图模型比视图做得更多，并且处理大部分视图的显示逻辑。 视图模型可以实现中介者模式，组织对视图所支持的用例集的后端逻辑的访问</p>
-</blockquote>
-<p><a href="https://zh.wikipedia.org/wiki/MVVM">想要了解更多关于MVVM的定义，点击访问维基百科</a></p>
-<h2 id="MVVM涉及到的概念"><a href="#MVVM涉及到的概念" class="headerlink" title="MVVM涉及到的概念"></a>MVVM涉及到的概念</h2><ul>
-<li>M(odel)层：模型，定义数据结构。</li>
-<li>C(ontroller)层：实现业务逻辑，数据的增删改查。在MVVM模式中一般把C层算在M层中，（只有在理想的双向绑定模式下，Controller 才会完全的消失。这种理想状态一般不存在）</li>
-<li>ViewModel层：顾名思义是视图View的模型、映射和显示逻辑（如if for等，非业务逻辑），另外绑定器也在此层。ViewModel是基于视图开发的一套模型，如果你的应用是给盲人用的，那么也可以开发一套基于Audio的模型AudioModel。</li>
-<li>V(iew)层：将ViewModel通过特定的GUI展示出来，并在GUI控件上绑定视图交互事件，V(iew)一般由MVVM框架自动生成在浏览器中。</li>
-</ul>
-<h2 id="MVVM的工作机制"><a href="#MVVM的工作机制" class="headerlink" title="MVVM的工作机制"></a>MVVM的工作机制</h2><p>在MVVM架构下，View 和 Model 之间其实并没有直接的联系，而是通<strong>过ViewModel进行交互</strong>，Model 和 ViewModel 之间的交互是*<u>双向</u>*的， 因此View 数据的变化会同步到Model中，而Model 数据的变化也会立即反应到View 上。</p>
-<p>ViewModel 通过双向数据绑定把 View 层和 Model 层连接了起来。ViewModel里面包含DOM Listeners(数据监听)和Data Bindings(数据绑定)，DOM Listeners和Data Bindings是实现双向绑定的关键。</p>
-<blockquote>
-<p>DOM Listeners监听页面所有View层DOM元素的变化，当发生变化，Model层的数据随之变化；</p>
-</blockquote>
-<blockquote>
-<p>Data Bindings监听Model层的数据，当数据发生变化，View层的DOM元素随之变化。</p>
-</blockquote>
-<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/01.png" class>
-
-
-
-<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/02.png" class>
-
-
-
-<h2 id="MVVM模式的优缺点"><a href="#MVVM模式的优缺点" class="headerlink" title="MVVM模式的优缺点"></a>MVVM模式的优缺点</h2><p>MVVM模式相较于原先的MVP模式至少省下30%编码量，甚至能省下70%DOM操作，因为用MVP模式的话主要是在进行DOM操作</p>
-<blockquote>
-<p>优点</p>
-</blockquote>
-<ul>
-<li><strong>低耦合</strong>。View可以独立于Model变化和修改，一个ViewModel可以绑定到不同的View上，当View变化的时候Model可以不变，当Model变化的时候View也可以不变。</li>
-<li><strong>可重用性</strong>。可以把一些视图的逻辑放在ViewModel里面，让很多View重用这段视图逻辑。</li>
-<li>独立开发。开发人员可以专注与业务逻辑和数据的开发(ViewModel)。设计人员可以专注于界面(View)的设计。</li>
-<li><strong>可测试性</strong>。可以针对ViewModel来对界面(View)进行测试</li>
-</ul>
-<blockquote>
-<p>缺点</p>
-</blockquote>
-<ul>
-<li>学习成本高。</li>
-<li>DEBUG困难</li>
-<li>实现MVVM的开销对于简单的UI操作是过度的。而对于更大的应用来说，推广ViewModel将变得更加困难，非常大的应用程序中的数据绑定会导致相当大的内存消耗。</li>
-</ul>
-<h2 id="MVVM应用场景"><a href="#MVVM应用场景" class="headerlink" title="MVVM应用场景"></a>MVVM应用场景</h2><ul>
-<li>针对具有复杂交互逻辑的前端应用</li>
-<li>提供基础的架构抽象</li>
-<li>通过Ajax数据持久化，保证前端用户体验</li>
-</ul>
-<h2 id="常见的MVVM框架"><a href="#常见的MVVM框架" class="headerlink" title="常见的MVVM框架"></a>常见的MVVM框架</h2><p>Vue.js   AngularJs，ReactJs</p>
-]]></content>
-      <categories>
-        <category>基础架构</category>
-      </categories>
-      <tags>
-        <tag>架构模式</tag>
       </tags>
   </entry>
   <entry>
@@ -1242,6 +1242,41 @@
       </tags>
   </entry>
   <entry>
+    <title>Undo页与redo页</title>
+    <url>/2021/02/14/Undo%E9%A1%B5%E4%B8%8Eredo%E9%A1%B5/</url>
+    <content><![CDATA[<h2 id="Undo-Log"><a href="#Undo-Log" class="headerlink" title="Undo Log"></a>Undo Log</h2><p>是为了实现事务的原子性，在MySQL数据库InnoDB存储引擎中，还用Undo Log来实现多版本并发控制(简称：MVCC)。</p>
+<ul>
+<li>事务的原子性(Atomicity)<br>事务中的所有操作，要么全部完成，要么不做任何操作，不能只做部分操作。如果在执行的过程中发生了错误，要回滚(Rollback)到事务开始前的状态，就像这个事务从来没有执行过。</li>
+<li>原理<br>Undo Log的原理很简单，为了满足事务的原子性，在操作任何数据之前，首先将数据备份到一个地方（这个存储数据备份的地方称为Undo Log）。然后进行数据的修改。如果出现了错误或者用户执行了ROLLBACK语句，系统可以利用Undo Log中的备份将数据恢复到事务开始之前的状态。<br>除了可以保证事务的原子性，Undo Log也可以用来辅助完成事务的持久化。</li>
+<li>事务的持久性(Durability)<br>事务一旦完成，该事务对数据库所做的所有修改都会持久的保存到数据库中。为了保证持久性，数据库系统会将修改后的数据完全的记录到持久的存储上。</li>
+<li>用Undo Log实现原子性和持久化的事务的简化过程<br>假设有A、B两个数据，值分别为1,2。<br>A.事务开始.<br>B.记录A=1到undo log.<br>C.修改A=3.<br>D.记录B=2到undo log.<br>E.修改B=4.<br>F.将undo log写到磁盘。<br>G.将数据写到磁盘。<br>H.事务提交<br>这里有一个隐含的前提条件：‘数据都是先读到内存中，然后修改内存中的数据，最后将数据写回磁盘’。</li>
+</ul>
+<p>之所以能同时保证原子性和持久化，是因为以下特点：<br>A. 更新数据前记录Undo log。<br>B. 为了保证持久性，必须将数据在事务提交前写到磁盘。只要事务成功提交，数据必然已经持久化。<br>C. Undo log必须先于数据持久化到磁盘。如果在G,H之间系统崩溃，undo log是完整的,可以用来回滚事务。</p>
+<p>D. 如果在A-F之间系统崩溃,因为数据没有持久化到磁盘。所以磁盘上的数据还是保持在事务开始前的状态。</p>
+<p>缺陷：每个事务提交前将数据和Undo Log写入磁盘，这样会导致大量的磁盘IO，因此性能很低。</p>
+<p>如果能够将数据缓存一段时间，就能减少IO提高性能。但是这样就会丧失事务的持久性。因此引入了另外一<br>种机制来实现持久化，即Redo Log.</p>
+<h2 id="Redo-Log"><a href="#Redo-Log" class="headerlink" title="Redo Log"></a>Redo Log</h2><ul>
+<li>原理<br>和Undo Log相反，Redo Log记录的是新数据的备份。在事务提交前，只要将Redo Log持久化即可，<br>不需要将数据持久化。当系统崩溃时，虽然数据没有持久化，但是Redo Log已经持久化。系统可以根据Redo Log的内容，将所有数据恢复到最新的状态。</li>
+<li>Undo + Redo事务的简化过程<br>假设有A、B两个数据，值分别为1,2.<br>A.事务开始.<br>B.记录A=1到undo log.<br>C.修改A=3.<br>D.记录A=3到redo log.<br>E.记录B=2到undo log.<br>F.修改B=4.<br>G.记录B=4到redo log.<br>H.将redo log写入磁盘。<br>I.事务提交</li>
+<li>Undo + Redo事务的特点<br>A. 为了保证持久性，必须在事务提交前将Redo Log持久化。<br>B. 数据不需要在事务提交前写入磁盘，而是缓存在内存中。<br>C. Redo Log保证事务的持久性。<br>D. Undo Log保证事务的原子性。<br>E. 有一个隐含的特点，数据必须要晚于redo log写入持久存储。</li>
+<li>IO性能<br>Undo + Redo的设计主要考虑的是提升IO性能。虽说通过缓存数据，减少了写数据的IO. 但是却引入了新的IO，即写Redo Log的IO。如果Redo Log的IO性能不好，就不能起到提高性能的目的。</li>
+</ul>
+<p>为了保证Redo Log能够有比较好的IO性能，InnoDB 的 Redo Log的设计有以下几个特点：</p>
+<p>A. 尽量保持Redo Log存储在一段连续的空间上。因此在系统第一次启动时就会将日志文件的空间完全分配。以顺序追加的方式记录Redo Log,通过顺序IO来改善性能。<br>B. 批量写入日志。日志并不是直接写入文件，而是先写入redo log buffer.当需要将日志刷新到磁盘时 (如事务提交),将许多日志一起写入磁盘.<br>C. 并发的事务共享Redo Log的存储空间，它们的Redo Log按语句的执行顺序，依次交替的记录在一起，以减少日志占用的空间。例如,Redo Log中的记录内容可能是这样的：<br>记录1: &lt;trx1, insert …&gt;<br>记录2: &lt;trx2, update …&gt;<br>记录3: &lt;trx1, delete …&gt;<br>记录4: &lt;trx3, update …&gt;<br>记录5: &lt;trx2, insert …&gt;<br>D. 因为C的原因,当一个事务将Redo Log写入磁盘时，也会将其他未提交的事务的日志写入磁盘。<br>E. Redo Log上只进行顺序追加的操作，当一个事务需要回滚时，它的Redo Log记录也不会从Redo Log中删除掉。</p>
+<h2 id="恢复-Recovery"><a href="#恢复-Recovery" class="headerlink" title="恢复(Recovery)"></a>恢复(Recovery)</h2><ul>
+<li>恢复策略<br>前面说到未提交的事务和回滚了的事务也会记录Redo Log，因此在进行恢复时,这些事务要进行特殊的的处理.有2中不同的恢复策略：<br>A. 进行恢复时，只重做已经提交了的事务。<br>B. 进行恢复时，重做所有事务包括未提交的事务和回滚了的事务。然后通过Undo Log回滚那些未提交的事务。</li>
+<li>InnoDB存储引擎的恢复机制<br>MySQL数据库InnoDB存储引擎使用了B策略, InnoDB存储引擎中的恢复机制有几个特点：<br>A. 在重做Redo Log时，并不关心事务性。 恢复时，没有BEGIN，也没有COMMIT,ROLLBACK的行为。也不关心每个日志是哪个事务的。尽管事务ID等事务相关的内容会记入Redo Log，这些内容只是被当作要操作的数据的一部分。<br>B. 使用B策略就必须要将Undo Log持久化，而且必须要在写Redo Log之前将对应的Undo Log写入磁盘。<br>Undo和Redo Log的这种关联，使得持久化变得复杂起来。为了降低复杂度，InnoDB将Undo Log看作数据，因此记录Undo Log的操作也会记录到redo log中。这样undo log就可以象数据一样缓存起来， 而不用在redo log之前写入磁盘了。<br>包含Undo Log操作的Redo Log，看起来是这样的<br>记录1: &lt;trx1, Undo log insert &lt;undo_insert …&gt;&gt;<br>记录2: &lt;trx1, insert …&gt;<br>记录3: &lt;trx2, Undo log insert &lt;undo_update …&gt;&gt;<br>记录4: &lt;trx2, update …&gt;<br>记录5: &lt;trx3, Undo log insert &lt;undo_delete …&gt;&gt;<br>记录6: &lt;trx3, delete …&gt;<br>C. 到这里，还有一个问题没有弄清楚。既然Redo没有事务性，那岂不是会重新执行被回滚了的事务？<br>确实是这样。同时Innodb也会将事务回滚时的操作也记录到redo log中。回滚操作本质上也是对数据进行修改，因此回滚时对数据的操作也会记录到Redo Log中。<br>一个回滚了的事务的Redo Log，看起来是这样的：<br>记录1: &lt;trx1, Undo log insert &lt;undo_insert …&gt;&gt;<br>记录2: &lt;trx1, insert A…&gt;<br>记录3: &lt;trx1, Undo log insert &lt;undo_update …&gt;&gt;<br>记录4: &lt;trx1, update B…&gt;<br>记录5: &lt;trx1, Undo log insert &lt;undo_delete …&gt;&gt;<br>记录6: &lt;trx1, delete C…&gt;<br>记录7: &lt;trx1, insert C&gt;<br>记录8: &lt;trx1, update B to old value&gt;<br>记录9: &lt;trx1, delete A&gt;<br>一个被回滚了的事务在恢复时的操作就是先redo再undo，因此不会破坏数据的一致性.</li>
+<li>InnoDB存储引擎中相关的函数<br>Redo: recv_recovery_from_checkpoint_start()<br>Undo: recv_recovery_rollback_active()<br>Undo Log的Redo Log: trx_undof_page_add_undo_rec_log()</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MySQL数据库</category>
+      </categories>
+      <tags>
+        <tag>InnoDB存储引擎</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>中断</title>
     <url>/2021/02/03/%E4%B8%AD%E6%96%AD/</url>
     <content><![CDATA[<h3 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h3><p>中断使得硬件得以发出通知给处理器，是一种变内核主动为硬件主动的方式。中断本质上是一种特殊的电信号。硬件在生成中断的时候并不需要考虑与处理器的时钟同步，即中断可以随时产生，<strong>内核随时可能因为新到来的中断而被打断</strong>。</p>
@@ -1288,41 +1323,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Undo页与redo页</title>
-    <url>/2021/02/14/Undo%E9%A1%B5%E4%B8%8Eredo%E9%A1%B5/</url>
-    <content><![CDATA[<h2 id="Undo-Log"><a href="#Undo-Log" class="headerlink" title="Undo Log"></a>Undo Log</h2><p>是为了实现事务的原子性，在MySQL数据库InnoDB存储引擎中，还用Undo Log来实现多版本并发控制(简称：MVCC)。</p>
-<ul>
-<li>事务的原子性(Atomicity)<br>事务中的所有操作，要么全部完成，要么不做任何操作，不能只做部分操作。如果在执行的过程中发生了错误，要回滚(Rollback)到事务开始前的状态，就像这个事务从来没有执行过。</li>
-<li>原理<br>Undo Log的原理很简单，为了满足事务的原子性，在操作任何数据之前，首先将数据备份到一个地方（这个存储数据备份的地方称为Undo Log）。然后进行数据的修改。如果出现了错误或者用户执行了ROLLBACK语句，系统可以利用Undo Log中的备份将数据恢复到事务开始之前的状态。<br>除了可以保证事务的原子性，Undo Log也可以用来辅助完成事务的持久化。</li>
-<li>事务的持久性(Durability)<br>事务一旦完成，该事务对数据库所做的所有修改都会持久的保存到数据库中。为了保证持久性，数据库系统会将修改后的数据完全的记录到持久的存储上。</li>
-<li>用Undo Log实现原子性和持久化的事务的简化过程<br>假设有A、B两个数据，值分别为1,2。<br>A.事务开始.<br>B.记录A=1到undo log.<br>C.修改A=3.<br>D.记录B=2到undo log.<br>E.修改B=4.<br>F.将undo log写到磁盘。<br>G.将数据写到磁盘。<br>H.事务提交<br>这里有一个隐含的前提条件：‘数据都是先读到内存中，然后修改内存中的数据，最后将数据写回磁盘’。</li>
-</ul>
-<p>之所以能同时保证原子性和持久化，是因为以下特点：<br>A. 更新数据前记录Undo log。<br>B. 为了保证持久性，必须将数据在事务提交前写到磁盘。只要事务成功提交，数据必然已经持久化。<br>C. Undo log必须先于数据持久化到磁盘。如果在G,H之间系统崩溃，undo log是完整的,可以用来回滚事务。</p>
-<p>D. 如果在A-F之间系统崩溃,因为数据没有持久化到磁盘。所以磁盘上的数据还是保持在事务开始前的状态。</p>
-<p>缺陷：每个事务提交前将数据和Undo Log写入磁盘，这样会导致大量的磁盘IO，因此性能很低。</p>
-<p>如果能够将数据缓存一段时间，就能减少IO提高性能。但是这样就会丧失事务的持久性。因此引入了另外一<br>种机制来实现持久化，即Redo Log.</p>
-<h2 id="Redo-Log"><a href="#Redo-Log" class="headerlink" title="Redo Log"></a>Redo Log</h2><ul>
-<li>原理<br>和Undo Log相反，Redo Log记录的是新数据的备份。在事务提交前，只要将Redo Log持久化即可，<br>不需要将数据持久化。当系统崩溃时，虽然数据没有持久化，但是Redo Log已经持久化。系统可以根据Redo Log的内容，将所有数据恢复到最新的状态。</li>
-<li>Undo + Redo事务的简化过程<br>假设有A、B两个数据，值分别为1,2.<br>A.事务开始.<br>B.记录A=1到undo log.<br>C.修改A=3.<br>D.记录A=3到redo log.<br>E.记录B=2到undo log.<br>F.修改B=4.<br>G.记录B=4到redo log.<br>H.将redo log写入磁盘。<br>I.事务提交</li>
-<li>Undo + Redo事务的特点<br>A. 为了保证持久性，必须在事务提交前将Redo Log持久化。<br>B. 数据不需要在事务提交前写入磁盘，而是缓存在内存中。<br>C. Redo Log保证事务的持久性。<br>D. Undo Log保证事务的原子性。<br>E. 有一个隐含的特点，数据必须要晚于redo log写入持久存储。</li>
-<li>IO性能<br>Undo + Redo的设计主要考虑的是提升IO性能。虽说通过缓存数据，减少了写数据的IO. 但是却引入了新的IO，即写Redo Log的IO。如果Redo Log的IO性能不好，就不能起到提高性能的目的。</li>
-</ul>
-<p>为了保证Redo Log能够有比较好的IO性能，InnoDB 的 Redo Log的设计有以下几个特点：</p>
-<p>A. 尽量保持Redo Log存储在一段连续的空间上。因此在系统第一次启动时就会将日志文件的空间完全分配。以顺序追加的方式记录Redo Log,通过顺序IO来改善性能。<br>B. 批量写入日志。日志并不是直接写入文件，而是先写入redo log buffer.当需要将日志刷新到磁盘时 (如事务提交),将许多日志一起写入磁盘.<br>C. 并发的事务共享Redo Log的存储空间，它们的Redo Log按语句的执行顺序，依次交替的记录在一起，以减少日志占用的空间。例如,Redo Log中的记录内容可能是这样的：<br>记录1: &lt;trx1, insert …&gt;<br>记录2: &lt;trx2, update …&gt;<br>记录3: &lt;trx1, delete …&gt;<br>记录4: &lt;trx3, update …&gt;<br>记录5: &lt;trx2, insert …&gt;<br>D. 因为C的原因,当一个事务将Redo Log写入磁盘时，也会将其他未提交的事务的日志写入磁盘。<br>E. Redo Log上只进行顺序追加的操作，当一个事务需要回滚时，它的Redo Log记录也不会从Redo Log中删除掉。</p>
-<h2 id="恢复-Recovery"><a href="#恢复-Recovery" class="headerlink" title="恢复(Recovery)"></a>恢复(Recovery)</h2><ul>
-<li>恢复策略<br>前面说到未提交的事务和回滚了的事务也会记录Redo Log，因此在进行恢复时,这些事务要进行特殊的的处理.有2中不同的恢复策略：<br>A. 进行恢复时，只重做已经提交了的事务。<br>B. 进行恢复时，重做所有事务包括未提交的事务和回滚了的事务。然后通过Undo Log回滚那些未提交的事务。</li>
-<li>InnoDB存储引擎的恢复机制<br>MySQL数据库InnoDB存储引擎使用了B策略, InnoDB存储引擎中的恢复机制有几个特点：<br>A. 在重做Redo Log时，并不关心事务性。 恢复时，没有BEGIN，也没有COMMIT,ROLLBACK的行为。也不关心每个日志是哪个事务的。尽管事务ID等事务相关的内容会记入Redo Log，这些内容只是被当作要操作的数据的一部分。<br>B. 使用B策略就必须要将Undo Log持久化，而且必须要在写Redo Log之前将对应的Undo Log写入磁盘。<br>Undo和Redo Log的这种关联，使得持久化变得复杂起来。为了降低复杂度，InnoDB将Undo Log看作数据，因此记录Undo Log的操作也会记录到redo log中。这样undo log就可以象数据一样缓存起来， 而不用在redo log之前写入磁盘了。<br>包含Undo Log操作的Redo Log，看起来是这样的<br>记录1: &lt;trx1, Undo log insert &lt;undo_insert …&gt;&gt;<br>记录2: &lt;trx1, insert …&gt;<br>记录3: &lt;trx2, Undo log insert &lt;undo_update …&gt;&gt;<br>记录4: &lt;trx2, update …&gt;<br>记录5: &lt;trx3, Undo log insert &lt;undo_delete …&gt;&gt;<br>记录6: &lt;trx3, delete …&gt;<br>C. 到这里，还有一个问题没有弄清楚。既然Redo没有事务性，那岂不是会重新执行被回滚了的事务？<br>确实是这样。同时Innodb也会将事务回滚时的操作也记录到redo log中。回滚操作本质上也是对数据进行修改，因此回滚时对数据的操作也会记录到Redo Log中。<br>一个回滚了的事务的Redo Log，看起来是这样的：<br>记录1: &lt;trx1, Undo log insert &lt;undo_insert …&gt;&gt;<br>记录2: &lt;trx1, insert A…&gt;<br>记录3: &lt;trx1, Undo log insert &lt;undo_update …&gt;&gt;<br>记录4: &lt;trx1, update B…&gt;<br>记录5: &lt;trx1, Undo log insert &lt;undo_delete …&gt;&gt;<br>记录6: &lt;trx1, delete C…&gt;<br>记录7: &lt;trx1, insert C&gt;<br>记录8: &lt;trx1, update B to old value&gt;<br>记录9: &lt;trx1, delete A&gt;<br>一个被回滚了的事务在恢复时的操作就是先redo再undo，因此不会破坏数据的一致性.</li>
-<li>InnoDB存储引擎中相关的函数<br>Redo: recv_recovery_from_checkpoint_start()<br>Undo: recv_recovery_rollback_active()<br>Undo Log的Redo Log: trx_undof_page_add_undo_rec_log()</li>
-</ul>
-]]></content>
-      <categories>
-        <category>MySQL数据库</category>
-      </categories>
-      <tags>
-        <tag>InnoDB存储引擎</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>创建一个Vue实例</title>
     <url>/2021/03/07/%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAVue%E5%AE%9E%E4%BE%8B/</url>
     <content><![CDATA[<h2 id="创建一个Vue实例"><a href="#创建一个Vue实例" class="headerlink" title="创建一个Vue实例"></a>创建一个Vue实例</h2><p>虽然没有完全遵循 <a href="https://zh.wikipedia.org/wiki/MVVM">MVVM 模型</a>，但是 Vue 的设计也受到了它的启发。因此在文档中经常会使用 <code>vm</code> (ViewModel 的缩写) 这个变量名表示 Vue 实例。</p>
@@ -1361,19 +1361,113 @@
       </tags>
   </entry>
   <entry>
-    <title>初识递归</title>
-    <url>/2021/02/03/%E5%88%9D%E8%AF%86%E9%80%92%E5%BD%92/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>初识动态规划</title>
     <url>/2021/02/03/%E5%88%9D%E8%AF%86%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>垃圾收集器与内存分配策略</title>
-    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
-    <content><![CDATA[]]></content>
+    <title>初识递归</title>
+    <url>/2021/02/03/%E5%88%9D%E8%AF%86%E9%80%92%E5%BD%92/</url>
+    <content><![CDATA[<h2 id="二叉搜索树的范围和"><a href="#二叉搜索树的范围和" class="headerlink" title="二叉搜索树的范围和"></a>二叉搜索树的范围和</h2><h3 id="DFS深度优先搜索"><a href="#DFS深度优先搜索" class="headerlink" title="DFS深度优先搜索"></a>DFS深度优先搜索</h3><h4 id="1-递归"><a href="#1-递归" class="headerlink" title="1.递归"></a>1.递归</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * public class TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode left;</span></span><br><span class="line"><span class="comment"> *     TreeNode right;</span></span><br><span class="line"><span class="comment"> *     TreeNode() &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val) &#123; this.val = val; &#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val, TreeNode left, TreeNode right) &#123;</span></span><br><span class="line"><span class="comment"> *         this.val = val;</span></span><br><span class="line"><span class="comment"> *         this.left = left;</span></span><br><span class="line"><span class="comment"> *         this.right = right;</span></span><br><span class="line"><span class="comment"> *     &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> ans;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">rangeSumBST</span><span class="params">(TreeNode root, <span class="keyword">int</span> low, <span class="keyword">int</span> high)</span> </span>&#123;</span><br><span class="line">       ans = <span class="number">0</span> ;</span><br><span class="line">        dfs(root,low,high);</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dfs</span><span class="params">(TreeNode node,<span class="keyword">int</span> L,<span class="keyword">int</span> R)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(node!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(L&lt;=node.val&amp;&amp;node.val&lt;=R)&#123;</span><br><span class="line">                ans+=node.val;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(node.val&gt;L)&#123;</span><br><span class="line">                dfs(node.left,L,R);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(node.val&lt;R)&#123;</span><br><span class="line">                dfs(node.right,L,R);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-迭代"><a href="#2-迭代" class="headerlink" title="2.迭代"></a>2.迭代</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * public class TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode left;</span></span><br><span class="line"><span class="comment"> *     TreeNode right;</span></span><br><span class="line"><span class="comment"> *     TreeNode() &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val) &#123; this.val = val; &#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val, TreeNode left, TreeNode right) &#123;</span></span><br><span class="line"><span class="comment"> *         this.val = val;</span></span><br><span class="line"><span class="comment"> *         this.left = left;</span></span><br><span class="line"><span class="comment"> *         this.right = right;</span></span><br><span class="line"><span class="comment"> *     &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">rangeSumBST</span><span class="params">(TreeNode root, <span class="keyword">int</span> low, <span class="keyword">int</span> high)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">        Stack&lt;TreeNode&gt; stack = <span class="keyword">new</span> Stack&lt;TreeNode&gt;();</span><br><span class="line">        stack.push(root);</span><br><span class="line">        <span class="keyword">while</span>(!stack.isEmpty())&#123;</span><br><span class="line">            TreeNode node = stack.pop();</span><br><span class="line">            <span class="keyword">if</span>(node!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span>(node.val&gt;=low&amp;&amp;node.val&lt;=high)&#123;</span><br><span class="line">                    ans+=node.val;             <span class="comment">//注意：在这里不要写成ans+=node;</span></span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span>(node.val&gt;low)&#123;</span><br><span class="line">                    stack.push(node.left);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span>(node.val&lt;high)&#123;</span><br><span class="line">                    stack.push(node.right);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="二叉树的最大深度"><a href="#二叉树的最大深度" class="headerlink" title="二叉树的最大深度"></a>二叉树的最大深度</h2><h3 id="DFS"><a href="#DFS" class="headerlink" title="DFS"></a>DFS</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxDepth</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root==<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">int</span> maxLeftHight = maxDepth(root.left);</span><br><span class="line">            <span class="keyword">int</span> maxRightHighgt = maxDepth(root.right);</span><br><span class="line">            <span class="keyword">return</span> Math.max(maxLeftHight,maxRightHighgt)+<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<img data-src="/2021/02/03/%E5%88%9D%E8%AF%86%E9%80%92%E5%BD%92/01.png" class>
+
+
+
+<h2 id="面试题：汉诺塔"><a href="#面试题：汉诺塔" class="headerlink" title="面试题：汉诺塔"></a>面试题：汉诺塔</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">在经典汉诺塔问题中，有 3 根柱子及 N 个不同大小的穿孔圆盘，盘子可以滑入任意一根柱子。一开始，所有盘子自上而下按升序依次套在第一根柱子上(即每一个盘子只能放在更大的盘子上面)。移动圆盘时受到以下限制:</span><br><span class="line">(1) 每次只能移动一个盘子;</span><br><span class="line">(2) 盘子只能从柱子顶端滑出移到下一根柱子;</span><br><span class="line">(3) 盘子只能叠在比它大的盘子上。</span><br><span class="line"></span><br><span class="line">请编写程序，用栈将所有盘子从第一根柱子移到最后一根柱子。</span><br><span class="line"></span><br><span class="line">你需要原地修改栈。</span><br></pre></td></tr></table></figure>
+<img data-src="/2021/02/03/%E5%88%9D%E8%AF%86%E9%80%92%E5%BD%92/02.gif" class>
+
+
+
+
+
+<img data-src="/2021/02/03/%E5%88%9D%E8%AF%86%E9%80%92%E5%BD%92/03.gif" class>
+
+
+
+
+
+
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hanota</span><span class="params">(List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span> </span>&#123;</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">        将A柱子上面的盘子，通过辅助柱子B移动到C柱子的上面，需要用到递归和分治的算法</span></span><br><span class="line"><span class="comment">        先把上面 n - 1 个盘子从 A 移到 B（子问题，递归）；</span></span><br><span class="line"><span class="comment">		再将最大的盘子从 A 移到 C；</span></span><br><span class="line"><span class="comment">		再将 B 上 n - 1 个盘子从 B 移到 C（子问题，递归）</span></span><br><span class="line"><span class="comment">        **/</span></span><br><span class="line">        <span class="keyword">int</span> n = A.size();  <span class="comment">//先用n来表示柱子A上盘子的规模</span></span><br><span class="line">        moveable(n,A,B,C);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">moveable</span><span class="params">(<span class="keyword">int</span> num,List&lt;Integer&gt;A,List&lt;Integer&gt; B,List&lt;Integer&gt; C)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(num == <span class="number">1</span>)&#123;</span><br><span class="line">            C.add(A.remove(A.size()-<span class="number">1</span>));    <span class="comment">//只有一个盘子，直接移动即可</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            moveable(num-<span class="number">1</span>,A,C,B);         <span class="comment">//以C柱为辅助，将A柱上的n-1个圆盘移动至B柱</span></span><br><span class="line">            C.add(A.remove(A.size()-<span class="number">1</span>));   <span class="comment">//将A柱的最大圆盘放在C柱底端</span></span><br><span class="line">            moveable(num-<span class="number">1</span>,B,A,C);         <span class="comment">//以A柱为辅助柱，将B柱的n-1个圆盘移动至C柱</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<img data-src="/2021/02/03/%E5%88%9D%E8%AF%86%E9%80%92%E5%BD%92/04.png" class>
+
+
+
+
+
+<h2 id="递归顺序查找树"><a href="#递归顺序查找树" class="headerlink" title="递归顺序查找树"></a>递归顺序查找树</h2><p>给你一个树，请你 按中序遍历 重新排列树，使树中最左边的结点现在是树的根，并且每个结点没有左子结点，只有一个右子结点。</p>
+<p>示例 ：</p>
+<p>输入：[5,3,6,2,4,null,8,1,null,null,null,7,9] </p>
+<img data-src="/2021/02/03/%E5%88%9D%E8%AF%86%E9%80%92%E5%BD%92/05.png" class>
+
+<h3 id="方法一：中序遍历-构造新的树"><a href="#方法一：中序遍历-构造新的树" class="headerlink" title="方法一：中序遍历+构造新的树"></a>方法一：中序遍历+构造新的树</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * public class TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode left;</span></span><br><span class="line"><span class="comment"> *     TreeNode right;</span></span><br><span class="line"><span class="comment"> *     TreeNode() &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val) &#123; this.val = val; &#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val, TreeNode left, TreeNode right) &#123;</span></span><br><span class="line"><span class="comment"> *         this.val = val;</span></span><br><span class="line"><span class="comment"> *         this.left = left;</span></span><br><span class="line"><span class="comment"> *         this.right = right;</span></span><br><span class="line"><span class="comment"> *     &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> TreeNode <span class="title">increasingBST</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        List&lt;Integer&gt; vals = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">        <span class="comment">//获取到了升序的数组vals</span></span><br><span class="line">        inorder(root,vals);</span><br><span class="line">        <span class="comment">//下面的过程是重构树的过程，要求没有左节点，只有右节点</span></span><br><span class="line">        TreeNode ans = <span class="keyword">new</span> TreeNode(<span class="number">0</span>);</span><br><span class="line">        TreeNode cur = ans;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> v : vals)&#123;</span><br><span class="line">            cur.right = <span class="keyword">new</span> TreeNode(v);</span><br><span class="line">            cur = cur.right;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans.right;   <span class="comment">//返回的即为第一个节点，这里也体现出了设立ans的作用，类似于链表中的哨兵，在构建完成之后方便返回</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//中序遍历-----递归部分</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">inorder</span><span class="params">(TreeNode node, List&lt;Integer&gt; vals)</span></span>&#123;</span><br><span class="line">        <span class="comment">//不要忘了node为空的终止条件</span></span><br><span class="line">        <span class="keyword">if</span>(node==<span class="keyword">null</span>)</span><br><span class="line">            <span class="keyword">return</span> ;</span><br><span class="line">        inorder(node.left,vals);        <span class="comment">//从当前结点出发，先遍历左子树</span></span><br><span class="line">        vals.add(node.val);                 <span class="comment">//node的左子树遍历完成，将node加入数组</span></span><br><span class="line">        inorder(node.right,vals);       <span class="comment">//遍历当前节点的右子树，将其值加入数组</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<img data-src="/2021/02/03/%E5%88%9D%E8%AF%86%E9%80%92%E5%BD%92/06.png" class>
+
+<h3 id="方法二：中序递归遍历-更改树的连接关系"><a href="#方法二：中序递归遍历-更改树的连接关系" class="headerlink" title="方法二：中序递归遍历+更改树的连接关系"></a>方法二：中序递归遍历+更改树的连接关系</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * public class TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode left;</span></span><br><span class="line"><span class="comment"> *     TreeNode right;</span></span><br><span class="line"><span class="comment"> *     TreeNode() &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val) &#123; this.val = val; &#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val, TreeNode left, TreeNode right) &#123;</span></span><br><span class="line"><span class="comment"> *         this.val = val;</span></span><br><span class="line"><span class="comment"> *         this.left = left;</span></span><br><span class="line"><span class="comment"> *         this.right = right;</span></span><br><span class="line"><span class="comment"> *     &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    TreeNode cur;    <span class="comment">//作为成员变量，可以被各个方法引用</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> TreeNode <span class="title">increasingBST</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        TreeNode ans = <span class="keyword">new</span> TreeNode(<span class="number">0</span>);</span><br><span class="line">        cur = ans;</span><br><span class="line">        inorder(root);</span><br><span class="line">        <span class="keyword">return</span> ans.right;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">inorder</span><span class="params">(TreeNode node)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(node==<span class="keyword">null</span>)</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        inorder(node.left);</span><br><span class="line">        node.left = <span class="keyword">null</span>;</span><br><span class="line">        cur.right = node;</span><br><span class="line">        cur = node;</span><br><span class="line">        inorder(node.right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="面试题：biNode"><a href="#面试题：biNode" class="headerlink" title="面试题：biNode"></a>面试题：biNode</h2><p>二叉树数据结构TreeNode可用来表示单向链表（其中left置空，right为下一个链表节点）。实现一个方法，把二叉搜索树转换为单向链表，要求依然符合二叉搜索树的性质，转换操作应是原址的，也就是在原始的二叉搜索树上直接修改。</p>
+<p>返回转换后的单向链表的头节点。</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * public class TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode left;</span></span><br><span class="line"><span class="comment"> *     TreeNode right;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x) &#123; val = x; &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    TreeNode head = <span class="keyword">new</span> TreeNode(-<span class="number">1</span>);</span><br><span class="line">    TreeNode prev = head;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> TreeNode <span class="title">convertBiNode</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        makelist(root);</span><br><span class="line">        <span class="keyword">return</span> head.right;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">makelist</span><span class="params">(TreeNode node)</span></span>&#123;</span><br><span class="line">        <span class="comment">//采用中序遍历，最后会得到一个升序的单链表</span></span><br><span class="line">        <span class="comment">//最后返回的仍然是树，但是左子树为空，并且题目要求在原址修改，所以直接返回树即可</span></span><br><span class="line">        <span class="keyword">if</span>(node==<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> ;</span><br><span class="line">        &#125;</span><br><span class="line">        makelist(node.left);</span><br><span class="line">        prev.right = node;</span><br><span class="line">        prev = node;  </span><br><span class="line">        node.left = <span class="keyword">null</span>;</span><br><span class="line">        makelist(node.right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>​      </p>
+<img data-src="/2021/02/03/%E5%88%9D%E8%AF%86%E9%80%92%E5%BD%92/07.png" class>
+
+
+
+<p>这个图可以解释上面递归顺序查找树和biNode两道题中类似下面这样的代码</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"> cur.right = node;</span><br><span class="line"> cur = node;</span><br><span class="line"></span><br><span class="line">prev.right = node;</span><br><span class="line"> prev = node; </span><br></pre></td></tr></table></figure>
+<p>第一条指令用于更新结点指向，后一天指令用于prev的指向，即指向下一个元素，方便下一次访问</p>
+<h2 id="面试题16-11-跳水板"><a href="#面试题16-11-跳水板" class="headerlink" title="面试题16.11 跳水板"></a>面试题16.11 跳水板</h2><p>你正在使用一堆木板建造跳水板。有两种类型的木板，其中长度较短的木板长度为shorter，长度较长的木板长度为longer。你必须正好使用k块木板。编写一个方法，生成跳水板所有可能的长度。</p>
+<p>返回的长度需要从小到大排列。</p>
+ <img data-src="/2021/02/03/%E5%88%9D%E8%AF%86%E9%80%92%E5%BD%92/08.png" class>
+
+
+
+<h2 id="二叉树的坡度"><a href="#二叉树的坡度" class="headerlink" title="二叉树的坡度"></a>二叉树的坡度</h2><p>给定一个二叉树，计算 整个树 的坡度 。</p>
+<p>一个树的 节点的坡度 定义即为，该节点左子树的节点之和和右子树节点之和的 差的绝对值 。如果没有左子树的话，左子树的节点之和为 0 ；没有右子树的话也是一样。空结点的坡度是 0 。</p>
+<p>整个树的坡度就是其<strong>所有节点的坡度之和。</strong></p>
+ <img data-src="/2021/02/03/%E5%88%9D%E8%AF%86%E9%80%92%E5%BD%92/09.png" class>
+
+<img data-src="/2021/02/03/%E5%88%9D%E8%AF%86%E9%80%92%E5%BD%92/10.png" class>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * public class TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode left;</span></span><br><span class="line"><span class="comment"> *     TreeNode right;</span></span><br><span class="line"><span class="comment"> *     TreeNode() &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val) &#123; this.val = val; &#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val, TreeNode left, TreeNode right) &#123;</span></span><br><span class="line"><span class="comment"> *         this.val = val;</span></span><br><span class="line"><span class="comment"> *         this.left = left;</span></span><br><span class="line"><span class="comment"> *         this.right = right;</span></span><br><span class="line"><span class="comment"> *     &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="comment">//成员变量可以不赋初值，局部变量必须要赋初值，</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> count;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">findTilt</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        calculate(root);</span><br><span class="line">        <span class="keyword">return</span> count;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">calculate</span><span class="params">(TreeNode node)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(node==<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//后期需要用到，所以每次递归的结果用left和right接收一下</span></span><br><span class="line">        <span class="keyword">int</span> left = calculate(node.left);</span><br><span class="line">        <span class="keyword">int</span> right = calculate(node.right);</span><br><span class="line">        count+=Math.abs(left-right);</span><br><span class="line">        <span class="keyword">return</span> left+right+node.val;    <span class="comment">//返回当前结点之和，便于下次递归使用</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<img data-src="/2021/02/03/%E5%88%9D%E8%AF%86%E9%80%92%E5%BD%92/11.png" class>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>递归</tag>
+      </tags>
   </entry>
   <entry>
     <title>双指针问题</title>
@@ -1449,6 +1543,11 @@
         <tag>链表</tag>
         <tag>双指针</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>垃圾收集器与内存分配策略</title>
+    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>基于XML的DI</title>
@@ -1532,6 +1631,11 @@
       </tags>
   </entry>
   <entry>
+    <title>基础注解的DI</title>
+    <url>/2021/02/28/%E5%9F%BA%E7%A1%80%E6%B3%A8%E8%A7%A3%E7%9A%84DI/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Vue模板语法</title>
     <url>/2021/03/07/%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95/</url>
     <content><![CDATA[<h2 id="模板语法"><a href="#模板语法" class="headerlink" title="模板语法"></a>模板语法</h2><p>Vue.js 使用了基于 HTML 的模板语法，允许开发者声明式地将 DOM 绑定至底层 Vue 实例的数据。所有 Vue.js 的模板都是合法的 HTML，所以能被遵循规范的浏览器和 HTML 解析器解析。</p>
@@ -1600,11 +1704,6 @@
       <tags>
         <tag>Vue</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>基础注解的DI</title>
-    <url>/2021/02/28/%E5%9F%BA%E7%A1%80%E6%B3%A8%E8%A7%A3%E7%9A%84DI/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>类文件结构</title>
@@ -1836,90 +1935,13 @@
       </tags>
   </entry>
   <entry>
-    <title>链表</title>
-    <url>/2021/01/13/%E9%93%BE%E8%A1%A8/</url>
-    <content><![CDATA[<h2 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h2><h3 id="单链表"><a href="#单链表" class="headerlink" title="单链表"></a>单链表</h3><p>单链表中的每个结点不仅包含值，还包含链接到下一个结点的引用字段。通过这种方式，单链表将所有结点按顺序组织起来。习惯于用头节点来代表整个单链表。</p>
-<p>下面是一个单链表的例子：</p>
-<p> <img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\Desktop\screen-shot-2018-04-12-at-152754.png" alt="screen-shot-2018-04-12-at-152754"></p>
-<p>蓝色箭头显示单个链接列表中的结点是如何组合在一起的。</p>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SinglyListNode</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> val;</span><br><span class="line">    SinglyListNode next;    <span class="comment">//定义对象，下一个节点</span></span><br><span class="line">    SinglyListNode(<span class="keyword">int</span> x)&#123;val=x;&#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="单列表的操作"><a href="#单列表的操作" class="headerlink" title="单列表的操作"></a>单列表的操作</h3><p>与数组不同，我们无法在常量时间内访问单链表中的随机元素。 如果我们想要获得第 i 个元素，我们必须从头结点逐个遍历。 我们按索引来访问元素平均要花费 O(N) 时间，其中 N 是链表的长度。</p>
-<p>例如，在上面的示例中，头结点是 23。访问第 3 个结点的唯一方法是使用头结点中的“next”字段到达第 2 个结点（结点 6）; 然后使用结点 6 的“next”字段，我们能够访问第 3 个结点。</p>
-<p>你可能想知道为什么链表很有用，尽管它在通过索引访问数据时（与数组相比）具有如此糟糕的性能。 在 插入和删除中，链表具有良好的性能。</p>
-<h4 id="操作一：添加元素cur在prev之后"><a href="#操作一：添加元素cur在prev之后" class="headerlink" title="操作一：添加元素cur在prev之后"></a>操作一：添加元素cur在prev之后</h4><p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113091359911.png" alt="image-20210113091359911"></p>
-<p>与数组对比，插入新元素不需要将插入节点后的所有元素都后移，因此，时间复杂度为O(1),</p>
-<p><strong><em>特殊情况</em></strong></p>
-<p>在开头添加结点：在列表开头添加新节点时更新头节点head至关重要。</p>
-<ol>
-<li>初始化一个新结点 <code>cur</code> ；</li>
-<li>将新结点链接到我们的原始头结点 <code>head</code>。</li>
-<li>将 <code>cur</code> 指定为 <code>head</code> 。</li>
-</ol>
-<p>在结尾添加节点</p>
-<h4 id="操作二：从单链表中删除现有结点cur"><a href="#操作二：从单链表中删除现有结点cur" class="headerlink" title="操作二：从单链表中删除现有结点cur"></a>操作二：从单链表中删除现有结点cur</h4><p>删除操作 - 单链表<br>如果我们想从单链表中删除现有结点 cur，可以分两步完成：</p>
-<p>找到 cur 的上一个结点 prev 及其下一个结点 next ；</p>
-<p>接下来链接 prev 到 cur 的下一个节点 next 。</p>
-<p>在我们的第一步中，我们需要找出 prev 和 next。使用 cur 的参考字段很容易找出 next，但是，我们必须<strong>从头结点遍历链表，以找出 prev</strong>，它的平均时间是 O(N)，其中 N 是链表的长度。因此，删除结点的时间复杂度将是 <u>O(N)</u>。</p>
-<p>空间复杂度为 O(1)，因为我们只需要常量空间来存储指针。</p>
-<p>示例</p>
-<p>让我们尝试把结点 6从上面的单链表中删除。</p>
-<ol>
-<li><p>从头遍历链表，直到我们找到前一个结点 prev，即结点 23</p>
-<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113092734343.png" alt="image-20210113092734343"></p>
-</li>
-<li><p>将 prev（结点 23）与 next（结点 15）链接</p>
-<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113092712828.png" alt="image-20210113092712828"></p>
-</li>
-</ol>
-<p>结点 6 现在不在我们的单链表中。</p>
-<p><strong>特殊情况</strong></p>
-<p>删除第一个结点<br>如果我们想删除第一个结点，策略会有所不同。</p>
-<p>正如之前所提到的，我们使用头结点 head 来表示链表。我们的头是下面示例中的黑色结点 23。</p>
-<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113092928077.png" alt="image-20210113092928077"></p>
-<p>如果想要删除第一个结点，我们可以简单地将下一个结点分配给 head。也就是说，删除之后我们的头将会是结点 6。</p>
-<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113092949088.png" alt="image-20210113092949088"></p>
-<p>链表从头结点开始，因此结点 23 不再在我们的链表中。</p>
-<h3 id="双链表"><a href="#双链表" class="headerlink" title="双链表"></a>双链表</h3><p>与单链表的区别在于：双链表除了有数据域和指向其后继的指针外，还有指向其前驱的指针。</p>
-<p><strong>所以，根据链接数的不同，可以将链表分为单链表、双链表、多重链表</strong></p>
-<h3 id="LC设计链表"><a href="#LC设计链表" class="headerlink" title="LC设计链表"></a>LC设计链表</h3><p>链表时一个包含零个或多个元素的数据结构。每个元素都包含一个值和到另一个元素的链接。根据链接数的不同，可以分为单链表，双链表和多重链表。</p>
-<p>单链表是最简单的一种，它提供了在常数时间内的 addAtHead 操作和在线性时间内的 addAtTail 的操作。双链表是最常用的一种，因为它提供了在常数时间内的 addAtHead 和 addAtTail 操作，并且优化的插入和删除。</p>
-<p>双链表在 Java 中的实现为 LinkedList，在 Python 中为 list。这些结构都比较常用，有两个要点：</p>
-<p>1、<strong>哨兵节点</strong>：<br>哨兵节点在树和链表中被广泛用作<u>伪头、伪尾</u>等，通常不保存任何数据。</p>
-<p>我们将使用伪头来简化我们简化插入和删除。在接下来的两种方法中应用此方法。</p>
-<p>2、双链表的<u>双向搜索</u>：我们可以从头部或尾部进行搜索。</p>
-<p>####在链表类中实现这些功能：</p>
-<p>get(index)：获取链表中第 index 个节点的值。如果索引无效，则返回-1。<br>addAtHead(val)：在链表的第一个元素之前添加一个值为 val 的节点。插入后，新节点将成为链表的第一个节点。<br>addAtTail(val)：将值为 val 的节点追加到链表的最后一个元素。<br>addAtIndex(index,val)：在链表中的第 index 个节点之前添加值为 val  的节点。如果 index 等于链表的长度，则该节点将附加到链表的末尾。如果 index 大于链表长度，则不会插入节点。如果index小于0，则在头部插入节点。<br>deleteAtIndex(index)：如果索引 index 有效，则删除链表中的第 index 个节点。</p>
-<h4 id="方式一：单链表实现"><a href="#方式一：单链表实现" class="headerlink" title="方式一：单链表实现"></a>方式一：单链表实现</h4><p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113095508745.png" alt="image-20210113095508745"> </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListNode</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> val;</span><br><span class="line">  ListNode next;</span><br><span class="line">  ListNode(<span class="keyword">int</span> x) &#123; val = x; &#125;</span><br><span class="line">&#125;      <span class="comment">//声明结点</span></span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">    <span class="keyword">int</span> size;</span><br><span class="line">    ListNode head;  <span class="comment">//sentinel node as pseudo-head</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyLinkedList</span><span class="params">()</span></span>&#123;</span><br><span class="line">        size = <span class="number">0</span>;</span><br><span class="line">        head = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;   <span class="comment">//声明链表，用哨兵做伪头，这样确保链表中节点永远不为空</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListNode</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> val;</span><br><span class="line">  ListNode next;</span><br><span class="line">  ListNode(<span class="keyword">int</span> x) &#123; val = x; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyLinkedList</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> size;</span><br><span class="line">  ListNode head;  <span class="comment">// sentinel node as pseudo-head</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">MyLinkedList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    size = <span class="number">0</span>;</span><br><span class="line">    head = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Get the value of the index-th node in the linked list. If the index is invalid, return -1. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// if index is invalid</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt;= size) <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    ListNode curr = head;</span><br><span class="line">    <span class="comment">// index steps needed </span></span><br><span class="line">    <span class="comment">// to move from sentinel node to wanted index</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index + <span class="number">1</span>; ++i) curr = curr.next;   <span class="comment">//与删除不同，如果要获取指定索引处的节点，必须前进index+1步</span></span><br><span class="line">    <span class="keyword">return</span> curr.val;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtHead</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    addAtIndex(<span class="number">0</span>, val);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Append a node of value val to the last element of the linked list. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtTail</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    addAtIndex(size, val);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtIndex</span><span class="params">(<span class="keyword">int</span> index, <span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// If index is greater than the length, </span></span><br><span class="line">    <span class="comment">// the node will not be inserted.</span></span><br><span class="line">    <span class="keyword">if</span> (index &gt; size) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// [so weird] If index is negative, </span></span><br><span class="line">    <span class="comment">// the node will be inserted at the head of the list.</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span>)  index = <span class="number">0</span>;</span><br><span class="line">		++size;</span><br><span class="line">    <span class="comment">// find predecessor of the node to be added</span></span><br><span class="line">    ListNode pred = head;    </span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; ++i) pred = pred.next;   <span class="comment">//从头开始找给定索引处的前一个元素pred，</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// node to be added</span></span><br><span class="line">    ListNode toAdd = <span class="keyword">new</span> ListNode(val);    <span class="comment">//新建一个节点</span></span><br><span class="line">    <span class="comment">// insertion itself</span></span><br><span class="line">    toAdd.next = pred.next;  </span><br><span class="line">    pred.next = toAdd;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Delete the index-th node in the linked list, if the index is valid. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteAtIndex</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// if the index is invalid, do nothing</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt;= size) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    size--;</span><br><span class="line">    <span class="comment">// find predecessor of the node to be deleted</span></span><br><span class="line">    ListNode pred = head;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; ++i) pred = pred.next;  <span class="comment">//找到的是要删除节点的前一个节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// delete pred.next </span></span><br><span class="line">    pred.next = pred.next.next;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">作者：LeetCode</span><br><span class="line">链接：https:<span class="comment">//leetcode-cn.com/problems/design-linked-list/solution/she-ji-lian-biao-by-leetcode/</span></span><br><span class="line">来源：力扣（LeetCode）</span><br><span class="line">著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</span><br></pre></td></tr></table></figure>
-<p>#####复杂度分析</p>
-<p>时间复杂度：<br>addAtHead： \mathcal{O}(1)O(1)<br>addAtInder，get，deleteAtIndex: \mathcal{O}(k)O(k)，其中 kk 指的是元素的索引。<br>addAtTail：\mathcal{O}(N)O(N)，其中 NN 指的是链表的元素个数。<br>空间复杂度：所有的操作都是 O(1)O(1)。</p>
-<p>####方式二：双链表实现</p>
-<p>双链表比单链表快得多，测试用例花费的时间比单链表快了两倍。但是它更加复杂，它包含了 <code>size</code>，记录链表元素个数，和伪头伪尾。</p>
-<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113105525613.png" alt="image-20210113105525613"></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListNode</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> val;</span><br><span class="line">  ListNode next;   <span class="comment">//后继结点</span></span><br><span class="line">  ListNode prev;   <span class="comment">//前驱节点</span></span><br><span class="line">  ListNode(<span class="keyword">int</span> x) &#123; val = x; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyLinkedList</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> size=<span class="number">0</span>;</span><br><span class="line">  <span class="comment">// sentinel nodes as pseudo-head and pseudo-tail  --伪元素充当头结点和尾节点</span></span><br><span class="line">  ListNode head, tail;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">MyLinkedList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    size = <span class="number">0</span>;</span><br><span class="line">    head = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">    tail = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">    head.next = tail;</span><br><span class="line">    tail.prev = head;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Get the value of the index-th node in the linked list. If the index is invalid, return -1. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// if index is invalid</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt;= size) <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// choose the fastest way: to move from the head</span></span><br><span class="line">    <span class="comment">// or to move from the tail    ----从后或者从前遍历，选择一个比较快速的遍历方向</span></span><br><span class="line">    ListNode curr = head;</span><br><span class="line">    <span class="keyword">if</span> (index + <span class="number">1</span> &lt; size - index)</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index + <span class="number">1</span>; ++i) curr = curr.next;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      curr = tail;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size - index; ++i) curr = curr.prev;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> curr.val;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtHead</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    ListNode pred = head, succ = head.next;</span><br><span class="line"></span><br><span class="line">    ++size;      <span class="comment">//记得把链表长度更新一下</span></span><br><span class="line">    ListNode toAdd = <span class="keyword">new</span> ListNode(val);</span><br><span class="line">    toAdd.prev = pred;</span><br><span class="line">    toAdd.next = succ;</span><br><span class="line">    pred.next = toAdd;</span><br><span class="line">    succ.prev = toAdd;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Append a node of value val to the last element of the linked list. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtTail</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    ListNode succ = tail, pred = tail.prev;</span><br><span class="line"></span><br><span class="line">    ++size;</span><br><span class="line">    ListNode toAdd = <span class="keyword">new</span> ListNode(val);</span><br><span class="line">    toAdd.prev = pred;</span><br><span class="line">    toAdd.next = succ;</span><br><span class="line">    pred.next = toAdd;</span><br><span class="line">    succ.prev = toAdd;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtIndex</span><span class="params">(<span class="keyword">int</span> index, <span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// If index is greater than the length, </span></span><br><span class="line">    <span class="comment">// the node will not be inserted.</span></span><br><span class="line">    <span class="keyword">if</span> (index &gt; size) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// [so weird] If index is negative, </span></span><br><span class="line">    <span class="comment">// the node will be inserted at the head of the list.</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span>) index = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// find predecessor and successor of the node to be added   找到节点的前驱和后继</span></span><br><span class="line">    ListNode pred, succ;</span><br><span class="line">    <span class="keyword">if</span> (index &lt; size - index) &#123;</span><br><span class="line">      pred = head;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; ++i) </span><br><span class="line">          pred = pred.next;</span><br><span class="line">      succ = pred.next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      succ = tail;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size - index; ++i) succ = succ.prev;</span><br><span class="line">      pred = succ.prev;</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">//先找到待插入元素的前驱与后继，然后在进行节点指向的变更</span></span><br><span class="line">    <span class="comment">// insertion itself</span></span><br><span class="line">    ++size;        <span class="comment">//注意长度的更新</span></span><br><span class="line">    ListNode toAdd = <span class="keyword">new</span> ListNode(val);</span><br><span class="line">    toAdd.prev = pred;</span><br><span class="line">    toAdd.next = succ;</span><br><span class="line">    pred.next = toAdd;</span><br><span class="line">    succ.prev = toAdd;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Delete the index-th node in the linked list, if the index is valid. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteAtIndex</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// if the index is invalid, do nothing</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt;= size) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// find predecessor and successor of the node to be deleted</span></span><br><span class="line">    ListNode pred, succ;</span><br><span class="line">    <span class="keyword">if</span> (index &lt; size - index) &#123;</span><br><span class="line">      pred = head;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; ++i) pred = pred.next;</span><br><span class="line">      succ = pred.next.next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      succ = tail;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size - index - <span class="number">1</span>; ++i) succ = succ.prev;</span><br><span class="line">      pred = succ.prev.prev;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// delete pred.next </span></span><br><span class="line">    --size;</span><br><span class="line">    pred.next = succ;</span><br><span class="line">    succ.prev = pred;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
-<p>伪头和伪尾总是存在，MyLinkedList 中所有节点都包含：值 + 指向前一个节点的指针 + 指向后一个节点的指针。</p>
-<p>#####复杂度分析</p>
-<p>时间复杂度：<br>addAtHead，addAtTail： \mathcal{O}(1)O(1)<br>get，addAtIndex，delete：\mathcal{O}(\min(k, N - k))O(min(k,N−k))，其中 kk 指的是元素的索引。<br>空间复杂度：所有的操作都是 \mathcal{O}(1)O(1)。</p>
-<p> <strong>说明</strong>:不论是单链表还是双链表，在进行遍历时，如果想要通过index来get某一结点元素，for循环中的终止条件是<strong>i&lt;index+1</strong></p>
-<p>如果是删除或者添加，for循环中的终止条件是**i&lt;index</p>
-]]></content>
-      <categories>
-        <category>数据结构</category>
-      </categories>
-      <tags>
-        <tag>链表</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>编程范式</title>
     <url>/2021/03/02/%E7%BC%96%E7%A8%8B%E8%8C%83%E5%BC%8F/</url>
     <content><![CDATA[<p>相信绝大部分开发人员、DBA都听过范式这个词，在MySQL中有第一范式、第二范式、第三范式、BCNF范式等，在开发中也有相应的范式，专业词汇叫编程范式(ProgrammingParadigm)。由于笔者能力、精力都有限，本篇主要通过针对同一业务场景，基于编程范式的概念，核心原理以及用例实现来对比不同范式及其实现业务功能的差异。</p>
 <p>范式分类</p>
 <p>如图1所示，范式可以简单分为三类:</p>
 <p>图1: 范式的简单分类</p>
- 
+ <img data-src="/2021/03/02/%E7%BC%96%E7%A8%8B%E8%8C%83%E5%BC%8F/01.jpg" class>
 
 <p>范式和语言的关系</p>
 <p>图2: 范式和语言的关系</p>
@@ -2005,10 +2027,81 @@
       </tags>
   </entry>
   <entry>
-    <title></title>
-    <url>/2021/03/02/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/JVM%E5%90%AC%E8%AF%BE%E7%AC%94%E8%AE%B0%E8%A1%A5%E5%85%85/</url>
-    <content><![CDATA[<p>java的指令是根据栈来设计的，不适用基于寄存器的，是因为基于寄存器与CPU耦合度太高，不太好实现跨平台运行</p>
-<img data-src="https://tse1-mm.cn.bing.net/th/id/OIP.f3N7J7-cCRt2cBZM2z-XlQHaGV?w=223&h=191&c=7&o=5&dpr=1.5&pid=1.7" alt=" JVM内存结构 的图像结果" style="zoom: 200%;">]]></content>
+    <title>链表</title>
+    <url>/2021/01/13/%E9%93%BE%E8%A1%A8/</url>
+    <content><![CDATA[<h2 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h2><h3 id="单链表"><a href="#单链表" class="headerlink" title="单链表"></a>单链表</h3><p>单链表中的每个结点不仅包含值，还包含链接到下一个结点的引用字段。通过这种方式，单链表将所有结点按顺序组织起来。习惯于用头节点来代表整个单链表。</p>
+<p>下面是一个单链表的例子：</p>
+<p> <img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\Desktop\screen-shot-2018-04-12-at-152754.png" alt="screen-shot-2018-04-12-at-152754"></p>
+<p>蓝色箭头显示单个链接列表中的结点是如何组合在一起的。</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SinglyListNode</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> val;</span><br><span class="line">    SinglyListNode next;    <span class="comment">//定义对象，下一个节点</span></span><br><span class="line">    SinglyListNode(<span class="keyword">int</span> x)&#123;val=x;&#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="单列表的操作"><a href="#单列表的操作" class="headerlink" title="单列表的操作"></a>单列表的操作</h3><p>与数组不同，我们无法在常量时间内访问单链表中的随机元素。 如果我们想要获得第 i 个元素，我们必须从头结点逐个遍历。 我们按索引来访问元素平均要花费 O(N) 时间，其中 N 是链表的长度。</p>
+<p>例如，在上面的示例中，头结点是 23。访问第 3 个结点的唯一方法是使用头结点中的“next”字段到达第 2 个结点（结点 6）; 然后使用结点 6 的“next”字段，我们能够访问第 3 个结点。</p>
+<p>你可能想知道为什么链表很有用，尽管它在通过索引访问数据时（与数组相比）具有如此糟糕的性能。 在 插入和删除中，链表具有良好的性能。</p>
+<h4 id="操作一：添加元素cur在prev之后"><a href="#操作一：添加元素cur在prev之后" class="headerlink" title="操作一：添加元素cur在prev之后"></a>操作一：添加元素cur在prev之后</h4><p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113091359911.png" alt="image-20210113091359911"></p>
+<p>与数组对比，插入新元素不需要将插入节点后的所有元素都后移，因此，时间复杂度为O(1),</p>
+<p><strong><em>特殊情况</em></strong></p>
+<p>在开头添加结点：在列表开头添加新节点时更新头节点head至关重要。</p>
+<ol>
+<li>初始化一个新结点 <code>cur</code> ；</li>
+<li>将新结点链接到我们的原始头结点 <code>head</code>。</li>
+<li>将 <code>cur</code> 指定为 <code>head</code> 。</li>
+</ol>
+<p>在结尾添加节点</p>
+<h4 id="操作二：从单链表中删除现有结点cur"><a href="#操作二：从单链表中删除现有结点cur" class="headerlink" title="操作二：从单链表中删除现有结点cur"></a>操作二：从单链表中删除现有结点cur</h4><p>删除操作 - 单链表<br>如果我们想从单链表中删除现有结点 cur，可以分两步完成：</p>
+<p>找到 cur 的上一个结点 prev 及其下一个结点 next ；</p>
+<p>接下来链接 prev 到 cur 的下一个节点 next 。</p>
+<p>在我们的第一步中，我们需要找出 prev 和 next。使用 cur 的参考字段很容易找出 next，但是，我们必须<strong>从头结点遍历链表，以找出 prev</strong>，它的平均时间是 O(N)，其中 N 是链表的长度。因此，删除结点的时间复杂度将是 <u>O(N)</u>。</p>
+<p>空间复杂度为 O(1)，因为我们只需要常量空间来存储指针。</p>
+<p>示例</p>
+<p>让我们尝试把结点 6从上面的单链表中删除。</p>
+<ol>
+<li><p>从头遍历链表，直到我们找到前一个结点 prev，即结点 23</p>
+<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113092734343.png" alt="image-20210113092734343"></p>
+</li>
+<li><p>将 prev（结点 23）与 next（结点 15）链接</p>
+<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113092712828.png" alt="image-20210113092712828"></p>
+</li>
+</ol>
+<p>结点 6 现在不在我们的单链表中。</p>
+<p><strong>特殊情况</strong></p>
+<p>删除第一个结点<br>如果我们想删除第一个结点，策略会有所不同。</p>
+<p>正如之前所提到的，我们使用头结点 head 来表示链表。我们的头是下面示例中的黑色结点 23。</p>
+<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113092928077.png" alt="image-20210113092928077"></p>
+<p>如果想要删除第一个结点，我们可以简单地将下一个结点分配给 head。也就是说，删除之后我们的头将会是结点 6。</p>
+<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113092949088.png" alt="image-20210113092949088"></p>
+<p>链表从头结点开始，因此结点 23 不再在我们的链表中。</p>
+<h3 id="双链表"><a href="#双链表" class="headerlink" title="双链表"></a>双链表</h3><p>与单链表的区别在于：双链表除了有数据域和指向其后继的指针外，还有指向其前驱的指针。</p>
+<p><strong>所以，根据链接数的不同，可以将链表分为单链表、双链表、多重链表</strong></p>
+<h3 id="LC设计链表"><a href="#LC设计链表" class="headerlink" title="LC设计链表"></a>LC设计链表</h3><p>链表时一个包含零个或多个元素的数据结构。每个元素都包含一个值和到另一个元素的链接。根据链接数的不同，可以分为单链表，双链表和多重链表。</p>
+<p>单链表是最简单的一种，它提供了在常数时间内的 addAtHead 操作和在线性时间内的 addAtTail 的操作。双链表是最常用的一种，因为它提供了在常数时间内的 addAtHead 和 addAtTail 操作，并且优化的插入和删除。</p>
+<p>双链表在 Java 中的实现为 LinkedList，在 Python 中为 list。这些结构都比较常用，有两个要点：</p>
+<p>1、<strong>哨兵节点</strong>：<br>哨兵节点在树和链表中被广泛用作<u>伪头、伪尾</u>等，通常不保存任何数据。</p>
+<p>我们将使用伪头来简化我们简化插入和删除。在接下来的两种方法中应用此方法。</p>
+<p>2、双链表的<u>双向搜索</u>：我们可以从头部或尾部进行搜索。</p>
+<p>####在链表类中实现这些功能：</p>
+<p>get(index)：获取链表中第 index 个节点的值。如果索引无效，则返回-1。<br>addAtHead(val)：在链表的第一个元素之前添加一个值为 val 的节点。插入后，新节点将成为链表的第一个节点。<br>addAtTail(val)：将值为 val 的节点追加到链表的最后一个元素。<br>addAtIndex(index,val)：在链表中的第 index 个节点之前添加值为 val  的节点。如果 index 等于链表的长度，则该节点将附加到链表的末尾。如果 index 大于链表长度，则不会插入节点。如果index小于0，则在头部插入节点。<br>deleteAtIndex(index)：如果索引 index 有效，则删除链表中的第 index 个节点。</p>
+<h4 id="方式一：单链表实现"><a href="#方式一：单链表实现" class="headerlink" title="方式一：单链表实现"></a>方式一：单链表实现</h4><p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113095508745.png" alt="image-20210113095508745"> </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListNode</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> val;</span><br><span class="line">  ListNode next;</span><br><span class="line">  ListNode(<span class="keyword">int</span> x) &#123; val = x; &#125;</span><br><span class="line">&#125;      <span class="comment">//声明结点</span></span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">    <span class="keyword">int</span> size;</span><br><span class="line">    ListNode head;  <span class="comment">//sentinel node as pseudo-head</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyLinkedList</span><span class="params">()</span></span>&#123;</span><br><span class="line">        size = <span class="number">0</span>;</span><br><span class="line">        head = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;   <span class="comment">//声明链表，用哨兵做伪头，这样确保链表中节点永远不为空</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListNode</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> val;</span><br><span class="line">  ListNode next;</span><br><span class="line">  ListNode(<span class="keyword">int</span> x) &#123; val = x; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyLinkedList</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> size;</span><br><span class="line">  ListNode head;  <span class="comment">// sentinel node as pseudo-head</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">MyLinkedList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    size = <span class="number">0</span>;</span><br><span class="line">    head = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Get the value of the index-th node in the linked list. If the index is invalid, return -1. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// if index is invalid</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt;= size) <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    ListNode curr = head;</span><br><span class="line">    <span class="comment">// index steps needed </span></span><br><span class="line">    <span class="comment">// to move from sentinel node to wanted index</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index + <span class="number">1</span>; ++i) curr = curr.next;   <span class="comment">//与删除不同，如果要获取指定索引处的节点，必须前进index+1步</span></span><br><span class="line">    <span class="keyword">return</span> curr.val;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtHead</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    addAtIndex(<span class="number">0</span>, val);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Append a node of value val to the last element of the linked list. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtTail</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    addAtIndex(size, val);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtIndex</span><span class="params">(<span class="keyword">int</span> index, <span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// If index is greater than the length, </span></span><br><span class="line">    <span class="comment">// the node will not be inserted.</span></span><br><span class="line">    <span class="keyword">if</span> (index &gt; size) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// [so weird] If index is negative, </span></span><br><span class="line">    <span class="comment">// the node will be inserted at the head of the list.</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span>)  index = <span class="number">0</span>;</span><br><span class="line">		++size;</span><br><span class="line">    <span class="comment">// find predecessor of the node to be added</span></span><br><span class="line">    ListNode pred = head;    </span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; ++i) pred = pred.next;   <span class="comment">//从头开始找给定索引处的前一个元素pred，</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// node to be added</span></span><br><span class="line">    ListNode toAdd = <span class="keyword">new</span> ListNode(val);    <span class="comment">//新建一个节点</span></span><br><span class="line">    <span class="comment">// insertion itself</span></span><br><span class="line">    toAdd.next = pred.next;  </span><br><span class="line">    pred.next = toAdd;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Delete the index-th node in the linked list, if the index is valid. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteAtIndex</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// if the index is invalid, do nothing</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt;= size) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    size--;</span><br><span class="line">    <span class="comment">// find predecessor of the node to be deleted</span></span><br><span class="line">    ListNode pred = head;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; ++i) pred = pred.next;  <span class="comment">//找到的是要删除节点的前一个节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// delete pred.next </span></span><br><span class="line">    pred.next = pred.next.next;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">作者：LeetCode</span><br><span class="line">链接：https:<span class="comment">//leetcode-cn.com/problems/design-linked-list/solution/she-ji-lian-biao-by-leetcode/</span></span><br><span class="line">来源：力扣（LeetCode）</span><br><span class="line">著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</span><br></pre></td></tr></table></figure>
+<p>#####复杂度分析</p>
+<p>时间复杂度：<br>addAtHead： \mathcal{O}(1)O(1)<br>addAtInder，get，deleteAtIndex: \mathcal{O}(k)O(k)，其中 kk 指的是元素的索引。<br>addAtTail：\mathcal{O}(N)O(N)，其中 NN 指的是链表的元素个数。<br>空间复杂度：所有的操作都是 O(1)O(1)。</p>
+<p>####方式二：双链表实现</p>
+<p>双链表比单链表快得多，测试用例花费的时间比单链表快了两倍。但是它更加复杂，它包含了 <code>size</code>，记录链表元素个数，和伪头伪尾。</p>
+<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113105525613.png" alt="image-20210113105525613"></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListNode</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> val;</span><br><span class="line">  ListNode next;   <span class="comment">//后继结点</span></span><br><span class="line">  ListNode prev;   <span class="comment">//前驱节点</span></span><br><span class="line">  ListNode(<span class="keyword">int</span> x) &#123; val = x; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyLinkedList</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> size=<span class="number">0</span>;</span><br><span class="line">  <span class="comment">// sentinel nodes as pseudo-head and pseudo-tail  --伪元素充当头结点和尾节点</span></span><br><span class="line">  ListNode head, tail;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">MyLinkedList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    size = <span class="number">0</span>;</span><br><span class="line">    head = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">    tail = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">    head.next = tail;</span><br><span class="line">    tail.prev = head;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Get the value of the index-th node in the linked list. If the index is invalid, return -1. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// if index is invalid</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt;= size) <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// choose the fastest way: to move from the head</span></span><br><span class="line">    <span class="comment">// or to move from the tail    ----从后或者从前遍历，选择一个比较快速的遍历方向</span></span><br><span class="line">    ListNode curr = head;</span><br><span class="line">    <span class="keyword">if</span> (index + <span class="number">1</span> &lt; size - index)</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index + <span class="number">1</span>; ++i) curr = curr.next;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      curr = tail;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size - index; ++i) curr = curr.prev;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> curr.val;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtHead</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    ListNode pred = head, succ = head.next;</span><br><span class="line"></span><br><span class="line">    ++size;      <span class="comment">//记得把链表长度更新一下</span></span><br><span class="line">    ListNode toAdd = <span class="keyword">new</span> ListNode(val);</span><br><span class="line">    toAdd.prev = pred;</span><br><span class="line">    toAdd.next = succ;</span><br><span class="line">    pred.next = toAdd;</span><br><span class="line">    succ.prev = toAdd;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Append a node of value val to the last element of the linked list. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtTail</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    ListNode succ = tail, pred = tail.prev;</span><br><span class="line"></span><br><span class="line">    ++size;</span><br><span class="line">    ListNode toAdd = <span class="keyword">new</span> ListNode(val);</span><br><span class="line">    toAdd.prev = pred;</span><br><span class="line">    toAdd.next = succ;</span><br><span class="line">    pred.next = toAdd;</span><br><span class="line">    succ.prev = toAdd;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtIndex</span><span class="params">(<span class="keyword">int</span> index, <span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// If index is greater than the length, </span></span><br><span class="line">    <span class="comment">// the node will not be inserted.</span></span><br><span class="line">    <span class="keyword">if</span> (index &gt; size) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// [so weird] If index is negative, </span></span><br><span class="line">    <span class="comment">// the node will be inserted at the head of the list.</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span>) index = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// find predecessor and successor of the node to be added   找到节点的前驱和后继</span></span><br><span class="line">    ListNode pred, succ;</span><br><span class="line">    <span class="keyword">if</span> (index &lt; size - index) &#123;</span><br><span class="line">      pred = head;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; ++i) </span><br><span class="line">          pred = pred.next;</span><br><span class="line">      succ = pred.next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      succ = tail;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size - index; ++i) succ = succ.prev;</span><br><span class="line">      pred = succ.prev;</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">//先找到待插入元素的前驱与后继，然后在进行节点指向的变更</span></span><br><span class="line">    <span class="comment">// insertion itself</span></span><br><span class="line">    ++size;        <span class="comment">//注意长度的更新</span></span><br><span class="line">    ListNode toAdd = <span class="keyword">new</span> ListNode(val);</span><br><span class="line">    toAdd.prev = pred;</span><br><span class="line">    toAdd.next = succ;</span><br><span class="line">    pred.next = toAdd;</span><br><span class="line">    succ.prev = toAdd;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Delete the index-th node in the linked list, if the index is valid. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteAtIndex</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// if the index is invalid, do nothing</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt;= size) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// find predecessor and successor of the node to be deleted</span></span><br><span class="line">    ListNode pred, succ;</span><br><span class="line">    <span class="keyword">if</span> (index &lt; size - index) &#123;</span><br><span class="line">      pred = head;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; ++i) pred = pred.next;</span><br><span class="line">      succ = pred.next.next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      succ = tail;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size - index - <span class="number">1</span>; ++i) succ = succ.prev;</span><br><span class="line">      pred = succ.prev.prev;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// delete pred.next </span></span><br><span class="line">    --size;</span><br><span class="line">    pred.next = succ;</span><br><span class="line">    succ.prev = pred;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+<p>伪头和伪尾总是存在，MyLinkedList 中所有节点都包含：值 + 指向前一个节点的指针 + 指向后一个节点的指针。</p>
+<p>#####复杂度分析</p>
+<p>时间复杂度：<br>addAtHead，addAtTail： \mathcal{O}(1)O(1)<br>get，addAtIndex，delete：\mathcal{O}(\min(k, N - k))O(min(k,N−k))，其中 kk 指的是元素的索引。<br>空间复杂度：所有的操作都是 \mathcal{O}(1)O(1)。</p>
+<p> <strong>说明</strong>:不论是单链表还是双链表，在进行遍历时，如果想要通过index来get某一结点元素，for循环中的终止条件是<strong>i&lt;index+1</strong></p>
+<p>如果是删除或者添加，for循环中的终止条件是**i&lt;index</p>
+]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>链表</tag>
+      </tags>
   </entry>
   <entry>
     <title>链表刷题总结（easy篇）</title>
@@ -2128,6 +2221,12 @@
       <tags>
         <tag>阿里云ECS部署</tag>
       </tags>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/2021/03/02/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/JVM%E5%90%AC%E8%AF%BE%E7%AC%94%E8%AE%B0%E8%A1%A5%E5%85%85/</url>
+    <content><![CDATA[<p>java的指令是根据栈来设计的，不适用基于寄存器的，是因为基于寄存器与CPU耦合度太高，不太好实现跨平台运行</p>
+<img data-src="https://tse1-mm.cn.bing.net/th/id/OIP.f3N7J7-cCRt2cBZM2z-XlQHaGV?w=223&h=191&c=7&o=5&dpr=1.5&pid=1.7" alt=" JVM内存结构 的图像结果" style="zoom: 200%;">]]></content>
   </entry>
   <entry>
     <title>Tomcat服务器</title>
