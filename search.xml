@@ -972,64 +972,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Mybatis入门案例知识补充</title>
-    <url>/2021/03/07/Mybatis%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E8%A1%A5%E5%85%85/</url>
-    <content><![CDATA[<h2 id="不使用XML构建SqlSessionFactory"><a href="#不使用XML构建SqlSessionFactory" class="headerlink" title="不使用XML构建SqlSessionFactory"></a>不使用XML构建SqlSessionFactory</h2><p>如果你更愿意直接从 Java 代码而不是 XML 文件中创建配置，或者想要创建你自己的配置建造器，MyBatis 也<strong>提供了完整的配置类</strong>，提供了所有与 XML 文件等价的配置项。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">DataSource dataSource = BlogDataSourceFactory.getBlogDataSource();</span><br><span class="line"><span class="comment">//指定事务类型</span></span><br><span class="line">TransactionFactory transactionFactory = <span class="keyword">new</span> JdbcTransactionFactory();</span><br><span class="line">Environment environment = <span class="keyword">new</span> Environment(<span class="string">&quot;development&quot;</span>, transactionFactory, dataSource);</span><br><span class="line">Configuration configuration = <span class="keyword">new</span> Configuration(environment);</span><br><span class="line"><span class="comment">//添加一个映射器类,相较于XML文件构建存在一定的局限性</span></span><br><span class="line">configuration.addMapper(BlogMapper.class);</span><br><span class="line"><span class="comment">//构造SqlSessionFactory</span></span><br><span class="line">SqlSessionFactory sqlSessionFactory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(configuration);</span><br></pre></td></tr></table></figure>
-<p>注意该例中，configuration 添加了一个映射器类（mapper class）。映射器类是 Java 类，它们**<u>包含 SQL 映射注解从而避免依赖 XML 文件</u>**。不过，由于 Java 注解的一些限制以及某些 MyBatis 映射的复杂性，要使用大多数高级映射（比如：嵌套联合映射），仍然需要使用 XML 配置。有鉴于此，如果存在一个同名 XML 配置文件，MyBatis 会自动查找并加载它（在这个例子中，基于类路径和 BlogMapper.class 的类名，会加载 BlogMapper.xml）。</p>
-<h2 id="从SqlSessionFactory中获取SqlSession"><a href="#从SqlSessionFactory中获取SqlSession" class="headerlink" title="从SqlSessionFactory中获取SqlSession"></a>从SqlSessionFactory中获取SqlSession</h2><p> 既然有了 SqlSessionFactory，顾名思义，我们可以从中获得 SqlSession 的实例。SqlSession 提供了在数据库执行 SQL 命令所需的所有方法。你可以通过 SqlSession 实例来直接执行已映射的 SQL 语句。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span>(SqlSession session = SqlSessionFactory.opensession())&#123;</span><br><span class="line">	 Blog blog = (Blog) session.selectOne(<span class="string">&quot;org.mybatis.example.BlogMapper.selectBlog&quot;</span>, <span class="number">101</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>另一种更加简洁的方式</p>
-</blockquote>
-<p>使用和指定语句的参数和返回值**<u>相匹配的接口</u>**（比如 BlogMapper.class），现在你的代码不仅更清晰，更加类型安全，还不用担心可能出错的字符串字面值以及强制类型转换。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">    <span class="comment">//传参的时候传了一个接口</span></span><br><span class="line">  BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">  Blog blog = mapper.selectBlog(<span class="number">101</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="探究已经映射的SQL语句"><a href="#探究已经映射的SQL语句" class="headerlink" title="探究已经映射的SQL语句"></a>探究已经映射的SQL语句</h2><p>粗略的讨论一下SqlSession和Mapper到底执行了什么操作</p>
-<p>一个语句既可以通过 XML 定义，也可以通过注解定义。我们先看看 XML 定义语句的方式，事实上 MyBatis 提供的所有特性都可以利用基于 XML 的映射语言来实现，这使得 MyBatis 在过去的数年间得以流行。下面是一个XML文件示例</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span> ?&gt;</span><br><span class="line">&lt;!DOCTYPE mapper</span><br><span class="line">  PUBLIC <span class="string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span><br><span class="line">  <span class="string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span><br><span class="line">&lt;mapper namespace=<span class="string">&quot;org.mybatis.example.BlogMapper&quot;</span>&gt;</span><br><span class="line">  &lt;select id=<span class="string">&quot;selectBlog&quot;</span> resultType=<span class="string">&quot;Blog&quot;</span>&gt;</span><br><span class="line">    select * from Blog where id = #&#123;id&#125;</span><br><span class="line">  &lt;/select&gt;</span><br><span class="line">&lt;/mapper&gt;</span><br></pre></td></tr></table></figure>
-<p>为了这个简单的例子，我们似乎写了不少配置，但其实并不多。在一个 XML 映射文件中，可以定义无数个映射语句，这样一来，XML 头部和文档类型声明部分就显得微不足道了。文档的其它部分很直白，容易理解。 它在命名空间 “org.mybatis.example.BlogMapper” 中定义了一个名为 “selectBlog” 的映射语句，这样你就可以用全限定名 “org.mybatis.example.BlogMapper.selectBlog” 来调用映射语句了，就像上面例子中那样：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Blog blog = (Blog) session.selectOne(<span class="string">&quot;org.mybatis.example.BlogMapper.selectBlog&quot;</span>, <span class="number">101</span>);</span><br></pre></td></tr></table></figure>
-<ul>
-<li>说明：此时org.mybatis.example.BlogMapper应该是一个接口</li>
-<li>selectBlog是接口中定义的一个方法</li>
-</ul>
-<p>你可能会注意到，这种方式和用全限定名调用 Java 对象的方法类似。这样，该命名就可以<strong>直接映射到在命名空间中同名的映射器类</strong>，并将已映射的 select 语句匹配到对应名称、参数和返回类型的方法。因此你就可以像上面那样，不费吹灰之力地在对应的映射器接口调用方法，就像下面这样：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">Blog blog = mapper.selectBlog(<span class="number">101</span>);</span><br></pre></td></tr></table></figure>
-<p>第二种方法有很多优势，首先它不依赖于字符串字面值，会更安全一点；其次，如果你的 IDE 有代码补全功能，那么代码补全可以帮你快速选择到映射好的 SQL 语句。</p>
-<h2 id="命名空间"><a href="#命名空间" class="headerlink" title="命名空间"></a>命名空间</h2><p>在之前版本的 MyBatis 中，<strong>命名空间（Namespaces）</strong>的作用并不大，是可选的。 但现在，随着命名空间越发重要，你必须指定命名空间。</p>
-<p>命名空间的作用有两个，一个是利用更长的全限定名来将不同的语句隔离开来，同时也实现了你上面见到的接口绑定。就算你觉得暂时用不到接口绑定，你也应该遵循这里的规定，以防哪天你改变了主意。 长远来看，只要将命名空间置于合适的 Java 包命名空间之中，你的代码会变得更加整洁，也有利于你更方便地使用 MyBatis。</p>
-<p><strong>命名解析：</strong>为了减少输入量，MyBatis 对所有具有名称的配置元素（包括语句，结果映射，缓存等）使用了如下的命名解析规则。</p>
-<ul>
-<li>全限定名（比如 “com.mypackage.MyMapper.selectAllThings）将被直接用于查找及使用。</li>
-<li>短名称（比如 “selectAllThings”）如果全局唯一也可以作为一个单独的引用。 如果不唯一，有两个或两个以上的相同名称（比如 “com.foo.selectAllThings” 和 “com.bar.selectAllThings”），那么使用时就会产生“短名称不唯一”的错误，这种情况下就必须使用全限定名。</li>
-</ul>
-<hr>
-<p>对于像 BlogMapper 这样的映射器类来说，还有另一种方法来完成语句映射。 它们映射的语句可以不用 XML 来配置，而可以使用 Java 注解来配置。比如，上面的 XML 示例可以被替换成如下的配置：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> org.mybatis.example;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">BlogMapper</span> </span>&#123;</span><br><span class="line">  <span class="meta">@Select(&quot;SELECT * FROM blog WHERE id = #&#123;id&#125;&quot;)</span></span><br><span class="line">  <span class="function">Blog <span class="title">selectBlog</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用注解来映射简单语句会使代码显得更加简洁，但对于稍微复杂一点的语句，Java 注解不仅力不从心，还会让你本就复杂的 SQL 语句更加混乱不堪。 因此，如果你需要做一些很复杂的操作，最好用 XML 来映射语句。</p>
-<p>选择何种方式来配置映射，以及认为是否应该要统一映射语句定义的形式，完全取决于你和你的团队。 换句话说，永远不要拘泥于一种方式，你可以很轻松的在基于注解和 XML 的语句映射方式间自由移植和切换。</p>
-<h2 id="作用域和生命周期"><a href="#作用域和生命周期" class="headerlink" title="作用域和生命周期"></a>作用域和生命周期</h2><blockquote>
-<p>对象生命周期和依赖注入框架</p>
-</blockquote>
-<p>依赖注入框架可以创建线程安全的、基于事务的 SqlSession 和映射器，并将它们直接注入到你的 bean 中，因此可以直接忽略它们的生命周期。 如果对如何通过依赖注入框架使用 MyBatis 感兴趣，可以研究一下 MyBatis-Spring 或 MyBatis-Guice 两个子项目。</p>
-<h3 id="SqlSessionFactoryBuilder"><a href="#SqlSessionFactoryBuilder" class="headerlink" title="SqlSessionFactoryBuilder"></a>SqlSessionFactoryBuilder</h3><p>这个类可以被实例化、使用和丢弃，一旦创建了 SqlSessionFactory，就不再需要它了。 因此 SqlSessionFactoryBuilder 实例的最佳作用域是方法作用域（也就是局部方法变量）。 你可以重用 SqlSessionFactoryBuilder 来创建多个 SqlSessionFactory 实例，但最好还是不要一直保留着它，以保证所有的 XML 解析资源可以被释放给更重要的事情。</p>
-<h3 id="SqlSessionFactory"><a href="#SqlSessionFactory" class="headerlink" title="SqlSessionFactory"></a>SqlSessionFactory</h3><p>SqlSessionFactory 一旦被创建就应该在应用的运行期间一直存在，没有任何理由丢弃它或重新创建另一个实例。 使用 SqlSessionFactory 的最佳实践是在应用运行期间不要重复创建多次，多次重建 SqlSessionFactory 被视为一种代码“坏习惯”。因此 SqlSessionFactory 的最佳作用域是应用作用域。 有很多方法可以做到，最简单的就是使用单例模式或者静态单例模式。</p>
-<h3 id="SqlSession"><a href="#SqlSession" class="headerlink" title="SqlSession"></a>SqlSession</h3><p>每个线程都应该有它自己的 SqlSession 实例。SqlSession 的实例不是线程安全的，因此是不能被共享的，所以它的最佳的作用域是请求或方法作用域。 绝对不能将 SqlSession 实例的引用放在一个类的静态域，甚至一个类的实例变量也不行。 也绝不能将 SqlSession 实例的引用放在任何类型的托管作用域中，比如 Servlet 框架中的 HttpSession。 如果你现在正在使用一种 Web 框架，考虑将 SqlSession 放在一个和 HTTP 请求相似的作用域中。 换句话说，每次收到 HTTP 请求，就可以打开一个 SqlSession，返回一个响应后，就关闭它。 这个关闭操作很重要，为了确保每次都能执行关闭操作，你应该把这个关闭操作放到 finally 块中。 下面的示例就是一个确保 SqlSession 关闭的标准模式：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">  <span class="comment">// 你的应用逻辑代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在所有代码中都遵循这种使用模式，可以保证所有数据库资源都能被正确地关闭。</p>
-<h3 id="映射器实例"><a href="#映射器实例" class="headerlink" title="映射器实例"></a>映射器实例</h3><p>映射器是一些绑定映射语句的接口。映射器接口的实例是从 SqlSession 中获得的。虽然从技术层面上来讲，任何映射器实例的最大作用域与请求它们的 SqlSession 相同。但方法作用域才是映射器实例的最合适的作用域。 也就是说，映射器实例应该在调用它们的方法中被获取，使用完毕之后即可丢弃。 映射器实例并不需要被显式地关闭。尽管在整个请求作用域保留映射器实例不会有什么问题，但是你很快会发现，在这个作用域上管理太多像 SqlSession 的资源会让你忙不过来。 因此，最好将映射器放在方法作用域内。就像下面的例子一样：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">  BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">  <span class="comment">// 你的应用逻辑代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-]]></content>
-      <categories>
-        <category>Mybatis框架</category>
-      </categories>
-      <tags>
-        <tag>Mybatis</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Nginx服务器的使用</title>
     <url>/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<h1 id="Nginx服务器使用"><a href="#Nginx服务器使用" class="headerlink" title="Nginx服务器使用"></a>Nginx服务器使用</h1><h2 id="内容概览"><a href="#内容概览" class="headerlink" title="内容概览"></a>内容概览</h2><h3 id="1、nginx简介"><a href="#1、nginx简介" class="headerlink" title="1、nginx简介"></a>1、nginx简介</h3><p>（1）介绍nginx的应用场景和具体可以做什么事情</p>
@@ -1099,6 +1041,64 @@
       </categories>
       <tags>
         <tag>Nginx服务器</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Mybatis入门案例知识补充</title>
+    <url>/2021/03/07/Mybatis%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E8%A1%A5%E5%85%85/</url>
+    <content><![CDATA[<h2 id="不使用XML构建SqlSessionFactory"><a href="#不使用XML构建SqlSessionFactory" class="headerlink" title="不使用XML构建SqlSessionFactory"></a>不使用XML构建SqlSessionFactory</h2><p>如果你更愿意直接从 Java 代码而不是 XML 文件中创建配置，或者想要创建你自己的配置建造器，MyBatis 也<strong>提供了完整的配置类</strong>，提供了所有与 XML 文件等价的配置项。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">DataSource dataSource = BlogDataSourceFactory.getBlogDataSource();</span><br><span class="line"><span class="comment">//指定事务类型</span></span><br><span class="line">TransactionFactory transactionFactory = <span class="keyword">new</span> JdbcTransactionFactory();</span><br><span class="line">Environment environment = <span class="keyword">new</span> Environment(<span class="string">&quot;development&quot;</span>, transactionFactory, dataSource);</span><br><span class="line">Configuration configuration = <span class="keyword">new</span> Configuration(environment);</span><br><span class="line"><span class="comment">//添加一个映射器类,相较于XML文件构建存在一定的局限性</span></span><br><span class="line">configuration.addMapper(BlogMapper.class);</span><br><span class="line"><span class="comment">//构造SqlSessionFactory</span></span><br><span class="line">SqlSessionFactory sqlSessionFactory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(configuration);</span><br></pre></td></tr></table></figure>
+<p>注意该例中，configuration 添加了一个映射器类（mapper class）。映射器类是 Java 类，它们**<u>包含 SQL 映射注解从而避免依赖 XML 文件</u>**。不过，由于 Java 注解的一些限制以及某些 MyBatis 映射的复杂性，要使用大多数高级映射（比如：嵌套联合映射），仍然需要使用 XML 配置。有鉴于此，如果存在一个同名 XML 配置文件，MyBatis 会自动查找并加载它（在这个例子中，基于类路径和 BlogMapper.class 的类名，会加载 BlogMapper.xml）。</p>
+<h2 id="从SqlSessionFactory中获取SqlSession"><a href="#从SqlSessionFactory中获取SqlSession" class="headerlink" title="从SqlSessionFactory中获取SqlSession"></a>从SqlSessionFactory中获取SqlSession</h2><p> 既然有了 SqlSessionFactory，顾名思义，我们可以从中获得 SqlSession 的实例。SqlSession 提供了在数据库执行 SQL 命令所需的所有方法。你可以通过 SqlSession 实例来直接执行已映射的 SQL 语句。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span>(SqlSession session = SqlSessionFactory.opensession())&#123;</span><br><span class="line">	 Blog blog = (Blog) session.selectOne(<span class="string">&quot;org.mybatis.example.BlogMapper.selectBlog&quot;</span>, <span class="number">101</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>另一种更加简洁的方式</p>
+</blockquote>
+<p>使用和指定语句的参数和返回值**<u>相匹配的接口</u>**（比如 BlogMapper.class），现在你的代码不仅更清晰，更加类型安全，还不用担心可能出错的字符串字面值以及强制类型转换。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">    <span class="comment">//传参的时候传了一个接口</span></span><br><span class="line">  BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">  Blog blog = mapper.selectBlog(<span class="number">101</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="探究已经映射的SQL语句"><a href="#探究已经映射的SQL语句" class="headerlink" title="探究已经映射的SQL语句"></a>探究已经映射的SQL语句</h2><p>粗略的讨论一下SqlSession和Mapper到底执行了什么操作</p>
+<p>一个语句既可以通过 XML 定义，也可以通过注解定义。我们先看看 XML 定义语句的方式，事实上 MyBatis 提供的所有特性都可以利用基于 XML 的映射语言来实现，这使得 MyBatis 在过去的数年间得以流行。下面是一个XML文件示例</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span> ?&gt;</span><br><span class="line">&lt;!DOCTYPE mapper</span><br><span class="line">  PUBLIC <span class="string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span><br><span class="line">  <span class="string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span><br><span class="line">&lt;mapper namespace=<span class="string">&quot;org.mybatis.example.BlogMapper&quot;</span>&gt;</span><br><span class="line">  &lt;select id=<span class="string">&quot;selectBlog&quot;</span> resultType=<span class="string">&quot;Blog&quot;</span>&gt;</span><br><span class="line">    select * from Blog where id = #&#123;id&#125;</span><br><span class="line">  &lt;/select&gt;</span><br><span class="line">&lt;/mapper&gt;</span><br></pre></td></tr></table></figure>
+<p>为了这个简单的例子，我们似乎写了不少配置，但其实并不多。在一个 XML 映射文件中，可以定义无数个映射语句，这样一来，XML 头部和文档类型声明部分就显得微不足道了。文档的其它部分很直白，容易理解。 它在命名空间 “org.mybatis.example.BlogMapper” 中定义了一个名为 “selectBlog” 的映射语句，这样你就可以用全限定名 “org.mybatis.example.BlogMapper.selectBlog” 来调用映射语句了，就像上面例子中那样：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Blog blog = (Blog) session.selectOne(<span class="string">&quot;org.mybatis.example.BlogMapper.selectBlog&quot;</span>, <span class="number">101</span>);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>说明：此时org.mybatis.example.BlogMapper应该是一个接口</li>
+<li>selectBlog是接口中定义的一个方法</li>
+</ul>
+<p>你可能会注意到，这种方式和用全限定名调用 Java 对象的方法类似。这样，该命名就可以<strong>直接映射到在命名空间中同名的映射器类</strong>，并将已映射的 select 语句匹配到对应名称、参数和返回类型的方法。因此你就可以像上面那样，不费吹灰之力地在对应的映射器接口调用方法，就像下面这样：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">Blog blog = mapper.selectBlog(<span class="number">101</span>);</span><br></pre></td></tr></table></figure>
+<p>第二种方法有很多优势，首先它不依赖于字符串字面值，会更安全一点；其次，如果你的 IDE 有代码补全功能，那么代码补全可以帮你快速选择到映射好的 SQL 语句。</p>
+<h2 id="命名空间"><a href="#命名空间" class="headerlink" title="命名空间"></a>命名空间</h2><p>在之前版本的 MyBatis 中，<strong>命名空间（Namespaces）</strong>的作用并不大，是可选的。 但现在，随着命名空间越发重要，你必须指定命名空间。</p>
+<p>命名空间的作用有两个，一个是利用更长的全限定名来将不同的语句隔离开来，同时也实现了你上面见到的接口绑定。就算你觉得暂时用不到接口绑定，你也应该遵循这里的规定，以防哪天你改变了主意。 长远来看，只要将命名空间置于合适的 Java 包命名空间之中，你的代码会变得更加整洁，也有利于你更方便地使用 MyBatis。</p>
+<p><strong>命名解析：</strong>为了减少输入量，MyBatis 对所有具有名称的配置元素（包括语句，结果映射，缓存等）使用了如下的命名解析规则。</p>
+<ul>
+<li>全限定名（比如 “com.mypackage.MyMapper.selectAllThings）将被直接用于查找及使用。</li>
+<li>短名称（比如 “selectAllThings”）如果全局唯一也可以作为一个单独的引用。 如果不唯一，有两个或两个以上的相同名称（比如 “com.foo.selectAllThings” 和 “com.bar.selectAllThings”），那么使用时就会产生“短名称不唯一”的错误，这种情况下就必须使用全限定名。</li>
+</ul>
+<hr>
+<p>对于像 BlogMapper 这样的映射器类来说，还有另一种方法来完成语句映射。 它们映射的语句可以不用 XML 来配置，而可以使用 Java 注解来配置。比如，上面的 XML 示例可以被替换成如下的配置：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> org.mybatis.example;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">BlogMapper</span> </span>&#123;</span><br><span class="line">  <span class="meta">@Select(&quot;SELECT * FROM blog WHERE id = #&#123;id&#125;&quot;)</span></span><br><span class="line">  <span class="function">Blog <span class="title">selectBlog</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用注解来映射简单语句会使代码显得更加简洁，但对于稍微复杂一点的语句，Java 注解不仅力不从心，还会让你本就复杂的 SQL 语句更加混乱不堪。 因此，如果你需要做一些很复杂的操作，最好用 XML 来映射语句。</p>
+<p>选择何种方式来配置映射，以及认为是否应该要统一映射语句定义的形式，完全取决于你和你的团队。 换句话说，永远不要拘泥于一种方式，你可以很轻松的在基于注解和 XML 的语句映射方式间自由移植和切换。</p>
+<h2 id="作用域和生命周期"><a href="#作用域和生命周期" class="headerlink" title="作用域和生命周期"></a>作用域和生命周期</h2><blockquote>
+<p>对象生命周期和依赖注入框架</p>
+</blockquote>
+<p>依赖注入框架可以创建线程安全的、基于事务的 SqlSession 和映射器，并将它们直接注入到你的 bean 中，因此可以直接忽略它们的生命周期。 如果对如何通过依赖注入框架使用 MyBatis 感兴趣，可以研究一下 MyBatis-Spring 或 MyBatis-Guice 两个子项目。</p>
+<h3 id="SqlSessionFactoryBuilder"><a href="#SqlSessionFactoryBuilder" class="headerlink" title="SqlSessionFactoryBuilder"></a>SqlSessionFactoryBuilder</h3><p>这个类可以被实例化、使用和丢弃，一旦创建了 SqlSessionFactory，就不再需要它了。 因此 SqlSessionFactoryBuilder 实例的最佳作用域是方法作用域（也就是局部方法变量）。 你可以重用 SqlSessionFactoryBuilder 来创建多个 SqlSessionFactory 实例，但最好还是不要一直保留着它，以保证所有的 XML 解析资源可以被释放给更重要的事情。</p>
+<h3 id="SqlSessionFactory"><a href="#SqlSessionFactory" class="headerlink" title="SqlSessionFactory"></a>SqlSessionFactory</h3><p>SqlSessionFactory 一旦被创建就应该在应用的运行期间一直存在，没有任何理由丢弃它或重新创建另一个实例。 使用 SqlSessionFactory 的最佳实践是在应用运行期间不要重复创建多次，多次重建 SqlSessionFactory 被视为一种代码“坏习惯”。因此 SqlSessionFactory 的最佳作用域是应用作用域。 有很多方法可以做到，最简单的就是使用单例模式或者静态单例模式。</p>
+<h3 id="SqlSession"><a href="#SqlSession" class="headerlink" title="SqlSession"></a>SqlSession</h3><p>每个线程都应该有它自己的 SqlSession 实例。SqlSession 的实例不是线程安全的，因此是不能被共享的，所以它的最佳的作用域是请求或方法作用域。 绝对不能将 SqlSession 实例的引用放在一个类的静态域，甚至一个类的实例变量也不行。 也绝不能将 SqlSession 实例的引用放在任何类型的托管作用域中，比如 Servlet 框架中的 HttpSession。 如果你现在正在使用一种 Web 框架，考虑将 SqlSession 放在一个和 HTTP 请求相似的作用域中。 换句话说，每次收到 HTTP 请求，就可以打开一个 SqlSession，返回一个响应后，就关闭它。 这个关闭操作很重要，为了确保每次都能执行关闭操作，你应该把这个关闭操作放到 finally 块中。 下面的示例就是一个确保 SqlSession 关闭的标准模式：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">  <span class="comment">// 你的应用逻辑代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在所有代码中都遵循这种使用模式，可以保证所有数据库资源都能被正确地关闭。</p>
+<h3 id="映射器实例"><a href="#映射器实例" class="headerlink" title="映射器实例"></a>映射器实例</h3><p>映射器是一些绑定映射语句的接口。映射器接口的实例是从 SqlSession 中获得的。虽然从技术层面上来讲，任何映射器实例的最大作用域与请求它们的 SqlSession 相同。但方法作用域才是映射器实例的最合适的作用域。 也就是说，映射器实例应该在调用它们的方法中被获取，使用完毕之后即可丢弃。 映射器实例并不需要被显式地关闭。尽管在整个请求作用域保留映射器实例不会有什么问题，但是你很快会发现，在这个作用域上管理太多像 SqlSession 的资源会让你忙不过来。 因此，最好将映射器放在方法作用域内。就像下面的例子一样：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">  BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">  <span class="comment">// 你的应用逻辑代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+]]></content>
+      <categories>
+        <category>Mybatis框架</category>
+      </categories>
+      <tags>
+        <tag>Mybatis</tag>
       </tags>
   </entry>
   <entry>
@@ -1821,17 +1821,126 @@
       </tags>
   </entry>
   <entry>
-    <title>红队常用行话</title>
+    <title>红队常用行话总结一</title>
     <url>/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/</url>
     <content><![CDATA[<h2 id="漏洞利用术语解读"><a href="#漏洞利用术语解读" class="headerlink" title="漏洞利用术语解读"></a>漏洞利用术语解读</h2><blockquote>
 <p>Vulnerability:即漏洞，</p>
 </blockquote>
 <p>是指计算机软件、硬件、系统、应用、协议等方面的缺陷，使得其保密性、完整性、可用性、访问控制等方面面临威胁。</p>
 <ul>
-<li>基于技术分类，有命令执行、权限绕过、缓存区溢出、注入、解析、弱口令、信息泄露等漏洞</li>
-<li>基于时间分类，有0day、1day、Nday等漏洞</li>
+<li><p>基于技术分类，有命令执行、权限绕过、缓存区溢出、注入、解析、弱口令、信息泄露等漏洞</p>
+</li>
+<li><p>基于时间分类，有0day、1day、Nday等漏洞</p>
+ <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/01.png" class>
+
+<img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/02.png" class>
+
+</li>
 </ul>
-<p><img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210302152521653.png" alt="image-20210302152521653"></p>
+<blockquote>
+<p>Poc (Proof of Content)概念验证</p>
+</blockquote>
+<p>泛指对某些想法的一个较短而不完整的实现；在网络安全领域，通常指的是一段漏洞验证程序或者说是攻击样例，仅能验证漏洞存在，但并不能对漏洞造成实质性利用。在[计算机安全]术语中，<strong>概念验证</strong>经常被用来作为<a href="https://zh.wikipedia.org/wiki/0day">0day</a>、<a href="https://zh.wikipedia.org/wiki/Exploit">exploit</a>的别名。（通常指并没有充分利用这个漏洞的exploit）</p>
+ <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/03.png" class>
+
+<blockquote>
+<p>Exploit 漏洞利用</p>
+</blockquote>
+  <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/04.png" class>
+
+
+
+<p>代表一段有漏洞价值的攻击代码或者漏洞利用过程，目的是获取未经授权的访问或者执行意外操作。常见的漏洞利用手段包括SQL注入、缓存区溢出、远程代码执行等。</p>
+ <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/05.png" class>
+
+ <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/06.png" class>
+
+
+
+<blockquote>
+<p>Payload 攻击载荷</p>
+</blockquote>
+<p>通常是指Exploit在拿下目标之后，攻击者在目标机器上执行的定制代码或者程序，包括但不限于系统命令、会话建立、Shellcode等。</p>
+  <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/07.png" class>
+
+
+
+<blockquote>
+<p>Shellcode</p>
+</blockquote>
+<ul>
+<li><p>shell：泛指系统控制权或者操作界面（CLI/GUI），通常在Exploit漏洞利用之后，首先要做的就是拿shell，以此进行进一步操作。</p>
+</li>
+<li><p>shellcode：用于获取控制权或者操作界面的攻击载荷代码，通常采用二进制机器代码，shellcode也是payload的一种类型</p>
+</li>
+<li><p>正反shell：shell需要绑定至指定IP地址后端口号上面，这个动作就是bindshell；有攻击方主动连接至受害者，则为正向shell；反之，由受害者主动连接至攻击方，则为反向shell。</p>
+ <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/08.png" class>
+
+</li>
+</ul>
+<p>shellcode常常使用机器语言编写。 可在暂存器eip溢出后，塞入一段可让CPU执行的shellcode机械码，让电脑可以执行攻击者的任意指令。</p>
+<ul>
+<li>本地shellcode：本地运行的shellcode经常用于利用软件<a href="https://zh.wikipedia.org/wiki/%E6%BC%8F%E6%B4%9E">漏洞</a>提升权限。比如在Linux下由普通权限提升至<a href="https://zh.wikipedia.org/wiki/Root%E6%9D%83%E9%99%90">root权限</a>。</li>
+<li>远程shellcode：借由抓软件漏洞获得特定的shellcode，再经由C或Python撰写远端攻击程式，进而取得对方电脑之root权限。</li>
+</ul>
+<h2 id="恶意程序术语解读"><a href="#恶意程序术语解读" class="headerlink" title="恶意程序术语解读"></a>恶意程序术语解读</h2><blockquote>
+<p>Malware(Malicious Software) </p>
+</blockquote>
+<p>即恶意程序或软件，泛指病毒、蠕虫、木马、勒索软件、间谍软件，用于对目标系统进行入侵、控制、窃取、破坏等。</p>
+  <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/09.png" class>
+
+<blockquote>
+<p>Worm</p>
+</blockquote>
+<p>Worm即蠕虫病毒，能够独立于其他文件或者程序运行，能够给予网络进行自我复制或者传播，能实现从点到面的超大规模的破坏行为（例如占用CPU或带宽资源、修改删除文件）。</p>
+<p>计算机病毒不同的是，计算机蠕虫不需要附在别的程序内，可能不用用户介入操作也能自我复制或运行。计算机蠕虫未必会直接破坏被感染的系统，却几乎都对网络有害。计算机蠕虫可能会执行垃圾代码以发动分布式拒绝服务攻击，令计算机的执行效率极大程度降低，从而影响计算机的正常使用；可能会损毁或修改目标计算机的文件；亦可能只是浪费<a href="https://zh.wikipedia.org/wiki/%E9%A0%BB%E5%AF%AC">带宽</a>。（恶意的）计算机蠕虫可根据其目的分成2类：</p>
+<ul>
+<li>一种是面对大规模计算机使用网络发动拒绝服务的计算机蠕虫，虽说会绑架计算机，但用户可能还可以正常使用，只是会被占用一部分运算、连网能力。</li>
+<li>另一种是针对个人用户的以执行大量垃圾代码的计算机蠕虫。计算机蠕虫多不具有跨平台性，但是在其他平台下，可能会出现其平台特有的非跨平台性的平台版本。</li>
+</ul>
+<p>计算机蠕虫的传播过程：蠕虫程序常驻于一台或多台机器中，通常它会扫描其他机器是否有感染同种计算机蠕虫，如果没有，就会通过其内置的传播手段进行感染，以达到使计算机瘫痪的目的。其通常会以宿主机器作为扫描源。通常采用：<a href="https://zh.wikipedia.org/wiki/%E5%9E%83%E5%9C%BE%E9%82%AE%E4%BB%B6">垃圾邮件</a>、漏洞传播这2种方法来传播</p>
+<p>例子：2006年的熊猫烧香，通过网站投毒、局域网共享等方式植入系统并进行传播，Windows用户中毒后，后缀名为.exe的文件无法执行，文件图标会变成熊猫烧香的图案。</p>
+  <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/10.png" class>
+
+
+
+
+
+<blockquote>
+<p>Virus病毒</p>
+</blockquote>
+<p>通常依附于其他文件或者程序上，不进行自我复制获知或者传播，当受害者运行其它程序时则病毒启动，对目标系统造成破坏（例如修改删除文件）。</p>
+<p>例子：1998年的<strong>CIH病毒</strong>，能够破坏BIOS和硬盘，是电脑可以完全瘫痪，被公认为有史以来最为危险、破坏力最强的病毒之一。</p>
+ <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/11.png" class>
+
+<p>! <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/12.png" class></p>
+<p>由于<a href="https://zh.wikipedia.org/wiki/%E4%B8%96%E7%95%8C">世界</a><a href="https://zh.wikipedia.org/wiki/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F">操作系统</a>[桌面环境]90%的市场都是使用<a href="https://zh.wikipedia.org/wiki/%E5%BE%AE%E8%BD%AF">微软</a>[Windows] 系列产品 ， 所以病毒作者纷纷把病毒攻击对象选为Windows。制作病毒者首先应该确定要攻击的操作系统版本有何<a href="https://zh.wikipedia.org/wiki/%E6%BC%8F%E6%B4%9E">漏洞</a>，这才是他所写的病毒能够利用的关键。Windows当时并没有有效的安全与防御功能，且用户常以管理员权限运行未经安全检查的软件，这也为Windows下病毒的泛滥提供了温床。<a href="https://zh.wikipedia.org/wiki/Linux">Linux</a>、<a href="https://zh.wikipedia.org/wiki/Mac_OS">Mac OS</a>等<a href="https://zh.wikipedia.org/wiki/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F">操作系统</a>，因使用的人群比较少，病毒一般不容易扩散。大多病毒发布作者的目的有多种，包括恶作剧、想搞破坏、报复及想出名与对研究病毒有特殊嗜好。 病毒主要通过<a href="https://zh.wikipedia.org/wiki/%E7%B6%B2%E8%B7%AF">网路</a>浏览以及<a href="https://zh.wikipedia.org/wiki/%E4%B8%8B%E8%BD%BD">下载</a>，<a href="https://zh.wikipedia.org/wiki/%E9%9B%BB%E5%AD%90%E9%83%B5%E4%BB%B6">电子邮件</a>以及可移动<a href="https://zh.wikipedia.org/wiki/%E7%A3%81%E7%A2%9F">磁盘</a>等途径迅速传播。[<a href="https://zh.wikipedia.org/wiki/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%97%85%E6%AF%92#cite_note-mc-4">4</a></p>
+<p>Trojan Horse(特洛伊木马)</p>
+<p>通常潜伏于“合法”软件中运行（也可以独立运行），不复制传播且高度隐蔽。木马运行时可以创建“后门”或者“隧道”，攻击者通过后门实现对目标系统的远程控制、监听、破坏行为。RAT（Remote Access Trojan）远控木马属于木马的一种，例如灰鸽子、冰河、Gh0st、ZXShell。</p>
+ <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/13.png" class>
+
+
+
+
+
+<blockquote>
+<p>Ransomware(勒索软件)</p>
+</blockquote>
+<p>能够独立于其他文件运行，能够基于网络进行自我复制或者传播，通过对目标系统进行加密劫持，实现对受害者的钱财勒索。在所有的恶意程序类别中，勒索软件时面向个人和机构的最直接、最有效、最野蛮的“敛财方式”。</p>
+ <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/14.png" class>
+
+<blockquote>
+<p>Spyware(间谍软件)</p>
+</blockquote>
+<p>流氓软件或者恶意软件，指未经用户许可搜集用户个人信息的恶意程序。通过搜集网站的浏览记录、键盘记录、账号密码等隐私信息，再以网站劫持、网址导航、弹框广告等方式变现盈利。</p>
+  <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/15.png" class>
+
+
+
+<blockquote>
+<p>Rootkits</p>
+</blockquote>
+<p>可看作升级型的木马病毒，泛指可以获取到<strong>root</strong>权限的恶意程序，以管理员权限运行、修改系统核心文件、绕过杀毒软件，包括系统内核rootkit、硬件固件rootkit、内存rootkit等类型。相比木马，Rootkits通常具备更高权限、更加隐蔽、更难查杀、更大危害等特征。、</p>
 ]]></content>
       <categories>
         <category>网络安全</category>
