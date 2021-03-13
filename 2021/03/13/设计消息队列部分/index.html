@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.mindmaster.top","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="设计消息队列">
+<meta property="og:type" content="article">
+<meta property="og:title" content="设计消息队列--&gt;2">
+<meta property="og:url" content="https://www.mindmaster.top/2021/03/13/%E8%AE%BE%E8%AE%A1%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E9%83%A8%E5%88%86/index.html">
+<meta property="og:site_name" content="一只小码农">
+<meta property="og:description" content="设计消息队列">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-03-13T14:20:38.000Z">
+<meta property="article:modified_time" content="2021-03-13T06:29:39.631Z">
+<meta property="article:author" content="邢浩东">
+<meta property="article:tag" content="RabbitMQ">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://www.mindmaster.top/2021/03/13/%E8%AE%BE%E8%AE%A1%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E9%83%A8%E5%88%86/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>设计消息队列-->2 | 一只小码农</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">一只小码农</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">每天进步一点点</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-stethoscope fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">32</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-braille fa-fw"></i>分类<span class="badge">18</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">53</span></a>
+
+  </li>
+        <li class="menu-item menu-item-movies">
+
+    <a href="/movies/" rel="section"><i class="fa fa-film fa-fw"></i>电影</a>
+
+  </li>
+        <li class="menu-item menu-item-book">
+
+    <a href="/book/" rel="section"><i class="fa fa-book fa-fw"></i>书籍</a>
+
+  </li>
+        <li class="menu-item menu-item-view">
+
+    <a href="/view/" rel="section"><i class="fa fa-blind fa-fw"></i>生活见闻--杂谈</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml/" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/mindmaster1" class="github-corner" title="Fork me on GitHub" aria-label="Fork me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.mindmaster.top/2021/03/13/%E8%AE%BE%E8%AE%A1%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E9%83%A8%E5%88%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/OIP.jfif">
+      <meta itemprop="name" content="邢浩东">
+      <meta itemprop="description" content="The world favors the underdog,and I would be the bad guy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一只小码农">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          设计消息队列-->2
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-03-13 14:20:38 / 修改时间：06:29:39" itemprop="dateCreated datePublished" datetime="2021-03-13T14:20:38Z">2021-03-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MQ/" itemprop="url" rel="index"><span itemprop="name">MQ</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/03/13/%E8%AE%BE%E8%AE%A1%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E9%83%A8%E5%88%86/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/03/13/%E8%AE%BE%E8%AE%A1%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E9%83%A8%E5%88%86/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+            <div class="post-description">设计消息队列</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p>持久性是事务的一个特性，然而只满足持久性却不一定能满足事务的特性。还是拿扣钱/加钱的例子讲。满足事务的一致性特征，则必须要么都不进行，要么都能成功。 解决方案从大方向上有两种：</p>
+<blockquote>
+<p>两阶段提交，分布式事务。</p>
+</blockquote>
+<blockquote>
+<p>本地事务，本地落地，补偿发送。</p>
+</blockquote>
+<p>分布式事务存在的最大问题是成本太高，两阶段提交协议，对于仲裁down机或者单点故障，几乎是一个无解的黑洞。对于交易密集型或者I/O密集型的应用，没有办法承受这么高的网络延迟，系统复杂性。 并且成熟的分布式事务一定构建与比较靠谱的商用DB和商用中间件上，成本也太高。 那如何使用本地事务解决分布式事务的问题呢？以本地和业务在一个数据库实例中建表为例子，与扣钱的业务操作同一个事务里，将消息插入本地数据库。如果消息入库失败，则业务回滚；如果消息入库成功，事务提交。 然后发送消息（注意这里可以实时发送，不需要等定时任务检出，以提高消息实时性）。以后的问题就是前文的最终一致性问题所提到的了，只要消息没有发送成功，就一直靠定时任务重试。 这里有一个关键的点，本地事务做的，是业务落地和消息落地的事务，而不是业务落地和RPC成功的事务。这里很多人容易混淆，如果是后者，无疑是事务嵌套RPC，是大忌，会有长事务死锁等各种风险。 而消息只要成功落地，很大程度上就没有丢失的风险（磁盘物理损坏除外）。而消息只要投递到服务端确认后本地才做删除，就完成了producer-&gt;broker的可靠投递，并且当消息存储异常时，业务也是可以回滚的。 本地事务存在两个最大的使用障碍：</p>
+<blockquote>
+<p>配置较为复杂，“绑架”业务方，必须本地数据库实例提供一个库表。</p>
+</blockquote>
+<blockquote>
+<p>对于消息延迟高敏感的业务不适用。</p>
+</blockquote>
+<p>话说回来，不是每个业务都需要强事务的。扣钱和加钱需要事务保证，但下单和生成短信却不需要事务，不能因为要求发短信的消息存储投递失败而要求下单业务回滚。所以，一个完整的消息队列应该定义清楚自己可以投递的消息类型，如事务型消息，本地非持久型消息，以及服务端不落地的非可靠消息等。对不同的业务场景做不同的选择。另外事务的使用应该尽量低成本、透明化，可以依托于现有的成熟框架，如Spring的声明式事务做扩展。业务方只需要使用@Transactional标签即可。</p>
+<h2 id="性能相关"><a href="#性能相关" class="headerlink" title="性能相关"></a>性能相关</h2><h3 id="异步、同步"><a href="#异步、同步" class="headerlink" title="异步、同步"></a>异步、同步</h3><p>首先澄清一个概念，异步，同步和oneway是三件事。异步，归根结底你还是需要关心结果的，但可能不是当时的时间点关心，可以用轮询或者回调等方式处理结果；同步是需要当时关心 的结果的；而oneway是发出去就不管死活的方式，这种对于某些完全对可靠性没有要求的场景还是适用的，但不是我们重点讨论的范畴。 回归来看，任何的RPC都是存在客户端异步与服务端异步的，而且是可以任意组合的：客户端同步对服务端异步，客户端异步对服务端异步，客户端同步对服务端同步，客户端异步对服务端同步。 对于客户端来说，同步与异步主要是拿到一个Result，还是Future(Listenable)的区别。实现方式可以是线程池，NIO或者其他事件机制，这里先不展开讲。 服务端异步可能稍微难理解一点，这个是需要RPC协议支持的。参考servlet 3.0规范，服务端可以吐一个future给客户端，并且在future done的时候通知客户端。 整个过程可以参考下面的代码：</p>
+<blockquote>
+<p>客户端同步服务端异步</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Future&lt;Result&gt; future = request(server);<span class="comment">//server立刻返回future</span></span><br><span class="line"><span class="keyword">synchronized</span>(future)&#123;</span><br><span class="line"><span class="keyword">while</span>(!future.isDone())&#123;</span><br><span class="line">   future.wait();<span class="comment">//server处理结束后会notify这个future，并修改isdone标志</span></span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> future.get();</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>客户端同步服务端同步</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Result result = request(server);</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>客户端异步服务端同步（使用线程池方式）</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Future&lt;Result&gt; future = executor.submit(<span class="keyword">new</span> Callable()&#123;<span class="keyword">public</span> <span class="keyword">void</span> call&lt;Result&gt;()&#123;</span><br><span class="line">    result = request(server);</span><br><span class="line">&#125;&#125;)</span><br><span class="line"><span class="keyword">return</span> future;</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>客户端异步服务端异步</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Future&lt;Result&gt; future = request(server);<span class="comment">//server立刻返回future</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> future</span><br></pre></td></tr></table></figure>
+<p>上面说了这么多，其实是想让大家脱离两个误区：</p>
+<ul>
+<li><p>RPC只有客户端能做异步，服务端不能。</p>
+</li>
+<li><p>异步只能通过线程池。</p>
+</li>
+</ul>
+<p>那么，服务端使用异步最大的好处是什么呢？说到底，是解放了线程和I/O。试想服务端有一堆I/O等待处理，如果每个请求都需要同步响应，每条消息都需要结果立刻返回，那么就几乎没法做I/O合并 （当然接口可以设计成batch的，但可能batch发过来的仍然数量较少）。而如果用异步的方式返回给客户端future，就可以有机会进行I/O的合并，把几个批次发过来的消息一起落地（这种合并对于MySQL等允许batch insert的数据库效果尤其明显），并且彻底释放了线程。不至于说来多少请求开多少线程，能够支持的并发量直线提高。 来看第二个误区，返回future的方式不一定只有线程池。换句话说，可以在线程池里面进行同步操作，也可以进行异步操作，也可以不使用线程池使用异步操作（NIO、事件）。 回到消息队列的议题上，我们当然不希望消息的发送阻塞主流程（前面提到了，server端如果使用异步模型，则可能因消息合并带来一定程度上的消息延迟），所以可以先使用线程池提交一个发送请求，主流程继续往下走。 但是线程池中的请求关心结果吗？Of course，必须等待服务端消息成功落地，才算是消息发送成功。所以这里的模型，准确地说事客户端半同步半异步（使用线程池不阻塞主流程，但线程池中的任务需要等待server端的返回），server端是纯异步。客户端的线程池wait在server端吐回的future上，直到server端处理完毕，才解除阻塞继续进行。 总结一句，同步能够保证结果，异步能够保证效率，要合理的结合才能做到最好的效率。</p>
+<h2 id="批量"><a href="#批量" class="headerlink" title="批量"></a>批量</h2><p>谈到批量就不得不提生产者消费者模型。但生产者消费者模型中最大的痛点是：消费者到底应该何时进行消费。大处着眼来看，消费动作都是事件驱动的。主要事件包括：</p>
+<ol>
+<li>攒够了一定数量。</li>
+<li>到达了一定时间。</li>
+<li>队列里有新的数据到来。</li>
+</ol>
+<p>对于及时性要求高的数据，可用采用方式3来完成，比如客户端向服务端投递数据。只要队列有数据，就把队列中的所有数据刷出，否则将自己挂起，等待新数据的到来。 在第一次把队列数据往外刷的过程中，又积攒了一部分数据，第二次又可以形成一个批量。伪代码如下:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Executor executor = Executors.newFixedThreadPool(<span class="number">4</span>);</span><br><span class="line"><span class="keyword">final</span> BlockingQueue&lt;Message&gt; queue = <span class="keyword">new</span> ArrayBlockingQueue&lt;&gt;();</span><br><span class="line"><span class="keyword">private</span> Runnable task = <span class="keyword">new</span> Runnable(&#123;<span class="comment">//这里由于共享队列，Runnable可以复用，故做成全局的</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">      List&lt;Message&gt; messages  = <span class="keyword">new</span> ArrayList&lt;&gt;(<span class="number">20</span>);</span><br><span class="line">      queue.drainTo(messages，<span class="number">20</span>);</span><br><span class="line">      doSend(messages);<span class="comment">//阻塞，在这个过程中会有新的消息到来，如果4个线程都占满，队列就有机会囤新的消息</span></span><br><span class="line">   &#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">send</span><span class="params">(Message message)</span></span>&#123;</span><br><span class="line">    queue.offer(message);</span><br><span class="line">    executor.submit(task)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种方式是消息延迟和批量的一个比较好的平衡，但优先响应低延迟。延迟的最高程度由上一次发送的等待时间决定。但可能造成的问题是发送过快的话批量的大小不够满足性能的极致。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">Executor executor = Executors.newFixedThreadPool(<span class="number">4</span>);</span><br><span class="line"><span class="keyword">final</span> BlockingQueue&lt;Message&gt; queue = <span class="keyword">new</span> ArrayBlockingQueue&lt;&gt;();</span><br><span class="line"><span class="keyword">volatile</span> <span class="keyword">long</span> last = System.currentMills();</span><br><span class="line">Executors.newSingleThreadScheduledExecutor().submit(<span class="keyword">new</span> Runnable()&#123;</span><br><span class="line">   flush();</span><br><span class="line">&#125;，<span class="number">500</span>，<span class="number">500</span>，TimeUnits.MILLS);</span><br><span class="line"><span class="keyword">private</span> Runnable task = <span class="keyword">new</span> Runnable(&#123;<span class="comment">//这里由于共享队列，Runnable可以复用，顾做成全局的。</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">      List&lt;Message&gt; messages  = <span class="keyword">new</span> ArrayList&lt;&gt;(<span class="number">20</span>);</span><br><span class="line">      queue.drainTo(messages，<span class="number">20</span>);</span><br><span class="line">      doSend(messages);<span class="comment">//阻塞，在这个过程中会有新的消息到来，如果4个线程都占满，队列就有机会屯新的消息。</span></span><br><span class="line">   &#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">send</span><span class="params">(Message message)</span></span>&#123;</span><br><span class="line">    last = System.currentMills();</span><br><span class="line">    queue.offer(message);</span><br><span class="line">    flush();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">flush</span><span class="params">()</span></span>&#123;</span><br><span class="line"> <span class="keyword">if</span>(queue.size&gt;<span class="number">200</span>||System.currentMills()-last&gt;<span class="number">200</span>)&#123;</span><br><span class="line">       executor.submit(task)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>相反对于可以用适量的延迟来换取高性能的场景来说，用定时/定量二选一的方式可能会更为理想，既到达一定数量才发送，但如果数量一直达不到，也不能干等，有一个时间上限。 具体说来，在上文的submit之前，多判断一个时间和数量，并且Runnable内部维护一个定时器，避免没有新任务到来时旧的任务永远没有机会触发发送条件。对于server端的数据落地，使用这种方式就非常方便。</p>
+<p>最后啰嗦几句，曾经有人问我，为什么网络请求小包合并成大包会提高性能？主要原因有两个：</p>
+<ul>
+<li><p>减少无谓的请求头，如果你每个请求只有几字节，而头却有几十字节，无疑效率非常低下。</p>
+</li>
+<li><p>减少回复的ack包个数。把请求合并后，ack包数量必然减少，确认和重发的成本就会降低。</p>
+</li>
+</ul>
+<h3 id="push还是pull"><a href="#push还是pull" class="headerlink" title="push还是pull"></a>push还是pull</h3><p>上文提到的消息队列，大多是针对push模型的设计。现在市面上有很多经典的也比较成熟的pull模型的消息队列，如Kafka、MetaQ等。这跟JMS中传统的push方式有很大的区别，可谓另辟蹊径。 我们简要分析下push和pull模型各自存在的利弊。</p>
+<h4 id="慢消费"><a href="#慢消费" class="headerlink" title="慢消费"></a>慢消费</h4><p>慢消费无疑是push模型最大的致命伤，穿成流水线来看，如果消费者的速度比发送者的速度慢很多，势必造成消息在broker的堆积。假设这些消息都是有用的无法丢弃的，消息就要一直在broker端保存。当然这还不是最致命的，最致命的是broker给consumer推送一堆consumer无法处理的消息，consumer不是reject就是error，然后来回踢皮球。 反观pull模式，consumer可以按需消费，不用担心自己处理不了的消息来骚扰自己，而broker堆积消息也会相对简单，无需记录每一个要发送消息的状态，只需要维护所有消息的队列和偏移量就可以了。所以对于建立索引等慢消费，消息量有限且到来的速度不均匀的情况，pull模式比较合适。</p>
+<h3 id="消息延迟与忙等"><a href="#消息延迟与忙等" class="headerlink" title="消息延迟与忙等"></a>消息延迟与忙等</h3><p>这是pull模式最大的短板。由于主动权在消费方，消费方无法准确地决定何时去拉取最新的消息。如果一次pull取到消息了还可以继续去pull，如果没有pull取到则需要等待一段时间重新pull。 但等待多久就很难判定了。你可能会说，我可以有xx动态pull取时间调整算法，但问题的本质在于，有没有消息到来这件事情决定权不在消费方。也许1分钟内连续来了1000条消息，然后半个小时没有新消息产生， 可能你的算法算出下次最有可能到来的时间点是31分钟之后，或者60分钟之后，结果下条消息10分钟后到了，是不是很让人沮丧？ 当然也不是说延迟就没有解决方案了，业界较成熟的做法是从短时间开始（不会对broker有太大负担），然后指数级增长等待。比如开始等5ms，然后10ms，然后20ms，然后40ms……直到有消息到来，然后再回到5ms。 即使这样，依然存在延迟问题：假设40ms到80ms之间的50ms消息到来，消息就延迟了30ms，而且对于半个小时来一次的消息，这些开销就是白白浪费的。 在阿里的RocketMq里，有一种优化的做法-长轮询，来平衡推拉模型各自的缺点。基本思路是:消费者如果尝试拉取失败，不是直接return,而是把连接挂在那里wait,服务端如果有新的消息到来，把连接notify起来，这也是不错的思路。但海量的长连接block对系统的开销还是不容小觑的，还是要合理的评估时间间隔，给wait加一个时间上限比较好~</p>
+<h3 id="顺序消息"><a href="#顺序消息" class="headerlink" title="顺序消息"></a>顺序消息</h3><p>如果push模式的消息队列，支持分区，单分区只支持一个消费者消费，并且消费者只有确认一个消息消费后才能push送另外一个消息，还要发送者保证全局顺序唯一，听起来也能做顺序消息，但成本太高了，尤其是必须每个消息消费确认后才能发下一条消息，这对于本身堆积能力和慢消费就是瓶颈的push模式的消息队列，简直是一场灾难。 反观pull模式，如果想做到全局顺序消息，就相对容易很多：</p>
+<ol>
+<li>producer对应partition，并且单线程。</li>
+<li>consumer对应partition，消费确认（或批量确认），继续消费即可。</li>
+</ol>
+<p>所以对于日志push送这种最好全局有序，但允许出现小误差的场景，pull模式非常合适。如果你不想看到通篇乱套的日志~~ Anyway，需要顺序消息的场景还是比较有限的而且成本太高，请慎重考虑。</p>
+<p>本文从为何使用消息队列开始讲起，然后主要介绍了如何从零开始设计一个消息队列，包括RPC、事务、最终一致性、广播、消息确认等关键问题。并对消息队列的push、pull模型做了简要分析，最后从批量和异步角度，分析了消息队列性能优化的思路。 </p>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">相关文章推荐</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2021\03\13\初识RabbitMQ\" rel="bookmark">消息队列MQ</a></div>
+        <div class="popular-posts-excerpt"><p>对消息队列MQ入门级学习</p></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2021\03\13\消息队列产品与设计模型\" rel="bookmark">消息队列产品与RabbitMQ的简介</a></div>
+        <div class="popular-posts-excerpt"><p>消息队列常见产品及RabbitMQ</p></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2021\03\13\设计消息队列\" rel="bookmark">设计消息队列-->1</a></div>
+        <div class="popular-posts-excerpt"><p>如何简单的设计一个消息队列</p></div>
+    </li>
+  </ul>
+
+        <div class="reward-container">
+  <div>谢谢你的支持哦，继续加油.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="邢浩东 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="邢浩东 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>邢浩东
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.mindmaster.top/2021/03/13/%E8%AE%BE%E8%AE%A1%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E9%83%A8%E5%88%86/" title="设计消息队列--&gt;2">https://www.mindmaster.top/2021/03/13/设计消息队列部分/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-%E9%82%A2%E6%B5%A9%E4%B8%9C/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-邢浩东</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/RabbitMQ/" rel="tag"># RabbitMQ</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/03/13/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E4%BA%A7%E5%93%81%E4%B8%8E%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%9E%8B/" rel="prev" title="消息队列产品与RabbitMQ的简介">
+      <i class="fa fa-chevron-left"></i> 消息队列产品与RabbitMQ的简介
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1"><span class="nav-number">1.</span> <span class="nav-text">事务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E7%9B%B8%E5%85%B3"><span class="nav-number">2.</span> <span class="nav-text">性能相关</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E3%80%81%E5%90%8C%E6%AD%A5"><span class="nav-number">2.1.</span> <span class="nav-text">异步、同步</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%B9%E9%87%8F"><span class="nav-number">3.</span> <span class="nav-text">批量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#push%E8%BF%98%E6%98%AFpull"><span class="nav-number">3.1.</span> <span class="nav-text">push还是pull</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%85%A2%E6%B6%88%E8%B4%B9"><span class="nav-number">3.1.1.</span> <span class="nav-text">慢消费</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E5%BB%B6%E8%BF%9F%E4%B8%8E%E5%BF%99%E7%AD%89"><span class="nav-number">3.2.</span> <span class="nav-text">消息延迟与忙等</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%BA%E5%BA%8F%E6%B6%88%E6%81%AF"><span class="nav-number">3.3.</span> <span class="nav-text">顺序消息</span></a></li></ol></li></ol></div>
+
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="邢浩东"
+      src="/images/OIP.jfif">
+  <p class="site-author-name" itemprop="name">邢浩东</p>
+  <div class="site-description" itemprop="description">The world favors the underdog,and I would be the bad guy</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">53</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mindmaster1" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mindmaster1" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/yourname" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;yourname" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.csdn.net/" title="CSDN → https:&#x2F;&#x2F;www.csdn.net" rel="noopener" target="_blank"><i class="fab fa-apple fa-fw"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://juejin.cn/user/1706074845232983" title="掘金 → https:&#x2F;&#x2F;juejin.cn&#x2F;user&#x2F;1706074845232983" rel="noopener" target="_blank"><i class="fa fa-binoculars fa-fw"></i>掘金</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Leetcode刷题
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://leetcode-cn.com/" title="https:&#x2F;&#x2F;leetcode-cn.com&#x2F;" rel="noopener" target="_blank">通向快乐</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+ <div>
+    <svg>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-1"></text>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-2"></text>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-3"></text>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-4"></text>
+    </svg>
+</div>
+<script>
+function showtime(){
+    var noatime = new Date();
+    var h = noatime.getHours(),
+        m = noatime.getMinutes(),
+        s = noatime.getSeconds();
+    h=checktime(h);
+    m=checktime(m);
+    s=checktime(s);
+  return h+":"+m+":"+s;
+}
+function checktime(x){
+  if(x<10){
+    x="0"+x;
+  }
+  return x;
+}
+var div1=document.getElementsByTagName("text");
+setInterval(function(){
+  for (var i in div1){
+      div1[i].innerHTML=showtime();
+  }
+},1000);
+</script>	   
+
+<script type="text/javascript" src="//rf.revolvermaps.com/0/0/1.js?i=57fnj853bkq&amp;s=220&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+ 
+    
+  </ul>
+    </div>
+	
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+	
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">邢浩东</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">152k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:19</span>
+</div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'dOLOPmQA1yPidXhJmndTryVE-gzGzoHsz',
+      appKey     : 'tDnfIUMcS9cpj4Rqgxu4mUxG',
+      placeholder: "欢迎大家畅所欲言# Comment box placeholder",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

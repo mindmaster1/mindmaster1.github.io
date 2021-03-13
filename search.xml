@@ -972,6 +972,64 @@
       </tags>
   </entry>
   <entry>
+    <title>Mybatis入门案例知识补充</title>
+    <url>/2021/03/07/Mybatis%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E8%A1%A5%E5%85%85/</url>
+    <content><![CDATA[<h2 id="不使用XML构建SqlSessionFactory"><a href="#不使用XML构建SqlSessionFactory" class="headerlink" title="不使用XML构建SqlSessionFactory"></a>不使用XML构建SqlSessionFactory</h2><p>如果你更愿意直接从 Java 代码而不是 XML 文件中创建配置，或者想要创建你自己的配置建造器，MyBatis 也<strong>提供了完整的配置类</strong>，提供了所有与 XML 文件等价的配置项。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">DataSource dataSource = BlogDataSourceFactory.getBlogDataSource();</span><br><span class="line"><span class="comment">//指定事务类型</span></span><br><span class="line">TransactionFactory transactionFactory = <span class="keyword">new</span> JdbcTransactionFactory();</span><br><span class="line">Environment environment = <span class="keyword">new</span> Environment(<span class="string">&quot;development&quot;</span>, transactionFactory, dataSource);</span><br><span class="line">Configuration configuration = <span class="keyword">new</span> Configuration(environment);</span><br><span class="line"><span class="comment">//添加一个映射器类,相较于XML文件构建存在一定的局限性</span></span><br><span class="line">configuration.addMapper(BlogMapper.class);</span><br><span class="line"><span class="comment">//构造SqlSessionFactory</span></span><br><span class="line">SqlSessionFactory sqlSessionFactory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(configuration);</span><br></pre></td></tr></table></figure>
+<p>注意该例中，configuration 添加了一个映射器类（mapper class）。映射器类是 Java 类，它们**<u>包含 SQL 映射注解从而避免依赖 XML 文件</u>**。不过，由于 Java 注解的一些限制以及某些 MyBatis 映射的复杂性，要使用大多数高级映射（比如：嵌套联合映射），仍然需要使用 XML 配置。有鉴于此，如果存在一个同名 XML 配置文件，MyBatis 会自动查找并加载它（在这个例子中，基于类路径和 BlogMapper.class 的类名，会加载 BlogMapper.xml）。</p>
+<h2 id="从SqlSessionFactory中获取SqlSession"><a href="#从SqlSessionFactory中获取SqlSession" class="headerlink" title="从SqlSessionFactory中获取SqlSession"></a>从SqlSessionFactory中获取SqlSession</h2><p> 既然有了 SqlSessionFactory，顾名思义，我们可以从中获得 SqlSession 的实例。SqlSession 提供了在数据库执行 SQL 命令所需的所有方法。你可以通过 SqlSession 实例来直接执行已映射的 SQL 语句。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span>(SqlSession session = SqlSessionFactory.opensession())&#123;</span><br><span class="line">	 Blog blog = (Blog) session.selectOne(<span class="string">&quot;org.mybatis.example.BlogMapper.selectBlog&quot;</span>, <span class="number">101</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>另一种更加简洁的方式</p>
+</blockquote>
+<p>使用和指定语句的参数和返回值**<u>相匹配的接口</u>**（比如 BlogMapper.class），现在你的代码不仅更清晰，更加类型安全，还不用担心可能出错的字符串字面值以及强制类型转换。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">    <span class="comment">//传参的时候传了一个接口</span></span><br><span class="line">  BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">  Blog blog = mapper.selectBlog(<span class="number">101</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="探究已经映射的SQL语句"><a href="#探究已经映射的SQL语句" class="headerlink" title="探究已经映射的SQL语句"></a>探究已经映射的SQL语句</h2><p>粗略的讨论一下SqlSession和Mapper到底执行了什么操作</p>
+<p>一个语句既可以通过 XML 定义，也可以通过注解定义。我们先看看 XML 定义语句的方式，事实上 MyBatis 提供的所有特性都可以利用基于 XML 的映射语言来实现，这使得 MyBatis 在过去的数年间得以流行。下面是一个XML文件示例</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span> ?&gt;</span><br><span class="line">&lt;!DOCTYPE mapper</span><br><span class="line">  PUBLIC <span class="string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span><br><span class="line">  <span class="string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span><br><span class="line">&lt;mapper namespace=<span class="string">&quot;org.mybatis.example.BlogMapper&quot;</span>&gt;</span><br><span class="line">  &lt;select id=<span class="string">&quot;selectBlog&quot;</span> resultType=<span class="string">&quot;Blog&quot;</span>&gt;</span><br><span class="line">    select * from Blog where id = #&#123;id&#125;</span><br><span class="line">  &lt;/select&gt;</span><br><span class="line">&lt;/mapper&gt;</span><br></pre></td></tr></table></figure>
+<p>为了这个简单的例子，我们似乎写了不少配置，但其实并不多。在一个 XML 映射文件中，可以定义无数个映射语句，这样一来，XML 头部和文档类型声明部分就显得微不足道了。文档的其它部分很直白，容易理解。 它在命名空间 “org.mybatis.example.BlogMapper” 中定义了一个名为 “selectBlog” 的映射语句，这样你就可以用全限定名 “org.mybatis.example.BlogMapper.selectBlog” 来调用映射语句了，就像上面例子中那样：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Blog blog = (Blog) session.selectOne(<span class="string">&quot;org.mybatis.example.BlogMapper.selectBlog&quot;</span>, <span class="number">101</span>);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>说明：此时org.mybatis.example.BlogMapper应该是一个接口</li>
+<li>selectBlog是接口中定义的一个方法</li>
+</ul>
+<p>你可能会注意到，这种方式和用全限定名调用 Java 对象的方法类似。这样，该命名就可以<strong>直接映射到在命名空间中同名的映射器类</strong>，并将已映射的 select 语句匹配到对应名称、参数和返回类型的方法。因此你就可以像上面那样，不费吹灰之力地在对应的映射器接口调用方法，就像下面这样：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">Blog blog = mapper.selectBlog(<span class="number">101</span>);</span><br></pre></td></tr></table></figure>
+<p>第二种方法有很多优势，首先它不依赖于字符串字面值，会更安全一点；其次，如果你的 IDE 有代码补全功能，那么代码补全可以帮你快速选择到映射好的 SQL 语句。</p>
+<h2 id="命名空间"><a href="#命名空间" class="headerlink" title="命名空间"></a>命名空间</h2><p>在之前版本的 MyBatis 中，<strong>命名空间（Namespaces）</strong>的作用并不大，是可选的。 但现在，随着命名空间越发重要，你必须指定命名空间。</p>
+<p>命名空间的作用有两个，一个是利用更长的全限定名来将不同的语句隔离开来，同时也实现了你上面见到的接口绑定。就算你觉得暂时用不到接口绑定，你也应该遵循这里的规定，以防哪天你改变了主意。 长远来看，只要将命名空间置于合适的 Java 包命名空间之中，你的代码会变得更加整洁，也有利于你更方便地使用 MyBatis。</p>
+<p><strong>命名解析：</strong>为了减少输入量，MyBatis 对所有具有名称的配置元素（包括语句，结果映射，缓存等）使用了如下的命名解析规则。</p>
+<ul>
+<li>全限定名（比如 “com.mypackage.MyMapper.selectAllThings）将被直接用于查找及使用。</li>
+<li>短名称（比如 “selectAllThings”）如果全局唯一也可以作为一个单独的引用。 如果不唯一，有两个或两个以上的相同名称（比如 “com.foo.selectAllThings” 和 “com.bar.selectAllThings”），那么使用时就会产生“短名称不唯一”的错误，这种情况下就必须使用全限定名。</li>
+</ul>
+<hr>
+<p>对于像 BlogMapper 这样的映射器类来说，还有另一种方法来完成语句映射。 它们映射的语句可以不用 XML 来配置，而可以使用 Java 注解来配置。比如，上面的 XML 示例可以被替换成如下的配置：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> org.mybatis.example;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">BlogMapper</span> </span>&#123;</span><br><span class="line">  <span class="meta">@Select(&quot;SELECT * FROM blog WHERE id = #&#123;id&#125;&quot;)</span></span><br><span class="line">  <span class="function">Blog <span class="title">selectBlog</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用注解来映射简单语句会使代码显得更加简洁，但对于稍微复杂一点的语句，Java 注解不仅力不从心，还会让你本就复杂的 SQL 语句更加混乱不堪。 因此，如果你需要做一些很复杂的操作，最好用 XML 来映射语句。</p>
+<p>选择何种方式来配置映射，以及认为是否应该要统一映射语句定义的形式，完全取决于你和你的团队。 换句话说，永远不要拘泥于一种方式，你可以很轻松的在基于注解和 XML 的语句映射方式间自由移植和切换。</p>
+<h2 id="作用域和生命周期"><a href="#作用域和生命周期" class="headerlink" title="作用域和生命周期"></a>作用域和生命周期</h2><blockquote>
+<p>对象生命周期和依赖注入框架</p>
+</blockquote>
+<p>依赖注入框架可以创建线程安全的、基于事务的 SqlSession 和映射器，并将它们直接注入到你的 bean 中，因此可以直接忽略它们的生命周期。 如果对如何通过依赖注入框架使用 MyBatis 感兴趣，可以研究一下 MyBatis-Spring 或 MyBatis-Guice 两个子项目。</p>
+<h3 id="SqlSessionFactoryBuilder"><a href="#SqlSessionFactoryBuilder" class="headerlink" title="SqlSessionFactoryBuilder"></a>SqlSessionFactoryBuilder</h3><p>这个类可以被实例化、使用和丢弃，一旦创建了 SqlSessionFactory，就不再需要它了。 因此 SqlSessionFactoryBuilder 实例的最佳作用域是方法作用域（也就是局部方法变量）。 你可以重用 SqlSessionFactoryBuilder 来创建多个 SqlSessionFactory 实例，但最好还是不要一直保留着它，以保证所有的 XML 解析资源可以被释放给更重要的事情。</p>
+<h3 id="SqlSessionFactory"><a href="#SqlSessionFactory" class="headerlink" title="SqlSessionFactory"></a>SqlSessionFactory</h3><p>SqlSessionFactory 一旦被创建就应该在应用的运行期间一直存在，没有任何理由丢弃它或重新创建另一个实例。 使用 SqlSessionFactory 的最佳实践是在应用运行期间不要重复创建多次，多次重建 SqlSessionFactory 被视为一种代码“坏习惯”。因此 SqlSessionFactory 的最佳作用域是应用作用域。 有很多方法可以做到，最简单的就是使用单例模式或者静态单例模式。</p>
+<h3 id="SqlSession"><a href="#SqlSession" class="headerlink" title="SqlSession"></a>SqlSession</h3><p>每个线程都应该有它自己的 SqlSession 实例。SqlSession 的实例不是线程安全的，因此是不能被共享的，所以它的最佳的作用域是请求或方法作用域。 绝对不能将 SqlSession 实例的引用放在一个类的静态域，甚至一个类的实例变量也不行。 也绝不能将 SqlSession 实例的引用放在任何类型的托管作用域中，比如 Servlet 框架中的 HttpSession。 如果你现在正在使用一种 Web 框架，考虑将 SqlSession 放在一个和 HTTP 请求相似的作用域中。 换句话说，每次收到 HTTP 请求，就可以打开一个 SqlSession，返回一个响应后，就关闭它。 这个关闭操作很重要，为了确保每次都能执行关闭操作，你应该把这个关闭操作放到 finally 块中。 下面的示例就是一个确保 SqlSession 关闭的标准模式：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">  <span class="comment">// 你的应用逻辑代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在所有代码中都遵循这种使用模式，可以保证所有数据库资源都能被正确地关闭。</p>
+<h3 id="映射器实例"><a href="#映射器实例" class="headerlink" title="映射器实例"></a>映射器实例</h3><p>映射器是一些绑定映射语句的接口。映射器接口的实例是从 SqlSession 中获得的。虽然从技术层面上来讲，任何映射器实例的最大作用域与请求它们的 SqlSession 相同。但方法作用域才是映射器实例的最合适的作用域。 也就是说，映射器实例应该在调用它们的方法中被获取，使用完毕之后即可丢弃。 映射器实例并不需要被显式地关闭。尽管在整个请求作用域保留映射器实例不会有什么问题，但是你很快会发现，在这个作用域上管理太多像 SqlSession 的资源会让你忙不过来。 因此，最好将映射器放在方法作用域内。就像下面的例子一样：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">  BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">  <span class="comment">// 你的应用逻辑代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+]]></content>
+      <categories>
+        <category>Mybatis框架</category>
+      </categories>
+      <tags>
+        <tag>Mybatis</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Nginx服务器的使用</title>
     <url>/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<h1 id="Nginx服务器使用"><a href="#Nginx服务器使用" class="headerlink" title="Nginx服务器使用"></a>Nginx服务器使用</h1><h2 id="内容概览"><a href="#内容概览" class="headerlink" title="内容概览"></a>内容概览</h2><h3 id="1、nginx简介"><a href="#1、nginx简介" class="headerlink" title="1、nginx简介"></a>1、nginx简介</h3><p>（1）介绍nginx的应用场景和具体可以做什么事情</p>
@@ -1047,64 +1105,6 @@
     <title>Redis数据库</title>
     <url>/2021/02/25/Redis%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
     <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>Mybatis入门案例知识补充</title>
-    <url>/2021/03/07/Mybatis%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E8%A1%A5%E5%85%85/</url>
-    <content><![CDATA[<h2 id="不使用XML构建SqlSessionFactory"><a href="#不使用XML构建SqlSessionFactory" class="headerlink" title="不使用XML构建SqlSessionFactory"></a>不使用XML构建SqlSessionFactory</h2><p>如果你更愿意直接从 Java 代码而不是 XML 文件中创建配置，或者想要创建你自己的配置建造器，MyBatis 也<strong>提供了完整的配置类</strong>，提供了所有与 XML 文件等价的配置项。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">DataSource dataSource = BlogDataSourceFactory.getBlogDataSource();</span><br><span class="line"><span class="comment">//指定事务类型</span></span><br><span class="line">TransactionFactory transactionFactory = <span class="keyword">new</span> JdbcTransactionFactory();</span><br><span class="line">Environment environment = <span class="keyword">new</span> Environment(<span class="string">&quot;development&quot;</span>, transactionFactory, dataSource);</span><br><span class="line">Configuration configuration = <span class="keyword">new</span> Configuration(environment);</span><br><span class="line"><span class="comment">//添加一个映射器类,相较于XML文件构建存在一定的局限性</span></span><br><span class="line">configuration.addMapper(BlogMapper.class);</span><br><span class="line"><span class="comment">//构造SqlSessionFactory</span></span><br><span class="line">SqlSessionFactory sqlSessionFactory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(configuration);</span><br></pre></td></tr></table></figure>
-<p>注意该例中，configuration 添加了一个映射器类（mapper class）。映射器类是 Java 类，它们**<u>包含 SQL 映射注解从而避免依赖 XML 文件</u>**。不过，由于 Java 注解的一些限制以及某些 MyBatis 映射的复杂性，要使用大多数高级映射（比如：嵌套联合映射），仍然需要使用 XML 配置。有鉴于此，如果存在一个同名 XML 配置文件，MyBatis 会自动查找并加载它（在这个例子中，基于类路径和 BlogMapper.class 的类名，会加载 BlogMapper.xml）。</p>
-<h2 id="从SqlSessionFactory中获取SqlSession"><a href="#从SqlSessionFactory中获取SqlSession" class="headerlink" title="从SqlSessionFactory中获取SqlSession"></a>从SqlSessionFactory中获取SqlSession</h2><p> 既然有了 SqlSessionFactory，顾名思义，我们可以从中获得 SqlSession 的实例。SqlSession 提供了在数据库执行 SQL 命令所需的所有方法。你可以通过 SqlSession 实例来直接执行已映射的 SQL 语句。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span>(SqlSession session = SqlSessionFactory.opensession())&#123;</span><br><span class="line">	 Blog blog = (Blog) session.selectOne(<span class="string">&quot;org.mybatis.example.BlogMapper.selectBlog&quot;</span>, <span class="number">101</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>另一种更加简洁的方式</p>
-</blockquote>
-<p>使用和指定语句的参数和返回值**<u>相匹配的接口</u>**（比如 BlogMapper.class），现在你的代码不仅更清晰，更加类型安全，还不用担心可能出错的字符串字面值以及强制类型转换。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">    <span class="comment">//传参的时候传了一个接口</span></span><br><span class="line">  BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">  Blog blog = mapper.selectBlog(<span class="number">101</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="探究已经映射的SQL语句"><a href="#探究已经映射的SQL语句" class="headerlink" title="探究已经映射的SQL语句"></a>探究已经映射的SQL语句</h2><p>粗略的讨论一下SqlSession和Mapper到底执行了什么操作</p>
-<p>一个语句既可以通过 XML 定义，也可以通过注解定义。我们先看看 XML 定义语句的方式，事实上 MyBatis 提供的所有特性都可以利用基于 XML 的映射语言来实现，这使得 MyBatis 在过去的数年间得以流行。下面是一个XML文件示例</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span> ?&gt;</span><br><span class="line">&lt;!DOCTYPE mapper</span><br><span class="line">  PUBLIC <span class="string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span><br><span class="line">  <span class="string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span><br><span class="line">&lt;mapper namespace=<span class="string">&quot;org.mybatis.example.BlogMapper&quot;</span>&gt;</span><br><span class="line">  &lt;select id=<span class="string">&quot;selectBlog&quot;</span> resultType=<span class="string">&quot;Blog&quot;</span>&gt;</span><br><span class="line">    select * from Blog where id = #&#123;id&#125;</span><br><span class="line">  &lt;/select&gt;</span><br><span class="line">&lt;/mapper&gt;</span><br></pre></td></tr></table></figure>
-<p>为了这个简单的例子，我们似乎写了不少配置，但其实并不多。在一个 XML 映射文件中，可以定义无数个映射语句，这样一来，XML 头部和文档类型声明部分就显得微不足道了。文档的其它部分很直白，容易理解。 它在命名空间 “org.mybatis.example.BlogMapper” 中定义了一个名为 “selectBlog” 的映射语句，这样你就可以用全限定名 “org.mybatis.example.BlogMapper.selectBlog” 来调用映射语句了，就像上面例子中那样：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Blog blog = (Blog) session.selectOne(<span class="string">&quot;org.mybatis.example.BlogMapper.selectBlog&quot;</span>, <span class="number">101</span>);</span><br></pre></td></tr></table></figure>
-<ul>
-<li>说明：此时org.mybatis.example.BlogMapper应该是一个接口</li>
-<li>selectBlog是接口中定义的一个方法</li>
-</ul>
-<p>你可能会注意到，这种方式和用全限定名调用 Java 对象的方法类似。这样，该命名就可以<strong>直接映射到在命名空间中同名的映射器类</strong>，并将已映射的 select 语句匹配到对应名称、参数和返回类型的方法。因此你就可以像上面那样，不费吹灰之力地在对应的映射器接口调用方法，就像下面这样：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">Blog blog = mapper.selectBlog(<span class="number">101</span>);</span><br></pre></td></tr></table></figure>
-<p>第二种方法有很多优势，首先它不依赖于字符串字面值，会更安全一点；其次，如果你的 IDE 有代码补全功能，那么代码补全可以帮你快速选择到映射好的 SQL 语句。</p>
-<h2 id="命名空间"><a href="#命名空间" class="headerlink" title="命名空间"></a>命名空间</h2><p>在之前版本的 MyBatis 中，<strong>命名空间（Namespaces）</strong>的作用并不大，是可选的。 但现在，随着命名空间越发重要，你必须指定命名空间。</p>
-<p>命名空间的作用有两个，一个是利用更长的全限定名来将不同的语句隔离开来，同时也实现了你上面见到的接口绑定。就算你觉得暂时用不到接口绑定，你也应该遵循这里的规定，以防哪天你改变了主意。 长远来看，只要将命名空间置于合适的 Java 包命名空间之中，你的代码会变得更加整洁，也有利于你更方便地使用 MyBatis。</p>
-<p><strong>命名解析：</strong>为了减少输入量，MyBatis 对所有具有名称的配置元素（包括语句，结果映射，缓存等）使用了如下的命名解析规则。</p>
-<ul>
-<li>全限定名（比如 “com.mypackage.MyMapper.selectAllThings）将被直接用于查找及使用。</li>
-<li>短名称（比如 “selectAllThings”）如果全局唯一也可以作为一个单独的引用。 如果不唯一，有两个或两个以上的相同名称（比如 “com.foo.selectAllThings” 和 “com.bar.selectAllThings”），那么使用时就会产生“短名称不唯一”的错误，这种情况下就必须使用全限定名。</li>
-</ul>
-<hr>
-<p>对于像 BlogMapper 这样的映射器类来说，还有另一种方法来完成语句映射。 它们映射的语句可以不用 XML 来配置，而可以使用 Java 注解来配置。比如，上面的 XML 示例可以被替换成如下的配置：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> org.mybatis.example;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">BlogMapper</span> </span>&#123;</span><br><span class="line">  <span class="meta">@Select(&quot;SELECT * FROM blog WHERE id = #&#123;id&#125;&quot;)</span></span><br><span class="line">  <span class="function">Blog <span class="title">selectBlog</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用注解来映射简单语句会使代码显得更加简洁，但对于稍微复杂一点的语句，Java 注解不仅力不从心，还会让你本就复杂的 SQL 语句更加混乱不堪。 因此，如果你需要做一些很复杂的操作，最好用 XML 来映射语句。</p>
-<p>选择何种方式来配置映射，以及认为是否应该要统一映射语句定义的形式，完全取决于你和你的团队。 换句话说，永远不要拘泥于一种方式，你可以很轻松的在基于注解和 XML 的语句映射方式间自由移植和切换。</p>
-<h2 id="作用域和生命周期"><a href="#作用域和生命周期" class="headerlink" title="作用域和生命周期"></a>作用域和生命周期</h2><blockquote>
-<p>对象生命周期和依赖注入框架</p>
-</blockquote>
-<p>依赖注入框架可以创建线程安全的、基于事务的 SqlSession 和映射器，并将它们直接注入到你的 bean 中，因此可以直接忽略它们的生命周期。 如果对如何通过依赖注入框架使用 MyBatis 感兴趣，可以研究一下 MyBatis-Spring 或 MyBatis-Guice 两个子项目。</p>
-<h3 id="SqlSessionFactoryBuilder"><a href="#SqlSessionFactoryBuilder" class="headerlink" title="SqlSessionFactoryBuilder"></a>SqlSessionFactoryBuilder</h3><p>这个类可以被实例化、使用和丢弃，一旦创建了 SqlSessionFactory，就不再需要它了。 因此 SqlSessionFactoryBuilder 实例的最佳作用域是方法作用域（也就是局部方法变量）。 你可以重用 SqlSessionFactoryBuilder 来创建多个 SqlSessionFactory 实例，但最好还是不要一直保留着它，以保证所有的 XML 解析资源可以被释放给更重要的事情。</p>
-<h3 id="SqlSessionFactory"><a href="#SqlSessionFactory" class="headerlink" title="SqlSessionFactory"></a>SqlSessionFactory</h3><p>SqlSessionFactory 一旦被创建就应该在应用的运行期间一直存在，没有任何理由丢弃它或重新创建另一个实例。 使用 SqlSessionFactory 的最佳实践是在应用运行期间不要重复创建多次，多次重建 SqlSessionFactory 被视为一种代码“坏习惯”。因此 SqlSessionFactory 的最佳作用域是应用作用域。 有很多方法可以做到，最简单的就是使用单例模式或者静态单例模式。</p>
-<h3 id="SqlSession"><a href="#SqlSession" class="headerlink" title="SqlSession"></a>SqlSession</h3><p>每个线程都应该有它自己的 SqlSession 实例。SqlSession 的实例不是线程安全的，因此是不能被共享的，所以它的最佳的作用域是请求或方法作用域。 绝对不能将 SqlSession 实例的引用放在一个类的静态域，甚至一个类的实例变量也不行。 也绝不能将 SqlSession 实例的引用放在任何类型的托管作用域中，比如 Servlet 框架中的 HttpSession。 如果你现在正在使用一种 Web 框架，考虑将 SqlSession 放在一个和 HTTP 请求相似的作用域中。 换句话说，每次收到 HTTP 请求，就可以打开一个 SqlSession，返回一个响应后，就关闭它。 这个关闭操作很重要，为了确保每次都能执行关闭操作，你应该把这个关闭操作放到 finally 块中。 下面的示例就是一个确保 SqlSession 关闭的标准模式：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">  <span class="comment">// 你的应用逻辑代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在所有代码中都遵循这种使用模式，可以保证所有数据库资源都能被正确地关闭。</p>
-<h3 id="映射器实例"><a href="#映射器实例" class="headerlink" title="映射器实例"></a>映射器实例</h3><p>映射器是一些绑定映射语句的接口。映射器接口的实例是从 SqlSession 中获得的。虽然从技术层面上来讲，任何映射器实例的最大作用域与请求它们的 SqlSession 相同。但方法作用域才是映射器实例的最合适的作用域。 也就是说，映射器实例应该在调用它们的方法中被获取，使用完毕之后即可丢弃。 映射器实例并不需要被显式地关闭。尽管在整个请求作用域保留映射器实例不会有什么问题，但是你很快会发现，在这个作用域上管理太多像 SqlSession 的资源会让你忙不过来。 因此，最好将映射器放在方法作用域内。就像下面的例子一样：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">  BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">  <span class="comment">// 你的应用逻辑代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-]]></content>
-      <categories>
-        <category>Mybatis框架</category>
-      </categories>
-      <tags>
-        <tag>Mybatis</tag>
-      </tags>
   </entry>
   <entry>
     <title>SVN版本控制系统</title>
@@ -1441,6 +1441,100 @@
       </tags>
   </entry>
   <entry>
+    <title>优秀项目</title>
+    <url>/2021/03/11/%E4%BC%98%E7%A7%80%E9%A1%B9%E7%9B%AE/</url>
+    <content><![CDATA[<blockquote>
+<h2 id="litemall"><a href="#litemall" class="headerlink" title="litemall"></a>litemall</h2></blockquote>
+<p><a href="https://github.com/linlinjava/litemall">https://github.com/linlinjava/litemall</a></p>
+<p>Star: 15.5k</p>
+<p><img data-src="https://github.com/linlinjava/litemall/raw/master/doc/pics/readme/project-structure.png" alt="img"></p>
+<p>这是一个小商城系统。</p>
+<p>litemall = Spring Boot后端 + Vue管理员前端 + 微信小程序用户前端 + Vue用户移动端</p>
+<p>技术栈：Spring Boot、VUE、微信小程序</p>
+<blockquote>
+<h2 id="Head-First-Design-Patterns"><a href="#Head-First-Design-Patterns" class="headerlink" title="Head-First-Design-Patterns"></a>Head-First-Design-Patterns</h2></blockquote>
+<p><a href="https://github.com/bethrobson/Head-First-Design-Patterns">https://github.com/bethrobson/Head-First-Design-Patterns</a></p>
+<p>Star: 2.2k</p>
+<p>《Head First Design Patterns》书籍的示例代码，与2014年7月发布的书籍对应，你可以载代码并从命令行编译并运行，或者将代码加载到 Eclipse 中的项目中。</p>
+<blockquote>
+<p>##Mall</p>
+</blockquote>
+<p><a href="https://github.com/macrozheng/mall">https://github.com/macrozheng/mall</a></p>
+<p>Star: 47k</p>
+<img data-src="/2021/03/11/%E4%BC%98%E7%A7%80%E9%A1%B9%E7%9B%AE/01.png" class>
+
+<p>mall致力于打造一个完整的电商系统，采用现阶段流行技术实现。</p>
+<p>mall包括前台商城系统及后台管理系统，基于SpringBoot+MyBatis实现。</p>
+<p>前台商城系统包含首页门户、商品推荐、商品搜索、商品展示、购物车、订单流程、会员中心、客户服务、帮助中心等模块。</p>
+<p>后台管理系统包含商品管理、订单管理、会员管理、促销管理、运营管理、内容管理、统计报表、财务管理、权限管理、设置等模块。</p>
+<blockquote>
+<h2 id="miaosha"><a href="#miaosha" class="headerlink" title="miaosha"></a>miaosha</h2></blockquote>
+<p><a href="https://github.com/qiurunze123/miaosha">https://github.com/qiurunze123/miaosha</a></p>
+<p>Star: 19.3k</p>
+<img data-src="/2021/03/11/%E4%BC%98%E7%A7%80%E9%A1%B9%E7%9B%AE/02.png" class>
+
+<p>miaosha = 秒杀，秒杀系统设计与实现</p>
+<p>这个项目是对高并发大流量如何进行秒杀架构，而做的一个系统整理。</p>
+<blockquote>
+<h2 id="vhr"><a href="#vhr" class="headerlink" title="vhr"></a>vhr</h2></blockquote>
+<p><a href="https://github.com/lenve/vhr">https://github.com/lenve/vhr</a></p>
+<p>Star: 20.5k</p>
+<img data-src="/2021/03/11/%E4%BC%98%E7%A7%80%E9%A1%B9%E7%9B%AE/03.png" class>
+
+
+
+<blockquote>
+<h2 id="spring-boot-demo"><a href="#spring-boot-demo" class="headerlink" title="spring-boot-demo"></a>spring-boot-demo</h2></blockquote>
+<p><a href="https://github.com/xkcoding/spring-boot-demo">https://github.com/xkcoding/spring-boot-demo</a></p>
+<p>Star: 20.8k</p>
+<p>spring boot demo 是一个用来深度学习并实战 spring boot 的项目，目前总共包含65个集成demo，已经完成53个。</p>
+<p>这个项目已成功集成 actuator(监控)、admin(可视化监控)、logback(日志)、aopLog(通过AOP记录web请求日志)、统一异常处理(json级别和页面级别)、freemarker(模板引擎)、Mybatis、redis、zookeeper、RabbitMQ、Kafka等。</p>
+<blockquote>
+<h2 id="eladmin"><a href="#eladmin" class="headerlink" title="eladmin"></a>eladmin</h2></blockquote>
+<p><a href="https://github.com/elunez/eladmin">https://github.com/elunez/eladmin</a></p>
+<p>Star: 14.6k</p>
+<p>这是一个基于 Spring Boot、Jpa、Spring Security、redis、Vue 的前后端分离的后台管理系统。</p>
+<p>项目采用分模块开发方式，权限控制采用 RBAC，支持数据字典与数据权限管理，支持一键生成前后端代码，支持动态路由。</p>
+<p>系统功能：用户管理、角色管理、菜单管理、部门管理、岗位管理、SQL监控、定时任务、邮件工具、七牛云存储、支付宝支付、服务监控、运维管理等。</p>
+<blockquote>
+<h2 id="99-problems"><a href="#99-problems" class="headerlink" title="99-problems"></a>99-problems</h2></blockquote>
+<p><a href="https://github.com/shekhargulati/99-problems">https://github.com/shekhargulati/99-problems</a></p>
+<p>Star: 3.3k</p>
+<p>光看名字就能对其功能了解一二，它的作用是帮助大家磨练逻辑编程中的具体技能。大家可以选择利用Java 8、Scala 或者 Haskell 进行问题解决，并最终找到最精致的解决办法。</p>
+<p>如果大家喜爱解题，其中还提供多种不同层级的难度供各位选择。另外，如果大家将全部 99 道难题解决掉，则可进一步冲击Java Deathmatch。如果大家被难住了，请点击此处查看难题——但请注意，认真思考之后再参阅比较好。</p>
+<blockquote>
+<h2 id="Dex"><a href="#Dex" class="headerlink" title="Dex"></a>Dex</h2></blockquote>
+<p><a href="https://github.com/PatMartin/Dex">https://github.com/PatMartin/Dex</a></p>
+<p>Star: 1.2k</p>
+<p>如果大家希望通过酷炫的方式进行数据交互，那么 Dex 绝对不容错过。它能够帮助我们提取、转换及可视化数据，同时附带预测功能。大家可以将可视化结果发布为 3D 或者其它 HTML 变量形式。</p>
+<p>Dex 允许我们生成超过 50 种不同的可视化模式，其中包括世界地图、时间表、网络可视化等。</p>
+ <img data-src="/2021/03/11/%E4%BC%98%E7%A7%80%E9%A1%B9%E7%9B%AE/04.png" class>
+
+<img data-src="/2021/03/11/%E4%BC%98%E7%A7%80%E9%A1%B9%E7%9B%AE/05.png" class>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>项目</category>
+      </categories>
+      <tags>
+        <tag>优秀项目</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>创建一个Vue实例</title>
     <url>/2021/03/07/%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAVue%E5%AE%9E%E4%BE%8B/</url>
     <content><![CDATA[<h2 id="创建一个Vue实例"><a href="#创建一个Vue实例" class="headerlink" title="创建一个Vue实例"></a>创建一个Vue实例</h2><p>虽然没有完全遵循 <a href="https://zh.wikipedia.org/wiki/MVVM">MVVM 模型</a>，但是 Vue 的设计也受到了它的启发。因此在文档中经常会使用 <code>vm</code> (ViewModel 的缩写) 这个变量名表示 Vue 实例。</p>
@@ -1477,11 +1571,6 @@
       <tags>
         <tag>Vue</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>初识动态规划</title>
-    <url>/2021/02/03/%E5%88%9D%E8%AF%86%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>消息队列MQ</title>
@@ -1572,6 +1661,11 @@
       <tags>
         <tag>RabbitMQ</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>初识动态规划</title>
+    <url>/2021/02/03/%E5%88%9D%E8%AF%86%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>初识递归</title>
@@ -1678,81 +1772,6 @@
       </tags>
   </entry>
   <entry>
-    <title>双指针问题</title>
-    <url>/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<h2 id="环形列表I"><a href="#环形列表I" class="headerlink" title="环形列表I"></a>环形列表I</h2><h3 id="题目说明"><a href="#题目说明" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，判断链表中是否有环。</p>
-<p>如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。</p>
-<p>如果链表中存在环，则返回 true 。 否则，返回 false 。</p>
-<p> 进阶：</p>
-<p>你能用 O(1)（即，常量）内存解决此问题吗？</p>
-<p> 示例 1：</p>
-<p> <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100453506.png" alt="image-20210114100453506"></p>
-<p>输入：head = [3,2,0,-4], pos = 1<br>输出：true<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100714252.png" alt="image-20210114100714252"></p>
-<p>输入：head = [1,2], pos = 0<br>输出：true<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
-<img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100749569.png" alt="image-20210114100749569" style="zoom:150%;">
-
-<p>输入：head = [1], pos = -1<br>输出：false<br>解释：链表中没有环。</p>
-<p>提示：</p>
-<p>链表中节点的数目范围是 [0, 104]<br>-105 &lt;= Node.val &lt;= 105<br>pos 为 -1 或者链表中的一个 有效索引 </p>
-<h3 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h3><p>####方法一：哈希表<br>思路及算法</p>
-<p>最容易想到的方法是遍历所有节点，每次遍历到一个节点时，判断该节点此前是否被访问过。</p>
-<p>具体地，我们可以使用哈希表来存储所有已经访问过的节点。每次我们到达一个节点，如果该节点已经存在于哈希表中，则说明该链表是环形链表，否则就将该节点加入哈希表中。重复这一过程，直到我们遍历完整个链表即可。</p>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">pulic <span class="class"><span class="keyword">class</span> <span class="title">solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascirle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        Set&lt;ListNOde&gt; seen = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span>( head !=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!seen.add(head))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>#####复杂度分析</p>
-<p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。最坏情况下我们需要遍历每个节点一次。</p>
-<p>空间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。主要为哈希表的开销，最坏情况下我们需要将每个节点插入到哈希表中一次。</p>
-<h4 id="方式二；双指针–快慢指针"><a href="#方式二；双指针–快慢指针" class="headerlink" title="方式二；双指针–快慢指针"></a>方式二；双指针–快慢指针</h4><p>方法需要读者对「Floyd 判圈算法」（又称龟兔赛跑算法）有所了解。</p>
-<p>假想「乌龟」和「兔子」在链表上移动，「兔子」跑得快，「乌龟」跑得慢。当「乌龟」和「兔子」从链表上的同一个节点开始移动时，如果该链表中没有环，那么「兔子」将一直处于「乌龟」的前方；如果该链表中有环，那么「兔子」会先于「乌龟」进入环，并且一直在环内移动。等到「乌龟」进入环时，由于「兔子」的速度快，它一定会在某个时刻与乌龟相遇，即套了「乌龟」若干圈。</p>
-<p>我们可以根据上述思路来解决本题。具体地，我们定义两个指针，一快一满。慢指针每次只移动一步，而快指针每次移动两步。初始时，慢指针在位置 head，而快指针在位置 head.next。这样一来，如果在移动的过程中，快指针反过来追上慢指针，就说明该链表为环形链表。否则快指针将到达链表尾部，该链表不为环形链表。</p>
-<p> 为什么我们要规定初始时慢指针在位置 head，快指针在位置 head.next，而不是两个指针都在位置 head（即与「乌龟」和「兔子」中的叙述相同）？</p>
-<p>观察下面的代码，我们使用的是 while 循环，循环条件先于循环体。由于循环条件一定是判断快慢指针是否重合，如果我们将两个指针初始都置于 head，那么 while 循环就不会执行。因此，我们可以假想一个在 head 之前的虚拟节点，慢指针从虚拟节点移动一步到达 head，快指针从虚拟节点移动两步到达 head.next，这样我们就可以使用 while 循环了。</p>
-<p>当然，我们也可以使用 do-while 循环。此时，我们就可以把快慢指针的初始值都置为 head。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">puclic <span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascycle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head;</span><br><span class="line">        ListNode fast = head.next;</span><br><span class="line">        <span class="keyword">while</span>(slow!=fast)&#123;</span><br><span class="line">            <span class="keyword">if</span>(fast==<span class="keyword">null</span>||fast.next==<span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            fast = fast.next.next</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。</p>
-<p>当链表中不存在环时，快指针将先于慢指针到达链表尾部，链表中每个节点至多被访问两次。</p>
-<p>当链表中存在环时，每一轮移动后，快慢指针的距离将减小一。而初始距离为环的长度，因此至多移动 NN 轮。</p>
-<p>空间复杂度：O(1)O(1)。我们只使用了两个指针的额外空间</p>
-<h2 id="环形列表II"><a href="#环形列表II" class="headerlink" title="环形列表II"></a>环形列表II</h2><h3 id="题目说明-1"><a href="#题目说明-1" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。</p>
-<p>为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意，pos 仅仅是用于标识环的情况，并不会作为参数传递到函数中。</p>
-<p>说明：不允许修改给定的链表。</p>
-<p>进阶：</p>
-<p>你是否可以使用 O(1) 空间解决此题？</p>
-<p> 示例 1：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102706369.png" alt="image-20210114102706369"></p>
-<p>输入：head = [3,2,0,-4], pos = 1<br>输出：返回索引为 1 的链表节点<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102721841.png" alt="image-20210114102721841"></p>
-<p>输入：head = [1,2], pos = 0<br>输出：返回索引为 0 的链表节点<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102737481.png" alt="image-20210114102737481"></p>
-<p>输入：head = [1], pos = -1<br>输出：返回 null<br>解释：链表中没有环。</p>
-<p>提示：</p>
-<p>链表中节点的数目范围在范围 [0, 104] 内<br>-105 &lt;= Node.val &lt;= 105<br>pos 的值为 -1 或者链表中的一个有效索引</p>
-<h3 id="题解-1"><a href="#题解-1" class="headerlink" title="题解"></a>题解</h3><h4 id="方法一：哈希表"><a href="#方法一：哈希表" class="headerlink" title="方法一：哈希表"></a>方法一：哈希表</h4><p>一个非常直观的思路是：我们遍历链表中的每个节点，并将它记录下来；一旦遇到了此前遍历过的节点，就可以判定链表中存在环。借助哈希表可以很方便地实现。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        ListNode pos = head;</span><br><span class="line">        Set&lt;ListNode&gt; visited = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span> (pos != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (visited.contains(pos)) &#123;</span><br><span class="line">                <span class="keyword">return</span> pos;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                visited.add(pos);</span><br><span class="line">            &#125;</span><br><span class="line">            pos = pos.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析-1"><a href="#复杂度分析-1" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们恰好需要访问链表中的每一个节点。</p>
-<p>空间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们需要将链表中的每个节点都保存在哈希表当中。</p>
-<h4 id="方法二：双指针–快慢指针"><a href="#方法二：双指针–快慢指针" class="headerlink" title="方法二：双指针–快慢指针"></a>方法二：双指针–快慢指针</h4><p>我们使用两个指针，\textit{fast}fast 与 \textit{slow}slow。它们起始都位于链表的头部。随后，\textit{slow}slow 指针每次向后移动一个位置，而 \textit{fast}fast 指针向后移动两个位置。如果链表中存在环，则 \textit{fast}fast 指针最终将再次与 \textit{slow}slow 指针在环中相遇。</p>
-<p>如下图所示，设链表中环外部分的长度为 aa。\textit{slow}slow 指针进入环后，又走了 bb 的距离与 \textit{fast}fast 相遇。此时，\textit{fast}fast 指针已经走完了环的 nn 圈，因此它走过的总距离为 a+n(b+c)+b=a+(n+1)b+nca+n(b+c)+b=a+(n+1)b+nc</p>
- <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114103031586.png" alt="image-20210114103031586" style="zoom:50%;">
-
-<p>根据题意，任意时刻，\textit{fast}fast 指针走过的距离都为 \textit{slow}slow 指针的 22 倍。因此，我们有</p>
-<p>a+(n+1)b+nc=2(a+b) \implies a=c+(n-1)(b+c)<br>a+(n+1)b+nc=2(a+b)⟹a=c+(n−1)(b+c)</p>
-<p>有了 a=c+(n-1)(b+c)a=c+(n−1)(b+c) 的等量关系，我们会发现：从相遇点到入环点的距离加上 n-1n−1 圈的环长，恰好等于从链表头部到入环点的距离。</p>
-<p>因此，当发现 \textit{slow}slow 与 \textit{fast}fast 相遇时，我们再额外使用一个指针 \textit{ptr}ptr。起始，它指向链表头部；随后，它和 \textit{slow}slow 每次向后移动一个位置。最终，它们会在入环点相遇。 </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head, fast = head;</span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="keyword">null</span>) &#123;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            <span class="keyword">if</span> (fast.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">                fast = fast.next.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (fast == slow) &#123;</span><br><span class="line">                ListNode ptr = head;</span><br><span class="line">                <span class="keyword">while</span> (ptr != slow) &#123;</span><br><span class="line">                    ptr = ptr.next;</span><br><span class="line">                    slow = slow.next;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> ptr;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>#####复杂度分析</p>
-<p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。在最初判断快慢指针是否相遇时，\textit{slow}slow 指针走过的距离不会超过链表的总长度；随后寻找入环点时，走过的距离也不会超过链表的总长度。因此，总的执行时间为 O(N)+O(N)=O(N)O(N)+O(N)=O(N)。</p>
-<p>空间复杂度：O(1)O(1)。我们只使用了 \textit{slow}, \textit{fast}, \textit{ptr}slow,fast,ptr 三个指针。</p>
-]]></content>
-      <categories>
-        <category>数据结构</category>
-      </categories>
-      <tags>
-        <tag>链表</tag>
-        <tag>双指针</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>哈希表easy篇总结</title>
     <url>/2021/03/11/%E5%93%88%E5%B8%8C%E8%A1%A8easy%E7%AF%87%E6%80%BB%E7%BB%93/</url>
     <content><![CDATA[<p>##哈希表刷题总结</p>
@@ -1826,6 +1845,81 @@
       </categories>
       <tags>
         <tag>哈希表</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>双指针问题</title>
+    <url>/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h2 id="环形列表I"><a href="#环形列表I" class="headerlink" title="环形列表I"></a>环形列表I</h2><h3 id="题目说明"><a href="#题目说明" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，判断链表中是否有环。</p>
+<p>如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。</p>
+<p>如果链表中存在环，则返回 true 。 否则，返回 false 。</p>
+<p> 进阶：</p>
+<p>你能用 O(1)（即，常量）内存解决此问题吗？</p>
+<p> 示例 1：</p>
+<p> <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100453506.png" alt="image-20210114100453506"></p>
+<p>输入：head = [3,2,0,-4], pos = 1<br>输出：true<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100714252.png" alt="image-20210114100714252"></p>
+<p>输入：head = [1,2], pos = 0<br>输出：true<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
+<img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100749569.png" alt="image-20210114100749569" style="zoom:150%;">
+
+<p>输入：head = [1], pos = -1<br>输出：false<br>解释：链表中没有环。</p>
+<p>提示：</p>
+<p>链表中节点的数目范围是 [0, 104]<br>-105 &lt;= Node.val &lt;= 105<br>pos 为 -1 或者链表中的一个 有效索引 </p>
+<h3 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h3><p>####方法一：哈希表<br>思路及算法</p>
+<p>最容易想到的方法是遍历所有节点，每次遍历到一个节点时，判断该节点此前是否被访问过。</p>
+<p>具体地，我们可以使用哈希表来存储所有已经访问过的节点。每次我们到达一个节点，如果该节点已经存在于哈希表中，则说明该链表是环形链表，否则就将该节点加入哈希表中。重复这一过程，直到我们遍历完整个链表即可。</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">pulic <span class="class"><span class="keyword">class</span> <span class="title">solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascirle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        Set&lt;ListNOde&gt; seen = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span>( head !=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!seen.add(head))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>#####复杂度分析</p>
+<p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。最坏情况下我们需要遍历每个节点一次。</p>
+<p>空间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。主要为哈希表的开销，最坏情况下我们需要将每个节点插入到哈希表中一次。</p>
+<h4 id="方式二；双指针–快慢指针"><a href="#方式二；双指针–快慢指针" class="headerlink" title="方式二；双指针–快慢指针"></a>方式二；双指针–快慢指针</h4><p>方法需要读者对「Floyd 判圈算法」（又称龟兔赛跑算法）有所了解。</p>
+<p>假想「乌龟」和「兔子」在链表上移动，「兔子」跑得快，「乌龟」跑得慢。当「乌龟」和「兔子」从链表上的同一个节点开始移动时，如果该链表中没有环，那么「兔子」将一直处于「乌龟」的前方；如果该链表中有环，那么「兔子」会先于「乌龟」进入环，并且一直在环内移动。等到「乌龟」进入环时，由于「兔子」的速度快，它一定会在某个时刻与乌龟相遇，即套了「乌龟」若干圈。</p>
+<p>我们可以根据上述思路来解决本题。具体地，我们定义两个指针，一快一满。慢指针每次只移动一步，而快指针每次移动两步。初始时，慢指针在位置 head，而快指针在位置 head.next。这样一来，如果在移动的过程中，快指针反过来追上慢指针，就说明该链表为环形链表。否则快指针将到达链表尾部，该链表不为环形链表。</p>
+<p> 为什么我们要规定初始时慢指针在位置 head，快指针在位置 head.next，而不是两个指针都在位置 head（即与「乌龟」和「兔子」中的叙述相同）？</p>
+<p>观察下面的代码，我们使用的是 while 循环，循环条件先于循环体。由于循环条件一定是判断快慢指针是否重合，如果我们将两个指针初始都置于 head，那么 while 循环就不会执行。因此，我们可以假想一个在 head 之前的虚拟节点，慢指针从虚拟节点移动一步到达 head，快指针从虚拟节点移动两步到达 head.next，这样我们就可以使用 while 循环了。</p>
+<p>当然，我们也可以使用 do-while 循环。此时，我们就可以把快慢指针的初始值都置为 head。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">puclic <span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascycle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head;</span><br><span class="line">        ListNode fast = head.next;</span><br><span class="line">        <span class="keyword">while</span>(slow!=fast)&#123;</span><br><span class="line">            <span class="keyword">if</span>(fast==<span class="keyword">null</span>||fast.next==<span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            fast = fast.next.next</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。</p>
+<p>当链表中不存在环时，快指针将先于慢指针到达链表尾部，链表中每个节点至多被访问两次。</p>
+<p>当链表中存在环时，每一轮移动后，快慢指针的距离将减小一。而初始距离为环的长度，因此至多移动 NN 轮。</p>
+<p>空间复杂度：O(1)O(1)。我们只使用了两个指针的额外空间</p>
+<h2 id="环形列表II"><a href="#环形列表II" class="headerlink" title="环形列表II"></a>环形列表II</h2><h3 id="题目说明-1"><a href="#题目说明-1" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。</p>
+<p>为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意，pos 仅仅是用于标识环的情况，并不会作为参数传递到函数中。</p>
+<p>说明：不允许修改给定的链表。</p>
+<p>进阶：</p>
+<p>你是否可以使用 O(1) 空间解决此题？</p>
+<p> 示例 1：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102706369.png" alt="image-20210114102706369"></p>
+<p>输入：head = [3,2,0,-4], pos = 1<br>输出：返回索引为 1 的链表节点<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102721841.png" alt="image-20210114102721841"></p>
+<p>输入：head = [1,2], pos = 0<br>输出：返回索引为 0 的链表节点<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102737481.png" alt="image-20210114102737481"></p>
+<p>输入：head = [1], pos = -1<br>输出：返回 null<br>解释：链表中没有环。</p>
+<p>提示：</p>
+<p>链表中节点的数目范围在范围 [0, 104] 内<br>-105 &lt;= Node.val &lt;= 105<br>pos 的值为 -1 或者链表中的一个有效索引</p>
+<h3 id="题解-1"><a href="#题解-1" class="headerlink" title="题解"></a>题解</h3><h4 id="方法一：哈希表"><a href="#方法一：哈希表" class="headerlink" title="方法一：哈希表"></a>方法一：哈希表</h4><p>一个非常直观的思路是：我们遍历链表中的每个节点，并将它记录下来；一旦遇到了此前遍历过的节点，就可以判定链表中存在环。借助哈希表可以很方便地实现。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        ListNode pos = head;</span><br><span class="line">        Set&lt;ListNode&gt; visited = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span> (pos != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (visited.contains(pos)) &#123;</span><br><span class="line">                <span class="keyword">return</span> pos;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                visited.add(pos);</span><br><span class="line">            &#125;</span><br><span class="line">            pos = pos.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析-1"><a href="#复杂度分析-1" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们恰好需要访问链表中的每一个节点。</p>
+<p>空间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们需要将链表中的每个节点都保存在哈希表当中。</p>
+<h4 id="方法二：双指针–快慢指针"><a href="#方法二：双指针–快慢指针" class="headerlink" title="方法二：双指针–快慢指针"></a>方法二：双指针–快慢指针</h4><p>我们使用两个指针，\textit{fast}fast 与 \textit{slow}slow。它们起始都位于链表的头部。随后，\textit{slow}slow 指针每次向后移动一个位置，而 \textit{fast}fast 指针向后移动两个位置。如果链表中存在环，则 \textit{fast}fast 指针最终将再次与 \textit{slow}slow 指针在环中相遇。</p>
+<p>如下图所示，设链表中环外部分的长度为 aa。\textit{slow}slow 指针进入环后，又走了 bb 的距离与 \textit{fast}fast 相遇。此时，\textit{fast}fast 指针已经走完了环的 nn 圈，因此它走过的总距离为 a+n(b+c)+b=a+(n+1)b+nca+n(b+c)+b=a+(n+1)b+nc</p>
+ <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114103031586.png" alt="image-20210114103031586" style="zoom:50%;">
+
+<p>根据题意，任意时刻，\textit{fast}fast 指针走过的距离都为 \textit{slow}slow 指针的 22 倍。因此，我们有</p>
+<p>a+(n+1)b+nc=2(a+b) \implies a=c+(n-1)(b+c)<br>a+(n+1)b+nc=2(a+b)⟹a=c+(n−1)(b+c)</p>
+<p>有了 a=c+(n-1)(b+c)a=c+(n−1)(b+c) 的等量关系，我们会发现：从相遇点到入环点的距离加上 n-1n−1 圈的环长，恰好等于从链表头部到入环点的距离。</p>
+<p>因此，当发现 \textit{slow}slow 与 \textit{fast}fast 相遇时，我们再额外使用一个指针 \textit{ptr}ptr。起始，它指向链表头部；随后，它和 \textit{slow}slow 每次向后移动一个位置。最终，它们会在入环点相遇。 </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head, fast = head;</span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="keyword">null</span>) &#123;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            <span class="keyword">if</span> (fast.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">                fast = fast.next.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (fast == slow) &#123;</span><br><span class="line">                ListNode ptr = head;</span><br><span class="line">                <span class="keyword">while</span> (ptr != slow) &#123;</span><br><span class="line">                    ptr = ptr.next;</span><br><span class="line">                    slow = slow.next;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> ptr;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>#####复杂度分析</p>
+<p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。在最初判断快慢指针是否相遇时，\textit{slow}slow 指针走过的距离不会超过链表的总长度；随后寻找入环点时，走过的距离也不会超过链表的总长度。因此，总的执行时间为 O(N)+O(N)=O(N)O(N)+O(N)=O(N)。</p>
+<p>空间复杂度：O(1)O(1)。我们只使用了 \textit{slow}, \textit{fast}, \textit{ptr}slow,fast,ptr 三个指针。</p>
+]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>链表</tag>
+        <tag>双指针</tag>
       </tags>
   </entry>
   <entry>
@@ -1987,6 +2081,35 @@
       </categories>
       <tags>
         <tag>Vue</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>类文件结构</title>
+    <url>/2021/01/16/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</url>
+    <content><![CDATA[<p>#类文件结构</p>
+<h2 id="虚拟机的无关性"><a href="#虚拟机的无关性" class="headerlink" title="虚拟机的无关性"></a>虚拟机的无关性</h2><p>Java的宣传口号是: <strong><em>WRITE ONCE , RUN ANYWHREE</em></strong></p>
+<p>java虚拟机力求实现的两种无关性：</p>
+<ol>
+<li><p>平台无关性</p>
+<p>各种不同平台的虚拟机与所有平台都统一使用的程序存储格式——–字节码（ByteCode）是构成平台无关性的基础，虚拟机可以载入同一种平台无关的字节码。</p>
+</li>
+<li><p>语言无关性：</p>
+<p><strong>举例</strong>：除了Java之外，Clojure、Groovy、JRuby、Jython、Scala都可以在Java虚拟机上运行</p>
+<p>实现语言无关性的基础是Java虚拟机不与任何语言绑定，只与**<em>“Class文件”这种特殊的二进制文件格式**</em>相关联，Class文件包含了Java虚拟机指令集和符号表以及若干其他辅助信息，在Class文件中使用了许多强制性的语法和结构化约束，任何一门语言都可以表示为被JAVA虚拟机锁接受的有效的Class文件。虚拟机只关心Class文件本身，而不关心Class文件的来源是哪种语言。</p>
+<p>在Class文件中，各种关键字、变量、和运算符号的语义都是有多条字节码命令组合而成的，字节码命令所能提供的语义描述能力必然要比java语言本身更为强大，所以Java虚拟机提供的支持远比java语言本身强大。</p>
+</li>
+</ol>
+<h2 id="Class类文件的结构"><a href="#Class类文件的结构" class="headerlink" title="Class类文件的结构"></a>Class类文件的结构</h2><p>Class文件是一组以8位字节为基础单位的二进制流，各个数据项目严格的按照顺序紧凑的排列在Class文件中，中间没有任何的分隔符，这使得整个Class文件中存储的内容几乎全是程序运行的必要数据，没有空隙存在。</p>
+<p>Class文件格式采用一种类似于C语言中struct的伪结构来进行存储数据：包括<strong>无符号数+表</strong></p>
+<p>1、无符号数：基本数据类型</p>
+<p>2、表：有多个无符号数或者其他表作为数据项构成的复合数据类型，习惯性的以__info结尾。表用于描述有层次关系的复合结构的数据。整个class文件本质上就是一张表。</p>
+<h3 id="magic-numer与class文件版本"><a href="#magic-numer与class文件版本" class="headerlink" title="magic numer与class文件版本"></a>magic numer与class文件版本</h3><h3 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h3><h3 id="访问标志"><a href="#访问标志" class="headerlink" title="访问标志"></a>访问标志</h3><h3 id="类索引、父类索引、接口索引集合"><a href="#类索引、父类索引、接口索引集合" class="headerlink" title="类索引、父类索引、接口索引集合"></a>类索引、父类索引、接口索引集合</h3><h3 id="字段表集合"><a href="#字段表集合" class="headerlink" title="字段表集合"></a>字段表集合</h3><h3 id="方法表集合"><a href="#方法表集合" class="headerlink" title="方法表集合"></a>方法表集合</h3><p>###属性表集合</p>
+]]></content>
+      <categories>
+        <category>JVM虚拟机</category>
+      </categories>
+      <tags>
+        <tag>JAVA</tag>
       </tags>
   </entry>
   <entry>
@@ -2166,35 +2289,6 @@
       </categories>
       <tags>
         <tag>RabbitMQ</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>类文件结构</title>
-    <url>/2021/01/16/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</url>
-    <content><![CDATA[<p>#类文件结构</p>
-<h2 id="虚拟机的无关性"><a href="#虚拟机的无关性" class="headerlink" title="虚拟机的无关性"></a>虚拟机的无关性</h2><p>Java的宣传口号是: <strong><em>WRITE ONCE , RUN ANYWHREE</em></strong></p>
-<p>java虚拟机力求实现的两种无关性：</p>
-<ol>
-<li><p>平台无关性</p>
-<p>各种不同平台的虚拟机与所有平台都统一使用的程序存储格式——–字节码（ByteCode）是构成平台无关性的基础，虚拟机可以载入同一种平台无关的字节码。</p>
-</li>
-<li><p>语言无关性：</p>
-<p><strong>举例</strong>：除了Java之外，Clojure、Groovy、JRuby、Jython、Scala都可以在Java虚拟机上运行</p>
-<p>实现语言无关性的基础是Java虚拟机不与任何语言绑定，只与**<em>“Class文件”这种特殊的二进制文件格式**</em>相关联，Class文件包含了Java虚拟机指令集和符号表以及若干其他辅助信息，在Class文件中使用了许多强制性的语法和结构化约束，任何一门语言都可以表示为被JAVA虚拟机锁接受的有效的Class文件。虚拟机只关心Class文件本身，而不关心Class文件的来源是哪种语言。</p>
-<p>在Class文件中，各种关键字、变量、和运算符号的语义都是有多条字节码命令组合而成的，字节码命令所能提供的语义描述能力必然要比java语言本身更为强大，所以Java虚拟机提供的支持远比java语言本身强大。</p>
-</li>
-</ol>
-<h2 id="Class类文件的结构"><a href="#Class类文件的结构" class="headerlink" title="Class类文件的结构"></a>Class类文件的结构</h2><p>Class文件是一组以8位字节为基础单位的二进制流，各个数据项目严格的按照顺序紧凑的排列在Class文件中，中间没有任何的分隔符，这使得整个Class文件中存储的内容几乎全是程序运行的必要数据，没有空隙存在。</p>
-<p>Class文件格式采用一种类似于C语言中struct的伪结构来进行存储数据：包括<strong>无符号数+表</strong></p>
-<p>1、无符号数：基本数据类型</p>
-<p>2、表：有多个无符号数或者其他表作为数据项构成的复合数据类型，习惯性的以__info结尾。表用于描述有层次关系的复合结构的数据。整个class文件本质上就是一张表。</p>
-<h3 id="magic-numer与class文件版本"><a href="#magic-numer与class文件版本" class="headerlink" title="magic numer与class文件版本"></a>magic numer与class文件版本</h3><h3 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h3><h3 id="访问标志"><a href="#访问标志" class="headerlink" title="访问标志"></a>访问标志</h3><h3 id="类索引、父类索引、接口索引集合"><a href="#类索引、父类索引、接口索引集合" class="headerlink" title="类索引、父类索引、接口索引集合"></a>类索引、父类索引、接口索引集合</h3><h3 id="字段表集合"><a href="#字段表集合" class="headerlink" title="字段表集合"></a>字段表集合</h3><h3 id="方法表集合"><a href="#方法表集合" class="headerlink" title="方法表集合"></a>方法表集合</h3><p>###属性表集合</p>
-]]></content>
-      <categories>
-        <category>JVM虚拟机</category>
-      </categories>
-      <tags>
-        <tag>JAVA</tag>
       </tags>
   </entry>
   <entry>
@@ -2599,6 +2693,91 @@
       </tags>
   </entry>
   <entry>
+    <title>设计消息队列--&gt;2</title>
+    <url>/2021/03/13/%E8%AE%BE%E8%AE%A1%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E9%83%A8%E5%88%86/</url>
+    <content><![CDATA[<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p>持久性是事务的一个特性，然而只满足持久性却不一定能满足事务的特性。还是拿扣钱/加钱的例子讲。满足事务的一致性特征，则必须要么都不进行，要么都能成功。 解决方案从大方向上有两种：</p>
+<blockquote>
+<p>两阶段提交，分布式事务。</p>
+</blockquote>
+<blockquote>
+<p>本地事务，本地落地，补偿发送。</p>
+</blockquote>
+<p>分布式事务存在的最大问题是成本太高，两阶段提交协议，对于仲裁down机或者单点故障，几乎是一个无解的黑洞。对于交易密集型或者I/O密集型的应用，没有办法承受这么高的网络延迟，系统复杂性。 并且成熟的分布式事务一定构建与比较靠谱的商用DB和商用中间件上，成本也太高。 那如何使用本地事务解决分布式事务的问题呢？以本地和业务在一个数据库实例中建表为例子，与扣钱的业务操作同一个事务里，将消息插入本地数据库。如果消息入库失败，则业务回滚；如果消息入库成功，事务提交。 然后发送消息（注意这里可以实时发送，不需要等定时任务检出，以提高消息实时性）。以后的问题就是前文的最终一致性问题所提到的了，只要消息没有发送成功，就一直靠定时任务重试。 这里有一个关键的点，本地事务做的，是业务落地和消息落地的事务，而不是业务落地和RPC成功的事务。这里很多人容易混淆，如果是后者，无疑是事务嵌套RPC，是大忌，会有长事务死锁等各种风险。 而消息只要成功落地，很大程度上就没有丢失的风险（磁盘物理损坏除外）。而消息只要投递到服务端确认后本地才做删除，就完成了producer-&gt;broker的可靠投递，并且当消息存储异常时，业务也是可以回滚的。 本地事务存在两个最大的使用障碍：</p>
+<blockquote>
+<p>配置较为复杂，“绑架”业务方，必须本地数据库实例提供一个库表。</p>
+</blockquote>
+<blockquote>
+<p>对于消息延迟高敏感的业务不适用。</p>
+</blockquote>
+<p>话说回来，不是每个业务都需要强事务的。扣钱和加钱需要事务保证，但下单和生成短信却不需要事务，不能因为要求发短信的消息存储投递失败而要求下单业务回滚。所以，一个完整的消息队列应该定义清楚自己可以投递的消息类型，如事务型消息，本地非持久型消息，以及服务端不落地的非可靠消息等。对不同的业务场景做不同的选择。另外事务的使用应该尽量低成本、透明化，可以依托于现有的成熟框架，如Spring的声明式事务做扩展。业务方只需要使用@Transactional标签即可。</p>
+<h2 id="性能相关"><a href="#性能相关" class="headerlink" title="性能相关"></a>性能相关</h2><h3 id="异步、同步"><a href="#异步、同步" class="headerlink" title="异步、同步"></a>异步、同步</h3><p>首先澄清一个概念，异步，同步和oneway是三件事。异步，归根结底你还是需要关心结果的，但可能不是当时的时间点关心，可以用轮询或者回调等方式处理结果；同步是需要当时关心 的结果的；而oneway是发出去就不管死活的方式，这种对于某些完全对可靠性没有要求的场景还是适用的，但不是我们重点讨论的范畴。 回归来看，任何的RPC都是存在客户端异步与服务端异步的，而且是可以任意组合的：客户端同步对服务端异步，客户端异步对服务端异步，客户端同步对服务端同步，客户端异步对服务端同步。 对于客户端来说，同步与异步主要是拿到一个Result，还是Future(Listenable)的区别。实现方式可以是线程池，NIO或者其他事件机制，这里先不展开讲。 服务端异步可能稍微难理解一点，这个是需要RPC协议支持的。参考servlet 3.0规范，服务端可以吐一个future给客户端，并且在future done的时候通知客户端。 整个过程可以参考下面的代码：</p>
+<blockquote>
+<p>客户端同步服务端异步</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Future&lt;Result&gt; future = request(server);<span class="comment">//server立刻返回future</span></span><br><span class="line"><span class="keyword">synchronized</span>(future)&#123;</span><br><span class="line"><span class="keyword">while</span>(!future.isDone())&#123;</span><br><span class="line">   future.wait();<span class="comment">//server处理结束后会notify这个future，并修改isdone标志</span></span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> future.get();</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>客户端同步服务端同步</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Result result = request(server);</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>客户端异步服务端同步（使用线程池方式）</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Future&lt;Result&gt; future = executor.submit(<span class="keyword">new</span> Callable()&#123;<span class="keyword">public</span> <span class="keyword">void</span> call&lt;Result&gt;()&#123;</span><br><span class="line">    result = request(server);</span><br><span class="line">&#125;&#125;)</span><br><span class="line"><span class="keyword">return</span> future;</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>客户端异步服务端异步</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Future&lt;Result&gt; future = request(server);<span class="comment">//server立刻返回future</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> future</span><br></pre></td></tr></table></figure>
+<p>上面说了这么多，其实是想让大家脱离两个误区：</p>
+<ul>
+<li><p>RPC只有客户端能做异步，服务端不能。</p>
+</li>
+<li><p>异步只能通过线程池。</p>
+</li>
+</ul>
+<p>那么，服务端使用异步最大的好处是什么呢？说到底，是解放了线程和I/O。试想服务端有一堆I/O等待处理，如果每个请求都需要同步响应，每条消息都需要结果立刻返回，那么就几乎没法做I/O合并 （当然接口可以设计成batch的，但可能batch发过来的仍然数量较少）。而如果用异步的方式返回给客户端future，就可以有机会进行I/O的合并，把几个批次发过来的消息一起落地（这种合并对于MySQL等允许batch insert的数据库效果尤其明显），并且彻底释放了线程。不至于说来多少请求开多少线程，能够支持的并发量直线提高。 来看第二个误区，返回future的方式不一定只有线程池。换句话说，可以在线程池里面进行同步操作，也可以进行异步操作，也可以不使用线程池使用异步操作（NIO、事件）。 回到消息队列的议题上，我们当然不希望消息的发送阻塞主流程（前面提到了，server端如果使用异步模型，则可能因消息合并带来一定程度上的消息延迟），所以可以先使用线程池提交一个发送请求，主流程继续往下走。 但是线程池中的请求关心结果吗？Of course，必须等待服务端消息成功落地，才算是消息发送成功。所以这里的模型，准确地说事客户端半同步半异步（使用线程池不阻塞主流程，但线程池中的任务需要等待server端的返回），server端是纯异步。客户端的线程池wait在server端吐回的future上，直到server端处理完毕，才解除阻塞继续进行。 总结一句，同步能够保证结果，异步能够保证效率，要合理的结合才能做到最好的效率。</p>
+<h2 id="批量"><a href="#批量" class="headerlink" title="批量"></a>批量</h2><p>谈到批量就不得不提生产者消费者模型。但生产者消费者模型中最大的痛点是：消费者到底应该何时进行消费。大处着眼来看，消费动作都是事件驱动的。主要事件包括：</p>
+<ol>
+<li>攒够了一定数量。</li>
+<li>到达了一定时间。</li>
+<li>队列里有新的数据到来。</li>
+</ol>
+<p>对于及时性要求高的数据，可用采用方式3来完成，比如客户端向服务端投递数据。只要队列有数据，就把队列中的所有数据刷出，否则将自己挂起，等待新数据的到来。 在第一次把队列数据往外刷的过程中，又积攒了一部分数据，第二次又可以形成一个批量。伪代码如下:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Executor executor = Executors.newFixedThreadPool(<span class="number">4</span>);</span><br><span class="line"><span class="keyword">final</span> BlockingQueue&lt;Message&gt; queue = <span class="keyword">new</span> ArrayBlockingQueue&lt;&gt;();</span><br><span class="line"><span class="keyword">private</span> Runnable task = <span class="keyword">new</span> Runnable(&#123;<span class="comment">//这里由于共享队列，Runnable可以复用，故做成全局的</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">      List&lt;Message&gt; messages  = <span class="keyword">new</span> ArrayList&lt;&gt;(<span class="number">20</span>);</span><br><span class="line">      queue.drainTo(messages，<span class="number">20</span>);</span><br><span class="line">      doSend(messages);<span class="comment">//阻塞，在这个过程中会有新的消息到来，如果4个线程都占满，队列就有机会囤新的消息</span></span><br><span class="line">   &#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">send</span><span class="params">(Message message)</span></span>&#123;</span><br><span class="line">    queue.offer(message);</span><br><span class="line">    executor.submit(task)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种方式是消息延迟和批量的一个比较好的平衡，但优先响应低延迟。延迟的最高程度由上一次发送的等待时间决定。但可能造成的问题是发送过快的话批量的大小不够满足性能的极致。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Executor executor = Executors.newFixedThreadPool(<span class="number">4</span>);</span><br><span class="line"><span class="keyword">final</span> BlockingQueue&lt;Message&gt; queue = <span class="keyword">new</span> ArrayBlockingQueue&lt;&gt;();</span><br><span class="line"><span class="keyword">volatile</span> <span class="keyword">long</span> last = System.currentMills();</span><br><span class="line">Executors.newSingleThreadScheduledExecutor().submit(<span class="keyword">new</span> Runnable()&#123;</span><br><span class="line">   flush();</span><br><span class="line">&#125;，<span class="number">500</span>，<span class="number">500</span>，TimeUnits.MILLS);</span><br><span class="line"><span class="keyword">private</span> Runnable task = <span class="keyword">new</span> Runnable(&#123;<span class="comment">//这里由于共享队列，Runnable可以复用，顾做成全局的。</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">      List&lt;Message&gt; messages  = <span class="keyword">new</span> ArrayList&lt;&gt;(<span class="number">20</span>);</span><br><span class="line">      queue.drainTo(messages，<span class="number">20</span>);</span><br><span class="line">      doSend(messages);<span class="comment">//阻塞，在这个过程中会有新的消息到来，如果4个线程都占满，队列就有机会屯新的消息。</span></span><br><span class="line">   &#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">send</span><span class="params">(Message message)</span></span>&#123;</span><br><span class="line">    last = System.currentMills();</span><br><span class="line">    queue.offer(message);</span><br><span class="line">    flush();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">flush</span><span class="params">()</span></span>&#123;</span><br><span class="line"> <span class="keyword">if</span>(queue.size&gt;<span class="number">200</span>||System.currentMills()-last&gt;<span class="number">200</span>)&#123;</span><br><span class="line">       executor.submit(task)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>相反对于可以用适量的延迟来换取高性能的场景来说，用定时/定量二选一的方式可能会更为理想，既到达一定数量才发送，但如果数量一直达不到，也不能干等，有一个时间上限。 具体说来，在上文的submit之前，多判断一个时间和数量，并且Runnable内部维护一个定时器，避免没有新任务到来时旧的任务永远没有机会触发发送条件。对于server端的数据落地，使用这种方式就非常方便。</p>
+<p>最后啰嗦几句，曾经有人问我，为什么网络请求小包合并成大包会提高性能？主要原因有两个：</p>
+<ul>
+<li><p>减少无谓的请求头，如果你每个请求只有几字节，而头却有几十字节，无疑效率非常低下。</p>
+</li>
+<li><p>减少回复的ack包个数。把请求合并后，ack包数量必然减少，确认和重发的成本就会降低。</p>
+</li>
+</ul>
+<h3 id="push还是pull"><a href="#push还是pull" class="headerlink" title="push还是pull"></a>push还是pull</h3><p>上文提到的消息队列，大多是针对push模型的设计。现在市面上有很多经典的也比较成熟的pull模型的消息队列，如Kafka、MetaQ等。这跟JMS中传统的push方式有很大的区别，可谓另辟蹊径。 我们简要分析下push和pull模型各自存在的利弊。</p>
+<h4 id="慢消费"><a href="#慢消费" class="headerlink" title="慢消费"></a>慢消费</h4><p>慢消费无疑是push模型最大的致命伤，穿成流水线来看，如果消费者的速度比发送者的速度慢很多，势必造成消息在broker的堆积。假设这些消息都是有用的无法丢弃的，消息就要一直在broker端保存。当然这还不是最致命的，最致命的是broker给consumer推送一堆consumer无法处理的消息，consumer不是reject就是error，然后来回踢皮球。 反观pull模式，consumer可以按需消费，不用担心自己处理不了的消息来骚扰自己，而broker堆积消息也会相对简单，无需记录每一个要发送消息的状态，只需要维护所有消息的队列和偏移量就可以了。所以对于建立索引等慢消费，消息量有限且到来的速度不均匀的情况，pull模式比较合适。</p>
+<h3 id="消息延迟与忙等"><a href="#消息延迟与忙等" class="headerlink" title="消息延迟与忙等"></a>消息延迟与忙等</h3><p>这是pull模式最大的短板。由于主动权在消费方，消费方无法准确地决定何时去拉取最新的消息。如果一次pull取到消息了还可以继续去pull，如果没有pull取到则需要等待一段时间重新pull。 但等待多久就很难判定了。你可能会说，我可以有xx动态pull取时间调整算法，但问题的本质在于，有没有消息到来这件事情决定权不在消费方。也许1分钟内连续来了1000条消息，然后半个小时没有新消息产生， 可能你的算法算出下次最有可能到来的时间点是31分钟之后，或者60分钟之后，结果下条消息10分钟后到了，是不是很让人沮丧？ 当然也不是说延迟就没有解决方案了，业界较成熟的做法是从短时间开始（不会对broker有太大负担），然后指数级增长等待。比如开始等5ms，然后10ms，然后20ms，然后40ms……直到有消息到来，然后再回到5ms。 即使这样，依然存在延迟问题：假设40ms到80ms之间的50ms消息到来，消息就延迟了30ms，而且对于半个小时来一次的消息，这些开销就是白白浪费的。 在阿里的RocketMq里，有一种优化的做法-长轮询，来平衡推拉模型各自的缺点。基本思路是:消费者如果尝试拉取失败，不是直接return,而是把连接挂在那里wait,服务端如果有新的消息到来，把连接notify起来，这也是不错的思路。但海量的长连接block对系统的开销还是不容小觑的，还是要合理的评估时间间隔，给wait加一个时间上限比较好~</p>
+<h3 id="顺序消息"><a href="#顺序消息" class="headerlink" title="顺序消息"></a>顺序消息</h3><p>如果push模式的消息队列，支持分区，单分区只支持一个消费者消费，并且消费者只有确认一个消息消费后才能push送另外一个消息，还要发送者保证全局顺序唯一，听起来也能做顺序消息，但成本太高了，尤其是必须每个消息消费确认后才能发下一条消息，这对于本身堆积能力和慢消费就是瓶颈的push模式的消息队列，简直是一场灾难。 反观pull模式，如果想做到全局顺序消息，就相对容易很多：</p>
+<ol>
+<li>producer对应partition，并且单线程。</li>
+<li>consumer对应partition，消费确认（或批量确认），继续消费即可。</li>
+</ol>
+<p>所以对于日志push送这种最好全局有序，但允许出现小误差的场景，pull模式非常合适。如果你不想看到通篇乱套的日志~~ Anyway，需要顺序消息的场景还是比较有限的而且成本太高，请慎重考虑。</p>
+<p>本文从为何使用消息队列开始讲起，然后主要介绍了如何从零开始设计一个消息队列，包括RPC、事务、最终一致性、广播、消息确认等关键问题。并对消息队列的push、pull模型做了简要分析，最后从批量和异步角度，分析了消息队列性能优化的思路。 </p>
+]]></content>
+      <categories>
+        <category>MQ</category>
+      </categories>
+      <tags>
+        <tag>RabbitMQ</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>链表</title>
     <url>/2021/01/13/%E9%93%BE%E8%A1%A8/</url>
     <content><![CDATA[<h2 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h2><h3 id="单链表"><a href="#单链表" class="headerlink" title="单链表"></a>单链表</h3><p>单链表中的每个结点不仅包含值，还包含链接到下一个结点的引用字段。通过这种方式，单链表将所有结点按顺序组织起来。习惯于用头节点来代表整个单链表。</p>
@@ -2676,155 +2855,6 @@
       </tags>
   </entry>
   <entry>
-    <title>链表刷题总结（easy篇）</title>
-    <url>/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/</url>
-    <content><![CDATA[<h1 id="链表知识刷题总结（easy篇）"><a href="#链表知识刷题总结（easy篇）" class="headerlink" title="链表知识刷题总结（easy篇）"></a>链表知识刷题总结（easy篇）</h1><p>###1.返回链表的倒数第k个结点</p>
-<p>###题目描述：</p>
-<p>实现一种算法，找出单向链表中倒数第 k 个节点。返回该节点的值。</p>
-<p>注意：本题相对原题稍作改动</p>
-<p>示例：</p>
-<p>输入： 1-&gt;2-&gt;3-&gt;4-&gt;5 和 k = 2<br>输出： 4<br>说明：</p>
-<p>给定的 k 保证是有效的。</p>
-<h3 id="题解："><a href="#题解：" class="headerlink" title="题解："></a>题解：</h3><h4 id="题解一-双指针"><a href="#题解一-双指针" class="headerlink" title="题解一:双指针"></a>题解一:双指针</h4><p> 这题要求链表的倒数第k个节点，最简单的方式就是使用两个指针，第一个指针先移动k步，然后第二个指针再从头开始，这个时候这两个指针同时移动，当第一个指针到链表的末尾的时候，返回第二个指针即可</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">kthToLast</span><span class="params">(ListNode head, <span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">        ListNode first = head;</span><br><span class="line">    	ListNode second = head;</span><br><span class="line">    </span><br><span class="line">    	<span class="keyword">while</span>(k-- &gt;<span class="number">0</span>)&#123;</span><br><span class="line">            first = first.next;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="keyword">while</span>(first!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            first =  first.next;</span><br><span class="line">            second = second.next;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="keyword">return</span> second.val;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<p>####题解二：使用栈求解(一看到倒数某某元素，要先想到栈)</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">kthTolast</span><span class="params">(ListNode head , <span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">        Stack&lt;ListNode&gt; stack = <span class="keyword">new</span> stack&lt;&gt;();</span><br><span class="line">        <span class="comment">//链表结点压栈处理</span></span><br><span class="line">        <span class="keyword">while</span>(head!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            stack.push(head);</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//出栈串成新的链表</span></span><br><span class="line">        ListNode firstnode = stack.pop();</span><br><span class="line">        <span class="keyword">while</span>(--k&gt;<span class="number">0</span>)&#123;</span><br><span class="line">            ListNode temp = stack.pop();</span><br><span class="line">            temp.next = firstNode;     <span class="comment">//这一步是不必要的，除非要求返回最后一个到倒数第k个结点链表，需要从新连接构建</span></span><br><span class="line">            firstNode = temp;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> firstnode.val;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="2-删除中间结点"><a href="#2-删除中间结点" class="headerlink" title="2.删除中间结点"></a>2.删除中间结点</h3><h4 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h4><h4 id="题解：-1"><a href="#题解：-1" class="headerlink" title="题解："></a>题解：</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="3-合并两个有序列表"><a href="#3-合并两个有序列表" class="headerlink" title="3.合并两个有序列表"></a>3.合并两个有序列表</h3><h4 id="题目描述：-1"><a href="#题目描述：-1" class="headerlink" title="题目描述："></a>题目描述：</h4><p>将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。 </p>
-<p>示例 1：</p>
-<p><img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120112941925.png" alt="image-20210120112941925"></p>
-<p>输入：l1 = [1,2,4], l2 = [1,3,4]<br>输出：[1,1,2,3,4,4]<br>示例 2：</p>
-<p>输入：l1 = [], l2 = []<br>输出：[]<br>示例 3：</p>
-<p>输入：l1 = [], l2 = [0]<br>输出：[0]</p>
-<h4 id="题解：-2"><a href="#题解：-2" class="headerlink" title="题解："></a>题解：</h4><h5 id="题解一：递归"><a href="#题解一：递归" class="headerlink" title="题解一：递归"></a>题解一：递归</h5><p>思路</p>
-<p>我们可以如下递归地定义两个链表里的 merge 操作（忽略边界情况，比如空链表等）：<br>    <img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120113648210.png" alt="image-20210120113648210"></p>
-<p>也就是说，两个链表头部值较小的一个节点与剩下元素的 merge 操作结果合并。</p>
-<p>算法</p>
-<p>我们直接将以上递归过程建模，同时需要考虑边界情况。</p>
-<p>如果 l1 或者 l2 一开始就是空链表 ，那么没有任何操作需要合并，所以我们只需要返回非空链表。否则，我们要判断 l1 和 l2 哪一个链表的头节点的值更小，然后递归地决定下一个添加到结果里的节点。如果两个链表有一个为空，递归结束</p>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">mergeTwoLists</span><span class="params">(ListNode l1, ListNode l2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (l1 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> l2;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (l2 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> l1;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (l1.val &lt; l2.val) &#123;</span><br><span class="line">            l1.next = mergeTwoLists(l1.next, l2);</span><br><span class="line">            <span class="keyword">return</span> l1;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            l2.next = mergeTwoLists(l1, l2.next);</span><br><span class="line">            <span class="keyword">return</span> l2;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析："><a href="#复杂度分析：" class="headerlink" title="复杂度分析："></a>复杂度分析：</h5><h3 id="4-回文链表"><a href="#4-回文链表" class="headerlink" title="4.回文链表"></a>4.回文链表</h3><p>####题目描述</p>
-<h4 id="题解：-3"><a href="#题解：-3" class="headerlink" title="题解："></a>题解：</h4><p>#####题解一：将链表中的值复制到数组中在用双指针</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isPalindrome</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        List&lt;Interger&gt; vals = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//将链表中的值赋值到数组中</span></span><br><span class="line">        ListNode currentNode = head;</span><br><span class="line">        <span class="keyword">while</span>(currentNode != <span class="keyword">null</span>)&#123;</span><br><span class="line">            vals.add(currentNode.val);        <span class="comment">//复制的是currentNode的值，而不是其本身</span></span><br><span class="line">            currentNode = currentNode.next;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//使用双指针判断回文</span></span><br><span class="line">        <span class="keyword">int</span> front=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> back = vals.size()-<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(front&lt;back)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!vals.get(front).equals(vals.get(back)))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            front++;</span><br><span class="line">            back--;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析：-1"><a href="#复杂度分析：-1" class="headerlink" title="复杂度分析："></a>复杂度分析：</h5><p><img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120205633023.png" alt="image-20210120205633023"></p>
-<h5 id="题解二：递归"><a href="#题解二：递归" class="headerlink" title="题解二：递归"></a>题解二：递归</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>数据结构</category>
-      </categories>
-      <tags>
-        <tag>链表</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>优秀项目</title>
-    <url>/2021/03/11/%E4%BC%98%E7%A7%80%E9%A1%B9%E7%9B%AE/</url>
-    <content><![CDATA[<blockquote>
-<h2 id="litemall"><a href="#litemall" class="headerlink" title="litemall"></a>litemall</h2></blockquote>
-<p><a href="https://github.com/linlinjava/litemall">https://github.com/linlinjava/litemall</a></p>
-<p>Star: 15.5k</p>
-<p><img data-src="https://github.com/linlinjava/litemall/raw/master/doc/pics/readme/project-structure.png" alt="img"></p>
-<p>这是一个小商城系统。</p>
-<p>litemall = Spring Boot后端 + Vue管理员前端 + 微信小程序用户前端 + Vue用户移动端</p>
-<p>技术栈：Spring Boot、VUE、微信小程序</p>
-<blockquote>
-<h2 id="Head-First-Design-Patterns"><a href="#Head-First-Design-Patterns" class="headerlink" title="Head-First-Design-Patterns"></a>Head-First-Design-Patterns</h2></blockquote>
-<p><a href="https://github.com/bethrobson/Head-First-Design-Patterns">https://github.com/bethrobson/Head-First-Design-Patterns</a></p>
-<p>Star: 2.2k</p>
-<p>《Head First Design Patterns》书籍的示例代码，与2014年7月发布的书籍对应，你可以载代码并从命令行编译并运行，或者将代码加载到 Eclipse 中的项目中。</p>
-<blockquote>
-<p>##Mall</p>
-</blockquote>
-<p><a href="https://github.com/macrozheng/mall">https://github.com/macrozheng/mall</a></p>
-<p>Star: 47k</p>
-<img data-src="/2021/03/11/%E4%BC%98%E7%A7%80%E9%A1%B9%E7%9B%AE/01.png" class>
-
-<p>mall致力于打造一个完整的电商系统，采用现阶段流行技术实现。</p>
-<p>mall包括前台商城系统及后台管理系统，基于SpringBoot+MyBatis实现。</p>
-<p>前台商城系统包含首页门户、商品推荐、商品搜索、商品展示、购物车、订单流程、会员中心、客户服务、帮助中心等模块。</p>
-<p>后台管理系统包含商品管理、订单管理、会员管理、促销管理、运营管理、内容管理、统计报表、财务管理、权限管理、设置等模块。</p>
-<blockquote>
-<h2 id="miaosha"><a href="#miaosha" class="headerlink" title="miaosha"></a>miaosha</h2></blockquote>
-<p><a href="https://github.com/qiurunze123/miaosha">https://github.com/qiurunze123/miaosha</a></p>
-<p>Star: 19.3k</p>
-<img data-src="/2021/03/11/%E4%BC%98%E7%A7%80%E9%A1%B9%E7%9B%AE/02.png" class>
-
-<p>miaosha = 秒杀，秒杀系统设计与实现</p>
-<p>这个项目是对高并发大流量如何进行秒杀架构，而做的一个系统整理。</p>
-<blockquote>
-<h2 id="vhr"><a href="#vhr" class="headerlink" title="vhr"></a>vhr</h2></blockquote>
-<p><a href="https://github.com/lenve/vhr">https://github.com/lenve/vhr</a></p>
-<p>Star: 20.5k</p>
-<img data-src="/2021/03/11/%E4%BC%98%E7%A7%80%E9%A1%B9%E7%9B%AE/03.png" class>
-
-
-
-<blockquote>
-<h2 id="spring-boot-demo"><a href="#spring-boot-demo" class="headerlink" title="spring-boot-demo"></a>spring-boot-demo</h2></blockquote>
-<p><a href="https://github.com/xkcoding/spring-boot-demo">https://github.com/xkcoding/spring-boot-demo</a></p>
-<p>Star: 20.8k</p>
-<p>spring boot demo 是一个用来深度学习并实战 spring boot 的项目，目前总共包含65个集成demo，已经完成53个。</p>
-<p>这个项目已成功集成 actuator(监控)、admin(可视化监控)、logback(日志)、aopLog(通过AOP记录web请求日志)、统一异常处理(json级别和页面级别)、freemarker(模板引擎)、Mybatis、redis、zookeeper、RabbitMQ、Kafka等。</p>
-<blockquote>
-<h2 id="eladmin"><a href="#eladmin" class="headerlink" title="eladmin"></a>eladmin</h2></blockquote>
-<p><a href="https://github.com/elunez/eladmin">https://github.com/elunez/eladmin</a></p>
-<p>Star: 14.6k</p>
-<p>这是一个基于 Spring Boot、Jpa、Spring Security、redis、Vue 的前后端分离的后台管理系统。</p>
-<p>项目采用分模块开发方式，权限控制采用 RBAC，支持数据字典与数据权限管理，支持一键生成前后端代码，支持动态路由。</p>
-<p>系统功能：用户管理、角色管理、菜单管理、部门管理、岗位管理、SQL监控、定时任务、邮件工具、七牛云存储、支付宝支付、服务监控、运维管理等。</p>
-<blockquote>
-<h2 id="99-problems"><a href="#99-problems" class="headerlink" title="99-problems"></a>99-problems</h2></blockquote>
-<p><a href="https://github.com/shekhargulati/99-problems">https://github.com/shekhargulati/99-problems</a></p>
-<p>Star: 3.3k</p>
-<p>光看名字就能对其功能了解一二，它的作用是帮助大家磨练逻辑编程中的具体技能。大家可以选择利用Java 8、Scala 或者 Haskell 进行问题解决，并最终找到最精致的解决办法。</p>
-<p>如果大家喜爱解题，其中还提供多种不同层级的难度供各位选择。另外，如果大家将全部 99 道难题解决掉，则可进一步冲击Java Deathmatch。如果大家被难住了，请点击此处查看难题——但请注意，认真思考之后再参阅比较好。</p>
-<blockquote>
-<h2 id="Dex"><a href="#Dex" class="headerlink" title="Dex"></a>Dex</h2></blockquote>
-<p><a href="https://github.com/PatMartin/Dex">https://github.com/PatMartin/Dex</a></p>
-<p>Star: 1.2k</p>
-<p>如果大家希望通过酷炫的方式进行数据交互，那么 Dex 绝对不容错过。它能够帮助我们提取、转换及可视化数据，同时附带预测功能。大家可以将可视化结果发布为 3D 或者其它 HTML 变量形式。</p>
-<p>Dex 允许我们生成超过 50 种不同的可视化模式，其中包括世界地图、时间表、网络可视化等。</p>
- <img data-src="/2021/03/11/%E4%BC%98%E7%A7%80%E9%A1%B9%E7%9B%AE/04.png" class>
-
-<img data-src="/2021/03/11/%E4%BC%98%E7%A7%80%E9%A1%B9%E7%9B%AE/05.png" class>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>项目</category>
-      </categories>
-      <tags>
-        <tag>优秀项目</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>阿里云ECS部署服务器</title>
     <url>/2021/01/22/%E9%98%BF%E9%87%8C%E4%BA%91ECS%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
     <content><![CDATA[<h2 id="阿里云ECS部署Tomcat、Nginx服务器"><a href="#阿里云ECS部署Tomcat、Nginx服务器" class="headerlink" title="阿里云ECS部署Tomcat、Nginx服务器"></a>阿里云ECS部署Tomcat、Nginx服务器</h2><h3 id="Nginx服务器"><a href="#Nginx服务器" class="headerlink" title="Nginx服务器"></a>Nginx服务器</h3><p>####一、简介</p>
@@ -2886,6 +2916,61 @@
       </categories>
       <tags>
         <tag>阿里云ECS部署</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>链表刷题总结（easy篇）</title>
+    <url>/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<h1 id="链表知识刷题总结（easy篇）"><a href="#链表知识刷题总结（easy篇）" class="headerlink" title="链表知识刷题总结（easy篇）"></a>链表知识刷题总结（easy篇）</h1><p>###1.返回链表的倒数第k个结点</p>
+<p>###题目描述：</p>
+<p>实现一种算法，找出单向链表中倒数第 k 个节点。返回该节点的值。</p>
+<p>注意：本题相对原题稍作改动</p>
+<p>示例：</p>
+<p>输入： 1-&gt;2-&gt;3-&gt;4-&gt;5 和 k = 2<br>输出： 4<br>说明：</p>
+<p>给定的 k 保证是有效的。</p>
+<h3 id="题解："><a href="#题解：" class="headerlink" title="题解："></a>题解：</h3><h4 id="题解一-双指针"><a href="#题解一-双指针" class="headerlink" title="题解一:双指针"></a>题解一:双指针</h4><p> 这题要求链表的倒数第k个节点，最简单的方式就是使用两个指针，第一个指针先移动k步，然后第二个指针再从头开始，这个时候这两个指针同时移动，当第一个指针到链表的末尾的时候，返回第二个指针即可</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">kthToLast</span><span class="params">(ListNode head, <span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">        ListNode first = head;</span><br><span class="line">    	ListNode second = head;</span><br><span class="line">    </span><br><span class="line">    	<span class="keyword">while</span>(k-- &gt;<span class="number">0</span>)&#123;</span><br><span class="line">            first = first.next;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="keyword">while</span>(first!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            first =  first.next;</span><br><span class="line">            second = second.next;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="keyword">return</span> second.val;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>####题解二：使用栈求解(一看到倒数某某元素，要先想到栈)</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">kthTolast</span><span class="params">(ListNode head , <span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">        Stack&lt;ListNode&gt; stack = <span class="keyword">new</span> stack&lt;&gt;();</span><br><span class="line">        <span class="comment">//链表结点压栈处理</span></span><br><span class="line">        <span class="keyword">while</span>(head!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            stack.push(head);</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//出栈串成新的链表</span></span><br><span class="line">        ListNode firstnode = stack.pop();</span><br><span class="line">        <span class="keyword">while</span>(--k&gt;<span class="number">0</span>)&#123;</span><br><span class="line">            ListNode temp = stack.pop();</span><br><span class="line">            temp.next = firstNode;     <span class="comment">//这一步是不必要的，除非要求返回最后一个到倒数第k个结点链表，需要从新连接构建</span></span><br><span class="line">            firstNode = temp;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> firstnode.val;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="2-删除中间结点"><a href="#2-删除中间结点" class="headerlink" title="2.删除中间结点"></a>2.删除中间结点</h3><h4 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h4><h4 id="题解：-1"><a href="#题解：-1" class="headerlink" title="题解："></a>题解：</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="3-合并两个有序列表"><a href="#3-合并两个有序列表" class="headerlink" title="3.合并两个有序列表"></a>3.合并两个有序列表</h3><h4 id="题目描述：-1"><a href="#题目描述：-1" class="headerlink" title="题目描述："></a>题目描述：</h4><p>将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。 </p>
+<p>示例 1：</p>
+<p><img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120112941925.png" alt="image-20210120112941925"></p>
+<p>输入：l1 = [1,2,4], l2 = [1,3,4]<br>输出：[1,1,2,3,4,4]<br>示例 2：</p>
+<p>输入：l1 = [], l2 = []<br>输出：[]<br>示例 3：</p>
+<p>输入：l1 = [], l2 = [0]<br>输出：[0]</p>
+<h4 id="题解：-2"><a href="#题解：-2" class="headerlink" title="题解："></a>题解：</h4><h5 id="题解一：递归"><a href="#题解一：递归" class="headerlink" title="题解一：递归"></a>题解一：递归</h5><p>思路</p>
+<p>我们可以如下递归地定义两个链表里的 merge 操作（忽略边界情况，比如空链表等）：<br>    <img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120113648210.png" alt="image-20210120113648210"></p>
+<p>也就是说，两个链表头部值较小的一个节点与剩下元素的 merge 操作结果合并。</p>
+<p>算法</p>
+<p>我们直接将以上递归过程建模，同时需要考虑边界情况。</p>
+<p>如果 l1 或者 l2 一开始就是空链表 ，那么没有任何操作需要合并，所以我们只需要返回非空链表。否则，我们要判断 l1 和 l2 哪一个链表的头节点的值更小，然后递归地决定下一个添加到结果里的节点。如果两个链表有一个为空，递归结束</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">mergeTwoLists</span><span class="params">(ListNode l1, ListNode l2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (l1 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> l2;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (l2 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> l1;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (l1.val &lt; l2.val) &#123;</span><br><span class="line">            l1.next = mergeTwoLists(l1.next, l2);</span><br><span class="line">            <span class="keyword">return</span> l1;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            l2.next = mergeTwoLists(l1, l2.next);</span><br><span class="line">            <span class="keyword">return</span> l2;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析："><a href="#复杂度分析：" class="headerlink" title="复杂度分析："></a>复杂度分析：</h5><h3 id="4-回文链表"><a href="#4-回文链表" class="headerlink" title="4.回文链表"></a>4.回文链表</h3><p>####题目描述</p>
+<h4 id="题解：-3"><a href="#题解：-3" class="headerlink" title="题解："></a>题解：</h4><p>#####题解一：将链表中的值复制到数组中在用双指针</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isPalindrome</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        List&lt;Interger&gt; vals = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//将链表中的值赋值到数组中</span></span><br><span class="line">        ListNode currentNode = head;</span><br><span class="line">        <span class="keyword">while</span>(currentNode != <span class="keyword">null</span>)&#123;</span><br><span class="line">            vals.add(currentNode.val);        <span class="comment">//复制的是currentNode的值，而不是其本身</span></span><br><span class="line">            currentNode = currentNode.next;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//使用双指针判断回文</span></span><br><span class="line">        <span class="keyword">int</span> front=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> back = vals.size()-<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(front&lt;back)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!vals.get(front).equals(vals.get(back)))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            front++;</span><br><span class="line">            back--;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析：-1"><a href="#复杂度分析：-1" class="headerlink" title="复杂度分析："></a>复杂度分析：</h5><p><img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120205633023.png" alt="image-20210120205633023"></p>
+<h5 id="题解二：递归"><a href="#题解二：递归" class="headerlink" title="题解二：递归"></a>题解二：递归</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>链表</tag>
       </tags>
   </entry>
   <entry>
