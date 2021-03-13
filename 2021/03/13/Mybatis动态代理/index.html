@@ -21,18 +21,29 @@
     var CONFIG = {"hostname":"www.mindmaster.top","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="The world favors the underdog,and I would be the bad guy">
+  <meta name="description" content="对Mybatis使用动态代理技术的总结">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mybatis动态代理">
+<meta property="og:title" content="Mybatis动态代理与传参">
 <meta property="og:url" content="https://www.mindmaster.top/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/index.html">
 <meta property="og:site_name" content="一只小码农">
-<meta property="og:description" content="The world favors the underdog,and I would be the bad guy">
+<meta property="og:description" content="对Mybatis使用动态代理技术的总结">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/01.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/02.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/03.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/04.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/05.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/06.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/07.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/08.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/09.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/10.png">
 <meta property="article:published_time" content="2021-03-13T15:16:45.000Z">
-<meta property="article:modified_time" content="2021-03-13T07:16:45.804Z">
+<meta property="article:modified_time" content="2021-03-13T09:03:31.350Z">
 <meta property="article:author" content="邢浩东">
-<meta property="article:tag" content="个人博客">
+<meta property="article:tag" content="Mybatis">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.mindmaster.top/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/01.png">
 
 <link rel="canonical" href="https://www.mindmaster.top/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/">
 
@@ -47,7 +58,7 @@
   };
 </script>
 
-  <title>Mybatis动态代理 | 一只小码农</title>
+  <title>Mybatis动态代理与传参 | 一只小码农</title>
   
 
 
@@ -138,7 +149,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">54</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">55</span></a>
 
   </li>
         <li class="menu-item menu-item-movies">
@@ -238,7 +249,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Mybatis动态代理
+          Mybatis动态代理与传参
         </h1>
 
         <div class="post-meta">
@@ -249,7 +260,16 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2021-03-13 15:16:45 / 修改时间：07:16:45" itemprop="dateCreated datePublished" datetime="2021-03-13T15:16:45Z">2021-03-13</time>
+              <time title="创建时间：2021-03-13 15:16:45 / 修改时间：09:03:31" itemprop="dateCreated datePublished" datetime="2021-03-13T15:16:45Z">2021-03-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Mybatis%E6%A1%86%E6%9E%B6/" itemprop="url" rel="index"><span itemprop="name">Mybatis框架</span></a>
+                </span>
             </span>
 
           
@@ -279,15 +299,16 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>0</span>
+              <span>5.4k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>5 分钟</span>
             </span>
+            <div class="post-description">对Mybatis使用动态代理技术的总结</div>
 
         </div>
       </header>
@@ -298,13 +319,195 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <h2 id="Mybatis动态代理实现CURD"><a href="#Mybatis动态代理实现CURD" class="headerlink" title="Mybatis动态代理实现CURD"></a>Mybatis动态代理实现CURD</h2><h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><blockquote>
+<p>去掉Dao接口的实现类</p>
+</blockquote>
+ <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/01.png" class>
+
+<blockquote>
+<p>getMapper获取代理对象</p>
+</blockquote>
+<p>只需调用 SqlSession 的 getMapper()方法，即可获取指定接口的实现类对象。该方法的参数为指定 Dao 接口类的 class 值。(<strong>反射原理</strong>)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SqlSession session = factory.openSession();</span><br><span class="line">StudentDao dao = session.getMapper(StudentDao.class);</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用工具类获取session</span></span><br><span class="line">StudentDao studentDao =</span><br><span class="line">MyBatisUtil.getSqlSession().getMapper(StudentDao.class);</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>使用Dao代理对象方法执行SQL语句</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//s所有的方法必须都在StudentDao接口中有所定义</span></span><br><span class="line"><span class="comment">//select 方法:</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelect</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="keyword">final</span> List&lt;Student&gt; studentList = studentDao.selectStudents();</span><br><span class="line">     studentList.forEach( stu -&gt; System.out.println(stu));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//insert 方法:</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testInsert</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     Student student = <span class="keyword">new</span> Student();</span><br><span class="line">     student.setId(<span class="number">1006</span>);</span><br><span class="line">     student.setName(<span class="string">&quot;林浩&quot;</span>);</span><br><span class="line">     student.setEmail(<span class="string">&quot;linhao@163.com&quot;</span>);</span><br><span class="line">     student.setAge(<span class="number">26</span>);</span><br><span class="line">     <span class="keyword">int</span> nums = studentDao.insertStudent(student);</span><br><span class="line">     System.out.println(<span class="string">&quot;使用 Dao 添加数据:&quot;</span>+nums);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//update 方法</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testUpdate</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     Student student = <span class="keyword">new</span> Student();</span><br><span class="line">     student.setId(<span class="number">1006</span>);</span><br><span class="line">     student.setAge(<span class="number">28</span>);</span><br><span class="line">     <span class="keyword">int</span> nums = studentDao.updateStudent(student);</span><br><span class="line">     System.out.println(<span class="string">&quot;使用 Dao 修改数据:&quot;</span>+nums);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//delete 方法</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testDelete</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="keyword">int</span> nums = studentDao.deleteStudent(<span class="number">1006</span>);</span><br><span class="line">     System.out.println(<span class="string">&quot;使用 Dao 修改数据:&quot;</span>+nums);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="基于动态代理的原理分析"><a href="#基于动态代理的原理分析" class="headerlink" title="基于动态代理的原理分析"></a>基于动态代理的原理分析</h4><img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/02.png" class>
+
+
+
+<blockquote>
+<p>MapperProxy类定义</p>
+</blockquote>
+ <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/03.png" class>
+
+<blockquote>
+<p>invoke方法</p>
+</blockquote>
+ <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/04.png" class>
+
+
+
+<blockquote>
+<p>重点方法</p>
+</blockquote>
+ <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/05.png" class>
+
+
+
+
+
+<h2 id="深入理解参数"><a href="#深入理解参数" class="headerlink" title="深入理解参数"></a>深入理解参数</h2><blockquote>
+<p>parameterType</p>
+</blockquote>
+<p>parameterType: 接口中方法参数的类型， 值是类型的完全限定名或别名。这个属性是可选的，因为 MyBatis 可以推断出具体传入语句的参数，默认值为未设置（unset）。接口中方法的参数从 java 代码传入到 mapper 文件的 sql 语句。</p>
+<p>支持传入参数的类型与别名映射如表所示：</p>
+ <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/06.png" class>
+
+
+
+<p> <select>、<insert>、<update>、<delete>都可以使用parameterType指定类型</delete></update></insert></select></p>
+  <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/07.png" class>
+
+
+
+<h3 id="Mybatis传递参数"><a href="#Mybatis传递参数" class="headerlink" title="Mybatis传递参数"></a>Mybatis传递参数</h3><h4 id="一个简单参数"><a href="#一个简单参数" class="headerlink" title="一个简单参数"></a>一个简单参数</h4><p>Dao 接口中方法的参数只有一个简单类型（java 基本类型和 String），占位符 #{ 任意字符 }，和方法的参数名无关。</p>
+<blockquote>
+<p>接口方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Student <span class="title">selectById</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>mapper文件</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;select id=<span class="string">&quot;selectById&quot;</span> resultType=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span><br><span class="line"> select id,name,email,age from student where id=#&#123;studentId&#125;</span><br><span class="line">&lt;/select&gt;</span><br><span class="line">#&#123;studentId&#125; , studentId 是自定义的变量名称，和方法参数名无关。#表示占位符</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>测试方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectById</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">//传入了一个参数</span></span><br><span class="line">    Student student = studentDao.selectById(<span class="number">1005</span>);</span><br><span class="line">    System.out.println(<span class="string">&quot;查询 id 是 1005 的学生：&quot;</span>+student);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="多个参数"><a href="#多个参数" class="headerlink" title="多个参数"></a>多个参数</h3><h4 id="使用-Param"><a href="#使用-Param" class="headerlink" title="使用@Param"></a>使用@Param</h4><p>当 Dao 接口方法多个参数，需要通过名称使用参数。在方法形参前面加入@Param(“自定义参数名”)， mapper 文件使用#{自定义参数名}。</p>
+<ul>
+<li>接口方法：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">List <span class="title">selectMultiParam</span><span class="params">(<span class="meta">@Param(&quot;personName&quot;)</span> String name, <span class="meta">@Param(&quot;personAge&quot;)</span> <span class="keyword">int</span> age)</span></span>; </span><br></pre></td></tr></table></figure>
+
+
+<ul>
+<li><p>mapper 文件： </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select id,name,email,age from student where name=#&#123;personName&#125; or age =#&#123;personAge&#125;</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span> </span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectMultiParam</span><span class="params">()</span></span>&#123; </span><br><span class="line">    List stuList = studentDao.selectMultiParam(<span class="string">&quot;李力&quot;</span>,<span class="number">20</span>); 					stuList.forEach( stu -&gt; System.out.println(stu));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<h4 id="多个参数–适用对象"><a href="#多个参数–适用对象" class="headerlink" title="多个参数–适用对象"></a>多个参数–适用对象</h4><p>使用 java 对象传递参数， java 的属性值就是 sql 需要的参数值。 每一个属性就是一个参数。 语法格式： #{ property,javaType=java 中数据类型名,jdbcType=数据类型名称 } javaType, jdbcType 的类型 MyBatis 可以检测出来，一般不需要设置。常用格式 #{ property }</p>
+ <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/08.png" class>
+
+<blockquote>
+<p>创建保存参数值的对象QueryParam</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.bjpowernode.vo;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">QueryParam</span> </span>&#123;</span><br><span class="line"> <span class="keyword">private</span> String queryName;</span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">int</span> queryAge;</span><br><span class="line"> <span class="comment">//set ，get 方法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>接口方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">List&lt;Student&gt; <span class="title">selectMultiObject</span><span class="params">(QueryParam queryParam)</span></span>;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>mapper文件—-必须保证和对象的属性名相同</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;select id=<span class="string">&quot;selectMultiObject&quot;</span> resultType=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span><br><span class="line"> select id,name,email,age from student where name=#&#123;queryName&#125; or age=#&#123;queryAge&#125;</span><br><span class="line">&lt;/select</span><br></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;select id=<span class="string">&quot;selectMultiObject&quot;</span> resultType=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span><br><span class="line"> select id,name,email,age from student</span><br><span class="line"> where name=#&#123;queryName,javaType=string,jdbcType=VARCHAR&#125;</span><br><span class="line"> or age =#&#123;queryAge,javaType=int,jdbcType=INTEGER&#125;</span><br><span class="line">&lt;/select&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>测试方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">selectMultiObject</span><span class="params">()</span></span>&#123;</span><br><span class="line">     QueryParam qp = <span class="keyword">new</span> QueryParam();</span><br><span class="line">     qp.setQueryName(<span class="string">&quot;李力&quot;</span>);</span><br><span class="line">     qp.setQueryAge(<span class="number">20</span>);</span><br><span class="line">     List&lt;Student&gt; stuList = studentDao.selectMultiObject(qp);</span><br><span class="line">     stuList.forEach( stu -&gt; System.out.println(stu));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="多个参数–按照位置"><a href="#多个参数–按照位置" class="headerlink" title="多个参数–按照位置"></a>多个参数–按照位置</h4><p>参数位置从 0 开始， 引用参数语法 #{ arg 位置 } ， 第一个参数是#{arg0}, 第二个是#{arg1} 注意：mybatis-3.3 版本和之前的版本使用#{0},#{1}方式， 从 mybatis3.4 开始使用#{arg0}方式&gt;。</p>
+<blockquote>
+<p>接口方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">List&lt;Student&gt; <span class="title">selectByNameAndAge</span><span class="params">(String name,<span class="keyword">int</span> age)</span></span>;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>mapper文件</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectByNameAndAge&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span></span><br><span class="line">	 select id,name,email,age from student where name=#&#123;arg0&#125; or age =#&#123;arg1&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>测试方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectByNameAndAge</span><span class="params">()</span></span>&#123;</span><br><span class="line">     <span class="comment">//按位置参数</span></span><br><span class="line">     List&lt;Student&gt; stuList = studentDao.selectByNameAndAge(<span class="string">&quot;李力&quot;</span>,<span class="number">20</span>);</span><br><span class="line">     stuList.forEach( stu -&gt; System.out.println(stu));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="多个参数–使用Map"><a href="#多个参数–使用Map" class="headerlink" title="多个参数–使用Map"></a>多个参数–使用Map</h4><p>Map 集合可以存储多个值，使用Map向 mapper 文件一次传入多个参数。Map 集合使用 String的 key， Object 类型的值存储参数。 mapper 文件使用 # { key } 引用参数值。</p>
+<blockquote>
+<p>接口方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">List&lt;Student&gt; <span class="title">selectMultiMap</span><span class="params">(Map&lt;String,Object&gt; map)</span></span>;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>mapper文件</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectMultiMap&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span></span><br><span class="line">	 select id,name,email,age from student where name=#&#123;myname&#125; or age =#&#123;myage&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line">//通过key来传递参数</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>测试方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectMultiMap</span><span class="params">()</span></span>&#123;</span><br><span class="line">     Map&lt;String,Object&gt; data = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">     data.put(<span class="string">&quot;myname&quot;</span>,<span class="string">&quot;李力&quot;</span>);<span class="comment">// #&#123;myname&#125;</span></span><br><span class="line">     data.put(<span class="string">&quot;myage&quot;</span>,<span class="number">20</span>); <span class="comment">// #&#123;myage&#125;</span></span><br><span class="line">     List&lt;Student&gt; stuList = studentDao.selectMultiMap(data);</span><br><span class="line">     stuList.forEach( stu -&gt; System.out.println(stu));</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//存储参数的类型是Object</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="占位符-和"><a href="#占位符-和" class="headerlink" title="占位符#和$"></a>占位符#和$</h3><h4 id><a href="#" class="headerlink" title></a></h4><p>#：占位符，告诉 mybatis 使用实际的参数值代替。并使用 PrepareStatement 对象执行 sql 语句, #{…}代替 sql 语句的“?”。这样做更安全，更迅速，通常也是首选做法，</p>
+<blockquote>
+<p>mapper文件</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectById&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span></span><br><span class="line">	 select id,name,email,age from student where id=#&#123;studentId&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>转换为Mybatis的执行是：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String <span class="keyword">sql</span><span class="operator">=</span>” <span class="keyword">select</span> id,name,email,age <span class="keyword">from</span> student <span class="keyword">where</span> id<span class="operator">=</span>?”;</span><br><span class="line">PreparedStatement ps <span class="operator">=</span> conn.prepareStatement(<span class="keyword">sql</span>);</span><br><span class="line">ps.setInt(<span class="number">1</span>,<span class="number">1005</span>);</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="-1"><a href="#-1" class="headerlink" title="$"></a>$</h4><p> $ 字符串替换，告诉 mybatis 使用$包含的“字符串”替换所在位置。使用 Statement 把 sql 语句和${}的 内容连接起来。主要用在替换表名，列名，不同列排序等操作。</p>
+<p><strong>因为存在拼接的操作，所以可能会存在SQL注入的安全隐患</strong></p>
+ <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/09.png" class>
+
+ <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/10.png" class>
+
+
+
+
+
+
+
+
+
+
+
+
     </div>
 
     
     
     
       
+  <div class="popular-posts-header">相关文章推荐</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2021\02\25\Mybatis框架\" rel="bookmark">Mybatis框架概述</a></div>
+        <div class="popular-posts-excerpt"><p>对Mybatis框架第一阶段学习的总结</p></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2021\02\25\Mybatis框架-1\" rel="bookmark">Mybatis框架</a></div>
+        <div class="popular-posts-excerpt"><p>Mybatis入门案例</p></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2021\03\07\Mybatis框架基础知识补充\" rel="bookmark">Mybatis入门案例知识补充</a></div>
+        <div class="popular-posts-excerpt"><p>对Mybatis入门案例知识的dig</p></div>
+    </li>
+  </ul>
 
         <div class="reward-container">
   <div>谢谢你的支持哦，继续加油.</div>
@@ -335,7 +538,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://www.mindmaster.top/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/" title="Mybatis动态代理">https://www.mindmaster.top/2021/03/13/Mybatis动态代理/</a>
+    <a href="https://www.mindmaster.top/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/" title="Mybatis动态代理与传参">https://www.mindmaster.top/2021/03/13/Mybatis动态代理/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-%E9%82%A2%E6%B5%A9%E4%B8%9C/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-邢浩东</a> 许可协议。转载请注明出处！
@@ -345,6 +548,9 @@
 
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Mybatis/" rel="tag"># Mybatis</a>
+          </div>
 
         
 
@@ -355,7 +561,10 @@
     <a href="/2021/03/13/%E8%AE%BE%E8%AE%A1%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E9%83%A8%E5%88%86/" rel="prev" title="设计消息队列-->2">
       <i class="fa fa-chevron-left"></i> 设计消息队列-->2
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2021/03/13/XML%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/" rel="next" title="XML配置文件详解">
+      XML配置文件详解 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -415,6 +624,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E5%AE%9E%E7%8E%B0CURD"><span class="nav-number">1.</span> <span class="nav-text">Mybatis动态代理实现CURD</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4"><span class="nav-number">1.1.</span> <span class="nav-text">步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E7%9A%84%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90"><span class="nav-number">1.1.1.</span> <span class="nav-text">基于动态代理的原理分析</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%8F%82%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">深入理解参数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Mybatis%E4%BC%A0%E9%80%92%E5%8F%82%E6%95%B0"><span class="nav-number">2.1.</span> <span class="nav-text">Mybatis传递参数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E5%8F%82%E6%95%B0"><span class="nav-number">2.1.1.</span> <span class="nav-text">一个简单参数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E4%B8%AA%E5%8F%82%E6%95%B0"><span class="nav-number">2.2.</span> <span class="nav-text">多个参数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-Param"><span class="nav-number">2.2.1.</span> <span class="nav-text">使用@Param</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E4%B8%AA%E5%8F%82%E6%95%B0%E2%80%93%E9%80%82%E7%94%A8%E5%AF%B9%E8%B1%A1"><span class="nav-number">2.2.2.</span> <span class="nav-text">多个参数–适用对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E4%B8%AA%E5%8F%82%E6%95%B0%E2%80%93%E6%8C%89%E7%85%A7%E4%BD%8D%E7%BD%AE"><span class="nav-number">2.2.3.</span> <span class="nav-text">多个参数–按照位置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E4%B8%AA%E5%8F%82%E6%95%B0%E2%80%93%E4%BD%BF%E7%94%A8Map"><span class="nav-number">2.2.4.</span> <span class="nav-text">多个参数–使用Map</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%A0%E4%BD%8D%E7%AC%A6-%E5%92%8C"><span class="nav-number">2.3.</span> <span class="nav-text">占位符#和$</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link"><span class="nav-number">2.3.1.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#-1"><span class="nav-number">2.3.2.</span> <span class="nav-text">$</span></a></li></ol></li></ol></li></ol></div>
 
       </div>
       <!--/noindex-->
@@ -431,7 +641,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">54</span>
+          <span class="site-state-item-count">55</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -549,13 +759,13 @@ setInterval(function(){
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">152k</span>
+    <span title="站点总字数">158k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">2:19</span>
+    <span title="站点阅读时长">2:24</span>
 </div>
 
 

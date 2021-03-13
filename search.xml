@@ -12,6 +12,17 @@
       </tags>
   </entry>
   <entry>
+    <title>Cookie</title>
+    <url>/2021/02/25/Cookie/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Java web</category>
+      </categories>
+      <tags>
+        <tag>Cookie</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Filter</title>
     <url>/2021/02/25/Filter/</url>
     <content><![CDATA[]]></content>
@@ -26,17 +37,6 @@
     <title>HTTP代理</title>
     <url>/2021/02/03/HTTP%E4%BB%A3%E7%90%86/</url>
     <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>Cookie</title>
-    <url>/2021/02/25/Cookie/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>Java web</category>
-      </categories>
-      <tags>
-        <tag>Cookie</tag>
-      </tags>
   </entry>
   <entry>
     <title>HTTP缓存</title>
@@ -62,53 +62,6 @@
       </categories>
       <tags>
         <tag>HTTP</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>InnoDB存储引擎</title>
-    <url>/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
-    <content><![CDATA[<h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
-<p>InnoDB存储引擎有多个内存块，这些内存块组成了一个大的内存池</p>
-<p>后台线程的主要作用就是负责刷新内存池中的数据，保证缓存池中的内存缓存的是最近的数据。此外，还将已经修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下，InnoDB可以恢复运行到最佳状态。</p>
-<h4 id="后台线程（InnDB是一个多线程模型"><a href="#后台线程（InnDB是一个多线程模型" class="headerlink" title="后台线程（InnDB是一个多线程模型)"></a>后台线程（InnDB是一个多线程模型)</h4><p>#####Master Thread</p>
-<p><strong>作用：</strong></p>
-<p>​    一个非常核心的后台进程，负责将缓存池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓存、UNDO页的回收等。</p>
-<h5 id="IO-Therad"><a href="#IO-Therad" class="headerlink" title="IO Therad"></a>IO Therad</h5><p>  在InnoDB存储引擎中大量使用了AIO（Async IO）—异步时间非阻塞IO，这样可以极大程度上提高数据库的性能。IO Thread的主要工作就是负责这些IO请求的回调</p>
-<p>共有四个IO Thread:write 、read、insert buffer、log IO thread</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114130216.png" alt="image-20210114114130216"></p>
-<p>通过命令SHOW ENGINE INNODB STASTUS\G来观察IO Thread</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114405936.png" alt="image-20210114114405936"></p>
-<p>有四个write和read IO Thread</p>
-<p>通过innodb_read_io_threads和innodb_write_io_threads参数来进行设置</p>
-<h5 id="Purge-Thread"><a href="#Purge-Thread" class="headerlink" title="Purge Thread"></a>Purge Thread</h5><p><strong>作用</strong>：</p>
-<p>​    Purge Thread回收已经使用并且已经分配的undo页（事务提交之后，其所使用的Undolog可能就不再需要）</p>
-<p>用户需要在<strong>MySQL数据库的配置文件</strong>中添加如下命令来启用独立的Purge Thread: </p>
-<p>​        innodb_purge_threads=1</p>
-<h5 id="Page-Cleaner-Thread"><a href="#Page-Cleaner-Thread" class="headerlink" title="Page Cleaner Thread"></a>Page Cleaner Thread</h5><p><strong>作用</strong>：</p>
-<p>​    将脏页的刷新操作放在单独的线程中完成。减轻Master Thread的工作以及对于用户查询线程的阻塞</p>
-<h4 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h4><h5 id="缓存池"><a href="#缓存池" class="headerlink" title="缓存池"></a>缓存池</h5><p>Innodb存储引擎是基于磁盘存储的（Disk-base Database），将其中的记录按照页来管理。</p>
-<p>缓存池的出现，就是为了解决CPU速度和磁盘速度之间的差异，通过内存的速度来弥补磁盘速度较慢对数据库性能的影响。读取文件时，首先判断给文件是否在缓存池中（没有就去磁盘上找）。</p>
-<p>在修改缓存池中的页时，先以一定频率刷新到缓存池上，然后通过Checkpoint刷新回磁盘。</p>
-<p>数据库服务器最好采用64位操作系统，可以使用更多的内存（512GB），32位（只有64GB）。</p>
-<p>缓存池的配置通过参数innodb_buffer_pool_size来设置。</p>
-<h6 id="缓存池中缓存的数据页类型："><a href="#缓存池中缓存的数据页类型：" class="headerlink" title="缓存池中缓存的数据页类型："></a>缓存池中缓存的数据页类型：</h6><p>​    索引页、数据页、Undo页、插入缓存页、自适应哈希索引页（adaptive hash index）、InnoDB存储的锁信息、数据字典信息等。</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114131120313.png" alt="image-20210114131120313"></p>
-<p><strong>允许有多个缓存池实例</strong>：每个页根据hashcode平均分配到不同的缓存池实例中，减少数据库内部资源的竞争，增加数据库的并发能力。可以通过inodb_buffer_pool_instances来进行配置，通过命令SHOW ENGINE INNODB STATUS可以观察到每个缓存池实例对象运行的状态，还可以通过查看表InnoDB_BUFFER_POOL_STATS来观察缓存的状态(要求在information_schema架构下)</p>
-<h5 id="LRU-LIST-、FREE-LIST-、FLUSH-LIST"><a href="#LRU-LIST-、FREE-LIST-、FLUSH-LIST" class="headerlink" title="LRU LIST 、FREE LIST 、FLUSH LIST"></a>LRU LIST 、FREE LIST 、FLUSH LIST</h5><p><strong>LRU</strong>算法用来管理已经读取的页</p>
-<p>数据库中的缓存池是通过LRU（Latest Recent Used,最近最少使用）算法来管理内部的各种类型的页。</p>
-<p><strong>LRU解释</strong>：将最频繁使用的页放在LRU列表的前端，最少使用的页放在LRU列表的尾端。当缓存池不能存放新读取到的页时，将优先删除列表尾端的页（默认大小为16KB）。</p>
-<p><strong>改进</strong>：</p>
-<p>1、（midpoint insertion strategy）：InnoDB中在LRU中加入了midpoint位置，将新读取到的页放在midpoint，而不是直接放在LRU列表首部。<strong>默认位置在LRU列表长度63%处</strong>（可以通过innodb_old_blocks_pct来控制）</p>
-<p>2、设置了参数innodb_old_blocks_time,用于表示页读取到mid位置后需要等待多久才会加入到LRU列表的热端</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133522544.png" alt="image-20210114133522544"></p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133412580.png" alt="image-20210114133412580"></p>
-<p><strong>为什么要对朴素的LRU算法进行改良</strong>？</p>
-<h5 id="重做日志缓存"><a href="#重做日志缓存" class="headerlink" title="重做日志缓存"></a>重做日志缓存</h5><h5 id="额外的内存池"><a href="#额外的内存池" class="headerlink" title="额外的内存池"></a>额外的内存池</h5>]]></content>
-      <categories>
-        <category>MySQL数据库</category>
-      </categories>
-      <tags>
-        <tag>InnoDB存储引擎</tag>
       </tags>
   </entry>
   <entry>
@@ -212,6 +165,53 @@
       </categories>
       <tags>
         <tag>spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>InnoDB存储引擎</title>
+    <url>/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
+    <content><![CDATA[<h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
+<p>InnoDB存储引擎有多个内存块，这些内存块组成了一个大的内存池</p>
+<p>后台线程的主要作用就是负责刷新内存池中的数据，保证缓存池中的内存缓存的是最近的数据。此外，还将已经修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下，InnoDB可以恢复运行到最佳状态。</p>
+<h4 id="后台线程（InnDB是一个多线程模型"><a href="#后台线程（InnDB是一个多线程模型" class="headerlink" title="后台线程（InnDB是一个多线程模型)"></a>后台线程（InnDB是一个多线程模型)</h4><p>#####Master Thread</p>
+<p><strong>作用：</strong></p>
+<p>​    一个非常核心的后台进程，负责将缓存池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓存、UNDO页的回收等。</p>
+<h5 id="IO-Therad"><a href="#IO-Therad" class="headerlink" title="IO Therad"></a>IO Therad</h5><p>  在InnoDB存储引擎中大量使用了AIO（Async IO）—异步时间非阻塞IO，这样可以极大程度上提高数据库的性能。IO Thread的主要工作就是负责这些IO请求的回调</p>
+<p>共有四个IO Thread:write 、read、insert buffer、log IO thread</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114130216.png" alt="image-20210114114130216"></p>
+<p>通过命令SHOW ENGINE INNODB STASTUS\G来观察IO Thread</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114405936.png" alt="image-20210114114405936"></p>
+<p>有四个write和read IO Thread</p>
+<p>通过innodb_read_io_threads和innodb_write_io_threads参数来进行设置</p>
+<h5 id="Purge-Thread"><a href="#Purge-Thread" class="headerlink" title="Purge Thread"></a>Purge Thread</h5><p><strong>作用</strong>：</p>
+<p>​    Purge Thread回收已经使用并且已经分配的undo页（事务提交之后，其所使用的Undolog可能就不再需要）</p>
+<p>用户需要在<strong>MySQL数据库的配置文件</strong>中添加如下命令来启用独立的Purge Thread: </p>
+<p>​        innodb_purge_threads=1</p>
+<h5 id="Page-Cleaner-Thread"><a href="#Page-Cleaner-Thread" class="headerlink" title="Page Cleaner Thread"></a>Page Cleaner Thread</h5><p><strong>作用</strong>：</p>
+<p>​    将脏页的刷新操作放在单独的线程中完成。减轻Master Thread的工作以及对于用户查询线程的阻塞</p>
+<h4 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h4><h5 id="缓存池"><a href="#缓存池" class="headerlink" title="缓存池"></a>缓存池</h5><p>Innodb存储引擎是基于磁盘存储的（Disk-base Database），将其中的记录按照页来管理。</p>
+<p>缓存池的出现，就是为了解决CPU速度和磁盘速度之间的差异，通过内存的速度来弥补磁盘速度较慢对数据库性能的影响。读取文件时，首先判断给文件是否在缓存池中（没有就去磁盘上找）。</p>
+<p>在修改缓存池中的页时，先以一定频率刷新到缓存池上，然后通过Checkpoint刷新回磁盘。</p>
+<p>数据库服务器最好采用64位操作系统，可以使用更多的内存（512GB），32位（只有64GB）。</p>
+<p>缓存池的配置通过参数innodb_buffer_pool_size来设置。</p>
+<h6 id="缓存池中缓存的数据页类型："><a href="#缓存池中缓存的数据页类型：" class="headerlink" title="缓存池中缓存的数据页类型："></a>缓存池中缓存的数据页类型：</h6><p>​    索引页、数据页、Undo页、插入缓存页、自适应哈希索引页（adaptive hash index）、InnoDB存储的锁信息、数据字典信息等。</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114131120313.png" alt="image-20210114131120313"></p>
+<p><strong>允许有多个缓存池实例</strong>：每个页根据hashcode平均分配到不同的缓存池实例中，减少数据库内部资源的竞争，增加数据库的并发能力。可以通过inodb_buffer_pool_instances来进行配置，通过命令SHOW ENGINE INNODB STATUS可以观察到每个缓存池实例对象运行的状态，还可以通过查看表InnoDB_BUFFER_POOL_STATS来观察缓存的状态(要求在information_schema架构下)</p>
+<h5 id="LRU-LIST-、FREE-LIST-、FLUSH-LIST"><a href="#LRU-LIST-、FREE-LIST-、FLUSH-LIST" class="headerlink" title="LRU LIST 、FREE LIST 、FLUSH LIST"></a>LRU LIST 、FREE LIST 、FLUSH LIST</h5><p><strong>LRU</strong>算法用来管理已经读取的页</p>
+<p>数据库中的缓存池是通过LRU（Latest Recent Used,最近最少使用）算法来管理内部的各种类型的页。</p>
+<p><strong>LRU解释</strong>：将最频繁使用的页放在LRU列表的前端，最少使用的页放在LRU列表的尾端。当缓存池不能存放新读取到的页时，将优先删除列表尾端的页（默认大小为16KB）。</p>
+<p><strong>改进</strong>：</p>
+<p>1、（midpoint insertion strategy）：InnoDB中在LRU中加入了midpoint位置，将新读取到的页放在midpoint，而不是直接放在LRU列表首部。<strong>默认位置在LRU列表长度63%处</strong>（可以通过innodb_old_blocks_pct来控制）</p>
+<p>2、设置了参数innodb_old_blocks_time,用于表示页读取到mid位置后需要等待多久才会加入到LRU列表的热端</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133522544.png" alt="image-20210114133522544"></p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133412580.png" alt="image-20210114133412580"></p>
+<p><strong>为什么要对朴素的LRU算法进行改良</strong>？</p>
+<h5 id="重做日志缓存"><a href="#重做日志缓存" class="headerlink" title="重做日志缓存"></a>重做日志缓存</h5><h5 id="额外的内存池"><a href="#额外的内存池" class="headerlink" title="额外的内存池"></a>额外的内存池</h5>]]></content>
+      <categories>
+        <category>MySQL数据库</category>
+      </categories>
+      <tags>
+        <tag>InnoDB存储引擎</tag>
       </tags>
   </entry>
   <entry>
@@ -798,9 +798,252 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>Mybatis动态代理</title>
+    <title>Mybatis动态代理与传参</title>
     <url>/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[<h2 id="Mybatis动态代理实现CURD"><a href="#Mybatis动态代理实现CURD" class="headerlink" title="Mybatis动态代理实现CURD"></a>Mybatis动态代理实现CURD</h2><h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><blockquote>
+<p>去掉Dao接口的实现类</p>
+</blockquote>
+ <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/01.png" class>
+
+<blockquote>
+<p>getMapper获取代理对象</p>
+</blockquote>
+<p>只需调用 SqlSession 的 getMapper()方法，即可获取指定接口的实现类对象。该方法的参数为指定 Dao 接口类的 class 值。(<strong>反射原理</strong>)</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">SqlSession session = factory.openSession();</span><br><span class="line">StudentDao dao = session.getMapper(StudentDao.class);</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用工具类获取session</span></span><br><span class="line">StudentDao studentDao =</span><br><span class="line">MyBatisUtil.getSqlSession().getMapper(StudentDao.class);</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>使用Dao代理对象方法执行SQL语句</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//s所有的方法必须都在StudentDao接口中有所定义</span></span><br><span class="line"><span class="comment">//select 方法:</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelect</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="keyword">final</span> List&lt;Student&gt; studentList = studentDao.selectStudents();</span><br><span class="line">     studentList.forEach( stu -&gt; System.out.println(stu));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//insert 方法:</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testInsert</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     Student student = <span class="keyword">new</span> Student();</span><br><span class="line">     student.setId(<span class="number">1006</span>);</span><br><span class="line">     student.setName(<span class="string">&quot;林浩&quot;</span>);</span><br><span class="line">     student.setEmail(<span class="string">&quot;linhao@163.com&quot;</span>);</span><br><span class="line">     student.setAge(<span class="number">26</span>);</span><br><span class="line">     <span class="keyword">int</span> nums = studentDao.insertStudent(student);</span><br><span class="line">     System.out.println(<span class="string">&quot;使用 Dao 添加数据:&quot;</span>+nums);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//update 方法</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testUpdate</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     Student student = <span class="keyword">new</span> Student();</span><br><span class="line">     student.setId(<span class="number">1006</span>);</span><br><span class="line">     student.setAge(<span class="number">28</span>);</span><br><span class="line">     <span class="keyword">int</span> nums = studentDao.updateStudent(student);</span><br><span class="line">     System.out.println(<span class="string">&quot;使用 Dao 修改数据:&quot;</span>+nums);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//delete 方法</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testDelete</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="keyword">int</span> nums = studentDao.deleteStudent(<span class="number">1006</span>);</span><br><span class="line">     System.out.println(<span class="string">&quot;使用 Dao 修改数据:&quot;</span>+nums);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="基于动态代理的原理分析"><a href="#基于动态代理的原理分析" class="headerlink" title="基于动态代理的原理分析"></a>基于动态代理的原理分析</h4><img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/02.png" class>
+
+
+
+<blockquote>
+<p>MapperProxy类定义</p>
+</blockquote>
+ <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/03.png" class>
+
+<blockquote>
+<p>invoke方法</p>
+</blockquote>
+ <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/04.png" class>
+
+
+
+<blockquote>
+<p>重点方法</p>
+</blockquote>
+ <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/05.png" class>
+
+
+
+
+
+<h2 id="深入理解参数"><a href="#深入理解参数" class="headerlink" title="深入理解参数"></a>深入理解参数</h2><blockquote>
+<p>parameterType</p>
+</blockquote>
+<p>parameterType: 接口中方法参数的类型， 值是类型的完全限定名或别名。这个属性是可选的，因为 MyBatis 可以推断出具体传入语句的参数，默认值为未设置（unset）。接口中方法的参数从 java 代码传入到 mapper 文件的 sql 语句。</p>
+<p>支持传入参数的类型与别名映射如表所示：</p>
+ <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/06.png" class>
+
+
+
+<p> <select>、<insert>、<update>、<delete>都可以使用parameterType指定类型</delete></update></insert></select></p>
+  <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/07.png" class>
+
+
+
+<h3 id="Mybatis传递参数"><a href="#Mybatis传递参数" class="headerlink" title="Mybatis传递参数"></a>Mybatis传递参数</h3><h4 id="一个简单参数"><a href="#一个简单参数" class="headerlink" title="一个简单参数"></a>一个简单参数</h4><p>Dao 接口中方法的参数只有一个简单类型（java 基本类型和 String），占位符 #{ 任意字符 }，和方法的参数名无关。</p>
+<blockquote>
+<p>接口方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">Student <span class="title">selectById</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>mapper文件</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;select id=<span class="string">&quot;selectById&quot;</span> resultType=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span><br><span class="line"> select id,name,email,age from student where id=#&#123;studentId&#125;</span><br><span class="line">&lt;/select&gt;</span><br><span class="line">#&#123;studentId&#125; , studentId 是自定义的变量名称，和方法参数名无关。#表示占位符</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>测试方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectById</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">//传入了一个参数</span></span><br><span class="line">    Student student = studentDao.selectById(<span class="number">1005</span>);</span><br><span class="line">    System.out.println(<span class="string">&quot;查询 id 是 1005 的学生：&quot;</span>+student);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="多个参数"><a href="#多个参数" class="headerlink" title="多个参数"></a>多个参数</h3><h4 id="使用-Param"><a href="#使用-Param" class="headerlink" title="使用@Param"></a>使用@Param</h4><p>当 Dao 接口方法多个参数，需要通过名称使用参数。在方法形参前面加入@Param(“自定义参数名”)， mapper 文件使用#{自定义参数名}。</p>
+<ul>
+<li>接口方法：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">List <span class="title">selectMultiParam</span><span class="params">(<span class="meta">@Param(&quot;personName&quot;)</span> String name, <span class="meta">@Param(&quot;personAge&quot;)</span> <span class="keyword">int</span> age)</span></span>; </span><br></pre></td></tr></table></figure>
+
+
+<ul>
+<li><p>mapper 文件： </p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">select id,name,email,age from student where name=#&#123;personName&#125; or age =#&#123;personAge&#125;</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span> </span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectMultiParam</span><span class="params">()</span></span>&#123; </span><br><span class="line">    List stuList = studentDao.selectMultiParam(<span class="string">&quot;李力&quot;</span>,<span class="number">20</span>); 					stuList.forEach( stu -&gt; System.out.println(stu));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<h4 id="多个参数–适用对象"><a href="#多个参数–适用对象" class="headerlink" title="多个参数–适用对象"></a>多个参数–适用对象</h4><p>使用 java 对象传递参数， java 的属性值就是 sql 需要的参数值。 每一个属性就是一个参数。 语法格式： #{ property,javaType=java 中数据类型名,jdbcType=数据类型名称 } javaType, jdbcType 的类型 MyBatis 可以检测出来，一般不需要设置。常用格式 #{ property }</p>
+ <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/08.png" class>
+
+<blockquote>
+<p>创建保存参数值的对象QueryParam</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.bjpowernode.vo;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">QueryParam</span> </span>&#123;</span><br><span class="line"> <span class="keyword">private</span> String queryName;</span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">int</span> queryAge;</span><br><span class="line"> <span class="comment">//set ，get 方法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>接口方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">List&lt;Student&gt; <span class="title">selectMultiObject</span><span class="params">(QueryParam queryParam)</span></span>;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>mapper文件—-必须保证和对象的属性名相同</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;select id=<span class="string">&quot;selectMultiObject&quot;</span> resultType=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span><br><span class="line"> select id,name,email,age from student where name=#&#123;queryName&#125; or age=#&#123;queryAge&#125;</span><br><span class="line">&lt;/select</span><br></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;select id=<span class="string">&quot;selectMultiObject&quot;</span> resultType=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span><br><span class="line"> select id,name,email,age from student</span><br><span class="line"> where name=#&#123;queryName,javaType=string,jdbcType=VARCHAR&#125;</span><br><span class="line"> or age =#&#123;queryAge,javaType=int,jdbcType=INTEGER&#125;</span><br><span class="line">&lt;/select&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>测试方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">selectMultiObject</span><span class="params">()</span></span>&#123;</span><br><span class="line">     QueryParam qp = <span class="keyword">new</span> QueryParam();</span><br><span class="line">     qp.setQueryName(<span class="string">&quot;李力&quot;</span>);</span><br><span class="line">     qp.setQueryAge(<span class="number">20</span>);</span><br><span class="line">     List&lt;Student&gt; stuList = studentDao.selectMultiObject(qp);</span><br><span class="line">     stuList.forEach( stu -&gt; System.out.println(stu));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="多个参数–按照位置"><a href="#多个参数–按照位置" class="headerlink" title="多个参数–按照位置"></a>多个参数–按照位置</h4><p>参数位置从 0 开始， 引用参数语法 #{ arg 位置 } ， 第一个参数是#{arg0}, 第二个是#{arg1} 注意：mybatis-3.3 版本和之前的版本使用#{0},#{1}方式， 从 mybatis3.4 开始使用#{arg0}方式&gt;。</p>
+<blockquote>
+<p>接口方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">List&lt;Student&gt; <span class="title">selectByNameAndAge</span><span class="params">(String name,<span class="keyword">int</span> age)</span></span>;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>mapper文件</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectByNameAndAge&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span></span><br><span class="line">	 select id,name,email,age from student where name=#&#123;arg0&#125; or age =#&#123;arg1&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>测试方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectByNameAndAge</span><span class="params">()</span></span>&#123;</span><br><span class="line">     <span class="comment">//按位置参数</span></span><br><span class="line">     List&lt;Student&gt; stuList = studentDao.selectByNameAndAge(<span class="string">&quot;李力&quot;</span>,<span class="number">20</span>);</span><br><span class="line">     stuList.forEach( stu -&gt; System.out.println(stu));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="多个参数–使用Map"><a href="#多个参数–使用Map" class="headerlink" title="多个参数–使用Map"></a>多个参数–使用Map</h4><p>Map 集合可以存储多个值，使用Map向 mapper 文件一次传入多个参数。Map 集合使用 String的 key， Object 类型的值存储参数。 mapper 文件使用 # { key } 引用参数值。</p>
+<blockquote>
+<p>接口方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">List&lt;Student&gt; <span class="title">selectMultiMap</span><span class="params">(Map&lt;String,Object&gt; map)</span></span>;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>mapper文件</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectMultiMap&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span></span><br><span class="line">	 select id,name,email,age from student where name=#&#123;myname&#125; or age =#&#123;myage&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line">//通过key来传递参数</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>测试方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectMultiMap</span><span class="params">()</span></span>&#123;</span><br><span class="line">     Map&lt;String,Object&gt; data = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">     data.put(<span class="string">&quot;myname&quot;</span>,<span class="string">&quot;李力&quot;</span>);<span class="comment">// #&#123;myname&#125;</span></span><br><span class="line">     data.put(<span class="string">&quot;myage&quot;</span>,<span class="number">20</span>); <span class="comment">// #&#123;myage&#125;</span></span><br><span class="line">     List&lt;Student&gt; stuList = studentDao.selectMultiMap(data);</span><br><span class="line">     stuList.forEach( stu -&gt; System.out.println(stu));</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//存储参数的类型是Object</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="占位符-和"><a href="#占位符-和" class="headerlink" title="占位符#和$"></a>占位符#和$</h3><h4 id><a href="#" class="headerlink" title></a></h4><p>#：占位符，告诉 mybatis 使用实际的参数值代替。并使用 PrepareStatement 对象执行 sql 语句, #{…}代替 sql 语句的“?”。这样做更安全，更迅速，通常也是首选做法，</p>
+<blockquote>
+<p>mapper文件</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectById&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span></span><br><span class="line">	 select id,name,email,age from student where id=#&#123;studentId&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>转换为Mybatis的执行是：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">String <span class="keyword">sql</span><span class="operator">=</span>” <span class="keyword">select</span> id,name,email,age <span class="keyword">from</span> student <span class="keyword">where</span> id<span class="operator">=</span>?”;</span><br><span class="line">PreparedStatement ps <span class="operator">=</span> conn.prepareStatement(<span class="keyword">sql</span>);</span><br><span class="line">ps.setInt(<span class="number">1</span>,<span class="number">1005</span>);</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="-1"><a href="#-1" class="headerlink" title="$"></a>$</h4><p> $ 字符串替换，告诉 mybatis 使用$包含的“字符串”替换所在位置。使用 Statement 把 sql 语句和${}的 内容连接起来。主要用在替换表名，列名，不同列排序等操作。</p>
+<p><strong>因为存在拼接的操作，所以可能会存在SQL注入的安全隐患</strong></p>
+ <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/09.png" class>
+
+ <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/10.png" class>
+
+
+
+
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>Mybatis框架</category>
+      </categories>
+      <tags>
+        <tag>Mybatis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Mybatis框架概述</title>
+    <url>/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6/</url>
+    <content><![CDATA[<h2 id="软件开发常用结构"><a href="#软件开发常用结构" class="headerlink" title="软件开发常用结构"></a>软件开发常用结构</h2><h3 id="三层架构"><a href="#三层架构" class="headerlink" title="三层架构"></a>三层架构</h3><p>三层架构包含的三层： 界面层（User Interface layer）、业务逻辑层（Business Logic Layer）、数据访问层（Data access layer）</p>
+<blockquote>
+<p>三层的职责</p>
+</blockquote>
+<ul>
+<li><p>1、界面层（表示层\视图层）：主要功能是接受用户的数据，显示请求的处理结果。使用 web 页面和 用户交互，手机 app 也就是表示层的，用户在 app 中操作，业务逻辑在服务器端处理。</p>
+</li>
+<li><p>2、业务逻辑层：接收表示传递过来的数据，检查数据，计算业务逻辑，调用数据访问层获取数据。</p>
+</li>
+<li><p>3、数据访问层（持久层）：与数据库打交道。主要实现对数据的增、删、改、查。将存储在数据库中的数据提交 给业务层，同时将业务层处理的数据保存到数据库。</p>
+</li>
+</ul>
+<p>三层的处理请求的交互：</p>
+<p>用户—&gt;界面层—&gt;业务逻辑层—&gt;数据访问层—&gt;DB数据库</p>
+ <img data-src="/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6/01.png" class>
+
+
+
+<blockquote>
+<p>为什么使用三层？</p>
+</blockquote>
+<p>1，结构清晰、耦合度低, 各层分工明确 </p>
+<p>2，可维护性高，可扩展性高</p>
+<p> 3，有利于标准化 </p>
+<p>4，开发人员可以只关注整个结构中的其中某一层的功能实现 </p>
+<p>5，有利于各层逻辑的复用</p>
+<h3 id="常用框架"><a href="#常用框架" class="headerlink" title="常用框架"></a>常用框架</h3><ul>
+<li><p>Mybatis框架</p>
+<p>MyBatis 是一个优秀的基于 java 的持久层框架，内部封装了 jdbc，开发者只需要关注 sql 语句本身，而不需要处理加载驱动、创建连接、创建 statement、关闭连接，资源等繁杂的过程。 MyBatis 通过 xml 或注解两种方式将要执行的各种 sql 语句配置起来，并通过 java 对象和 sql 的 动态参数进行映射生成最终执行的 sql 语句，最后由 mybatis 框架执行 sql 并将结果映射为 java 对象并返回。</p>
+</li>
+<li><p>Spring框架</p>
+<p>Spring 框架为了解决软件开发的复杂性而创建的。Spring 使用的是基本的 JavaBean 来完成以前 非常复杂的企业级开发。Spring 解决了业务对象，功能模块之间的耦合，不仅在 javase,web 中使用， 大部分 Java 应用都可以从 Spring 中受益。 Spring 是一个轻量级控制反转(IoC)和面向切面(AOP)的容器。</p>
+</li>
+<li><p>SpringMVC框架</p>
+<p>SpringMVC 框架 Spring MVC 属于 SpringFrameWork 3.0 版本加入的一个模块，为 Spring 框架提供了构建 Web 应用程序的能力。现在可以 Spring 框架提供的 SpringMVC 模块实现 web 应用开发，在 web 项目中 可以无缝使用 Spring 和 Spring MVC 框架。</p>
+</li>
+</ul>
+<h2 id="框架的定义"><a href="#框架的定义" class="headerlink" title="框架的定义"></a>框架的定义</h2><h3 id="框架定义"><a href="#框架定义" class="headerlink" title="框架定义"></a>框架定义</h3><p>框架（Framework）是整个或部分系统的可重用设计，表现为一组抽象构件及构件实例间交互的方法;另一种认为，框架是可被应用开发者定制的应用骨架、模板。 简单的说，框架其实是半成品软件，就是一组组件，供你使用完成你自己的系统。从另一个角度来 说框架一个舞台，你在舞台上做表演。在框架基础上加入你要完成的功能。 框架安全的，可复用的，不断升级的软件。 </p>
+<h3 id="框架解决的问题"><a href="#框架解决的问题" class="headerlink" title="框架解决的问题"></a>框架解决的问题</h3><p>框架要解决的最重要的一个问题是技术整合，在 J2EE 的 框架中，有着各种各样的技术，不同的应用，系统使用不同的技术解决问题。需要从 J2EE 中选择不同的技术，而技术自身的复杂性，有导致更大的风险。企业在开发软件项目时，主要目的是解决业务问题。 即要求企业负责技术本身，又要求解决业务问题。这是大多数企业不能完成的。框架把相关的技术融合在一起，企业开发可以集中在业务领域方面。 另一个方面可以提供开发的效率。</p>
+<h2 id="JDBC编程"><a href="#JDBC编程" class="headerlink" title="JDBC编程"></a>JDBC编程</h2><h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">findStudent</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> 	Connection conn = <span class="keyword">null</span>;</span><br><span class="line"> 	Statement stmt = <span class="keyword">null</span>;</span><br><span class="line">    ResultSet rs = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line"> 		<span class="comment">//注册 mysql 驱动</span></span><br><span class="line">		 Class.forName(<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>);</span><br><span class="line">		 <span class="comment">//连接数据的基本信息 url ，username，password</span></span><br><span class="line">		 String url = <span class="string">&quot;jdbc:mysql://localhost:3306/springdb&quot;</span>;</span><br><span class="line">		 String username = <span class="string">&quot;root&quot;</span>;</span><br><span class="line">		 String password = <span class="string">&quot;123456&quot;</span>;</span><br><span class="line"> 		<span class="comment">//创建连接对象</span></span><br><span class="line">		 conn = DriverManager.getConnection(url, username, password);</span><br><span class="line">		 <span class="comment">//保存查询结果</span></span><br><span class="line">		 List&lt;Student&gt; stuList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"> 		<span class="comment">//创建 Statement, 用来执行 sql 语句</span></span><br><span class="line"> 		stmt = conn.createStatement();</span><br><span class="line"> 		<span class="comment">//执行查询，创建记录集，</span></span><br><span class="line"> 		rs = stmt.executeQuery(<span class="string">&quot;select * from student&quot;</span>);</span><br><span class="line">		 <span class="keyword">while</span> (rs.next()) &#123;</span><br><span class="line">			 Student stu = <span class="keyword">new</span> Student();</span><br><span class="line">			 stu.setId(rs.getInt(<span class="string">&quot;id&quot;</span>));</span><br><span class="line">			 stu.setName(rs.getString(<span class="string">&quot;name&quot;</span>));</span><br><span class="line">			 stu.setAge(rs.getInt(<span class="string">&quot;age&quot;</span>));</span><br><span class="line">			 <span class="comment">//从数据库取出数据转为 Student 对象，封装到 List 集合</span></span><br><span class="line">			 stuList.add(stu);</span><br><span class="line">			 &#125;</span><br><span class="line"> 		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			 e.printStackTrace();</span><br><span class="line">	    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line"> 			<span class="keyword">try</span> &#123;</span><br><span class="line">				 <span class="comment">//关闭资源</span></span><br><span class="line">                 <span class="keyword">if</span> (rs != <span class="keyword">null</span>) ;</span><br><span class="line"> 				&#123;</span><br><span class="line">					 rs.close();</span><br><span class="line">				 &#125;</span><br><span class="line"> 				<span class="keyword">if</span> (stmt != <span class="keyword">null</span>) &#123;</span><br><span class="line"> 					stmt.close();</span><br><span class="line"> 				&#125;</span><br><span class="line"> 				<span class="keyword">if</span> (conn != <span class="keyword">null</span>) &#123;</span><br><span class="line"> 					conn.close();</span><br><span class="line"> 				&#125;</span><br><span class="line"> 				&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">				 e.printStackTrace();</span><br><span class="line"> 				&#125;</span><br><span class="line"> 			&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="使用JDBC的缺陷"><a href="#使用JDBC的缺陷" class="headerlink" title="使用JDBC的缺陷"></a>使用JDBC的缺陷</h3><ol>
+<li>代码比较多，开发效率低 </li>
+<li> 需要关注 Connection ,Statement, ResultSet 对象创建和销毁 </li>
+<li> 对 ResultSet 查询的结果，需要自己封装为 List </li>
+<li> 重复的代码比较多些 </li>
+<li> 业务代码和数据库的操作混在一起</li>
+</ol>
+<h2 id="Mybatis框架"><a href="#Mybatis框架" class="headerlink" title="Mybatis框架"></a>Mybatis框架</h2><p>MyBatis 框架：</p>
+<p> MyBatis 本是 apache 的一个开源项目 iBatis, 2010 年这个项目由 apache software foundation 迁 移到了 google code，并且改名为 MyBatis 。2013 年 11 月迁移到 Github。 iBATIS 一词来源于“internet”和“abatis”的组合，是一个基于 Java 的持久层框架。iBATIS 提供的 持久层框架包括 SQL Maps 和 Data Access Objects（DAOs） 当前，最新版本是 MyBatis 3.5.1 ，其发布时间是 2019 年 4 月 8 日。</p>
+<h3 id="Mybatis框架解决的主要问题"><a href="#Mybatis框架解决的主要问题" class="headerlink" title="Mybatis框架解决的主要问题"></a>Mybatis框架解决的主要问题</h3><p>减轻使用 JDBC 的复杂性，不用编写重复的创建 Connetion , Statement ; 不用编写关闭资源代码。 直接使用 java 对象，表示结果数据。让开发者专注 SQL 的处理。 其他分心的工作MyBatis 代劳。</p>
+<p> MyBatis 可以完成：  </p>
+<ul>
+<li>注册数据库的驱动，例如 Class.forName(“com.mysql.jdbc.Driver”))</li>
+<li>创建 JDBC 中必须使用的 Connection ， Statement， ResultSet 对象</li>
+<li>从 xml 中获取 sql，并执行 sql 语句，把 ResultSet 结果转换 java 对象</li>
+<li>关闭资源 ResultSet.close() , Statement.close() , Conenection.close()</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Mybatis框架</category>
+      </categories>
+      <tags>
+        <tag>Mybatis</tag>
+      </tags>
   </entry>
   <entry>
     <title>Mybatis框架</title>
@@ -898,76 +1141,6 @@
 
 
 
-]]></content>
-      <categories>
-        <category>Mybatis框架</category>
-      </categories>
-      <tags>
-        <tag>Mybatis</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Mybatis框架概述</title>
-    <url>/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6/</url>
-    <content><![CDATA[<h2 id="软件开发常用结构"><a href="#软件开发常用结构" class="headerlink" title="软件开发常用结构"></a>软件开发常用结构</h2><h3 id="三层架构"><a href="#三层架构" class="headerlink" title="三层架构"></a>三层架构</h3><p>三层架构包含的三层： 界面层（User Interface layer）、业务逻辑层（Business Logic Layer）、数据访问层（Data access layer）</p>
-<blockquote>
-<p>三层的职责</p>
-</blockquote>
-<ul>
-<li><p>1、界面层（表示层\视图层）：主要功能是接受用户的数据，显示请求的处理结果。使用 web 页面和 用户交互，手机 app 也就是表示层的，用户在 app 中操作，业务逻辑在服务器端处理。</p>
-</li>
-<li><p>2、业务逻辑层：接收表示传递过来的数据，检查数据，计算业务逻辑，调用数据访问层获取数据。</p>
-</li>
-<li><p>3、数据访问层（持久层）：与数据库打交道。主要实现对数据的增、删、改、查。将存储在数据库中的数据提交 给业务层，同时将业务层处理的数据保存到数据库。</p>
-</li>
-</ul>
-<p>三层的处理请求的交互：</p>
-<p>用户—&gt;界面层—&gt;业务逻辑层—&gt;数据访问层—&gt;DB数据库</p>
- <img data-src="/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6/01.png" class>
-
-
-
-<blockquote>
-<p>为什么使用三层？</p>
-</blockquote>
-<p>1，结构清晰、耦合度低, 各层分工明确 </p>
-<p>2，可维护性高，可扩展性高</p>
-<p> 3，有利于标准化 </p>
-<p>4，开发人员可以只关注整个结构中的其中某一层的功能实现 </p>
-<p>5，有利于各层逻辑的复用</p>
-<h3 id="常用框架"><a href="#常用框架" class="headerlink" title="常用框架"></a>常用框架</h3><ul>
-<li><p>Mybatis框架</p>
-<p>MyBatis 是一个优秀的基于 java 的持久层框架，内部封装了 jdbc，开发者只需要关注 sql 语句本身，而不需要处理加载驱动、创建连接、创建 statement、关闭连接，资源等繁杂的过程。 MyBatis 通过 xml 或注解两种方式将要执行的各种 sql 语句配置起来，并通过 java 对象和 sql 的 动态参数进行映射生成最终执行的 sql 语句，最后由 mybatis 框架执行 sql 并将结果映射为 java 对象并返回。</p>
-</li>
-<li><p>Spring框架</p>
-<p>Spring 框架为了解决软件开发的复杂性而创建的。Spring 使用的是基本的 JavaBean 来完成以前 非常复杂的企业级开发。Spring 解决了业务对象，功能模块之间的耦合，不仅在 javase,web 中使用， 大部分 Java 应用都可以从 Spring 中受益。 Spring 是一个轻量级控制反转(IoC)和面向切面(AOP)的容器。</p>
-</li>
-<li><p>SpringMVC框架</p>
-<p>SpringMVC 框架 Spring MVC 属于 SpringFrameWork 3.0 版本加入的一个模块，为 Spring 框架提供了构建 Web 应用程序的能力。现在可以 Spring 框架提供的 SpringMVC 模块实现 web 应用开发，在 web 项目中 可以无缝使用 Spring 和 Spring MVC 框架。</p>
-</li>
-</ul>
-<h2 id="框架的定义"><a href="#框架的定义" class="headerlink" title="框架的定义"></a>框架的定义</h2><h3 id="框架定义"><a href="#框架定义" class="headerlink" title="框架定义"></a>框架定义</h3><p>框架（Framework）是整个或部分系统的可重用设计，表现为一组抽象构件及构件实例间交互的方法;另一种认为，框架是可被应用开发者定制的应用骨架、模板。 简单的说，框架其实是半成品软件，就是一组组件，供你使用完成你自己的系统。从另一个角度来 说框架一个舞台，你在舞台上做表演。在框架基础上加入你要完成的功能。 框架安全的，可复用的，不断升级的软件。 </p>
-<h3 id="框架解决的问题"><a href="#框架解决的问题" class="headerlink" title="框架解决的问题"></a>框架解决的问题</h3><p>框架要解决的最重要的一个问题是技术整合，在 J2EE 的 框架中，有着各种各样的技术，不同的应用，系统使用不同的技术解决问题。需要从 J2EE 中选择不同的技术，而技术自身的复杂性，有导致更大的风险。企业在开发软件项目时，主要目的是解决业务问题。 即要求企业负责技术本身，又要求解决业务问题。这是大多数企业不能完成的。框架把相关的技术融合在一起，企业开发可以集中在业务领域方面。 另一个方面可以提供开发的效率。</p>
-<h2 id="JDBC编程"><a href="#JDBC编程" class="headerlink" title="JDBC编程"></a>JDBC编程</h2><h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">findStudent</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> 	Connection conn = <span class="keyword">null</span>;</span><br><span class="line"> 	Statement stmt = <span class="keyword">null</span>;</span><br><span class="line">    ResultSet rs = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line"> 		<span class="comment">//注册 mysql 驱动</span></span><br><span class="line">		 Class.forName(<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>);</span><br><span class="line">		 <span class="comment">//连接数据的基本信息 url ，username，password</span></span><br><span class="line">		 String url = <span class="string">&quot;jdbc:mysql://localhost:3306/springdb&quot;</span>;</span><br><span class="line">		 String username = <span class="string">&quot;root&quot;</span>;</span><br><span class="line">		 String password = <span class="string">&quot;123456&quot;</span>;</span><br><span class="line"> 		<span class="comment">//创建连接对象</span></span><br><span class="line">		 conn = DriverManager.getConnection(url, username, password);</span><br><span class="line">		 <span class="comment">//保存查询结果</span></span><br><span class="line">		 List&lt;Student&gt; stuList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"> 		<span class="comment">//创建 Statement, 用来执行 sql 语句</span></span><br><span class="line"> 		stmt = conn.createStatement();</span><br><span class="line"> 		<span class="comment">//执行查询，创建记录集，</span></span><br><span class="line"> 		rs = stmt.executeQuery(<span class="string">&quot;select * from student&quot;</span>);</span><br><span class="line">		 <span class="keyword">while</span> (rs.next()) &#123;</span><br><span class="line">			 Student stu = <span class="keyword">new</span> Student();</span><br><span class="line">			 stu.setId(rs.getInt(<span class="string">&quot;id&quot;</span>));</span><br><span class="line">			 stu.setName(rs.getString(<span class="string">&quot;name&quot;</span>));</span><br><span class="line">			 stu.setAge(rs.getInt(<span class="string">&quot;age&quot;</span>));</span><br><span class="line">			 <span class="comment">//从数据库取出数据转为 Student 对象，封装到 List 集合</span></span><br><span class="line">			 stuList.add(stu);</span><br><span class="line">			 &#125;</span><br><span class="line"> 		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			 e.printStackTrace();</span><br><span class="line">	    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line"> 			<span class="keyword">try</span> &#123;</span><br><span class="line">				 <span class="comment">//关闭资源</span></span><br><span class="line">                 <span class="keyword">if</span> (rs != <span class="keyword">null</span>) ;</span><br><span class="line"> 				&#123;</span><br><span class="line">					 rs.close();</span><br><span class="line">				 &#125;</span><br><span class="line"> 				<span class="keyword">if</span> (stmt != <span class="keyword">null</span>) &#123;</span><br><span class="line"> 					stmt.close();</span><br><span class="line"> 				&#125;</span><br><span class="line"> 				<span class="keyword">if</span> (conn != <span class="keyword">null</span>) &#123;</span><br><span class="line"> 					conn.close();</span><br><span class="line"> 				&#125;</span><br><span class="line"> 				&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">				 e.printStackTrace();</span><br><span class="line"> 				&#125;</span><br><span class="line"> 			&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="使用JDBC的缺陷"><a href="#使用JDBC的缺陷" class="headerlink" title="使用JDBC的缺陷"></a>使用JDBC的缺陷</h3><ol>
-<li>代码比较多，开发效率低 </li>
-<li> 需要关注 Connection ,Statement, ResultSet 对象创建和销毁 </li>
-<li> 对 ResultSet 查询的结果，需要自己封装为 List </li>
-<li> 重复的代码比较多些 </li>
-<li> 业务代码和数据库的操作混在一起</li>
-</ol>
-<h2 id="Mybatis框架"><a href="#Mybatis框架" class="headerlink" title="Mybatis框架"></a>Mybatis框架</h2><p>MyBatis 框架：</p>
-<p> MyBatis 本是 apache 的一个开源项目 iBatis, 2010 年这个项目由 apache software foundation 迁 移到了 google code，并且改名为 MyBatis 。2013 年 11 月迁移到 Github。 iBATIS 一词来源于“internet”和“abatis”的组合，是一个基于 Java 的持久层框架。iBATIS 提供的 持久层框架包括 SQL Maps 和 Data Access Objects（DAOs） 当前，最新版本是 MyBatis 3.5.1 ，其发布时间是 2019 年 4 月 8 日。</p>
-<h3 id="Mybatis框架解决的主要问题"><a href="#Mybatis框架解决的主要问题" class="headerlink" title="Mybatis框架解决的主要问题"></a>Mybatis框架解决的主要问题</h3><p>减轻使用 JDBC 的复杂性，不用编写重复的创建 Connetion , Statement ; 不用编写关闭资源代码。 直接使用 java 对象，表示结果数据。让开发者专注 SQL 的处理。 其他分心的工作MyBatis 代劳。</p>
-<p> MyBatis 可以完成：  </p>
-<ul>
-<li>注册数据库的驱动，例如 Class.forName(“com.mysql.jdbc.Driver”))</li>
-<li>创建 JDBC 中必须使用的 Connection ， Statement， ResultSet 对象</li>
-<li>从 xml 中获取 sql，并执行 sql 语句，把 ResultSet 结果转换 java 对象</li>
-<li>关闭资源 ResultSet.close() , Statement.close() , Conenection.close()</li>
-</ul>
 ]]></content>
       <categories>
         <category>Mybatis框架</category>
@@ -1400,6 +1573,11 @@
       </tags>
   </entry>
   <entry>
+    <title>XML配置文件详解</title>
+    <url>/2021/03/13/XML%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>中断</title>
     <url>/2021/02/03/%E4%B8%AD%E6%96%AD/</url>
     <content><![CDATA[<h3 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h3><p>中断使得硬件得以发出通知给处理器，是一种变内核主动为硬件主动的方式。中断本质上是一种特殊的电信号。硬件在生成中断的时候并不需要考虑与处理器的时钟同步，即中断可以随时产生，<strong>内核随时可能因为新到来的中断而被打断</strong>。</p>
@@ -1777,6 +1955,81 @@
       </tags>
   </entry>
   <entry>
+    <title>双指针问题</title>
+    <url>/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h2 id="环形列表I"><a href="#环形列表I" class="headerlink" title="环形列表I"></a>环形列表I</h2><h3 id="题目说明"><a href="#题目说明" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，判断链表中是否有环。</p>
+<p>如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。</p>
+<p>如果链表中存在环，则返回 true 。 否则，返回 false 。</p>
+<p> 进阶：</p>
+<p>你能用 O(1)（即，常量）内存解决此问题吗？</p>
+<p> 示例 1：</p>
+<p> <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100453506.png" alt="image-20210114100453506"></p>
+<p>输入：head = [3,2,0,-4], pos = 1<br>输出：true<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100714252.png" alt="image-20210114100714252"></p>
+<p>输入：head = [1,2], pos = 0<br>输出：true<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
+<img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100749569.png" alt="image-20210114100749569" style="zoom:150%;">
+
+<p>输入：head = [1], pos = -1<br>输出：false<br>解释：链表中没有环。</p>
+<p>提示：</p>
+<p>链表中节点的数目范围是 [0, 104]<br>-105 &lt;= Node.val &lt;= 105<br>pos 为 -1 或者链表中的一个 有效索引 </p>
+<h3 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h3><p>####方法一：哈希表<br>思路及算法</p>
+<p>最容易想到的方法是遍历所有节点，每次遍历到一个节点时，判断该节点此前是否被访问过。</p>
+<p>具体地，我们可以使用哈希表来存储所有已经访问过的节点。每次我们到达一个节点，如果该节点已经存在于哈希表中，则说明该链表是环形链表，否则就将该节点加入哈希表中。重复这一过程，直到我们遍历完整个链表即可。</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">pulic <span class="class"><span class="keyword">class</span> <span class="title">solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascirle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        Set&lt;ListNOde&gt; seen = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span>( head !=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!seen.add(head))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>#####复杂度分析</p>
+<p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。最坏情况下我们需要遍历每个节点一次。</p>
+<p>空间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。主要为哈希表的开销，最坏情况下我们需要将每个节点插入到哈希表中一次。</p>
+<h4 id="方式二；双指针–快慢指针"><a href="#方式二；双指针–快慢指针" class="headerlink" title="方式二；双指针–快慢指针"></a>方式二；双指针–快慢指针</h4><p>方法需要读者对「Floyd 判圈算法」（又称龟兔赛跑算法）有所了解。</p>
+<p>假想「乌龟」和「兔子」在链表上移动，「兔子」跑得快，「乌龟」跑得慢。当「乌龟」和「兔子」从链表上的同一个节点开始移动时，如果该链表中没有环，那么「兔子」将一直处于「乌龟」的前方；如果该链表中有环，那么「兔子」会先于「乌龟」进入环，并且一直在环内移动。等到「乌龟」进入环时，由于「兔子」的速度快，它一定会在某个时刻与乌龟相遇，即套了「乌龟」若干圈。</p>
+<p>我们可以根据上述思路来解决本题。具体地，我们定义两个指针，一快一满。慢指针每次只移动一步，而快指针每次移动两步。初始时，慢指针在位置 head，而快指针在位置 head.next。这样一来，如果在移动的过程中，快指针反过来追上慢指针，就说明该链表为环形链表。否则快指针将到达链表尾部，该链表不为环形链表。</p>
+<p> 为什么我们要规定初始时慢指针在位置 head，快指针在位置 head.next，而不是两个指针都在位置 head（即与「乌龟」和「兔子」中的叙述相同）？</p>
+<p>观察下面的代码，我们使用的是 while 循环，循环条件先于循环体。由于循环条件一定是判断快慢指针是否重合，如果我们将两个指针初始都置于 head，那么 while 循环就不会执行。因此，我们可以假想一个在 head 之前的虚拟节点，慢指针从虚拟节点移动一步到达 head，快指针从虚拟节点移动两步到达 head.next，这样我们就可以使用 while 循环了。</p>
+<p>当然，我们也可以使用 do-while 循环。此时，我们就可以把快慢指针的初始值都置为 head。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">puclic <span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascycle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head;</span><br><span class="line">        ListNode fast = head.next;</span><br><span class="line">        <span class="keyword">while</span>(slow!=fast)&#123;</span><br><span class="line">            <span class="keyword">if</span>(fast==<span class="keyword">null</span>||fast.next==<span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            fast = fast.next.next</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。</p>
+<p>当链表中不存在环时，快指针将先于慢指针到达链表尾部，链表中每个节点至多被访问两次。</p>
+<p>当链表中存在环时，每一轮移动后，快慢指针的距离将减小一。而初始距离为环的长度，因此至多移动 NN 轮。</p>
+<p>空间复杂度：O(1)O(1)。我们只使用了两个指针的额外空间</p>
+<h2 id="环形列表II"><a href="#环形列表II" class="headerlink" title="环形列表II"></a>环形列表II</h2><h3 id="题目说明-1"><a href="#题目说明-1" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。</p>
+<p>为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意，pos 仅仅是用于标识环的情况，并不会作为参数传递到函数中。</p>
+<p>说明：不允许修改给定的链表。</p>
+<p>进阶：</p>
+<p>你是否可以使用 O(1) 空间解决此题？</p>
+<p> 示例 1：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102706369.png" alt="image-20210114102706369"></p>
+<p>输入：head = [3,2,0,-4], pos = 1<br>输出：返回索引为 1 的链表节点<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102721841.png" alt="image-20210114102721841"></p>
+<p>输入：head = [1,2], pos = 0<br>输出：返回索引为 0 的链表节点<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102737481.png" alt="image-20210114102737481"></p>
+<p>输入：head = [1], pos = -1<br>输出：返回 null<br>解释：链表中没有环。</p>
+<p>提示：</p>
+<p>链表中节点的数目范围在范围 [0, 104] 内<br>-105 &lt;= Node.val &lt;= 105<br>pos 的值为 -1 或者链表中的一个有效索引</p>
+<h3 id="题解-1"><a href="#题解-1" class="headerlink" title="题解"></a>题解</h3><h4 id="方法一：哈希表"><a href="#方法一：哈希表" class="headerlink" title="方法一：哈希表"></a>方法一：哈希表</h4><p>一个非常直观的思路是：我们遍历链表中的每个节点，并将它记录下来；一旦遇到了此前遍历过的节点，就可以判定链表中存在环。借助哈希表可以很方便地实现。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        ListNode pos = head;</span><br><span class="line">        Set&lt;ListNode&gt; visited = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span> (pos != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (visited.contains(pos)) &#123;</span><br><span class="line">                <span class="keyword">return</span> pos;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                visited.add(pos);</span><br><span class="line">            &#125;</span><br><span class="line">            pos = pos.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析-1"><a href="#复杂度分析-1" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们恰好需要访问链表中的每一个节点。</p>
+<p>空间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们需要将链表中的每个节点都保存在哈希表当中。</p>
+<h4 id="方法二：双指针–快慢指针"><a href="#方法二：双指针–快慢指针" class="headerlink" title="方法二：双指针–快慢指针"></a>方法二：双指针–快慢指针</h4><p>我们使用两个指针，\textit{fast}fast 与 \textit{slow}slow。它们起始都位于链表的头部。随后，\textit{slow}slow 指针每次向后移动一个位置，而 \textit{fast}fast 指针向后移动两个位置。如果链表中存在环，则 \textit{fast}fast 指针最终将再次与 \textit{slow}slow 指针在环中相遇。</p>
+<p>如下图所示，设链表中环外部分的长度为 aa。\textit{slow}slow 指针进入环后，又走了 bb 的距离与 \textit{fast}fast 相遇。此时，\textit{fast}fast 指针已经走完了环的 nn 圈，因此它走过的总距离为 a+n(b+c)+b=a+(n+1)b+nca+n(b+c)+b=a+(n+1)b+nc</p>
+ <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114103031586.png" alt="image-20210114103031586" style="zoom:50%;">
+
+<p>根据题意，任意时刻，\textit{fast}fast 指针走过的距离都为 \textit{slow}slow 指针的 22 倍。因此，我们有</p>
+<p>a+(n+1)b+nc=2(a+b) \implies a=c+(n-1)(b+c)<br>a+(n+1)b+nc=2(a+b)⟹a=c+(n−1)(b+c)</p>
+<p>有了 a=c+(n-1)(b+c)a=c+(n−1)(b+c) 的等量关系，我们会发现：从相遇点到入环点的距离加上 n-1n−1 圈的环长，恰好等于从链表头部到入环点的距离。</p>
+<p>因此，当发现 \textit{slow}slow 与 \textit{fast}fast 相遇时，我们再额外使用一个指针 \textit{ptr}ptr。起始，它指向链表头部；随后，它和 \textit{slow}slow 每次向后移动一个位置。最终，它们会在入环点相遇。 </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head, fast = head;</span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="keyword">null</span>) &#123;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            <span class="keyword">if</span> (fast.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">                fast = fast.next.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (fast == slow) &#123;</span><br><span class="line">                ListNode ptr = head;</span><br><span class="line">                <span class="keyword">while</span> (ptr != slow) &#123;</span><br><span class="line">                    ptr = ptr.next;</span><br><span class="line">                    slow = slow.next;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> ptr;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>#####复杂度分析</p>
+<p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。在最初判断快慢指针是否相遇时，\textit{slow}slow 指针走过的距离不会超过链表的总长度；随后寻找入环点时，走过的距离也不会超过链表的总长度。因此，总的执行时间为 O(N)+O(N)=O(N)O(N)+O(N)=O(N)。</p>
+<p>空间复杂度：O(1)O(1)。我们只使用了 \textit{slow}, \textit{fast}, \textit{ptr}slow,fast,ptr 三个指针。</p>
+]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>链表</tag>
+        <tag>双指针</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>哈希表easy篇总结</title>
     <url>/2021/03/11/%E5%93%88%E5%B8%8C%E8%A1%A8easy%E7%AF%87%E6%80%BB%E7%BB%93/</url>
     <content><![CDATA[<p>##哈希表刷题总结</p>
@@ -1850,81 +2103,6 @@
       </categories>
       <tags>
         <tag>哈希表</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>双指针问题</title>
-    <url>/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<h2 id="环形列表I"><a href="#环形列表I" class="headerlink" title="环形列表I"></a>环形列表I</h2><h3 id="题目说明"><a href="#题目说明" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，判断链表中是否有环。</p>
-<p>如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。</p>
-<p>如果链表中存在环，则返回 true 。 否则，返回 false 。</p>
-<p> 进阶：</p>
-<p>你能用 O(1)（即，常量）内存解决此问题吗？</p>
-<p> 示例 1：</p>
-<p> <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100453506.png" alt="image-20210114100453506"></p>
-<p>输入：head = [3,2,0,-4], pos = 1<br>输出：true<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100714252.png" alt="image-20210114100714252"></p>
-<p>输入：head = [1,2], pos = 0<br>输出：true<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
-<img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100749569.png" alt="image-20210114100749569" style="zoom:150%;">
-
-<p>输入：head = [1], pos = -1<br>输出：false<br>解释：链表中没有环。</p>
-<p>提示：</p>
-<p>链表中节点的数目范围是 [0, 104]<br>-105 &lt;= Node.val &lt;= 105<br>pos 为 -1 或者链表中的一个 有效索引 </p>
-<h3 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h3><p>####方法一：哈希表<br>思路及算法</p>
-<p>最容易想到的方法是遍历所有节点，每次遍历到一个节点时，判断该节点此前是否被访问过。</p>
-<p>具体地，我们可以使用哈希表来存储所有已经访问过的节点。每次我们到达一个节点，如果该节点已经存在于哈希表中，则说明该链表是环形链表，否则就将该节点加入哈希表中。重复这一过程，直到我们遍历完整个链表即可。</p>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">pulic <span class="class"><span class="keyword">class</span> <span class="title">solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascirle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        Set&lt;ListNOde&gt; seen = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span>( head !=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!seen.add(head))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>#####复杂度分析</p>
-<p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。最坏情况下我们需要遍历每个节点一次。</p>
-<p>空间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。主要为哈希表的开销，最坏情况下我们需要将每个节点插入到哈希表中一次。</p>
-<h4 id="方式二；双指针–快慢指针"><a href="#方式二；双指针–快慢指针" class="headerlink" title="方式二；双指针–快慢指针"></a>方式二；双指针–快慢指针</h4><p>方法需要读者对「Floyd 判圈算法」（又称龟兔赛跑算法）有所了解。</p>
-<p>假想「乌龟」和「兔子」在链表上移动，「兔子」跑得快，「乌龟」跑得慢。当「乌龟」和「兔子」从链表上的同一个节点开始移动时，如果该链表中没有环，那么「兔子」将一直处于「乌龟」的前方；如果该链表中有环，那么「兔子」会先于「乌龟」进入环，并且一直在环内移动。等到「乌龟」进入环时，由于「兔子」的速度快，它一定会在某个时刻与乌龟相遇，即套了「乌龟」若干圈。</p>
-<p>我们可以根据上述思路来解决本题。具体地，我们定义两个指针，一快一满。慢指针每次只移动一步，而快指针每次移动两步。初始时，慢指针在位置 head，而快指针在位置 head.next。这样一来，如果在移动的过程中，快指针反过来追上慢指针，就说明该链表为环形链表。否则快指针将到达链表尾部，该链表不为环形链表。</p>
-<p> 为什么我们要规定初始时慢指针在位置 head，快指针在位置 head.next，而不是两个指针都在位置 head（即与「乌龟」和「兔子」中的叙述相同）？</p>
-<p>观察下面的代码，我们使用的是 while 循环，循环条件先于循环体。由于循环条件一定是判断快慢指针是否重合，如果我们将两个指针初始都置于 head，那么 while 循环就不会执行。因此，我们可以假想一个在 head 之前的虚拟节点，慢指针从虚拟节点移动一步到达 head，快指针从虚拟节点移动两步到达 head.next，这样我们就可以使用 while 循环了。</p>
-<p>当然，我们也可以使用 do-while 循环。此时，我们就可以把快慢指针的初始值都置为 head。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">puclic <span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascycle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head;</span><br><span class="line">        ListNode fast = head.next;</span><br><span class="line">        <span class="keyword">while</span>(slow!=fast)&#123;</span><br><span class="line">            <span class="keyword">if</span>(fast==<span class="keyword">null</span>||fast.next==<span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            fast = fast.next.next</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。</p>
-<p>当链表中不存在环时，快指针将先于慢指针到达链表尾部，链表中每个节点至多被访问两次。</p>
-<p>当链表中存在环时，每一轮移动后，快慢指针的距离将减小一。而初始距离为环的长度，因此至多移动 NN 轮。</p>
-<p>空间复杂度：O(1)O(1)。我们只使用了两个指针的额外空间</p>
-<h2 id="环形列表II"><a href="#环形列表II" class="headerlink" title="环形列表II"></a>环形列表II</h2><h3 id="题目说明-1"><a href="#题目说明-1" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。</p>
-<p>为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意，pos 仅仅是用于标识环的情况，并不会作为参数传递到函数中。</p>
-<p>说明：不允许修改给定的链表。</p>
-<p>进阶：</p>
-<p>你是否可以使用 O(1) 空间解决此题？</p>
-<p> 示例 1：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102706369.png" alt="image-20210114102706369"></p>
-<p>输入：head = [3,2,0,-4], pos = 1<br>输出：返回索引为 1 的链表节点<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102721841.png" alt="image-20210114102721841"></p>
-<p>输入：head = [1,2], pos = 0<br>输出：返回索引为 0 的链表节点<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102737481.png" alt="image-20210114102737481"></p>
-<p>输入：head = [1], pos = -1<br>输出：返回 null<br>解释：链表中没有环。</p>
-<p>提示：</p>
-<p>链表中节点的数目范围在范围 [0, 104] 内<br>-105 &lt;= Node.val &lt;= 105<br>pos 的值为 -1 或者链表中的一个有效索引</p>
-<h3 id="题解-1"><a href="#题解-1" class="headerlink" title="题解"></a>题解</h3><h4 id="方法一：哈希表"><a href="#方法一：哈希表" class="headerlink" title="方法一：哈希表"></a>方法一：哈希表</h4><p>一个非常直观的思路是：我们遍历链表中的每个节点，并将它记录下来；一旦遇到了此前遍历过的节点，就可以判定链表中存在环。借助哈希表可以很方便地实现。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        ListNode pos = head;</span><br><span class="line">        Set&lt;ListNode&gt; visited = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span> (pos != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (visited.contains(pos)) &#123;</span><br><span class="line">                <span class="keyword">return</span> pos;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                visited.add(pos);</span><br><span class="line">            &#125;</span><br><span class="line">            pos = pos.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析-1"><a href="#复杂度分析-1" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们恰好需要访问链表中的每一个节点。</p>
-<p>空间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们需要将链表中的每个节点都保存在哈希表当中。</p>
-<h4 id="方法二：双指针–快慢指针"><a href="#方法二：双指针–快慢指针" class="headerlink" title="方法二：双指针–快慢指针"></a>方法二：双指针–快慢指针</h4><p>我们使用两个指针，\textit{fast}fast 与 \textit{slow}slow。它们起始都位于链表的头部。随后，\textit{slow}slow 指针每次向后移动一个位置，而 \textit{fast}fast 指针向后移动两个位置。如果链表中存在环，则 \textit{fast}fast 指针最终将再次与 \textit{slow}slow 指针在环中相遇。</p>
-<p>如下图所示，设链表中环外部分的长度为 aa。\textit{slow}slow 指针进入环后，又走了 bb 的距离与 \textit{fast}fast 相遇。此时，\textit{fast}fast 指针已经走完了环的 nn 圈，因此它走过的总距离为 a+n(b+c)+b=a+(n+1)b+nca+n(b+c)+b=a+(n+1)b+nc</p>
- <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114103031586.png" alt="image-20210114103031586" style="zoom:50%;">
-
-<p>根据题意，任意时刻，\textit{fast}fast 指针走过的距离都为 \textit{slow}slow 指针的 22 倍。因此，我们有</p>
-<p>a+(n+1)b+nc=2(a+b) \implies a=c+(n-1)(b+c)<br>a+(n+1)b+nc=2(a+b)⟹a=c+(n−1)(b+c)</p>
-<p>有了 a=c+(n-1)(b+c)a=c+(n−1)(b+c) 的等量关系，我们会发现：从相遇点到入环点的距离加上 n-1n−1 圈的环长，恰好等于从链表头部到入环点的距离。</p>
-<p>因此，当发现 \textit{slow}slow 与 \textit{fast}fast 相遇时，我们再额外使用一个指针 \textit{ptr}ptr。起始，它指向链表头部；随后，它和 \textit{slow}slow 每次向后移动一个位置。最终，它们会在入环点相遇。 </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head, fast = head;</span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="keyword">null</span>) &#123;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            <span class="keyword">if</span> (fast.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">                fast = fast.next.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (fast == slow) &#123;</span><br><span class="line">                ListNode ptr = head;</span><br><span class="line">                <span class="keyword">while</span> (ptr != slow) &#123;</span><br><span class="line">                    ptr = ptr.next;</span><br><span class="line">                    slow = slow.next;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> ptr;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>#####复杂度分析</p>
-<p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。在最初判断快慢指针是否相遇时，\textit{slow}slow 指针走过的距离不会超过链表的总长度；随后寻找入环点时，走过的距离也不会超过链表的总长度。因此，总的执行时间为 O(N)+O(N)=O(N)O(N)+O(N)=O(N)。</p>
-<p>空间复杂度：O(1)O(1)。我们只使用了 \textit{slow}, \textit{fast}, \textit{ptr}slow,fast,ptr 三个指针。</p>
-]]></content>
-      <categories>
-        <category>数据结构</category>
-      </categories>
-      <tags>
-        <tag>链表</tag>
-        <tag>双指针</tag>
       </tags>
   </entry>
   <entry>
@@ -2698,83 +2876,6 @@
       </tags>
   </entry>
   <entry>
-    <title>链表</title>
-    <url>/2021/01/13/%E9%93%BE%E8%A1%A8/</url>
-    <content><![CDATA[<h2 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h2><h3 id="单链表"><a href="#单链表" class="headerlink" title="单链表"></a>单链表</h3><p>单链表中的每个结点不仅包含值，还包含链接到下一个结点的引用字段。通过这种方式，单链表将所有结点按顺序组织起来。习惯于用头节点来代表整个单链表。</p>
-<p>下面是一个单链表的例子：</p>
-<p> <img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\Desktop\screen-shot-2018-04-12-at-152754.png" alt="screen-shot-2018-04-12-at-152754"></p>
-<p>蓝色箭头显示单个链接列表中的结点是如何组合在一起的。</p>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SinglyListNode</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> val;</span><br><span class="line">    SinglyListNode next;    <span class="comment">//定义对象，下一个节点</span></span><br><span class="line">    SinglyListNode(<span class="keyword">int</span> x)&#123;val=x;&#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="单列表的操作"><a href="#单列表的操作" class="headerlink" title="单列表的操作"></a>单列表的操作</h3><p>与数组不同，我们无法在常量时间内访问单链表中的随机元素。 如果我们想要获得第 i 个元素，我们必须从头结点逐个遍历。 我们按索引来访问元素平均要花费 O(N) 时间，其中 N 是链表的长度。</p>
-<p>例如，在上面的示例中，头结点是 23。访问第 3 个结点的唯一方法是使用头结点中的“next”字段到达第 2 个结点（结点 6）; 然后使用结点 6 的“next”字段，我们能够访问第 3 个结点。</p>
-<p>你可能想知道为什么链表很有用，尽管它在通过索引访问数据时（与数组相比）具有如此糟糕的性能。 在 插入和删除中，链表具有良好的性能。</p>
-<h4 id="操作一：添加元素cur在prev之后"><a href="#操作一：添加元素cur在prev之后" class="headerlink" title="操作一：添加元素cur在prev之后"></a>操作一：添加元素cur在prev之后</h4><p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113091359911.png" alt="image-20210113091359911"></p>
-<p>与数组对比，插入新元素不需要将插入节点后的所有元素都后移，因此，时间复杂度为O(1),</p>
-<p><strong><em>特殊情况</em></strong></p>
-<p>在开头添加结点：在列表开头添加新节点时更新头节点head至关重要。</p>
-<ol>
-<li>初始化一个新结点 <code>cur</code> ；</li>
-<li>将新结点链接到我们的原始头结点 <code>head</code>。</li>
-<li>将 <code>cur</code> 指定为 <code>head</code> 。</li>
-</ol>
-<p>在结尾添加节点</p>
-<h4 id="操作二：从单链表中删除现有结点cur"><a href="#操作二：从单链表中删除现有结点cur" class="headerlink" title="操作二：从单链表中删除现有结点cur"></a>操作二：从单链表中删除现有结点cur</h4><p>删除操作 - 单链表<br>如果我们想从单链表中删除现有结点 cur，可以分两步完成：</p>
-<p>找到 cur 的上一个结点 prev 及其下一个结点 next ；</p>
-<p>接下来链接 prev 到 cur 的下一个节点 next 。</p>
-<p>在我们的第一步中，我们需要找出 prev 和 next。使用 cur 的参考字段很容易找出 next，但是，我们必须<strong>从头结点遍历链表，以找出 prev</strong>，它的平均时间是 O(N)，其中 N 是链表的长度。因此，删除结点的时间复杂度将是 <u>O(N)</u>。</p>
-<p>空间复杂度为 O(1)，因为我们只需要常量空间来存储指针。</p>
-<p>示例</p>
-<p>让我们尝试把结点 6从上面的单链表中删除。</p>
-<ol>
-<li><p>从头遍历链表，直到我们找到前一个结点 prev，即结点 23</p>
-<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113092734343.png" alt="image-20210113092734343"></p>
-</li>
-<li><p>将 prev（结点 23）与 next（结点 15）链接</p>
-<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113092712828.png" alt="image-20210113092712828"></p>
-</li>
-</ol>
-<p>结点 6 现在不在我们的单链表中。</p>
-<p><strong>特殊情况</strong></p>
-<p>删除第一个结点<br>如果我们想删除第一个结点，策略会有所不同。</p>
-<p>正如之前所提到的，我们使用头结点 head 来表示链表。我们的头是下面示例中的黑色结点 23。</p>
-<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113092928077.png" alt="image-20210113092928077"></p>
-<p>如果想要删除第一个结点，我们可以简单地将下一个结点分配给 head。也就是说，删除之后我们的头将会是结点 6。</p>
-<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113092949088.png" alt="image-20210113092949088"></p>
-<p>链表从头结点开始，因此结点 23 不再在我们的链表中。</p>
-<h3 id="双链表"><a href="#双链表" class="headerlink" title="双链表"></a>双链表</h3><p>与单链表的区别在于：双链表除了有数据域和指向其后继的指针外，还有指向其前驱的指针。</p>
-<p><strong>所以，根据链接数的不同，可以将链表分为单链表、双链表、多重链表</strong></p>
-<h3 id="LC设计链表"><a href="#LC设计链表" class="headerlink" title="LC设计链表"></a>LC设计链表</h3><p>链表时一个包含零个或多个元素的数据结构。每个元素都包含一个值和到另一个元素的链接。根据链接数的不同，可以分为单链表，双链表和多重链表。</p>
-<p>单链表是最简单的一种，它提供了在常数时间内的 addAtHead 操作和在线性时间内的 addAtTail 的操作。双链表是最常用的一种，因为它提供了在常数时间内的 addAtHead 和 addAtTail 操作，并且优化的插入和删除。</p>
-<p>双链表在 Java 中的实现为 LinkedList，在 Python 中为 list。这些结构都比较常用，有两个要点：</p>
-<p>1、<strong>哨兵节点</strong>：<br>哨兵节点在树和链表中被广泛用作<u>伪头、伪尾</u>等，通常不保存任何数据。</p>
-<p>我们将使用伪头来简化我们简化插入和删除。在接下来的两种方法中应用此方法。</p>
-<p>2、双链表的<u>双向搜索</u>：我们可以从头部或尾部进行搜索。</p>
-<p>####在链表类中实现这些功能：</p>
-<p>get(index)：获取链表中第 index 个节点的值。如果索引无效，则返回-1。<br>addAtHead(val)：在链表的第一个元素之前添加一个值为 val 的节点。插入后，新节点将成为链表的第一个节点。<br>addAtTail(val)：将值为 val 的节点追加到链表的最后一个元素。<br>addAtIndex(index,val)：在链表中的第 index 个节点之前添加值为 val  的节点。如果 index 等于链表的长度，则该节点将附加到链表的末尾。如果 index 大于链表长度，则不会插入节点。如果index小于0，则在头部插入节点。<br>deleteAtIndex(index)：如果索引 index 有效，则删除链表中的第 index 个节点。</p>
-<h4 id="方式一：单链表实现"><a href="#方式一：单链表实现" class="headerlink" title="方式一：单链表实现"></a>方式一：单链表实现</h4><p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113095508745.png" alt="image-20210113095508745"> </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListNode</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> val;</span><br><span class="line">  ListNode next;</span><br><span class="line">  ListNode(<span class="keyword">int</span> x) &#123; val = x; &#125;</span><br><span class="line">&#125;      <span class="comment">//声明结点</span></span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">    <span class="keyword">int</span> size;</span><br><span class="line">    ListNode head;  <span class="comment">//sentinel node as pseudo-head</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyLinkedList</span><span class="params">()</span></span>&#123;</span><br><span class="line">        size = <span class="number">0</span>;</span><br><span class="line">        head = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;   <span class="comment">//声明链表，用哨兵做伪头，这样确保链表中节点永远不为空</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListNode</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> val;</span><br><span class="line">  ListNode next;</span><br><span class="line">  ListNode(<span class="keyword">int</span> x) &#123; val = x; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyLinkedList</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> size;</span><br><span class="line">  ListNode head;  <span class="comment">// sentinel node as pseudo-head</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">MyLinkedList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    size = <span class="number">0</span>;</span><br><span class="line">    head = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Get the value of the index-th node in the linked list. If the index is invalid, return -1. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// if index is invalid</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt;= size) <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    ListNode curr = head;</span><br><span class="line">    <span class="comment">// index steps needed </span></span><br><span class="line">    <span class="comment">// to move from sentinel node to wanted index</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index + <span class="number">1</span>; ++i) curr = curr.next;   <span class="comment">//与删除不同，如果要获取指定索引处的节点，必须前进index+1步</span></span><br><span class="line">    <span class="keyword">return</span> curr.val;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtHead</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    addAtIndex(<span class="number">0</span>, val);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Append a node of value val to the last element of the linked list. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtTail</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    addAtIndex(size, val);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtIndex</span><span class="params">(<span class="keyword">int</span> index, <span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// If index is greater than the length, </span></span><br><span class="line">    <span class="comment">// the node will not be inserted.</span></span><br><span class="line">    <span class="keyword">if</span> (index &gt; size) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// [so weird] If index is negative, </span></span><br><span class="line">    <span class="comment">// the node will be inserted at the head of the list.</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span>)  index = <span class="number">0</span>;</span><br><span class="line">		++size;</span><br><span class="line">    <span class="comment">// find predecessor of the node to be added</span></span><br><span class="line">    ListNode pred = head;    </span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; ++i) pred = pred.next;   <span class="comment">//从头开始找给定索引处的前一个元素pred，</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// node to be added</span></span><br><span class="line">    ListNode toAdd = <span class="keyword">new</span> ListNode(val);    <span class="comment">//新建一个节点</span></span><br><span class="line">    <span class="comment">// insertion itself</span></span><br><span class="line">    toAdd.next = pred.next;  </span><br><span class="line">    pred.next = toAdd;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Delete the index-th node in the linked list, if the index is valid. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteAtIndex</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// if the index is invalid, do nothing</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt;= size) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    size--;</span><br><span class="line">    <span class="comment">// find predecessor of the node to be deleted</span></span><br><span class="line">    ListNode pred = head;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; ++i) pred = pred.next;  <span class="comment">//找到的是要删除节点的前一个节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// delete pred.next </span></span><br><span class="line">    pred.next = pred.next.next;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">作者：LeetCode</span><br><span class="line">链接：https:<span class="comment">//leetcode-cn.com/problems/design-linked-list/solution/she-ji-lian-biao-by-leetcode/</span></span><br><span class="line">来源：力扣（LeetCode）</span><br><span class="line">著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</span><br></pre></td></tr></table></figure>
-<p>#####复杂度分析</p>
-<p>时间复杂度：<br>addAtHead： \mathcal{O}(1)O(1)<br>addAtInder，get，deleteAtIndex: \mathcal{O}(k)O(k)，其中 kk 指的是元素的索引。<br>addAtTail：\mathcal{O}(N)O(N)，其中 NN 指的是链表的元素个数。<br>空间复杂度：所有的操作都是 O(1)O(1)。</p>
-<p>####方式二：双链表实现</p>
-<p>双链表比单链表快得多，测试用例花费的时间比单链表快了两倍。但是它更加复杂，它包含了 <code>size</code>，记录链表元素个数，和伪头伪尾。</p>
-<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113105525613.png" alt="image-20210113105525613"></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListNode</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> val;</span><br><span class="line">  ListNode next;   <span class="comment">//后继结点</span></span><br><span class="line">  ListNode prev;   <span class="comment">//前驱节点</span></span><br><span class="line">  ListNode(<span class="keyword">int</span> x) &#123; val = x; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyLinkedList</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> size=<span class="number">0</span>;</span><br><span class="line">  <span class="comment">// sentinel nodes as pseudo-head and pseudo-tail  --伪元素充当头结点和尾节点</span></span><br><span class="line">  ListNode head, tail;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">MyLinkedList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    size = <span class="number">0</span>;</span><br><span class="line">    head = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">    tail = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">    head.next = tail;</span><br><span class="line">    tail.prev = head;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Get the value of the index-th node in the linked list. If the index is invalid, return -1. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// if index is invalid</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt;= size) <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// choose the fastest way: to move from the head</span></span><br><span class="line">    <span class="comment">// or to move from the tail    ----从后或者从前遍历，选择一个比较快速的遍历方向</span></span><br><span class="line">    ListNode curr = head;</span><br><span class="line">    <span class="keyword">if</span> (index + <span class="number">1</span> &lt; size - index)</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index + <span class="number">1</span>; ++i) curr = curr.next;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      curr = tail;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size - index; ++i) curr = curr.prev;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> curr.val;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtHead</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    ListNode pred = head, succ = head.next;</span><br><span class="line"></span><br><span class="line">    ++size;      <span class="comment">//记得把链表长度更新一下</span></span><br><span class="line">    ListNode toAdd = <span class="keyword">new</span> ListNode(val);</span><br><span class="line">    toAdd.prev = pred;</span><br><span class="line">    toAdd.next = succ;</span><br><span class="line">    pred.next = toAdd;</span><br><span class="line">    succ.prev = toAdd;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Append a node of value val to the last element of the linked list. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtTail</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    ListNode succ = tail, pred = tail.prev;</span><br><span class="line"></span><br><span class="line">    ++size;</span><br><span class="line">    ListNode toAdd = <span class="keyword">new</span> ListNode(val);</span><br><span class="line">    toAdd.prev = pred;</span><br><span class="line">    toAdd.next = succ;</span><br><span class="line">    pred.next = toAdd;</span><br><span class="line">    succ.prev = toAdd;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtIndex</span><span class="params">(<span class="keyword">int</span> index, <span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// If index is greater than the length, </span></span><br><span class="line">    <span class="comment">// the node will not be inserted.</span></span><br><span class="line">    <span class="keyword">if</span> (index &gt; size) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// [so weird] If index is negative, </span></span><br><span class="line">    <span class="comment">// the node will be inserted at the head of the list.</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span>) index = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// find predecessor and successor of the node to be added   找到节点的前驱和后继</span></span><br><span class="line">    ListNode pred, succ;</span><br><span class="line">    <span class="keyword">if</span> (index &lt; size - index) &#123;</span><br><span class="line">      pred = head;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; ++i) </span><br><span class="line">          pred = pred.next;</span><br><span class="line">      succ = pred.next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      succ = tail;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size - index; ++i) succ = succ.prev;</span><br><span class="line">      pred = succ.prev;</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">//先找到待插入元素的前驱与后继，然后在进行节点指向的变更</span></span><br><span class="line">    <span class="comment">// insertion itself</span></span><br><span class="line">    ++size;        <span class="comment">//注意长度的更新</span></span><br><span class="line">    ListNode toAdd = <span class="keyword">new</span> ListNode(val);</span><br><span class="line">    toAdd.prev = pred;</span><br><span class="line">    toAdd.next = succ;</span><br><span class="line">    pred.next = toAdd;</span><br><span class="line">    succ.prev = toAdd;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Delete the index-th node in the linked list, if the index is valid. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteAtIndex</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// if the index is invalid, do nothing</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt;= size) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// find predecessor and successor of the node to be deleted</span></span><br><span class="line">    ListNode pred, succ;</span><br><span class="line">    <span class="keyword">if</span> (index &lt; size - index) &#123;</span><br><span class="line">      pred = head;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; ++i) pred = pred.next;</span><br><span class="line">      succ = pred.next.next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      succ = tail;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size - index - <span class="number">1</span>; ++i) succ = succ.prev;</span><br><span class="line">      pred = succ.prev.prev;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// delete pred.next </span></span><br><span class="line">    --size;</span><br><span class="line">    pred.next = succ;</span><br><span class="line">    succ.prev = pred;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
-<p>伪头和伪尾总是存在，MyLinkedList 中所有节点都包含：值 + 指向前一个节点的指针 + 指向后一个节点的指针。</p>
-<p>#####复杂度分析</p>
-<p>时间复杂度：<br>addAtHead，addAtTail： \mathcal{O}(1)O(1)<br>get，addAtIndex，delete：\mathcal{O}(\min(k, N - k))O(min(k,N−k))，其中 kk 指的是元素的索引。<br>空间复杂度：所有的操作都是 \mathcal{O}(1)O(1)。</p>
-<p> <strong>说明</strong>:不论是单链表还是双链表，在进行遍历时，如果想要通过index来get某一结点元素，for循环中的终止条件是<strong>i&lt;index+1</strong></p>
-<p>如果是删除或者添加，for循环中的终止条件是**i&lt;index</p>
-]]></content>
-      <categories>
-        <category>数据结构</category>
-      </categories>
-      <tags>
-        <tag>链表</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>设计消息队列--&gt;2</title>
     <url>/2021/03/13/%E8%AE%BE%E8%AE%A1%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E9%83%A8%E5%88%86/</url>
     <content><![CDATA[<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p>持久性是事务的一个特性，然而只满足持久性却不一定能满足事务的特性。还是拿扣钱/加钱的例子讲。满足事务的一致性特征，则必须要么都不进行，要么都能成功。 解决方案从大方向上有两种：</p>
@@ -2857,6 +2958,83 @@
       </categories>
       <tags>
         <tag>RabbitMQ</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>链表</title>
+    <url>/2021/01/13/%E9%93%BE%E8%A1%A8/</url>
+    <content><![CDATA[<h2 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h2><h3 id="单链表"><a href="#单链表" class="headerlink" title="单链表"></a>单链表</h3><p>单链表中的每个结点不仅包含值，还包含链接到下一个结点的引用字段。通过这种方式，单链表将所有结点按顺序组织起来。习惯于用头节点来代表整个单链表。</p>
+<p>下面是一个单链表的例子：</p>
+<p> <img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\Desktop\screen-shot-2018-04-12-at-152754.png" alt="screen-shot-2018-04-12-at-152754"></p>
+<p>蓝色箭头显示单个链接列表中的结点是如何组合在一起的。</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SinglyListNode</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> val;</span><br><span class="line">    SinglyListNode next;    <span class="comment">//定义对象，下一个节点</span></span><br><span class="line">    SinglyListNode(<span class="keyword">int</span> x)&#123;val=x;&#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="单列表的操作"><a href="#单列表的操作" class="headerlink" title="单列表的操作"></a>单列表的操作</h3><p>与数组不同，我们无法在常量时间内访问单链表中的随机元素。 如果我们想要获得第 i 个元素，我们必须从头结点逐个遍历。 我们按索引来访问元素平均要花费 O(N) 时间，其中 N 是链表的长度。</p>
+<p>例如，在上面的示例中，头结点是 23。访问第 3 个结点的唯一方法是使用头结点中的“next”字段到达第 2 个结点（结点 6）; 然后使用结点 6 的“next”字段，我们能够访问第 3 个结点。</p>
+<p>你可能想知道为什么链表很有用，尽管它在通过索引访问数据时（与数组相比）具有如此糟糕的性能。 在 插入和删除中，链表具有良好的性能。</p>
+<h4 id="操作一：添加元素cur在prev之后"><a href="#操作一：添加元素cur在prev之后" class="headerlink" title="操作一：添加元素cur在prev之后"></a>操作一：添加元素cur在prev之后</h4><p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113091359911.png" alt="image-20210113091359911"></p>
+<p>与数组对比，插入新元素不需要将插入节点后的所有元素都后移，因此，时间复杂度为O(1),</p>
+<p><strong><em>特殊情况</em></strong></p>
+<p>在开头添加结点：在列表开头添加新节点时更新头节点head至关重要。</p>
+<ol>
+<li>初始化一个新结点 <code>cur</code> ；</li>
+<li>将新结点链接到我们的原始头结点 <code>head</code>。</li>
+<li>将 <code>cur</code> 指定为 <code>head</code> 。</li>
+</ol>
+<p>在结尾添加节点</p>
+<h4 id="操作二：从单链表中删除现有结点cur"><a href="#操作二：从单链表中删除现有结点cur" class="headerlink" title="操作二：从单链表中删除现有结点cur"></a>操作二：从单链表中删除现有结点cur</h4><p>删除操作 - 单链表<br>如果我们想从单链表中删除现有结点 cur，可以分两步完成：</p>
+<p>找到 cur 的上一个结点 prev 及其下一个结点 next ；</p>
+<p>接下来链接 prev 到 cur 的下一个节点 next 。</p>
+<p>在我们的第一步中，我们需要找出 prev 和 next。使用 cur 的参考字段很容易找出 next，但是，我们必须<strong>从头结点遍历链表，以找出 prev</strong>，它的平均时间是 O(N)，其中 N 是链表的长度。因此，删除结点的时间复杂度将是 <u>O(N)</u>。</p>
+<p>空间复杂度为 O(1)，因为我们只需要常量空间来存储指针。</p>
+<p>示例</p>
+<p>让我们尝试把结点 6从上面的单链表中删除。</p>
+<ol>
+<li><p>从头遍历链表，直到我们找到前一个结点 prev，即结点 23</p>
+<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113092734343.png" alt="image-20210113092734343"></p>
+</li>
+<li><p>将 prev（结点 23）与 next（结点 15）链接</p>
+<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113092712828.png" alt="image-20210113092712828"></p>
+</li>
+</ol>
+<p>结点 6 现在不在我们的单链表中。</p>
+<p><strong>特殊情况</strong></p>
+<p>删除第一个结点<br>如果我们想删除第一个结点，策略会有所不同。</p>
+<p>正如之前所提到的，我们使用头结点 head 来表示链表。我们的头是下面示例中的黑色结点 23。</p>
+<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113092928077.png" alt="image-20210113092928077"></p>
+<p>如果想要删除第一个结点，我们可以简单地将下一个结点分配给 head。也就是说，删除之后我们的头将会是结点 6。</p>
+<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113092949088.png" alt="image-20210113092949088"></p>
+<p>链表从头结点开始，因此结点 23 不再在我们的链表中。</p>
+<h3 id="双链表"><a href="#双链表" class="headerlink" title="双链表"></a>双链表</h3><p>与单链表的区别在于：双链表除了有数据域和指向其后继的指针外，还有指向其前驱的指针。</p>
+<p><strong>所以，根据链接数的不同，可以将链表分为单链表、双链表、多重链表</strong></p>
+<h3 id="LC设计链表"><a href="#LC设计链表" class="headerlink" title="LC设计链表"></a>LC设计链表</h3><p>链表时一个包含零个或多个元素的数据结构。每个元素都包含一个值和到另一个元素的链接。根据链接数的不同，可以分为单链表，双链表和多重链表。</p>
+<p>单链表是最简单的一种，它提供了在常数时间内的 addAtHead 操作和在线性时间内的 addAtTail 的操作。双链表是最常用的一种，因为它提供了在常数时间内的 addAtHead 和 addAtTail 操作，并且优化的插入和删除。</p>
+<p>双链表在 Java 中的实现为 LinkedList，在 Python 中为 list。这些结构都比较常用，有两个要点：</p>
+<p>1、<strong>哨兵节点</strong>：<br>哨兵节点在树和链表中被广泛用作<u>伪头、伪尾</u>等，通常不保存任何数据。</p>
+<p>我们将使用伪头来简化我们简化插入和删除。在接下来的两种方法中应用此方法。</p>
+<p>2、双链表的<u>双向搜索</u>：我们可以从头部或尾部进行搜索。</p>
+<p>####在链表类中实现这些功能：</p>
+<p>get(index)：获取链表中第 index 个节点的值。如果索引无效，则返回-1。<br>addAtHead(val)：在链表的第一个元素之前添加一个值为 val 的节点。插入后，新节点将成为链表的第一个节点。<br>addAtTail(val)：将值为 val 的节点追加到链表的最后一个元素。<br>addAtIndex(index,val)：在链表中的第 index 个节点之前添加值为 val  的节点。如果 index 等于链表的长度，则该节点将附加到链表的末尾。如果 index 大于链表长度，则不会插入节点。如果index小于0，则在头部插入节点。<br>deleteAtIndex(index)：如果索引 index 有效，则删除链表中的第 index 个节点。</p>
+<h4 id="方式一：单链表实现"><a href="#方式一：单链表实现" class="headerlink" title="方式一：单链表实现"></a>方式一：单链表实现</h4><p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113095508745.png" alt="image-20210113095508745"> </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListNode</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> val;</span><br><span class="line">  ListNode next;</span><br><span class="line">  ListNode(<span class="keyword">int</span> x) &#123; val = x; &#125;</span><br><span class="line">&#125;      <span class="comment">//声明结点</span></span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">    <span class="keyword">int</span> size;</span><br><span class="line">    ListNode head;  <span class="comment">//sentinel node as pseudo-head</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyLinkedList</span><span class="params">()</span></span>&#123;</span><br><span class="line">        size = <span class="number">0</span>;</span><br><span class="line">        head = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;   <span class="comment">//声明链表，用哨兵做伪头，这样确保链表中节点永远不为空</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListNode</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> val;</span><br><span class="line">  ListNode next;</span><br><span class="line">  ListNode(<span class="keyword">int</span> x) &#123; val = x; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyLinkedList</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> size;</span><br><span class="line">  ListNode head;  <span class="comment">// sentinel node as pseudo-head</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">MyLinkedList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    size = <span class="number">0</span>;</span><br><span class="line">    head = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Get the value of the index-th node in the linked list. If the index is invalid, return -1. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// if index is invalid</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt;= size) <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    ListNode curr = head;</span><br><span class="line">    <span class="comment">// index steps needed </span></span><br><span class="line">    <span class="comment">// to move from sentinel node to wanted index</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index + <span class="number">1</span>; ++i) curr = curr.next;   <span class="comment">//与删除不同，如果要获取指定索引处的节点，必须前进index+1步</span></span><br><span class="line">    <span class="keyword">return</span> curr.val;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtHead</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    addAtIndex(<span class="number">0</span>, val);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Append a node of value val to the last element of the linked list. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtTail</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    addAtIndex(size, val);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtIndex</span><span class="params">(<span class="keyword">int</span> index, <span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// If index is greater than the length, </span></span><br><span class="line">    <span class="comment">// the node will not be inserted.</span></span><br><span class="line">    <span class="keyword">if</span> (index &gt; size) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// [so weird] If index is negative, </span></span><br><span class="line">    <span class="comment">// the node will be inserted at the head of the list.</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span>)  index = <span class="number">0</span>;</span><br><span class="line">		++size;</span><br><span class="line">    <span class="comment">// find predecessor of the node to be added</span></span><br><span class="line">    ListNode pred = head;    </span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; ++i) pred = pred.next;   <span class="comment">//从头开始找给定索引处的前一个元素pred，</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// node to be added</span></span><br><span class="line">    ListNode toAdd = <span class="keyword">new</span> ListNode(val);    <span class="comment">//新建一个节点</span></span><br><span class="line">    <span class="comment">// insertion itself</span></span><br><span class="line">    toAdd.next = pred.next;  </span><br><span class="line">    pred.next = toAdd;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Delete the index-th node in the linked list, if the index is valid. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteAtIndex</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// if the index is invalid, do nothing</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt;= size) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    size--;</span><br><span class="line">    <span class="comment">// find predecessor of the node to be deleted</span></span><br><span class="line">    ListNode pred = head;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; ++i) pred = pred.next;  <span class="comment">//找到的是要删除节点的前一个节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// delete pred.next </span></span><br><span class="line">    pred.next = pred.next.next;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">作者：LeetCode</span><br><span class="line">链接：https:<span class="comment">//leetcode-cn.com/problems/design-linked-list/solution/she-ji-lian-biao-by-leetcode/</span></span><br><span class="line">来源：力扣（LeetCode）</span><br><span class="line">著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</span><br></pre></td></tr></table></figure>
+<p>#####复杂度分析</p>
+<p>时间复杂度：<br>addAtHead： \mathcal{O}(1)O(1)<br>addAtInder，get，deleteAtIndex: \mathcal{O}(k)O(k)，其中 kk 指的是元素的索引。<br>addAtTail：\mathcal{O}(N)O(N)，其中 NN 指的是链表的元素个数。<br>空间复杂度：所有的操作都是 O(1)O(1)。</p>
+<p>####方式二：双链表实现</p>
+<p>双链表比单链表快得多，测试用例花费的时间比单链表快了两倍。但是它更加复杂，它包含了 <code>size</code>，记录链表元素个数，和伪头伪尾。</p>
+<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113105525613.png" alt="image-20210113105525613"></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListNode</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> val;</span><br><span class="line">  ListNode next;   <span class="comment">//后继结点</span></span><br><span class="line">  ListNode prev;   <span class="comment">//前驱节点</span></span><br><span class="line">  ListNode(<span class="keyword">int</span> x) &#123; val = x; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyLinkedList</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> size=<span class="number">0</span>;</span><br><span class="line">  <span class="comment">// sentinel nodes as pseudo-head and pseudo-tail  --伪元素充当头结点和尾节点</span></span><br><span class="line">  ListNode head, tail;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">MyLinkedList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    size = <span class="number">0</span>;</span><br><span class="line">    head = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">    tail = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">    head.next = tail;</span><br><span class="line">    tail.prev = head;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Get the value of the index-th node in the linked list. If the index is invalid, return -1. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// if index is invalid</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt;= size) <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// choose the fastest way: to move from the head</span></span><br><span class="line">    <span class="comment">// or to move from the tail    ----从后或者从前遍历，选择一个比较快速的遍历方向</span></span><br><span class="line">    ListNode curr = head;</span><br><span class="line">    <span class="keyword">if</span> (index + <span class="number">1</span> &lt; size - index)</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index + <span class="number">1</span>; ++i) curr = curr.next;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      curr = tail;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size - index; ++i) curr = curr.prev;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> curr.val;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtHead</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    ListNode pred = head, succ = head.next;</span><br><span class="line"></span><br><span class="line">    ++size;      <span class="comment">//记得把链表长度更新一下</span></span><br><span class="line">    ListNode toAdd = <span class="keyword">new</span> ListNode(val);</span><br><span class="line">    toAdd.prev = pred;</span><br><span class="line">    toAdd.next = succ;</span><br><span class="line">    pred.next = toAdd;</span><br><span class="line">    succ.prev = toAdd;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Append a node of value val to the last element of the linked list. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtTail</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    ListNode succ = tail, pred = tail.prev;</span><br><span class="line"></span><br><span class="line">    ++size;</span><br><span class="line">    ListNode toAdd = <span class="keyword">new</span> ListNode(val);</span><br><span class="line">    toAdd.prev = pred;</span><br><span class="line">    toAdd.next = succ;</span><br><span class="line">    pred.next = toAdd;</span><br><span class="line">    succ.prev = toAdd;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtIndex</span><span class="params">(<span class="keyword">int</span> index, <span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// If index is greater than the length, </span></span><br><span class="line">    <span class="comment">// the node will not be inserted.</span></span><br><span class="line">    <span class="keyword">if</span> (index &gt; size) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// [so weird] If index is negative, </span></span><br><span class="line">    <span class="comment">// the node will be inserted at the head of the list.</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span>) index = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// find predecessor and successor of the node to be added   找到节点的前驱和后继</span></span><br><span class="line">    ListNode pred, succ;</span><br><span class="line">    <span class="keyword">if</span> (index &lt; size - index) &#123;</span><br><span class="line">      pred = head;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; ++i) </span><br><span class="line">          pred = pred.next;</span><br><span class="line">      succ = pred.next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      succ = tail;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size - index; ++i) succ = succ.prev;</span><br><span class="line">      pred = succ.prev;</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">//先找到待插入元素的前驱与后继，然后在进行节点指向的变更</span></span><br><span class="line">    <span class="comment">// insertion itself</span></span><br><span class="line">    ++size;        <span class="comment">//注意长度的更新</span></span><br><span class="line">    ListNode toAdd = <span class="keyword">new</span> ListNode(val);</span><br><span class="line">    toAdd.prev = pred;</span><br><span class="line">    toAdd.next = succ;</span><br><span class="line">    pred.next = toAdd;</span><br><span class="line">    succ.prev = toAdd;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Delete the index-th node in the linked list, if the index is valid. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteAtIndex</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// if the index is invalid, do nothing</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt;= size) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// find predecessor and successor of the node to be deleted</span></span><br><span class="line">    ListNode pred, succ;</span><br><span class="line">    <span class="keyword">if</span> (index &lt; size - index) &#123;</span><br><span class="line">      pred = head;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; ++i) pred = pred.next;</span><br><span class="line">      succ = pred.next.next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      succ = tail;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size - index - <span class="number">1</span>; ++i) succ = succ.prev;</span><br><span class="line">      pred = succ.prev.prev;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// delete pred.next </span></span><br><span class="line">    --size;</span><br><span class="line">    pred.next = succ;</span><br><span class="line">    succ.prev = pred;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+<p>伪头和伪尾总是存在，MyLinkedList 中所有节点都包含：值 + 指向前一个节点的指针 + 指向后一个节点的指针。</p>
+<p>#####复杂度分析</p>
+<p>时间复杂度：<br>addAtHead，addAtTail： \mathcal{O}(1)O(1)<br>get，addAtIndex，delete：\mathcal{O}(\min(k, N - k))O(min(k,N−k))，其中 kk 指的是元素的索引。<br>空间复杂度：所有的操作都是 \mathcal{O}(1)O(1)。</p>
+<p> <strong>说明</strong>:不论是单链表还是双链表，在进行遍历时，如果想要通过index来get某一结点元素，for循环中的终止条件是<strong>i&lt;index+1</strong></p>
+<p>如果是删除或者添加，for循环中的终止条件是**i&lt;index</p>
+]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>链表</tag>
       </tags>
   </entry>
   <entry>
