@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>AOP</title>
+    <url>/2021/03/14/AOP/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Ajax异步传输</title>
     <url>/2021/02/25/Ajax%E5%BC%82%E6%AD%A5%E4%BC%A0%E8%BE%93/</url>
     <content><![CDATA[]]></content>
@@ -14,11 +19,6 @@
   <entry>
     <title>CDN</title>
     <url>/2021/03/14/CDN/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>AOP</title>
-    <url>/2021/03/14/AOP/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -49,13 +49,13 @@
       </tags>
   </entry>
   <entry>
-    <title>Druid数据库连接池</title>
-    <url>/2021/03/14/Druid%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/</url>
+    <title>HTTP代理</title>
+    <url>/2021/02/03/HTTP%E4%BB%A3%E7%90%86/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>HTTP代理</title>
-    <url>/2021/02/03/HTTP%E4%BB%A3%E7%90%86/</url>
+    <title>Druid数据库连接池</title>
+    <url>/2021/03/14/Druid%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -250,11 +250,6 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>JVM虚拟机栈</title>
-    <url>/2021/03/14/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Java内存区域与内存溢出异常</title>
     <url>/2021/02/05/Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/</url>
     <content><![CDATA[<h3 id="1-内存管理那些事"><a href="#1-内存管理那些事" class="headerlink" title="1.内存管理那些事"></a>1.内存管理那些事</h3><p>C、C++：在内存管理领域，没有所谓的内存动态分配机制和垃圾收集技术，他们即拥有每一个对象的所有权，又担负着每一个对象从开始到终结的维护责任。</p>
@@ -324,6 +319,11 @@
       </tags>
   </entry>
   <entry>
+    <title>JVM虚拟机栈</title>
+    <url>/2021/03/14/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Java高并发JUC</title>
     <url>/2021/02/25/Java%E9%AB%98%E5%B9%B6%E5%8F%91JUC/</url>
     <content><![CDATA[]]></content>
@@ -334,30 +334,19 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>LVS负载均衡</title>
-    <url>/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</url>
+    <title>Linux进程管理</title>
+    <url>/2021/03/14/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>Linux进程管理</title>
-    <url>/2021/03/14/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/</url>
+    <title>LVS负载均衡</title>
+    <url>/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Linux进程调度</title>
     <url>/2021/03/14/Linux%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/</url>
     <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>Listener</title>
-    <url>/2021/02/25/Listener/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>Java web</category>
-      </categories>
-      <tags>
-        <tag>Listener</tag>
-      </tags>
   </entry>
   <entry>
     <title>MVC框架</title>
@@ -456,6 +445,17 @@
       </tags>
   </entry>
   <entry>
+    <title>Listener</title>
+    <url>/2021/02/25/Listener/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Java web</category>
+      </categories>
+      <tags>
+        <tag>Listener</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MVVM框架</title>
     <url>/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/</url>
     <content><![CDATA[<p>一个软件或者 APP都是服务于某种需求，这称之为“业务需求”。随着业务需求的增多、软件会变得越来越庞大，越来越复杂。所以就会设计一套完整的架构设计、研发流程以及质量管理体系来保证整个研发过程。“架构设计”是一个非常大的话题，它涉及到各方面，近年来前端一个明显的开发趋势就是架构从传统的 MVC 模式向 MVVM 模式迁移，这里来谈谈——MVVM模式。</p>
@@ -515,6 +515,76 @@
       </categories>
       <tags>
         <tag>架构模式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Maven学习笔记</title>
+    <url>/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/</url>
+    <content><![CDATA[<h2 id="IDEA编辑器集成maven环境"><a href="#IDEA编辑器集成maven环境" class="headerlink" title="IDEA编辑器集成maven环境"></a>IDEA编辑器集成maven环境</h2><p>###设置Maven版本</p>
+<ul>
+<li> 设置Maven版本–选择下载好的maven版本（⽬录选到bin⽬录的上⼀级⽬录）</li>
+</ul>
+
+
+ <img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven2.png" class>
+
+<ul>
+<li><p>设置settings.xml文件</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven3.png" class>
+
+</li>
+</ul>
+<h3 id="Maven项目的创建"><a href="#Maven项目的创建" class="headerlink" title="Maven项目的创建"></a>Maven项目的创建</h3><ul>
+<li><p>选择Maven,设置JDK版本，选择maven项目里的模板</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven4.png" class>
+</li>
+<li><p>设置项目里的GroupID和ArtifactID</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven5.png" class>
+</li>
+<li><p>检查项目的Maven环境</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven6.png" class>
+</li>
+<li><p>项目的目录结构</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven7.png" class>
+
+</li>
+</ul>
+<p>###项目的编译</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven8.png" class>
+
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven9.png" class>
+
+<ul>
+<li>执⾏编译命令，两个图标分别代表”普通模式”和”调试模式”</li>
+</ul>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven10.png" class>
+
+<h3 id="创建WEB项目"><a href="#创建WEB项目" class="headerlink" title="创建WEB项目"></a>创建WEB项目</h3><p>创建web项目与创建普通Java项目步骤基本一致，区别在于选择Maven模板（WEB项目选择webapp)</p>
+<h4 id="启动项目"><a href="#启动项目" class="headerlink" title="启动项目"></a>启动项目</h4><ul>
+<li><p>修改相关版本</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- JDK的版本修改为1.8 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">maven.compiler.target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.target</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- junit的版本修改为4.12 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.12<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>删除pluginManagement标签</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 将这个标签及标签中的内容全部删除 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line">...</span><br><span class="line"><span class="tag">&lt;/<span class="name">pluginManagement</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>添加web部署的插件</p>
+<p>1.jetty插件</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置在plugins标签中 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mortbay.jetty<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-jetty-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">version</span>&gt;</span>6.1.25<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">		 <span class="comment">&lt;!-- 热部署，每10秒扫描⼀次 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">scanIntervalSeconds</span>&gt;</span>10<span class="tag">&lt;/<span class="name">scanIntervalSeconds</span>&gt;</span></span><br><span class="line">		 <span class="comment">&lt;!-- 可指定当前项⽬的站点名 --&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">contextPath</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">contextPath</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">connectors</span>&gt;</span></span><br><span class="line">			 &lt;connector</span><br><span class="line">implementation=&quot;org.mortbay.jetty.nio.SelectChannelConnector&quot;&gt;</span><br><span class="line"> <span class="tag">&lt;<span class="name">port</span>&gt;</span>9090<span class="tag">&lt;/<span class="name">port</span>&gt;</span> <span class="comment">&lt;!-- 设置启动的端⼝号 --&gt;</span></span><br><span class="line"> 			 <span class="tag">&lt;/<span class="name">connector</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">connectors</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<p>  2.tomcat插件</p>
+  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置在plugins标签中 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.tomcat.maven<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>tomcat7-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">port</span>&gt;</span>8081<span class="tag">&lt;/<span class="name">port</span>&gt;</span> <span class="comment">&lt;!-- 启动端⼝ 默认:8080 --&gt;</span></span><br><span class="line"> 		 <span class="tag">&lt;<span class="name">path</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">path</span>&gt;</span> <span class="comment">&lt;!-- 项⽬的站点名，即对外访问路径 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">uriEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">uriEncoding</span>&gt;</span> <span class="comment">&lt;!-- 字符集编码 默认：ISO-8859-1 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">server</span>&gt;</span>tomcat7<span class="tag">&lt;/<span class="name">server</span>&gt;</span> <span class="comment">&lt;!-- 服务器名称 --&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+  <img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven11.png" class>
+
+
+
+<p>**maven依赖仓库：<a href="https://mvnrepository.com/">https://mvnrepository.com/</a> **</p>
+]]></content>
+      <categories>
+        <category>项目工具</category>
+      </categories>
+      <tags>
+        <tag>Maven</tag>
       </tags>
   </entry>
   <entry>
@@ -604,76 +674,6 @@
 </blockquote>
 <p>如果A下同时存在两个不同version的C，冲突！！（选取同时适合A、B的版本）</p>
 <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">version</span>&gt;</span>xxx<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>项目工具</category>
-      </categories>
-      <tags>
-        <tag>Maven</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Maven学习笔记</title>
-    <url>/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/</url>
-    <content><![CDATA[<h2 id="IDEA编辑器集成maven环境"><a href="#IDEA编辑器集成maven环境" class="headerlink" title="IDEA编辑器集成maven环境"></a>IDEA编辑器集成maven环境</h2><p>###设置Maven版本</p>
-<ul>
-<li> 设置Maven版本–选择下载好的maven版本（⽬录选到bin⽬录的上⼀级⽬录）</li>
-</ul>
-
-
- <img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven2.png" class>
-
-<ul>
-<li><p>设置settings.xml文件</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven3.png" class>
-
-</li>
-</ul>
-<h3 id="Maven项目的创建"><a href="#Maven项目的创建" class="headerlink" title="Maven项目的创建"></a>Maven项目的创建</h3><ul>
-<li><p>选择Maven,设置JDK版本，选择maven项目里的模板</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven4.png" class>
-</li>
-<li><p>设置项目里的GroupID和ArtifactID</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven5.png" class>
-</li>
-<li><p>检查项目的Maven环境</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven6.png" class>
-</li>
-<li><p>项目的目录结构</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven7.png" class>
-
-</li>
-</ul>
-<p>###项目的编译</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven8.png" class>
-
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven9.png" class>
-
-<ul>
-<li>执⾏编译命令，两个图标分别代表”普通模式”和”调试模式”</li>
-</ul>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven10.png" class>
-
-<h3 id="创建WEB项目"><a href="#创建WEB项目" class="headerlink" title="创建WEB项目"></a>创建WEB项目</h3><p>创建web项目与创建普通Java项目步骤基本一致，区别在于选择Maven模板（WEB项目选择webapp)</p>
-<h4 id="启动项目"><a href="#启动项目" class="headerlink" title="启动项目"></a>启动项目</h4><ul>
-<li><p>修改相关版本</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- JDK的版本修改为1.8 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">maven.compiler.target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.target</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- junit的版本修改为4.12 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.12<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li><p>删除pluginManagement标签</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 将这个标签及标签中的内容全部删除 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line">...</span><br><span class="line"><span class="tag">&lt;/<span class="name">pluginManagement</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li><p>添加web部署的插件</p>
-<p>1.jetty插件</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置在plugins标签中 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mortbay.jetty<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-jetty-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">version</span>&gt;</span>6.1.25<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">		 <span class="comment">&lt;!-- 热部署，每10秒扫描⼀次 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">scanIntervalSeconds</span>&gt;</span>10<span class="tag">&lt;/<span class="name">scanIntervalSeconds</span>&gt;</span></span><br><span class="line">		 <span class="comment">&lt;!-- 可指定当前项⽬的站点名 --&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">contextPath</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">contextPath</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">connectors</span>&gt;</span></span><br><span class="line">			 &lt;connector</span><br><span class="line">implementation=&quot;org.mortbay.jetty.nio.SelectChannelConnector&quot;&gt;</span><br><span class="line"> <span class="tag">&lt;<span class="name">port</span>&gt;</span>9090<span class="tag">&lt;/<span class="name">port</span>&gt;</span> <span class="comment">&lt;!-- 设置启动的端⼝号 --&gt;</span></span><br><span class="line"> 			 <span class="tag">&lt;/<span class="name">connector</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">connectors</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<p>  2.tomcat插件</p>
-  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置在plugins标签中 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.tomcat.maven<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>tomcat7-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">port</span>&gt;</span>8081<span class="tag">&lt;/<span class="name">port</span>&gt;</span> <span class="comment">&lt;!-- 启动端⼝ 默认:8080 --&gt;</span></span><br><span class="line"> 		 <span class="tag">&lt;<span class="name">path</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">path</span>&gt;</span> <span class="comment">&lt;!-- 项⽬的站点名，即对外访问路径 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">uriEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">uriEncoding</span>&gt;</span> <span class="comment">&lt;!-- 字符集编码 默认：ISO-8859-1 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">server</span>&gt;</span>tomcat7<span class="tag">&lt;/<span class="name">server</span>&gt;</span> <span class="comment">&lt;!-- 服务器名称 --&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
-  <img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven11.png" class>
-
-
-
-<p>**maven依赖仓库：<a href="https://mvnrepository.com/">https://mvnrepository.com/</a> **</p>
 ]]></content>
       <categories>
         <category>项目工具</category>
@@ -856,184 +856,6 @@
     <title>MongoDB数据库</title>
     <url>/2021/02/25/MongoDB%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
     <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>Mybatis动态代理与传参</title>
-    <url>/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/</url>
-    <content><![CDATA[<h2 id="Mybatis动态代理实现CURD"><a href="#Mybatis动态代理实现CURD" class="headerlink" title="Mybatis动态代理实现CURD"></a>Mybatis动态代理实现CURD</h2><h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><blockquote>
-<p>去掉Dao接口的实现类</p>
-</blockquote>
- <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/01.png" class>
-
-<blockquote>
-<p>getMapper获取代理对象</p>
-</blockquote>
-<p>只需调用 SqlSession 的 getMapper()方法，即可获取指定接口的实现类对象。该方法的参数为指定 Dao 接口类的 class 值。(<strong>反射原理</strong>)</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">SqlSession session = factory.openSession();</span><br><span class="line">StudentDao dao = session.getMapper(StudentDao.class);</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用工具类获取session</span></span><br><span class="line">StudentDao studentDao =</span><br><span class="line">MyBatisUtil.getSqlSession().getMapper(StudentDao.class);</span><br></pre></td></tr></table></figure>
-
-
-<blockquote>
-<p>使用Dao代理对象方法执行SQL语句</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//s所有的方法必须都在StudentDao接口中有所定义</span></span><br><span class="line"><span class="comment">//select 方法:</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelect</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="keyword">final</span> List&lt;Student&gt; studentList = studentDao.selectStudents();</span><br><span class="line">     studentList.forEach( stu -&gt; System.out.println(stu));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//insert 方法:</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testInsert</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     Student student = <span class="keyword">new</span> Student();</span><br><span class="line">     student.setId(<span class="number">1006</span>);</span><br><span class="line">     student.setName(<span class="string">&quot;林浩&quot;</span>);</span><br><span class="line">     student.setEmail(<span class="string">&quot;linhao@163.com&quot;</span>);</span><br><span class="line">     student.setAge(<span class="number">26</span>);</span><br><span class="line">     <span class="keyword">int</span> nums = studentDao.insertStudent(student);</span><br><span class="line">     System.out.println(<span class="string">&quot;使用 Dao 添加数据:&quot;</span>+nums);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//update 方法</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testUpdate</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     Student student = <span class="keyword">new</span> Student();</span><br><span class="line">     student.setId(<span class="number">1006</span>);</span><br><span class="line">     student.setAge(<span class="number">28</span>);</span><br><span class="line">     <span class="keyword">int</span> nums = studentDao.updateStudent(student);</span><br><span class="line">     System.out.println(<span class="string">&quot;使用 Dao 修改数据:&quot;</span>+nums);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//delete 方法</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testDelete</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="keyword">int</span> nums = studentDao.deleteStudent(<span class="number">1006</span>);</span><br><span class="line">     System.out.println(<span class="string">&quot;使用 Dao 修改数据:&quot;</span>+nums);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<h4 id="基于动态代理的原理分析"><a href="#基于动态代理的原理分析" class="headerlink" title="基于动态代理的原理分析"></a>基于动态代理的原理分析</h4><img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/02.png" class>
-
-
-
-<blockquote>
-<p>MapperProxy类定义</p>
-</blockquote>
- <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/03.png" class>
-
-<blockquote>
-<p>invoke方法</p>
-</blockquote>
- <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/04.png" class>
-
-
-
-<blockquote>
-<p>重点方法</p>
-</blockquote>
- <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/05.png" class>
-
-
-
-
-
-<h2 id="深入理解参数"><a href="#深入理解参数" class="headerlink" title="深入理解参数"></a>深入理解参数</h2><blockquote>
-<p>parameterType</p>
-</blockquote>
-<p>parameterType: 接口中方法参数的类型， 值是类型的完全限定名或别名。这个属性是可选的，因为 MyBatis 可以推断出具体传入语句的参数，默认值为未设置（unset）。接口中方法的参数从 java 代码传入到 mapper 文件的 sql 语句。</p>
-<p>支持传入参数的类型与别名映射如表所示：</p>
- <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/06.png" class>
-
-
-
-<p> <select>、<insert>、<update>、<delete>都可以使用parameterType指定类型</delete></update></insert></select></p>
-  <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/07.png" class>
-
-
-
-<h3 id="Mybatis传递参数"><a href="#Mybatis传递参数" class="headerlink" title="Mybatis传递参数"></a>Mybatis传递参数</h3><h4 id="一个简单参数"><a href="#一个简单参数" class="headerlink" title="一个简单参数"></a>一个简单参数</h4><p>Dao 接口中方法的参数只有一个简单类型（java 基本类型和 String），占位符 #{ 任意字符 }，和方法的参数名无关。</p>
-<blockquote>
-<p>接口方法</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">Student <span class="title">selectById</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>mapper文件</p>
-</blockquote>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;select id=<span class="string">&quot;selectById&quot;</span> resultType=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span><br><span class="line"> select id,name,email,age from student where id=#&#123;studentId&#125;</span><br><span class="line">&lt;/select&gt;</span><br><span class="line">#&#123;studentId&#125; , studentId 是自定义的变量名称，和方法参数名无关。#表示占位符</span><br></pre></td></tr></table></figure>
-
-
-<blockquote>
-<p>测试方法</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectById</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">//传入了一个参数</span></span><br><span class="line">    Student student = studentDao.selectById(<span class="number">1005</span>);</span><br><span class="line">    System.out.println(<span class="string">&quot;查询 id 是 1005 的学生：&quot;</span>+student);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="多个参数"><a href="#多个参数" class="headerlink" title="多个参数"></a>多个参数</h3><h4 id="使用-Param"><a href="#使用-Param" class="headerlink" title="使用@Param"></a>使用@Param</h4><p>当 Dao 接口方法多个参数，需要通过名称使用参数。在方法形参前面加入@Param(“自定义参数名”)， mapper 文件使用#{自定义参数名}。</p>
-<ul>
-<li>接口方法：</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">List <span class="title">selectMultiParam</span><span class="params">(<span class="meta">@Param(&quot;personName&quot;)</span> String name, <span class="meta">@Param(&quot;personAge&quot;)</span> <span class="keyword">int</span> age)</span></span>; </span><br></pre></td></tr></table></figure>
-
-
-<ul>
-<li><p>mapper 文件： </p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">select id,name,email,age from student where name=#&#123;personName&#125; or age =#&#123;personAge&#125;</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span> </span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectMultiParam</span><span class="params">()</span></span>&#123; </span><br><span class="line">    List stuList = studentDao.selectMultiParam(<span class="string">&quot;李力&quot;</span>,<span class="number">20</span>); 					stuList.forEach( stu -&gt; System.out.println(stu));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<h4 id="多个参数–适用对象"><a href="#多个参数–适用对象" class="headerlink" title="多个参数–适用对象"></a>多个参数–适用对象</h4><p>使用 java 对象传递参数， java 的属性值就是 sql 需要的参数值。 每一个属性就是一个参数。 语法格式： #{ property,javaType=java 中数据类型名,jdbcType=数据类型名称 } javaType, jdbcType 的类型 MyBatis 可以检测出来，一般不需要设置。常用格式 #{ property }</p>
- <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/08.png" class>
-
-<blockquote>
-<p>创建保存参数值的对象QueryParam</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.bjpowernode.vo;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">QueryParam</span> </span>&#123;</span><br><span class="line"> <span class="keyword">private</span> String queryName;</span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">int</span> queryAge;</span><br><span class="line"> <span class="comment">//set ，get 方法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>接口方法</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">List&lt;Student&gt; <span class="title">selectMultiObject</span><span class="params">(QueryParam queryParam)</span></span>;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>mapper文件—-必须保证和对象的属性名相同</p>
-</blockquote>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;select id=<span class="string">&quot;selectMultiObject&quot;</span> resultType=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span><br><span class="line"> select id,name,email,age from student where name=#&#123;queryName&#125; or age=#&#123;queryAge&#125;</span><br><span class="line">&lt;/select</span><br></pre></td></tr></table></figure>
-<p>或者</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;select id=<span class="string">&quot;selectMultiObject&quot;</span> resultType=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span><br><span class="line"> select id,name,email,age from student</span><br><span class="line"> where name=#&#123;queryName,javaType=string,jdbcType=VARCHAR&#125;</span><br><span class="line"> or age =#&#123;queryAge,javaType=int,jdbcType=INTEGER&#125;</span><br><span class="line">&lt;/select&gt;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>测试方法</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">selectMultiObject</span><span class="params">()</span></span>&#123;</span><br><span class="line">     QueryParam qp = <span class="keyword">new</span> QueryParam();</span><br><span class="line">     qp.setQueryName(<span class="string">&quot;李力&quot;</span>);</span><br><span class="line">     qp.setQueryAge(<span class="number">20</span>);</span><br><span class="line">     List&lt;Student&gt; stuList = studentDao.selectMultiObject(qp);</span><br><span class="line">     stuList.forEach( stu -&gt; System.out.println(stu));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="多个参数–按照位置"><a href="#多个参数–按照位置" class="headerlink" title="多个参数–按照位置"></a>多个参数–按照位置</h4><p>参数位置从 0 开始， 引用参数语法 #{ arg 位置 } ， 第一个参数是#{arg0}, 第二个是#{arg1} 注意：mybatis-3.3 版本和之前的版本使用#{0},#{1}方式， 从 mybatis3.4 开始使用#{arg0}方式&gt;。</p>
-<blockquote>
-<p>接口方法</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">List&lt;Student&gt; <span class="title">selectByNameAndAge</span><span class="params">(String name,<span class="keyword">int</span> age)</span></span>;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>mapper文件</p>
-</blockquote>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectByNameAndAge&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span></span><br><span class="line">	 select id,name,email,age from student where name=#&#123;arg0&#125; or age =#&#123;arg1&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>测试方法</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectByNameAndAge</span><span class="params">()</span></span>&#123;</span><br><span class="line">     <span class="comment">//按位置参数</span></span><br><span class="line">     List&lt;Student&gt; stuList = studentDao.selectByNameAndAge(<span class="string">&quot;李力&quot;</span>,<span class="number">20</span>);</span><br><span class="line">     stuList.forEach( stu -&gt; System.out.println(stu));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="多个参数–使用Map"><a href="#多个参数–使用Map" class="headerlink" title="多个参数–使用Map"></a>多个参数–使用Map</h4><p>Map 集合可以存储多个值，使用Map向 mapper 文件一次传入多个参数。Map 集合使用 String的 key， Object 类型的值存储参数。 mapper 文件使用 # { key } 引用参数值。</p>
-<blockquote>
-<p>接口方法</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">List&lt;Student&gt; <span class="title">selectMultiMap</span><span class="params">(Map&lt;String,Object&gt; map)</span></span>;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>mapper文件</p>
-</blockquote>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectMultiMap&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span></span><br><span class="line">	 select id,name,email,age from student where name=#&#123;myname&#125; or age =#&#123;myage&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line">//通过key来传递参数</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>测试方法</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectMultiMap</span><span class="params">()</span></span>&#123;</span><br><span class="line">     Map&lt;String,Object&gt; data = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">     data.put(<span class="string">&quot;myname&quot;</span>,<span class="string">&quot;李力&quot;</span>);<span class="comment">// #&#123;myname&#125;</span></span><br><span class="line">     data.put(<span class="string">&quot;myage&quot;</span>,<span class="number">20</span>); <span class="comment">// #&#123;myage&#125;</span></span><br><span class="line">     List&lt;Student&gt; stuList = studentDao.selectMultiMap(data);</span><br><span class="line">     stuList.forEach( stu -&gt; System.out.println(stu));</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//存储参数的类型是Object</span></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="占位符-和"><a href="#占位符-和" class="headerlink" title="占位符#和$"></a>占位符#和$</h3><h4 id><a href="#" class="headerlink" title></a></h4><p>#：占位符，告诉 mybatis 使用实际的参数值代替。并使用 PrepareStatement 对象执行 sql 语句, #{…}代替 sql 语句的“?”。这样做更安全，更迅速，通常也是首选做法，</p>
-<blockquote>
-<p>mapper文件</p>
-</blockquote>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectById&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span></span><br><span class="line">	 select id,name,email,age from student where id=#&#123;studentId&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>转换为Mybatis的执行是：</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">String <span class="keyword">sql</span><span class="operator">=</span>” <span class="keyword">select</span> id,name,email,age <span class="keyword">from</span> student <span class="keyword">where</span> id<span class="operator">=</span>?”;</span><br><span class="line">PreparedStatement ps <span class="operator">=</span> conn.prepareStatement(<span class="keyword">sql</span>);</span><br><span class="line">ps.setInt(<span class="number">1</span>,<span class="number">1005</span>);</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="-1"><a href="#-1" class="headerlink" title="$"></a>$</h4><p> $ 字符串替换，告诉 mybatis 使用$包含的“字符串”替换所在位置。使用 Statement 把 sql 语句和${}的 内容连接起来。主要用在替换表名，列名，不同列排序等操作。</p>
-<p><strong>因为存在拼接的操作，所以可能会存在SQL注入的安全隐患</strong></p>
- <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/09.png" class>
-
- <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/10.png" class>
-
-
-
-
-
-
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>Mybatis框架</category>
-      </categories>
-      <tags>
-        <tag>Mybatis</tag>
-      </tags>
   </entry>
   <entry>
     <title>Mybatis框架</title>
@@ -1273,6 +1095,184 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
+    <title>Mybatis动态代理与传参</title>
+    <url>/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/</url>
+    <content><![CDATA[<h2 id="Mybatis动态代理实现CURD"><a href="#Mybatis动态代理实现CURD" class="headerlink" title="Mybatis动态代理实现CURD"></a>Mybatis动态代理实现CURD</h2><h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><blockquote>
+<p>去掉Dao接口的实现类</p>
+</blockquote>
+ <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/01.png" class>
+
+<blockquote>
+<p>getMapper获取代理对象</p>
+</blockquote>
+<p>只需调用 SqlSession 的 getMapper()方法，即可获取指定接口的实现类对象。该方法的参数为指定 Dao 接口类的 class 值。(<strong>反射原理</strong>)</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">SqlSession session = factory.openSession();</span><br><span class="line">StudentDao dao = session.getMapper(StudentDao.class);</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用工具类获取session</span></span><br><span class="line">StudentDao studentDao =</span><br><span class="line">MyBatisUtil.getSqlSession().getMapper(StudentDao.class);</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>使用Dao代理对象方法执行SQL语句</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//s所有的方法必须都在StudentDao接口中有所定义</span></span><br><span class="line"><span class="comment">//select 方法:</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelect</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="keyword">final</span> List&lt;Student&gt; studentList = studentDao.selectStudents();</span><br><span class="line">     studentList.forEach( stu -&gt; System.out.println(stu));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//insert 方法:</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testInsert</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     Student student = <span class="keyword">new</span> Student();</span><br><span class="line">     student.setId(<span class="number">1006</span>);</span><br><span class="line">     student.setName(<span class="string">&quot;林浩&quot;</span>);</span><br><span class="line">     student.setEmail(<span class="string">&quot;linhao@163.com&quot;</span>);</span><br><span class="line">     student.setAge(<span class="number">26</span>);</span><br><span class="line">     <span class="keyword">int</span> nums = studentDao.insertStudent(student);</span><br><span class="line">     System.out.println(<span class="string">&quot;使用 Dao 添加数据:&quot;</span>+nums);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//update 方法</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testUpdate</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     Student student = <span class="keyword">new</span> Student();</span><br><span class="line">     student.setId(<span class="number">1006</span>);</span><br><span class="line">     student.setAge(<span class="number">28</span>);</span><br><span class="line">     <span class="keyword">int</span> nums = studentDao.updateStudent(student);</span><br><span class="line">     System.out.println(<span class="string">&quot;使用 Dao 修改数据:&quot;</span>+nums);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//delete 方法</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testDelete</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="keyword">int</span> nums = studentDao.deleteStudent(<span class="number">1006</span>);</span><br><span class="line">     System.out.println(<span class="string">&quot;使用 Dao 修改数据:&quot;</span>+nums);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="基于动态代理的原理分析"><a href="#基于动态代理的原理分析" class="headerlink" title="基于动态代理的原理分析"></a>基于动态代理的原理分析</h4><img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/02.png" class>
+
+
+
+<blockquote>
+<p>MapperProxy类定义</p>
+</blockquote>
+ <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/03.png" class>
+
+<blockquote>
+<p>invoke方法</p>
+</blockquote>
+ <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/04.png" class>
+
+
+
+<blockquote>
+<p>重点方法</p>
+</blockquote>
+ <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/05.png" class>
+
+
+
+
+
+<h2 id="深入理解参数"><a href="#深入理解参数" class="headerlink" title="深入理解参数"></a>深入理解参数</h2><blockquote>
+<p>parameterType</p>
+</blockquote>
+<p>parameterType: 接口中方法参数的类型， 值是类型的完全限定名或别名。这个属性是可选的，因为 MyBatis 可以推断出具体传入语句的参数，默认值为未设置（unset）。接口中方法的参数从 java 代码传入到 mapper 文件的 sql 语句。</p>
+<p>支持传入参数的类型与别名映射如表所示：</p>
+ <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/06.png" class>
+
+
+
+<p> <select>、<insert>、<update>、<delete>都可以使用parameterType指定类型</delete></update></insert></select></p>
+  <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/07.png" class>
+
+
+
+<h3 id="Mybatis传递参数"><a href="#Mybatis传递参数" class="headerlink" title="Mybatis传递参数"></a>Mybatis传递参数</h3><h4 id="一个简单参数"><a href="#一个简单参数" class="headerlink" title="一个简单参数"></a>一个简单参数</h4><p>Dao 接口中方法的参数只有一个简单类型（java 基本类型和 String），占位符 #{ 任意字符 }，和方法的参数名无关。</p>
+<blockquote>
+<p>接口方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">Student <span class="title">selectById</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>mapper文件</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;select id=<span class="string">&quot;selectById&quot;</span> resultType=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span><br><span class="line"> select id,name,email,age from student where id=#&#123;studentId&#125;</span><br><span class="line">&lt;/select&gt;</span><br><span class="line">#&#123;studentId&#125; , studentId 是自定义的变量名称，和方法参数名无关。#表示占位符</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>测试方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectById</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">//传入了一个参数</span></span><br><span class="line">    Student student = studentDao.selectById(<span class="number">1005</span>);</span><br><span class="line">    System.out.println(<span class="string">&quot;查询 id 是 1005 的学生：&quot;</span>+student);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="多个参数"><a href="#多个参数" class="headerlink" title="多个参数"></a>多个参数</h3><h4 id="使用-Param"><a href="#使用-Param" class="headerlink" title="使用@Param"></a>使用@Param</h4><p>当 Dao 接口方法多个参数，需要通过名称使用参数。在方法形参前面加入@Param(“自定义参数名”)， mapper 文件使用#{自定义参数名}。</p>
+<ul>
+<li>接口方法：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">List <span class="title">selectMultiParam</span><span class="params">(<span class="meta">@Param(&quot;personName&quot;)</span> String name, <span class="meta">@Param(&quot;personAge&quot;)</span> <span class="keyword">int</span> age)</span></span>; </span><br></pre></td></tr></table></figure>
+
+
+<ul>
+<li><p>mapper 文件： </p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">select id,name,email,age from student where name=#&#123;personName&#125; or age =#&#123;personAge&#125;</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span> </span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectMultiParam</span><span class="params">()</span></span>&#123; </span><br><span class="line">    List stuList = studentDao.selectMultiParam(<span class="string">&quot;李力&quot;</span>,<span class="number">20</span>); 					stuList.forEach( stu -&gt; System.out.println(stu));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<h4 id="多个参数–适用对象"><a href="#多个参数–适用对象" class="headerlink" title="多个参数–适用对象"></a>多个参数–适用对象</h4><p>使用 java 对象传递参数， java 的属性值就是 sql 需要的参数值。 每一个属性就是一个参数。 语法格式： #{ property,javaType=java 中数据类型名,jdbcType=数据类型名称 } javaType, jdbcType 的类型 MyBatis 可以检测出来，一般不需要设置。常用格式 #{ property }</p>
+ <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/08.png" class>
+
+<blockquote>
+<p>创建保存参数值的对象QueryParam</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.bjpowernode.vo;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">QueryParam</span> </span>&#123;</span><br><span class="line"> <span class="keyword">private</span> String queryName;</span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">int</span> queryAge;</span><br><span class="line"> <span class="comment">//set ，get 方法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>接口方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">List&lt;Student&gt; <span class="title">selectMultiObject</span><span class="params">(QueryParam queryParam)</span></span>;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>mapper文件—-必须保证和对象的属性名相同</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;select id=<span class="string">&quot;selectMultiObject&quot;</span> resultType=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span><br><span class="line"> select id,name,email,age from student where name=#&#123;queryName&#125; or age=#&#123;queryAge&#125;</span><br><span class="line">&lt;/select</span><br></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;select id=<span class="string">&quot;selectMultiObject&quot;</span> resultType=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span><br><span class="line"> select id,name,email,age from student</span><br><span class="line"> where name=#&#123;queryName,javaType=string,jdbcType=VARCHAR&#125;</span><br><span class="line"> or age =#&#123;queryAge,javaType=int,jdbcType=INTEGER&#125;</span><br><span class="line">&lt;/select&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>测试方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">selectMultiObject</span><span class="params">()</span></span>&#123;</span><br><span class="line">     QueryParam qp = <span class="keyword">new</span> QueryParam();</span><br><span class="line">     qp.setQueryName(<span class="string">&quot;李力&quot;</span>);</span><br><span class="line">     qp.setQueryAge(<span class="number">20</span>);</span><br><span class="line">     List&lt;Student&gt; stuList = studentDao.selectMultiObject(qp);</span><br><span class="line">     stuList.forEach( stu -&gt; System.out.println(stu));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="多个参数–按照位置"><a href="#多个参数–按照位置" class="headerlink" title="多个参数–按照位置"></a>多个参数–按照位置</h4><p>参数位置从 0 开始， 引用参数语法 #{ arg 位置 } ， 第一个参数是#{arg0}, 第二个是#{arg1} 注意：mybatis-3.3 版本和之前的版本使用#{0},#{1}方式， 从 mybatis3.4 开始使用#{arg0}方式&gt;。</p>
+<blockquote>
+<p>接口方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">List&lt;Student&gt; <span class="title">selectByNameAndAge</span><span class="params">(String name,<span class="keyword">int</span> age)</span></span>;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>mapper文件</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectByNameAndAge&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span></span><br><span class="line">	 select id,name,email,age from student where name=#&#123;arg0&#125; or age =#&#123;arg1&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>测试方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectByNameAndAge</span><span class="params">()</span></span>&#123;</span><br><span class="line">     <span class="comment">//按位置参数</span></span><br><span class="line">     List&lt;Student&gt; stuList = studentDao.selectByNameAndAge(<span class="string">&quot;李力&quot;</span>,<span class="number">20</span>);</span><br><span class="line">     stuList.forEach( stu -&gt; System.out.println(stu));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="多个参数–使用Map"><a href="#多个参数–使用Map" class="headerlink" title="多个参数–使用Map"></a>多个参数–使用Map</h4><p>Map 集合可以存储多个值，使用Map向 mapper 文件一次传入多个参数。Map 集合使用 String的 key， Object 类型的值存储参数。 mapper 文件使用 # { key } 引用参数值。</p>
+<blockquote>
+<p>接口方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">List&lt;Student&gt; <span class="title">selectMultiMap</span><span class="params">(Map&lt;String,Object&gt; map)</span></span>;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>mapper文件</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectMultiMap&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span></span><br><span class="line">	 select id,name,email,age from student where name=#&#123;myname&#125; or age =#&#123;myage&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line">//通过key来传递参数</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>测试方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectMultiMap</span><span class="params">()</span></span>&#123;</span><br><span class="line">     Map&lt;String,Object&gt; data = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">     data.put(<span class="string">&quot;myname&quot;</span>,<span class="string">&quot;李力&quot;</span>);<span class="comment">// #&#123;myname&#125;</span></span><br><span class="line">     data.put(<span class="string">&quot;myage&quot;</span>,<span class="number">20</span>); <span class="comment">// #&#123;myage&#125;</span></span><br><span class="line">     List&lt;Student&gt; stuList = studentDao.selectMultiMap(data);</span><br><span class="line">     stuList.forEach( stu -&gt; System.out.println(stu));</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//存储参数的类型是Object</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="占位符-和"><a href="#占位符-和" class="headerlink" title="占位符#和$"></a>占位符#和$</h3><h4 id><a href="#" class="headerlink" title></a></h4><p>#：占位符，告诉 mybatis 使用实际的参数值代替。并使用 PrepareStatement 对象执行 sql 语句, #{…}代替 sql 语句的“?”。这样做更安全，更迅速，通常也是首选做法，</p>
+<blockquote>
+<p>mapper文件</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectById&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span></span><br><span class="line">	 select id,name,email,age from student where id=#&#123;studentId&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>转换为Mybatis的执行是：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">String <span class="keyword">sql</span><span class="operator">=</span>” <span class="keyword">select</span> id,name,email,age <span class="keyword">from</span> student <span class="keyword">where</span> id<span class="operator">=</span>?”;</span><br><span class="line">PreparedStatement ps <span class="operator">=</span> conn.prepareStatement(<span class="keyword">sql</span>);</span><br><span class="line">ps.setInt(<span class="number">1</span>,<span class="number">1005</span>);</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="-1"><a href="#-1" class="headerlink" title="$"></a>$</h4><p> $ 字符串替换，告诉 mybatis 使用$包含的“字符串”替换所在位置。使用 Statement 把 sql 语句和${}的 内容连接起来。主要用在替换表名，列名，不同列排序等操作。</p>
+<p><strong>因为存在拼接的操作，所以可能会存在SQL注入的安全隐患</strong></p>
+ <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/09.png" class>
+
+ <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/10.png" class>
+
+
+
+
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>Mybatis框架</category>
+      </categories>
+      <tags>
+        <tag>Mybatis</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Nginx服务器的使用</title>
     <url>/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<h1 id="Nginx服务器使用"><a href="#Nginx服务器使用" class="headerlink" title="Nginx服务器使用"></a>Nginx服务器使用</h1><h2 id="内容概览"><a href="#内容概览" class="headerlink" title="内容概览"></a>内容概览</h2><h3 id="1、nginx简介"><a href="#1、nginx简介" class="headerlink" title="1、nginx简介"></a>1、nginx简介</h3><p>（1）介绍nginx的应用场景和具体可以做什么事情</p>
@@ -1345,13 +1345,13 @@
       </tags>
   </entry>
   <entry>
-    <title>PC寄存器</title>
-    <url>/2021/03/14/PC%E5%AF%84%E5%AD%98%E5%99%A8/</url>
+    <title>Redis数据库</title>
+    <url>/2021/02/25/Redis%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>Redis数据库</title>
-    <url>/2021/02/25/Redis%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+    <title>PC寄存器</title>
+    <url>/2021/03/14/PC%E5%AF%84%E5%AD%98%E5%99%A8/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -1490,6 +1490,51 @@
       </tags>
   </entry>
   <entry>
+    <title>Swagger-UI</title>
+    <url>/2021/03/14/Swagger-UI/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>XML映射文件详解</title>
+    <url>/2021/03/14/XML%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Undo页与redo页</title>
+    <url>/2021/02/14/Undo%E9%A1%B5%E4%B8%8Eredo%E9%A1%B5/</url>
+    <content><![CDATA[<h2 id="Undo-Log"><a href="#Undo-Log" class="headerlink" title="Undo Log"></a>Undo Log</h2><p>是为了实现事务的原子性，在MySQL数据库InnoDB存储引擎中，还用Undo Log来实现多版本并发控制(简称：MVCC)。</p>
+<ul>
+<li>事务的原子性(Atomicity)<br>事务中的所有操作，要么全部完成，要么不做任何操作，不能只做部分操作。如果在执行的过程中发生了错误，要回滚(Rollback)到事务开始前的状态，就像这个事务从来没有执行过。</li>
+<li>原理<br>Undo Log的原理很简单，为了满足事务的原子性，在操作任何数据之前，首先将数据备份到一个地方（这个存储数据备份的地方称为Undo Log）。然后进行数据的修改。如果出现了错误或者用户执行了ROLLBACK语句，系统可以利用Undo Log中的备份将数据恢复到事务开始之前的状态。<br>除了可以保证事务的原子性，Undo Log也可以用来辅助完成事务的持久化。</li>
+<li>事务的持久性(Durability)<br>事务一旦完成，该事务对数据库所做的所有修改都会持久的保存到数据库中。为了保证持久性，数据库系统会将修改后的数据完全的记录到持久的存储上。</li>
+<li>用Undo Log实现原子性和持久化的事务的简化过程<br>假设有A、B两个数据，值分别为1,2。<br>A.事务开始.<br>B.记录A=1到undo log.<br>C.修改A=3.<br>D.记录B=2到undo log.<br>E.修改B=4.<br>F.将undo log写到磁盘。<br>G.将数据写到磁盘。<br>H.事务提交<br>这里有一个隐含的前提条件：‘数据都是先读到内存中，然后修改内存中的数据，最后将数据写回磁盘’。</li>
+</ul>
+<p>之所以能同时保证原子性和持久化，是因为以下特点：<br>A. 更新数据前记录Undo log。<br>B. 为了保证持久性，必须将数据在事务提交前写到磁盘。只要事务成功提交，数据必然已经持久化。<br>C. Undo log必须先于数据持久化到磁盘。如果在G,H之间系统崩溃，undo log是完整的,可以用来回滚事务。</p>
+<p>D. 如果在A-F之间系统崩溃,因为数据没有持久化到磁盘。所以磁盘上的数据还是保持在事务开始前的状态。</p>
+<p>缺陷：每个事务提交前将数据和Undo Log写入磁盘，这样会导致大量的磁盘IO，因此性能很低。</p>
+<p>如果能够将数据缓存一段时间，就能减少IO提高性能。但是这样就会丧失事务的持久性。因此引入了另外一<br>种机制来实现持久化，即Redo Log.</p>
+<h2 id="Redo-Log"><a href="#Redo-Log" class="headerlink" title="Redo Log"></a>Redo Log</h2><ul>
+<li>原理<br>和Undo Log相反，Redo Log记录的是新数据的备份。在事务提交前，只要将Redo Log持久化即可，<br>不需要将数据持久化。当系统崩溃时，虽然数据没有持久化，但是Redo Log已经持久化。系统可以根据Redo Log的内容，将所有数据恢复到最新的状态。</li>
+<li>Undo + Redo事务的简化过程<br>假设有A、B两个数据，值分别为1,2.<br>A.事务开始.<br>B.记录A=1到undo log.<br>C.修改A=3.<br>D.记录A=3到redo log.<br>E.记录B=2到undo log.<br>F.修改B=4.<br>G.记录B=4到redo log.<br>H.将redo log写入磁盘。<br>I.事务提交</li>
+<li>Undo + Redo事务的特点<br>A. 为了保证持久性，必须在事务提交前将Redo Log持久化。<br>B. 数据不需要在事务提交前写入磁盘，而是缓存在内存中。<br>C. Redo Log保证事务的持久性。<br>D. Undo Log保证事务的原子性。<br>E. 有一个隐含的特点，数据必须要晚于redo log写入持久存储。</li>
+<li>IO性能<br>Undo + Redo的设计主要考虑的是提升IO性能。虽说通过缓存数据，减少了写数据的IO. 但是却引入了新的IO，即写Redo Log的IO。如果Redo Log的IO性能不好，就不能起到提高性能的目的。</li>
+</ul>
+<p>为了保证Redo Log能够有比较好的IO性能，InnoDB 的 Redo Log的设计有以下几个特点：</p>
+<p>A. 尽量保持Redo Log存储在一段连续的空间上。因此在系统第一次启动时就会将日志文件的空间完全分配。以顺序追加的方式记录Redo Log,通过顺序IO来改善性能。<br>B. 批量写入日志。日志并不是直接写入文件，而是先写入redo log buffer.当需要将日志刷新到磁盘时 (如事务提交),将许多日志一起写入磁盘.<br>C. 并发的事务共享Redo Log的存储空间，它们的Redo Log按语句的执行顺序，依次交替的记录在一起，以减少日志占用的空间。例如,Redo Log中的记录内容可能是这样的：<br>记录1: &lt;trx1, insert …&gt;<br>记录2: &lt;trx2, update …&gt;<br>记录3: &lt;trx1, delete …&gt;<br>记录4: &lt;trx3, update …&gt;<br>记录5: &lt;trx2, insert …&gt;<br>D. 因为C的原因,当一个事务将Redo Log写入磁盘时，也会将其他未提交的事务的日志写入磁盘。<br>E. Redo Log上只进行顺序追加的操作，当一个事务需要回滚时，它的Redo Log记录也不会从Redo Log中删除掉。</p>
+<h2 id="恢复-Recovery"><a href="#恢复-Recovery" class="headerlink" title="恢复(Recovery)"></a>恢复(Recovery)</h2><ul>
+<li>恢复策略<br>前面说到未提交的事务和回滚了的事务也会记录Redo Log，因此在进行恢复时,这些事务要进行特殊的的处理.有2中不同的恢复策略：<br>A. 进行恢复时，只重做已经提交了的事务。<br>B. 进行恢复时，重做所有事务包括未提交的事务和回滚了的事务。然后通过Undo Log回滚那些未提交的事务。</li>
+<li>InnoDB存储引擎的恢复机制<br>MySQL数据库InnoDB存储引擎使用了B策略, InnoDB存储引擎中的恢复机制有几个特点：<br>A. 在重做Redo Log时，并不关心事务性。 恢复时，没有BEGIN，也没有COMMIT,ROLLBACK的行为。也不关心每个日志是哪个事务的。尽管事务ID等事务相关的内容会记入Redo Log，这些内容只是被当作要操作的数据的一部分。<br>B. 使用B策略就必须要将Undo Log持久化，而且必须要在写Redo Log之前将对应的Undo Log写入磁盘。<br>Undo和Redo Log的这种关联，使得持久化变得复杂起来。为了降低复杂度，InnoDB将Undo Log看作数据，因此记录Undo Log的操作也会记录到redo log中。这样undo log就可以象数据一样缓存起来， 而不用在redo log之前写入磁盘了。<br>包含Undo Log操作的Redo Log，看起来是这样的<br>记录1: &lt;trx1, Undo log insert &lt;undo_insert …&gt;&gt;<br>记录2: &lt;trx1, insert …&gt;<br>记录3: &lt;trx2, Undo log insert &lt;undo_update …&gt;&gt;<br>记录4: &lt;trx2, update …&gt;<br>记录5: &lt;trx3, Undo log insert &lt;undo_delete …&gt;&gt;<br>记录6: &lt;trx3, delete …&gt;<br>C. 到这里，还有一个问题没有弄清楚。既然Redo没有事务性，那岂不是会重新执行被回滚了的事务？<br>确实是这样。同时Innodb也会将事务回滚时的操作也记录到redo log中。回滚操作本质上也是对数据进行修改，因此回滚时对数据的操作也会记录到Redo Log中。<br>一个回滚了的事务的Redo Log，看起来是这样的：<br>记录1: &lt;trx1, Undo log insert &lt;undo_insert …&gt;&gt;<br>记录2: &lt;trx1, insert A…&gt;<br>记录3: &lt;trx1, Undo log insert &lt;undo_update …&gt;&gt;<br>记录4: &lt;trx1, update B…&gt;<br>记录5: &lt;trx1, Undo log insert &lt;undo_delete …&gt;&gt;<br>记录6: &lt;trx1, delete C…&gt;<br>记录7: &lt;trx1, insert C&gt;<br>记录8: &lt;trx1, update B to old value&gt;<br>记录9: &lt;trx1, delete A&gt;<br>一个被回滚了的事务在恢复时的操作就是先redo再undo，因此不会破坏数据的一致性.</li>
+<li>InnoDB存储引擎中相关的函数<br>Redo: recv_recovery_from_checkpoint_start()<br>Undo: recv_recovery_rollback_active()<br>Undo Log的Redo Log: trx_undof_page_add_undo_rec_log()</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MySQL数据库</category>
+      </categories>
+      <tags>
+        <tag>InnoDB存储引擎</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Stack</title>
     <url>/2021/03/11/Stack/</url>
     <content><![CDATA[<h2 id="栈刷题总结"><a href="#栈刷题总结" class="headerlink" title="栈刷题总结"></a>栈刷题总结</h2><h3 id="1-有效的括号"><a href="#1-有效的括号" class="headerlink" title="1.有效的括号"></a>1.有效的括号</h3><h4 id="知识点补充："><a href="#知识点补充：" class="headerlink" title="知识点补充："></a>知识点补充：</h4><blockquote>
@@ -1608,53 +1653,13 @@
       </tags>
   </entry>
   <entry>
-    <title>Swagger-UI</title>
-    <url>/2021/03/14/Swagger-UI/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>Undo页与redo页</title>
-    <url>/2021/02/14/Undo%E9%A1%B5%E4%B8%8Eredo%E9%A1%B5/</url>
-    <content><![CDATA[<h2 id="Undo-Log"><a href="#Undo-Log" class="headerlink" title="Undo Log"></a>Undo Log</h2><p>是为了实现事务的原子性，在MySQL数据库InnoDB存储引擎中，还用Undo Log来实现多版本并发控制(简称：MVCC)。</p>
-<ul>
-<li>事务的原子性(Atomicity)<br>事务中的所有操作，要么全部完成，要么不做任何操作，不能只做部分操作。如果在执行的过程中发生了错误，要回滚(Rollback)到事务开始前的状态，就像这个事务从来没有执行过。</li>
-<li>原理<br>Undo Log的原理很简单，为了满足事务的原子性，在操作任何数据之前，首先将数据备份到一个地方（这个存储数据备份的地方称为Undo Log）。然后进行数据的修改。如果出现了错误或者用户执行了ROLLBACK语句，系统可以利用Undo Log中的备份将数据恢复到事务开始之前的状态。<br>除了可以保证事务的原子性，Undo Log也可以用来辅助完成事务的持久化。</li>
-<li>事务的持久性(Durability)<br>事务一旦完成，该事务对数据库所做的所有修改都会持久的保存到数据库中。为了保证持久性，数据库系统会将修改后的数据完全的记录到持久的存储上。</li>
-<li>用Undo Log实现原子性和持久化的事务的简化过程<br>假设有A、B两个数据，值分别为1,2。<br>A.事务开始.<br>B.记录A=1到undo log.<br>C.修改A=3.<br>D.记录B=2到undo log.<br>E.修改B=4.<br>F.将undo log写到磁盘。<br>G.将数据写到磁盘。<br>H.事务提交<br>这里有一个隐含的前提条件：‘数据都是先读到内存中，然后修改内存中的数据，最后将数据写回磁盘’。</li>
-</ul>
-<p>之所以能同时保证原子性和持久化，是因为以下特点：<br>A. 更新数据前记录Undo log。<br>B. 为了保证持久性，必须将数据在事务提交前写到磁盘。只要事务成功提交，数据必然已经持久化。<br>C. Undo log必须先于数据持久化到磁盘。如果在G,H之间系统崩溃，undo log是完整的,可以用来回滚事务。</p>
-<p>D. 如果在A-F之间系统崩溃,因为数据没有持久化到磁盘。所以磁盘上的数据还是保持在事务开始前的状态。</p>
-<p>缺陷：每个事务提交前将数据和Undo Log写入磁盘，这样会导致大量的磁盘IO，因此性能很低。</p>
-<p>如果能够将数据缓存一段时间，就能减少IO提高性能。但是这样就会丧失事务的持久性。因此引入了另外一<br>种机制来实现持久化，即Redo Log.</p>
-<h2 id="Redo-Log"><a href="#Redo-Log" class="headerlink" title="Redo Log"></a>Redo Log</h2><ul>
-<li>原理<br>和Undo Log相反，Redo Log记录的是新数据的备份。在事务提交前，只要将Redo Log持久化即可，<br>不需要将数据持久化。当系统崩溃时，虽然数据没有持久化，但是Redo Log已经持久化。系统可以根据Redo Log的内容，将所有数据恢复到最新的状态。</li>
-<li>Undo + Redo事务的简化过程<br>假设有A、B两个数据，值分别为1,2.<br>A.事务开始.<br>B.记录A=1到undo log.<br>C.修改A=3.<br>D.记录A=3到redo log.<br>E.记录B=2到undo log.<br>F.修改B=4.<br>G.记录B=4到redo log.<br>H.将redo log写入磁盘。<br>I.事务提交</li>
-<li>Undo + Redo事务的特点<br>A. 为了保证持久性，必须在事务提交前将Redo Log持久化。<br>B. 数据不需要在事务提交前写入磁盘，而是缓存在内存中。<br>C. Redo Log保证事务的持久性。<br>D. Undo Log保证事务的原子性。<br>E. 有一个隐含的特点，数据必须要晚于redo log写入持久存储。</li>
-<li>IO性能<br>Undo + Redo的设计主要考虑的是提升IO性能。虽说通过缓存数据，减少了写数据的IO. 但是却引入了新的IO，即写Redo Log的IO。如果Redo Log的IO性能不好，就不能起到提高性能的目的。</li>
-</ul>
-<p>为了保证Redo Log能够有比较好的IO性能，InnoDB 的 Redo Log的设计有以下几个特点：</p>
-<p>A. 尽量保持Redo Log存储在一段连续的空间上。因此在系统第一次启动时就会将日志文件的空间完全分配。以顺序追加的方式记录Redo Log,通过顺序IO来改善性能。<br>B. 批量写入日志。日志并不是直接写入文件，而是先写入redo log buffer.当需要将日志刷新到磁盘时 (如事务提交),将许多日志一起写入磁盘.<br>C. 并发的事务共享Redo Log的存储空间，它们的Redo Log按语句的执行顺序，依次交替的记录在一起，以减少日志占用的空间。例如,Redo Log中的记录内容可能是这样的：<br>记录1: &lt;trx1, insert …&gt;<br>记录2: &lt;trx2, update …&gt;<br>记录3: &lt;trx1, delete …&gt;<br>记录4: &lt;trx3, update …&gt;<br>记录5: &lt;trx2, insert …&gt;<br>D. 因为C的原因,当一个事务将Redo Log写入磁盘时，也会将其他未提交的事务的日志写入磁盘。<br>E. Redo Log上只进行顺序追加的操作，当一个事务需要回滚时，它的Redo Log记录也不会从Redo Log中删除掉。</p>
-<h2 id="恢复-Recovery"><a href="#恢复-Recovery" class="headerlink" title="恢复(Recovery)"></a>恢复(Recovery)</h2><ul>
-<li>恢复策略<br>前面说到未提交的事务和回滚了的事务也会记录Redo Log，因此在进行恢复时,这些事务要进行特殊的的处理.有2中不同的恢复策略：<br>A. 进行恢复时，只重做已经提交了的事务。<br>B. 进行恢复时，重做所有事务包括未提交的事务和回滚了的事务。然后通过Undo Log回滚那些未提交的事务。</li>
-<li>InnoDB存储引擎的恢复机制<br>MySQL数据库InnoDB存储引擎使用了B策略, InnoDB存储引擎中的恢复机制有几个特点：<br>A. 在重做Redo Log时，并不关心事务性。 恢复时，没有BEGIN，也没有COMMIT,ROLLBACK的行为。也不关心每个日志是哪个事务的。尽管事务ID等事务相关的内容会记入Redo Log，这些内容只是被当作要操作的数据的一部分。<br>B. 使用B策略就必须要将Undo Log持久化，而且必须要在写Redo Log之前将对应的Undo Log写入磁盘。<br>Undo和Redo Log的这种关联，使得持久化变得复杂起来。为了降低复杂度，InnoDB将Undo Log看作数据，因此记录Undo Log的操作也会记录到redo log中。这样undo log就可以象数据一样缓存起来， 而不用在redo log之前写入磁盘了。<br>包含Undo Log操作的Redo Log，看起来是这样的<br>记录1: &lt;trx1, Undo log insert &lt;undo_insert …&gt;&gt;<br>记录2: &lt;trx1, insert …&gt;<br>记录3: &lt;trx2, Undo log insert &lt;undo_update …&gt;&gt;<br>记录4: &lt;trx2, update …&gt;<br>记录5: &lt;trx3, Undo log insert &lt;undo_delete …&gt;&gt;<br>记录6: &lt;trx3, delete …&gt;<br>C. 到这里，还有一个问题没有弄清楚。既然Redo没有事务性，那岂不是会重新执行被回滚了的事务？<br>确实是这样。同时Innodb也会将事务回滚时的操作也记录到redo log中。回滚操作本质上也是对数据进行修改，因此回滚时对数据的操作也会记录到Redo Log中。<br>一个回滚了的事务的Redo Log，看起来是这样的：<br>记录1: &lt;trx1, Undo log insert &lt;undo_insert …&gt;&gt;<br>记录2: &lt;trx1, insert A…&gt;<br>记录3: &lt;trx1, Undo log insert &lt;undo_update …&gt;&gt;<br>记录4: &lt;trx1, update B…&gt;<br>记录5: &lt;trx1, Undo log insert &lt;undo_delete …&gt;&gt;<br>记录6: &lt;trx1, delete C…&gt;<br>记录7: &lt;trx1, insert C&gt;<br>记录8: &lt;trx1, update B to old value&gt;<br>记录9: &lt;trx1, delete A&gt;<br>一个被回滚了的事务在恢复时的操作就是先redo再undo，因此不会破坏数据的一致性.</li>
-<li>InnoDB存储引擎中相关的函数<br>Redo: recv_recovery_from_checkpoint_start()<br>Undo: recv_recovery_rollback_active()<br>Undo Log的Redo Log: trx_undof_page_add_undo_rec_log()</li>
-</ul>
-]]></content>
-      <categories>
-        <category>MySQL数据库</category>
-      </categories>
-      <tags>
-        <tag>InnoDB存储引擎</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>XML映射文件详解</title>
-    <url>/2021/03/14/XML%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>XML配置文件详解</title>
     <url>/2021/03/13/XML%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>zookeeper</title>
+    <url>/2021/03/14/zookeeper/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -1663,8 +1668,8 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>zookeeper</title>
-    <url>/2021/03/14/zookeeper/</url>
+    <title>事件处理</title>
+    <url>/2021/03/14/%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -1712,11 +1717,6 @@
       <tags>
         <tag>中断</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>事件处理</title>
-    <url>/2021/03/14/%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>优秀项目</title>
@@ -2201,11 +2201,6 @@
       </tags>
   </entry>
   <entry>
-    <title>垃圾收集器与内存分配策略</title>
-    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>在Linux环境安装redis</title>
     <url>/2021/03/18/%E5%9C%A8Linux%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85redis/</url>
     <content><![CDATA[<h2 id="开发环境搭建"><a href="#开发环境搭建" class="headerlink" title="开发环境搭建"></a>开发环境搭建</h2><h3 id="云服务器部署redis"><a href="#云服务器部署redis" class="headerlink" title="云服务器部署redis"></a>云服务器部署redis</h3><h4 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h4><blockquote>
@@ -2291,6 +2286,11 @@
       </tags>
   </entry>
   <entry>
+    <title>垃圾收集器与内存分配策略</title>
+    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>基于XML的DI</title>
     <url>/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/</url>
     <content><![CDATA[<h2 id="基于XML的DI"><a href="#基于XML的DI" class="headerlink" title="基于XML的DI"></a>基于XML的DI</h2> <img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/01.png" class>
@@ -2374,6 +2374,11 @@
   <entry>
     <title>基础注解的DI</title>
     <url>/2021/02/28/%E5%9F%BA%E7%A1%80%E6%B3%A8%E8%A7%A3%E7%9A%84DI/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>条件渲染与列表渲染</title>
+    <url>/2021/03/14/%E6%9D%A1%E4%BB%B6%E6%B8%B2%E6%9F%93%E4%B8%8E%E5%88%97%E8%A1%A8%E6%B8%B2%E6%9F%93/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -2493,9 +2498,74 @@
       </tags>
   </entry>
   <entry>
-    <title>条件渲染与列表渲染</title>
-    <url>/2021/03/14/%E6%9D%A1%E4%BB%B6%E6%B8%B2%E6%9F%93%E4%B8%8E%E5%88%97%E8%A1%A8%E6%B8%B2%E6%9F%93/</url>
-    <content><![CDATA[]]></content>
+    <title>Vue模板语法</title>
+    <url>/2021/03/07/%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="模板语法"><a href="#模板语法" class="headerlink" title="模板语法"></a>模板语法</h2><p>Vue.js 使用了基于 HTML 的模板语法，允许开发者声明式地将 DOM 绑定至底层 Vue 实例的数据。所有 Vue.js 的模板都是合法的 HTML，所以能被遵循规范的浏览器和 HTML 解析器解析。</p>
+<p>在底层的实现上，Vue 将模板编译成虚拟 DOM 渲染函数。结合响应系统，Vue 能够智能地计算出最少需要重新渲染多少组件，并把 DOM 操作次数减到最少。</p>
+<h3 id="插值"><a href="#插值" class="headerlink" title="插值"></a>插值</h3><h4 id="文本"><a href="#文本" class="headerlink" title="文本"></a>文本</h4><p>数据绑定最常见的形式就是使用“Mustache”语法 (双大括号) 的文本插值：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span>Message:&#123;&#123;msg&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>Mustache 标签将会被替代为对应数据对象上 <code>msg</code> property 的值。无论何时，绑定的数据对象上 <code>msg</code> property 发生了改变，插值处的内容都会更新。</p>
+<p>通过使用 **<a href="https://cn.vuejs.org/v2/api/#v-once">v-once 指令</a>**，你也能执行一次性地插值，当数据改变时，插值处的内容不会更新。但请留心这会影响到该节点上的其它数据绑定：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">v-once</span>&gt;</span>这个节点上的数据将不会改变：&#123;&#123;mag&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="双大括号下的原始HTML文本"><a href="#双大括号下的原始HTML文本" class="headerlink" title="双大括号下的原始HTML文本"></a>双大括号下的原始HTML文本</h4><p>双大括号会将数据解释为普通文本，而非 HTML 代码。为了输出真正的 HTML，你需要使用**`v-html  **</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">p</span>&gt;</span>Using mustaches: &#123;&#123; rawHtml &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>Using v-html directive: <span class="tag">&lt;<span class="name">span</span> <span class="attr">v-html</span>=<span class="string">&quot;rawHtml&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>你不能使用 <code>v-html</code> 来复合局部模板，因为 Vue 不是基于字符串的模板引擎。反之，对于用户界面 (UI)，组件更适合作为可重用和可组合的基本单位。</p>
+<blockquote>
+<p>你的站点上动态渲染的任意 HTML 可能会非常危险，因为它很容易导致 <a href="https://en.wikipedia.org/wiki/Cross-site_scripting">XSS 攻击</a>。请只对可信内容使用 HTML 插值，<strong>绝不要</strong>对用户提供的内容使用插值。</p>
+</blockquote>
+<h2 id="对Attribute进行数据绑定"><a href="#对Attribute进行数据绑定" class="headerlink" title="对Attribute进行数据绑定"></a>对Attribute进行数据绑定</h2><p>Mustache 语法不能作用在 HTML attribute 上，遇到这种情况应该使用 <a href="https://cn.vuejs.org/v2/api/#v-bind"><code>v-bind</code> 指令</a>：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;div v-bind:id&#x3D;&quot;dynamicId&quot;&gt;&lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
+<p>对于布尔 attribute (它们只要存在就意味着值为 <code>true</code>)，<code>v-bind</code> 工作起来略有不同，在这个例子中：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;button v-bind:disabled&#x3D;&quot;isButtonDisabled&quot;&gt;Button&lt;&#x2F;button&gt;</span><br></pre></td></tr></table></figure>
+<p>如果 <code>isButtonDisabled</code> 的值是 <code>null</code>、<code>undefined</code> 或 <code>false</code>，则 <code>disabled</code> attribute 甚至不会被包含在渲染出来的 <code>&lt;button&gt;</code> 元素中。</p>
+<h4 id="使用JavaScript表达式-而不是键值"><a href="#使用JavaScript表达式-而不是键值" class="headerlink" title="使用JavaScript表达式(而不是键值)"></a>使用JavaScript表达式(而不是键值)</h4><p>迄今为止，在我们的模板中，我们一直都只绑定简单的 property 键值。但实际上，对于所有的数据绑定，Vue.js 都提供了完全的 JavaScript 表达式支持。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&#123;&#123; number + <span class="number">1</span> &#125;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&#123; ok ? <span class="string">&#x27;YES&#x27;</span> : <span class="string">&#x27;NO&#x27;</span> &#125;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&#123; message.split(<span class="string">&#x27;&#x27;</span>).reverse().join(<span class="string">&#x27;&#x27;</span>) &#125;&#125;</span><br><span class="line"></span><br><span class="line">&lt;div v-bind:id=<span class="string">&quot;&#x27;list-&#x27; + id&quot;</span>&gt;&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+<p>这些表达式会在所属 Vue 实例的数据作用域下作为 JavaScript 被解析。有个限制就是，每个绑定都只能包含<strong>单个表达式</strong>，所以下面的例子都<strong>不会</strong>生效。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&lt;!-- 这是语句，不是表达式 --&gt;</span><br><span class="line">&#123;&#123; <span class="keyword">var</span> a = <span class="number">1</span> &#125;&#125;      </span><br><span class="line"></span><br><span class="line">&lt;!-- 流控制也不会生效，请使用三元表达式 --&gt;</span><br><span class="line">&#123;&#123; <span class="keyword">if</span> (ok) &#123; <span class="keyword">return</span> message &#125; &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h3><p>指令 (Directives) 是带有 <code>v-</code> 前缀的特殊 attribute。指令 attribute 的值预期是<strong>单个 JavaScript 表达式</strong> (<code>v-for</code> 是例外情况，稍后我们再讨论)。指令的职责是，当表达式的值改变时，将其产生的连带影响，响应式地作用于 DOM。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;p v-if&#x3D;&quot;seen&quot;&gt;现在你看到我了&lt;&#x2F;p&gt;</span><br></pre></td></tr></table></figure>
+<p>这里，<code>v-if</code> 指令将根据表达式 <code>seen</code> 的值的真假来插入/移除 <code>&lt;p&gt;</code> 元素</p>
+<h3 id="参数"><a href="#参数" class="headerlink" title="[参数]"></a>[参数]</h3><p>一些指令能够接收一个“参数”，在指令名称之后以冒号表示。例如，<code>v-bind</code> 指令可以用于响应式地更新 HTML attribute：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;a v-bind:href&#x3D;&quot;url&quot;&gt;...&lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<p>在这里 <code>href</code> 是参数，告知 <code>v-bind</code> 指令将该元素的 <code>href</code> attribute 与表达式 <code>url</code> 的值绑定。</p>
+<p>另一个例子是 <code>v-on</code> 指令，它用于监听 DOM 事件：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;a v-on:click&#x3D;&quot;doSomething&quot;&gt;...&lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<p>在这里参数是监听的事件名。 </p>
+<h3 id="动态参数"><a href="#动态参数" class="headerlink" title="动态参数"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#%E5%8A%A8%E6%80%81%E5%8F%82%E6%95%B0">动态参数</a></h3><blockquote>
+<p>2.6.0 新增</p>
+</blockquote>
+<p>从 2.6.0 开始，可以用方括号括起来的 JavaScript 表达式作为一个指令的参数：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!--</span><br><span class="line">注意，参数表达式的写法存在一些约束，如之后的“对动态参数表达式的约束”章节所述。</span><br><span class="line">--&gt;</span><br><span class="line">&lt;a v-bind:[attributeName]&#x3D;&quot;url&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<p>这里的 <code>attributeName</code> 会被作为一个 JavaScript 表达式进行动态求值，求得的值将会作为最终的参数来使用。例如，如果你的 Vue 实例有一个 <code>data</code> property <code>attributeName</code>，其值为 <code>&quot;href&quot;</code>，那么这个绑定将等价于 <code>v-bind:href</code>。</p>
+<p>同样地，你可以使用动态参数为一个动态的事件名绑定处理函数：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;a v-on:[eventName]&#x3D;&quot;doSomething&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<p>在这个示例中，当 <code>eventName</code> 的值为 <code>&quot;focus&quot;</code> 时，<code>v-on:[eventName]</code> 将等价于 <code>v-on:focus</code>。</p>
+<h4 id="对动态参数的值的约束"><a href="#对动态参数的值的约束" class="headerlink" title="对动态参数的值的约束"></a>对动态参数的值的约束</h4><p>动态参数预期会求出一个字符串，异常情况下值为 <code>null</code>。这个<strong>特殊的 <code>null</code> 值可以被显性地用于移除绑定</strong>。任何其它非字符串类型的值都将会触发一个警告。</p>
+<h4 id="对动态参数表达式的约束"><a href="#对动态参数表达式的约束" class="headerlink" title="对动态参数表达式的约束"></a>对动态参数表达式的约束</h4><p>动态参数表达式有一些语法约束，因为某些字符，如空格和引号，放在 HTML attribute 名里是无效的。例如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 这会触发一个编译警告 --&gt;</span><br><span class="line">&lt;a v-bind:[&#39;foo&#39; + bar]&#x3D;&quot;value&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<p>变通的办法是使用没有空格或引号的表达式，或用计算属性替代这种复杂表达式。</p>
+<p>在 DOM 中使用模板时 (直接在一个 HTML 文件里撰写模板)，还需要避免使用大写字符来命名键名，因为浏览器会把 attribute 名全部强制转为小写：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!--</span><br><span class="line">在 DOM 中使用模板时这段代码会被转换为 &#96;v-bind:[someattr]&#96;。</span><br><span class="line">除非在实例中有一个名为“someattr”的 property，否则代码不会工作。</span><br><span class="line">--&gt;</span><br><span class="line">&lt;a v-bind:[someAttr]&#x3D;&quot;value&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="修饰符"><a href="#修饰符" class="headerlink" title="修饰符"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#%E4%BF%AE%E9%A5%B0%E7%AC%A6">修饰符</a></h3><p>修饰符 (modifier) 是以半角句号 <code>.</code> 指明的特殊后缀，用于指出一个指令应该以特殊方式绑定。例如，<code>.prevent</code> 修饰符告诉 <code>v-on</code> 指令对于触发的事件调用 <code>event.preventDefault()</code>：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;form v-on:submit.prevent&#x3D;&quot;onSubmit&quot;&gt;...&lt;&#x2F;form&gt;</span><br></pre></td></tr></table></figure>
+<p>阻止某一事件的默认机制执行，此时组织了submit行为的产生</p>
+<h3 id="缩写"><a href="#缩写" class="headerlink" title="缩写"></a>缩写</h3><p><code>v-</code> 前缀作为一种视觉提示，用来识别模板中 Vue 特定的 attribute。当你在使用 Vue.js 为现有标签添加动态行为 (dynamic behavior) 时，<code>v-</code> 前缀很有帮助，然而，对于一些频繁用到的指令来说，就会感到使用繁琐。同时，在构建由 Vue 管理所有模板的<a href="https://en.wikipedia.org/wiki/Single-page_application">单页面应用程序 (SPA - single page application)</a> 时，<code>v-</code> 前缀也变得没那么重要了。因此，Vue 为 <code>v-bind</code> 和 <code>v-on</code> 这两个最常用的指令，提供了特定简写：</p>
+<h3 id="v-bind-缩写"><a href="#v-bind-缩写" class="headerlink" title="v-bind 缩写"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#v-bind-%E7%BC%A9%E5%86%99"><code>v-bind</code> 缩写</a></h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 完整语法 --&gt;</span><br><span class="line">&lt;a v-bind:href&#x3D;&quot;url&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 缩写 --&gt;</span><br><span class="line">&lt;a :href&#x3D;&quot;url&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 动态参数的缩写 (2.6.0+) --&gt;</span><br><span class="line">&lt;a :[key]&#x3D;&quot;url&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="v-on-缩写"><a href="#v-on-缩写" class="headerlink" title="v-on 缩写"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#v-on-%E7%BC%A9%E5%86%99"><code>v-on</code> 缩写</a></h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 完整语法 --&gt;</span><br><span class="line">&lt;a v-on:click&#x3D;&quot;doSomething&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 缩写 --&gt;</span><br><span class="line">&lt;a @click&#x3D;&quot;doSomething&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 动态参数的缩写 (2.6.0+) --&gt;</span><br><span class="line">&lt;a @[event]&#x3D;&quot;doSomething&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<p>它们看起来可能与普通的 HTML 略有不同，但 <code>:</code> 与 <code>@</code> 对于 attribute 名来说都是合法字符，在所有支持 Vue 的浏览器都能被正确地解析。</p>
+]]></content>
+      <categories>
+        <category>Vue框架</category>
+      </categories>
+      <tags>
+        <tag>Vue</tag>
+      </tags>
   </entry>
   <entry>
     <title>消息队列产品与RabbitMQ的简介</title>
@@ -2674,76 +2744,6 @@
       </categories>
       <tags>
         <tag>RabbitMQ</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Vue模板语法</title>
-    <url>/2021/03/07/%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95/</url>
-    <content><![CDATA[<h2 id="模板语法"><a href="#模板语法" class="headerlink" title="模板语法"></a>模板语法</h2><p>Vue.js 使用了基于 HTML 的模板语法，允许开发者声明式地将 DOM 绑定至底层 Vue 实例的数据。所有 Vue.js 的模板都是合法的 HTML，所以能被遵循规范的浏览器和 HTML 解析器解析。</p>
-<p>在底层的实现上，Vue 将模板编译成虚拟 DOM 渲染函数。结合响应系统，Vue 能够智能地计算出最少需要重新渲染多少组件，并把 DOM 操作次数减到最少。</p>
-<h3 id="插值"><a href="#插值" class="headerlink" title="插值"></a>插值</h3><h4 id="文本"><a href="#文本" class="headerlink" title="文本"></a>文本</h4><p>数据绑定最常见的形式就是使用“Mustache”语法 (双大括号) 的文本插值：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span>Message:&#123;&#123;msg&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>Mustache 标签将会被替代为对应数据对象上 <code>msg</code> property 的值。无论何时，绑定的数据对象上 <code>msg</code> property 发生了改变，插值处的内容都会更新。</p>
-<p>通过使用 **<a href="https://cn.vuejs.org/v2/api/#v-once">v-once 指令</a>**，你也能执行一次性地插值，当数据改变时，插值处的内容不会更新。但请留心这会影响到该节点上的其它数据绑定：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">v-once</span>&gt;</span>这个节点上的数据将不会改变：&#123;&#123;mag&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-<h4 id="双大括号下的原始HTML文本"><a href="#双大括号下的原始HTML文本" class="headerlink" title="双大括号下的原始HTML文本"></a>双大括号下的原始HTML文本</h4><p>双大括号会将数据解释为普通文本，而非 HTML 代码。为了输出真正的 HTML，你需要使用**`v-html  **</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">p</span>&gt;</span>Using mustaches: &#123;&#123; rawHtml &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>Using v-html directive: <span class="tag">&lt;<span class="name">span</span> <span class="attr">v-html</span>=<span class="string">&quot;rawHtml&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>你不能使用 <code>v-html</code> 来复合局部模板，因为 Vue 不是基于字符串的模板引擎。反之，对于用户界面 (UI)，组件更适合作为可重用和可组合的基本单位。</p>
-<blockquote>
-<p>你的站点上动态渲染的任意 HTML 可能会非常危险，因为它很容易导致 <a href="https://en.wikipedia.org/wiki/Cross-site_scripting">XSS 攻击</a>。请只对可信内容使用 HTML 插值，<strong>绝不要</strong>对用户提供的内容使用插值。</p>
-</blockquote>
-<h2 id="对Attribute进行数据绑定"><a href="#对Attribute进行数据绑定" class="headerlink" title="对Attribute进行数据绑定"></a>对Attribute进行数据绑定</h2><p>Mustache 语法不能作用在 HTML attribute 上，遇到这种情况应该使用 <a href="https://cn.vuejs.org/v2/api/#v-bind"><code>v-bind</code> 指令</a>：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;div v-bind:id&#x3D;&quot;dynamicId&quot;&gt;&lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
-<p>对于布尔 attribute (它们只要存在就意味着值为 <code>true</code>)，<code>v-bind</code> 工作起来略有不同，在这个例子中：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;button v-bind:disabled&#x3D;&quot;isButtonDisabled&quot;&gt;Button&lt;&#x2F;button&gt;</span><br></pre></td></tr></table></figure>
-<p>如果 <code>isButtonDisabled</code> 的值是 <code>null</code>、<code>undefined</code> 或 <code>false</code>，则 <code>disabled</code> attribute 甚至不会被包含在渲染出来的 <code>&lt;button&gt;</code> 元素中。</p>
-<h4 id="使用JavaScript表达式-而不是键值"><a href="#使用JavaScript表达式-而不是键值" class="headerlink" title="使用JavaScript表达式(而不是键值)"></a>使用JavaScript表达式(而不是键值)</h4><p>迄今为止，在我们的模板中，我们一直都只绑定简单的 property 键值。但实际上，对于所有的数据绑定，Vue.js 都提供了完全的 JavaScript 表达式支持。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&#123;&#123; number + <span class="number">1</span> &#125;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&#123; ok ? <span class="string">&#x27;YES&#x27;</span> : <span class="string">&#x27;NO&#x27;</span> &#125;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&#123; message.split(<span class="string">&#x27;&#x27;</span>).reverse().join(<span class="string">&#x27;&#x27;</span>) &#125;&#125;</span><br><span class="line"></span><br><span class="line">&lt;div v-bind:id=<span class="string">&quot;&#x27;list-&#x27; + id&quot;</span>&gt;&lt;/div&gt;</span><br></pre></td></tr></table></figure>
-<p>这些表达式会在所属 Vue 实例的数据作用域下作为 JavaScript 被解析。有个限制就是，每个绑定都只能包含<strong>单个表达式</strong>，所以下面的例子都<strong>不会</strong>生效。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&lt;!-- 这是语句，不是表达式 --&gt;</span><br><span class="line">&#123;&#123; <span class="keyword">var</span> a = <span class="number">1</span> &#125;&#125;      </span><br><span class="line"></span><br><span class="line">&lt;!-- 流控制也不会生效，请使用三元表达式 --&gt;</span><br><span class="line">&#123;&#123; <span class="keyword">if</span> (ok) &#123; <span class="keyword">return</span> message &#125; &#125;&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h3><p>指令 (Directives) 是带有 <code>v-</code> 前缀的特殊 attribute。指令 attribute 的值预期是<strong>单个 JavaScript 表达式</strong> (<code>v-for</code> 是例外情况，稍后我们再讨论)。指令的职责是，当表达式的值改变时，将其产生的连带影响，响应式地作用于 DOM。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;p v-if&#x3D;&quot;seen&quot;&gt;现在你看到我了&lt;&#x2F;p&gt;</span><br></pre></td></tr></table></figure>
-<p>这里，<code>v-if</code> 指令将根据表达式 <code>seen</code> 的值的真假来插入/移除 <code>&lt;p&gt;</code> 元素</p>
-<h3 id="参数"><a href="#参数" class="headerlink" title="[参数]"></a>[参数]</h3><p>一些指令能够接收一个“参数”，在指令名称之后以冒号表示。例如，<code>v-bind</code> 指令可以用于响应式地更新 HTML attribute：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;a v-bind:href&#x3D;&quot;url&quot;&gt;...&lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<p>在这里 <code>href</code> 是参数，告知 <code>v-bind</code> 指令将该元素的 <code>href</code> attribute 与表达式 <code>url</code> 的值绑定。</p>
-<p>另一个例子是 <code>v-on</code> 指令，它用于监听 DOM 事件：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;a v-on:click&#x3D;&quot;doSomething&quot;&gt;...&lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<p>在这里参数是监听的事件名。 </p>
-<h3 id="动态参数"><a href="#动态参数" class="headerlink" title="动态参数"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#%E5%8A%A8%E6%80%81%E5%8F%82%E6%95%B0">动态参数</a></h3><blockquote>
-<p>2.6.0 新增</p>
-</blockquote>
-<p>从 2.6.0 开始，可以用方括号括起来的 JavaScript 表达式作为一个指令的参数：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!--</span><br><span class="line">注意，参数表达式的写法存在一些约束，如之后的“对动态参数表达式的约束”章节所述。</span><br><span class="line">--&gt;</span><br><span class="line">&lt;a v-bind:[attributeName]&#x3D;&quot;url&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<p>这里的 <code>attributeName</code> 会被作为一个 JavaScript 表达式进行动态求值，求得的值将会作为最终的参数来使用。例如，如果你的 Vue 实例有一个 <code>data</code> property <code>attributeName</code>，其值为 <code>&quot;href&quot;</code>，那么这个绑定将等价于 <code>v-bind:href</code>。</p>
-<p>同样地，你可以使用动态参数为一个动态的事件名绑定处理函数：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;a v-on:[eventName]&#x3D;&quot;doSomething&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<p>在这个示例中，当 <code>eventName</code> 的值为 <code>&quot;focus&quot;</code> 时，<code>v-on:[eventName]</code> 将等价于 <code>v-on:focus</code>。</p>
-<h4 id="对动态参数的值的约束"><a href="#对动态参数的值的约束" class="headerlink" title="对动态参数的值的约束"></a>对动态参数的值的约束</h4><p>动态参数预期会求出一个字符串，异常情况下值为 <code>null</code>。这个<strong>特殊的 <code>null</code> 值可以被显性地用于移除绑定</strong>。任何其它非字符串类型的值都将会触发一个警告。</p>
-<h4 id="对动态参数表达式的约束"><a href="#对动态参数表达式的约束" class="headerlink" title="对动态参数表达式的约束"></a>对动态参数表达式的约束</h4><p>动态参数表达式有一些语法约束，因为某些字符，如空格和引号，放在 HTML attribute 名里是无效的。例如：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 这会触发一个编译警告 --&gt;</span><br><span class="line">&lt;a v-bind:[&#39;foo&#39; + bar]&#x3D;&quot;value&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<p>变通的办法是使用没有空格或引号的表达式，或用计算属性替代这种复杂表达式。</p>
-<p>在 DOM 中使用模板时 (直接在一个 HTML 文件里撰写模板)，还需要避免使用大写字符来命名键名，因为浏览器会把 attribute 名全部强制转为小写：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!--</span><br><span class="line">在 DOM 中使用模板时这段代码会被转换为 &#96;v-bind:[someattr]&#96;。</span><br><span class="line">除非在实例中有一个名为“someattr”的 property，否则代码不会工作。</span><br><span class="line">--&gt;</span><br><span class="line">&lt;a v-bind:[someAttr]&#x3D;&quot;value&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="修饰符"><a href="#修饰符" class="headerlink" title="修饰符"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#%E4%BF%AE%E9%A5%B0%E7%AC%A6">修饰符</a></h3><p>修饰符 (modifier) 是以半角句号 <code>.</code> 指明的特殊后缀，用于指出一个指令应该以特殊方式绑定。例如，<code>.prevent</code> 修饰符告诉 <code>v-on</code> 指令对于触发的事件调用 <code>event.preventDefault()</code>：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;form v-on:submit.prevent&#x3D;&quot;onSubmit&quot;&gt;...&lt;&#x2F;form&gt;</span><br></pre></td></tr></table></figure>
-<p>阻止某一事件的默认机制执行，此时组织了submit行为的产生</p>
-<h3 id="缩写"><a href="#缩写" class="headerlink" title="缩写"></a>缩写</h3><p><code>v-</code> 前缀作为一种视觉提示，用来识别模板中 Vue 特定的 attribute。当你在使用 Vue.js 为现有标签添加动态行为 (dynamic behavior) 时，<code>v-</code> 前缀很有帮助，然而，对于一些频繁用到的指令来说，就会感到使用繁琐。同时，在构建由 Vue 管理所有模板的<a href="https://en.wikipedia.org/wiki/Single-page_application">单页面应用程序 (SPA - single page application)</a> 时，<code>v-</code> 前缀也变得没那么重要了。因此，Vue 为 <code>v-bind</code> 和 <code>v-on</code> 这两个最常用的指令，提供了特定简写：</p>
-<h3 id="v-bind-缩写"><a href="#v-bind-缩写" class="headerlink" title="v-bind 缩写"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#v-bind-%E7%BC%A9%E5%86%99"><code>v-bind</code> 缩写</a></h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 完整语法 --&gt;</span><br><span class="line">&lt;a v-bind:href&#x3D;&quot;url&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 缩写 --&gt;</span><br><span class="line">&lt;a :href&#x3D;&quot;url&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 动态参数的缩写 (2.6.0+) --&gt;</span><br><span class="line">&lt;a :[key]&#x3D;&quot;url&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<h3 id="v-on-缩写"><a href="#v-on-缩写" class="headerlink" title="v-on 缩写"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#v-on-%E7%BC%A9%E5%86%99"><code>v-on</code> 缩写</a></h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 完整语法 --&gt;</span><br><span class="line">&lt;a v-on:click&#x3D;&quot;doSomething&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 缩写 --&gt;</span><br><span class="line">&lt;a @click&#x3D;&quot;doSomething&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 动态参数的缩写 (2.6.0+) --&gt;</span><br><span class="line">&lt;a @[event]&#x3D;&quot;doSomething&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<p>它们看起来可能与普通的 HTML 略有不同，但 <code>:</code> 与 <code>@</code> 对于 attribute 名来说都是合法字符，在所有支持 Vue 的浏览器都能被正确地解析。</p>
-]]></content>
-      <categories>
-        <category>Vue框架</category>
-      </categories>
-      <tags>
-        <tag>Vue</tag>
       </tags>
   </entry>
   <entry>
@@ -3085,13 +3085,13 @@
       </tags>
   </entry>
   <entry>
-    <title>组件进阶篇--深入了解组件</title>
-    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E8%BF%9B%E9%98%B6%E7%AF%87-%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E7%BB%84%E4%BB%B6/</url>
+    <title>组件基础</title>
+    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>组件基础</title>
-    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E5%9F%BA%E7%A1%80/</url>
+    <title>组件进阶篇--深入了解组件</title>
+    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E8%BF%9B%E9%98%B6%E7%AF%87-%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E7%BB%84%E4%BB%B6/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -3187,18 +3187,23 @@
       </tags>
   </entry>
   <entry>
-    <title>表单输入绑定</title>
-    <url>/2021/03/14/%E8%A1%A8%E5%8D%95%E8%BE%93%E5%85%A5%E7%BB%91%E5%AE%9A/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>虚拟机种类</title>
     <url>/2021/03/14/%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%A7%8D%E7%B1%BB/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
+    <title>表单输入绑定</title>
+    <url>/2021/03/14/%E8%A1%A8%E5%8D%95%E8%BE%93%E5%85%A5%E7%BB%91%E5%AE%9A/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>计算属性与监听器setter</title>
     <url>/2021/03/14/%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7%E4%B8%8E%E7%9B%91%E5%90%AC%E5%99%A8setter/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>过度与动画</title>
+    <url>/2021/03/14/%E8%BF%87%E5%BA%A6%E4%B8%8E%E5%8A%A8%E7%94%BB/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -3285,11 +3290,6 @@
       <tags>
         <tag>RabbitMQ</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>过度与动画</title>
-    <url>/2021/03/14/%E8%BF%87%E5%BA%A6%E4%B8%8E%E5%8A%A8%E7%94%BB/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>链表</title>
@@ -3424,6 +3424,12 @@
       </tags>
   </entry>
   <entry>
+    <title></title>
+    <url>/2021/03/02/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/JVM%E5%90%AC%E8%AF%BE%E7%AC%94%E8%AE%B0%E8%A1%A5%E5%85%85/</url>
+    <content><![CDATA[<p>java的指令是根据栈来设计的，不适用基于寄存器的，是因为基于寄存器与CPU耦合度太高，不太好实现跨平台运行</p>
+<img data-src="https://tse1-mm.cn.bing.net/th/id/OIP.f3N7J7-cCRt2cBZM2z-XlQHaGV?w=223&h=191&c=7&o=5&dpr=1.5&pid=1.7" alt=" JVM内存结构 的图像结果" style="zoom: 200%;">]]></content>
+  </entry>
+  <entry>
     <title>阿里云ECS部署服务器</title>
     <url>/2021/01/22/%E9%98%BF%E9%87%8C%E4%BA%91ECS%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
     <content><![CDATA[<h2 id="阿里云ECS部署Tomcat、Nginx服务器"><a href="#阿里云ECS部署Tomcat、Nginx服务器" class="headerlink" title="阿里云ECS部署Tomcat、Nginx服务器"></a>阿里云ECS部署Tomcat、Nginx服务器</h2><h3 id="Nginx服务器"><a href="#Nginx服务器" class="headerlink" title="Nginx服务器"></a>Nginx服务器</h3><p>####一、简介</p>
@@ -3486,12 +3492,6 @@
       <tags>
         <tag>阿里云ECS部署</tag>
       </tags>
-  </entry>
-  <entry>
-    <title></title>
-    <url>/2021/03/02/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/JVM%E5%90%AC%E8%AF%BE%E7%AC%94%E8%AE%B0%E8%A1%A5%E5%85%85/</url>
-    <content><![CDATA[<p>java的指令是根据栈来设计的，不适用基于寄存器的，是因为基于寄存器与CPU耦合度太高，不太好实现跨平台运行</p>
-<img data-src="https://tse1-mm.cn.bing.net/th/id/OIP.f3N7J7-cCRt2cBZM2z-XlQHaGV?w=223&h=191&c=7&o=5&dpr=1.5&pid=1.7" alt=" JVM内存结构 的图像结果" style="zoom: 200%;">]]></content>
   </entry>
   <entry>
     <title>Tomcat服务器</title>
