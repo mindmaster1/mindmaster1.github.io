@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.mindmaster.top","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="SpringBoot介绍先通过来一些概念，会让我们对技术有着更加清晰的理解。J2EE笨重的开发、繁多的配置、低下的开发效率、复杂的部署流程、第三方技术集成难度大，如果开发过SpringMVC或者单纯使用过SSH、SSM框架的同学，肯定是体验过被很多配置文件支配的恐惧，很难受吧，不过不用担心，我们有了SpringBoot。Spring Boot用来简化Spring应用开发，约定大于配置，去繁从简，j">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringBoot入门一">
+<meta property="og:url" content="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/index.html">
+<meta property="og:site_name" content="一只小码农">
+<meta property="og:description" content="SpringBoot介绍先通过来一些概念，会让我们对技术有着更加清晰的理解。J2EE笨重的开发、繁多的配置、低下的开发效率、复杂的部署流程、第三方技术集成难度大，如果开发过SpringMVC或者单纯使用过SSH、SSM框架的同学，肯定是体验过被很多配置文件支配的恐惧，很难受吧，不过不用担心，我们有了SpringBoot。Spring Boot用来简化Spring应用开发，约定大于配置，去繁从简，j">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/01.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/02.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/03.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/04.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/05.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/06.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/07.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/08.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/09.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/10.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/11.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/12.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/13.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/14.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/15.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/16.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/17.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/18.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/19.png">
+<meta property="article:published_time" content="2021-03-19T14:04:55.000Z">
+<meta property="article:modified_time" content="2021-03-19T06:25:17.458Z">
+<meta property="article:author" content="邢浩东">
+<meta property="article:tag" content="SpringBoot框架">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/01.png">
+
+<link rel="canonical" href="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>SpringBoot入门一 | 一只小码农</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">一只小码农</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">每天进步一点点</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-stethoscope fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">34</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-braille fa-fw"></i>分类<span class="badge">20</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">85</span></a>
+
+  </li>
+        <li class="menu-item menu-item-movies">
+
+    <a href="/movies/" rel="section"><i class="fa fa-film fa-fw"></i>电影</a>
+
+  </li>
+        <li class="menu-item menu-item-book">
+
+    <a href="/book/" rel="section"><i class="fa fa-book fa-fw"></i>书籍</a>
+
+  </li>
+        <li class="menu-item menu-item-view">
+
+    <a href="/view/" rel="section"><i class="fa fa-blind fa-fw"></i>生活见闻--杂谈</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml/" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/mindmaster1" class="github-corner" title="Fork me on GitHub" aria-label="Fork me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/OIP.jfif">
+      <meta itemprop="name" content="邢浩东">
+      <meta itemprop="description" content="The world favors the underdog,and I would be the bad guy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一只小码农">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SpringBoot入门一
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-03-19 14:04:55 / 修改时间：06:25:17" itemprop="dateCreated datePublished" datetime="2021-03-19T14:04:55Z">2021-03-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/SpringBoot/" itemprop="url" rel="index"><span itemprop="name">SpringBoot</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="SpringBoot介绍"><a href="#SpringBoot介绍" class="headerlink" title="SpringBoot介绍"></a>SpringBoot介绍</h2><p>先通过来一些概念，会让我们对技术有着更加清晰的理解。J2EE笨重的开发、繁多的配置、低下的开发效率、复杂的部署流程、第三方技术集成难度大，如果开发过SpringMVC或者单纯使用过SSH、SSM框架的同学，肯定是体验过被很多配置文件支配的恐惧，很难受吧，不过不用担心，我们有了SpringBoot。Spring Boot用来简化Spring应用开发，约定大于配置，去繁从简，just run就能创建一个独立的，产品级别的应用。随着Spring全家桶时代的到来，SpringBoot给我们带来了J2EE一站式解决方案，SpringCloud给我们带来了分布式整体解决方案。从此我们可以使用 SpringBoot 快速的开发基于 Spring 框架的项目，由于围绕 SpringBoot 存在很多开箱即用的 Starter 依赖，使得我们在开发业务代码时能够非常方便的、不需要过多关注框架的配置，而只需要关注业务即可。</p>
+<h2 id="SpringBoot优点"><a href="#SpringBoot优点" class="headerlink" title="SpringBoot优点"></a>SpringBoot优点</h2><ul>
+<li>快速创建独立运行的Spring项目以及与主流框架集成</li>
+<li>使用嵌入式的Servlet容器，应用无需打成WAR包</li>
+<li>starters自动依赖与版本控制</li>
+<li>大量的自动配置，简化开发，也可以修改默认值</li>
+<li>无需配置XML，无代码生成，开箱即用</li>
+<li>准生产环境的运行时应用监控</li>
+<li>与云计算的天然集成</li>
+</ul>
+<p>看到SpringBoot这么多优点，是不是很想立刻上手呢，先不急。这里还是要提一下的，SpringBoot入门很容易，不过想要精通还是有难度的，因为毕竟自动化帮我们把Spring全家桶集成的这么好，我们想要深入精通的话，必须要了解Spring全家桶的技术，当然难呀，不过既然好上手，我们完全可以先学会怎么使用，然后后面熟练了再去研究底层代码原理，这样才有那种豁然开让的感觉。</p>
+<h2 id="微服务"><a href="#微服务" class="headerlink" title="微服务"></a>微服务</h2><p>说到SpringBoot，就不得不提一下微服务，微服务是一种架构风格，可以理解成小型服务，这些服务通过HTTP的方式进行互通。微服务并没有一个官方的定义，想要直接描述微服务比较困难，我们可以通过对比传统WEB应用，来理解什么是微服务，传统的应用成为“单体应用”</p>
+<p>单体应用就是那种，核心分为业务逻辑、适配器以及API或通过UI访问的WEB界面。业务逻辑定义业务流程、业务规则以及领域实体。适配器包括数据库访问组件、消息组件以及访问接口等，所有的这些东西都集成在一起，看着很强大，其实很乱。</p>
+<p>而微服务架构有很多重要的优点，它解决的就是复杂性问题。它将单体应用分解为一组服务。虽然功能总量不变，但应用程序已被分解为可管理的模块或服务。这些服务定义了明确的RPC或消息驱动的API边界。微服务架构强化了应用模块化的水平，而这通过单体代码库很难实现。因此，微服务开发的速度要快很多，更容易理解和维护。</p>
+<h2 id="实现一个HelloWord应用"><a href="#实现一个HelloWord应用" class="headerlink" title="实现一个HelloWord应用"></a>实现一个HelloWord应用</h2><p>说了这么多SprigBoot多好多好，不直接上手一个简单的项目说不过去，那我们就来创建运行一个HelloWord应用，体验一些从创建到访问<a target="_blank" rel="noopener" href="http://localhost:8080/hello%E6%9C%89%E5%A4%9A%E4%B9%88%E7%9A%84%E7%AE%80%E5%8D%95%EF%BC%8C%E4%BD%A0%E5%B0%B1%E4%BC%9A%E6%84%8F%E8%AF%86%E5%88%B0%E5%8E%9F%E5%85%88%E7%9A%84SpringMVC%E4%BB%A5%E5%8F%8ASSH%E4%BB%80%E4%B9%88%E7%9A%84%E6%9C%89%E5%A4%9A%E4%B9%88%E7%B9%81%E7%90%90%E3%80%82">http://localhost:8080/hello有多么的简单，你就会意识到原先的SpringMVC以及SSH什么的有多么繁琐。</a><br>这里说一下，我们先上手一个简单的应用，然后我会基于这个简单的应用说明一些SpringBoot的配置和使用，正所谓先要尝到甜头，才有学习的动力嘛，废话不多说，上手。</p>
+<h3 id="环境说明"><a href="#环境说明" class="headerlink" title="环境说明"></a>环境说明</h3><p>环境啥的其实，也不用多说，因为和我使用的不同版本其实也不会有太大影响，只是可能一些问题是因为版本引起的。</p>
+<pre><code>JDK1.8：1.8的版本很好用，目前大部分公司生产环境的项目也都是1.8
+SpringBoot1.7以上：我这里使用的SpringBoot2.2.4
+Maven3.3以上：我这里使用的是3.5.4
+IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</code></pre>
+<p>这里特别说明一下的是Maven，我们如果使用Idea内置的Maven也可以，不过我喜欢用自己想要的版本，所以就自己给Idea配置我想要的Maven版本，而且还能学到东西，Maven也是我们必须要了解的一项工具。</p>
+<p>我使用的是Idea2018，里面内置的Maven是3.3的，我自己改成了3.5</p>
+<p>安装好了Maven以后，记得把Maven默认的JDK改成1.8，就是在Maven的安装位置的conf文件夹中，打开setting.xml，在里面改成如下配置<br> <img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/01.png" class><br>为了方便，我就直接把内容粘贴出来，你们就不用一个一个打了，如下</p>
+ <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">id</span>&gt;</span>jdk-1.8<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line"></span><br><span class="line">      <span class="tag">&lt;<span class="name">activation</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">activeByDefault</span>&gt;</span>true<span class="tag">&lt;/<span class="name">activeByDefault</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">jdk</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">jdk</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">activation</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">maven.compiler.targer</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.targer</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">maven.compiler.compilerVersion</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.compilerVersion</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>完成了上述操作之后，现在我教你用Idea配置自己的Maven，具体操作如下图：</p>
+ <img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/02.png" class>
+
+<img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/03.png" class>
+
+<p>选择好了之后，点击Apply就可以了。</p>
+<h3 id="实现功能"><a href="#实现功能" class="headerlink" title="实现功能"></a>实现功能</h3><p>一个功能，浏览器发送hello请求，服务器接受请求并处理，相应HelloWorld字符串</p>
+<h3 id="具体步骤"><a href="#具体步骤" class="headerlink" title="具体步骤"></a>具体步骤</h3><p>首先我们使用Idea创建Maven工程</p>
+<img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/04.png" class>
+
+<img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/05.png" class>
+
+<img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/06.png" class>
+
+<img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/07.png" class>
+
+<p>然后点击Finish就创建成功了，我们的Maven项目也就创建好了，这里要提一下，我们刚创建Maven项目的时候，Idea给我的一些Tip，我们把这个勾选了，以后我们修改pom.xml的时候，就会自动帮我们加载依赖了。</p>
+<img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/08.png" class>
+
+<p>当然啦，如果你没有对Maven进行生命配置的话，你会发现Maven加载相关依赖的时候非常的慢，因为Maven中央库在国外，所以自然比较慢，我们可以配置Maven为阿里源，这里就快很多了，具体操作看我另一篇文章带你了解Maven，并搞定安装和配置，里面有讲解如何配置阿里源</p>
+<h3 id="导入依赖SpringBoot相关的依赖"><a href="#导入依赖SpringBoot相关的依赖" class="headerlink" title="导入依赖SpringBoot相关的依赖"></a>导入依赖SpringBoot相关的依赖</h3><p>接下来，我们来使用pom加载相关依赖，加载我们的SpringBoot项目，那我们应该是用什么依赖呢，哈哈，不要慌，这里我教你怎么使用官网的例子，首先打开Spring官网，然后我们根据我们需要的相关版本，进行勾选生成即可，SpringBoot的版本一般选择最新的release版本就可以了，具体如下图<br> <img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/09.png" class><br>然后我们就可以把生成的pom.xml依赖拷贝到我们项目的pom.xml里面，注意了，不要全部拷贝，基本把我圈出来的换成你自己的，如下图<br> <img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/10.png" class></p>
+<img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/11.png" class>
+
+<p>到这里我们就加载完成了一个SpringBoot项目吧，是不是很简单，不过你可能会说，我加载SpringMVC之类的也很简单，不过不要急，我们接着编写一个代码，你就发现我们什么都不用配置。</p>
+<h3 id="编写一个主程序，启动SpringBoot应用"><a href="#编写一个主程序，启动SpringBoot应用" class="headerlink" title="编写一个主程序，启动SpringBoot应用"></a>编写一个主程序，启动SpringBoot应用</h3><p>现在创建一个包，在包下创建一个java类，命名随便，我这里命名为DemoApplication ，如下图，编写的代码如下：</p>
+<img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/12.png" class>
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">import</span> org.springframework.boot.SpringApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.GetMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestParam;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(DemoApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/hello&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">(<span class="meta">@RequestParam(value = &quot;name&quot;, defaultValue = &quot;World&quot;)</span> String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> String.format(<span class="string">&quot;Hello %s!&quot;</span>, name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>}</p>
+<p>代码写好了就直接运行吧，你没听错，啥都不用做，直接运行就好了，运行了之后，直接在浏览器中访问，你就会发现成功了，舒不舒服。<br> <img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/13.png" class></p>
+<h2 id="SpringBoot简化部署"><a href="#SpringBoot简化部署" class="headerlink" title="SpringBoot简化部署"></a>SpringBoot简化部署</h2><p>从创建到运行就是这么方便简单，非常舒服，在进行代码分析讲解之前，我在多说点SpringBoot的甜头，就是打包部署。这个时候会发出疑问，哎，我刚刚创建的时候，好像像Tomcat之类的都没有安装配置，war包也没有打，怎么就运行了呢，更何谈部署。哈哈哈这个时候就能体现SpringBoot的小甜头了，SpringBoot项目可以打成jar包，然后在不需要安装运行环境的情况下，就能直接运行jar包，启动程序，可以移植性非常强。我们可以使用Maven命令打包，也可以直接借助Idea打包，Maven命令自己直接网上查找就可以了，这里我演示使用Idea打包方便，具体操作如下，在Idea侧边栏有Maven Projects，点击打开：<br> <img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/14.png" class><br>等待运行结束，在日志那里，如下图<br> <img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/15.png" class><br> <img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/16.png" class><br>把打包好的jar包粘贴到桌面，然后打开命令行，执行指令就可以运行了。<br> <img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/17.png" class><br> <img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/18.png" class><br> <img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/19.png" class><br>运行成功，然后直接在浏览器访问一样可以成功访问，是不是很有意思。</p>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div class="reward-container">
+  <div>谢谢你的支持哦，继续加油.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="邢浩东 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="邢浩东 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>邢浩东
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/" title="SpringBoot入门一">https://www.mindmaster.top/2021/03/19/SpringBoot入门一/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-%E9%82%A2%E6%B5%A9%E4%B8%9C/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-邢浩东</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/SpringBoot%E6%A1%86%E6%9E%B6/" rel="tag"># SpringBoot框架</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/03/18/%E5%9C%A8Linux%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85redis/" rel="prev" title="在Linux环境安装redis">
+      <i class="fa fa-chevron-left"></i> 在Linux环境安装redis
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">SpringBoot介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot%E4%BC%98%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">SpringBoot优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1"><span class="nav-number">3.</span> <span class="nav-text">微服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AAHelloWord%E5%BA%94%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">实现一个HelloWord应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E8%AF%B4%E6%98%8E"><span class="nav-number">4.1.</span> <span class="nav-text">环境说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E5%8A%9F%E8%83%BD"><span class="nav-number">4.2.</span> <span class="nav-text">实现功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E6%AD%A5%E9%AA%A4"><span class="nav-number">4.3.</span> <span class="nav-text">具体步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5%E4%BE%9D%E8%B5%96SpringBoot%E7%9B%B8%E5%85%B3%E7%9A%84%E4%BE%9D%E8%B5%96"><span class="nav-number">4.4.</span> <span class="nav-text">导入依赖SpringBoot相关的依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA%E4%B8%BB%E7%A8%8B%E5%BA%8F%EF%BC%8C%E5%90%AF%E5%8A%A8SpringBoot%E5%BA%94%E7%94%A8"><span class="nav-number">4.5.</span> <span class="nav-text">编写一个主程序，启动SpringBoot应用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot%E7%AE%80%E5%8C%96%E9%83%A8%E7%BD%B2"><span class="nav-number">5.</span> <span class="nav-text">SpringBoot简化部署</span></a></li></ol></div>
+
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="邢浩东"
+      src="/images/OIP.jfif">
+  <p class="site-author-name" itemprop="name">邢浩东</p>
+  <div class="site-description" itemprop="description">The world favors the underdog,and I would be the bad guy</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">85</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mindmaster1" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mindmaster1" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/yourname" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;yourname" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.csdn.net/" title="CSDN → https:&#x2F;&#x2F;www.csdn.net" rel="noopener" target="_blank"><i class="fab fa-apple fa-fw"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://juejin.cn/user/1706074845232983" title="掘金 → https:&#x2F;&#x2F;juejin.cn&#x2F;user&#x2F;1706074845232983" rel="noopener" target="_blank"><i class="fa fa-binoculars fa-fw"></i>掘金</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Leetcode刷题
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://leetcode-cn.com/" title="https:&#x2F;&#x2F;leetcode-cn.com&#x2F;" rel="noopener" target="_blank">通向快乐</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+ <div>
+    <svg>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-1"></text>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-2"></text>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-3"></text>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-4"></text>
+    </svg>
+</div>
+<script>
+function showtime(){
+    var noatime = new Date();
+    var h = noatime.getHours(),
+        m = noatime.getMinutes(),
+        s = noatime.getSeconds();
+    h=checktime(h);
+    m=checktime(m);
+    s=checktime(s);
+  return h+":"+m+":"+s;
+}
+function checktime(x){
+  if(x<10){
+    x="0"+x;
+  }
+  return x;
+}
+var div1=document.getElementsByTagName("text");
+setInterval(function(){
+  for (var i in div1){
+      div1[i].innerHTML=showtime();
+  }
+},1000);
+</script>	   
+
+<script type="text/javascript" src="//rf.revolvermaps.com/0/0/1.js?i=57fnj853bkq&amp;s=220&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+ 
+    
+  </ul>
+    </div>
+	
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+	
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">邢浩东</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">169k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:34</span>
+</div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'dOLOPmQA1yPidXhJmndTryVE-gzGzoHsz',
+      appKey     : 'tDnfIUMcS9cpj4Rqgxu4mUxG',
+      placeholder: "欢迎大家畅所欲言# Comment box placeholder",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

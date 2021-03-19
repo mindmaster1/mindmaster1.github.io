@@ -126,17 +126,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">33</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">34</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-braille fa-fw"></i>分类<span class="badge">19</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-braille fa-fw"></i>分类<span class="badge">20</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">84</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">85</span></a>
 
   </li>
         <li class="menu-item menu-item-movies">
@@ -218,6 +218,158 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/OIP.jfif">
+      <meta itemprop="name" content="邢浩东">
+      <meta itemprop="description" content="The world favors the underdog,and I would be the bad guy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一只小码农">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/" class="post-title-link" itemprop="url">SpringBoot入门一</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-03-19 14:04:55 / 修改时间：06:25:17" itemprop="dateCreated datePublished" datetime="2021-03-19T14:04:55Z">2021-03-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/SpringBoot/" itemprop="url" rel="index"><span itemprop="name">SpringBoot</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="SpringBoot介绍"><a href="#SpringBoot介绍" class="headerlink" title="SpringBoot介绍"></a>SpringBoot介绍</h2><p>先通过来一些概念，会让我们对技术有着更加清晰的理解。J2EE笨重的开发、繁多的配置、低下的开发效率、复杂的部署流程、第三方技术集成难度大，如果开发过SpringMVC或者单纯使用过SSH、SSM框架的同学，肯定是体验过被很多配置文件支配的恐惧，很难受吧，不过不用担心，我们有了SpringBoot。Spring Boot用来简化Spring应用开发，约定大于配置，去繁从简，just run就能创建一个独立的，产品级别的应用。随着Spring全家桶时代的到来，SpringBoot给我们带来了J2EE一站式解决方案，SpringCloud给我们带来了分布式整体解决方案。从此我们可以使用 SpringBoot 快速的开发基于 Spring 框架的项目，由于围绕 SpringBoot 存在很多开箱即用的 Starter 依赖，使得我们在开发业务代码时能够非常方便的、不需要过多关注框架的配置，而只需要关注业务即可。</p>
+<h2 id="SpringBoot优点"><a href="#SpringBoot优点" class="headerlink" title="SpringBoot优点"></a>SpringBoot优点</h2><ul>
+<li>快速创建独立运行的Spring项目以及与主流框架集成</li>
+<li>使用嵌入式的Servlet容器，应用无需打成WAR包</li>
+<li>starters自动依赖与版本控制</li>
+<li>大量的自动配置，简化开发，也可以修改默认值</li>
+<li>无需配置XML，无代码生成，开箱即用</li>
+<li>准生产环境的运行时应用监控</li>
+<li>与云计算的天然集成</li>
+</ul>
+<p>看到SpringBoot这么多优点，是不是很想立刻上手呢，先不急。这里还是要提一下的，SpringBoot入门很容易，不过想要精通还是有难度的，因为毕竟自动化帮我们把Spring全家桶集成的这么好，我们想要深入精通的话，必须要了解Spring全家桶的技术，当然难呀，不过既然好上手，我们完全可以先学会怎么使用，然后后面熟练了再去研究底层代码原理，这样才有那种豁然开让的感觉。</p>
+<h2 id="微服务"><a href="#微服务" class="headerlink" title="微服务"></a>微服务</h2><p>说到SpringBoot，就不得不提一下微服务，微服务是一种架构风格，可以理解成小型服务，这些服务通过HTTP的方式进行互通。微服务并没有一个官方的定义，想要直接描述微服务比较困难，我们可以通过对比传统WEB应用，来理解什么是微服务，传统的应用成为“单体应用”</p>
+<p>单体应用就是那种，核心分为业务逻辑、适配器以及API或通过UI访问的WEB界面。业务逻辑定义业务流程、业务规则以及领域实体。适配器包括数据库访问组件、消息组件以及访问接口等，所有的这些东西都集成在一起，看着很强大，其实很乱。</p>
+<p>而微服务架构有很多重要的优点，它解决的就是复杂性问题。它将单体应用分解为一组服务。虽然功能总量不变，但应用程序已被分解为可管理的模块或服务。这些服务定义了明确的RPC或消息驱动的API边界。微服务架构强化了应用模块化的水平，而这通过单体代码库很难实现。因此，微服务开发的速度要快很多，更容易理解和维护。</p>
+<h2 id="实现一个HelloWord应用"><a href="#实现一个HelloWord应用" class="headerlink" title="实现一个HelloWord应用"></a>实现一个HelloWord应用</h2><p>说了这么多SprigBoot多好多好，不直接上手一个简单的项目说不过去，那我们就来创建运行一个HelloWord应用，体验一些从创建到访问<a target="_blank" rel="noopener" href="http://localhost:8080/hello%E6%9C%89%E5%A4%9A%E4%B9%88%E7%9A%84%E7%AE%80%E5%8D%95%EF%BC%8C%E4%BD%A0%E5%B0%B1%E4%BC%9A%E6%84%8F%E8%AF%86%E5%88%B0%E5%8E%9F%E5%85%88%E7%9A%84SpringMVC%E4%BB%A5%E5%8F%8ASSH%E4%BB%80%E4%B9%88%E7%9A%84%E6%9C%89%E5%A4%9A%E4%B9%88%E7%B9%81%E7%90%90%E3%80%82">http://localhost:8080/hello有多么的简单，你就会意识到原先的SpringMVC以及SSH什么的有多么繁琐。</a><br>这里说一下，我们先上手一个简单的应用，然后我会基于这个简单的应用说明一些SpringBoot的配置和使用，正所谓先要尝到甜头，才有学习的动力嘛，废话不多说，上手。</p>
+<h3 id="环境说明"><a href="#环境说明" class="headerlink" title="环境说明"></a>环境说明</h3><p>环境啥的其实，也不用多说，因为和我使用的不同版本其实也不会有太大影响，只是可能一些问题是因为版本引起的。</p>
+<pre><code>JDK1.8：1.8的版本很好用，目前大部分公司生产环境的项目也都是1.8
+SpringBoot1.7以上：我这里使用的SpringBoot2.2.4
+Maven3.3以上：我这里使用的是3.5.4
+IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</code></pre>
+<p>这里特别说明一下的是Maven，我们如果使用Idea内置的Maven也可以，不过我喜欢用自己想要的版本，所以就自己给Idea配置我想要的Maven版本，而且还能学到东西，Maven也是我们必须要了解的一项工具。</p>
+<p>我使用的是Idea2018，里面内置的Maven是3.3的，我自己改成了3.5</p>
+<p>安装好了Maven以后，记得把Maven默认的JDK改成1.8，就是在Maven的安装位置的conf文件夹中，打开setting.xml，在里面改成如下配置<br> <img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/01.png" class><br>为了方便，我就直接把内容粘贴出来，你们就不用一个一个打了，如下</p>
+ <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">id</span>&gt;</span>jdk-1.8<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line"></span><br><span class="line">      <span class="tag">&lt;<span class="name">activation</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">activeByDefault</span>&gt;</span>true<span class="tag">&lt;/<span class="name">activeByDefault</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">jdk</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">jdk</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">activation</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">maven.compiler.targer</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.targer</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">maven.compiler.compilerVersion</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.compilerVersion</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>完成了上述操作之后，现在我教你用Idea配置自己的Maven，具体操作如下图：</p>
+ <img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/02.png" class>
+
+<img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/03.png" class>
+
+<p>选择好了之后，点击Apply就可以了。</p>
+<h3 id="实现功能"><a href="#实现功能" class="headerlink" title="实现功能"></a>实现功能</h3><p>一个功能，浏览器发送hello请求，服务器接受请求并处理，相应HelloWorld字符串</p>
+<h3 id="具体步骤"><a href="#具体步骤" class="headerlink" title="具体步骤"></a>具体步骤</h3><p>首先我们使用Idea创建Maven工程</p>
+<img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/04.png" class>
+
+<img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/05.png" class>
+
+<img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/06.png" class>
+
+<img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/07.png" class>
+
+<p>然后点击Finish就创建成功了，我们的Maven项目也就创建好了，这里要提一下，我们刚创建Maven项目的时候，Idea给我的一些Tip，我们把这个勾选了，以后我们修改pom.xml的时候，就会自动帮我们加载依赖了。</p>
+<img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/08.png" class>
+
+<p>当然啦，如果你没有对Maven进行生命配置的话，你会发现Maven加载相关依赖的时候非常的慢，因为Maven中央库在国外，所以自然比较慢，我们可以配置Maven为阿里源，这里就快很多了，具体操作看我另一篇文章带你了解Maven，并搞定安装和配置，里面有讲解如何配置阿里源</p>
+<h3 id="导入依赖SpringBoot相关的依赖"><a href="#导入依赖SpringBoot相关的依赖" class="headerlink" title="导入依赖SpringBoot相关的依赖"></a>导入依赖SpringBoot相关的依赖</h3><p>接下来，我们来使用pom加载相关依赖，加载我们的SpringBoot项目，那我们应该是用什么依赖呢，哈哈，不要慌，这里我教你怎么使用官网的例子，首先打开Spring官网，然后我们根据我们需要的相关版本，进行勾选生成即可，SpringBoot的版本一般选择最新的release版本就可以了，具体如下图<br> <img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/09.png" class><br>然后我们就可以把生成的pom.xml依赖拷贝到我们项目的pom.xml里面，注意了，不要全部拷贝，基本把我圈出来的换成你自己的，如下图<br> <img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/10.png" class></p>
+<img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/11.png" class>
+
+<p>到这里我们就加载完成了一个SpringBoot项目吧，是不是很简单，不过你可能会说，我加载SpringMVC之类的也很简单，不过不要急，我们接着编写一个代码，你就发现我们什么都不用配置。</p>
+<h3 id="编写一个主程序，启动SpringBoot应用"><a href="#编写一个主程序，启动SpringBoot应用" class="headerlink" title="编写一个主程序，启动SpringBoot应用"></a>编写一个主程序，启动SpringBoot应用</h3><p>现在创建一个包，在包下创建一个java类，命名随便，我这里命名为DemoApplication ，如下图，编写的代码如下：</p>
+<img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/12.png" class>
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">import</span> org.springframework.boot.SpringApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.GetMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestParam;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(DemoApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/hello&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">(<span class="meta">@RequestParam(value = &quot;name&quot;, defaultValue = &quot;World&quot;)</span> String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> String.format(<span class="string">&quot;Hello %s!&quot;</span>, name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>}</p>
+<p>代码写好了就直接运行吧，你没听错，啥都不用做，直接运行就好了，运行了之后，直接在浏览器中访问，你就会发现成功了，舒不舒服。<br> <img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/13.png" class></p>
+<h2 id="SpringBoot简化部署"><a href="#SpringBoot简化部署" class="headerlink" title="SpringBoot简化部署"></a>SpringBoot简化部署</h2><p>从创建到运行就是这么方便简单，非常舒服，在进行代码分析讲解之前，我在多说点SpringBoot的甜头，就是打包部署。这个时候会发出疑问，哎，我刚刚创建的时候，好像像Tomcat之类的都没有安装配置，war包也没有打，怎么就运行了呢，更何谈部署。哈哈哈这个时候就能体现SpringBoot的小甜头了，SpringBoot项目可以打成jar包，然后在不需要安装运行环境的情况下，就能直接运行jar包，启动程序，可以移植性非常强。我们可以使用Maven命令打包，也可以直接借助Idea打包，Maven命令自己直接网上查找就可以了，这里我演示使用Idea打包方便，具体操作如下，在Idea侧边栏有Maven Projects，点击打开：<br> <img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/14.png" class><br>等待运行结束，在日志那里，如下图<br> <img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/15.png" class><br> <img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/16.png" class><br>把打包好的jar包粘贴到桌面，然后打开命令行，执行指令就可以运行了。<br> <img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/17.png" class><br> <img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/18.png" class><br> <img data-src="/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/19.png" class><br>运行成功，然后直接在浏览器访问一样可以成功访问，是不是很有意思。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -1009,92 +1161,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.mindmaster.top/2021/03/14/InnoDB%E8%A1%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/OIP.jfif">
-      <meta itemprop="name" content="邢浩东">
-      <meta itemprop="description" content="The world favors the underdog,and I would be the bad guy">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="一只小码农">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/03/14/InnoDB%E8%A1%A8/" class="post-title-link" itemprop="url">InnoDB表</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-03-14 14:38:12 / 修改时间：06:38:12" itemprop="dateCreated datePublished" datetime="2021-03-14T14:38:12Z">2021-03-14</time>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/03/14/InnoDB%E8%A1%A8/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/03/14/InnoDB%E8%A1%A8/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>0</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1167,20 +1233,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-count">85</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-count">20</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-count">34</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1285,13 +1351,13 @@ setInterval(function(){
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">165k</span>
+    <span title="站点总字数">169k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">2:30</span>
+    <span title="站点阅读时长">2:34</span>
 </div>
 
 
