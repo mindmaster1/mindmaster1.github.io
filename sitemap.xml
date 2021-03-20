@@ -4,7 +4,7 @@
   <url>
     <loc>https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/</loc>
     
-    <lastmod>2021-03-19</lastmod>
+    <lastmod>2021-03-20</lastmod>
     
   </url>
   
@@ -676,7 +676,7 @@
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/tags/HTTP/</loc>
+    <loc>https://www.mindmaster.top/tags/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</loc>
     <lastmod>2021-03-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -690,7 +690,7 @@
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/tags/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</loc>
+    <loc>https://www.mindmaster.top/tags/HTTP/</loc>
     <lastmod>2021-03-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -704,14 +704,14 @@
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/tags/Listener/</loc>
+    <loc>https://www.mindmaster.top/tags/%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F/</loc>
     <lastmod>2021-03-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/tags/%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F/</loc>
+    <loc>https://www.mindmaster.top/tags/Listener/</loc>
     <lastmod>2021-03-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -739,13 +739,6 @@
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/tags/SVN/</loc>
-    <lastmod>2021-03-20</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://www.mindmaster.top/tags/Servlet%E8%A7%84%E8%8C%83/</loc>
     <lastmod>2021-03-20</lastmod>
     <changefreq>daily</changefreq>
@@ -753,7 +746,7 @@
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/tags/Session/</loc>
+    <loc>https://www.mindmaster.top/tags/SVN/</loc>
     <lastmod>2021-03-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -761,6 +754,13 @@
   
   <url>
     <loc>https://www.mindmaster.top/tags/SpringBoot%E6%A1%86%E6%9E%B6/</loc>
+    <lastmod>2021-03-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.mindmaster.top/tags/Session/</loc>
     <lastmod>2021-03-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -795,14 +795,14 @@
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/tags/Vue/</loc>
+    <loc>https://www.mindmaster.top/tags/RabbitMQ/</loc>
     <lastmod>2021-03-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/tags/RabbitMQ/</loc>
+    <loc>https://www.mindmaster.top/tags/Vue/</loc>
     <lastmod>2021-03-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -830,14 +830,14 @@
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/</loc>
+    <loc>https://www.mindmaster.top/tags/%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2/</loc>
     <lastmod>2021-03-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/tags/%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2/</loc>
+    <loc>https://www.mindmaster.top/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/</loc>
     <lastmod>2021-03-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -851,14 +851,14 @@
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/tags/JAVA/</loc>
+    <loc>https://www.mindmaster.top/tags/Linux%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1/</loc>
     <lastmod>2021-03-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/tags/Linux%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1/</loc>
+    <loc>https://www.mindmaster.top/tags/JAVA/</loc>
     <lastmod>2021-03-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -902,7 +902,7 @@
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/categories/HTTP/</loc>
+    <loc>https://www.mindmaster.top/categories/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
     <lastmod>2021-03-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -916,7 +916,7 @@
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/categories/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
+    <loc>https://www.mindmaster.top/categories/HTTP/</loc>
     <lastmod>2021-03-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -993,14 +993,14 @@
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/categories/Vue%E6%A1%86%E6%9E%B6/</loc>
+    <loc>https://www.mindmaster.top/categories/MQ/</loc>
     <lastmod>2021-03-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/categories/MQ/</loc>
+    <loc>https://www.mindmaster.top/categories/Vue%E6%A1%86%E6%9E%B6/</loc>
     <lastmod>2021-03-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>

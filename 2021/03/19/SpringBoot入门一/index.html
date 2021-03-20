@@ -21,12 +21,12 @@
     var CONFIG = {"hostname":"www.mindmaster.top","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="SpringBoot介绍先通过来一些概念，会让我们对技术有着更加清晰的理解。J2EE笨重的开发、繁多的配置、低下的开发效率、复杂的部署流程、第三方技术集成难度大，如果开发过SpringMVC或者单纯使用过SSH、SSM框架的同学，肯定是体验过被很多配置文件支配的恐惧，很难受吧，不过不用担心，我们有了SpringBoot。Spring Boot用来简化Spring应用开发，约定大于配置，去繁从简，j">
+  <meta name="description" content="对SpringBoot的基本认识与特性了解">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SpringBoot入门一">
 <meta property="og:url" content="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/index.html">
 <meta property="og:site_name" content="一只小码农">
-<meta property="og:description" content="SpringBoot介绍先通过来一些概念，会让我们对技术有着更加清晰的理解。J2EE笨重的开发、繁多的配置、低下的开发效率、复杂的部署流程、第三方技术集成难度大，如果开发过SpringMVC或者单纯使用过SSH、SSM框架的同学，肯定是体验过被很多配置文件支配的恐惧，很难受吧，不过不用担心，我们有了SpringBoot。Spring Boot用来简化Spring应用开发，约定大于配置，去繁从简，j">
+<meta property="og:description" content="对SpringBoot的基本认识与特性了解">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/01.png">
 <meta property="og:image" content="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/02.png">
@@ -48,7 +48,7 @@
 <meta property="og:image" content="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/18.png">
 <meta property="og:image" content="https://www.mindmaster.top/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/19.png">
 <meta property="article:published_time" content="2021-03-19T14:04:55.000Z">
-<meta property="article:modified_time" content="2021-03-19T06:25:17.458Z">
+<meta property="article:modified_time" content="2021-03-20T02:32:22.824Z">
 <meta property="article:author" content="邢浩东">
 <meta property="article:tag" content="SpringBoot框架">
 <meta name="twitter:card" content="summary">
@@ -267,10 +267,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-03-19 14:04:55 / 修改时间：06:25:17" itemprop="dateCreated datePublished" datetime="2021-03-19T14:04:55Z">2021-03-19</time>
+              <time title="创建时间：2021-03-19 14:04:55" itemprop="dateCreated datePublished" datetime="2021-03-19T14:04:55Z">2021-03-19</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-20 02:32:22" itemprop="dateModified" datetime="2021-03-20T02:32:22Z">2021-03-20</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -317,6 +323,7 @@
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
               <span>4 分钟</span>
             </span>
+            <div class="post-description">对SpringBoot的基本认识与特性了解</div>
 
         </div>
       </header>
