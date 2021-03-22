@@ -90,68 +90,6 @@
       </tags>
   </entry>
   <entry>
-    <title>InnoDB存储引擎</title>
-    <url>/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
-    <content><![CDATA[<h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
-<p>InnoDB存储引擎有多个内存块，这些内存块组成了一个大的内存池</p>
-<p>后台线程的主要作用就是负责刷新内存池中的数据，保证缓存池中的内存缓存的是最近的数据。此外，还将已经修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下，InnoDB可以恢复运行到最佳状态。</p>
-<h4 id="后台线程（InnDB是一个多线程模型"><a href="#后台线程（InnDB是一个多线程模型" class="headerlink" title="后台线程（InnDB是一个多线程模型)"></a>后台线程（InnDB是一个多线程模型)</h4><p>#####Master Thread</p>
-<p><strong>作用：</strong></p>
-<p>​    一个非常核心的后台进程，负责将缓存池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓存、UNDO页的回收等。</p>
-<h5 id="IO-Therad"><a href="#IO-Therad" class="headerlink" title="IO Therad"></a>IO Therad</h5><p>  在InnoDB存储引擎中大量使用了AIO（Async IO）—异步时间非阻塞IO，这样可以极大程度上提高数据库的性能。IO Thread的主要工作就是负责这些IO请求的回调</p>
-<p>共有四个IO Thread:write 、read、insert buffer、log IO thread</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114130216.png" alt="image-20210114114130216"></p>
-<p>通过命令SHOW ENGINE INNODB STASTUS\G来观察IO Thread</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114405936.png" alt="image-20210114114405936"></p>
-<p>有四个write和read IO Thread</p>
-<p>通过innodb_read_io_threads和innodb_write_io_threads参数来进行设置</p>
-<h5 id="Purge-Thread"><a href="#Purge-Thread" class="headerlink" title="Purge Thread"></a>Purge Thread</h5><p><strong>作用</strong>：</p>
-<p>​    Purge Thread回收已经使用并且已经分配的undo页（事务提交之后，其所使用的Undolog可能就不再需要）</p>
-<p>用户需要在<strong>MySQL数据库的配置文件</strong>中添加如下命令来启用独立的Purge Thread: </p>
-<p>​        innodb_purge_threads=1</p>
-<h5 id="Page-Cleaner-Thread"><a href="#Page-Cleaner-Thread" class="headerlink" title="Page Cleaner Thread"></a>Page Cleaner Thread</h5><p><strong>作用</strong>：</p>
-<p>​    将脏页的刷新操作放在单独的线程中完成。减轻Master Thread的工作以及对于用户查询线程的阻塞</p>
-<h4 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h4><h5 id="缓存池"><a href="#缓存池" class="headerlink" title="缓存池"></a>缓存池</h5><p>Innodb存储引擎是基于磁盘存储的（Disk-base Database），将其中的记录按照页来管理。</p>
-<p>缓存池的出现，就是为了解决CPU速度和磁盘速度之间的差异，通过内存的速度来弥补磁盘速度较慢对数据库性能的影响。读取文件时，首先判断给文件是否在缓存池中（没有就去磁盘上找）。</p>
-<p>在修改缓存池中的页时，先以一定频率刷新到缓存池上，然后通过Checkpoint刷新回磁盘。</p>
-<p>数据库服务器最好采用64位操作系统，可以使用更多的内存（512GB），32位（只有64GB）。</p>
-<p>缓存池的配置通过参数innodb_buffer_pool_size来设置。</p>
-<h6 id="缓存池中缓存的数据页类型："><a href="#缓存池中缓存的数据页类型：" class="headerlink" title="缓存池中缓存的数据页类型："></a>缓存池中缓存的数据页类型：</h6><p>​    索引页、数据页、Undo页、插入缓存页、自适应哈希索引页（adaptive hash index）、InnoDB存储的锁信息、数据字典信息等。</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114131120313.png" alt="image-20210114131120313"></p>
-<p><strong>允许有多个缓存池实例</strong>：每个页根据hashcode平均分配到不同的缓存池实例中，减少数据库内部资源的竞争，增加数据库的并发能力。可以通过inodb_buffer_pool_instances来进行配置，通过命令SHOW ENGINE INNODB STATUS可以观察到每个缓存池实例对象运行的状态，还可以通过查看表InnoDB_BUFFER_POOL_STATS来观察缓存的状态(要求在information_schema架构下)</p>
-<h5 id="LRU-LIST-、FREE-LIST-、FLUSH-LIST"><a href="#LRU-LIST-、FREE-LIST-、FLUSH-LIST" class="headerlink" title="LRU LIST 、FREE LIST 、FLUSH LIST"></a>LRU LIST 、FREE LIST 、FLUSH LIST</h5><p><strong>LRU</strong>算法用来管理已经读取的页</p>
-<p>数据库中的缓存池是通过LRU（Latest Recent Used,最近最少使用）算法来管理内部的各种类型的页。</p>
-<p><strong>LRU解释</strong>：将最频繁使用的页放在LRU列表的前端，最少使用的页放在LRU列表的尾端。当缓存池不能存放新读取到的页时，将优先删除列表尾端的页（默认大小为16KB）。</p>
-<p><strong>改进</strong>：</p>
-<p>1、（midpoint insertion strategy）：InnoDB中在LRU中加入了midpoint位置，将新读取到的页放在midpoint，而不是直接放在LRU列表首部。<strong>默认位置在LRU列表长度63%处</strong>（可以通过innodb_old_blocks_pct来控制）</p>
-<p>2、设置了参数innodb_old_blocks_time,用于表示页读取到mid位置后需要等待多久才会加入到LRU列表的热端</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133522544.png" alt="image-20210114133522544"></p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133412580.png" alt="image-20210114133412580"></p>
-<p><strong>为什么要对朴素的LRU算法进行改良</strong>？</p>
-<h5 id="重做日志缓存"><a href="#重做日志缓存" class="headerlink" title="重做日志缓存"></a>重做日志缓存</h5><h5 id="额外的内存池"><a href="#额外的内存池" class="headerlink" title="额外的内存池"></a>额外的内存池</h5>]]></content>
-      <categories>
-        <category>MySQL数据库</category>
-      </categories>
-      <tags>
-        <tag>InnoDB存储引擎</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>InnoDB文件</title>
-    <url>/2021/03/14/InnoDB%E6%96%87%E4%BB%B6/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>JVM虚拟机栈</title>
-    <url>/2021/03/14/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>InnoDB表</title>
-    <url>/2021/03/14/InnoDB%E8%A1%A8/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>IOC创建对象</title>
     <url>/2021/02/28/IOC%E6%8E%A7%E5%88%B6%E5%8F%8D%E8%BD%AC/</url>
     <content><![CDATA[<h2 id="IOC"><a href="#IOC" class="headerlink" title="IOC"></a>IOC</h2><p>控制反转（<strong>IoC，Inversion of Control</strong>），是一个概念，是一种思想。指将传统上由程序代 码直接操控的对象调用权交给容器，通过容器来实现对象的装配和管理。控制反转就是对对 象控制权的转移，从程序代码本身反转到了外部容器。通过容器实现对象的创建，属性赋值， 依赖的管理。</p>
@@ -255,6 +193,73 @@
       </tags>
   </entry>
   <entry>
+    <title>InnoDB存储引擎</title>
+    <url>/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
+    <content><![CDATA[<h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
+<p>InnoDB存储引擎有多个内存块，这些内存块组成了一个大的内存池</p>
+<p>后台线程的主要作用就是负责刷新内存池中的数据，保证缓存池中的内存缓存的是最近的数据。此外，还将已经修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下，InnoDB可以恢复运行到最佳状态。</p>
+<h4 id="后台线程（InnDB是一个多线程模型"><a href="#后台线程（InnDB是一个多线程模型" class="headerlink" title="后台线程（InnDB是一个多线程模型)"></a>后台线程（InnDB是一个多线程模型)</h4><p>#####Master Thread</p>
+<p><strong>作用：</strong></p>
+<p>​    一个非常核心的后台进程，负责将缓存池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓存、UNDO页的回收等。</p>
+<h5 id="IO-Therad"><a href="#IO-Therad" class="headerlink" title="IO Therad"></a>IO Therad</h5><p>  在InnoDB存储引擎中大量使用了AIO（Async IO）—异步时间非阻塞IO，这样可以极大程度上提高数据库的性能。IO Thread的主要工作就是负责这些IO请求的回调</p>
+<p>共有四个IO Thread:write 、read、insert buffer、log IO thread</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114130216.png" alt="image-20210114114130216"></p>
+<p>通过命令SHOW ENGINE INNODB STASTUS\G来观察IO Thread</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114405936.png" alt="image-20210114114405936"></p>
+<p>有四个write和read IO Thread</p>
+<p>通过innodb_read_io_threads和innodb_write_io_threads参数来进行设置</p>
+<h5 id="Purge-Thread"><a href="#Purge-Thread" class="headerlink" title="Purge Thread"></a>Purge Thread</h5><p><strong>作用</strong>：</p>
+<p>​    Purge Thread回收已经使用并且已经分配的undo页（事务提交之后，其所使用的Undolog可能就不再需要）</p>
+<p>用户需要在<strong>MySQL数据库的配置文件</strong>中添加如下命令来启用独立的Purge Thread: </p>
+<p>​        innodb_purge_threads=1</p>
+<h5 id="Page-Cleaner-Thread"><a href="#Page-Cleaner-Thread" class="headerlink" title="Page Cleaner Thread"></a>Page Cleaner Thread</h5><p><strong>作用</strong>：</p>
+<p>​    将脏页的刷新操作放在单独的线程中完成。减轻Master Thread的工作以及对于用户查询线程的阻塞</p>
+<h4 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h4><h5 id="缓存池"><a href="#缓存池" class="headerlink" title="缓存池"></a>缓存池</h5><p>Innodb存储引擎是基于磁盘存储的（Disk-base Database），将其中的记录按照页来管理。</p>
+<p>缓存池的出现，就是为了解决CPU速度和磁盘速度之间的差异，通过内存的速度来弥补磁盘速度较慢对数据库性能的影响。读取文件时，首先判断给文件是否在缓存池中（没有就去磁盘上找）。</p>
+<p>在修改缓存池中的页时，先以一定频率刷新到缓存池上，然后通过Checkpoint刷新回磁盘。</p>
+<p>数据库服务器最好采用64位操作系统，可以使用更多的内存（512GB），32位（只有64GB）。</p>
+<p>缓存池的配置通过参数innodb_buffer_pool_size来设置。</p>
+<h6 id="缓存池中缓存的数据页类型："><a href="#缓存池中缓存的数据页类型：" class="headerlink" title="缓存池中缓存的数据页类型："></a>缓存池中缓存的数据页类型：</h6><p>​    索引页、数据页、Undo页、插入缓存页、自适应哈希索引页（adaptive hash index）、InnoDB存储的锁信息、数据字典信息等。</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114131120313.png" alt="image-20210114131120313"></p>
+<p><strong>允许有多个缓存池实例</strong>：每个页根据hashcode平均分配到不同的缓存池实例中，减少数据库内部资源的竞争，增加数据库的并发能力。可以通过inodb_buffer_pool_instances来进行配置，通过命令SHOW ENGINE INNODB STATUS可以观察到每个缓存池实例对象运行的状态，还可以通过查看表InnoDB_BUFFER_POOL_STATS来观察缓存的状态(要求在information_schema架构下)</p>
+<h5 id="LRU-LIST-、FREE-LIST-、FLUSH-LIST"><a href="#LRU-LIST-、FREE-LIST-、FLUSH-LIST" class="headerlink" title="LRU LIST 、FREE LIST 、FLUSH LIST"></a>LRU LIST 、FREE LIST 、FLUSH LIST</h5><p><strong>LRU</strong>算法用来管理已经读取的页</p>
+<p>数据库中的缓存池是通过LRU（Latest Recent Used,最近最少使用）算法来管理内部的各种类型的页。</p>
+<p><strong>LRU解释</strong>：将最频繁使用的页放在LRU列表的前端，最少使用的页放在LRU列表的尾端。当缓存池不能存放新读取到的页时，将优先删除列表尾端的页（默认大小为16KB）。</p>
+<p><strong>改进</strong>：</p>
+<p>1、（midpoint insertion strategy）：InnoDB中在LRU中加入了midpoint位置，将新读取到的页放在midpoint，而不是直接放在LRU列表首部。<strong>默认位置在LRU列表长度63%处</strong>（可以通过innodb_old_blocks_pct来控制）</p>
+<p>2、设置了参数innodb_old_blocks_time,用于表示页读取到mid位置后需要等待多久才会加入到LRU列表的热端</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133522544.png" alt="image-20210114133522544"></p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133412580.png" alt="image-20210114133412580"></p>
+<p><strong>为什么要对朴素的LRU算法进行改良</strong>？</p>
+<h5 id="重做日志缓存"><a href="#重做日志缓存" class="headerlink" title="重做日志缓存"></a>重做日志缓存</h5><h5 id="额外的内存池"><a href="#额外的内存池" class="headerlink" title="额外的内存池"></a>额外的内存池</h5>]]></content>
+      <categories>
+        <category>MySQL数据库</category>
+      </categories>
+      <tags>
+        <tag>InnoDB存储引擎</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>InnoDB文件</title>
+    <url>/2021/03/14/InnoDB%E6%96%87%E4%BB%B6/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>InnoDB表</title>
+    <url>/2021/03/14/InnoDB%E8%A1%A8/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>JVM虚拟机栈</title>
+    <url>/2021/03/14/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Java高并发JUC</title>
+    <url>/2021/02/25/Java%E9%AB%98%E5%B9%B6%E5%8F%91JUC/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Java内存区域与内存溢出异常</title>
     <url>/2021/02/05/Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/</url>
     <content><![CDATA[<h3 id="1-内存管理那些事"><a href="#1-内存管理那些事" class="headerlink" title="1.内存管理那些事"></a>1.内存管理那些事</h3><p>C、C++：在内存管理领域，没有所谓的内存动态分配机制和垃圾收集技术，他们即拥有每一个对象的所有权，又担负着每一个对象从开始到终结的维护责任。</p>
@@ -331,11 +336,6 @@
   <entry>
     <title>LVS负载均衡</title>
     <url>/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>Java高并发JUC</title>
-    <url>/2021/02/25/Java%E9%AB%98%E5%B9%B6%E5%8F%91JUC/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -651,11 +651,6 @@
       </tags>
   </entry>
   <entry>
-    <title>MongoDB数据库</title>
-    <url>/2021/02/25/MongoDB%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Maven学习笔记</title>
     <url>/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-3/</url>
     <content><![CDATA[<h3 id="Maven仓库的基本概念"><a href="#Maven仓库的基本概念" class="headerlink" title="Maven仓库的基本概念"></a>Maven仓库的基本概念</h3><p> 当第⼀次运⾏Maven命令的时候， 你需要Internet链接， 因为它需要从⽹上下载⼀些⽂件。 那么它从 哪⾥下载呢？ 它是从Maven默认的远程库下载的。 这个远程仓库有Maven的核⼼插件和可供下载的jar⽂件。</p>
@@ -921,108 +916,9 @@
       </tags>
   </entry>
   <entry>
-    <title>Mybatis框架</title>
-    <url>/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6-1/</url>
-    <content><![CDATA[<h2 id="Mybatis入门案例"><a href="#Mybatis入门案例" class="headerlink" title="Mybatis入门案例"></a>Mybatis入门案例</h2><h3 id="搭建Mybatis开发环境–基础CRUD操作实例"><a href="#搭建Mybatis开发环境–基础CRUD操作实例" class="headerlink" title="搭建Mybatis开发环境–基础CRUD操作实例"></a>搭建Mybatis开发环境–基础CRUD操作实例</h3><h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><blockquote>
-<p>创建MySQL数据库和表</p>
-</blockquote>
-<img data-src="/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6-1/01.png" class>
-
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `student` (</span><br><span class="line"> `id` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> ,</span><br><span class="line"> `name` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line"> `email` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line"> `age` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line"> <span class="keyword">PRIMARY</span> <span class="keyword">KEY</span> (`id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>创建Maven工程，并且在pom.xml中加入maven坐标</p>
-</blockquote>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">     	<span class="tag">&lt;<span class="name">version</span>&gt;</span>4.11<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">   	 	<span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mybatis<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.5.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.1.9<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>加入maven插件</p>
-</blockquote>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">directory</span>&gt;</span>src/main/java<span class="tag">&lt;/<span class="name">directory</span>&gt;</span><span class="comment">&lt;!--所在的目录--&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">includes</span>&gt;</span><span class="comment">&lt;!--包括目录下的.properties,.xml 文件都会扫描到--&gt;</span></span><br><span class="line"> 			 <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.properties<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.xml<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;/<span class="name">includes</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">filtering</span>&gt;</span>false<span class="tag">&lt;/<span class="name">filtering</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span> </span><br><span class="line">			<span class="tag">&lt;<span class="name">source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">build</span>/&gt;</span> </span><br></pre></td></tr></table></figure>
-
-
-<blockquote>
-<p>编写Student实体类</p>
-</blockquote>
-<p>创建包com.bytedance.domain,包中创建Student类</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.bjpowernode.domain;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Description: 实体类 &lt;/p&gt;</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Company: http://www.bjpowernode.com</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123;</span><br><span class="line"> <span class="comment">//属性名和列名一样</span></span><br><span class="line">     <span class="keyword">private</span> Integer id;</span><br><span class="line">     <span class="keyword">private</span> String name;</span><br><span class="line">     <span class="keyword">private</span> String email;</span><br><span class="line">     <span class="keyword">private</span> Integer age;</span><br><span class="line">     <span class="comment">// set ,get , toString</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>编写Dao接口 StudentDao</p>
-</blockquote>
-<p>创建包com.bytedance.dao,创建StudentDao接口</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.bjpowernode.dao;</span><br><span class="line"><span class="keyword">import</span> com.bjpowernode.domain.Student;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Description: Dao 接口 &lt;/p&gt;</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Company: http://www.bjpowernode.com</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">StudentDao</span> </span>&#123;</span><br><span class="line">	 <span class="comment">/*查询所有数据*/</span></span><br><span class="line">	 <span class="function">List&lt;Student&gt; <span class="title">selectStudents</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>编写Dao接口Mapper映射文件StudentDao.xml</p>
-<p>要求：</p>
-<ul>
-<li> 在 dao 包中创建文件 StudentDao.xml </li>
-<li>要 StudentDao.xml 文件名称和接口 StudentDao 一样，区分大小写的一样</li>
-</ul>
-</blockquote>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">mapper</span></span></span><br><span class="line"><span class="meta">     <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span></span><br><span class="line"><span class="meta">     <span class="meta-string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">     namespace：必须有值，自定义的唯一字符串</span></span><br><span class="line"><span class="comment">     推荐使用：dao 接口的全限定名称</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;com.bytedance.dao.StudentDao&quot;</span>&gt;</span></span><br><span class="line"> <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment"> 		&lt;select&gt;: 查询数据， 标签中必须是 select 语句</span></span><br><span class="line"><span class="comment"> 			id: sql 语句的自定义名称，推荐使用 dao 接口中方法名称，使用名称表示要执行的 sql 语句</span></span><br><span class="line"><span class="comment"> 		resultType: 查询语句的返回结果数据类型，使用全限定类名</span></span><br><span class="line"><span class="comment"> --&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectStudents&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.bytedance.domain.Student&quot;</span>&gt;</span></span><br><span class="line">         <span class="comment">&lt;!--要执行的 sql 语句--&gt;</span></span><br><span class="line">         select id,name,email,age from student</span><br><span class="line"> <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>创建Mybatis主配置文件</p>
-</blockquote>
-<p>项目 src/main 下创建 resources 目录，设置 resources 目录为 resources root 创建主配置文件：名称为 mybatis.xml 说明：主配置文件名称是自定义的，内容如下</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">configuration</span></span></span><br><span class="line"><span class="meta">     <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//mybatis.org//DTD Config 3.0//EN&quot;</span></span></span><br><span class="line"><span class="meta">     <span class="meta-string">&quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line"> 	<span class="comment">&lt;!--配置 mybatis 环境--&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">environments</span> <span class="attr">default</span>=<span class="string">&quot;mysql&quot;</span>&gt;</span></span><br><span class="line">         <span class="comment">&lt;!--id:数据源的名称--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">environment</span> <span class="attr">id</span>=<span class="string">&quot;mysql&quot;</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--配置事务类型：使用 JDBC 事务（使用 Connection 的提交和回滚）--&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">transactionManager</span> <span class="attr">type</span>=<span class="string">&quot;JDBC&quot;</span>/&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--数据源 dataSource：创建数据库 Connection 对象</span></span><br><span class="line"><span class="comment">        type: POOLED 使用数据库的连接池</span></span><br><span class="line"><span class="comment">        --&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">dataSource</span> <span class="attr">type</span>=<span class="string">&quot;POOLED&quot;</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--连接数据库的四个要素--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;driver&quot;</span> <span class="attr">value</span>=<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;url&quot;</span> <span class="attr">value</span>=<span class="string">&quot;jdbc:mysql://localhost:3306/ssm&quot;</span>/&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> <span class="attr">value</span>=<span class="string">&quot;root&quot;</span>/&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span> <span class="attr">value</span>=<span class="string">&quot;123456&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dataSource</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">environment</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">environments</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">mappers</span>&gt;</span></span><br><span class="line">	 <span class="comment">&lt;!--告诉 mybatis 要执行的 sql 语句的位置--&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">mapper</span> <span class="attr">resource</span>=<span class="string">&quot;com/bytedance/dao/StudentDao.xml&quot;</span>/&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">mappers</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>创建测试类</p>
-</blockquote>
-<p> src/test/java/com/bytedance/ 创建 MyBatisTest.java 文件</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* mybatis 入门</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testStart</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="comment">//1.mybatis 主配置文件</span></span><br><span class="line">     String config = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">     <span class="comment">//2.读取配置文件</span></span><br><span class="line">     InputStream in = Resources.getResourceAsStream(config);</span><br><span class="line">     <span class="comment">//3.创建 SqlSessionFactory 对象,目的是获取 SqlSession</span></span><br><span class="line">     SqlSessionFactory factory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(in);</span><br><span class="line">     <span class="comment">//4.获取 SqlSession,SqlSession 能执行 sql 语句</span></span><br><span class="line">     SqlSession session = factory.openSession();</span><br><span class="line">     <span class="comment">//5.执行 SqlSession 的 selectList()</span></span><br><span class="line">     List&lt;Student&gt; studentList = 	session.selectList(<span class="string">&quot;com.bytedance.dao.StudentDao.selectStudents&quot;</span>);</span><br><span class="line">    <span class="comment">//6.循环输出查询结果</span></span><br><span class="line">	 studentList.forEach( student -&gt; System.out.println(student));</span><br><span class="line"> 	<span class="comment">//7.关闭 SqlSession，释放资源</span></span><br><span class="line">	 session.close();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>配置日志功能</p>
-</blockquote>
-<p>mybatis.xml 文件加入日志配置，可以在控制台输出执行的 sql 语句和参数</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">settings</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">&quot;logImpl&quot;</span> <span class="attr">value</span>=<span class="string">&quot;STDOUT_LOGGING&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="insert"><a href="#insert" class="headerlink" title="insert"></a>insert</h3><ul>
-<li><p>StudentDao 接口中增加方法</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">int insertStudent(Student student);</span><br></pre></td></tr></table></figure></li>
-<li><p>StudentDao.xml中加入SQL语句</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">（<span class="number">2</span>） StudentDao.xml 加入 <span class="keyword">sql</span> 语句</span><br><span class="line"><span class="operator">&lt;</span><span class="keyword">insert</span> id<span class="operator">=</span>&quot;insertStudent&quot;<span class="operator">&gt;</span></span><br><span class="line"> 	<span class="keyword">insert</span> <span class="keyword">into</span> student(id,name,email,age)</span><br><span class="line">	values(#&#123;id&#125;,#&#123;name&#125;,#&#123;email&#125;,#&#123;age&#125;)</span><br><span class="line"><span class="operator">&lt;</span><span class="operator">/</span><span class="keyword">insert</span><span class="operator">&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li><p>增加测试方法</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testInsert</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="comment">//1.mybatis 主配置文件</span></span><br><span class="line">     String config = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">     <span class="comment">//2.读取配置文件</span></span><br><span class="line">     InputStream in = Resources.getResourceAsStream(config);</span><br><span class="line">     <span class="comment">//3.创建 SqlSessionFactory 对象</span></span><br><span class="line">     SqlSessionFactory factory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(in);</span><br><span class="line">     <span class="comment">//4.获取 SqlSession</span></span><br><span class="line">     SqlSession session = factory.openSession();</span><br><span class="line">     <span class="comment">//5.创建保存数据的对象</span></span><br><span class="line">     Student student = <span class="keyword">new</span> Student();</span><br><span class="line">     student.setId(<span class="number">1005</span>);</span><br><span class="line">     student.setName(<span class="string">&quot;张丽&quot;</span>);</span><br><span class="line">     student.setEmail(<span class="string">&quot;zhangli@163.com&quot;</span>);</span><br><span class="line">     student.setAge(<span class="number">20</span>);</span><br><span class="line">     <span class="comment">//6.执行插入 insert</span></span><br><span class="line">     <span class="keyword">int</span> rows = session.insert(</span><br><span class="line">    <span class="string">&quot;com.bytedance.dao.StudentDao.insertStudent&quot;</span>,student);</span><br><span class="line">     <span class="comment">//7.提交事务</span></span><br><span class="line">     session.commit();</span><br><span class="line">     System.out.println(<span class="string">&quot;增加记录的行数:&quot;</span>+rows);</span><br><span class="line">     <span class="comment">//8.关闭 SqlSession</span></span><br><span class="line">     session.close();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<h3 id="update"><a href="#update" class="headerlink" title="update"></a>update</h3><ul>
-<li><p>StudentDao接口中增加方法</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">updateStudent</span><span class="params">(Student student)</span></span>;</span><br></pre></td></tr></table></figure></li>
-<li><p>StudentDao.xml文件中增加SQL语句</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="operator">&lt;</span><span class="keyword">update</span> id<span class="operator">=</span>&quot;updateStudent&quot;<span class="operator">&gt;</span></span><br><span class="line"> 	update student set age = #&#123;age&#125; where id=#&#123;id&#125;</span><br><span class="line"><span class="operator">&lt;</span><span class="operator">/</span><span class="keyword">update</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li><p>增加测试方法</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testUpdate</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="comment">//1.mybatis 主配置文件</span></span><br><span class="line">     String config = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">     <span class="comment">//2.读取配置文件</span></span><br><span class="line">     InputStream in = Resources.getResourceAsStream(config);</span><br><span class="line">     <span class="comment">//3.创建 SqlSessionFactory 对象</span></span><br><span class="line">     SqlSessionFactory factory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(in);</span><br><span class="line">     <span class="comment">//4.获取 SqlSession</span></span><br><span class="line">     SqlSession session = factory.openSession();</span><br><span class="line">     <span class="comment">//5.创建保存数据的对象</span></span><br><span class="line">     Student student = <span class="keyword">new</span> Student();</span><br><span class="line">     student.setId(<span class="number">1005</span>);<span class="comment">//要修改的 id</span></span><br><span class="line">     student.setAge(<span class="number">30</span>); <span class="comment">//要修改的年龄值</span></span><br><span class="line">     <span class="comment">//6.执行更新 update</span></span><br><span class="line">     <span class="keyword">int</span> rows = session.update(</span><br><span class="line">    <span class="string">&quot;com.bytedance.dao.StudentDao.updateStudent&quot;</span>,student);</span><br><span class="line">     <span class="comment">//7.提交事务</span></span><br><span class="line">     session.commit();</span><br><span class="line">     System.out.println(<span class="string">&quot;修改记录的行数:&quot;</span>+rows);</span><br><span class="line">     <span class="comment">//8.关闭 SqlSession</span></span><br><span class="line">     session.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<h3 id="delete"><a href="#delete" class="headerlink" title="delete"></a>delete</h3><ul>
-<li><p>StudentDao接口中增加方法</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">deleteStudent</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br></pre></td></tr></table></figure></li>
-<li><p>StudentDao.xml文件中增加SQL语句</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">delete</span> <span class="attr">id</span>=<span class="string">&quot;deleteStudent&quot;</span>&gt;</span></span><br><span class="line"> delete from student where id=#&#123;studentId&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">delete</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li><p>增加测试方法</p>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testDelete</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="comment">//1.mybatis 主配置文件</span></span><br><span class="line">     String config = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">     <span class="comment">//2.读取配置文件</span></span><br><span class="line">     InputStream in = Resources.getResourceAsStream(config);</span><br><span class="line">     <span class="comment">//3.创建 SqlSessionFactory 对象</span></span><br><span class="line">     SqlSessionFactory factory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(in);</span><br><span class="line">     <span class="comment">//4.获取 SqlSession</span></span><br><span class="line">     SqlSession session = factory.openSession();</span><br><span class="line">     <span class="comment">//5.删除的 id</span></span><br><span class="line">     <span class="keyword">int</span> id = <span class="number">1001</span>;</span><br><span class="line">     <span class="comment">//6.执行删除 delete</span></span><br><span class="line">     <span class="keyword">int</span> rows = session.delete(</span><br><span class="line">    <span class="string">&quot;com.bytedance.dao.StudentDao.deleteStudent&quot;</span>,id);</span><br><span class="line">     <span class="comment">//7.提交事务</span></span><br><span class="line">     session.commit();</span><br><span class="line">     System.out.println(<span class="string">&quot;修改记录的行数:&quot;</span>+rows);</span><br><span class="line">    <span class="comment">//8.关闭SqlSession</span></span><br><span class="line">    session.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>Mybatis框架</category>
-      </categories>
-      <tags>
-        <tag>Mybatis</tag>
-      </tags>
+    <title>MongoDB数据库</title>
+    <url>/2021/02/25/MongoDB%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Mybatis动态代理与传参</title>
@@ -1184,6 +1080,110 @@
 
  <img data-src="/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/10.png" class>
 
+
+
+
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>Mybatis框架</category>
+      </categories>
+      <tags>
+        <tag>Mybatis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Mybatis框架</title>
+    <url>/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6-1/</url>
+    <content><![CDATA[<h2 id="Mybatis入门案例"><a href="#Mybatis入门案例" class="headerlink" title="Mybatis入门案例"></a>Mybatis入门案例</h2><h3 id="搭建Mybatis开发环境–基础CRUD操作实例"><a href="#搭建Mybatis开发环境–基础CRUD操作实例" class="headerlink" title="搭建Mybatis开发环境–基础CRUD操作实例"></a>搭建Mybatis开发环境–基础CRUD操作实例</h3><h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><blockquote>
+<p>创建MySQL数据库和表</p>
+</blockquote>
+<img data-src="/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6-1/01.png" class>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `student` (</span><br><span class="line"> `id` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> ,</span><br><span class="line"> `name` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line"> `email` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line"> `age` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line"> <span class="keyword">PRIMARY</span> <span class="keyword">KEY</span> (`id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>创建Maven工程，并且在pom.xml中加入maven坐标</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">     	<span class="tag">&lt;<span class="name">version</span>&gt;</span>4.11<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">   	 	<span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mybatis<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.5.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.1.9<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>加入maven插件</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">directory</span>&gt;</span>src/main/java<span class="tag">&lt;/<span class="name">directory</span>&gt;</span><span class="comment">&lt;!--所在的目录--&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">includes</span>&gt;</span><span class="comment">&lt;!--包括目录下的.properties,.xml 文件都会扫描到--&gt;</span></span><br><span class="line"> 			 <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.properties<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.xml<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;/<span class="name">includes</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">filtering</span>&gt;</span>false<span class="tag">&lt;/<span class="name">filtering</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span> </span><br><span class="line">			<span class="tag">&lt;<span class="name">source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">build</span>/&gt;</span> </span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>编写Student实体类</p>
+</blockquote>
+<p>创建包com.bytedance.domain,包中创建Student类</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.bjpowernode.domain;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Description: 实体类 &lt;/p&gt;</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Company: http://www.bjpowernode.com</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123;</span><br><span class="line"> <span class="comment">//属性名和列名一样</span></span><br><span class="line">     <span class="keyword">private</span> Integer id;</span><br><span class="line">     <span class="keyword">private</span> String name;</span><br><span class="line">     <span class="keyword">private</span> String email;</span><br><span class="line">     <span class="keyword">private</span> Integer age;</span><br><span class="line">     <span class="comment">// set ,get , toString</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>编写Dao接口 StudentDao</p>
+</blockquote>
+<p>创建包com.bytedance.dao,创建StudentDao接口</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.bjpowernode.dao;</span><br><span class="line"><span class="keyword">import</span> com.bjpowernode.domain.Student;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Description: Dao 接口 &lt;/p&gt;</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Company: http://www.bjpowernode.com</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">StudentDao</span> </span>&#123;</span><br><span class="line">	 <span class="comment">/*查询所有数据*/</span></span><br><span class="line">	 <span class="function">List&lt;Student&gt; <span class="title">selectStudents</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>编写Dao接口Mapper映射文件StudentDao.xml</p>
+<p>要求：</p>
+<ul>
+<li> 在 dao 包中创建文件 StudentDao.xml </li>
+<li>要 StudentDao.xml 文件名称和接口 StudentDao 一样，区分大小写的一样</li>
+</ul>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">mapper</span></span></span><br><span class="line"><span class="meta">     <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span></span><br><span class="line"><span class="meta">     <span class="meta-string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">     namespace：必须有值，自定义的唯一字符串</span></span><br><span class="line"><span class="comment">     推荐使用：dao 接口的全限定名称</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;com.bytedance.dao.StudentDao&quot;</span>&gt;</span></span><br><span class="line"> <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment"> 		&lt;select&gt;: 查询数据， 标签中必须是 select 语句</span></span><br><span class="line"><span class="comment"> 			id: sql 语句的自定义名称，推荐使用 dao 接口中方法名称，使用名称表示要执行的 sql 语句</span></span><br><span class="line"><span class="comment"> 		resultType: 查询语句的返回结果数据类型，使用全限定类名</span></span><br><span class="line"><span class="comment"> --&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectStudents&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.bytedance.domain.Student&quot;</span>&gt;</span></span><br><span class="line">         <span class="comment">&lt;!--要执行的 sql 语句--&gt;</span></span><br><span class="line">         select id,name,email,age from student</span><br><span class="line"> <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>创建Mybatis主配置文件</p>
+</blockquote>
+<p>项目 src/main 下创建 resources 目录，设置 resources 目录为 resources root 创建主配置文件：名称为 mybatis.xml 说明：主配置文件名称是自定义的，内容如下</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">configuration</span></span></span><br><span class="line"><span class="meta">     <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//mybatis.org//DTD Config 3.0//EN&quot;</span></span></span><br><span class="line"><span class="meta">     <span class="meta-string">&quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line"> 	<span class="comment">&lt;!--配置 mybatis 环境--&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">environments</span> <span class="attr">default</span>=<span class="string">&quot;mysql&quot;</span>&gt;</span></span><br><span class="line">         <span class="comment">&lt;!--id:数据源的名称--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">environment</span> <span class="attr">id</span>=<span class="string">&quot;mysql&quot;</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--配置事务类型：使用 JDBC 事务（使用 Connection 的提交和回滚）--&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">transactionManager</span> <span class="attr">type</span>=<span class="string">&quot;JDBC&quot;</span>/&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--数据源 dataSource：创建数据库 Connection 对象</span></span><br><span class="line"><span class="comment">        type: POOLED 使用数据库的连接池</span></span><br><span class="line"><span class="comment">        --&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">dataSource</span> <span class="attr">type</span>=<span class="string">&quot;POOLED&quot;</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--连接数据库的四个要素--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;driver&quot;</span> <span class="attr">value</span>=<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;url&quot;</span> <span class="attr">value</span>=<span class="string">&quot;jdbc:mysql://localhost:3306/ssm&quot;</span>/&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> <span class="attr">value</span>=<span class="string">&quot;root&quot;</span>/&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span> <span class="attr">value</span>=<span class="string">&quot;123456&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dataSource</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">environment</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">environments</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">mappers</span>&gt;</span></span><br><span class="line">	 <span class="comment">&lt;!--告诉 mybatis 要执行的 sql 语句的位置--&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">mapper</span> <span class="attr">resource</span>=<span class="string">&quot;com/bytedance/dao/StudentDao.xml&quot;</span>/&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">mappers</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>创建测试类</p>
+</blockquote>
+<p> src/test/java/com/bytedance/ 创建 MyBatisTest.java 文件</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* mybatis 入门</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testStart</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="comment">//1.mybatis 主配置文件</span></span><br><span class="line">     String config = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">     <span class="comment">//2.读取配置文件</span></span><br><span class="line">     InputStream in = Resources.getResourceAsStream(config);</span><br><span class="line">     <span class="comment">//3.创建 SqlSessionFactory 对象,目的是获取 SqlSession</span></span><br><span class="line">     SqlSessionFactory factory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(in);</span><br><span class="line">     <span class="comment">//4.获取 SqlSession,SqlSession 能执行 sql 语句</span></span><br><span class="line">     SqlSession session = factory.openSession();</span><br><span class="line">     <span class="comment">//5.执行 SqlSession 的 selectList()</span></span><br><span class="line">     List&lt;Student&gt; studentList = 	session.selectList(<span class="string">&quot;com.bytedance.dao.StudentDao.selectStudents&quot;</span>);</span><br><span class="line">    <span class="comment">//6.循环输出查询结果</span></span><br><span class="line">	 studentList.forEach( student -&gt; System.out.println(student));</span><br><span class="line"> 	<span class="comment">//7.关闭 SqlSession，释放资源</span></span><br><span class="line">	 session.close();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>配置日志功能</p>
+</blockquote>
+<p>mybatis.xml 文件加入日志配置，可以在控制台输出执行的 sql 语句和参数</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">settings</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">&quot;logImpl&quot;</span> <span class="attr">value</span>=<span class="string">&quot;STDOUT_LOGGING&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="insert"><a href="#insert" class="headerlink" title="insert"></a>insert</h3><ul>
+<li><p>StudentDao 接口中增加方法</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">int insertStudent(Student student);</span><br></pre></td></tr></table></figure></li>
+<li><p>StudentDao.xml中加入SQL语句</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">（<span class="number">2</span>） StudentDao.xml 加入 <span class="keyword">sql</span> 语句</span><br><span class="line"><span class="operator">&lt;</span><span class="keyword">insert</span> id<span class="operator">=</span>&quot;insertStudent&quot;<span class="operator">&gt;</span></span><br><span class="line"> 	<span class="keyword">insert</span> <span class="keyword">into</span> student(id,name,email,age)</span><br><span class="line">	values(#&#123;id&#125;,#&#123;name&#125;,#&#123;email&#125;,#&#123;age&#125;)</span><br><span class="line"><span class="operator">&lt;</span><span class="operator">/</span><span class="keyword">insert</span><span class="operator">&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p>增加测试方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testInsert</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="comment">//1.mybatis 主配置文件</span></span><br><span class="line">     String config = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">     <span class="comment">//2.读取配置文件</span></span><br><span class="line">     InputStream in = Resources.getResourceAsStream(config);</span><br><span class="line">     <span class="comment">//3.创建 SqlSessionFactory 对象</span></span><br><span class="line">     SqlSessionFactory factory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(in);</span><br><span class="line">     <span class="comment">//4.获取 SqlSession</span></span><br><span class="line">     SqlSession session = factory.openSession();</span><br><span class="line">     <span class="comment">//5.创建保存数据的对象</span></span><br><span class="line">     Student student = <span class="keyword">new</span> Student();</span><br><span class="line">     student.setId(<span class="number">1005</span>);</span><br><span class="line">     student.setName(<span class="string">&quot;张丽&quot;</span>);</span><br><span class="line">     student.setEmail(<span class="string">&quot;zhangli@163.com&quot;</span>);</span><br><span class="line">     student.setAge(<span class="number">20</span>);</span><br><span class="line">     <span class="comment">//6.执行插入 insert</span></span><br><span class="line">     <span class="keyword">int</span> rows = session.insert(</span><br><span class="line">    <span class="string">&quot;com.bytedance.dao.StudentDao.insertStudent&quot;</span>,student);</span><br><span class="line">     <span class="comment">//7.提交事务</span></span><br><span class="line">     session.commit();</span><br><span class="line">     System.out.println(<span class="string">&quot;增加记录的行数:&quot;</span>+rows);</span><br><span class="line">     <span class="comment">//8.关闭 SqlSession</span></span><br><span class="line">     session.close();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<h3 id="update"><a href="#update" class="headerlink" title="update"></a>update</h3><ul>
+<li><p>StudentDao接口中增加方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">updateStudent</span><span class="params">(Student student)</span></span>;</span><br></pre></td></tr></table></figure></li>
+<li><p>StudentDao.xml文件中增加SQL语句</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="operator">&lt;</span><span class="keyword">update</span> id<span class="operator">=</span>&quot;updateStudent&quot;<span class="operator">&gt;</span></span><br><span class="line"> 	update student set age = #&#123;age&#125; where id=#&#123;id&#125;</span><br><span class="line"><span class="operator">&lt;</span><span class="operator">/</span><span class="keyword">update</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>增加测试方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testUpdate</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="comment">//1.mybatis 主配置文件</span></span><br><span class="line">     String config = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">     <span class="comment">//2.读取配置文件</span></span><br><span class="line">     InputStream in = Resources.getResourceAsStream(config);</span><br><span class="line">     <span class="comment">//3.创建 SqlSessionFactory 对象</span></span><br><span class="line">     SqlSessionFactory factory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(in);</span><br><span class="line">     <span class="comment">//4.获取 SqlSession</span></span><br><span class="line">     SqlSession session = factory.openSession();</span><br><span class="line">     <span class="comment">//5.创建保存数据的对象</span></span><br><span class="line">     Student student = <span class="keyword">new</span> Student();</span><br><span class="line">     student.setId(<span class="number">1005</span>);<span class="comment">//要修改的 id</span></span><br><span class="line">     student.setAge(<span class="number">30</span>); <span class="comment">//要修改的年龄值</span></span><br><span class="line">     <span class="comment">//6.执行更新 update</span></span><br><span class="line">     <span class="keyword">int</span> rows = session.update(</span><br><span class="line">    <span class="string">&quot;com.bytedance.dao.StudentDao.updateStudent&quot;</span>,student);</span><br><span class="line">     <span class="comment">//7.提交事务</span></span><br><span class="line">     session.commit();</span><br><span class="line">     System.out.println(<span class="string">&quot;修改记录的行数:&quot;</span>+rows);</span><br><span class="line">     <span class="comment">//8.关闭 SqlSession</span></span><br><span class="line">     session.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<h3 id="delete"><a href="#delete" class="headerlink" title="delete"></a>delete</h3><ul>
+<li><p>StudentDao接口中增加方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">deleteStudent</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br></pre></td></tr></table></figure></li>
+<li><p>StudentDao.xml文件中增加SQL语句</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">delete</span> <span class="attr">id</span>=<span class="string">&quot;deleteStudent&quot;</span>&gt;</span></span><br><span class="line"> delete from student where id=#&#123;studentId&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">delete</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>增加测试方法</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testDelete</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="comment">//1.mybatis 主配置文件</span></span><br><span class="line">     String config = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">     <span class="comment">//2.读取配置文件</span></span><br><span class="line">     InputStream in = Resources.getResourceAsStream(config);</span><br><span class="line">     <span class="comment">//3.创建 SqlSessionFactory 对象</span></span><br><span class="line">     SqlSessionFactory factory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(in);</span><br><span class="line">     <span class="comment">//4.获取 SqlSession</span></span><br><span class="line">     SqlSession session = factory.openSession();</span><br><span class="line">     <span class="comment">//5.删除的 id</span></span><br><span class="line">     <span class="keyword">int</span> id = <span class="number">1001</span>;</span><br><span class="line">     <span class="comment">//6.执行删除 delete</span></span><br><span class="line">     <span class="keyword">int</span> rows = session.delete(</span><br><span class="line">    <span class="string">&quot;com.bytedance.dao.StudentDao.deleteStudent&quot;</span>,id);</span><br><span class="line">     <span class="comment">//7.提交事务</span></span><br><span class="line">     session.commit();</span><br><span class="line">     System.out.println(<span class="string">&quot;修改记录的行数:&quot;</span>+rows);</span><br><span class="line">    <span class="comment">//8.关闭SqlSession</span></span><br><span class="line">    session.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
@@ -1408,6 +1408,16 @@
       </tags>
   </entry>
   <entry>
+    <title>PC寄存器</title>
+    <url>/2021/03/14/PC%E5%AF%84%E5%AD%98%E5%99%A8/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Redis数据库</title>
+    <url>/2021/02/25/Redis%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>SVN版本控制系统</title>
     <url>/2021/02/06/SVN%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F/</url>
     <content><![CDATA[<h3 id="主要内容"><a href="#主要内容" class="headerlink" title="主要内容"></a>主要内容</h3>]]></content>
@@ -1417,16 +1427,6 @@
       <tags>
         <tag>SVN</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>PC寄存器</title>
-    <url>/2021/03/14/PC%E5%AF%84%E5%AD%98%E5%99%A8/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>Redis数据库</title>
-    <url>/2021/02/25/Redis%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Servlet规范一</title>
@@ -1520,44 +1520,6 @@
       </tags>
   </entry>
   <entry>
-    <title>SpringBoot入门二</title>
-    <url>/2021/03/21/SpringBoot%E5%85%A5%E9%97%A8%E4%BA%8C/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>Spring学习第一跳</title>
-    <url>/2021/02/03/Spring%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E8%B7%B3/</url>
-    <content><![CDATA[<h2 id="初识Spring"><a href="#初识Spring" class="headerlink" title="初识Spring"></a>初识Spring</h2><h3 id="Spring框架概述"><a href="#Spring框架概述" class="headerlink" title="Spring框架概述"></a>Spring框架概述</h3><p>Spring 是于 2003 年兴起的一个轻量级的 Java 开发框架，它是为了解决企业应用开发的复杂性而创建的。Spring 的核心是控制反转（IoC）和面向切面编程（AOP）。Spring 是可 以在 Java SE/EE 中使用的轻量级开源框架。</p>
-<p>Spring 的主要作用就是为代码<strong>“解耦”</strong>，降低代码间的耦合度。就是让对象和对象（模 块和模块）之间关系不是使用代码关联，而是<u>通过配置</u>来说明。即在 Spring 中说明对象（模块）的关系。 </p>
-<p>Spring 根据代码的功能特点，使用 Ioc 降低业务对象之间耦合度。IoC 使得主业务在相互 调用过程中，不用再自己维护关系了，即不用再自己创建要使用的对象了。而是由 Spring 容器统一管理，自动“注入”,注入即赋值。 而 AOP 使得系统级服务得到了最大复用，且不用再由程序员手工将系统级服务“混杂”到主业务逻辑中了，而是由 Spring 容器统一完成 “织入”。</p>
-<h3 id="Spring的优点"><a href="#Spring的优点" class="headerlink" title="Spring的优点"></a>Spring的优点</h3><p>Spring 是一个框架，是一个半成品的软件。有 20 个模块组成。它是一个容器管理对象， 容器是装东西的，Spring 容器不装文本，数字。装的是对象。Spring 是存储对象的容器。</p>
-<ul>
-<li><p>轻量</p>
-<p>Spring 框架使用的 jar 都比较小，一般在 1M 以下或者几百 kb。Spring 核心功能的所需 的 jar 总共在 3M 左右。 Spring 框架运行占用的资源少，运行效率高。不依赖其他 jar</p>
-</li>
-<li><p>针对接口编程，解耦合</p>
-<p>Spring 提供了 Ioc 控制反转，由容器管理对象，对象的依赖关系。原来在程序代码中的 对象创建方式，现在由容器完成。对象之间的依赖解耦合。</p>
-</li>
-<li><p>AOP编程的支持</p>
-<p>通过 Spring 提供的 AOP 功能，方便进行面向切面的编程，许多不容易用传统 OOP 实现 的功能可以通过 AOP 轻松应付 。</p>
-<p>在 Spring 中，开发人员可以从繁杂的事务管理代码中解脱出来，通过声明方式灵活地进行事务的管理，提高开发效率和质量。</p>
-</li>
-<li><p>方便集成各种优秀框架</p>
-<p>Spring 不排斥各种优秀的开源框架，相反 Spring 可以降低各种框架的使用难度，Spring 提供了对各种优秀框架（如 Struts,Hibernate、MyBatis）等的直接支持。简化框架的使用。 Spring 像插线板一样，其他框架是插头，可以容易的组合到一起。需要使用哪个框架，就把 这个插头放入插线板。不需要可以轻易的移除。</p>
-</li>
-</ul>
-<h3 id="Spring体系结构"><a href="#Spring体系结构" class="headerlink" title="Spring体系结构"></a>Spring体系结构</h3><img data-src="/2021/02/03/Spring%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E8%B7%B3/image.png" class>
-
-<p>Spring 由 20 多个模块组成，它们可以分为数据访问/集成（Data Access/Integration）、 Web、面向切面编程（AOP, Aspects）、提供JVM的代理（Instrumentation）、消息发送（Messaging）、 核心容器（Core Container）和测试（Test）。</p>
-]]></content>
-      <categories>
-        <category>spring框架</category>
-      </categories>
-      <tags>
-        <tag>spring框架</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>SpringBoot入门一</title>
     <url>/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/</url>
     <content><![CDATA[<h2 id="SpringBoot介绍"><a href="#SpringBoot介绍" class="headerlink" title="SpringBoot介绍"></a>SpringBoot介绍</h2><p>先通过来一些概念，会让我们对技术有着更加清晰的理解。J2EE笨重的开发、繁多的配置、低下的开发效率、复杂的部署流程、第三方技术集成难度大，如果开发过SpringMVC或者单纯使用过SSH、SSM框架的同学，肯定是体验过被很多配置文件支配的恐惧，很难受吧，不过不用担心，我们有了SpringBoot。Spring Boot用来简化Spring应用开发，约定大于配置，去繁从简，just run就能创建一个独立的，产品级别的应用。随着Spring全家桶时代的到来，SpringBoot给我们带来了J2EE一站式解决方案，SpringCloud给我们带来了分布式整体解决方案。从此我们可以使用 SpringBoot 快速的开发基于 Spring 框架的项目，由于围绕 SpringBoot 存在很多开箱即用的 Starter 依赖，使得我们在开发业务代码时能够非常方便的、不需要过多关注框架的配置，而只需要关注业务即可。</p>
@@ -1623,6 +1585,44 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </categories>
       <tags>
         <tag>SpringBoot框架</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SpringBoot入门二</title>
+    <url>/2021/03/21/SpringBoot%E5%85%A5%E9%97%A8%E4%BA%8C/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Spring学习第一跳</title>
+    <url>/2021/02/03/Spring%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E8%B7%B3/</url>
+    <content><![CDATA[<h2 id="初识Spring"><a href="#初识Spring" class="headerlink" title="初识Spring"></a>初识Spring</h2><h3 id="Spring框架概述"><a href="#Spring框架概述" class="headerlink" title="Spring框架概述"></a>Spring框架概述</h3><p>Spring 是于 2003 年兴起的一个轻量级的 Java 开发框架，它是为了解决企业应用开发的复杂性而创建的。Spring 的核心是控制反转（IoC）和面向切面编程（AOP）。Spring 是可 以在 Java SE/EE 中使用的轻量级开源框架。</p>
+<p>Spring 的主要作用就是为代码<strong>“解耦”</strong>，降低代码间的耦合度。就是让对象和对象（模 块和模块）之间关系不是使用代码关联，而是<u>通过配置</u>来说明。即在 Spring 中说明对象（模块）的关系。 </p>
+<p>Spring 根据代码的功能特点，使用 Ioc 降低业务对象之间耦合度。IoC 使得主业务在相互 调用过程中，不用再自己维护关系了，即不用再自己创建要使用的对象了。而是由 Spring 容器统一管理，自动“注入”,注入即赋值。 而 AOP 使得系统级服务得到了最大复用，且不用再由程序员手工将系统级服务“混杂”到主业务逻辑中了，而是由 Spring 容器统一完成 “织入”。</p>
+<h3 id="Spring的优点"><a href="#Spring的优点" class="headerlink" title="Spring的优点"></a>Spring的优点</h3><p>Spring 是一个框架，是一个半成品的软件。有 20 个模块组成。它是一个容器管理对象， 容器是装东西的，Spring 容器不装文本，数字。装的是对象。Spring 是存储对象的容器。</p>
+<ul>
+<li><p>轻量</p>
+<p>Spring 框架使用的 jar 都比较小，一般在 1M 以下或者几百 kb。Spring 核心功能的所需 的 jar 总共在 3M 左右。 Spring 框架运行占用的资源少，运行效率高。不依赖其他 jar</p>
+</li>
+<li><p>针对接口编程，解耦合</p>
+<p>Spring 提供了 Ioc 控制反转，由容器管理对象，对象的依赖关系。原来在程序代码中的 对象创建方式，现在由容器完成。对象之间的依赖解耦合。</p>
+</li>
+<li><p>AOP编程的支持</p>
+<p>通过 Spring 提供的 AOP 功能，方便进行面向切面的编程，许多不容易用传统 OOP 实现 的功能可以通过 AOP 轻松应付 。</p>
+<p>在 Spring 中，开发人员可以从繁杂的事务管理代码中解脱出来，通过声明方式灵活地进行事务的管理，提高开发效率和质量。</p>
+</li>
+<li><p>方便集成各种优秀框架</p>
+<p>Spring 不排斥各种优秀的开源框架，相反 Spring 可以降低各种框架的使用难度，Spring 提供了对各种优秀框架（如 Struts,Hibernate、MyBatis）等的直接支持。简化框架的使用。 Spring 像插线板一样，其他框架是插头，可以容易的组合到一起。需要使用哪个框架，就把 这个插头放入插线板。不需要可以轻易的移除。</p>
+</li>
+</ul>
+<h3 id="Spring体系结构"><a href="#Spring体系结构" class="headerlink" title="Spring体系结构"></a>Spring体系结构</h3><img data-src="/2021/02/03/Spring%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E8%B7%B3/image.png" class>
+
+<p>Spring 由 20 多个模块组成，它们可以分为数据访问/集成（Data Access/Integration）、 Web、面向切面编程（AOP, Aspects）、提供JVM的代理（Instrumentation）、消息发送（Messaging）、 核心容器（Core Container）和测试（Test）。</p>
+]]></content>
+      <categories>
+        <category>spring框架</category>
+      </categories>
+      <tags>
+        <tag>spring框架</tag>
       </tags>
   </entry>
   <entry>
@@ -1749,11 +1749,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>XML映射文件详解</title>
-    <url>/2021/03/14/XML%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Undo页与redo页</title>
     <url>/2021/02/14/Undo%E9%A1%B5%E4%B8%8Eredo%E9%A1%B5/</url>
     <content><![CDATA[<h2 id="Undo-Log"><a href="#Undo-Log" class="headerlink" title="Undo Log"></a>Undo Log</h2><p>是为了实现事务的原子性，在MySQL数据库InnoDB存储引擎中，还用Undo Log来实现多版本并发控制(简称：MVCC)。</p>
@@ -1789,13 +1784,8 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>coding部署</title>
-    <url>/2021/03/15/coding%E9%83%A8%E7%BD%B2/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>zookeeper</title>
-    <url>/2021/03/14/zookeeper/</url>
+    <title>XML映射文件详解</title>
+    <url>/2021/03/14/XML%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -1914,6 +1904,16 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
+    <title>coding部署</title>
+    <url>/2021/03/15/coding%E9%83%A8%E7%BD%B2/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>zookeeper</title>
+    <url>/2021/03/14/zookeeper/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>中断</title>
     <url>/2021/02/03/%E4%B8%AD%E6%96%AD/</url>
     <content><![CDATA[<h3 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h3><p>中断使得硬件得以发出通知给处理器，是一种变内核主动为硬件主动的方式。中断本质上是一种特殊的电信号。硬件在生成中断的时候并不需要考虑与处理器的时钟同步，即中断可以随时产生，<strong>内核随时可能因为新到来的中断而被打断</strong>。</p>
@@ -1963,44 +1963,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <title>事件处理</title>
     <url>/2021/03/14/%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86/</url>
     <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>创建一个Vue实例</title>
-    <url>/2021/03/07/%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAVue%E5%AE%9E%E4%BE%8B/</url>
-    <content><![CDATA[<h2 id="创建一个Vue实例"><a href="#创建一个Vue实例" class="headerlink" title="创建一个Vue实例"></a>创建一个Vue实例</h2><p>虽然没有完全遵循 <a href="https://zh.wikipedia.org/wiki/MVVM">MVVM 模型</a>，但是 Vue 的设计也受到了它的启发。因此在文档中经常会使用 <code>vm</code> (ViewModel 的缩写) 这个变量名表示 Vue 实例。</p>
-<p>当创建一个 Vue 实例时，你可以传入一个<strong>选项对象</strong> </p>
-<p>一个 Vue 应用由一个通过 <code>new Vue</code> 创建的<strong>根 Vue 实例</strong>，以及可选的嵌套的、可复用的组件树组成。举个例子，一个 todo 应用的组件树可以是这样的：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">根实例</span><br><span class="line">└─ TodoList</span><br><span class="line">   ├─ TodoItem</span><br><span class="line">   │  ├─ TodoButtonDelete</span><br><span class="line">   │  └─ TodoButtonEdit</span><br><span class="line">   └─ TodoListFooter</span><br><span class="line">      ├─ TodosButtonClear</span><br><span class="line">      └─ TodoListStatistics</span><br></pre></td></tr></table></figure>
-<p>当一个 Vue 实例被创建时，它将 <code>data</code> 对象中的所有的 property 加入到 Vue 的<strong>响应式系统</strong>中。当这些 property 的值发生改变时，<strong>视图</strong>将会产生“响应”，即匹配更新为新的值</p>
-<p>当这些数据改变时，视图会进行重渲染。值得注意的是只有当实例被创建时就已经存在于 <code>data</code> 中的 property 才是<strong>响应式</strong>的。也就是说如果你添加一个新的 property，</p>
-<p>你知道你会在晚些时候需要一个 property，但是一开始它为空或不存在，那么你仅需要设置一些初始值。比如：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">data: &#123;</span><br><span class="line">  newTodoText: &#39;&#39;,</span><br><span class="line">  visitCount: 0,</span><br><span class="line">  hideCompletedTodos: false,</span><br><span class="line">  todos: [],</span><br><span class="line">  error: null</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用 <code>Object.freeze()</code>，这会阻止修改现有的 property，也意味着响应系统无法再<em>追踪</em>变化。</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;app&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; foo &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 这里的 `foo` 不会更新！ --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span> <span class="attr">v-on:click</span>=<span class="string">&quot;foo = &#x27;baz&#x27;&quot;</span>&gt;</span>Change it<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">var obj = &#123;</span><br><span class="line">	foot:&#x27;bar&#x27;</span><br><span class="line">&#125;</span><br><span class="line">Object.freeze(obj)</span><br><span class="line">new Vue(&#123;</span><br><span class="line">	el:&#x27;#app&#x27;</span><br><span class="line">	data: obj</span><br><span class="line">&#125;)     //没办法对obj进行修改</span><br></pre></td></tr></table></figure>
-<p><a href="https://cn.vuejs.org/v2/api/#%E9%80%89%E9%A1%B9-%E6%95%B0%E6%8D%AE">选项对象API</a></p>
-<p>有用的property与方法，带有前缀$,以便于用户定义的property区分开</p>
-<p><a href="https://cn.vuejs.org/v2/api/#%E5%AE%9E%E4%BE%8B-property">具体API文档</a></p>
-<h2 id="实例的生命周期"><a href="#实例的生命周期" class="headerlink" title="实例的生命周期"></a>实例的生命周期</h2><p>每个 Vue 实例在被创建时都要经过一系列的初始化过程——例如，需要设置数据监听、编译模板、将实例挂载到 DOM 并在数据变化时更新 DOM 等。同时在这个过程中也会运行一些叫做<strong>生命周期钩子</strong>的函数，这给了用户在不同阶段添加自己的代码的机会。</p>
-<p>比如 <a href="https://cn.vuejs.org/v2/api/#created"><code>created</code></a> 钩子可以用来在一个实例被创建之后执行代码：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  data: &#123;</span><br><span class="line">    a: <span class="number">1</span></span><br><span class="line">  &#125;,</span><br><span class="line">  created: function () &#123;</span><br><span class="line">    <span class="comment">// `this` 指向 vm 实例</span></span><br><span class="line">    console.log(<span class="string">&#x27;a is: &#x27;</span> + <span class="keyword">this</span>.a)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// =&gt; &quot;a is: 1&quot;</span></span><br></pre></td></tr></table></figure>
-<p> 有一些其它的钩子，在实例生命周期的不同阶段被调用，如 <a href="https://cn.vuejs.org/v2/api/#mounted"><code>mounted</code></a>、<a href="https://cn.vuejs.org/v2/api/#updated"><code>updated</code></a> 和 <a href="https://cn.vuejs.org/v2/api/#destroyed"><code>destroyed</code></a>。<u>生命周</u><u>期钩子的 <code>this</code> 上下文指向调用它的 Vue 实例</u>。</p>
-<blockquote>
-<p>不要在选项 property 或回调上使用<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions">箭头函数</a>，比如 <code>created: () =&gt; console.log(this.a)</code> 或 <code>vm.$watch(&#39;a&#39;, newValue =&gt; this.myMethod())</code>。**因为箭头函数并没有 <code>this</code>**，<code>this</code> 会作为变量一直向上级词法作用域查找，直至找到为止，经常导致 <code>Uncaught TypeError: Cannot read property of undefined</code> 或 <code>Uncaught TypeError: this.myMethod is not a function</code> 之类的错误。</p>
-</blockquote>
-<p>生命周期的图示</p>
-<img data-src="/2021/03/07/%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAVue%E5%AE%9E%E4%BE%8B/lifecycle.png" class>
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>Vue框架</category>
-      </categories>
-      <tags>
-        <tag>Vue</tag>
-      </tags>
   </entry>
   <entry>
     <title>优秀项目</title>
@@ -2097,9 +2059,42 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>初识动态规划</title>
-    <url>/2021/02/03/%E5%88%9D%E8%AF%86%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/</url>
-    <content><![CDATA[]]></content>
+    <title>创建一个Vue实例</title>
+    <url>/2021/03/07/%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAVue%E5%AE%9E%E4%BE%8B/</url>
+    <content><![CDATA[<h2 id="创建一个Vue实例"><a href="#创建一个Vue实例" class="headerlink" title="创建一个Vue实例"></a>创建一个Vue实例</h2><p>虽然没有完全遵循 <a href="https://zh.wikipedia.org/wiki/MVVM">MVVM 模型</a>，但是 Vue 的设计也受到了它的启发。因此在文档中经常会使用 <code>vm</code> (ViewModel 的缩写) 这个变量名表示 Vue 实例。</p>
+<p>当创建一个 Vue 实例时，你可以传入一个<strong>选项对象</strong> </p>
+<p>一个 Vue 应用由一个通过 <code>new Vue</code> 创建的<strong>根 Vue 实例</strong>，以及可选的嵌套的、可复用的组件树组成。举个例子，一个 todo 应用的组件树可以是这样的：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">根实例</span><br><span class="line">└─ TodoList</span><br><span class="line">   ├─ TodoItem</span><br><span class="line">   │  ├─ TodoButtonDelete</span><br><span class="line">   │  └─ TodoButtonEdit</span><br><span class="line">   └─ TodoListFooter</span><br><span class="line">      ├─ TodosButtonClear</span><br><span class="line">      └─ TodoListStatistics</span><br></pre></td></tr></table></figure>
+<p>当一个 Vue 实例被创建时，它将 <code>data</code> 对象中的所有的 property 加入到 Vue 的<strong>响应式系统</strong>中。当这些 property 的值发生改变时，<strong>视图</strong>将会产生“响应”，即匹配更新为新的值</p>
+<p>当这些数据改变时，视图会进行重渲染。值得注意的是只有当实例被创建时就已经存在于 <code>data</code> 中的 property 才是<strong>响应式</strong>的。也就是说如果你添加一个新的 property，</p>
+<p>你知道你会在晚些时候需要一个 property，但是一开始它为空或不存在，那么你仅需要设置一些初始值。比如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">data: &#123;</span><br><span class="line">  newTodoText: &#39;&#39;,</span><br><span class="line">  visitCount: 0,</span><br><span class="line">  hideCompletedTodos: false,</span><br><span class="line">  todos: [],</span><br><span class="line">  error: null</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用 <code>Object.freeze()</code>，这会阻止修改现有的 property，也意味着响应系统无法再<em>追踪</em>变化。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;app&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; foo &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 这里的 `foo` 不会更新！ --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span> <span class="attr">v-on:click</span>=<span class="string">&quot;foo = &#x27;baz&#x27;&quot;</span>&gt;</span>Change it<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">var obj = &#123;</span><br><span class="line">	foot:&#x27;bar&#x27;</span><br><span class="line">&#125;</span><br><span class="line">Object.freeze(obj)</span><br><span class="line">new Vue(&#123;</span><br><span class="line">	el:&#x27;#app&#x27;</span><br><span class="line">	data: obj</span><br><span class="line">&#125;)     //没办法对obj进行修改</span><br></pre></td></tr></table></figure>
+<p><a href="https://cn.vuejs.org/v2/api/#%E9%80%89%E9%A1%B9-%E6%95%B0%E6%8D%AE">选项对象API</a></p>
+<p>有用的property与方法，带有前缀$,以便于用户定义的property区分开</p>
+<p><a href="https://cn.vuejs.org/v2/api/#%E5%AE%9E%E4%BE%8B-property">具体API文档</a></p>
+<h2 id="实例的生命周期"><a href="#实例的生命周期" class="headerlink" title="实例的生命周期"></a>实例的生命周期</h2><p>每个 Vue 实例在被创建时都要经过一系列的初始化过程——例如，需要设置数据监听、编译模板、将实例挂载到 DOM 并在数据变化时更新 DOM 等。同时在这个过程中也会运行一些叫做<strong>生命周期钩子</strong>的函数，这给了用户在不同阶段添加自己的代码的机会。</p>
+<p>比如 <a href="https://cn.vuejs.org/v2/api/#created"><code>created</code></a> 钩子可以用来在一个实例被创建之后执行代码：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  data: &#123;</span><br><span class="line">    a: <span class="number">1</span></span><br><span class="line">  &#125;,</span><br><span class="line">  created: function () &#123;</span><br><span class="line">    <span class="comment">// `this` 指向 vm 实例</span></span><br><span class="line">    console.log(<span class="string">&#x27;a is: &#x27;</span> + <span class="keyword">this</span>.a)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// =&gt; &quot;a is: 1&quot;</span></span><br></pre></td></tr></table></figure>
+<p> 有一些其它的钩子，在实例生命周期的不同阶段被调用，如 <a href="https://cn.vuejs.org/v2/api/#mounted"><code>mounted</code></a>、<a href="https://cn.vuejs.org/v2/api/#updated"><code>updated</code></a> 和 <a href="https://cn.vuejs.org/v2/api/#destroyed"><code>destroyed</code></a>。<u>生命周</u><u>期钩子的 <code>this</code> 上下文指向调用它的 Vue 实例</u>。</p>
+<blockquote>
+<p>不要在选项 property 或回调上使用<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions">箭头函数</a>，比如 <code>created: () =&gt; console.log(this.a)</code> 或 <code>vm.$watch(&#39;a&#39;, newValue =&gt; this.myMethod())</code>。**因为箭头函数并没有 <code>this</code>**，<code>this</code> 会作为变量一直向上级词法作用域查找，直至找到为止，经常导致 <code>Uncaught TypeError: Cannot read property of undefined</code> 或 <code>Uncaught TypeError: this.myMethod is not a function</code> 之类的错误。</p>
+</blockquote>
+<p>生命周期的图示</p>
+<img data-src="/2021/03/07/%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAVue%E5%AE%9E%E4%BE%8B/lifecycle.png" class>
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>Vue框架</category>
+      </categories>
+      <tags>
+        <tag>Vue</tag>
+      </tags>
   </entry>
   <entry>
     <title>消息队列MQ</title>
@@ -2190,6 +2185,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>RabbitMQ</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>初识动态规划</title>
+    <url>/2021/02/03/%E5%88%9D%E8%AF%86%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>初识递归</title>
@@ -2814,35 +2814,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>类文件结构</title>
-    <url>/2021/01/16/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</url>
-    <content><![CDATA[<p>#类文件结构</p>
-<h2 id="虚拟机的无关性"><a href="#虚拟机的无关性" class="headerlink" title="虚拟机的无关性"></a>虚拟机的无关性</h2><p>Java的宣传口号是: <strong><em>WRITE ONCE , RUN ANYWHREE</em></strong></p>
-<p>java虚拟机力求实现的两种无关性：</p>
-<ol>
-<li><p>平台无关性</p>
-<p>各种不同平台的虚拟机与所有平台都统一使用的程序存储格式——–字节码（ByteCode）是构成平台无关性的基础，虚拟机可以载入同一种平台无关的字节码。</p>
-</li>
-<li><p>语言无关性：</p>
-<p><strong>举例</strong>：除了Java之外，Clojure、Groovy、JRuby、Jython、Scala都可以在Java虚拟机上运行</p>
-<p>实现语言无关性的基础是Java虚拟机不与任何语言绑定，只与**<em>“Class文件”这种特殊的二进制文件格式**</em>相关联，Class文件包含了Java虚拟机指令集和符号表以及若干其他辅助信息，在Class文件中使用了许多强制性的语法和结构化约束，任何一门语言都可以表示为被JAVA虚拟机锁接受的有效的Class文件。虚拟机只关心Class文件本身，而不关心Class文件的来源是哪种语言。</p>
-<p>在Class文件中，各种关键字、变量、和运算符号的语义都是有多条字节码命令组合而成的，字节码命令所能提供的语义描述能力必然要比java语言本身更为强大，所以Java虚拟机提供的支持远比java语言本身强大。</p>
-</li>
-</ol>
-<h2 id="Class类文件的结构"><a href="#Class类文件的结构" class="headerlink" title="Class类文件的结构"></a>Class类文件的结构</h2><p>Class文件是一组以8位字节为基础单位的二进制流，各个数据项目严格的按照顺序紧凑的排列在Class文件中，中间没有任何的分隔符，这使得整个Class文件中存储的内容几乎全是程序运行的必要数据，没有空隙存在。</p>
-<p>Class文件格式采用一种类似于C语言中struct的伪结构来进行存储数据：包括<strong>无符号数+表</strong></p>
-<p>1、无符号数：基本数据类型</p>
-<p>2、表：有多个无符号数或者其他表作为数据项构成的复合数据类型，习惯性的以__info结尾。表用于描述有层次关系的复合结构的数据。整个class文件本质上就是一张表。</p>
-<h3 id="magic-numer与class文件版本"><a href="#magic-numer与class文件版本" class="headerlink" title="magic numer与class文件版本"></a>magic numer与class文件版本</h3><h3 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h3><h3 id="访问标志"><a href="#访问标志" class="headerlink" title="访问标志"></a>访问标志</h3><h3 id="类索引、父类索引、接口索引集合"><a href="#类索引、父类索引、接口索引集合" class="headerlink" title="类索引、父类索引、接口索引集合"></a>类索引、父类索引、接口索引集合</h3><h3 id="字段表集合"><a href="#字段表集合" class="headerlink" title="字段表集合"></a>字段表集合</h3><h3 id="方法表集合"><a href="#方法表集合" class="headerlink" title="方法表集合"></a>方法表集合</h3><p>###属性表集合</p>
-]]></content>
-      <categories>
-        <category>JVM虚拟机</category>
-      </categories>
-      <tags>
-        <tag>JAVA</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>消息队列产品与RabbitMQ的简介</title>
     <url>/2021/03/13/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E4%BA%A7%E5%93%81%E4%B8%8E%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%9E%8B/</url>
     <content><![CDATA[<h2 id="MQ常见产品"><a href="#MQ常见产品" class="headerlink" title="MQ常见产品"></a>MQ常见产品</h2><p>目前业界有很多的 MQ 产品，例如 RabbitMQ、RocketMQ、ActiveMQ、Kafka、ZeroMQ、MetaMq等，也有直接使用 Redis 充当消息队列的案例，而这些消息队列产品，各有侧重，在实际选型时，需要结合自身需求及 MQ 产品特征，综合考虑。</p>
@@ -3022,6 +2993,35 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
+    <title>类文件结构</title>
+    <url>/2021/01/16/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</url>
+    <content><![CDATA[<p>#类文件结构</p>
+<h2 id="虚拟机的无关性"><a href="#虚拟机的无关性" class="headerlink" title="虚拟机的无关性"></a>虚拟机的无关性</h2><p>Java的宣传口号是: <strong><em>WRITE ONCE , RUN ANYWHREE</em></strong></p>
+<p>java虚拟机力求实现的两种无关性：</p>
+<ol>
+<li><p>平台无关性</p>
+<p>各种不同平台的虚拟机与所有平台都统一使用的程序存储格式——–字节码（ByteCode）是构成平台无关性的基础，虚拟机可以载入同一种平台无关的字节码。</p>
+</li>
+<li><p>语言无关性：</p>
+<p><strong>举例</strong>：除了Java之外，Clojure、Groovy、JRuby、Jython、Scala都可以在Java虚拟机上运行</p>
+<p>实现语言无关性的基础是Java虚拟机不与任何语言绑定，只与**<em>“Class文件”这种特殊的二进制文件格式**</em>相关联，Class文件包含了Java虚拟机指令集和符号表以及若干其他辅助信息，在Class文件中使用了许多强制性的语法和结构化约束，任何一门语言都可以表示为被JAVA虚拟机锁接受的有效的Class文件。虚拟机只关心Class文件本身，而不关心Class文件的来源是哪种语言。</p>
+<p>在Class文件中，各种关键字、变量、和运算符号的语义都是有多条字节码命令组合而成的，字节码命令所能提供的语义描述能力必然要比java语言本身更为强大，所以Java虚拟机提供的支持远比java语言本身强大。</p>
+</li>
+</ol>
+<h2 id="Class类文件的结构"><a href="#Class类文件的结构" class="headerlink" title="Class类文件的结构"></a>Class类文件的结构</h2><p>Class文件是一组以8位字节为基础单位的二进制流，各个数据项目严格的按照顺序紧凑的排列在Class文件中，中间没有任何的分隔符，这使得整个Class文件中存储的内容几乎全是程序运行的必要数据，没有空隙存在。</p>
+<p>Class文件格式采用一种类似于C语言中struct的伪结构来进行存储数据：包括<strong>无符号数+表</strong></p>
+<p>1、无符号数：基本数据类型</p>
+<p>2、表：有多个无符号数或者其他表作为数据项构成的复合数据类型，习惯性的以__info结尾。表用于描述有层次关系的复合结构的数据。整个class文件本质上就是一张表。</p>
+<h3 id="magic-numer与class文件版本"><a href="#magic-numer与class文件版本" class="headerlink" title="magic numer与class文件版本"></a>magic numer与class文件版本</h3><h3 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h3><h3 id="访问标志"><a href="#访问标志" class="headerlink" title="访问标志"></a>访问标志</h3><h3 id="类索引、父类索引、接口索引集合"><a href="#类索引、父类索引、接口索引集合" class="headerlink" title="类索引、父类索引、接口索引集合"></a>类索引、父类索引、接口索引集合</h3><h3 id="字段表集合"><a href="#字段表集合" class="headerlink" title="字段表集合"></a>字段表集合</h3><h3 id="方法表集合"><a href="#方法表集合" class="headerlink" title="方法表集合"></a>方法表集合</h3><p>###属性表集合</p>
+]]></content>
+      <categories>
+        <category>JVM虚拟机</category>
+      </categories>
+      <tags>
+        <tag>JAVA</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>系统调用</title>
     <url>/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/</url>
     <content><![CDATA[<h2 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h2><h3 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h3><p>系统调用是内核与用户进程进行交互的一组接口，这些接口让应用程序受限制的访问硬件设备，提供了创建新进程并与已有进程进行交互通信的机制，也提供了申请操作系统其他资源的能力。</p>
@@ -3105,100 +3105,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </categories>
       <tags>
         <tag>Linux系统内核设计</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>红队攻防入门1</title>
-    <url>/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/</url>
-    <content><![CDATA[<h2 id="红队攻防入门1–初识红队"><a href="#红队攻防入门1–初识红队" class="headerlink" title="红队攻防入门1–初识红队"></a>红队攻防入门1–初识红队</h2><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F1.png" class>
-
-<p>###红队概念</p>
-<p><strong>红队（Red Team）即安全团队最大化模拟真实世界里面的入侵事件，采用入侵者的战术、技术、流程，以此来检验蓝队（Blue Team）的威胁检测和应急响应的机制和效率，最终帮助企业真正提高整个安全建设、安全运营、安全管理等能力。</strong></p>
-<p>####1.1红队VS渗透测试</p>
-<p>在企业内部的一般的渗透测试，很多就是点到为止，并不会被授予很多的权限。而红队整体来看，在合法合规的前提下，在充分沟通的前提下，授权范围会更加广泛，真实程度更加贴合实战。</p>
-<img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F2.jpg" class>
-
-<h4 id="1-2红队VS蓝队"><a href="#1-2红队VS蓝队" class="headerlink" title="1.2红队VS蓝队"></a>1.2红队VS蓝队</h4><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F3.jpg" class>
-
-<p>无论是Red Team 还是Blue Team,这些概念都来自真实的战争领域。</p>
-<blockquote>
-<p>作为红队，是以攻击方的方式做安全工作的，常见的技术概念有APT攻击、渗透测试、零日漏洞、武器开发。</p>
-</blockquote>
-<blockquote>
-<p>作为蓝队，则以防御方的方式做安全工作，是安全合规、安全运营、应急响应、态势感知、威胁情报等等。</p>
-</blockquote>
-<p>####1.3 红队常用模型框架</p>
- <img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F4.jpg" class>
-
-
-
-<p>#####1.3.1渗透测试执行标准PTES</p>
-
-
-<p>PTES中文全名【渗透测试执行标准】，他是有2010年由业界网络安全专家共同发起并定义的规范，目标是希望为企业和安全服务商，指定整个渗透测试的标准流程，方便大家工作和沟通。</p>
-<p>PTES 包括 7 个标准步骤，即前期交互、情报收集、威胁建模、漏洞分析、渗透利用、报告输出等，一般的渗透测试工作，基本都绕不开这些步骤，可以看成一个标准的工作流。</p>
-<p><strong>① 前期交互</strong></p>
-<p>前期交互阶段，我们得先拿到客户的授权，并且了解授权范围多少？渗透目标是谁？期望目标是什么？</p>
-<p>这些都是前期交互阶段要沟通好的。</p>
-<p><strong>② 情报搜集</strong></p>
-<p>情报搜集阶段，即根据上面的授权、范围、目标等信息，开始进行一些情报搜集工作。</p>
-<p>无论是主动搜集还是被动搜集，我们得知道对方开了哪个端口、提供了什么服务、这些服务的软件版本是什么、这些软件是否曾经出现过漏洞？</p>
-<p><strong>③ 威胁建模</strong></p>
-<p>哪些信息是真正有价值的？哪个口子用什么攻击方法？哪条攻击路径是最大可能的？</p>
-<p>根据情报搜集的汇总，我们得制定出接下来的「作战计划」。</p>
-<p>这些就是在威胁建模阶段要分析出来的。</p>
-<p><strong>④ 漏洞分析</strong></p>
-<p>结合以上情报搜集和威胁建模阶段，此阶段我们要判断出哪些漏洞是最有可能拿到对方权限，打通攻击路径的。</p>
-<p>哪些漏洞的攻击效果最佳？</p>
-<p>哪些漏洞有最新的工具？</p>
-<p>哪些漏洞需要自研渗透代码？</p>
-<p><strong>⑤ 渗透利用</strong></p>
-<p>前面 4 个阶段都不算真正 Hack 进目标系统，而这个阶段则是真正对目标进行渗透攻击，通过漏洞对应的利用工具等，获取目标控制权。</p>
-<p><strong>⑥ 后渗透</strong></p>
-<p>在拿到控制权限之后，为了避免对方发现，还需要进行后渗透，实现更持久地控制，更深层次地执行任务。</p>
-<p>比如进程迁移、隧道建立、数据获取、擦除痕迹等。</p>
-<p><strong>⑦ 报告输出</strong></p>
-<p>最后阶段就是输出一份安全报告，即写明渗透测试工作中，企业 IT 基础系统所存在的漏洞和风险点。</p>
-<p>以上便是 PTES 渗透测试执行标准。</p>
-<h5 id="1-3-2网络杀伤链Cyber-Kill-Chain"><a href="#1-3-2网络杀伤链Cyber-Kill-Chain" class="headerlink" title="1.3.2网络杀伤链Cyber Kill Chain"></a>1.3.2网络杀伤链Cyber Kill Chain</h5><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F6.jpg" class>
-
-<p>网络杀伤链的英文全名是 Cyber Kill Chain，这是 2011 年洛克希德马丁公司提出的网络攻击模型。</p>
-<p>跟真实世界的入侵者，对一个目标系统进行攻击的每个阶段都是一一映射的。</p>
-<p>这里也分为 7 个步骤 =&gt;</p>
-<p><strong>第 1 步，目标侦察，</strong>跟前面 PTES 情报收集阶段是差不多的；</p>
-<p><strong>第 2 步，武器研制，</strong>编写各种工具/后门/病毒 Exp / Weapon / Malware；</p>
-<p><strong>第 3 步，载荷投递，</strong>通过水坑鱼叉等攻击方式将武器散播出去（<strong>投毒</strong>）；</p>
-<p><strong>第 4 步，渗透利用，</strong>通过<strong>漏洞利用</strong>获取对方控制器；</p>
-<p><strong>第 5 步，安装执行</strong>，在目标系统将<strong>后门木马</strong>跑起来；</p>
-<p><strong>第 6 步，命令控制，</strong>对目标来进行<strong>持久化控制</strong>；</p>
-<p><strong>第 7 步，任务执行，</strong>即开始执行<strong>窃取数据、破坏系统</strong>等。</p>
-<p>以上便是网络杀伤链，相比 PTES 更加贴合实战阶段。</p>
-<h5 id="1-3-3MITRE-ATT-amp-CK框架"><a href="#1-3-3MITRE-ATT-amp-CK框架" class="headerlink" title="1.3.3MITRE ATT&amp;CK框架"></a>1.3.3MITRE ATT&amp;CK框架</h5><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F7.jpg" class>
-
-<p>「<strong>ATT&amp;CK 框架</strong>」，由 MITRE 公司于 2013 年提出来的一个通用知识框架，中文名叫做「<strong>对抗战术、技术、常识</strong> 」 。</p>
-<p>ATT&amp;CK 框架是基于真实网络空间攻防案例及数据，采用军事战争中的 <strong>TTPs （Tactics, Techniques &amp; Procedures）</strong>方法论，重新编排的网络安全知识体系，目的是建立一套网络安全的通用语言。</p>
-<p>举例，大家经常听到的什么 APT 攻击、威胁情报、态势感知等等，无论个人还是企业，理解上不尽相同，总会有一些偏差的。</p>
-<p>有了 ATT&amp;CK 框架，大家不会存在太大的偏差，红队具体怎么去攻击的，蓝队具体到怎么去防御的，使用 ATT&amp;CK 矩阵可以将每个细节标记出来，攻击路线和防御过程都可以图形展现出来，攻防双方就有了一套通用语言了。</p>
-<p>网络安全行业的组织、机构、厂家，每年都会造各种 ”新词“，但 MITRE 这个组织推的这套框架，兼具实战和学术价值，具备广泛的应用场景，对安全行业的发展推动是实实在在的。</p>
-<p>我认为，在未来 5 年也好 10 年也好 ，它可能会成为一个事实上的标准。</p>
-<p>这里看一下左上角图片，它整体有三个部分，一个是 PRE ATT&amp;CK，一个是 ATT&amp;CK for Enterprise，一个是 ATT&amp;CK for Mobile，我们学习和研究时，核心放在 ATT&amp;CK forEnterprise 即可。</p>
-<p>大家可以看到，其实左边这里面，也有侦查、武器化、载荷传递、利用、控制、执行、维持等等阶段，是不是跟前面介绍的网络杀伤链是一样的呢？</p>
-<p>是的，你可以这么简单理解，其实 ATT&amp;CK 这个框架，刚开始就是在杀伤链的基础上，提供了更加具体的、更细颗粒度的战术、技术、文档、工具、描述等等。</p>
-<p>因此，如果要深入学习红队，平常可以多逛逛去 ATT&amp;CK 框架官网。</p>
-<img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F8.jpg" class>
-
-<p>接下来，我们来重点看一下 ATT&amp;CK for Enterprise。</p>
-<p>这张图里面，横轴代表是战术（Tactics），最新版本里横轴包括的战术有 12 个（原来是 10 个），纵轴代表的是技术（Techniques）有 156 个技术 272 个子技术。</p>
-<p>前面我们提到了，它是基于 TTPs 方法来描述的，所以非常标准和通用。</p>
-<p>在实际的红蓝对抗、威胁情报分析、安全差距评估等工作场景中，都可以用得上。</p>
-<p>另外补充一点，这 12 个战术从左到右，也是按照网络杀伤链的路径来编排的，包括初始访问、执行、持久化、权限提升、防御绕过、凭证访问、发现、横向移动、收集、命令控制、数据获取、影响。</p>
-<p>每一个战术下面包括很多技术，每个技术有详细的过程，包括独立的编号、描述、工具等。</p>
-]]></content>
-      <categories>
-        <category>网络安全</category>
-      </categories>
-      <tags>
-        <tag>红队攻防</tag>
       </tags>
   </entry>
   <entry>
@@ -3331,13 +3237,107 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>组件基础</title>
-    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E5%9F%BA%E7%A1%80/</url>
-    <content><![CDATA[]]></content>
+    <title>红队攻防入门1</title>
+    <url>/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/</url>
+    <content><![CDATA[<h2 id="红队攻防入门1–初识红队"><a href="#红队攻防入门1–初识红队" class="headerlink" title="红队攻防入门1–初识红队"></a>红队攻防入门1–初识红队</h2><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F1.png" class>
+
+<p>###红队概念</p>
+<p><strong>红队（Red Team）即安全团队最大化模拟真实世界里面的入侵事件，采用入侵者的战术、技术、流程，以此来检验蓝队（Blue Team）的威胁检测和应急响应的机制和效率，最终帮助企业真正提高整个安全建设、安全运营、安全管理等能力。</strong></p>
+<p>####1.1红队VS渗透测试</p>
+<p>在企业内部的一般的渗透测试，很多就是点到为止，并不会被授予很多的权限。而红队整体来看，在合法合规的前提下，在充分沟通的前提下，授权范围会更加广泛，真实程度更加贴合实战。</p>
+<img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F2.jpg" class>
+
+<h4 id="1-2红队VS蓝队"><a href="#1-2红队VS蓝队" class="headerlink" title="1.2红队VS蓝队"></a>1.2红队VS蓝队</h4><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F3.jpg" class>
+
+<p>无论是Red Team 还是Blue Team,这些概念都来自真实的战争领域。</p>
+<blockquote>
+<p>作为红队，是以攻击方的方式做安全工作的，常见的技术概念有APT攻击、渗透测试、零日漏洞、武器开发。</p>
+</blockquote>
+<blockquote>
+<p>作为蓝队，则以防御方的方式做安全工作，是安全合规、安全运营、应急响应、态势感知、威胁情报等等。</p>
+</blockquote>
+<p>####1.3 红队常用模型框架</p>
+ <img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F4.jpg" class>
+
+
+
+<p>#####1.3.1渗透测试执行标准PTES</p>
+
+
+<p>PTES中文全名【渗透测试执行标准】，他是有2010年由业界网络安全专家共同发起并定义的规范，目标是希望为企业和安全服务商，指定整个渗透测试的标准流程，方便大家工作和沟通。</p>
+<p>PTES 包括 7 个标准步骤，即前期交互、情报收集、威胁建模、漏洞分析、渗透利用、报告输出等，一般的渗透测试工作，基本都绕不开这些步骤，可以看成一个标准的工作流。</p>
+<p><strong>① 前期交互</strong></p>
+<p>前期交互阶段，我们得先拿到客户的授权，并且了解授权范围多少？渗透目标是谁？期望目标是什么？</p>
+<p>这些都是前期交互阶段要沟通好的。</p>
+<p><strong>② 情报搜集</strong></p>
+<p>情报搜集阶段，即根据上面的授权、范围、目标等信息，开始进行一些情报搜集工作。</p>
+<p>无论是主动搜集还是被动搜集，我们得知道对方开了哪个端口、提供了什么服务、这些服务的软件版本是什么、这些软件是否曾经出现过漏洞？</p>
+<p><strong>③ 威胁建模</strong></p>
+<p>哪些信息是真正有价值的？哪个口子用什么攻击方法？哪条攻击路径是最大可能的？</p>
+<p>根据情报搜集的汇总，我们得制定出接下来的「作战计划」。</p>
+<p>这些就是在威胁建模阶段要分析出来的。</p>
+<p><strong>④ 漏洞分析</strong></p>
+<p>结合以上情报搜集和威胁建模阶段，此阶段我们要判断出哪些漏洞是最有可能拿到对方权限，打通攻击路径的。</p>
+<p>哪些漏洞的攻击效果最佳？</p>
+<p>哪些漏洞有最新的工具？</p>
+<p>哪些漏洞需要自研渗透代码？</p>
+<p><strong>⑤ 渗透利用</strong></p>
+<p>前面 4 个阶段都不算真正 Hack 进目标系统，而这个阶段则是真正对目标进行渗透攻击，通过漏洞对应的利用工具等，获取目标控制权。</p>
+<p><strong>⑥ 后渗透</strong></p>
+<p>在拿到控制权限之后，为了避免对方发现，还需要进行后渗透，实现更持久地控制，更深层次地执行任务。</p>
+<p>比如进程迁移、隧道建立、数据获取、擦除痕迹等。</p>
+<p><strong>⑦ 报告输出</strong></p>
+<p>最后阶段就是输出一份安全报告，即写明渗透测试工作中，企业 IT 基础系统所存在的漏洞和风险点。</p>
+<p>以上便是 PTES 渗透测试执行标准。</p>
+<h5 id="1-3-2网络杀伤链Cyber-Kill-Chain"><a href="#1-3-2网络杀伤链Cyber-Kill-Chain" class="headerlink" title="1.3.2网络杀伤链Cyber Kill Chain"></a>1.3.2网络杀伤链Cyber Kill Chain</h5><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F6.jpg" class>
+
+<p>网络杀伤链的英文全名是 Cyber Kill Chain，这是 2011 年洛克希德马丁公司提出的网络攻击模型。</p>
+<p>跟真实世界的入侵者，对一个目标系统进行攻击的每个阶段都是一一映射的。</p>
+<p>这里也分为 7 个步骤 =&gt;</p>
+<p><strong>第 1 步，目标侦察，</strong>跟前面 PTES 情报收集阶段是差不多的；</p>
+<p><strong>第 2 步，武器研制，</strong>编写各种工具/后门/病毒 Exp / Weapon / Malware；</p>
+<p><strong>第 3 步，载荷投递，</strong>通过水坑鱼叉等攻击方式将武器散播出去（<strong>投毒</strong>）；</p>
+<p><strong>第 4 步，渗透利用，</strong>通过<strong>漏洞利用</strong>获取对方控制器；</p>
+<p><strong>第 5 步，安装执行</strong>，在目标系统将<strong>后门木马</strong>跑起来；</p>
+<p><strong>第 6 步，命令控制，</strong>对目标来进行<strong>持久化控制</strong>；</p>
+<p><strong>第 7 步，任务执行，</strong>即开始执行<strong>窃取数据、破坏系统</strong>等。</p>
+<p>以上便是网络杀伤链，相比 PTES 更加贴合实战阶段。</p>
+<h5 id="1-3-3MITRE-ATT-amp-CK框架"><a href="#1-3-3MITRE-ATT-amp-CK框架" class="headerlink" title="1.3.3MITRE ATT&amp;CK框架"></a>1.3.3MITRE ATT&amp;CK框架</h5><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F7.jpg" class>
+
+<p>「<strong>ATT&amp;CK 框架</strong>」，由 MITRE 公司于 2013 年提出来的一个通用知识框架，中文名叫做「<strong>对抗战术、技术、常识</strong> 」 。</p>
+<p>ATT&amp;CK 框架是基于真实网络空间攻防案例及数据，采用军事战争中的 <strong>TTPs （Tactics, Techniques &amp; Procedures）</strong>方法论，重新编排的网络安全知识体系，目的是建立一套网络安全的通用语言。</p>
+<p>举例，大家经常听到的什么 APT 攻击、威胁情报、态势感知等等，无论个人还是企业，理解上不尽相同，总会有一些偏差的。</p>
+<p>有了 ATT&amp;CK 框架，大家不会存在太大的偏差，红队具体怎么去攻击的，蓝队具体到怎么去防御的，使用 ATT&amp;CK 矩阵可以将每个细节标记出来，攻击路线和防御过程都可以图形展现出来，攻防双方就有了一套通用语言了。</p>
+<p>网络安全行业的组织、机构、厂家，每年都会造各种 ”新词“，但 MITRE 这个组织推的这套框架，兼具实战和学术价值，具备广泛的应用场景，对安全行业的发展推动是实实在在的。</p>
+<p>我认为，在未来 5 年也好 10 年也好 ，它可能会成为一个事实上的标准。</p>
+<p>这里看一下左上角图片，它整体有三个部分，一个是 PRE ATT&amp;CK，一个是 ATT&amp;CK for Enterprise，一个是 ATT&amp;CK for Mobile，我们学习和研究时，核心放在 ATT&amp;CK forEnterprise 即可。</p>
+<p>大家可以看到，其实左边这里面，也有侦查、武器化、载荷传递、利用、控制、执行、维持等等阶段，是不是跟前面介绍的网络杀伤链是一样的呢？</p>
+<p>是的，你可以这么简单理解，其实 ATT&amp;CK 这个框架，刚开始就是在杀伤链的基础上，提供了更加具体的、更细颗粒度的战术、技术、文档、工具、描述等等。</p>
+<p>因此，如果要深入学习红队，平常可以多逛逛去 ATT&amp;CK 框架官网。</p>
+<img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F8.jpg" class>
+
+<p>接下来，我们来重点看一下 ATT&amp;CK for Enterprise。</p>
+<p>这张图里面，横轴代表是战术（Tactics），最新版本里横轴包括的战术有 12 个（原来是 10 个），纵轴代表的是技术（Techniques）有 156 个技术 272 个子技术。</p>
+<p>前面我们提到了，它是基于 TTPs 方法来描述的，所以非常标准和通用。</p>
+<p>在实际的红蓝对抗、威胁情报分析、安全差距评估等工作场景中，都可以用得上。</p>
+<p>另外补充一点，这 12 个战术从左到右，也是按照网络杀伤链的路径来编排的，包括初始访问、执行、持久化、权限提升、防御绕过、凭证访问、发现、横向移动、收集、命令控制、数据获取、影响。</p>
+<p>每一个战术下面包括很多技术，每个技术有详细的过程，包括独立的编号、描述、工具等。</p>
+]]></content>
+      <categories>
+        <category>网络安全</category>
+      </categories>
+      <tags>
+        <tag>红队攻防</tag>
+      </tags>
   </entry>
   <entry>
     <title>组件进阶篇--深入了解组件</title>
     <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E8%BF%9B%E9%98%B6%E7%AF%87-%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E7%BB%84%E4%BB%B6/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>组件基础</title>
+    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -3448,207 +3448,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>过度与动画</title>
-    <url>/2021/03/14/%E8%BF%87%E5%BA%A6%E4%B8%8E%E5%8A%A8%E7%94%BB/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>链表刷题总结（easy篇）</title>
-    <url>/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/</url>
-    <content><![CDATA[<h1 id="链表知识刷题总结（easy篇）"><a href="#链表知识刷题总结（easy篇）" class="headerlink" title="链表知识刷题总结（easy篇）"></a>链表知识刷题总结（easy篇）</h1><p>###1.返回链表的倒数第k个结点</p>
-<p>###题目描述：</p>
-<p>实现一种算法，找出单向链表中倒数第 k 个节点。返回该节点的值。</p>
-<p>注意：本题相对原题稍作改动</p>
-<p>示例：</p>
-<p>输入： 1-&gt;2-&gt;3-&gt;4-&gt;5 和 k = 2<br>输出： 4<br>说明：</p>
-<p>给定的 k 保证是有效的。</p>
-<h3 id="题解："><a href="#题解：" class="headerlink" title="题解："></a>题解：</h3><h4 id="题解一-双指针"><a href="#题解一-双指针" class="headerlink" title="题解一:双指针"></a>题解一:双指针</h4><p> 这题要求链表的倒数第k个节点，最简单的方式就是使用两个指针，第一个指针先移动k步，然后第二个指针再从头开始，这个时候这两个指针同时移动，当第一个指针到链表的末尾的时候，返回第二个指针即可</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">kthToLast</span><span class="params">(ListNode head, <span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">        ListNode first = head;</span><br><span class="line">    	ListNode second = head;</span><br><span class="line">    </span><br><span class="line">    	<span class="keyword">while</span>(k-- &gt;<span class="number">0</span>)&#123;</span><br><span class="line">            first = first.next;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="keyword">while</span>(first!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            first =  first.next;</span><br><span class="line">            second = second.next;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="keyword">return</span> second.val;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<p>####题解二：使用栈求解(一看到倒数某某元素，要先想到栈)</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">kthTolast</span><span class="params">(ListNode head , <span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">        Stack&lt;ListNode&gt; stack = <span class="keyword">new</span> stack&lt;&gt;();</span><br><span class="line">        <span class="comment">//链表结点压栈处理</span></span><br><span class="line">        <span class="keyword">while</span>(head!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            stack.push(head);</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//出栈串成新的链表</span></span><br><span class="line">        ListNode firstnode = stack.pop();</span><br><span class="line">        <span class="keyword">while</span>(--k&gt;<span class="number">0</span>)&#123;</span><br><span class="line">            ListNode temp = stack.pop();</span><br><span class="line">            temp.next = firstNode;     <span class="comment">//这一步是不必要的，除非要求返回最后一个到倒数第k个结点链表，需要从新连接构建</span></span><br><span class="line">            firstNode = temp;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> firstnode.val;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="2-删除中间结点"><a href="#2-删除中间结点" class="headerlink" title="2.删除中间结点"></a>2.删除中间结点</h3><h4 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h4><h4 id="题解：-1"><a href="#题解：-1" class="headerlink" title="题解："></a>题解：</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="3-合并两个有序列表"><a href="#3-合并两个有序列表" class="headerlink" title="3.合并两个有序列表"></a>3.合并两个有序列表</h3><h4 id="题目描述：-1"><a href="#题目描述：-1" class="headerlink" title="题目描述："></a>题目描述：</h4><p>将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。 </p>
-<p>示例 1：</p>
-<p><img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120112941925.png" alt="image-20210120112941925"></p>
-<p>输入：l1 = [1,2,4], l2 = [1,3,4]<br>输出：[1,1,2,3,4,4]<br>示例 2：</p>
-<p>输入：l1 = [], l2 = []<br>输出：[]<br>示例 3：</p>
-<p>输入：l1 = [], l2 = [0]<br>输出：[0]</p>
-<h4 id="题解：-2"><a href="#题解：-2" class="headerlink" title="题解："></a>题解：</h4><h5 id="题解一：递归"><a href="#题解一：递归" class="headerlink" title="题解一：递归"></a>题解一：递归</h5><p>思路</p>
-<p>我们可以如下递归地定义两个链表里的 merge 操作（忽略边界情况，比如空链表等）：<br>    <img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120113648210.png" alt="image-20210120113648210"></p>
-<p>也就是说，两个链表头部值较小的一个节点与剩下元素的 merge 操作结果合并。</p>
-<p>算法</p>
-<p>我们直接将以上递归过程建模，同时需要考虑边界情况。</p>
-<p>如果 l1 或者 l2 一开始就是空链表 ，那么没有任何操作需要合并，所以我们只需要返回非空链表。否则，我们要判断 l1 和 l2 哪一个链表的头节点的值更小，然后递归地决定下一个添加到结果里的节点。如果两个链表有一个为空，递归结束</p>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">mergeTwoLists</span><span class="params">(ListNode l1, ListNode l2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (l1 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> l2;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (l2 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> l1;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (l1.val &lt; l2.val) &#123;</span><br><span class="line">            l1.next = mergeTwoLists(l1.next, l2);</span><br><span class="line">            <span class="keyword">return</span> l1;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            l2.next = mergeTwoLists(l1, l2.next);</span><br><span class="line">            <span class="keyword">return</span> l2;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析："><a href="#复杂度分析：" class="headerlink" title="复杂度分析："></a>复杂度分析：</h5><h3 id="4-回文链表"><a href="#4-回文链表" class="headerlink" title="4.回文链表"></a>4.回文链表</h3><p>####题目描述</p>
-<h4 id="题解：-3"><a href="#题解：-3" class="headerlink" title="题解："></a>题解：</h4><p>#####题解一：将链表中的值复制到数组中在用双指针</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isPalindrome</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        List&lt;Interger&gt; vals = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//将链表中的值赋值到数组中</span></span><br><span class="line">        ListNode currentNode = head;</span><br><span class="line">        <span class="keyword">while</span>(currentNode != <span class="keyword">null</span>)&#123;</span><br><span class="line">            vals.add(currentNode.val);        <span class="comment">//复制的是currentNode的值，而不是其本身</span></span><br><span class="line">            currentNode = currentNode.next;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//使用双指针判断回文</span></span><br><span class="line">        <span class="keyword">int</span> front=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> back = vals.size()-<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(front&lt;back)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!vals.get(front).equals(vals.get(back)))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            front++;</span><br><span class="line">            back--;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析：-1"><a href="#复杂度分析：-1" class="headerlink" title="复杂度分析："></a>复杂度分析：</h5><p><img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120205633023.png" alt="image-20210120205633023"></p>
-<h5 id="题解二：递归"><a href="#题解二：递归" class="headerlink" title="题解二：递归"></a>题解二：递归</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>数据结构</category>
-      </categories>
-      <tags>
-        <tag>链表</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>链表</title>
-    <url>/2021/01/13/%E9%93%BE%E8%A1%A8/</url>
-    <content><![CDATA[<h2 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h2><h3 id="单链表"><a href="#单链表" class="headerlink" title="单链表"></a>单链表</h3><p>单链表中的每个结点不仅包含值，还包含链接到下一个结点的引用字段。通过这种方式，单链表将所有结点按顺序组织起来。习惯于用头节点来代表整个单链表。</p>
-<p>下面是一个单链表的例子：</p>
-<p> <img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\Desktop\screen-shot-2018-04-12-at-152754.png" alt="screen-shot-2018-04-12-at-152754"></p>
-<p>蓝色箭头显示单个链接列表中的结点是如何组合在一起的。</p>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SinglyListNode</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> val;</span><br><span class="line">    SinglyListNode next;    <span class="comment">//定义对象，下一个节点</span></span><br><span class="line">    SinglyListNode(<span class="keyword">int</span> x)&#123;val=x;&#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="单列表的操作"><a href="#单列表的操作" class="headerlink" title="单列表的操作"></a>单列表的操作</h3><p>与数组不同，我们无法在常量时间内访问单链表中的随机元素。 如果我们想要获得第 i 个元素，我们必须从头结点逐个遍历。 我们按索引来访问元素平均要花费 O(N) 时间，其中 N 是链表的长度。</p>
-<p>例如，在上面的示例中，头结点是 23。访问第 3 个结点的唯一方法是使用头结点中的“next”字段到达第 2 个结点（结点 6）; 然后使用结点 6 的“next”字段，我们能够访问第 3 个结点。</p>
-<p>你可能想知道为什么链表很有用，尽管它在通过索引访问数据时（与数组相比）具有如此糟糕的性能。 在 插入和删除中，链表具有良好的性能。</p>
-<h4 id="操作一：添加元素cur在prev之后"><a href="#操作一：添加元素cur在prev之后" class="headerlink" title="操作一：添加元素cur在prev之后"></a>操作一：添加元素cur在prev之后</h4><p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113091359911.png" alt="image-20210113091359911"></p>
-<p>与数组对比，插入新元素不需要将插入节点后的所有元素都后移，因此，时间复杂度为O(1),</p>
-<p><strong><em>特殊情况</em></strong></p>
-<p>在开头添加结点：在列表开头添加新节点时更新头节点head至关重要。</p>
-<ol>
-<li>初始化一个新结点 <code>cur</code> ；</li>
-<li>将新结点链接到我们的原始头结点 <code>head</code>。</li>
-<li>将 <code>cur</code> 指定为 <code>head</code> 。</li>
-</ol>
-<p>在结尾添加节点</p>
-<h4 id="操作二：从单链表中删除现有结点cur"><a href="#操作二：从单链表中删除现有结点cur" class="headerlink" title="操作二：从单链表中删除现有结点cur"></a>操作二：从单链表中删除现有结点cur</h4><p>删除操作 - 单链表<br>如果我们想从单链表中删除现有结点 cur，可以分两步完成：</p>
-<p>找到 cur 的上一个结点 prev 及其下一个结点 next ；</p>
-<p>接下来链接 prev 到 cur 的下一个节点 next 。</p>
-<p>在我们的第一步中，我们需要找出 prev 和 next。使用 cur 的参考字段很容易找出 next，但是，我们必须<strong>从头结点遍历链表，以找出 prev</strong>，它的平均时间是 O(N)，其中 N 是链表的长度。因此，删除结点的时间复杂度将是 <u>O(N)</u>。</p>
-<p>空间复杂度为 O(1)，因为我们只需要常量空间来存储指针。</p>
-<p>示例</p>
-<p>让我们尝试把结点 6从上面的单链表中删除。</p>
-<ol>
-<li><p>从头遍历链表，直到我们找到前一个结点 prev，即结点 23</p>
-<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113092734343.png" alt="image-20210113092734343"></p>
-</li>
-<li><p>将 prev（结点 23）与 next（结点 15）链接</p>
-<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113092712828.png" alt="image-20210113092712828"></p>
-</li>
-</ol>
-<p>结点 6 现在不在我们的单链表中。</p>
-<p><strong>特殊情况</strong></p>
-<p>删除第一个结点<br>如果我们想删除第一个结点，策略会有所不同。</p>
-<p>正如之前所提到的，我们使用头结点 head 来表示链表。我们的头是下面示例中的黑色结点 23。</p>
-<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113092928077.png" alt="image-20210113092928077"></p>
-<p>如果想要删除第一个结点，我们可以简单地将下一个结点分配给 head。也就是说，删除之后我们的头将会是结点 6。</p>
-<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113092949088.png" alt="image-20210113092949088"></p>
-<p>链表从头结点开始，因此结点 23 不再在我们的链表中。</p>
-<h3 id="双链表"><a href="#双链表" class="headerlink" title="双链表"></a>双链表</h3><p>与单链表的区别在于：双链表除了有数据域和指向其后继的指针外，还有指向其前驱的指针。</p>
-<p><strong>所以，根据链接数的不同，可以将链表分为单链表、双链表、多重链表</strong></p>
-<h3 id="LC设计链表"><a href="#LC设计链表" class="headerlink" title="LC设计链表"></a>LC设计链表</h3><p>链表时一个包含零个或多个元素的数据结构。每个元素都包含一个值和到另一个元素的链接。根据链接数的不同，可以分为单链表，双链表和多重链表。</p>
-<p>单链表是最简单的一种，它提供了在常数时间内的 addAtHead 操作和在线性时间内的 addAtTail 的操作。双链表是最常用的一种，因为它提供了在常数时间内的 addAtHead 和 addAtTail 操作，并且优化的插入和删除。</p>
-<p>双链表在 Java 中的实现为 LinkedList，在 Python 中为 list。这些结构都比较常用，有两个要点：</p>
-<p>1、<strong>哨兵节点</strong>：<br>哨兵节点在树和链表中被广泛用作<u>伪头、伪尾</u>等，通常不保存任何数据。</p>
-<p>我们将使用伪头来简化我们简化插入和删除。在接下来的两种方法中应用此方法。</p>
-<p>2、双链表的<u>双向搜索</u>：我们可以从头部或尾部进行搜索。</p>
-<p>####在链表类中实现这些功能：</p>
-<p>get(index)：获取链表中第 index 个节点的值。如果索引无效，则返回-1。<br>addAtHead(val)：在链表的第一个元素之前添加一个值为 val 的节点。插入后，新节点将成为链表的第一个节点。<br>addAtTail(val)：将值为 val 的节点追加到链表的最后一个元素。<br>addAtIndex(index,val)：在链表中的第 index 个节点之前添加值为 val  的节点。如果 index 等于链表的长度，则该节点将附加到链表的末尾。如果 index 大于链表长度，则不会插入节点。如果index小于0，则在头部插入节点。<br>deleteAtIndex(index)：如果索引 index 有效，则删除链表中的第 index 个节点。</p>
-<h4 id="方式一：单链表实现"><a href="#方式一：单链表实现" class="headerlink" title="方式一：单链表实现"></a>方式一：单链表实现</h4><p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113095508745.png" alt="image-20210113095508745"> </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListNode</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> val;</span><br><span class="line">  ListNode next;</span><br><span class="line">  ListNode(<span class="keyword">int</span> x) &#123; val = x; &#125;</span><br><span class="line">&#125;      <span class="comment">//声明结点</span></span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">    <span class="keyword">int</span> size;</span><br><span class="line">    ListNode head;  <span class="comment">//sentinel node as pseudo-head</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyLinkedList</span><span class="params">()</span></span>&#123;</span><br><span class="line">        size = <span class="number">0</span>;</span><br><span class="line">        head = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;   <span class="comment">//声明链表，用哨兵做伪头，这样确保链表中节点永远不为空</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListNode</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> val;</span><br><span class="line">  ListNode next;</span><br><span class="line">  ListNode(<span class="keyword">int</span> x) &#123; val = x; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyLinkedList</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> size;</span><br><span class="line">  ListNode head;  <span class="comment">// sentinel node as pseudo-head</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">MyLinkedList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    size = <span class="number">0</span>;</span><br><span class="line">    head = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Get the value of the index-th node in the linked list. If the index is invalid, return -1. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// if index is invalid</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt;= size) <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    ListNode curr = head;</span><br><span class="line">    <span class="comment">// index steps needed </span></span><br><span class="line">    <span class="comment">// to move from sentinel node to wanted index</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index + <span class="number">1</span>; ++i) curr = curr.next;   <span class="comment">//与删除不同，如果要获取指定索引处的节点，必须前进index+1步</span></span><br><span class="line">    <span class="keyword">return</span> curr.val;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtHead</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    addAtIndex(<span class="number">0</span>, val);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Append a node of value val to the last element of the linked list. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtTail</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    addAtIndex(size, val);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtIndex</span><span class="params">(<span class="keyword">int</span> index, <span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// If index is greater than the length, </span></span><br><span class="line">    <span class="comment">// the node will not be inserted.</span></span><br><span class="line">    <span class="keyword">if</span> (index &gt; size) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// [so weird] If index is negative, </span></span><br><span class="line">    <span class="comment">// the node will be inserted at the head of the list.</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span>)  index = <span class="number">0</span>;</span><br><span class="line">		++size;</span><br><span class="line">    <span class="comment">// find predecessor of the node to be added</span></span><br><span class="line">    ListNode pred = head;    </span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; ++i) pred = pred.next;   <span class="comment">//从头开始找给定索引处的前一个元素pred，</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// node to be added</span></span><br><span class="line">    ListNode toAdd = <span class="keyword">new</span> ListNode(val);    <span class="comment">//新建一个节点</span></span><br><span class="line">    <span class="comment">// insertion itself</span></span><br><span class="line">    toAdd.next = pred.next;  </span><br><span class="line">    pred.next = toAdd;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Delete the index-th node in the linked list, if the index is valid. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteAtIndex</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// if the index is invalid, do nothing</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt;= size) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    size--;</span><br><span class="line">    <span class="comment">// find predecessor of the node to be deleted</span></span><br><span class="line">    ListNode pred = head;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; ++i) pred = pred.next;  <span class="comment">//找到的是要删除节点的前一个节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// delete pred.next </span></span><br><span class="line">    pred.next = pred.next.next;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">作者：LeetCode</span><br><span class="line">链接：https:<span class="comment">//leetcode-cn.com/problems/design-linked-list/solution/she-ji-lian-biao-by-leetcode/</span></span><br><span class="line">来源：力扣（LeetCode）</span><br><span class="line">著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</span><br></pre></td></tr></table></figure>
-<p>#####复杂度分析</p>
-<p>时间复杂度：<br>addAtHead： \mathcal{O}(1)O(1)<br>addAtInder，get，deleteAtIndex: \mathcal{O}(k)O(k)，其中 kk 指的是元素的索引。<br>addAtTail：\mathcal{O}(N)O(N)，其中 NN 指的是链表的元素个数。<br>空间复杂度：所有的操作都是 O(1)O(1)。</p>
-<p>####方式二：双链表实现</p>
-<p>双链表比单链表快得多，测试用例花费的时间比单链表快了两倍。但是它更加复杂，它包含了 <code>size</code>，记录链表元素个数，和伪头伪尾。</p>
-<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113105525613.png" alt="image-20210113105525613"></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListNode</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> val;</span><br><span class="line">  ListNode next;   <span class="comment">//后继结点</span></span><br><span class="line">  ListNode prev;   <span class="comment">//前驱节点</span></span><br><span class="line">  ListNode(<span class="keyword">int</span> x) &#123; val = x; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyLinkedList</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> size=<span class="number">0</span>;</span><br><span class="line">  <span class="comment">// sentinel nodes as pseudo-head and pseudo-tail  --伪元素充当头结点和尾节点</span></span><br><span class="line">  ListNode head, tail;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">MyLinkedList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    size = <span class="number">0</span>;</span><br><span class="line">    head = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">    tail = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">    head.next = tail;</span><br><span class="line">    tail.prev = head;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Get the value of the index-th node in the linked list. If the index is invalid, return -1. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// if index is invalid</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt;= size) <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// choose the fastest way: to move from the head</span></span><br><span class="line">    <span class="comment">// or to move from the tail    ----从后或者从前遍历，选择一个比较快速的遍历方向</span></span><br><span class="line">    ListNode curr = head;</span><br><span class="line">    <span class="keyword">if</span> (index + <span class="number">1</span> &lt; size - index)</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index + <span class="number">1</span>; ++i) curr = curr.next;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      curr = tail;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size - index; ++i) curr = curr.prev;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> curr.val;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtHead</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    ListNode pred = head, succ = head.next;</span><br><span class="line"></span><br><span class="line">    ++size;      <span class="comment">//记得把链表长度更新一下</span></span><br><span class="line">    ListNode toAdd = <span class="keyword">new</span> ListNode(val);</span><br><span class="line">    toAdd.prev = pred;</span><br><span class="line">    toAdd.next = succ;</span><br><span class="line">    pred.next = toAdd;</span><br><span class="line">    succ.prev = toAdd;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Append a node of value val to the last element of the linked list. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtTail</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    ListNode succ = tail, pred = tail.prev;</span><br><span class="line"></span><br><span class="line">    ++size;</span><br><span class="line">    ListNode toAdd = <span class="keyword">new</span> ListNode(val);</span><br><span class="line">    toAdd.prev = pred;</span><br><span class="line">    toAdd.next = succ;</span><br><span class="line">    pred.next = toAdd;</span><br><span class="line">    succ.prev = toAdd;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtIndex</span><span class="params">(<span class="keyword">int</span> index, <span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// If index is greater than the length, </span></span><br><span class="line">    <span class="comment">// the node will not be inserted.</span></span><br><span class="line">    <span class="keyword">if</span> (index &gt; size) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// [so weird] If index is negative, </span></span><br><span class="line">    <span class="comment">// the node will be inserted at the head of the list.</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span>) index = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// find predecessor and successor of the node to be added   找到节点的前驱和后继</span></span><br><span class="line">    ListNode pred, succ;</span><br><span class="line">    <span class="keyword">if</span> (index &lt; size - index) &#123;</span><br><span class="line">      pred = head;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; ++i) </span><br><span class="line">          pred = pred.next;</span><br><span class="line">      succ = pred.next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      succ = tail;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size - index; ++i) succ = succ.prev;</span><br><span class="line">      pred = succ.prev;</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">//先找到待插入元素的前驱与后继，然后在进行节点指向的变更</span></span><br><span class="line">    <span class="comment">// insertion itself</span></span><br><span class="line">    ++size;        <span class="comment">//注意长度的更新</span></span><br><span class="line">    ListNode toAdd = <span class="keyword">new</span> ListNode(val);</span><br><span class="line">    toAdd.prev = pred;</span><br><span class="line">    toAdd.next = succ;</span><br><span class="line">    pred.next = toAdd;</span><br><span class="line">    succ.prev = toAdd;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Delete the index-th node in the linked list, if the index is valid. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteAtIndex</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// if the index is invalid, do nothing</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt;= size) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// find predecessor and successor of the node to be deleted</span></span><br><span class="line">    ListNode pred, succ;</span><br><span class="line">    <span class="keyword">if</span> (index &lt; size - index) &#123;</span><br><span class="line">      pred = head;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; ++i) pred = pred.next;</span><br><span class="line">      succ = pred.next.next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      succ = tail;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size - index - <span class="number">1</span>; ++i) succ = succ.prev;</span><br><span class="line">      pred = succ.prev.prev;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// delete pred.next </span></span><br><span class="line">    --size;</span><br><span class="line">    pred.next = succ;</span><br><span class="line">    succ.prev = pred;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
-<p>伪头和伪尾总是存在，MyLinkedList 中所有节点都包含：值 + 指向前一个节点的指针 + 指向后一个节点的指针。</p>
-<p>#####复杂度分析</p>
-<p>时间复杂度：<br>addAtHead，addAtTail： \mathcal{O}(1)O(1)<br>get，addAtIndex，delete：\mathcal{O}(\min(k, N - k))O(min(k,N−k))，其中 kk 指的是元素的索引。<br>空间复杂度：所有的操作都是 \mathcal{O}(1)O(1)。</p>
-<p> <strong>说明</strong>:不论是单链表还是双链表，在进行遍历时，如果想要通过index来get某一结点元素，for循环中的终止条件是<strong>i&lt;index+1</strong></p>
-<p>如果是删除或者添加，for循环中的终止条件是**i&lt;index</p>
-]]></content>
-      <categories>
-        <category>数据结构</category>
-      </categories>
-      <tags>
-        <tag>链表</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>阿里云ECS部署服务器</title>
-    <url>/2021/01/22/%E9%98%BF%E9%87%8C%E4%BA%91ECS%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
-    <content><![CDATA[<h2 id="阿里云ECS部署Tomcat、Nginx服务器"><a href="#阿里云ECS部署Tomcat、Nginx服务器" class="headerlink" title="阿里云ECS部署Tomcat、Nginx服务器"></a>阿里云ECS部署Tomcat、Nginx服务器</h2><h3 id="Nginx服务器"><a href="#Nginx服务器" class="headerlink" title="Nginx服务器"></a>Nginx服务器</h3><p>####一、简介</p>
-<p>Nginx是一款轻量级的网页服务器、反向代理服务器。相较于Apache、lighttpd具有占有内存少，稳定性高等优势。它最常的用途是提供反向代理服务。</p>
-<h4 id="二、安装"><a href="#二、安装" class="headerlink" title="二、安装"></a>二、安装</h4><h2 id="1、准备工作"><a href="#1、准备工作" class="headerlink" title="1、准备工作"></a>1、准备工作</h2><p>Nginx的安装依赖于以下三个包，意思就是在安装Nginx之前首先必须安装一下的三个包，注意安装顺序如下：</p>
-<p>　　1 SSL功能需要openssl库，直接通过yum安装: #yum install openssl</p>
-<p>　　2 gzip模块需要zlib库，直接通过yum安装: #yum install zlib</p>
-<p>　　3 rewrite模块需要pcre库，直接通过yum安装: #yum install pcre</p>
-<h2 id="2、安装Nginx依赖项和Nginx"><a href="#2、安装Nginx依赖项和Nginx" class="headerlink" title="2、安装Nginx依赖项和Nginx"></a>2、安装Nginx依赖项和Nginx</h2><p>1 、使用yum安装nginx需要包括Nginx的库，安装Nginx的库</p>
-<p>rpm -Uvh <a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm">http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm</a></p>
-<p>2 、使用下面命令安装nginx</p>
-<p> yum install nginx</p>
-<p>3、 启动Nginx</p>
-<p>service nginx start（Centos 6.0）,如果是Centos7.0以上，使用systemctl start nginx启动。</p>
-<p>4、直接浏览器访问localhost就会出现Nginx的欢迎界面表示你安装成功了，否则就是安装失败了</p>
-<p>　　默认80端口加入防火墙访问白名单中：firewall-cmd –permanent –zone=public –add-port=80/tcp</p>
-<p>　　使用firewall-cmd –reload命令使其生效</p>
-<p>5、配置Nginx</p>
-<p>CentOS安装Nginx后，安装在了 /etc/nginx/目录下，你可以打开/etc/nginx/conf.d/default/conf查看里面的配置，包括监听端口，域名和nginx访问的根目录</p>
-<p><strong>如果出现nginx启动之后，通过自己服务器的公网IP地址无法访问，是服务器端口没有开放访问权限的缘故，可以参考博客：<a href="https://blog.csdn.net/inite/article/details/73658214">https://blog.csdn.net/inite/article/details/73658214</a></strong></p>
-<p>####三、配置</p>
-<p>以上安装方法nginx的配置文件位于</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;usr&#x2F;local&#x2F;nginx&#x2F;conf&#x2F;nginx.conf</span><br></pre></td></tr></table></figure>
-<p>Nginx配置文件常见结构的从外到内依次是「http」「server」「location」等等，缺省的继承关系是从外到内，也就是说内层块会自动获取外层块的值作为缺省值。</p>
-<h5 id="Server"><a href="#Server" class="headerlink" title="Server"></a>Server</h5><p>接收请求的服务器需要将不同的请求按规则转发到不同的后端服务器上，在 nginx 中我们可以通过构建虚拟主机（server）的概念来将这些不同的服务配置隔离。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  localhost;</span><br><span class="line">root   html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>例如我们笔戈玩下的两个子项目 passport 和 wan 就可以通过在 nginx 的配置文件中配置两个 server，servername 分别为 passport.bigertech.com 和 wan.bigertech.com。这样的话不同的 url 请求就会对应到 nginx 相应的设置，转发到不同的后端服务器上。</p>
-<p>这里的 listen 指监听端口，server_name 用来指定IP或域名，多个域名对应统一规则可以空格分开，index 用于设定访问的默认首页地址，root 指令用于指定虚拟主机的网页跟目录，这个地方可以是相对地址也可以是绝对地址。</p>
-<p>通常情况下我们可以在 nginx.conf 中配置多个server，对不同的请求进行设置。就像这样：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  host1;</span><br><span class="line">root   html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  host2;</span><br><span class="line">root   &#x2F;data&#x2F;www&#x2F;html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>但是当 server 超过2个时，建议将不同对虚拟主机的配置放在另一个文件中，然后通过在主配置文件 nginx.conf 加上 include 指令包含进来。更便于管理。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">include vhosts&#x2F;*.conf;</span><br></pre></td></tr></table></figure>
-<p>就可以把vhosts的文件都包含进去啦。</p>
-<p>#####Localtion</p>
-<p>每个 url 请求都会对应的一个服务，nginx 进行处理转发或者是本地的一个文件路径，或者是其他服务器的一个服务路径。而这个路径的匹配是通过 location 来进行的。我们可以将 server 当做对应一个域名进行的配置，而 location 是在一个域名下对更精细的路径进行配置。</p>
-<p>以上面的例子，可以将root和index指令放到一个location中，那么只有在匹配到这个location时才会访问root后的内容：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> location &#x2F; &#123;</span><br><span class="line">      root   &#x2F;data&#x2F;www&#x2F;host2;</span><br><span class="line">      index  index.html index.htm;</span><br><span class="line">  &#125;</span><br><span class="line">location 匹配规则</span><br><span class="line"></span><br><span class="line">~      波浪线表示执行一个正则匹配，区分大小写</span><br><span class="line">~*    表示执行一个正则匹配，不区分大小写</span><br><span class="line">^~    ^~表示普通字符匹配，如果该选项匹配，只匹配该选项，不匹配别的选项，一般用来匹配目录</span><br><span class="line">&#x3D;      进行普通字符精确匹配</span><br><span class="line">匹配例子：</span><br><span class="line"></span><br><span class="line">  location  &#x3D; &#x2F; &#123;</span><br><span class="line"># 只匹配&quot;&#x2F;&quot;.</span><br><span class="line">[ configuration A ] </span><br><span class="line">  &#125;</span><br><span class="line">location  &#x2F; &#123;</span><br><span class="line"># 匹配任何请求，因为所有请求都是以&quot;&#x2F;&quot;开始</span><br><span class="line"># 但是更长字符匹配或者正则表达式匹配会优先匹配</span><br><span class="line">[ configuration B ] </span><br><span class="line">&#125;</span><br><span class="line">location ^~ &#x2F;images&#x2F; &#123;</span><br><span class="line"> #匹配任何以 &#x2F;images&#x2F; 开始的请求，并停止匹配 其它location</span><br><span class="line">[ configuration C ] </span><br><span class="line">&#125;</span><br><span class="line">location ~* \.(gif|jpg|jpeg)$ &#123;</span><br><span class="line"># 匹配以 gif, jpg, or jpeg结尾的请求. </span><br><span class="line"># 但是所有 &#x2F;images&#x2F; 目录的请求将由 [Configuration C]处理.   </span><br><span class="line">[ configuration D ] </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">请求:</span><br><span class="line">&#x2F; -&gt; 符合configuration A</span><br><span class="line">&#x2F;documents&#x2F;document.html -&gt; 符合configuration B</span><br><span class="line">&#x2F;images&#x2F;1.gif -&gt; 符合configuration C</span><br><span class="line">&#x2F;documents&#x2F;1.jpg -&gt;符合 configuration D</span><br></pre></td></tr></table></figure>
-<p>#####静态文件映射</p>
-<p>访问文件的配置主要有 root 和 aliasp’s 两个指令。这两个指令的区别容易弄混：</p>
-<p>alias<br>alias后跟的指定目录是准确的，并且末尾必须加 /。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F;c&#x2F; &#123;</span><br><span class="line">    alias &#x2F;a&#x2F;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果访问站点<a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://location/c">http://location/c</a>访问的就是/a/目录下的站点信息。</p>
-<p>#####root</p>
-<p>root后跟的指定目录是上级目录，并且该上级目录下要含有和location后指定名称的同名目录才行。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F;c&#x2F; &#123;</span><br><span class="line">    root &#x2F;a&#x2F;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这时访问站点<a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://location/c">http://location/c</a>访问的就是/a/c目录下的站点信息。</p>
-<p>如果你需要将这个目录展开，在这个location的末尾加上「autoindex on; 」就可以了</p>
-<p>#####转发</p>
-<p>配置起来很简单比如我要将所有的请求到转移到真正提供服务的一台机器的 8001 端口，只要这样：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">proxy_pass 172.16.1.1:8001;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这样访问host时，就都被转发到 172.16.1.1的8001端口去了。</p>
-<p>#####负载均衡</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">upstream myserver; &#123;</span><br><span class="line">ip_hash;    </span><br><span class="line">server 172.16.1.1:8001;</span><br><span class="line">server 172.16.1.2:8002;</span><br><span class="line">server 172.16.1.3;</span><br><span class="line">server 172.16.1.4;</span><br><span class="line">&#125;</span><br><span class="line">location &#x2F; &#123;</span><br><span class="line">proxy_pass http:&#x2F;&#x2F;myserver;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们在 upstream 中指定了一组机器，并将这个组命名为 myserver，这样在 proxypass 中只要将请求转移到 myserver 这个 upstream 中我们就实现了在四台机器的反向代理加负载均衡。其中的 ip_hash 指明了我们均衡的方式是按照用户的 ip 地址进行分配。另外还有轮询、指定权重轮询、fair、url_hash几种调度算法。</p>
-<p>###Tomcat服务器</p>
-<h4 id="一、下载Tomcat"><a href="#一、下载Tomcat" class="headerlink" title="一、下载Tomcat"></a>一、下载Tomcat</h4>]]></content>
-      <categories>
-        <category>阿里云ECS</category>
-      </categories>
-      <tags>
-        <tag>阿里云ECS部署</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>设计消息队列--&gt;2</title>
     <url>/2021/03/13/%E8%AE%BE%E8%AE%A1%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E9%83%A8%E5%88%86/</url>
     <content><![CDATA[<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p>持久性是事务的一个特性，然而只满足持久性却不一定能满足事务的特性。还是拿扣钱/加钱的例子讲。满足事务的一致性特征，则必须要么都不进行，要么都能成功。 解决方案从大方向上有两种：</p>
@@ -3731,6 +3530,207 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </categories>
       <tags>
         <tag>RabbitMQ</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>过度与动画</title>
+    <url>/2021/03/14/%E8%BF%87%E5%BA%A6%E4%B8%8E%E5%8A%A8%E7%94%BB/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>链表</title>
+    <url>/2021/01/13/%E9%93%BE%E8%A1%A8/</url>
+    <content><![CDATA[<h2 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h2><h3 id="单链表"><a href="#单链表" class="headerlink" title="单链表"></a>单链表</h3><p>单链表中的每个结点不仅包含值，还包含链接到下一个结点的引用字段。通过这种方式，单链表将所有结点按顺序组织起来。习惯于用头节点来代表整个单链表。</p>
+<p>下面是一个单链表的例子：</p>
+<p> <img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\Desktop\screen-shot-2018-04-12-at-152754.png" alt="screen-shot-2018-04-12-at-152754"></p>
+<p>蓝色箭头显示单个链接列表中的结点是如何组合在一起的。</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SinglyListNode</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> val;</span><br><span class="line">    SinglyListNode next;    <span class="comment">//定义对象，下一个节点</span></span><br><span class="line">    SinglyListNode(<span class="keyword">int</span> x)&#123;val=x;&#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="单列表的操作"><a href="#单列表的操作" class="headerlink" title="单列表的操作"></a>单列表的操作</h3><p>与数组不同，我们无法在常量时间内访问单链表中的随机元素。 如果我们想要获得第 i 个元素，我们必须从头结点逐个遍历。 我们按索引来访问元素平均要花费 O(N) 时间，其中 N 是链表的长度。</p>
+<p>例如，在上面的示例中，头结点是 23。访问第 3 个结点的唯一方法是使用头结点中的“next”字段到达第 2 个结点（结点 6）; 然后使用结点 6 的“next”字段，我们能够访问第 3 个结点。</p>
+<p>你可能想知道为什么链表很有用，尽管它在通过索引访问数据时（与数组相比）具有如此糟糕的性能。 在 插入和删除中，链表具有良好的性能。</p>
+<h4 id="操作一：添加元素cur在prev之后"><a href="#操作一：添加元素cur在prev之后" class="headerlink" title="操作一：添加元素cur在prev之后"></a>操作一：添加元素cur在prev之后</h4><p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113091359911.png" alt="image-20210113091359911"></p>
+<p>与数组对比，插入新元素不需要将插入节点后的所有元素都后移，因此，时间复杂度为O(1),</p>
+<p><strong><em>特殊情况</em></strong></p>
+<p>在开头添加结点：在列表开头添加新节点时更新头节点head至关重要。</p>
+<ol>
+<li>初始化一个新结点 <code>cur</code> ；</li>
+<li>将新结点链接到我们的原始头结点 <code>head</code>。</li>
+<li>将 <code>cur</code> 指定为 <code>head</code> 。</li>
+</ol>
+<p>在结尾添加节点</p>
+<h4 id="操作二：从单链表中删除现有结点cur"><a href="#操作二：从单链表中删除现有结点cur" class="headerlink" title="操作二：从单链表中删除现有结点cur"></a>操作二：从单链表中删除现有结点cur</h4><p>删除操作 - 单链表<br>如果我们想从单链表中删除现有结点 cur，可以分两步完成：</p>
+<p>找到 cur 的上一个结点 prev 及其下一个结点 next ；</p>
+<p>接下来链接 prev 到 cur 的下一个节点 next 。</p>
+<p>在我们的第一步中，我们需要找出 prev 和 next。使用 cur 的参考字段很容易找出 next，但是，我们必须<strong>从头结点遍历链表，以找出 prev</strong>，它的平均时间是 O(N)，其中 N 是链表的长度。因此，删除结点的时间复杂度将是 <u>O(N)</u>。</p>
+<p>空间复杂度为 O(1)，因为我们只需要常量空间来存储指针。</p>
+<p>示例</p>
+<p>让我们尝试把结点 6从上面的单链表中删除。</p>
+<ol>
+<li><p>从头遍历链表，直到我们找到前一个结点 prev，即结点 23</p>
+<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113092734343.png" alt="image-20210113092734343"></p>
+</li>
+<li><p>将 prev（结点 23）与 next（结点 15）链接</p>
+<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113092712828.png" alt="image-20210113092712828"></p>
+</li>
+</ol>
+<p>结点 6 现在不在我们的单链表中。</p>
+<p><strong>特殊情况</strong></p>
+<p>删除第一个结点<br>如果我们想删除第一个结点，策略会有所不同。</p>
+<p>正如之前所提到的，我们使用头结点 head 来表示链表。我们的头是下面示例中的黑色结点 23。</p>
+<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113092928077.png" alt="image-20210113092928077"></p>
+<p>如果想要删除第一个结点，我们可以简单地将下一个结点分配给 head。也就是说，删除之后我们的头将会是结点 6。</p>
+<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113092949088.png" alt="image-20210113092949088"></p>
+<p>链表从头结点开始，因此结点 23 不再在我们的链表中。</p>
+<h3 id="双链表"><a href="#双链表" class="headerlink" title="双链表"></a>双链表</h3><p>与单链表的区别在于：双链表除了有数据域和指向其后继的指针外，还有指向其前驱的指针。</p>
+<p><strong>所以，根据链接数的不同，可以将链表分为单链表、双链表、多重链表</strong></p>
+<h3 id="LC设计链表"><a href="#LC设计链表" class="headerlink" title="LC设计链表"></a>LC设计链表</h3><p>链表时一个包含零个或多个元素的数据结构。每个元素都包含一个值和到另一个元素的链接。根据链接数的不同，可以分为单链表，双链表和多重链表。</p>
+<p>单链表是最简单的一种，它提供了在常数时间内的 addAtHead 操作和在线性时间内的 addAtTail 的操作。双链表是最常用的一种，因为它提供了在常数时间内的 addAtHead 和 addAtTail 操作，并且优化的插入和删除。</p>
+<p>双链表在 Java 中的实现为 LinkedList，在 Python 中为 list。这些结构都比较常用，有两个要点：</p>
+<p>1、<strong>哨兵节点</strong>：<br>哨兵节点在树和链表中被广泛用作<u>伪头、伪尾</u>等，通常不保存任何数据。</p>
+<p>我们将使用伪头来简化我们简化插入和删除。在接下来的两种方法中应用此方法。</p>
+<p>2、双链表的<u>双向搜索</u>：我们可以从头部或尾部进行搜索。</p>
+<p>####在链表类中实现这些功能：</p>
+<p>get(index)：获取链表中第 index 个节点的值。如果索引无效，则返回-1。<br>addAtHead(val)：在链表的第一个元素之前添加一个值为 val 的节点。插入后，新节点将成为链表的第一个节点。<br>addAtTail(val)：将值为 val 的节点追加到链表的最后一个元素。<br>addAtIndex(index,val)：在链表中的第 index 个节点之前添加值为 val  的节点。如果 index 等于链表的长度，则该节点将附加到链表的末尾。如果 index 大于链表长度，则不会插入节点。如果index小于0，则在头部插入节点。<br>deleteAtIndex(index)：如果索引 index 有效，则删除链表中的第 index 个节点。</p>
+<h4 id="方式一：单链表实现"><a href="#方式一：单链表实现" class="headerlink" title="方式一：单链表实现"></a>方式一：单链表实现</h4><p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113095508745.png" alt="image-20210113095508745"> </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListNode</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> val;</span><br><span class="line">  ListNode next;</span><br><span class="line">  ListNode(<span class="keyword">int</span> x) &#123; val = x; &#125;</span><br><span class="line">&#125;      <span class="comment">//声明结点</span></span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">    <span class="keyword">int</span> size;</span><br><span class="line">    ListNode head;  <span class="comment">//sentinel node as pseudo-head</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyLinkedList</span><span class="params">()</span></span>&#123;</span><br><span class="line">        size = <span class="number">0</span>;</span><br><span class="line">        head = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;   <span class="comment">//声明链表，用哨兵做伪头，这样确保链表中节点永远不为空</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListNode</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> val;</span><br><span class="line">  ListNode next;</span><br><span class="line">  ListNode(<span class="keyword">int</span> x) &#123; val = x; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyLinkedList</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> size;</span><br><span class="line">  ListNode head;  <span class="comment">// sentinel node as pseudo-head</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">MyLinkedList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    size = <span class="number">0</span>;</span><br><span class="line">    head = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Get the value of the index-th node in the linked list. If the index is invalid, return -1. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// if index is invalid</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt;= size) <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    ListNode curr = head;</span><br><span class="line">    <span class="comment">// index steps needed </span></span><br><span class="line">    <span class="comment">// to move from sentinel node to wanted index</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index + <span class="number">1</span>; ++i) curr = curr.next;   <span class="comment">//与删除不同，如果要获取指定索引处的节点，必须前进index+1步</span></span><br><span class="line">    <span class="keyword">return</span> curr.val;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtHead</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    addAtIndex(<span class="number">0</span>, val);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Append a node of value val to the last element of the linked list. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtTail</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    addAtIndex(size, val);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtIndex</span><span class="params">(<span class="keyword">int</span> index, <span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// If index is greater than the length, </span></span><br><span class="line">    <span class="comment">// the node will not be inserted.</span></span><br><span class="line">    <span class="keyword">if</span> (index &gt; size) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// [so weird] If index is negative, </span></span><br><span class="line">    <span class="comment">// the node will be inserted at the head of the list.</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span>)  index = <span class="number">0</span>;</span><br><span class="line">		++size;</span><br><span class="line">    <span class="comment">// find predecessor of the node to be added</span></span><br><span class="line">    ListNode pred = head;    </span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; ++i) pred = pred.next;   <span class="comment">//从头开始找给定索引处的前一个元素pred，</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// node to be added</span></span><br><span class="line">    ListNode toAdd = <span class="keyword">new</span> ListNode(val);    <span class="comment">//新建一个节点</span></span><br><span class="line">    <span class="comment">// insertion itself</span></span><br><span class="line">    toAdd.next = pred.next;  </span><br><span class="line">    pred.next = toAdd;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Delete the index-th node in the linked list, if the index is valid. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteAtIndex</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// if the index is invalid, do nothing</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt;= size) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    size--;</span><br><span class="line">    <span class="comment">// find predecessor of the node to be deleted</span></span><br><span class="line">    ListNode pred = head;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; ++i) pred = pred.next;  <span class="comment">//找到的是要删除节点的前一个节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// delete pred.next </span></span><br><span class="line">    pred.next = pred.next.next;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">作者：LeetCode</span><br><span class="line">链接：https:<span class="comment">//leetcode-cn.com/problems/design-linked-list/solution/she-ji-lian-biao-by-leetcode/</span></span><br><span class="line">来源：力扣（LeetCode）</span><br><span class="line">著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</span><br></pre></td></tr></table></figure>
+<p>#####复杂度分析</p>
+<p>时间复杂度：<br>addAtHead： \mathcal{O}(1)O(1)<br>addAtInder，get，deleteAtIndex: \mathcal{O}(k)O(k)，其中 kk 指的是元素的索引。<br>addAtTail：\mathcal{O}(N)O(N)，其中 NN 指的是链表的元素个数。<br>空间复杂度：所有的操作都是 O(1)O(1)。</p>
+<p>####方式二：双链表实现</p>
+<p>双链表比单链表快得多，测试用例花费的时间比单链表快了两倍。但是它更加复杂，它包含了 <code>size</code>，记录链表元素个数，和伪头伪尾。</p>
+<p><img data-src="/2021/01/13/%E9%93%BE%E8%A1%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210113105525613.png" alt="image-20210113105525613"></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListNode</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> val;</span><br><span class="line">  ListNode next;   <span class="comment">//后继结点</span></span><br><span class="line">  ListNode prev;   <span class="comment">//前驱节点</span></span><br><span class="line">  ListNode(<span class="keyword">int</span> x) &#123; val = x; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyLinkedList</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> size=<span class="number">0</span>;</span><br><span class="line">  <span class="comment">// sentinel nodes as pseudo-head and pseudo-tail  --伪元素充当头结点和尾节点</span></span><br><span class="line">  ListNode head, tail;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">MyLinkedList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    size = <span class="number">0</span>;</span><br><span class="line">    head = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">    tail = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">    head.next = tail;</span><br><span class="line">    tail.prev = head;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Get the value of the index-th node in the linked list. If the index is invalid, return -1. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// if index is invalid</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt;= size) <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// choose the fastest way: to move from the head</span></span><br><span class="line">    <span class="comment">// or to move from the tail    ----从后或者从前遍历，选择一个比较快速的遍历方向</span></span><br><span class="line">    ListNode curr = head;</span><br><span class="line">    <span class="keyword">if</span> (index + <span class="number">1</span> &lt; size - index)</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index + <span class="number">1</span>; ++i) curr = curr.next;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      curr = tail;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size - index; ++i) curr = curr.prev;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> curr.val;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtHead</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    ListNode pred = head, succ = head.next;</span><br><span class="line"></span><br><span class="line">    ++size;      <span class="comment">//记得把链表长度更新一下</span></span><br><span class="line">    ListNode toAdd = <span class="keyword">new</span> ListNode(val);</span><br><span class="line">    toAdd.prev = pred;</span><br><span class="line">    toAdd.next = succ;</span><br><span class="line">    pred.next = toAdd;</span><br><span class="line">    succ.prev = toAdd;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Append a node of value val to the last element of the linked list. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtTail</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    ListNode succ = tail, pred = tail.prev;</span><br><span class="line"></span><br><span class="line">    ++size;</span><br><span class="line">    ListNode toAdd = <span class="keyword">new</span> ListNode(val);</span><br><span class="line">    toAdd.prev = pred;</span><br><span class="line">    toAdd.next = succ;</span><br><span class="line">    pred.next = toAdd;</span><br><span class="line">    succ.prev = toAdd;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAtIndex</span><span class="params">(<span class="keyword">int</span> index, <span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// If index is greater than the length, </span></span><br><span class="line">    <span class="comment">// the node will not be inserted.</span></span><br><span class="line">    <span class="keyword">if</span> (index &gt; size) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// [so weird] If index is negative, </span></span><br><span class="line">    <span class="comment">// the node will be inserted at the head of the list.</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span>) index = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// find predecessor and successor of the node to be added   找到节点的前驱和后继</span></span><br><span class="line">    ListNode pred, succ;</span><br><span class="line">    <span class="keyword">if</span> (index &lt; size - index) &#123;</span><br><span class="line">      pred = head;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; ++i) </span><br><span class="line">          pred = pred.next;</span><br><span class="line">      succ = pred.next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      succ = tail;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size - index; ++i) succ = succ.prev;</span><br><span class="line">      pred = succ.prev;</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">//先找到待插入元素的前驱与后继，然后在进行节点指向的变更</span></span><br><span class="line">    <span class="comment">// insertion itself</span></span><br><span class="line">    ++size;        <span class="comment">//注意长度的更新</span></span><br><span class="line">    ListNode toAdd = <span class="keyword">new</span> ListNode(val);</span><br><span class="line">    toAdd.prev = pred;</span><br><span class="line">    toAdd.next = succ;</span><br><span class="line">    pred.next = toAdd;</span><br><span class="line">    succ.prev = toAdd;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Delete the index-th node in the linked list, if the index is valid. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteAtIndex</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// if the index is invalid, do nothing</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt;= size) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// find predecessor and successor of the node to be deleted</span></span><br><span class="line">    ListNode pred, succ;</span><br><span class="line">    <span class="keyword">if</span> (index &lt; size - index) &#123;</span><br><span class="line">      pred = head;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; ++i) pred = pred.next;</span><br><span class="line">      succ = pred.next.next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      succ = tail;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size - index - <span class="number">1</span>; ++i) succ = succ.prev;</span><br><span class="line">      pred = succ.prev.prev;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// delete pred.next </span></span><br><span class="line">    --size;</span><br><span class="line">    pred.next = succ;</span><br><span class="line">    succ.prev = pred;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+<p>伪头和伪尾总是存在，MyLinkedList 中所有节点都包含：值 + 指向前一个节点的指针 + 指向后一个节点的指针。</p>
+<p>#####复杂度分析</p>
+<p>时间复杂度：<br>addAtHead，addAtTail： \mathcal{O}(1)O(1)<br>get，addAtIndex，delete：\mathcal{O}(\min(k, N - k))O(min(k,N−k))，其中 kk 指的是元素的索引。<br>空间复杂度：所有的操作都是 \mathcal{O}(1)O(1)。</p>
+<p> <strong>说明</strong>:不论是单链表还是双链表，在进行遍历时，如果想要通过index来get某一结点元素，for循环中的终止条件是<strong>i&lt;index+1</strong></p>
+<p>如果是删除或者添加，for循环中的终止条件是**i&lt;index</p>
+]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>链表</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>链表刷题总结（easy篇）</title>
+    <url>/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<h1 id="链表知识刷题总结（easy篇）"><a href="#链表知识刷题总结（easy篇）" class="headerlink" title="链表知识刷题总结（easy篇）"></a>链表知识刷题总结（easy篇）</h1><p>###1.返回链表的倒数第k个结点</p>
+<p>###题目描述：</p>
+<p>实现一种算法，找出单向链表中倒数第 k 个节点。返回该节点的值。</p>
+<p>注意：本题相对原题稍作改动</p>
+<p>示例：</p>
+<p>输入： 1-&gt;2-&gt;3-&gt;4-&gt;5 和 k = 2<br>输出： 4<br>说明：</p>
+<p>给定的 k 保证是有效的。</p>
+<h3 id="题解："><a href="#题解：" class="headerlink" title="题解："></a>题解：</h3><h4 id="题解一-双指针"><a href="#题解一-双指针" class="headerlink" title="题解一:双指针"></a>题解一:双指针</h4><p> 这题要求链表的倒数第k个节点，最简单的方式就是使用两个指针，第一个指针先移动k步，然后第二个指针再从头开始，这个时候这两个指针同时移动，当第一个指针到链表的末尾的时候，返回第二个指针即可</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">kthToLast</span><span class="params">(ListNode head, <span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">        ListNode first = head;</span><br><span class="line">    	ListNode second = head;</span><br><span class="line">    </span><br><span class="line">    	<span class="keyword">while</span>(k-- &gt;<span class="number">0</span>)&#123;</span><br><span class="line">            first = first.next;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="keyword">while</span>(first!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            first =  first.next;</span><br><span class="line">            second = second.next;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="keyword">return</span> second.val;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>####题解二：使用栈求解(一看到倒数某某元素，要先想到栈)</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">kthTolast</span><span class="params">(ListNode head , <span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">        Stack&lt;ListNode&gt; stack = <span class="keyword">new</span> stack&lt;&gt;();</span><br><span class="line">        <span class="comment">//链表结点压栈处理</span></span><br><span class="line">        <span class="keyword">while</span>(head!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            stack.push(head);</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//出栈串成新的链表</span></span><br><span class="line">        ListNode firstnode = stack.pop();</span><br><span class="line">        <span class="keyword">while</span>(--k&gt;<span class="number">0</span>)&#123;</span><br><span class="line">            ListNode temp = stack.pop();</span><br><span class="line">            temp.next = firstNode;     <span class="comment">//这一步是不必要的，除非要求返回最后一个到倒数第k个结点链表，需要从新连接构建</span></span><br><span class="line">            firstNode = temp;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> firstnode.val;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="2-删除中间结点"><a href="#2-删除中间结点" class="headerlink" title="2.删除中间结点"></a>2.删除中间结点</h3><h4 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h4><h4 id="题解：-1"><a href="#题解：-1" class="headerlink" title="题解："></a>题解：</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="3-合并两个有序列表"><a href="#3-合并两个有序列表" class="headerlink" title="3.合并两个有序列表"></a>3.合并两个有序列表</h3><h4 id="题目描述：-1"><a href="#题目描述：-1" class="headerlink" title="题目描述："></a>题目描述：</h4><p>将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。 </p>
+<p>示例 1：</p>
+<p><img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120112941925.png" alt="image-20210120112941925"></p>
+<p>输入：l1 = [1,2,4], l2 = [1,3,4]<br>输出：[1,1,2,3,4,4]<br>示例 2：</p>
+<p>输入：l1 = [], l2 = []<br>输出：[]<br>示例 3：</p>
+<p>输入：l1 = [], l2 = [0]<br>输出：[0]</p>
+<h4 id="题解：-2"><a href="#题解：-2" class="headerlink" title="题解："></a>题解：</h4><h5 id="题解一：递归"><a href="#题解一：递归" class="headerlink" title="题解一：递归"></a>题解一：递归</h5><p>思路</p>
+<p>我们可以如下递归地定义两个链表里的 merge 操作（忽略边界情况，比如空链表等）：<br>    <img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120113648210.png" alt="image-20210120113648210"></p>
+<p>也就是说，两个链表头部值较小的一个节点与剩下元素的 merge 操作结果合并。</p>
+<p>算法</p>
+<p>我们直接将以上递归过程建模，同时需要考虑边界情况。</p>
+<p>如果 l1 或者 l2 一开始就是空链表 ，那么没有任何操作需要合并，所以我们只需要返回非空链表。否则，我们要判断 l1 和 l2 哪一个链表的头节点的值更小，然后递归地决定下一个添加到结果里的节点。如果两个链表有一个为空，递归结束</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">mergeTwoLists</span><span class="params">(ListNode l1, ListNode l2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (l1 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> l2;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (l2 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> l1;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (l1.val &lt; l2.val) &#123;</span><br><span class="line">            l1.next = mergeTwoLists(l1.next, l2);</span><br><span class="line">            <span class="keyword">return</span> l1;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            l2.next = mergeTwoLists(l1, l2.next);</span><br><span class="line">            <span class="keyword">return</span> l2;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析："><a href="#复杂度分析：" class="headerlink" title="复杂度分析："></a>复杂度分析：</h5><h3 id="4-回文链表"><a href="#4-回文链表" class="headerlink" title="4.回文链表"></a>4.回文链表</h3><p>####题目描述</p>
+<h4 id="题解：-3"><a href="#题解：-3" class="headerlink" title="题解："></a>题解：</h4><p>#####题解一：将链表中的值复制到数组中在用双指针</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isPalindrome</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        List&lt;Interger&gt; vals = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//将链表中的值赋值到数组中</span></span><br><span class="line">        ListNode currentNode = head;</span><br><span class="line">        <span class="keyword">while</span>(currentNode != <span class="keyword">null</span>)&#123;</span><br><span class="line">            vals.add(currentNode.val);        <span class="comment">//复制的是currentNode的值，而不是其本身</span></span><br><span class="line">            currentNode = currentNode.next;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//使用双指针判断回文</span></span><br><span class="line">        <span class="keyword">int</span> front=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> back = vals.size()-<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(front&lt;back)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!vals.get(front).equals(vals.get(back)))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            front++;</span><br><span class="line">            back--;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析：-1"><a href="#复杂度分析：-1" class="headerlink" title="复杂度分析："></a>复杂度分析：</h5><p><img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120205633023.png" alt="image-20210120205633023"></p>
+<h5 id="题解二：递归"><a href="#题解二：递归" class="headerlink" title="题解二：递归"></a>题解二：递归</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>链表</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>阿里云ECS部署服务器</title>
+    <url>/2021/01/22/%E9%98%BF%E9%87%8C%E4%BA%91ECS%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
+    <content><![CDATA[<h2 id="阿里云ECS部署Tomcat、Nginx服务器"><a href="#阿里云ECS部署Tomcat、Nginx服务器" class="headerlink" title="阿里云ECS部署Tomcat、Nginx服务器"></a>阿里云ECS部署Tomcat、Nginx服务器</h2><h3 id="Nginx服务器"><a href="#Nginx服务器" class="headerlink" title="Nginx服务器"></a>Nginx服务器</h3><p>####一、简介</p>
+<p>Nginx是一款轻量级的网页服务器、反向代理服务器。相较于Apache、lighttpd具有占有内存少，稳定性高等优势。它最常的用途是提供反向代理服务。</p>
+<h4 id="二、安装"><a href="#二、安装" class="headerlink" title="二、安装"></a>二、安装</h4><h2 id="1、准备工作"><a href="#1、准备工作" class="headerlink" title="1、准备工作"></a>1、准备工作</h2><p>Nginx的安装依赖于以下三个包，意思就是在安装Nginx之前首先必须安装一下的三个包，注意安装顺序如下：</p>
+<p>　　1 SSL功能需要openssl库，直接通过yum安装: #yum install openssl</p>
+<p>　　2 gzip模块需要zlib库，直接通过yum安装: #yum install zlib</p>
+<p>　　3 rewrite模块需要pcre库，直接通过yum安装: #yum install pcre</p>
+<h2 id="2、安装Nginx依赖项和Nginx"><a href="#2、安装Nginx依赖项和Nginx" class="headerlink" title="2、安装Nginx依赖项和Nginx"></a>2、安装Nginx依赖项和Nginx</h2><p>1 、使用yum安装nginx需要包括Nginx的库，安装Nginx的库</p>
+<p>rpm -Uvh <a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm">http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm</a></p>
+<p>2 、使用下面命令安装nginx</p>
+<p> yum install nginx</p>
+<p>3、 启动Nginx</p>
+<p>service nginx start（Centos 6.0）,如果是Centos7.0以上，使用systemctl start nginx启动。</p>
+<p>4、直接浏览器访问localhost就会出现Nginx的欢迎界面表示你安装成功了，否则就是安装失败了</p>
+<p>　　默认80端口加入防火墙访问白名单中：firewall-cmd –permanent –zone=public –add-port=80/tcp</p>
+<p>　　使用firewall-cmd –reload命令使其生效</p>
+<p>5、配置Nginx</p>
+<p>CentOS安装Nginx后，安装在了 /etc/nginx/目录下，你可以打开/etc/nginx/conf.d/default/conf查看里面的配置，包括监听端口，域名和nginx访问的根目录</p>
+<p><strong>如果出现nginx启动之后，通过自己服务器的公网IP地址无法访问，是服务器端口没有开放访问权限的缘故，可以参考博客：<a href="https://blog.csdn.net/inite/article/details/73658214">https://blog.csdn.net/inite/article/details/73658214</a></strong></p>
+<p>####三、配置</p>
+<p>以上安装方法nginx的配置文件位于</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;usr&#x2F;local&#x2F;nginx&#x2F;conf&#x2F;nginx.conf</span><br></pre></td></tr></table></figure>
+<p>Nginx配置文件常见结构的从外到内依次是「http」「server」「location」等等，缺省的继承关系是从外到内，也就是说内层块会自动获取外层块的值作为缺省值。</p>
+<h5 id="Server"><a href="#Server" class="headerlink" title="Server"></a>Server</h5><p>接收请求的服务器需要将不同的请求按规则转发到不同的后端服务器上，在 nginx 中我们可以通过构建虚拟主机（server）的概念来将这些不同的服务配置隔离。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  localhost;</span><br><span class="line">root   html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>例如我们笔戈玩下的两个子项目 passport 和 wan 就可以通过在 nginx 的配置文件中配置两个 server，servername 分别为 passport.bigertech.com 和 wan.bigertech.com。这样的话不同的 url 请求就会对应到 nginx 相应的设置，转发到不同的后端服务器上。</p>
+<p>这里的 listen 指监听端口，server_name 用来指定IP或域名，多个域名对应统一规则可以空格分开，index 用于设定访问的默认首页地址，root 指令用于指定虚拟主机的网页跟目录，这个地方可以是相对地址也可以是绝对地址。</p>
+<p>通常情况下我们可以在 nginx.conf 中配置多个server，对不同的请求进行设置。就像这样：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  host1;</span><br><span class="line">root   html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  host2;</span><br><span class="line">root   &#x2F;data&#x2F;www&#x2F;html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是当 server 超过2个时，建议将不同对虚拟主机的配置放在另一个文件中，然后通过在主配置文件 nginx.conf 加上 include 指令包含进来。更便于管理。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">include vhosts&#x2F;*.conf;</span><br></pre></td></tr></table></figure>
+<p>就可以把vhosts的文件都包含进去啦。</p>
+<p>#####Localtion</p>
+<p>每个 url 请求都会对应的一个服务，nginx 进行处理转发或者是本地的一个文件路径，或者是其他服务器的一个服务路径。而这个路径的匹配是通过 location 来进行的。我们可以将 server 当做对应一个域名进行的配置，而 location 是在一个域名下对更精细的路径进行配置。</p>
+<p>以上面的例子，可以将root和index指令放到一个location中，那么只有在匹配到这个location时才会访问root后的内容：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> location &#x2F; &#123;</span><br><span class="line">      root   &#x2F;data&#x2F;www&#x2F;host2;</span><br><span class="line">      index  index.html index.htm;</span><br><span class="line">  &#125;</span><br><span class="line">location 匹配规则</span><br><span class="line"></span><br><span class="line">~      波浪线表示执行一个正则匹配，区分大小写</span><br><span class="line">~*    表示执行一个正则匹配，不区分大小写</span><br><span class="line">^~    ^~表示普通字符匹配，如果该选项匹配，只匹配该选项，不匹配别的选项，一般用来匹配目录</span><br><span class="line">&#x3D;      进行普通字符精确匹配</span><br><span class="line">匹配例子：</span><br><span class="line"></span><br><span class="line">  location  &#x3D; &#x2F; &#123;</span><br><span class="line"># 只匹配&quot;&#x2F;&quot;.</span><br><span class="line">[ configuration A ] </span><br><span class="line">  &#125;</span><br><span class="line">location  &#x2F; &#123;</span><br><span class="line"># 匹配任何请求，因为所有请求都是以&quot;&#x2F;&quot;开始</span><br><span class="line"># 但是更长字符匹配或者正则表达式匹配会优先匹配</span><br><span class="line">[ configuration B ] </span><br><span class="line">&#125;</span><br><span class="line">location ^~ &#x2F;images&#x2F; &#123;</span><br><span class="line"> #匹配任何以 &#x2F;images&#x2F; 开始的请求，并停止匹配 其它location</span><br><span class="line">[ configuration C ] </span><br><span class="line">&#125;</span><br><span class="line">location ~* \.(gif|jpg|jpeg)$ &#123;</span><br><span class="line"># 匹配以 gif, jpg, or jpeg结尾的请求. </span><br><span class="line"># 但是所有 &#x2F;images&#x2F; 目录的请求将由 [Configuration C]处理.   </span><br><span class="line">[ configuration D ] </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">请求:</span><br><span class="line">&#x2F; -&gt; 符合configuration A</span><br><span class="line">&#x2F;documents&#x2F;document.html -&gt; 符合configuration B</span><br><span class="line">&#x2F;images&#x2F;1.gif -&gt; 符合configuration C</span><br><span class="line">&#x2F;documents&#x2F;1.jpg -&gt;符合 configuration D</span><br></pre></td></tr></table></figure>
+<p>#####静态文件映射</p>
+<p>访问文件的配置主要有 root 和 aliasp’s 两个指令。这两个指令的区别容易弄混：</p>
+<p>alias<br>alias后跟的指定目录是准确的，并且末尾必须加 /。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F;c&#x2F; &#123;</span><br><span class="line">    alias &#x2F;a&#x2F;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果访问站点<a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://location/c">http://location/c</a>访问的就是/a/目录下的站点信息。</p>
+<p>#####root</p>
+<p>root后跟的指定目录是上级目录，并且该上级目录下要含有和location后指定名称的同名目录才行。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F;c&#x2F; &#123;</span><br><span class="line">    root &#x2F;a&#x2F;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这时访问站点<a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://location/c">http://location/c</a>访问的就是/a/c目录下的站点信息。</p>
+<p>如果你需要将这个目录展开，在这个location的末尾加上「autoindex on; 」就可以了</p>
+<p>#####转发</p>
+<p>配置起来很简单比如我要将所有的请求到转移到真正提供服务的一台机器的 8001 端口，只要这样：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">proxy_pass 172.16.1.1:8001;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样访问host时，就都被转发到 172.16.1.1的8001端口去了。</p>
+<p>#####负载均衡</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">upstream myserver; &#123;</span><br><span class="line">ip_hash;    </span><br><span class="line">server 172.16.1.1:8001;</span><br><span class="line">server 172.16.1.2:8002;</span><br><span class="line">server 172.16.1.3;</span><br><span class="line">server 172.16.1.4;</span><br><span class="line">&#125;</span><br><span class="line">location &#x2F; &#123;</span><br><span class="line">proxy_pass http:&#x2F;&#x2F;myserver;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们在 upstream 中指定了一组机器，并将这个组命名为 myserver，这样在 proxypass 中只要将请求转移到 myserver 这个 upstream 中我们就实现了在四台机器的反向代理加负载均衡。其中的 ip_hash 指明了我们均衡的方式是按照用户的 ip 地址进行分配。另外还有轮询、指定权重轮询、fair、url_hash几种调度算法。</p>
+<p>###Tomcat服务器</p>
+<h4 id="一、下载Tomcat"><a href="#一、下载Tomcat" class="headerlink" title="一、下载Tomcat"></a>一、下载Tomcat</h4>]]></content>
+      <categories>
+        <category>阿里云ECS</category>
+      </categories>
+      <tags>
+        <tag>阿里云ECS部署</tag>
       </tags>
   </entry>
   <entry>
