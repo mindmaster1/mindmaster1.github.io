@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>AOP</title>
-    <url>/2021/03/14/AOP/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Ajax异步传输</title>
     <url>/2021/02/25/Ajax%E5%BC%82%E6%AD%A5%E4%BC%A0%E8%BE%93/</url>
     <content><![CDATA[]]></content>
@@ -22,11 +17,6 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>Docker虚拟容器入门</title>
-    <url>/2021/03/14/Docker%E8%99%9A%E6%8B%9F%E5%AE%B9%E5%99%A8%E5%85%A5%E9%97%A8/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Cookie</title>
     <url>/2021/02/25/Cookie/</url>
     <content><![CDATA[]]></content>
@@ -36,6 +26,11 @@
       <tags>
         <tag>Cookie</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Docker虚拟容器入门</title>
+    <url>/2021/03/14/Docker%E8%99%9A%E6%8B%9F%E5%AE%B9%E5%99%A8%E5%85%A5%E9%97%A8/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Druid数据库连接池</title>
@@ -90,51 +85,9 @@
       </tags>
   </entry>
   <entry>
-    <title>InnoDB存储引擎</title>
-    <url>/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
-    <content><![CDATA[<h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
-<p>InnoDB存储引擎有多个内存块，这些内存块组成了一个大的内存池</p>
-<p>后台线程的主要作用就是负责刷新内存池中的数据，保证缓存池中的内存缓存的是最近的数据。此外，还将已经修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下，InnoDB可以恢复运行到最佳状态。</p>
-<h4 id="后台线程（InnDB是一个多线程模型"><a href="#后台线程（InnDB是一个多线程模型" class="headerlink" title="后台线程（InnDB是一个多线程模型)"></a>后台线程（InnDB是一个多线程模型)</h4><p>#####Master Thread</p>
-<p><strong>作用：</strong></p>
-<p>​    一个非常核心的后台进程，负责将缓存池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓存、UNDO页的回收等。</p>
-<h5 id="IO-Therad"><a href="#IO-Therad" class="headerlink" title="IO Therad"></a>IO Therad</h5><p>  在InnoDB存储引擎中大量使用了AIO（Async IO）—异步时间非阻塞IO，这样可以极大程度上提高数据库的性能。IO Thread的主要工作就是负责这些IO请求的回调</p>
-<p>共有四个IO Thread:write 、read、insert buffer、log IO thread</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114130216.png" alt="image-20210114114130216"></p>
-<p>通过命令SHOW ENGINE INNODB STASTUS\G来观察IO Thread</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114405936.png" alt="image-20210114114405936"></p>
-<p>有四个write和read IO Thread</p>
-<p>通过innodb_read_io_threads和innodb_write_io_threads参数来进行设置</p>
-<h5 id="Purge-Thread"><a href="#Purge-Thread" class="headerlink" title="Purge Thread"></a>Purge Thread</h5><p><strong>作用</strong>：</p>
-<p>​    Purge Thread回收已经使用并且已经分配的undo页（事务提交之后，其所使用的Undolog可能就不再需要）</p>
-<p>用户需要在<strong>MySQL数据库的配置文件</strong>中添加如下命令来启用独立的Purge Thread: </p>
-<p>​        innodb_purge_threads=1</p>
-<h5 id="Page-Cleaner-Thread"><a href="#Page-Cleaner-Thread" class="headerlink" title="Page Cleaner Thread"></a>Page Cleaner Thread</h5><p><strong>作用</strong>：</p>
-<p>​    将脏页的刷新操作放在单独的线程中完成。减轻Master Thread的工作以及对于用户查询线程的阻塞</p>
-<h4 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h4><h5 id="缓存池"><a href="#缓存池" class="headerlink" title="缓存池"></a>缓存池</h5><p>Innodb存储引擎是基于磁盘存储的（Disk-base Database），将其中的记录按照页来管理。</p>
-<p>缓存池的出现，就是为了解决CPU速度和磁盘速度之间的差异，通过内存的速度来弥补磁盘速度较慢对数据库性能的影响。读取文件时，首先判断给文件是否在缓存池中（没有就去磁盘上找）。</p>
-<p>在修改缓存池中的页时，先以一定频率刷新到缓存池上，然后通过Checkpoint刷新回磁盘。</p>
-<p>数据库服务器最好采用64位操作系统，可以使用更多的内存（512GB），32位（只有64GB）。</p>
-<p>缓存池的配置通过参数innodb_buffer_pool_size来设置。</p>
-<h6 id="缓存池中缓存的数据页类型："><a href="#缓存池中缓存的数据页类型：" class="headerlink" title="缓存池中缓存的数据页类型："></a>缓存池中缓存的数据页类型：</h6><p>​    索引页、数据页、Undo页、插入缓存页、自适应哈希索引页（adaptive hash index）、InnoDB存储的锁信息、数据字典信息等。</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114131120313.png" alt="image-20210114131120313"></p>
-<p><strong>允许有多个缓存池实例</strong>：每个页根据hashcode平均分配到不同的缓存池实例中，减少数据库内部资源的竞争，增加数据库的并发能力。可以通过inodb_buffer_pool_instances来进行配置，通过命令SHOW ENGINE INNODB STATUS可以观察到每个缓存池实例对象运行的状态，还可以通过查看表InnoDB_BUFFER_POOL_STATS来观察缓存的状态(要求在information_schema架构下)</p>
-<h5 id="LRU-LIST-、FREE-LIST-、FLUSH-LIST"><a href="#LRU-LIST-、FREE-LIST-、FLUSH-LIST" class="headerlink" title="LRU LIST 、FREE LIST 、FLUSH LIST"></a>LRU LIST 、FREE LIST 、FLUSH LIST</h5><p><strong>LRU</strong>算法用来管理已经读取的页</p>
-<p>数据库中的缓存池是通过LRU（Latest Recent Used,最近最少使用）算法来管理内部的各种类型的页。</p>
-<p><strong>LRU解释</strong>：将最频繁使用的页放在LRU列表的前端，最少使用的页放在LRU列表的尾端。当缓存池不能存放新读取到的页时，将优先删除列表尾端的页（默认大小为16KB）。</p>
-<p><strong>改进</strong>：</p>
-<p>1、（midpoint insertion strategy）：InnoDB中在LRU中加入了midpoint位置，将新读取到的页放在midpoint，而不是直接放在LRU列表首部。<strong>默认位置在LRU列表长度63%处</strong>（可以通过innodb_old_blocks_pct来控制）</p>
-<p>2、设置了参数innodb_old_blocks_time,用于表示页读取到mid位置后需要等待多久才会加入到LRU列表的热端</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133522544.png" alt="image-20210114133522544"></p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133412580.png" alt="image-20210114133412580"></p>
-<p><strong>为什么要对朴素的LRU算法进行改良</strong>？</p>
-<h5 id="重做日志缓存"><a href="#重做日志缓存" class="headerlink" title="重做日志缓存"></a>重做日志缓存</h5><h5 id="额外的内存池"><a href="#额外的内存池" class="headerlink" title="额外的内存池"></a>额外的内存池</h5>]]></content>
-      <categories>
-        <category>MySQL数据库</category>
-      </categories>
-      <tags>
-        <tag>InnoDB存储引擎</tag>
-      </tags>
+    <title>AOP</title>
+    <url>/2021/03/14/AOP/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>IOC创建对象</title>
@@ -240,6 +193,53 @@
       </tags>
   </entry>
   <entry>
+    <title>InnoDB存储引擎</title>
+    <url>/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
+    <content><![CDATA[<h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
+<p>InnoDB存储引擎有多个内存块，这些内存块组成了一个大的内存池</p>
+<p>后台线程的主要作用就是负责刷新内存池中的数据，保证缓存池中的内存缓存的是最近的数据。此外，还将已经修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下，InnoDB可以恢复运行到最佳状态。</p>
+<h4 id="后台线程（InnDB是一个多线程模型"><a href="#后台线程（InnDB是一个多线程模型" class="headerlink" title="后台线程（InnDB是一个多线程模型)"></a>后台线程（InnDB是一个多线程模型)</h4><p>#####Master Thread</p>
+<p><strong>作用：</strong></p>
+<p>​    一个非常核心的后台进程，负责将缓存池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓存、UNDO页的回收等。</p>
+<h5 id="IO-Therad"><a href="#IO-Therad" class="headerlink" title="IO Therad"></a>IO Therad</h5><p>  在InnoDB存储引擎中大量使用了AIO（Async IO）—异步时间非阻塞IO，这样可以极大程度上提高数据库的性能。IO Thread的主要工作就是负责这些IO请求的回调</p>
+<p>共有四个IO Thread:write 、read、insert buffer、log IO thread</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114130216.png" alt="image-20210114114130216"></p>
+<p>通过命令SHOW ENGINE INNODB STASTUS\G来观察IO Thread</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114405936.png" alt="image-20210114114405936"></p>
+<p>有四个write和read IO Thread</p>
+<p>通过innodb_read_io_threads和innodb_write_io_threads参数来进行设置</p>
+<h5 id="Purge-Thread"><a href="#Purge-Thread" class="headerlink" title="Purge Thread"></a>Purge Thread</h5><p><strong>作用</strong>：</p>
+<p>​    Purge Thread回收已经使用并且已经分配的undo页（事务提交之后，其所使用的Undolog可能就不再需要）</p>
+<p>用户需要在<strong>MySQL数据库的配置文件</strong>中添加如下命令来启用独立的Purge Thread: </p>
+<p>​        innodb_purge_threads=1</p>
+<h5 id="Page-Cleaner-Thread"><a href="#Page-Cleaner-Thread" class="headerlink" title="Page Cleaner Thread"></a>Page Cleaner Thread</h5><p><strong>作用</strong>：</p>
+<p>​    将脏页的刷新操作放在单独的线程中完成。减轻Master Thread的工作以及对于用户查询线程的阻塞</p>
+<h4 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h4><h5 id="缓存池"><a href="#缓存池" class="headerlink" title="缓存池"></a>缓存池</h5><p>Innodb存储引擎是基于磁盘存储的（Disk-base Database），将其中的记录按照页来管理。</p>
+<p>缓存池的出现，就是为了解决CPU速度和磁盘速度之间的差异，通过内存的速度来弥补磁盘速度较慢对数据库性能的影响。读取文件时，首先判断给文件是否在缓存池中（没有就去磁盘上找）。</p>
+<p>在修改缓存池中的页时，先以一定频率刷新到缓存池上，然后通过Checkpoint刷新回磁盘。</p>
+<p>数据库服务器最好采用64位操作系统，可以使用更多的内存（512GB），32位（只有64GB）。</p>
+<p>缓存池的配置通过参数innodb_buffer_pool_size来设置。</p>
+<h6 id="缓存池中缓存的数据页类型："><a href="#缓存池中缓存的数据页类型：" class="headerlink" title="缓存池中缓存的数据页类型："></a>缓存池中缓存的数据页类型：</h6><p>​    索引页、数据页、Undo页、插入缓存页、自适应哈希索引页（adaptive hash index）、InnoDB存储的锁信息、数据字典信息等。</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114131120313.png" alt="image-20210114131120313"></p>
+<p><strong>允许有多个缓存池实例</strong>：每个页根据hashcode平均分配到不同的缓存池实例中，减少数据库内部资源的竞争，增加数据库的并发能力。可以通过inodb_buffer_pool_instances来进行配置，通过命令SHOW ENGINE INNODB STATUS可以观察到每个缓存池实例对象运行的状态，还可以通过查看表InnoDB_BUFFER_POOL_STATS来观察缓存的状态(要求在information_schema架构下)</p>
+<h5 id="LRU-LIST-、FREE-LIST-、FLUSH-LIST"><a href="#LRU-LIST-、FREE-LIST-、FLUSH-LIST" class="headerlink" title="LRU LIST 、FREE LIST 、FLUSH LIST"></a>LRU LIST 、FREE LIST 、FLUSH LIST</h5><p><strong>LRU</strong>算法用来管理已经读取的页</p>
+<p>数据库中的缓存池是通过LRU（Latest Recent Used,最近最少使用）算法来管理内部的各种类型的页。</p>
+<p><strong>LRU解释</strong>：将最频繁使用的页放在LRU列表的前端，最少使用的页放在LRU列表的尾端。当缓存池不能存放新读取到的页时，将优先删除列表尾端的页（默认大小为16KB）。</p>
+<p><strong>改进</strong>：</p>
+<p>1、（midpoint insertion strategy）：InnoDB中在LRU中加入了midpoint位置，将新读取到的页放在midpoint，而不是直接放在LRU列表首部。<strong>默认位置在LRU列表长度63%处</strong>（可以通过innodb_old_blocks_pct来控制）</p>
+<p>2、设置了参数innodb_old_blocks_time,用于表示页读取到mid位置后需要等待多久才会加入到LRU列表的热端</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133522544.png" alt="image-20210114133522544"></p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133412580.png" alt="image-20210114133412580"></p>
+<p><strong>为什么要对朴素的LRU算法进行改良</strong>？</p>
+<h5 id="重做日志缓存"><a href="#重做日志缓存" class="headerlink" title="重做日志缓存"></a>重做日志缓存</h5><h5 id="额外的内存池"><a href="#额外的内存池" class="headerlink" title="额外的内存池"></a>额外的内存池</h5>]]></content>
+      <categories>
+        <category>MySQL数据库</category>
+      </categories>
+      <tags>
+        <tag>InnoDB存储引擎</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>InnoDB文件</title>
     <url>/2021/03/14/InnoDB%E6%96%87%E4%BB%B6/</url>
     <content><![CDATA[]]></content>
@@ -252,11 +252,6 @@
   <entry>
     <title>JVM虚拟机栈</title>
     <url>/2021/03/14/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>Java高并发JUC</title>
-    <url>/2021/02/25/Java%E9%AB%98%E5%B9%B6%E5%8F%91JUC/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -329,6 +324,11 @@
       </tags>
   </entry>
   <entry>
+    <title>Java高并发JUC</title>
+    <url>/2021/02/25/Java%E9%AB%98%E5%B9%B6%E5%8F%91JUC/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Jenkins自动化部署工具</title>
     <url>/2021/03/14/Jenkins%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E5%B7%A5%E5%85%B7/</url>
     <content><![CDATA[]]></content>
@@ -339,91 +339,6 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>Leetcode树刷题总结</title>
-    <url>/2021/03/23/Leetcode%E6%A0%91%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/</url>
-    <content><![CDATA[<h2 id="最小高度树"><a href="#最小高度树" class="headerlink" title="最小高度树"></a>最小高度树</h2><h3 id="题目说明："><a href="#题目说明：" class="headerlink" title="题目说明："></a>题目说明：</h3><p>给定一个有序整数数组，元素各不相同且按升序排列，编写一个算法，创建一棵高度最小的二叉搜索树。</p>
-<p>示例:<br>给定有序数组: [-10,-3,0,5,9],</p>
-<p>一个可能的答案是：[0,-3,9,-10,null,5]，它可以表示下面这个高度平衡二叉搜索树：</p>
-<pre><code>      0 
-     / \ 
-   -3   9 
-   /   / 
- -10  5 </code></pre>
-<h3 id="解法一：递归"><a href="#解法一：递归" class="headerlink" title="解法一：递归"></a>解法一：递归</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * public class TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode left;</span></span><br><span class="line"><span class="comment"> *     TreeNode right;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x) &#123; val = x; &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line">在这道题中，left和right并不代表左右结点的值，而是相应节点在数组nums中的位置，这个在编写递归开始前的判断是很重要的。</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> TreeNode <span class="title">sortedArrayToBST</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">         <span class="comment">//最小高度树的实现，在于找到中间节点来作为整棵树的根节点，这样构建的二叉树高度差是最小的。</span></span><br><span class="line">         <span class="keyword">if</span>(nums.length==<span class="number">0</span>)&#123;</span><br><span class="line">             <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">         &#125;   </span><br><span class="line">         <span class="keyword">return</span> CreateMinitree(nums,<span class="number">0</span>,nums.length-<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> TreeNode <span class="title">CreateMinitree</span><span class="params">(<span class="keyword">int</span> nums[],<span class="keyword">int</span> left,<span class="keyword">int</span> right)</span></span>&#123;</span><br><span class="line">        <span class="comment">//需要在递归的开始处增加必要的判断，防止数组越界和外节点</span></span><br><span class="line">        <span class="keyword">if</span>(left&gt;=right||right&gt;nums.length||left&lt;<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//插入中间值作为父节点，随后插入左右子树</span></span><br><span class="line">        <span class="keyword">int</span> mid = (left+right)/<span class="number">2</span>;</span><br><span class="line">       TreeNode n = <span class="keyword">new</span> TreeNode(nums[mid]);</span><br><span class="line">        n.left = CreateMinitree(nums,left,mid-<span class="number">1</span>);</span><br><span class="line">        n.right = CreateMinitree(nums,mid+<span class="number">1</span>,right);</span><br><span class="line">        <span class="keyword">return</span> n;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="二叉树的深度"><a href="#二叉树的深度" class="headerlink" title="二叉树的深度"></a>二叉树的深度</h2><h3 id="题目说明：-1"><a href="#题目说明：-1" class="headerlink" title="题目说明："></a>题目说明：</h3><p>输入一棵二叉树的根节点，求该树的深度。从根节点到叶节点依次经过的节点（含根、叶节点）形成树的一条路径，最长路径的长度为树的深度。</p>
-<p>例如：</p>
-<p>给定二叉树 [3,9,20,null,null,15,7]， </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">  3</span><br><span class="line"> &#x2F; \</span><br><span class="line">9  20</span><br><span class="line">  &#x2F;  \</span><br><span class="line"> 15   7</span><br></pre></td></tr></table></figure>
-<h3 id="解法一：递归-1"><a href="#解法一：递归-1" class="headerlink" title="解法一：递归"></a>解法一：递归</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * public class TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode left;</span></span><br><span class="line"><span class="comment"> *     TreeNode right;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x) &#123; val = x; &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxDepth</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root==<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">int</span> maxLeftHeight = maxDepth(root.left);</span><br><span class="line">            <span class="keyword">int</span> maxRightHeight = maxDepth(root.right);</span><br><span class="line">            <span class="keyword">return</span> Math.max(maxLeftHeight,maxRightHeight)+<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="剑指offer27-二叉树的镜像"><a href="#剑指offer27-二叉树的镜像" class="headerlink" title="剑指offer27.二叉树的镜像"></a>剑指offer27.二叉树的镜像</h2><h3 id="题目说明：-2"><a href="#题目说明：-2" class="headerlink" title="题目说明："></a>题目说明：</h3><p>请完成一个函数，输入一个二叉树，该函数输出它的镜像。</p>
-<p>例如输入：</p>
- <img data-src="/2021/03/23/Leetcode%E6%A0%91%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/01.png" class>
-
-<img data-src="/2021/03/23/Leetcode%E6%A0%91%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/02.png" class>
-
-
-
-<h3 id="解法一：DFS递归"><a href="#解法一：DFS递归" class="headerlink" title="解法一：DFS递归"></a>解法一：DFS递归</h3><ul>
-<li>根据二叉树镜像的定义，考虑递归遍历（dfs）二叉树，交换每个节点的左 / 右子节点，即可生成二叉树的镜像。</li>
-</ul>
-<h4 id="递归解析："><a href="#递归解析：" class="headerlink" title="递归解析："></a>递归解析：</h4><ul>
-<li>**终止条件 **:当节点 root 为空时（即越过叶节点），则返回 null ；</li>
-<li><strong>递推工作</strong>：<ul>
-<li>初始化节点 tmp ，用于暂存 root 的左子节点；</li>
-<li>开启递归右子节点mirrorTree(root,right)，并将返回值作为root的左子节点。</li>
-<li>开启递归右子节点mirrorTree(root,left)，并将返回值作为root的右子节点。</li>
-</ul>
-</li>
-<li><strong>返回值</strong>: 返回新构建的树的root结点。</li>
-</ul>
-<blockquote>
-<p>Q：为何需要暂存root的左子节点？</p>
-<p>A：在递归完成root的右子节点后，此时root.left的值已经发生改变，此时再进行递归左子树就会出现问题。</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * public class TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode left;</span></span><br><span class="line"><span class="comment"> *     TreeNode right;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x) &#123; val = x; &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> TreeNode <span class="title">mirrorTree</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root==<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//在暂时存储左子树的时候，一定要注意传入的是root.left，即左子树的第一个节点。不要再new TreeNode了；</span></span><br><span class="line">        TreeNode temp = root.left;</span><br><span class="line">        root.left = mirrorTree(root.right);</span><br><span class="line">        root.right  = mirrorTree(temp);</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="解法二：辅助栈"><a href="#解法二：辅助栈" class="headerlink" title="解法二：辅助栈"></a>解法二：辅助栈</h3><blockquote>
-<ul>
-<li>利用栈（或队列）遍历树的所有节点 node<em>n<strong>o</strong>d**e</em> ，并交换每个 node的左 / 右子节点。</li>
-</ul>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<h2 id="合并两棵二叉树"><a href="#合并两棵二叉树" class="headerlink" title="合并两棵二叉树"></a>合并两棵二叉树</h2><h3 id="题目概述："><a href="#题目概述：" class="headerlink" title="题目概述："></a>题目概述：</h3><p>给定两个二叉树，想象当你将它们中的一个覆盖到另一个上时，两个二叉树的一些节点便会重叠。</p>
-<p>你需要将他们合并为一个新的二叉树。合并的规则是如果两个节点重叠，那么将他们的值相加作为节点合并后的新值，否则不为 NULL 的节点将直接作为新二叉树的节点。</p>
- <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入: </span><br><span class="line">	Tree 1                     Tree 2                  </span><br><span class="line">          1                         2                             </span><br><span class="line">         &#x2F; \                       &#x2F; \                            </span><br><span class="line">        3   2                     1   3                        </span><br><span class="line">       &#x2F;                           \   \                      </span><br><span class="line">      5                             4   7                  </span><br><span class="line">输出: </span><br><span class="line">合并后的树:</span><br><span class="line">	     3</span><br><span class="line">	    &#x2F; \</span><br><span class="line">	   4   5</span><br><span class="line">	  &#x2F; \   \ </span><br><span class="line">	 5   4   7</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="解法一：DFS深度优先搜索"><a href="#解法一：DFS深度优先搜索" class="headerlink" title="解法一：DFS深度优先搜索"></a>解法一：DFS深度优先搜索</h3><p>可以使用深度优先搜索合并两个二叉树。从根节点开始同时遍历两个二叉树，并将对应的节点进行合并。</p>
-<p>两个二叉树的对应节点可能存在以下三种情况，对于每种情况使用不同的合并方式。</p>
-<p>如果两个二叉树的对应节点都为空，则合并后的二叉树的对应节点也为空；</p>
-<p>如果两个二叉树的对应节点只有一个为空，则合并后的二叉树的对应节点为其中的非空节点；</p>
-<p>如果两个二叉树的对应节点都不为空，则合并后的二叉树的对应节点的值为两个二叉树的对应节点的值之和，此时需要显性合并两个节点。</p>
-<p>对一个节点进行合并之后，还要对该节点的左右子树分别进行合并。这是一个递归的过程。</p>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * public class TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode left;</span></span><br><span class="line"><span class="comment"> *     TreeNode right;</span></span><br><span class="line"><span class="comment"> *     TreeNode() &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val) &#123; this.val = val; &#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val, TreeNode left, TreeNode right) &#123;</span></span><br><span class="line"><span class="comment"> *         this.val = val;</span></span><br><span class="line"><span class="comment"> *         this.left = left;</span></span><br><span class="line"><span class="comment"> *         this.right = right;</span></span><br><span class="line"><span class="comment"> *     &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> TreeNode <span class="title">mergeTrees</span><span class="params">(TreeNode root1, TreeNode root2)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//对两棵树先进行判空</span></span><br><span class="line">        <span class="keyword">if</span>(root1==<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> root2;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(root2==<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> root1;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//将合并二叉树的根节点构造出来,并且开始递归，每合并完一个节点，还要递归的合并其左右子树。</span></span><br><span class="line">        TreeNode merged = <span class="keyword">new</span> TreeNode(root1.val+root2.val);</span><br><span class="line">        merged.left = mergeTrees(root1.left,root2.left);</span><br><span class="line">        merged.right = mergeTrees(root2.right ,root1.right );</span><br><span class="line">        <span class="keyword">return</span> merged;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="复杂度分析："><a href="#复杂度分析：" class="headerlink" title="复杂度分析："></a>复杂度分析：</h4><img data-src="/2021/03/23/Leetcode%E6%A0%91%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/03.png" class>
-
-
-
-<h3 id="解法二：广度优先搜索BFS"><a href="#解法二：广度优先搜索BFS" class="headerlink" title="解法二：广度优先搜索BFS"></a>解法二：广度优先搜索BFS</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">也可以使用广度优先搜索合并两个二叉树。首先判断两个二叉树是否为空，如果两个二叉树都为空，则合并后的二叉树也为空，如果只有一个二叉树为空，则合并后的二叉树为另一个非空的二叉树。</span><br><span class="line"></span><br><span class="line">如果两个二叉树都不为空，则首先计算合并后的根节点的值，然后从合并后的二叉树与两个原始二叉树的根节点开始广度优先搜索，从根节点开始同时遍历每个二叉树，并将对应的节点进行合并。</span><br><span class="line"></span><br><span class="line">使用三个队列分别存储合并后的二叉树的节点以及两个原始二叉树的节点。初始时将每个二叉树的根节点分别加入相应的队列。每次从每个队列中取出一个节点，判断两个原始二叉树的节点的左右子节点是否为空。如果两个原始二叉树的当前节点中至少有一个节点的左子节点不为空，则合并后的二叉树的对应节点的左子节点也不为空。对于右子节点同理。</span><br><span class="line"></span><br><span class="line">如果合并后的二叉树的左子节点不为空，则需要根据两个原始二叉树的左子节点计算合并后的二叉树的左子节点以及整个左子树。考虑以下两种情况：</span><br><span class="line"></span><br><span class="line">如果两个原始二叉树的左子节点都不为空，则合并后的二叉树的左子节点的值为两个原始二叉树的左子节点的值之和，在创建合并后的二叉树的左子节点之后，将每个二叉树中的左子节点都加入相应的队列；</span><br><span class="line"></span><br><span class="line">如果两个原始二叉树的左子节点有一个为空，即有一个原始二叉树的左子树为空，则合并后的二叉树的左子树即为另一个原始二叉树的左子树，此时也不需要对非空左子树继续遍历，因此不需要将左子节点加入队列。</span><br><span class="line"></span><br><span class="line">对于右子节点和右子树，处理方法与左子节点和左子树相同。</span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
-
-
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * public class TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode left;</span></span><br><span class="line"><span class="comment"> *     TreeNode right;</span></span><br><span class="line"><span class="comment"> *     TreeNode() &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val) &#123; this.val = val; &#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val, TreeNode left, TreeNode right) &#123;</span></span><br><span class="line"><span class="comment"> *         this.val = val;</span></span><br><span class="line"><span class="comment"> *         this.left = left;</span></span><br><span class="line"><span class="comment"> *         this.right = right;</span></span><br><span class="line"><span class="comment"> *     &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> TreeNode <span class="title">mergeTrees</span><span class="params">(TreeNode root1, TreeNode root2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root1==<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> root2;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(root2==<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> root1;</span><br><span class="line">        &#125;</span><br><span class="line">        TreeNode merged = <span class="keyword">new</span> TreeNode(root1.val+root2.val);</span><br><span class="line">        Queue&lt;TreeNode&gt; queue1 = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">        Queue&lt;TreeNode&gt; queue2 = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">        Queue&lt;TreeNode&gt; queue = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//向队列中添加元素</span></span><br><span class="line">        queue.offer(merged);</span><br><span class="line">        queue1.offer(root1);</span><br><span class="line">        queue2.offer(root2);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span>(!queue1.isEmpty()&amp;&amp;!queue2.isEmpty())&#123;</span><br><span class="line">            TreeNode node1 = queue1.poll();</span><br><span class="line">            TreeNode node = queue.poll();</span><br><span class="line">            TreeNode node2 = queue2.poll();</span><br><span class="line"></span><br><span class="line">            TreeNode left1 = node1.left,left2 = node2.left,right1 = node1.right,right2 = node2.right;</span><br><span class="line">            <span class="keyword">if</span>(left1!=<span class="keyword">null</span> || left2!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span>(left1!=<span class="keyword">null</span>&amp;&amp;left2!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                    TreeNode left = <span class="keyword">new</span> TreeNode(left1.val+left2.val);</span><br><span class="line">                    node.left = left;</span><br><span class="line">                    queue.offer(left);</span><br><span class="line">                    queue1.offer(left1);</span><br><span class="line">                    queue2.offer(left2);</span><br><span class="line"></span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(left1!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                    node.left = left1;</span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(left2!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                    node.left = left2;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">         </span><br><span class="line">            <span class="keyword">if</span>(right1!=<span class="keyword">null</span> || right2!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span>(right1!=<span class="keyword">null</span>&amp;&amp;right2!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                    TreeNode right = <span class="keyword">new</span> TreeNode(right1.val+right2.val);</span><br><span class="line">                    node.right = right;</span><br><span class="line">                    queue.offer(right);</span><br><span class="line">                    queue1.offer(right1);</span><br><span class="line">                    queue2.offer(right2);</span><br><span class="line"></span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(right1!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                    node.right = right1;</span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(right2!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                    node.right = right2;</span><br><span class="line">                &#125;   </span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> merged;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="复杂度分析：-1"><a href="#复杂度分析：-1" class="headerlink" title="复杂度分析："></a>复杂度分析：</h4><img data-src="/2021/03/23/Leetcode%E6%A0%91%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/04.png" class>]]></content>
-      <categories>
-        <category>数据结构</category>
-      </categories>
-      <tags>
-        <tag>数据结构</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Linux进程管理</title>
     <url>/2021/03/14/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/</url>
     <content><![CDATA[]]></content>
@@ -432,6 +347,17 @@
     <title>Linux进程调度</title>
     <url>/2021/03/14/Linux%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/</url>
     <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Listener</title>
+    <url>/2021/02/25/Listener/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Java web</category>
+      </categories>
+      <tags>
+        <tag>Listener</tag>
+      </tags>
   </entry>
   <entry>
     <title>MVC框架</title>
@@ -527,17 +453,6 @@
       </categories>
       <tags>
         <tag>架构模式</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Listener</title>
-    <url>/2021/02/25/Listener/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>Java web</category>
-      </categories>
-      <tags>
-        <tag>Listener</tag>
       </tags>
   </entry>
   <entry>
@@ -768,6 +683,181 @@
       </tags>
   </entry>
   <entry>
+    <title>Maven学习笔记&lt;一&gt;</title>
+    <url>/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</url>
+    <content><![CDATA[<h2 id="Maven的简介"><a href="#Maven的简介" class="headerlink" title="Maven的简介"></a>Maven的简介</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p> Maven【[ˈmevən]】这个词可以翻译为”专家”,”内⾏”。 作为Apache组织中的⼀个颇为成功的开源项⽬， Maven主要服务于基于java平台的项⽬构建，依赖管理和项⽬信息管理。 ⽆论是⼩型的开源类库项⽬，还是⼤型的企业级应⽤； ⽆论是传统的瀑布式开发，还是流⾏的敏捷开 发，Maven都能⼤显身⼿。</p>
+<p>###项目构建</p>
+<p>不管你是否意识到，构建（build）是每⼀位程序员每天都在做的⼯作。早上来到公司，我们做的第⼀ 件事就是从源码库签出最新的代码，然后进⾏单元测试，如果测试失败，会找相关的同事⼀起调试修复错误代码。 接着回到⾃⼰的⼯作上来，编写⾃⼰的单元测试及产品代码。</p>
+<p>我们会发现，除了编写源代码，我们每天有相当⼀部分时间花在了编译，运⾏单元测 试，⽣成⽂档，打包和部署等繁琐且不起眼的⼯作上，这就是构建。 如果我们现在还⼿⼯这样做，那成 本也太⾼了，于是有⼈⽤软件的⽅法让这⼀系列⼯作完全⾃动化，使得软件的构建可以像全⾃动流⽔线 ⼀样，只需要⼀条简单的命令，w所有繁琐的步骤都能够⾃动完成，很快就能得到最终结果。</p>
+<p>###项目构建工具</p>
+<blockquote>
+<p>Ant构建</p>
+</blockquote>
+<p>最早的构建⼯具，基于IDE, ⼤概是2000年有的，当时是最流⾏java构建⼯具，不过它的XML脚本编写格式让XML⽂件特别⼤。对⼯程构建过程中的过程控制特别好。</p>
+<blockquote>
+<p>Maven【Java】</p>
+</blockquote>
+<p>项⽬对象模型，通过其描述信息来管理项⽬的构建，报告和⽂档的软件项⽬管理⼯具。它填补了Ant缺 点，Maven第⼀次⽀持了从⽹络上下载的功能，仍然采⽤xml作为配置⽂件格式。Maven专注的是依赖管理，使⽤Java编写。</p>
+<blockquote>
+<p>Gradle</p>
+</blockquote>
+<p>属于结合以上两个的优点，它继承了Ant的灵活和Maven的⽣命周期管理，它最后被google作为了 Android御⽤管理⼯具。它最⼤的区别是不⽤XML作为配置⽂件格式，采⽤了DSL格式，使得脚本更加简洁。 ⽬前市⾯上Ant⽐较⽼, 所以⼀般是⼀些⽐较传统的软件企业公司使⽤, Maven使⽤Java编写, 是当下⼤多数互联⽹公司会使⽤的⼀个构建⼯具, 中⽂⽂档也⽐较⻬全, gradle是⽤groovy编写, ⽬前⽐较新型的构建⼯具⼀些初创互联⽹公司会使⽤, 以后会有很⼤的使⽤空间。</p>
+<h3 id="Maven的四大特性"><a href="#Maven的四大特性" class="headerlink" title="Maven的四大特性"></a>Maven的四大特性</h3><h4 id="依赖管理系统"><a href="#依赖管理系统" class="headerlink" title="依赖管理系统"></a>依赖管理系统</h4><p> Maven为Java世界引⼊了⼀个新的依赖管理系统jar包管理 jar 升级时修改配置⽂件即可。在Java世界中，可以⽤<strong>groupId、artifactId、version</strong>组成的Coordination（坐标）<u>唯⼀标识⼀个依赖。</u></p>
+<p>任何基于Maven构建的项⽬⾃身也必须定义这三项属性，⽣成的包可以是Jar包，也可以是war包或者 jar包。⼀个典型的依赖引⽤如下所示：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.servlet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span> com.baidu</span><br><span class="line"> <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>javax.servlet-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span> ueditor echarts</span><br><span class="line"> <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>坐标属性的理解</p>
+</blockquote>
+<ul>
+<li><strong>groupId</strong></li>
+</ul>
+<p>定义当前Maven项⽬⾪属的实际项⽬-公司名称。(jar包所在仓库路径） 由于Maven中模块的概念，因 此⼀个实际项⽬往往会被划分为很多模块。 ⽐如spring是⼀个实际项⽬，其对应的Maven模块会有很 多，如spring-core,spring-webmvc等。</p>
+<ul>
+<li><strong>artifactId</strong></li>
+</ul>
+<p>该元素定义实际项⽬中的⼀个Maven模块-项⽬名， 推荐的做法是使⽤实际项⽬名称作为artifactId的前 缀。 ⽐如： spring-bean, spring-webmvc等。</p>
+<ul>
+<li><strong>version</strong></li>
+</ul>
+<p>该元素定义Maven当前所处的版本</p>
+<h4 id="项目的多模块构建"><a href="#项目的多模块构建" class="headerlink" title="项目的多模块构建"></a>项目的多模块构建</h4><p>项⽬复查时 dao service controller 层分离将⼀个项⽬分解为多个模块已经是很通⽤的⼀种⽅式。 在Maven中需要定义⼀个parent POM作为⼀组module的聚合POM。在该POM中可以使⽤ 标签来定义⼀ 组⼦模块。parent POM不会有什么实际构建产出。⽽parent POM中的build配置以及依赖配置都会⾃动继承给⼦module。</p>
+<h4 id="一致的构建模型和插件机制"><a href="#一致的构建模型和插件机制" class="headerlink" title="一致的构建模型和插件机制"></a>一致的构建模型和插件机制</h4><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mortbay.jetty<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-jetty-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">version</span>&gt;</span>6.1.25<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">scanIntervalSeconds</span>&gt;</span>10<span class="tag">&lt;/<span class="name">scanIntervalSeconds</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">contextPath</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">contextPath</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="Maven的安装配置和目录结构"><a href="#Maven的安装配置和目录结构" class="headerlink" title="Maven的安装配置和目录结构"></a>Maven的安装配置和目录结构</h2><h3 id="Maven的安装与配置"><a href="#Maven的安装与配置" class="headerlink" title="Maven的安装与配置"></a>Maven的安装与配置</h3><img data-src="/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/createmaven.png" class>
+
+<p>打开cmd窗口，通过命令查看maven是否安装成功</p>
+<img data-src="/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/maventest.png" class>
+
+<h3 id="认识Maven的目录结构"><a href="#认识Maven的目录结构" class="headerlink" title="认识Maven的目录结构"></a>认识Maven的目录结构</h3> <img data-src="/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/mulu.png" class>
+
+<h4 id="创建一个文件夹作为项目的根目录"><a href="#创建一个文件夹作为项目的根目录" class="headerlink" title="创建一个文件夹作为项目的根目录"></a>创建一个文件夹作为项目的根目录</h4><ul>
+<li><p>在根目录中创建一个pom.xml文件</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span></span></span><br><span class="line"><span class="tag"> <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag"> <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0</span></span></span><br><span class="line"><span class="tag"><span class="string"> http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"> <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.xxxx<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven01<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.0.1-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">name</span>&gt;</span>maven01<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.apache.org<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.8.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<p><strong>PS:标签定义解释</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">根⽬录下的第⼀个⼦元素 ModelVersion指定当前Pom模型的版本，对于Maven3来说，它只能是4.0.0 。指定了当前Maven模型的版本号，对于Maven2和Maven3来说，它只能是4.0.0</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">groupId:定义了项目属于哪一个组，这个组通常和项目所在的组织和公司存在关联</span></span><br><span class="line"><span class="comment">比如：com.xxxx</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">artifactId 定义了当前Maven项⽬在组中唯⼀的ID。</span></span><br><span class="line"><span class="comment">Version X.X.X-⾥程碑</span></span><br><span class="line"><span class="comment">⽐如：1.0.0-SNAPSHOT</span></span><br><span class="line"><span class="comment">第⼀个X ⼤版本 有重⼤变⾰</span></span><br><span class="line"><span class="comment">第⼆个X ⼩版本 修复bug，增加功能</span></span><br><span class="line"><span class="comment">第三个X 更新</span></span><br><span class="line"><span class="comment">⾥程碑版本：</span></span><br><span class="line"><span class="comment">SNAPSHOT （快照，开发版）</span></span><br><span class="line"><span class="comment">alpha（内部测试）</span></span><br><span class="line"><span class="comment">beta（公开测试）</span></span><br><span class="line"><span class="comment">Release | RC（ 发布版）</span></span><br><span class="line"><span class="comment">GA（正常版本）</span></span><br><span class="line"><span class="comment">使⽤name标签声明⼀个对于⽤户更为友好的项⽬名称，虽然不是必须的，但还是推荐为每个Pom声明name，以⽅便信息交流。</span></span><br><span class="line"><span class="comment">**/</span></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="编写主函数"><a href="#编写主函数" class="headerlink" title="编写主函数"></a>编写主函数</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.xxxx.demo;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hello</span></span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> System.out.println(<span class="string">&quot;hello maven&quot;</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="cmd下编译并且运行"><a href="#cmd下编译并且运行" class="headerlink" title="cmd下编译并且运行"></a>cmd下编译并且运行</h4><p>cmd下面，进入项目根目录</p>
+<p>1.编译Java文件</p>
+<p>mvn compile</p>
+<p>2.执行main方法</p>
+<p>mvn exec:java -Dexec.mainClass=”com.xxxx.demo.hello”</p>
+<img data-src="/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/mavencreate.png" class>
+
+<p><strong>注：第⼀次下载会⽐较慢，要修改maven解压之后的conf⽬录下的settings.xml。</strong></p>
+ <figure class="highlight html"><table><tr><td class="code"><pre><span class="line">1.1.修改默认仓库位置</span><br><span class="line">打开maven⽬录 -&gt; conf -&gt; settings.xml</span><br><span class="line">添加仓库位置配置</span><br><span class="line"><span class="tag">&lt;<span class="name">localRepository</span>&gt;</span>F:/m2/repository<span class="tag">&lt;/<span class="name">localRepository</span>&gt;</span></span><br><span class="line">注：仓库位置改为⾃⼰本机的指定⽬录，&quot;/&quot;不要写反</span><br><span class="line">1.2.更换阿⾥镜像,加快依赖下载</span><br><span class="line"><span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus-aliyun<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">name</span>&gt;</span>Nexus aliyun<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>如果编译不成功，可能出现的问题</p>
+<blockquote>
+<p>1.不是使用管理员权限执行的dos命令</p>
+</blockquote>
+<blockquote>
+<p>2.JDK环境配置有问题，重装JDK</p>
+</blockquote>
+<blockquote>
+<p>3.代码编写时，类里面没有设置包名</p>
+</blockquote>
+<p>##Maven命令</p>
+<p>作为开发利器的maven，为我们提供了⼗分丰富的命令，了解maven的命令⾏操作并熟练运⽤常⻅的 maven命令还是⼗分必要的，即使譬如IDEA等⼯具给我提供了图形界⾯化⼯具，但其底层还是依靠 maven命令来驱动的。</p>
+<p>Maven的命令格式如下：</p>
+<blockquote>
+<p>maven [plugin-name] : [goal-name]</p>
+</blockquote>
+<p>命令代表的含义：执⾏ plugin-name 插件的 goal-name ⽬标</p>
+<table>
+<thead>
+<tr>
+<th align="left">maven命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">mvn clean</td>
+<td>清理项⽬⽣产的临时⽂件,⼀般是模块下的target⽬录</td>
+</tr>
+<tr>
+<td align="left">mvn compile</td>
+<td>编译源代码，⼀般编译模块下的src/main/java⽬录</td>
+</tr>
+<tr>
+<td align="left">mvn package</td>
+<td>项⽬打包⼯具,会在模块下的target⽬录⽣成jar或war等⽂件</td>
+</tr>
+<tr>
+<td align="left">mvn test</td>
+<td>测试命令,或执⾏src/test/java/下junit的测试⽤例</td>
+</tr>
+<tr>
+<td align="left">mvn -version</td>
+<td>显示版本信息</td>
+</tr>
+<tr>
+<td align="left">mvn install</td>
+<td>将打包的jar/war⽂件复制到你的本地仓库中,供其他模块使⽤</td>
+</tr>
+<tr>
+<td align="left">mvn deploy</td>
+<td>将打包的⽂件发布到远程参考,提供其他⼈员进⾏下载依赖</td>
+</tr>
+<tr>
+<td align="left">mvn site</td>
+<td>生成项目相关信息的网站</td>
+</tr>
+<tr>
+<td align="left">mvn eclipse:eclipse</td>
+<td>将项目转换为Eclipse项目</td>
+</tr>
+<tr>
+<td align="left">mvn dependency:tree</td>
+<td>打印出整个项目的依赖树</td>
+</tr>
+<tr>
+<td align="left">mvn archetype:generate</td>
+<td>创建maven的普通Java项目</td>
+</tr>
+<tr>
+<td align="left">mvn tomcat:run</td>
+<td>在tomcat容器中运行web应用</td>
+</tr>
+<tr>
+<td align="left">mvn jetty:run</td>
+<td>调用jetty插件的Run目标在jetty servlet容器中启动web应用</td>
+</tr>
+</tbody></table>
+<p>注意：运⾏maven命令的时候，⾸先需要定位到maven项⽬的⽬录，也就是项⽬的pom.xml⽂件所在的⽬录。否则， 必以通过参数来指定项⽬的⽬录。</p>
+<h3 id="命令参数"><a href="#命令参数" class="headerlink" title="命令参数"></a>命令参数</h3><p>上⾯列举的只是⽐较通⽤的命令，其实很多命令都可以携带参数以执⾏更精准的任务。</p>
+<h4 id="D传入属性参数"><a href="#D传入属性参数" class="headerlink" title="-D传入属性参数"></a>-D传入属性参数</h4><p>例如： </p>
+<blockquote>
+<p>mvn package -Dmaven.test.skip=true </p>
+</blockquote>
+<p>以 -D 开头，将 maven.test.skip 的值设为 true ,就是告诉maven打包的时候跳过单元测试。同 理， mvn deploy-Dmaven.test.skip=true 代表部署项⽬并跳过单元测试。</p>
+<h4 id="P使用指定的Profile配置"><a href="#P使用指定的Profile配置" class="headerlink" title="-P使用指定的Profile配置"></a>-P使用指定的Profile配置</h4><p>⽐如项⽬开发需要有多个环境，⼀般为开发，测试，预发，正式4个环境，在pom.xml中的配置如下：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">profiles</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">id</span>&gt;</span>dev<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">env</span>&gt;</span>dev<span class="tag">&lt;/<span class="name">env</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">activation</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">activeByDefault</span>&gt;</span>true<span class="tag">&lt;/<span class="name">activeByDefault</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">activation</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">id</span>&gt;</span>qa<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">env</span>&gt;</span>qa<span class="tag">&lt;/<span class="name">env</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">id</span>&gt;</span>pre<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">env</span>&gt;</span>pre<span class="tag">&lt;/<span class="name">env</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">id</span>&gt;</span>prod<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">env</span>&gt;</span>prod<span class="tag">&lt;/<span class="name">env</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">profiles</span>&gt;</span></span><br><span class="line">......</span><br><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">filters</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">filter</span>&gt;</span>config/$&#123;env&#125;.properties<span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;/<span class="name">filters</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">directory</span>&gt;</span>src/main/resources<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">filtering</span>&gt;</span>true<span class="tag">&lt;/<span class="name">filtering</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br><span class="line"> ......</span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>profiles 定义了各个环境的变量 id ， filters 中定义了变量配置⽂件的地址，其中地址中的环境 变量就是上⾯ profile 中定义的值， resources 中是定义哪些⽬录下的⽂件会被配置⽂件中定义的变量替换。 通过maven可以实现按不同环境进⾏打包部署，例如：</p>
+<blockquote>
+<p>mvn package -Pdev -Dmaven.test.skip=true</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>项目工具</category>
+      </categories>
+      <tags>
+        <tag>Maven</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MongoDB数据库</title>
+    <url>/2021/02/25/MongoDB%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Mybatis动态代理与传参</title>
     <url>/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/</url>
     <content><![CDATA[<h2 id="Mybatis动态代理实现CURD"><a href="#Mybatis动态代理实现CURD" class="headerlink" title="Mybatis动态代理实现CURD"></a>Mybatis动态代理实现CURD</h2><h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><blockquote>
@@ -944,181 +1034,6 @@
       <tags>
         <tag>Mybatis</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Maven学习笔记&lt;一&gt;</title>
-    <url>/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</url>
-    <content><![CDATA[<h2 id="Maven的简介"><a href="#Maven的简介" class="headerlink" title="Maven的简介"></a>Maven的简介</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p> Maven【[ˈmevən]】这个词可以翻译为”专家”,”内⾏”。 作为Apache组织中的⼀个颇为成功的开源项⽬， Maven主要服务于基于java平台的项⽬构建，依赖管理和项⽬信息管理。 ⽆论是⼩型的开源类库项⽬，还是⼤型的企业级应⽤； ⽆论是传统的瀑布式开发，还是流⾏的敏捷开 发，Maven都能⼤显身⼿。</p>
-<p>###项目构建</p>
-<p>不管你是否意识到，构建（build）是每⼀位程序员每天都在做的⼯作。早上来到公司，我们做的第⼀ 件事就是从源码库签出最新的代码，然后进⾏单元测试，如果测试失败，会找相关的同事⼀起调试修复错误代码。 接着回到⾃⼰的⼯作上来，编写⾃⼰的单元测试及产品代码。</p>
-<p>我们会发现，除了编写源代码，我们每天有相当⼀部分时间花在了编译，运⾏单元测 试，⽣成⽂档，打包和部署等繁琐且不起眼的⼯作上，这就是构建。 如果我们现在还⼿⼯这样做，那成 本也太⾼了，于是有⼈⽤软件的⽅法让这⼀系列⼯作完全⾃动化，使得软件的构建可以像全⾃动流⽔线 ⼀样，只需要⼀条简单的命令，w所有繁琐的步骤都能够⾃动完成，很快就能得到最终结果。</p>
-<p>###项目构建工具</p>
-<blockquote>
-<p>Ant构建</p>
-</blockquote>
-<p>最早的构建⼯具，基于IDE, ⼤概是2000年有的，当时是最流⾏java构建⼯具，不过它的XML脚本编写格式让XML⽂件特别⼤。对⼯程构建过程中的过程控制特别好。</p>
-<blockquote>
-<p>Maven【Java】</p>
-</blockquote>
-<p>项⽬对象模型，通过其描述信息来管理项⽬的构建，报告和⽂档的软件项⽬管理⼯具。它填补了Ant缺 点，Maven第⼀次⽀持了从⽹络上下载的功能，仍然采⽤xml作为配置⽂件格式。Maven专注的是依赖管理，使⽤Java编写。</p>
-<blockquote>
-<p>Gradle</p>
-</blockquote>
-<p>属于结合以上两个的优点，它继承了Ant的灵活和Maven的⽣命周期管理，它最后被google作为了 Android御⽤管理⼯具。它最⼤的区别是不⽤XML作为配置⽂件格式，采⽤了DSL格式，使得脚本更加简洁。 ⽬前市⾯上Ant⽐较⽼, 所以⼀般是⼀些⽐较传统的软件企业公司使⽤, Maven使⽤Java编写, 是当下⼤多数互联⽹公司会使⽤的⼀个构建⼯具, 中⽂⽂档也⽐较⻬全, gradle是⽤groovy编写, ⽬前⽐较新型的构建⼯具⼀些初创互联⽹公司会使⽤, 以后会有很⼤的使⽤空间。</p>
-<h3 id="Maven的四大特性"><a href="#Maven的四大特性" class="headerlink" title="Maven的四大特性"></a>Maven的四大特性</h3><h4 id="依赖管理系统"><a href="#依赖管理系统" class="headerlink" title="依赖管理系统"></a>依赖管理系统</h4><p> Maven为Java世界引⼊了⼀个新的依赖管理系统jar包管理 jar 升级时修改配置⽂件即可。在Java世界中，可以⽤<strong>groupId、artifactId、version</strong>组成的Coordination（坐标）<u>唯⼀标识⼀个依赖。</u></p>
-<p>任何基于Maven构建的项⽬⾃身也必须定义这三项属性，⽣成的包可以是Jar包，也可以是war包或者 jar包。⼀个典型的依赖引⽤如下所示：</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.servlet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span> com.baidu</span><br><span class="line"> <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>javax.servlet-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span> ueditor echarts</span><br><span class="line"> <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>坐标属性的理解</p>
-</blockquote>
-<ul>
-<li><strong>groupId</strong></li>
-</ul>
-<p>定义当前Maven项⽬⾪属的实际项⽬-公司名称。(jar包所在仓库路径） 由于Maven中模块的概念，因 此⼀个实际项⽬往往会被划分为很多模块。 ⽐如spring是⼀个实际项⽬，其对应的Maven模块会有很 多，如spring-core,spring-webmvc等。</p>
-<ul>
-<li><strong>artifactId</strong></li>
-</ul>
-<p>该元素定义实际项⽬中的⼀个Maven模块-项⽬名， 推荐的做法是使⽤实际项⽬名称作为artifactId的前 缀。 ⽐如： spring-bean, spring-webmvc等。</p>
-<ul>
-<li><strong>version</strong></li>
-</ul>
-<p>该元素定义Maven当前所处的版本</p>
-<h4 id="项目的多模块构建"><a href="#项目的多模块构建" class="headerlink" title="项目的多模块构建"></a>项目的多模块构建</h4><p>项⽬复查时 dao service controller 层分离将⼀个项⽬分解为多个模块已经是很通⽤的⼀种⽅式。 在Maven中需要定义⼀个parent POM作为⼀组module的聚合POM。在该POM中可以使⽤ 标签来定义⼀ 组⼦模块。parent POM不会有什么实际构建产出。⽽parent POM中的build配置以及依赖配置都会⾃动继承给⼦module。</p>
-<h4 id="一致的构建模型和插件机制"><a href="#一致的构建模型和插件机制" class="headerlink" title="一致的构建模型和插件机制"></a>一致的构建模型和插件机制</h4><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mortbay.jetty<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-jetty-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">version</span>&gt;</span>6.1.25<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">scanIntervalSeconds</span>&gt;</span>10<span class="tag">&lt;/<span class="name">scanIntervalSeconds</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">contextPath</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">contextPath</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-<h2 id="Maven的安装配置和目录结构"><a href="#Maven的安装配置和目录结构" class="headerlink" title="Maven的安装配置和目录结构"></a>Maven的安装配置和目录结构</h2><h3 id="Maven的安装与配置"><a href="#Maven的安装与配置" class="headerlink" title="Maven的安装与配置"></a>Maven的安装与配置</h3><img data-src="/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/createmaven.png" class>
-
-<p>打开cmd窗口，通过命令查看maven是否安装成功</p>
-<img data-src="/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/maventest.png" class>
-
-<h3 id="认识Maven的目录结构"><a href="#认识Maven的目录结构" class="headerlink" title="认识Maven的目录结构"></a>认识Maven的目录结构</h3> <img data-src="/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/mulu.png" class>
-
-<h4 id="创建一个文件夹作为项目的根目录"><a href="#创建一个文件夹作为项目的根目录" class="headerlink" title="创建一个文件夹作为项目的根目录"></a>创建一个文件夹作为项目的根目录</h4><ul>
-<li><p>在根目录中创建一个pom.xml文件</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span></span></span><br><span class="line"><span class="tag"> <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag"> <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0</span></span></span><br><span class="line"><span class="tag"><span class="string"> http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"> <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.xxxx<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven01<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.0.1-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">name</span>&gt;</span>maven01<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.apache.org<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.8.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<p><strong>PS:标签定义解释</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">根⽬录下的第⼀个⼦元素 ModelVersion指定当前Pom模型的版本，对于Maven3来说，它只能是4.0.0 。指定了当前Maven模型的版本号，对于Maven2和Maven3来说，它只能是4.0.0</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">groupId:定义了项目属于哪一个组，这个组通常和项目所在的组织和公司存在关联</span></span><br><span class="line"><span class="comment">比如：com.xxxx</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">artifactId 定义了当前Maven项⽬在组中唯⼀的ID。</span></span><br><span class="line"><span class="comment">Version X.X.X-⾥程碑</span></span><br><span class="line"><span class="comment">⽐如：1.0.0-SNAPSHOT</span></span><br><span class="line"><span class="comment">第⼀个X ⼤版本 有重⼤变⾰</span></span><br><span class="line"><span class="comment">第⼆个X ⼩版本 修复bug，增加功能</span></span><br><span class="line"><span class="comment">第三个X 更新</span></span><br><span class="line"><span class="comment">⾥程碑版本：</span></span><br><span class="line"><span class="comment">SNAPSHOT （快照，开发版）</span></span><br><span class="line"><span class="comment">alpha（内部测试）</span></span><br><span class="line"><span class="comment">beta（公开测试）</span></span><br><span class="line"><span class="comment">Release | RC（ 发布版）</span></span><br><span class="line"><span class="comment">GA（正常版本）</span></span><br><span class="line"><span class="comment">使⽤name标签声明⼀个对于⽤户更为友好的项⽬名称，虽然不是必须的，但还是推荐为每个Pom声明name，以⽅便信息交流。</span></span><br><span class="line"><span class="comment">**/</span></span><br></pre></td></tr></table></figure>
-
-
-<h4 id="编写主函数"><a href="#编写主函数" class="headerlink" title="编写主函数"></a>编写主函数</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.xxxx.demo;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hello</span></span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> System.out.println(<span class="string">&quot;hello maven&quot;</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="cmd下编译并且运行"><a href="#cmd下编译并且运行" class="headerlink" title="cmd下编译并且运行"></a>cmd下编译并且运行</h4><p>cmd下面，进入项目根目录</p>
-<p>1.编译Java文件</p>
-<p>mvn compile</p>
-<p>2.执行main方法</p>
-<p>mvn exec:java -Dexec.mainClass=”com.xxxx.demo.hello”</p>
-<img data-src="/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/mavencreate.png" class>
-
-<p><strong>注：第⼀次下载会⽐较慢，要修改maven解压之后的conf⽬录下的settings.xml。</strong></p>
- <figure class="highlight html"><table><tr><td class="code"><pre><span class="line">1.1.修改默认仓库位置</span><br><span class="line">打开maven⽬录 -&gt; conf -&gt; settings.xml</span><br><span class="line">添加仓库位置配置</span><br><span class="line"><span class="tag">&lt;<span class="name">localRepository</span>&gt;</span>F:/m2/repository<span class="tag">&lt;/<span class="name">localRepository</span>&gt;</span></span><br><span class="line">注：仓库位置改为⾃⼰本机的指定⽬录，&quot;/&quot;不要写反</span><br><span class="line">1.2.更换阿⾥镜像,加快依赖下载</span><br><span class="line"><span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus-aliyun<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">name</span>&gt;</span>Nexus aliyun<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>如果编译不成功，可能出现的问题</p>
-<blockquote>
-<p>1.不是使用管理员权限执行的dos命令</p>
-</blockquote>
-<blockquote>
-<p>2.JDK环境配置有问题，重装JDK</p>
-</blockquote>
-<blockquote>
-<p>3.代码编写时，类里面没有设置包名</p>
-</blockquote>
-<p>##Maven命令</p>
-<p>作为开发利器的maven，为我们提供了⼗分丰富的命令，了解maven的命令⾏操作并熟练运⽤常⻅的 maven命令还是⼗分必要的，即使譬如IDEA等⼯具给我提供了图形界⾯化⼯具，但其底层还是依靠 maven命令来驱动的。</p>
-<p>Maven的命令格式如下：</p>
-<blockquote>
-<p>maven [plugin-name] : [goal-name]</p>
-</blockquote>
-<p>命令代表的含义：执⾏ plugin-name 插件的 goal-name ⽬标</p>
-<table>
-<thead>
-<tr>
-<th align="left">maven命令</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">mvn clean</td>
-<td>清理项⽬⽣产的临时⽂件,⼀般是模块下的target⽬录</td>
-</tr>
-<tr>
-<td align="left">mvn compile</td>
-<td>编译源代码，⼀般编译模块下的src/main/java⽬录</td>
-</tr>
-<tr>
-<td align="left">mvn package</td>
-<td>项⽬打包⼯具,会在模块下的target⽬录⽣成jar或war等⽂件</td>
-</tr>
-<tr>
-<td align="left">mvn test</td>
-<td>测试命令,或执⾏src/test/java/下junit的测试⽤例</td>
-</tr>
-<tr>
-<td align="left">mvn -version</td>
-<td>显示版本信息</td>
-</tr>
-<tr>
-<td align="left">mvn install</td>
-<td>将打包的jar/war⽂件复制到你的本地仓库中,供其他模块使⽤</td>
-</tr>
-<tr>
-<td align="left">mvn deploy</td>
-<td>将打包的⽂件发布到远程参考,提供其他⼈员进⾏下载依赖</td>
-</tr>
-<tr>
-<td align="left">mvn site</td>
-<td>生成项目相关信息的网站</td>
-</tr>
-<tr>
-<td align="left">mvn eclipse:eclipse</td>
-<td>将项目转换为Eclipse项目</td>
-</tr>
-<tr>
-<td align="left">mvn dependency:tree</td>
-<td>打印出整个项目的依赖树</td>
-</tr>
-<tr>
-<td align="left">mvn archetype:generate</td>
-<td>创建maven的普通Java项目</td>
-</tr>
-<tr>
-<td align="left">mvn tomcat:run</td>
-<td>在tomcat容器中运行web应用</td>
-</tr>
-<tr>
-<td align="left">mvn jetty:run</td>
-<td>调用jetty插件的Run目标在jetty servlet容器中启动web应用</td>
-</tr>
-</tbody></table>
-<p>注意：运⾏maven命令的时候，⾸先需要定位到maven项⽬的⽬录，也就是项⽬的pom.xml⽂件所在的⽬录。否则， 必以通过参数来指定项⽬的⽬录。</p>
-<h3 id="命令参数"><a href="#命令参数" class="headerlink" title="命令参数"></a>命令参数</h3><p>上⾯列举的只是⽐较通⽤的命令，其实很多命令都可以携带参数以执⾏更精准的任务。</p>
-<h4 id="D传入属性参数"><a href="#D传入属性参数" class="headerlink" title="-D传入属性参数"></a>-D传入属性参数</h4><p>例如： </p>
-<blockquote>
-<p>mvn package -Dmaven.test.skip=true </p>
-</blockquote>
-<p>以 -D 开头，将 maven.test.skip 的值设为 true ,就是告诉maven打包的时候跳过单元测试。同 理， mvn deploy-Dmaven.test.skip=true 代表部署项⽬并跳过单元测试。</p>
-<h4 id="P使用指定的Profile配置"><a href="#P使用指定的Profile配置" class="headerlink" title="-P使用指定的Profile配置"></a>-P使用指定的Profile配置</h4><p>⽐如项⽬开发需要有多个环境，⼀般为开发，测试，预发，正式4个环境，在pom.xml中的配置如下：</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">profiles</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">id</span>&gt;</span>dev<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">env</span>&gt;</span>dev<span class="tag">&lt;/<span class="name">env</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">activation</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">activeByDefault</span>&gt;</span>true<span class="tag">&lt;/<span class="name">activeByDefault</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">activation</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">id</span>&gt;</span>qa<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">env</span>&gt;</span>qa<span class="tag">&lt;/<span class="name">env</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">id</span>&gt;</span>pre<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">env</span>&gt;</span>pre<span class="tag">&lt;/<span class="name">env</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">id</span>&gt;</span>prod<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">env</span>&gt;</span>prod<span class="tag">&lt;/<span class="name">env</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">profiles</span>&gt;</span></span><br><span class="line">......</span><br><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">filters</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">filter</span>&gt;</span>config/$&#123;env&#125;.properties<span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;/<span class="name">filters</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">directory</span>&gt;</span>src/main/resources<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">filtering</span>&gt;</span>true<span class="tag">&lt;/<span class="name">filtering</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br><span class="line"> ......</span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>profiles 定义了各个环境的变量 id ， filters 中定义了变量配置⽂件的地址，其中地址中的环境 变量就是上⾯ profile 中定义的值， resources 中是定义哪些⽬录下的⽂件会被配置⽂件中定义的变量替换。 通过maven可以实现按不同环境进⾏打包部署，例如：</p>
-<blockquote>
-<p>mvn package -Pdev -Dmaven.test.skip=true</p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>项目工具</category>
-      </categories>
-      <tags>
-        <tag>Maven</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MongoDB数据库</title>
-    <url>/2021/02/25/MongoDB%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Mybatis框架</title>
@@ -1358,6 +1273,101 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
+    <title>Leetcode树刷题总结</title>
+    <url>/2021/03/23/Leetcode%E6%A0%91%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<h2 id="最小高度树"><a href="#最小高度树" class="headerlink" title="最小高度树"></a>最小高度树</h2><h3 id="题目说明："><a href="#题目说明：" class="headerlink" title="题目说明："></a>题目说明：</h3><p>给定一个有序整数数组，元素各不相同且按升序排列，编写一个算法，创建一棵高度最小的二叉搜索树。</p>
+<p>示例:<br>给定有序数组: [-10,-3,0,5,9],</p>
+<p>一个可能的答案是：[0,-3,9,-10,null,5]，它可以表示下面这个高度平衡二叉搜索树：</p>
+<pre><code>      0 
+     / \ 
+   -3   9 
+   /   / 
+ -10  5 </code></pre>
+<h3 id="解法一：递归"><a href="#解法一：递归" class="headerlink" title="解法一：递归"></a>解法一：递归</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * public class TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode left;</span></span><br><span class="line"><span class="comment"> *     TreeNode right;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x) &#123; val = x; &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line">在这道题中，left和right并不代表左右结点的值，而是相应节点在数组nums中的位置，这个在编写递归开始前的判断是很重要的。</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> TreeNode <span class="title">sortedArrayToBST</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">         <span class="comment">//最小高度树的实现，在于找到中间节点来作为整棵树的根节点，这样构建的二叉树高度差是最小的。</span></span><br><span class="line">         <span class="keyword">if</span>(nums.length==<span class="number">0</span>)&#123;</span><br><span class="line">             <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">         &#125;   </span><br><span class="line">         <span class="keyword">return</span> CreateMinitree(nums,<span class="number">0</span>,nums.length-<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> TreeNode <span class="title">CreateMinitree</span><span class="params">(<span class="keyword">int</span> nums[],<span class="keyword">int</span> left,<span class="keyword">int</span> right)</span></span>&#123;</span><br><span class="line">        <span class="comment">//需要在递归的开始处增加必要的判断，防止数组越界和外节点</span></span><br><span class="line">        <span class="keyword">if</span>(left&gt;=right||right&gt;nums.length||left&lt;<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//插入中间值作为父节点，随后插入左右子树</span></span><br><span class="line">        <span class="keyword">int</span> mid = (left+right)/<span class="number">2</span>;</span><br><span class="line">       TreeNode n = <span class="keyword">new</span> TreeNode(nums[mid]);</span><br><span class="line">        n.left = CreateMinitree(nums,left,mid-<span class="number">1</span>);</span><br><span class="line">        n.right = CreateMinitree(nums,mid+<span class="number">1</span>,right);</span><br><span class="line">        <span class="keyword">return</span> n;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="二叉树的深度"><a href="#二叉树的深度" class="headerlink" title="二叉树的深度"></a>二叉树的深度</h2><h3 id="题目说明：-1"><a href="#题目说明：-1" class="headerlink" title="题目说明："></a>题目说明：</h3><p>输入一棵二叉树的根节点，求该树的深度。从根节点到叶节点依次经过的节点（含根、叶节点）形成树的一条路径，最长路径的长度为树的深度。</p>
+<p>例如：</p>
+<p>给定二叉树 [3,9,20,null,null,15,7]， </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">  3</span><br><span class="line"> &#x2F; \</span><br><span class="line">9  20</span><br><span class="line">  &#x2F;  \</span><br><span class="line"> 15   7</span><br></pre></td></tr></table></figure>
+<h3 id="解法一：递归-1"><a href="#解法一：递归-1" class="headerlink" title="解法一：递归"></a>解法一：递归</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * public class TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode left;</span></span><br><span class="line"><span class="comment"> *     TreeNode right;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x) &#123; val = x; &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxDepth</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root==<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">int</span> maxLeftHeight = maxDepth(root.left);</span><br><span class="line">            <span class="keyword">int</span> maxRightHeight = maxDepth(root.right);</span><br><span class="line">            <span class="keyword">return</span> Math.max(maxLeftHeight,maxRightHeight)+<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="剑指offer27-二叉树的镜像"><a href="#剑指offer27-二叉树的镜像" class="headerlink" title="剑指offer27.二叉树的镜像"></a>剑指offer27.二叉树的镜像</h2><h3 id="题目说明：-2"><a href="#题目说明：-2" class="headerlink" title="题目说明："></a>题目说明：</h3><p>请完成一个函数，输入一个二叉树，该函数输出它的镜像。</p>
+<p>例如输入：</p>
+ <img data-src="/2021/03/23/Leetcode%E6%A0%91%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/01.png" class>
+
+<img data-src="/2021/03/23/Leetcode%E6%A0%91%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/02.png" class>
+
+
+
+<h3 id="解法一：DFS递归"><a href="#解法一：DFS递归" class="headerlink" title="解法一：DFS递归"></a>解法一：DFS递归</h3><ul>
+<li>根据二叉树镜像的定义，考虑递归遍历（dfs）二叉树，交换每个节点的左 / 右子节点，即可生成二叉树的镜像。</li>
+</ul>
+<h4 id="递归解析："><a href="#递归解析：" class="headerlink" title="递归解析："></a>递归解析：</h4><ul>
+<li>**终止条件 **:当节点 root 为空时（即越过叶节点），则返回 null ；</li>
+<li><strong>递推工作</strong>：<ul>
+<li>初始化节点 tmp ，用于暂存 root 的左子节点；</li>
+<li>开启递归右子节点mirrorTree(root,right)，并将返回值作为root的左子节点。</li>
+<li>开启递归右子节点mirrorTree(root,left)，并将返回值作为root的右子节点。</li>
+</ul>
+</li>
+<li><strong>返回值</strong>: 返回新构建的树的root结点。</li>
+</ul>
+<blockquote>
+<p>Q：为何需要暂存root的左子节点？</p>
+<p>A：在递归完成root的右子节点后，此时root.left的值已经发生改变，此时再进行递归左子树就会出现问题。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * public class TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode left;</span></span><br><span class="line"><span class="comment"> *     TreeNode right;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x) &#123; val = x; &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> TreeNode <span class="title">mirrorTree</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root==<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//在暂时存储左子树的时候，一定要注意传入的是root.left，即左子树的第一个节点。不要再new TreeNode了；</span></span><br><span class="line">        TreeNode temp = root.left;</span><br><span class="line">        root.left = mirrorTree(root.right);</span><br><span class="line">        root.right  = mirrorTree(temp);</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="解法二：辅助栈"><a href="#解法二：辅助栈" class="headerlink" title="解法二：辅助栈"></a>解法二：辅助栈</h3><blockquote>
+<ul>
+<li>利用栈（或队列）遍历树的所有节点 node<em>n<strong>o</strong>d**e</em> ，并交换每个 node的左 / 右子节点。</li>
+</ul>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="合并两棵二叉树"><a href="#合并两棵二叉树" class="headerlink" title="合并两棵二叉树"></a>合并两棵二叉树</h2><h3 id="题目概述："><a href="#题目概述：" class="headerlink" title="题目概述："></a>题目概述：</h3><p>给定两个二叉树，想象当你将它们中的一个覆盖到另一个上时，两个二叉树的一些节点便会重叠。</p>
+<p>你需要将他们合并为一个新的二叉树。合并的规则是如果两个节点重叠，那么将他们的值相加作为节点合并后的新值，否则不为 NULL 的节点将直接作为新二叉树的节点。</p>
+ <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入: </span><br><span class="line">	Tree 1                     Tree 2                  </span><br><span class="line">          1                         2                             </span><br><span class="line">         &#x2F; \                       &#x2F; \                            </span><br><span class="line">        3   2                     1   3                        </span><br><span class="line">       &#x2F;                           \   \                      </span><br><span class="line">      5                             4   7                  </span><br><span class="line">输出: </span><br><span class="line">合并后的树:</span><br><span class="line">	     3</span><br><span class="line">	    &#x2F; \</span><br><span class="line">	   4   5</span><br><span class="line">	  &#x2F; \   \ </span><br><span class="line">	 5   4   7</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="解法一：DFS深度优先搜索"><a href="#解法一：DFS深度优先搜索" class="headerlink" title="解法一：DFS深度优先搜索"></a>解法一：DFS深度优先搜索</h3><p>可以使用深度优先搜索合并两个二叉树。从根节点开始同时遍历两个二叉树，并将对应的节点进行合并。</p>
+<p>两个二叉树的对应节点可能存在以下三种情况，对于每种情况使用不同的合并方式。</p>
+<p>如果两个二叉树的对应节点都为空，则合并后的二叉树的对应节点也为空；</p>
+<p>如果两个二叉树的对应节点只有一个为空，则合并后的二叉树的对应节点为其中的非空节点；</p>
+<p>如果两个二叉树的对应节点都不为空，则合并后的二叉树的对应节点的值为两个二叉树的对应节点的值之和，此时需要显性合并两个节点。</p>
+<p>对一个节点进行合并之后，还要对该节点的左右子树分别进行合并。这是一个递归的过程。</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * public class TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode left;</span></span><br><span class="line"><span class="comment"> *     TreeNode right;</span></span><br><span class="line"><span class="comment"> *     TreeNode() &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val) &#123; this.val = val; &#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val, TreeNode left, TreeNode right) &#123;</span></span><br><span class="line"><span class="comment"> *         this.val = val;</span></span><br><span class="line"><span class="comment"> *         this.left = left;</span></span><br><span class="line"><span class="comment"> *         this.right = right;</span></span><br><span class="line"><span class="comment"> *     &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> TreeNode <span class="title">mergeTrees</span><span class="params">(TreeNode root1, TreeNode root2)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//对两棵树先进行判空</span></span><br><span class="line">        <span class="keyword">if</span>(root1==<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> root2;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(root2==<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> root1;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//将合并二叉树的根节点构造出来,并且开始递归，每合并完一个节点，还要递归的合并其左右子树。</span></span><br><span class="line">        TreeNode merged = <span class="keyword">new</span> TreeNode(root1.val+root2.val);</span><br><span class="line">        merged.left = mergeTrees(root1.left,root2.left);</span><br><span class="line">        merged.right = mergeTrees(root2.right ,root1.right );</span><br><span class="line">        <span class="keyword">return</span> merged;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="复杂度分析："><a href="#复杂度分析：" class="headerlink" title="复杂度分析："></a>复杂度分析：</h4><img data-src="/2021/03/23/Leetcode%E6%A0%91%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/03.png" class>
+
+
+
+<h3 id="解法二：广度优先搜索BFS"><a href="#解法二：广度优先搜索BFS" class="headerlink" title="解法二：广度优先搜索BFS"></a>解法二：广度优先搜索BFS</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">也可以使用广度优先搜索合并两个二叉树。首先判断两个二叉树是否为空，如果两个二叉树都为空，则合并后的二叉树也为空，如果只有一个二叉树为空，则合并后的二叉树为另一个非空的二叉树。</span><br><span class="line"></span><br><span class="line">如果两个二叉树都不为空，则首先计算合并后的根节点的值，然后从合并后的二叉树与两个原始二叉树的根节点开始广度优先搜索，从根节点开始同时遍历每个二叉树，并将对应的节点进行合并。</span><br><span class="line"></span><br><span class="line">使用三个队列分别存储合并后的二叉树的节点以及两个原始二叉树的节点。初始时将每个二叉树的根节点分别加入相应的队列。每次从每个队列中取出一个节点，判断两个原始二叉树的节点的左右子节点是否为空。如果两个原始二叉树的当前节点中至少有一个节点的左子节点不为空，则合并后的二叉树的对应节点的左子节点也不为空。对于右子节点同理。</span><br><span class="line"></span><br><span class="line">如果合并后的二叉树的左子节点不为空，则需要根据两个原始二叉树的左子节点计算合并后的二叉树的左子节点以及整个左子树。考虑以下两种情况：</span><br><span class="line"></span><br><span class="line">如果两个原始二叉树的左子节点都不为空，则合并后的二叉树的左子节点的值为两个原始二叉树的左子节点的值之和，在创建合并后的二叉树的左子节点之后，将每个二叉树中的左子节点都加入相应的队列；</span><br><span class="line"></span><br><span class="line">如果两个原始二叉树的左子节点有一个为空，即有一个原始二叉树的左子树为空，则合并后的二叉树的左子树即为另一个原始二叉树的左子树，此时也不需要对非空左子树继续遍历，因此不需要将左子节点加入队列。</span><br><span class="line"></span><br><span class="line">对于右子节点和右子树，处理方法与左子节点和左子树相同。</span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * public class TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode left;</span></span><br><span class="line"><span class="comment"> *     TreeNode right;</span></span><br><span class="line"><span class="comment"> *     TreeNode() &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val) &#123; this.val = val; &#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val, TreeNode left, TreeNode right) &#123;</span></span><br><span class="line"><span class="comment"> *         this.val = val;</span></span><br><span class="line"><span class="comment"> *         this.left = left;</span></span><br><span class="line"><span class="comment"> *         this.right = right;</span></span><br><span class="line"><span class="comment"> *     &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> TreeNode <span class="title">mergeTrees</span><span class="params">(TreeNode root1, TreeNode root2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root1==<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> root2;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(root2==<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> root1;</span><br><span class="line">        &#125;</span><br><span class="line">        TreeNode merged = <span class="keyword">new</span> TreeNode(root1.val+root2.val);</span><br><span class="line">        Queue&lt;TreeNode&gt; queue1 = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">        Queue&lt;TreeNode&gt; queue2 = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">        Queue&lt;TreeNode&gt; queue = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//向队列中添加元素</span></span><br><span class="line">        queue.offer(merged);</span><br><span class="line">        queue1.offer(root1);</span><br><span class="line">        queue2.offer(root2);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span>(!queue1.isEmpty()&amp;&amp;!queue2.isEmpty())&#123;</span><br><span class="line">            TreeNode node1 = queue1.poll();</span><br><span class="line">            TreeNode node = queue.poll();</span><br><span class="line">            TreeNode node2 = queue2.poll();</span><br><span class="line"></span><br><span class="line">            TreeNode left1 = node1.left,left2 = node2.left,right1 = node1.right,right2 = node2.right;</span><br><span class="line">            <span class="keyword">if</span>(left1!=<span class="keyword">null</span> || left2!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span>(left1!=<span class="keyword">null</span>&amp;&amp;left2!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                    TreeNode left = <span class="keyword">new</span> TreeNode(left1.val+left2.val);</span><br><span class="line">                    node.left = left;</span><br><span class="line">                    queue.offer(left);</span><br><span class="line">                    queue1.offer(left1);</span><br><span class="line">                    queue2.offer(left2);</span><br><span class="line"></span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(left1!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                    node.left = left1;</span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(left2!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                    node.left = left2;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">         </span><br><span class="line">            <span class="keyword">if</span>(right1!=<span class="keyword">null</span> || right2!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span>(right1!=<span class="keyword">null</span>&amp;&amp;right2!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                    TreeNode right = <span class="keyword">new</span> TreeNode(right1.val+right2.val);</span><br><span class="line">                    node.right = right;</span><br><span class="line">                    queue.offer(right);</span><br><span class="line">                    queue1.offer(right1);</span><br><span class="line">                    queue2.offer(right2);</span><br><span class="line"></span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(right1!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                    node.right = right1;</span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(right2!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                    node.right = right2;</span><br><span class="line">                &#125;   </span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> merged;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="复杂度分析：-1"><a href="#复杂度分析：-1" class="headerlink" title="复杂度分析："></a>复杂度分析：</h4><img data-src="/2021/03/23/Leetcode%E6%A0%91%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/04.png" class>]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>数据结构</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>PC寄存器</title>
+    <url>/2021/03/14/PC%E5%AF%84%E5%AD%98%E5%99%A8/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Redis数据库</title>
+    <url>/2021/02/25/Redis%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Nginx服务器的使用</title>
     <url>/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<h1 id="Nginx服务器使用"><a href="#Nginx服务器使用" class="headerlink" title="Nginx服务器使用"></a>Nginx服务器使用</h1><h2 id="内容概览"><a href="#内容概览" class="headerlink" title="内容概览"></a>内容概览</h2><h3 id="1、nginx简介"><a href="#1、nginx简介" class="headerlink" title="1、nginx简介"></a>1、nginx简介</h3><p>（1）介绍nginx的应用场景和具体可以做什么事情</p>
@@ -1430,11 +1440,6 @@
       </tags>
   </entry>
   <entry>
-    <title>PC寄存器</title>
-    <url>/2021/03/14/PC%E5%AF%84%E5%AD%98%E5%99%A8/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>SVN版本控制系统</title>
     <url>/2021/02/06/SVN%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F/</url>
     <content><![CDATA[<h3 id="主要内容"><a href="#主要内容" class="headerlink" title="主要内容"></a>主要内容</h3>]]></content>
@@ -1444,11 +1449,6 @@
       <tags>
         <tag>SVN</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Redis数据库</title>
-    <url>/2021/02/25/Redis%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Servlet规范一</title>
@@ -1648,11 +1648,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>Swagger-UI</title>
-    <url>/2021/03/14/Swagger-UI/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Stack</title>
     <url>/2021/03/11/Stack/</url>
     <content><![CDATA[<h2 id="栈刷题总结"><a href="#栈刷题总结" class="headerlink" title="栈刷题总结"></a>栈刷题总结</h2><h3 id="1-有效的括号"><a href="#1-有效的括号" class="headerlink" title="1.有效的括号"></a>1.有效的括号</h3><h4 id="知识点补充："><a href="#知识点补充：" class="headerlink" title="知识点补充："></a>知识点补充：</h4><blockquote>
@@ -1769,6 +1764,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>栈</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Swagger-UI</title>
+    <url>/2021/03/14/Swagger-UI/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Undo页与redo页</title>
@@ -1926,13 +1926,13 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>zookeeper</title>
-    <url>/2021/03/14/zookeeper/</url>
+    <title>coding部署</title>
+    <url>/2021/03/15/coding%E9%83%A8%E7%BD%B2/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>coding部署</title>
-    <url>/2021/03/15/coding%E9%83%A8%E7%BD%B2/</url>
+    <title>zookeeper</title>
+    <url>/2021/03/14/zookeeper/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -2339,81 +2339,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>双指针问题</title>
-    <url>/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<h2 id="环形列表I"><a href="#环形列表I" class="headerlink" title="环形列表I"></a>环形列表I</h2><h3 id="题目说明"><a href="#题目说明" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，判断链表中是否有环。</p>
-<p>如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。</p>
-<p>如果链表中存在环，则返回 true 。 否则，返回 false 。</p>
-<p> 进阶：</p>
-<p>你能用 O(1)（即，常量）内存解决此问题吗？</p>
-<p> 示例 1：</p>
-<p> <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100453506.png" alt="image-20210114100453506"></p>
-<p>输入：head = [3,2,0,-4], pos = 1<br>输出：true<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100714252.png" alt="image-20210114100714252"></p>
-<p>输入：head = [1,2], pos = 0<br>输出：true<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
-<img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100749569.png" alt="image-20210114100749569" style="zoom:150%;">
-
-<p>输入：head = [1], pos = -1<br>输出：false<br>解释：链表中没有环。</p>
-<p>提示：</p>
-<p>链表中节点的数目范围是 [0, 104]<br>-105 &lt;= Node.val &lt;= 105<br>pos 为 -1 或者链表中的一个 有效索引 </p>
-<h3 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h3><p>####方法一：哈希表<br>思路及算法</p>
-<p>最容易想到的方法是遍历所有节点，每次遍历到一个节点时，判断该节点此前是否被访问过。</p>
-<p>具体地，我们可以使用哈希表来存储所有已经访问过的节点。每次我们到达一个节点，如果该节点已经存在于哈希表中，则说明该链表是环形链表，否则就将该节点加入哈希表中。重复这一过程，直到我们遍历完整个链表即可。</p>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">pulic <span class="class"><span class="keyword">class</span> <span class="title">solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascirle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        Set&lt;ListNOde&gt; seen = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span>( head !=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!seen.add(head))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>#####复杂度分析</p>
-<p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。最坏情况下我们需要遍历每个节点一次。</p>
-<p>空间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。主要为哈希表的开销，最坏情况下我们需要将每个节点插入到哈希表中一次。</p>
-<h4 id="方式二；双指针–快慢指针"><a href="#方式二；双指针–快慢指针" class="headerlink" title="方式二；双指针–快慢指针"></a>方式二；双指针–快慢指针</h4><p>方法需要读者对「Floyd 判圈算法」（又称龟兔赛跑算法）有所了解。</p>
-<p>假想「乌龟」和「兔子」在链表上移动，「兔子」跑得快，「乌龟」跑得慢。当「乌龟」和「兔子」从链表上的同一个节点开始移动时，如果该链表中没有环，那么「兔子」将一直处于「乌龟」的前方；如果该链表中有环，那么「兔子」会先于「乌龟」进入环，并且一直在环内移动。等到「乌龟」进入环时，由于「兔子」的速度快，它一定会在某个时刻与乌龟相遇，即套了「乌龟」若干圈。</p>
-<p>我们可以根据上述思路来解决本题。具体地，我们定义两个指针，一快一满。慢指针每次只移动一步，而快指针每次移动两步。初始时，慢指针在位置 head，而快指针在位置 head.next。这样一来，如果在移动的过程中，快指针反过来追上慢指针，就说明该链表为环形链表。否则快指针将到达链表尾部，该链表不为环形链表。</p>
-<p> 为什么我们要规定初始时慢指针在位置 head，快指针在位置 head.next，而不是两个指针都在位置 head（即与「乌龟」和「兔子」中的叙述相同）？</p>
-<p>观察下面的代码，我们使用的是 while 循环，循环条件先于循环体。由于循环条件一定是判断快慢指针是否重合，如果我们将两个指针初始都置于 head，那么 while 循环就不会执行。因此，我们可以假想一个在 head 之前的虚拟节点，慢指针从虚拟节点移动一步到达 head，快指针从虚拟节点移动两步到达 head.next，这样我们就可以使用 while 循环了。</p>
-<p>当然，我们也可以使用 do-while 循环。此时，我们就可以把快慢指针的初始值都置为 head。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">puclic <span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascycle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head;</span><br><span class="line">        ListNode fast = head.next;</span><br><span class="line">        <span class="keyword">while</span>(slow!=fast)&#123;</span><br><span class="line">            <span class="keyword">if</span>(fast==<span class="keyword">null</span>||fast.next==<span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            fast = fast.next.next</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。</p>
-<p>当链表中不存在环时，快指针将先于慢指针到达链表尾部，链表中每个节点至多被访问两次。</p>
-<p>当链表中存在环时，每一轮移动后，快慢指针的距离将减小一。而初始距离为环的长度，因此至多移动 NN 轮。</p>
-<p>空间复杂度：O(1)O(1)。我们只使用了两个指针的额外空间</p>
-<h2 id="环形列表II"><a href="#环形列表II" class="headerlink" title="环形列表II"></a>环形列表II</h2><h3 id="题目说明-1"><a href="#题目说明-1" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。</p>
-<p>为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意，pos 仅仅是用于标识环的情况，并不会作为参数传递到函数中。</p>
-<p>说明：不允许修改给定的链表。</p>
-<p>进阶：</p>
-<p>你是否可以使用 O(1) 空间解决此题？</p>
-<p> 示例 1：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102706369.png" alt="image-20210114102706369"></p>
-<p>输入：head = [3,2,0,-4], pos = 1<br>输出：返回索引为 1 的链表节点<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102721841.png" alt="image-20210114102721841"></p>
-<p>输入：head = [1,2], pos = 0<br>输出：返回索引为 0 的链表节点<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102737481.png" alt="image-20210114102737481"></p>
-<p>输入：head = [1], pos = -1<br>输出：返回 null<br>解释：链表中没有环。</p>
-<p>提示：</p>
-<p>链表中节点的数目范围在范围 [0, 104] 内<br>-105 &lt;= Node.val &lt;= 105<br>pos 的值为 -1 或者链表中的一个有效索引</p>
-<h3 id="题解-1"><a href="#题解-1" class="headerlink" title="题解"></a>题解</h3><h4 id="方法一：哈希表"><a href="#方法一：哈希表" class="headerlink" title="方法一：哈希表"></a>方法一：哈希表</h4><p>一个非常直观的思路是：我们遍历链表中的每个节点，并将它记录下来；一旦遇到了此前遍历过的节点，就可以判定链表中存在环。借助哈希表可以很方便地实现。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        ListNode pos = head;</span><br><span class="line">        Set&lt;ListNode&gt; visited = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span> (pos != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (visited.contains(pos)) &#123;</span><br><span class="line">                <span class="keyword">return</span> pos;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                visited.add(pos);</span><br><span class="line">            &#125;</span><br><span class="line">            pos = pos.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析-1"><a href="#复杂度分析-1" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们恰好需要访问链表中的每一个节点。</p>
-<p>空间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们需要将链表中的每个节点都保存在哈希表当中。</p>
-<h4 id="方法二：双指针–快慢指针"><a href="#方法二：双指针–快慢指针" class="headerlink" title="方法二：双指针–快慢指针"></a>方法二：双指针–快慢指针</h4><p>我们使用两个指针，\textit{fast}fast 与 \textit{slow}slow。它们起始都位于链表的头部。随后，\textit{slow}slow 指针每次向后移动一个位置，而 \textit{fast}fast 指针向后移动两个位置。如果链表中存在环，则 \textit{fast}fast 指针最终将再次与 \textit{slow}slow 指针在环中相遇。</p>
-<p>如下图所示，设链表中环外部分的长度为 aa。\textit{slow}slow 指针进入环后，又走了 bb 的距离与 \textit{fast}fast 相遇。此时，\textit{fast}fast 指针已经走完了环的 nn 圈，因此它走过的总距离为 a+n(b+c)+b=a+(n+1)b+nca+n(b+c)+b=a+(n+1)b+nc</p>
- <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114103031586.png" alt="image-20210114103031586" style="zoom:50%;">
-
-<p>根据题意，任意时刻，\textit{fast}fast 指针走过的距离都为 \textit{slow}slow 指针的 22 倍。因此，我们有</p>
-<p>a+(n+1)b+nc=2(a+b) \implies a=c+(n-1)(b+c)<br>a+(n+1)b+nc=2(a+b)⟹a=c+(n−1)(b+c)</p>
-<p>有了 a=c+(n-1)(b+c)a=c+(n−1)(b+c) 的等量关系，我们会发现：从相遇点到入环点的距离加上 n-1n−1 圈的环长，恰好等于从链表头部到入环点的距离。</p>
-<p>因此，当发现 \textit{slow}slow 与 \textit{fast}fast 相遇时，我们再额外使用一个指针 \textit{ptr}ptr。起始，它指向链表头部；随后，它和 \textit{slow}slow 每次向后移动一个位置。最终，它们会在入环点相遇。 </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head, fast = head;</span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="keyword">null</span>) &#123;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            <span class="keyword">if</span> (fast.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">                fast = fast.next.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (fast == slow) &#123;</span><br><span class="line">                ListNode ptr = head;</span><br><span class="line">                <span class="keyword">while</span> (ptr != slow) &#123;</span><br><span class="line">                    ptr = ptr.next;</span><br><span class="line">                    slow = slow.next;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> ptr;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>#####复杂度分析</p>
-<p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。在最初判断快慢指针是否相遇时，\textit{slow}slow 指针走过的距离不会超过链表的总长度；随后寻找入环点时，走过的距离也不会超过链表的总长度。因此，总的执行时间为 O(N)+O(N)=O(N)O(N)+O(N)=O(N)。</p>
-<p>空间复杂度：O(1)O(1)。我们只使用了 \textit{slow}, \textit{fast}, \textit{ptr}slow,fast,ptr 三个指针。</p>
-]]></content>
-      <categories>
-        <category>数据结构</category>
-      </categories>
-      <tags>
-        <tag>链表</tag>
-        <tag>双指针</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>初识递归</title>
     <url>/2021/02/03/%E5%88%9D%E8%AF%86%E9%80%92%E5%BD%92/</url>
     <content><![CDATA[<h2 id="二叉搜索树的范围和"><a href="#二叉搜索树的范围和" class="headerlink" title="二叉搜索树的范围和"></a>二叉搜索树的范围和</h2><h3 id="DFS深度优先搜索"><a href="#DFS深度优先搜索" class="headerlink" title="DFS深度优先搜索"></a>DFS深度优先搜索</h3><h4 id="1-递归"><a href="#1-递归" class="headerlink" title="1.递归"></a>1.递归</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * public class TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode left;</span></span><br><span class="line"><span class="comment"> *     TreeNode right;</span></span><br><span class="line"><span class="comment"> *     TreeNode() &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val) &#123; this.val = val; &#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val, TreeNode left, TreeNode right) &#123;</span></span><br><span class="line"><span class="comment"> *         this.val = val;</span></span><br><span class="line"><span class="comment"> *         this.left = left;</span></span><br><span class="line"><span class="comment"> *         this.right = right;</span></span><br><span class="line"><span class="comment"> *     &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> ans;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">rangeSumBST</span><span class="params">(TreeNode root, <span class="keyword">int</span> low, <span class="keyword">int</span> high)</span> </span>&#123;</span><br><span class="line">       ans = <span class="number">0</span> ;</span><br><span class="line">        dfs(root,low,high);</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dfs</span><span class="params">(TreeNode node,<span class="keyword">int</span> L,<span class="keyword">int</span> R)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(node!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(L&lt;=node.val&amp;&amp;node.val&lt;=R)&#123;</span><br><span class="line">                ans+=node.val;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(node.val&gt;L)&#123;</span><br><span class="line">                dfs(node.left,L,R);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(node.val&lt;R)&#123;</span><br><span class="line">                dfs(node.right,L,R);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -2515,6 +2440,81 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </categories>
       <tags>
         <tag>递归</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>双指针问题</title>
+    <url>/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h2 id="环形列表I"><a href="#环形列表I" class="headerlink" title="环形列表I"></a>环形列表I</h2><h3 id="题目说明"><a href="#题目说明" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，判断链表中是否有环。</p>
+<p>如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。</p>
+<p>如果链表中存在环，则返回 true 。 否则，返回 false 。</p>
+<p> 进阶：</p>
+<p>你能用 O(1)（即，常量）内存解决此问题吗？</p>
+<p> 示例 1：</p>
+<p> <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100453506.png" alt="image-20210114100453506"></p>
+<p>输入：head = [3,2,0,-4], pos = 1<br>输出：true<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100714252.png" alt="image-20210114100714252"></p>
+<p>输入：head = [1,2], pos = 0<br>输出：true<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
+<img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100749569.png" alt="image-20210114100749569" style="zoom:150%;">
+
+<p>输入：head = [1], pos = -1<br>输出：false<br>解释：链表中没有环。</p>
+<p>提示：</p>
+<p>链表中节点的数目范围是 [0, 104]<br>-105 &lt;= Node.val &lt;= 105<br>pos 为 -1 或者链表中的一个 有效索引 </p>
+<h3 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h3><p>####方法一：哈希表<br>思路及算法</p>
+<p>最容易想到的方法是遍历所有节点，每次遍历到一个节点时，判断该节点此前是否被访问过。</p>
+<p>具体地，我们可以使用哈希表来存储所有已经访问过的节点。每次我们到达一个节点，如果该节点已经存在于哈希表中，则说明该链表是环形链表，否则就将该节点加入哈希表中。重复这一过程，直到我们遍历完整个链表即可。</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">pulic <span class="class"><span class="keyword">class</span> <span class="title">solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascirle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        Set&lt;ListNOde&gt; seen = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span>( head !=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!seen.add(head))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>#####复杂度分析</p>
+<p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。最坏情况下我们需要遍历每个节点一次。</p>
+<p>空间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。主要为哈希表的开销，最坏情况下我们需要将每个节点插入到哈希表中一次。</p>
+<h4 id="方式二；双指针–快慢指针"><a href="#方式二；双指针–快慢指针" class="headerlink" title="方式二；双指针–快慢指针"></a>方式二；双指针–快慢指针</h4><p>方法需要读者对「Floyd 判圈算法」（又称龟兔赛跑算法）有所了解。</p>
+<p>假想「乌龟」和「兔子」在链表上移动，「兔子」跑得快，「乌龟」跑得慢。当「乌龟」和「兔子」从链表上的同一个节点开始移动时，如果该链表中没有环，那么「兔子」将一直处于「乌龟」的前方；如果该链表中有环，那么「兔子」会先于「乌龟」进入环，并且一直在环内移动。等到「乌龟」进入环时，由于「兔子」的速度快，它一定会在某个时刻与乌龟相遇，即套了「乌龟」若干圈。</p>
+<p>我们可以根据上述思路来解决本题。具体地，我们定义两个指针，一快一满。慢指针每次只移动一步，而快指针每次移动两步。初始时，慢指针在位置 head，而快指针在位置 head.next。这样一来，如果在移动的过程中，快指针反过来追上慢指针，就说明该链表为环形链表。否则快指针将到达链表尾部，该链表不为环形链表。</p>
+<p> 为什么我们要规定初始时慢指针在位置 head，快指针在位置 head.next，而不是两个指针都在位置 head（即与「乌龟」和「兔子」中的叙述相同）？</p>
+<p>观察下面的代码，我们使用的是 while 循环，循环条件先于循环体。由于循环条件一定是判断快慢指针是否重合，如果我们将两个指针初始都置于 head，那么 while 循环就不会执行。因此，我们可以假想一个在 head 之前的虚拟节点，慢指针从虚拟节点移动一步到达 head，快指针从虚拟节点移动两步到达 head.next，这样我们就可以使用 while 循环了。</p>
+<p>当然，我们也可以使用 do-while 循环。此时，我们就可以把快慢指针的初始值都置为 head。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">puclic <span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascycle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head;</span><br><span class="line">        ListNode fast = head.next;</span><br><span class="line">        <span class="keyword">while</span>(slow!=fast)&#123;</span><br><span class="line">            <span class="keyword">if</span>(fast==<span class="keyword">null</span>||fast.next==<span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            fast = fast.next.next</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。</p>
+<p>当链表中不存在环时，快指针将先于慢指针到达链表尾部，链表中每个节点至多被访问两次。</p>
+<p>当链表中存在环时，每一轮移动后，快慢指针的距离将减小一。而初始距离为环的长度，因此至多移动 NN 轮。</p>
+<p>空间复杂度：O(1)O(1)。我们只使用了两个指针的额外空间</p>
+<h2 id="环形列表II"><a href="#环形列表II" class="headerlink" title="环形列表II"></a>环形列表II</h2><h3 id="题目说明-1"><a href="#题目说明-1" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。</p>
+<p>为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意，pos 仅仅是用于标识环的情况，并不会作为参数传递到函数中。</p>
+<p>说明：不允许修改给定的链表。</p>
+<p>进阶：</p>
+<p>你是否可以使用 O(1) 空间解决此题？</p>
+<p> 示例 1：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102706369.png" alt="image-20210114102706369"></p>
+<p>输入：head = [3,2,0,-4], pos = 1<br>输出：返回索引为 1 的链表节点<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102721841.png" alt="image-20210114102721841"></p>
+<p>输入：head = [1,2], pos = 0<br>输出：返回索引为 0 的链表节点<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102737481.png" alt="image-20210114102737481"></p>
+<p>输入：head = [1], pos = -1<br>输出：返回 null<br>解释：链表中没有环。</p>
+<p>提示：</p>
+<p>链表中节点的数目范围在范围 [0, 104] 内<br>-105 &lt;= Node.val &lt;= 105<br>pos 的值为 -1 或者链表中的一个有效索引</p>
+<h3 id="题解-1"><a href="#题解-1" class="headerlink" title="题解"></a>题解</h3><h4 id="方法一：哈希表"><a href="#方法一：哈希表" class="headerlink" title="方法一：哈希表"></a>方法一：哈希表</h4><p>一个非常直观的思路是：我们遍历链表中的每个节点，并将它记录下来；一旦遇到了此前遍历过的节点，就可以判定链表中存在环。借助哈希表可以很方便地实现。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        ListNode pos = head;</span><br><span class="line">        Set&lt;ListNode&gt; visited = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span> (pos != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (visited.contains(pos)) &#123;</span><br><span class="line">                <span class="keyword">return</span> pos;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                visited.add(pos);</span><br><span class="line">            &#125;</span><br><span class="line">            pos = pos.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析-1"><a href="#复杂度分析-1" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们恰好需要访问链表中的每一个节点。</p>
+<p>空间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们需要将链表中的每个节点都保存在哈希表当中。</p>
+<h4 id="方法二：双指针–快慢指针"><a href="#方法二：双指针–快慢指针" class="headerlink" title="方法二：双指针–快慢指针"></a>方法二：双指针–快慢指针</h4><p>我们使用两个指针，\textit{fast}fast 与 \textit{slow}slow。它们起始都位于链表的头部。随后，\textit{slow}slow 指针每次向后移动一个位置，而 \textit{fast}fast 指针向后移动两个位置。如果链表中存在环，则 \textit{fast}fast 指针最终将再次与 \textit{slow}slow 指针在环中相遇。</p>
+<p>如下图所示，设链表中环外部分的长度为 aa。\textit{slow}slow 指针进入环后，又走了 bb 的距离与 \textit{fast}fast 相遇。此时，\textit{fast}fast 指针已经走完了环的 nn 圈，因此它走过的总距离为 a+n(b+c)+b=a+(n+1)b+nca+n(b+c)+b=a+(n+1)b+nc</p>
+ <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114103031586.png" alt="image-20210114103031586" style="zoom:50%;">
+
+<p>根据题意，任意时刻，\textit{fast}fast 指针走过的距离都为 \textit{slow}slow 指针的 22 倍。因此，我们有</p>
+<p>a+(n+1)b+nc=2(a+b) \implies a=c+(n-1)(b+c)<br>a+(n+1)b+nc=2(a+b)⟹a=c+(n−1)(b+c)</p>
+<p>有了 a=c+(n-1)(b+c)a=c+(n−1)(b+c) 的等量关系，我们会发现：从相遇点到入环点的距离加上 n-1n−1 圈的环长，恰好等于从链表头部到入环点的距离。</p>
+<p>因此，当发现 \textit{slow}slow 与 \textit{fast}fast 相遇时，我们再额外使用一个指针 \textit{ptr}ptr。起始，它指向链表头部；随后，它和 \textit{slow}slow 每次向后移动一个位置。最终，它们会在入环点相遇。 </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head, fast = head;</span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="keyword">null</span>) &#123;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            <span class="keyword">if</span> (fast.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">                fast = fast.next.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (fast == slow) &#123;</span><br><span class="line">                ListNode ptr = head;</span><br><span class="line">                <span class="keyword">while</span> (ptr != slow) &#123;</span><br><span class="line">                    ptr = ptr.next;</span><br><span class="line">                    slow = slow.next;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> ptr;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>#####复杂度分析</p>
+<p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。在最初判断快慢指针是否相遇时，\textit{slow}slow 指针走过的距离不会超过链表的总长度；随后寻找入环点时，走过的距离也不会超过链表的总长度。因此，总的执行时间为 O(N)+O(N)=O(N)O(N)+O(N)=O(N)。</p>
+<p>空间复杂度：O(1)O(1)。我们只使用了 \textit{slow}, \textit{fast}, \textit{ptr}slow,fast,ptr 三个指针。</p>
+]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>链表</tag>
+        <tag>双指针</tag>
       </tags>
   </entry>
   <entry>
@@ -2891,284 +2891,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>Vue模板语法</title>
-    <url>/2021/03/07/%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95/</url>
-    <content><![CDATA[<h2 id="模板语法"><a href="#模板语法" class="headerlink" title="模板语法"></a>模板语法</h2><p>Vue.js 使用了基于 HTML 的模板语法，允许开发者声明式地将 DOM 绑定至底层 Vue 实例的数据。所有 Vue.js 的模板都是合法的 HTML，所以能被遵循规范的浏览器和 HTML 解析器解析。</p>
-<p>在底层的实现上，Vue 将模板编译成虚拟 DOM 渲染函数。结合响应系统，Vue 能够智能地计算出最少需要重新渲染多少组件，并把 DOM 操作次数减到最少。</p>
-<h3 id="插值"><a href="#插值" class="headerlink" title="插值"></a>插值</h3><h4 id="文本"><a href="#文本" class="headerlink" title="文本"></a>文本</h4><p>数据绑定最常见的形式就是使用“Mustache”语法 (双大括号) 的文本插值：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span>Message:&#123;&#123;msg&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>Mustache 标签将会被替代为对应数据对象上 <code>msg</code> property 的值。无论何时，绑定的数据对象上 <code>msg</code> property 发生了改变，插值处的内容都会更新。</p>
-<p>通过使用 **<a href="https://cn.vuejs.org/v2/api/#v-once">v-once 指令</a>**，你也能执行一次性地插值，当数据改变时，插值处的内容不会更新。但请留心这会影响到该节点上的其它数据绑定：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">v-once</span>&gt;</span>这个节点上的数据将不会改变：&#123;&#123;mag&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-<h4 id="双大括号下的原始HTML文本"><a href="#双大括号下的原始HTML文本" class="headerlink" title="双大括号下的原始HTML文本"></a>双大括号下的原始HTML文本</h4><p>双大括号会将数据解释为普通文本，而非 HTML 代码。为了输出真正的 HTML，你需要使用**`v-html  **</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">p</span>&gt;</span>Using mustaches: &#123;&#123; rawHtml &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>Using v-html directive: <span class="tag">&lt;<span class="name">span</span> <span class="attr">v-html</span>=<span class="string">&quot;rawHtml&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>你不能使用 <code>v-html</code> 来复合局部模板，因为 Vue 不是基于字符串的模板引擎。反之，对于用户界面 (UI)，组件更适合作为可重用和可组合的基本单位。</p>
-<blockquote>
-<p>你的站点上动态渲染的任意 HTML 可能会非常危险，因为它很容易导致 <a href="https://en.wikipedia.org/wiki/Cross-site_scripting">XSS 攻击</a>。请只对可信内容使用 HTML 插值，<strong>绝不要</strong>对用户提供的内容使用插值。</p>
-</blockquote>
-<h2 id="对Attribute进行数据绑定"><a href="#对Attribute进行数据绑定" class="headerlink" title="对Attribute进行数据绑定"></a>对Attribute进行数据绑定</h2><p>Mustache 语法不能作用在 HTML attribute 上，遇到这种情况应该使用 <a href="https://cn.vuejs.org/v2/api/#v-bind"><code>v-bind</code> 指令</a>：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;div v-bind:id&#x3D;&quot;dynamicId&quot;&gt;&lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
-<p>对于布尔 attribute (它们只要存在就意味着值为 <code>true</code>)，<code>v-bind</code> 工作起来略有不同，在这个例子中：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;button v-bind:disabled&#x3D;&quot;isButtonDisabled&quot;&gt;Button&lt;&#x2F;button&gt;</span><br></pre></td></tr></table></figure>
-<p>如果 <code>isButtonDisabled</code> 的值是 <code>null</code>、<code>undefined</code> 或 <code>false</code>，则 <code>disabled</code> attribute 甚至不会被包含在渲染出来的 <code>&lt;button&gt;</code> 元素中。</p>
-<h4 id="使用JavaScript表达式-而不是键值"><a href="#使用JavaScript表达式-而不是键值" class="headerlink" title="使用JavaScript表达式(而不是键值)"></a>使用JavaScript表达式(而不是键值)</h4><p>迄今为止，在我们的模板中，我们一直都只绑定简单的 property 键值。但实际上，对于所有的数据绑定，Vue.js 都提供了完全的 JavaScript 表达式支持。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&#123;&#123; number + <span class="number">1</span> &#125;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&#123; ok ? <span class="string">&#x27;YES&#x27;</span> : <span class="string">&#x27;NO&#x27;</span> &#125;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&#123; message.split(<span class="string">&#x27;&#x27;</span>).reverse().join(<span class="string">&#x27;&#x27;</span>) &#125;&#125;</span><br><span class="line"></span><br><span class="line">&lt;div v-bind:id=<span class="string">&quot;&#x27;list-&#x27; + id&quot;</span>&gt;&lt;/div&gt;</span><br></pre></td></tr></table></figure>
-<p>这些表达式会在所属 Vue 实例的数据作用域下作为 JavaScript 被解析。有个限制就是，每个绑定都只能包含<strong>单个表达式</strong>，所以下面的例子都<strong>不会</strong>生效。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&lt;!-- 这是语句，不是表达式 --&gt;</span><br><span class="line">&#123;&#123; <span class="keyword">var</span> a = <span class="number">1</span> &#125;&#125;      </span><br><span class="line"></span><br><span class="line">&lt;!-- 流控制也不会生效，请使用三元表达式 --&gt;</span><br><span class="line">&#123;&#123; <span class="keyword">if</span> (ok) &#123; <span class="keyword">return</span> message &#125; &#125;&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h3><p>指令 (Directives) 是带有 <code>v-</code> 前缀的特殊 attribute。指令 attribute 的值预期是<strong>单个 JavaScript 表达式</strong> (<code>v-for</code> 是例外情况，稍后我们再讨论)。指令的职责是，当表达式的值改变时，将其产生的连带影响，响应式地作用于 DOM。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;p v-if&#x3D;&quot;seen&quot;&gt;现在你看到我了&lt;&#x2F;p&gt;</span><br></pre></td></tr></table></figure>
-<p>这里，<code>v-if</code> 指令将根据表达式 <code>seen</code> 的值的真假来插入/移除 <code>&lt;p&gt;</code> 元素</p>
-<h3 id="参数"><a href="#参数" class="headerlink" title="[参数]"></a>[参数]</h3><p>一些指令能够接收一个“参数”，在指令名称之后以冒号表示。例如，<code>v-bind</code> 指令可以用于响应式地更新 HTML attribute：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;a v-bind:href&#x3D;&quot;url&quot;&gt;...&lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<p>在这里 <code>href</code> 是参数，告知 <code>v-bind</code> 指令将该元素的 <code>href</code> attribute 与表达式 <code>url</code> 的值绑定。</p>
-<p>另一个例子是 <code>v-on</code> 指令，它用于监听 DOM 事件：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;a v-on:click&#x3D;&quot;doSomething&quot;&gt;...&lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<p>在这里参数是监听的事件名。 </p>
-<h3 id="动态参数"><a href="#动态参数" class="headerlink" title="动态参数"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#%E5%8A%A8%E6%80%81%E5%8F%82%E6%95%B0">动态参数</a></h3><blockquote>
-<p>2.6.0 新增</p>
-</blockquote>
-<p>从 2.6.0 开始，可以用方括号括起来的 JavaScript 表达式作为一个指令的参数：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!--</span><br><span class="line">注意，参数表达式的写法存在一些约束，如之后的“对动态参数表达式的约束”章节所述。</span><br><span class="line">--&gt;</span><br><span class="line">&lt;a v-bind:[attributeName]&#x3D;&quot;url&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<p>这里的 <code>attributeName</code> 会被作为一个 JavaScript 表达式进行动态求值，求得的值将会作为最终的参数来使用。例如，如果你的 Vue 实例有一个 <code>data</code> property <code>attributeName</code>，其值为 <code>&quot;href&quot;</code>，那么这个绑定将等价于 <code>v-bind:href</code>。</p>
-<p>同样地，你可以使用动态参数为一个动态的事件名绑定处理函数：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;a v-on:[eventName]&#x3D;&quot;doSomething&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<p>在这个示例中，当 <code>eventName</code> 的值为 <code>&quot;focus&quot;</code> 时，<code>v-on:[eventName]</code> 将等价于 <code>v-on:focus</code>。</p>
-<h4 id="对动态参数的值的约束"><a href="#对动态参数的值的约束" class="headerlink" title="对动态参数的值的约束"></a>对动态参数的值的约束</h4><p>动态参数预期会求出一个字符串，异常情况下值为 <code>null</code>。这个<strong>特殊的 <code>null</code> 值可以被显性地用于移除绑定</strong>。任何其它非字符串类型的值都将会触发一个警告。</p>
-<h4 id="对动态参数表达式的约束"><a href="#对动态参数表达式的约束" class="headerlink" title="对动态参数表达式的约束"></a>对动态参数表达式的约束</h4><p>动态参数表达式有一些语法约束，因为某些字符，如空格和引号，放在 HTML attribute 名里是无效的。例如：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 这会触发一个编译警告 --&gt;</span><br><span class="line">&lt;a v-bind:[&#39;foo&#39; + bar]&#x3D;&quot;value&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<p>变通的办法是使用没有空格或引号的表达式，或用计算属性替代这种复杂表达式。</p>
-<p>在 DOM 中使用模板时 (直接在一个 HTML 文件里撰写模板)，还需要避免使用大写字符来命名键名，因为浏览器会把 attribute 名全部强制转为小写：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!--</span><br><span class="line">在 DOM 中使用模板时这段代码会被转换为 &#96;v-bind:[someattr]&#96;。</span><br><span class="line">除非在实例中有一个名为“someattr”的 property，否则代码不会工作。</span><br><span class="line">--&gt;</span><br><span class="line">&lt;a v-bind:[someAttr]&#x3D;&quot;value&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="修饰符"><a href="#修饰符" class="headerlink" title="修饰符"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#%E4%BF%AE%E9%A5%B0%E7%AC%A6">修饰符</a></h3><p>修饰符 (modifier) 是以半角句号 <code>.</code> 指明的特殊后缀，用于指出一个指令应该以特殊方式绑定。例如，<code>.prevent</code> 修饰符告诉 <code>v-on</code> 指令对于触发的事件调用 <code>event.preventDefault()</code>：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;form v-on:submit.prevent&#x3D;&quot;onSubmit&quot;&gt;...&lt;&#x2F;form&gt;</span><br></pre></td></tr></table></figure>
-<p>阻止某一事件的默认机制执行，此时组织了submit行为的产生</p>
-<h3 id="缩写"><a href="#缩写" class="headerlink" title="缩写"></a>缩写</h3><p><code>v-</code> 前缀作为一种视觉提示，用来识别模板中 Vue 特定的 attribute。当你在使用 Vue.js 为现有标签添加动态行为 (dynamic behavior) 时，<code>v-</code> 前缀很有帮助，然而，对于一些频繁用到的指令来说，就会感到使用繁琐。同时，在构建由 Vue 管理所有模板的<a href="https://en.wikipedia.org/wiki/Single-page_application">单页面应用程序 (SPA - single page application)</a> 时，<code>v-</code> 前缀也变得没那么重要了。因此，Vue 为 <code>v-bind</code> 和 <code>v-on</code> 这两个最常用的指令，提供了特定简写：</p>
-<h3 id="v-bind-缩写"><a href="#v-bind-缩写" class="headerlink" title="v-bind 缩写"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#v-bind-%E7%BC%A9%E5%86%99"><code>v-bind</code> 缩写</a></h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 完整语法 --&gt;</span><br><span class="line">&lt;a v-bind:href&#x3D;&quot;url&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 缩写 --&gt;</span><br><span class="line">&lt;a :href&#x3D;&quot;url&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 动态参数的缩写 (2.6.0+) --&gt;</span><br><span class="line">&lt;a :[key]&#x3D;&quot;url&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<h3 id="v-on-缩写"><a href="#v-on-缩写" class="headerlink" title="v-on 缩写"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#v-on-%E7%BC%A9%E5%86%99"><code>v-on</code> 缩写</a></h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 完整语法 --&gt;</span><br><span class="line">&lt;a v-on:click&#x3D;&quot;doSomething&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 缩写 --&gt;</span><br><span class="line">&lt;a @click&#x3D;&quot;doSomething&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 动态参数的缩写 (2.6.0+) --&gt;</span><br><span class="line">&lt;a @[event]&#x3D;&quot;doSomething&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<p>它们看起来可能与普通的 HTML 略有不同，但 <code>:</code> 与 <code>@</code> 对于 attribute 名来说都是合法字符，在所有支持 Vue 的浏览器都能被正确地解析。</p>
-]]></content>
-      <categories>
-        <category>Vue框架</category>
-      </categories>
-      <tags>
-        <tag>Vue</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>消息队列产品与RabbitMQ的简介</title>
-    <url>/2021/03/13/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E4%BA%A7%E5%93%81%E4%B8%8E%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%9E%8B/</url>
-    <content><![CDATA[<h2 id="MQ常见产品"><a href="#MQ常见产品" class="headerlink" title="MQ常见产品"></a>MQ常见产品</h2><p>目前业界有很多的 MQ 产品，例如 RabbitMQ、RocketMQ、ActiveMQ、Kafka、ZeroMQ、MetaMq等，也有直接使用 Redis 充当消息队列的案例，而这些消息队列产品，各有侧重，在实际选型时，需要结合自身需求及 MQ 产品特征，综合考虑。</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th><strong>RabbitMQ</strong></th>
-<th><strong>ActiveMQ</strong></th>
-<th><strong>RocketMQ</strong></th>
-<th><strong>Kafka</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>公司/社区</td>
-<td>Rabbit</td>
-<td>Apache</td>
-<td>阿里</td>
-<td>Apache</td>
-</tr>
-<tr>
-<td>开发语言</td>
-<td>Erlang</td>
-<td>Java</td>
-<td>Java</td>
-<td>Scala&amp;Java</td>
-</tr>
-<tr>
-<td>协议支持</td>
-<td>AMQP，XMPP，SMTP，STOMP</td>
-<td>OpenWire,STOMP，REST,XMPP,AMQP</td>
-<td>自定义</td>
-<td>自定义协议，社区封装了http协议支持</td>
-</tr>
-<tr>
-<td>客户端支持语言</td>
-<td>官方支持Erlang，Java，Ruby等,社区产出多种API，几乎支持所有语言</td>
-<td>Java，C，C++，Python，PHP，Perl，.net等</td>
-<td>Java，C++（不成熟）</td>
-<td>官方支持Java,社区产出多种API，如PHP，Python等</td>
-</tr>
-<tr>
-<td>单机吞吐量</td>
-<td>万级（其次）</td>
-<td>万级（最差）</td>
-<td>十万级（最好）</td>
-<td>十万级（次之）</td>
-</tr>
-<tr>
-<td>消息延迟</td>
-<td>微妙级</td>
-<td>毫秒级</td>
-<td>毫秒级</td>
-<td>毫秒以内</td>
-</tr>
-<tr>
-<td>功能特性</td>
-<td>并发能力强，性能极其好，延时低，社区活跃，管理界面丰富</td>
-<td>老牌产品，成熟度高，文档较多</td>
-<td>MQ功能比较完备，扩展性佳</td>
-<td>只支持主要的MQ功能，毕竟是为大数据领域准备的。</td>
-</tr>
-</tbody></table>
-<ul>
-<li>ActiveMQ 的社区算是比较成熟，但是较目前来说，ActiveMQ 的性能比较差，而且版本迭代很慢，不推荐使用。</li>
-<li>RabbitMQ 在吞吐量方面虽然稍逊于 Kafka 和 RocketMQ ，但是由于它基于 erlang 开发，所以并发能力很强，性能极其好，延时很低，达到微秒级。但是也因为 RabbitMQ 基于 erlang 开发，所以国内很少有公司有实力做erlang源码级别的研究和定制。如果业务场景对并发量要求不是太高（十万级、百万级），那这四种消息队列中，RabbitMQ 一定是你的首选。如果是大数据领域的实时计算、日志采集等场景，用 Kafka 是业内标准的，绝对没问题，社区活跃度很高，绝对不会黄，何况几乎是全世界这个领域的事实性规范。</li>
-<li>RocketMQ 阿里出品，Java 系开源项目，源代码我们可以直接阅读，然后可以定制自己公司的MQ，并且 RocketMQ 有阿里巴巴的实际业务场景的实战考验。RocketMQ 社区活跃度相对较为一般，不过也还可以，文档相对来说简单一些，然后接口这块不是按照标准 JMS 规范走的有些系统要迁移需要修改大量代码。还有就是阿里出台的技术，你得做好这个技术万一被抛弃，社区黄掉的风险，那如果你们公司有技术实力我觉得用RocketMQ 挺好的</li>
-<li>kafka 的特点其实很明显，就是仅仅提供较少的核心功能，但是提供超高的吞吐量，ms 级的延迟，极高的可用性以及可靠性，而且分布式可以任意扩展。同时 kafka 最好是支撑较少的 topic 数量即可，保证其超高吞吐量。kafka 唯一的一点劣势是有可能消息重复消费，那么对数据准确性会造成极其轻微的影响，在大数据领域中以及日志采集中，这点轻微影响可以忽略这个特性天然适合大数据实时计算以及日志收集。</li>
-</ul>
-<h2 id="RabbitMQ"><a href="#RabbitMQ" class="headerlink" title="RabbitMQ"></a>RabbitMQ</h2><p>2007年，Rabbit 技术公司基于 AMQP 标准开发的 RabbitMQ 1.0 发布。RabbitMQ 采用 Erlang 语言开发。Erlang 语言由 Ericson 设计，专门为开发高并发和分布式系统的一种语言，在电信领域使用广泛。</p>
-<p>RabbitMQ基础架构如下图：</p>
-<img data-src="/2021/03/13/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E4%BA%A7%E5%93%81%E4%B8%8E%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%9E%8B/02.png" class>
-
-<h3 id="相关概念与基础架构"><a href="#相关概念与基础架构" class="headerlink" title="相关概念与基础架构"></a>相关概念与基础架构</h3><blockquote>
-<p>RabbitMQ的相关概念</p>
-</blockquote>
-<ul>
-<li><p> Broker：接收和分发消息的应用，RabbitMQ Server就是 Message Broker。</p>
-</li>
-<li><p>Virtual host：出于多租户和安全因素设计的，把 AMQP 的基本组件划分到一个虚拟的分组中，类似于网络中的 namespace 概念。当多个不同的用户使用同一个 RabbitMQ server 提供的服务时，可以划分出多个vhost，每个用户在自己的 vhost 创建 exchange／queue 等。</p>
-</li>
-<li><p>Connection：publisher／consumer 和 broker 之间的 TCP 连接。</p>
-</li>
-<li><p>Channel：如果每一次访问 RabbitMQ 都建立一个 Connection，在消息量大的时候建立 TCP Connection的开销将是巨大的，效率也较低。Channel 是在 connection 内部建立的逻辑连接，如果应用程序支持多线程，通常每个thread创建单独的 channel 进行通讯，AMQP method 包含了channel id 帮助客户端和message broker 识别 channel，所以 channel 之间是完全隔离的。Channel 作为轻量级的 Connection 极大减少了操作系统建立 TCP connection 的开销。</p>
-</li>
-<li><p>message 到达 broker 的第一站，根据分发规则，匹配查询表中的 routing key，分发消息到queue 中去。常用的类型有：direct (point-to-point), topic (publish-subscribe) and fanout (multicast)。</p>
-</li>
-<li><p>Queue：消息最终被送到这里等待 consumer 取走。</p>
-</li>
-<li><p>Bingding：exchange 和 queue 之间的虚拟连接，binding 中可以包含 routing key。Binding 信息被保存到 exchange 中的查询表中，用于 message 的分发依据。</p>
-</li>
-</ul>
-<h3 id="工作模式"><a href="#工作模式" class="headerlink" title="工作模式"></a>工作模式</h3><p>RabbitMQ 提供了 6 种工作模式：简单模式、work queues、Publish/Subscribe 发布与订阅模式、Routing 路由模式、Topics 主题模式、RPC 远程调用模式（远程调用，不太算 MQ；暂不作介绍）。</p>
-<p><a href="https://www.rabbitmq.com/getstarted.html">官网对应模式介绍</a></p>
- <img data-src="/2021/03/13/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E4%BA%A7%E5%93%81%E4%B8%8E%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%9E%8B/03.png" class>
-
-
-
-<h3 id="AMQP与JMS"><a href="#AMQP与JMS" class="headerlink" title="AMQP与JMS"></a>AMQP与JMS</h3><p>首先明确AMQP是协议，类比HTTP；JMS是API规范接口，类比JDBC。</p>
-<h4 id="JMS简介"><a href="#JMS简介" class="headerlink" title="JMS简介"></a>JMS简介</h4><p>JMS（JAVA Message Service,java消息服务）是java的消息服务，JMS的客户端之间可以通过JMS服务进行异步的消息传输。<strong>JMS（JAVA Message Service,Java消息服务）API是一个消息服务的标准或者说是规范</strong>，允许应用程序组件基于JavaEE平台创建、发送、接收和读取消息。它使分布式通信耦合度更低，消息服务更加可靠以及异步性。</p>
-<p><strong>ActiveMQ 就是基于 JMS 规范实现的。</strong></p>
-<h5 id="JMS两种消息模型"><a href="#JMS两种消息模型" class="headerlink" title="JMS两种消息模型"></a>JMS两种消息模型</h5><blockquote>
-<p>点到点（P2P）模型</p>
-</blockquote>
-<img data-src="/2021/03/13/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E4%BA%A7%E5%93%81%E4%B8%8E%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%9E%8B/04.png" class>
-
-
-
-<p>使用<strong>队列（Queue）</strong>作为消息通信载体；满足<strong>生产者与消费者模式</strong>，**<em>一条消息只能被一个消费者使用**</em>，未被消费的消息在队列中保留直到被消费或超时。比如：我们生产者发送100条消息的话，两个消费者来消费一般情况下两个消费者会按照消息发送的顺序各自消费一半（也就是你一个我一个的消费。）</p>
-<blockquote>
-<p>发布、订阅（Pub/Sub)模型</p>
-</blockquote>
-<img data-src="/2021/03/13/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E4%BA%A7%E5%93%81%E4%B8%8E%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%9E%8B/05.png" class>
-
-<p>发布订阅模型（Pub/Sub） 使用<strong>主题（Topic）</strong>作为消息通信载体，类似于<strong>广播模式</strong>；发布者发布一条消息，该消息通过主题传递给所有的订阅者，<strong>在一条消息广播之后才订阅的用户则是收不到该条消息的</strong>。</p>
-<h5 id="JMS五种不同的消息正文格式"><a href="#JMS五种不同的消息正文格式" class="headerlink" title="JMS五种不同的消息正文格式"></a>JMS五种不同的消息正文格式</h5><p>JMS定义了五种不同的消息正文格式，以及调用的消息类型，允许你发送并接收以一些不同形式的数据，提供现有消息格式的一些级别的兼容性。</p>
-<ul>
-<li>StreamMessage – Java原始值的数据流</li>
-<li>MapMessage–一套名称-值对</li>
-<li>TextMessage–一个字符串对象</li>
-<li>ObjectMessage–一个序列化的 Java对象</li>
-<li>BytesMessage–一个字节的数据流</li>
-</ul>
-<h4 id="AMQP"><a href="#AMQP" class="headerlink" title="AMQP"></a>AMQP</h4><p>AMQP，即Advanced Message Queuing Protocol,一个提供统一消息服务的应用层标准 <strong>高级消息队列协议</strong>（二进制应用层协议），是应用层协议的一个开放标准,为面向消息的中间件设计，兼容 JMS。基于此协议的客户端与消息中间件可传递消息，并不受客户端/中间件同产品，不同的开发语言等条件的限制。</p>
-<p><strong>RabbitMQ 就是基于 AMQP 协议实现的。</strong></p>
-<table>
-<thead>
-<tr>
-<th>对比</th>
-<th align="center">JMS</th>
-<th>AMQP</th>
-</tr>
-</thead>
-<tbody><tr>
-<td></td>
-<td align="center"></td>
-<td></td>
-</tr>
-<tr>
-<td>定义</td>
-<td align="center">Java API</td>
-<td>协议</td>
-</tr>
-<tr>
-<td>跨语言</td>
-<td align="center">否</td>
-<td>是</td>
-</tr>
-<tr>
-<td>跨平台</td>
-<td align="center">否</td>
-<td>是</td>
-</tr>
-<tr>
-<td>支持消息类型</td>
-<td align="center">提供两种消息模型：①Peer-2-Peer;②Pub/sub</td>
-<td>提供了五种消息模型：①direct exchange；②fanout exchange；③topic change；④headers exchange；⑤system exchange。本质来讲，后四种和JMS的pub/sub模型没有太大差别，仅是在路由机制上做了更详细的划分；</td>
-</tr>
-<tr>
-<td>支持消息类型</td>
-<td align="center">支持多种消息类型 ，我们在上面提到过</td>
-<td>byte[]（二进制</td>
-</tr>
-</tbody></table>
-<p>####总结</p>
-<ul>
-<li>AMQP 为消息定义了线路层（wire-level protocol）的协议，而JMS所定义的是API规范。在 Java 体系中，多个client均可以通过JMS进行交互，不需要应用修改代码，但是其对跨平台的支持较差。而AMQP天然具有跨平台、跨语言特性。</li>
-<li>JMS 支持TextMessage、MapMessage 等复杂的消息类型；而 AMQP 仅支持 byte[] 消息类型（复杂的类型可序列化后发送）。</li>
-<li>由于Exchange 提供的路由算法，AMQP可以提供多样化的路由方式来传递消息到消息队列，而 JMS 仅支持 队列 和 主题/订阅 方式两种。</li>
-</ul>
-]]></content>
-      <categories>
-        <category>MQ</category>
-      </categories>
-      <tags>
-        <tag>RabbitMQ</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>类文件结构</title>
-    <url>/2021/01/16/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</url>
-    <content><![CDATA[<p>#类文件结构</p>
-<h2 id="虚拟机的无关性"><a href="#虚拟机的无关性" class="headerlink" title="虚拟机的无关性"></a>虚拟机的无关性</h2><p>Java的宣传口号是: <strong><em>WRITE ONCE , RUN ANYWHREE</em></strong></p>
-<p>java虚拟机力求实现的两种无关性：</p>
-<ol>
-<li><p>平台无关性</p>
-<p>各种不同平台的虚拟机与所有平台都统一使用的程序存储格式——–字节码（ByteCode）是构成平台无关性的基础，虚拟机可以载入同一种平台无关的字节码。</p>
-</li>
-<li><p>语言无关性：</p>
-<p><strong>举例</strong>：除了Java之外，Clojure、Groovy、JRuby、Jython、Scala都可以在Java虚拟机上运行</p>
-<p>实现语言无关性的基础是Java虚拟机不与任何语言绑定，只与**<em>“Class文件”这种特殊的二进制文件格式**</em>相关联，Class文件包含了Java虚拟机指令集和符号表以及若干其他辅助信息，在Class文件中使用了许多强制性的语法和结构化约束，任何一门语言都可以表示为被JAVA虚拟机锁接受的有效的Class文件。虚拟机只关心Class文件本身，而不关心Class文件的来源是哪种语言。</p>
-<p>在Class文件中，各种关键字、变量、和运算符号的语义都是有多条字节码命令组合而成的，字节码命令所能提供的语义描述能力必然要比java语言本身更为强大，所以Java虚拟机提供的支持远比java语言本身强大。</p>
-</li>
-</ol>
-<h2 id="Class类文件的结构"><a href="#Class类文件的结构" class="headerlink" title="Class类文件的结构"></a>Class类文件的结构</h2><p>Class文件是一组以8位字节为基础单位的二进制流，各个数据项目严格的按照顺序紧凑的排列在Class文件中，中间没有任何的分隔符，这使得整个Class文件中存储的内容几乎全是程序运行的必要数据，没有空隙存在。</p>
-<p>Class文件格式采用一种类似于C语言中struct的伪结构来进行存储数据：包括<strong>无符号数+表</strong></p>
-<p>1、无符号数：基本数据类型</p>
-<p>2、表：有多个无符号数或者其他表作为数据项构成的复合数据类型，习惯性的以__info结尾。表用于描述有层次关系的复合结构的数据。整个class文件本质上就是一张表。</p>
-<h3 id="magic-numer与class文件版本"><a href="#magic-numer与class文件版本" class="headerlink" title="magic numer与class文件版本"></a>magic numer与class文件版本</h3><h3 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h3><h3 id="访问标志"><a href="#访问标志" class="headerlink" title="访问标志"></a>访问标志</h3><h3 id="类索引、父类索引、接口索引集合"><a href="#类索引、父类索引、接口索引集合" class="headerlink" title="类索引、父类索引、接口索引集合"></a>类索引、父类索引、接口索引集合</h3><h3 id="字段表集合"><a href="#字段表集合" class="headerlink" title="字段表集合"></a>字段表集合</h3><h3 id="方法表集合"><a href="#方法表集合" class="headerlink" title="方法表集合"></a>方法表集合</h3><p>###属性表集合</p>
-]]></content>
-      <categories>
-        <category>JVM虚拟机</category>
-      </categories>
-      <tags>
-        <tag>JAVA</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>系统调用</title>
     <url>/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/</url>
     <content><![CDATA[<h2 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h2><h3 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h3><p>系统调用是内核与用户进程进行交互的一组接口，这些接口让应用程序受限制的访问硬件设备，提供了创建新进程并与已有进程进行交互通信的机制，也提供了申请操作系统其他资源的能力。</p>
@@ -3384,11 +3106,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>组件基础</title>
-    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E5%9F%BA%E7%A1%80/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>红队攻防入门1</title>
     <url>/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/</url>
     <content><![CDATA[<h2 id="红队攻防入门1–初识红队"><a href="#红队攻防入门1–初识红队" class="headerlink" title="红队攻防入门1–初识红队"></a>红队攻防入门1–初识红队</h2><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F1.png" class>
@@ -3483,8 +3200,88 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
+    <title>组件基础</title>
+    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Vue模板语法</title>
+    <url>/2021/03/07/%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="模板语法"><a href="#模板语法" class="headerlink" title="模板语法"></a>模板语法</h2><p>Vue.js 使用了基于 HTML 的模板语法，允许开发者声明式地将 DOM 绑定至底层 Vue 实例的数据。所有 Vue.js 的模板都是合法的 HTML，所以能被遵循规范的浏览器和 HTML 解析器解析。</p>
+<p>在底层的实现上，Vue 将模板编译成虚拟 DOM 渲染函数。结合响应系统，Vue 能够智能地计算出最少需要重新渲染多少组件，并把 DOM 操作次数减到最少。</p>
+<h3 id="插值"><a href="#插值" class="headerlink" title="插值"></a>插值</h3><h4 id="文本"><a href="#文本" class="headerlink" title="文本"></a>文本</h4><p>数据绑定最常见的形式就是使用“Mustache”语法 (双大括号) 的文本插值：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span>Message:&#123;&#123;msg&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>Mustache 标签将会被替代为对应数据对象上 <code>msg</code> property 的值。无论何时，绑定的数据对象上 <code>msg</code> property 发生了改变，插值处的内容都会更新。</p>
+<p>通过使用 **<a href="https://cn.vuejs.org/v2/api/#v-once">v-once 指令</a>**，你也能执行一次性地插值，当数据改变时，插值处的内容不会更新。但请留心这会影响到该节点上的其它数据绑定：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">v-once</span>&gt;</span>这个节点上的数据将不会改变：&#123;&#123;mag&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="双大括号下的原始HTML文本"><a href="#双大括号下的原始HTML文本" class="headerlink" title="双大括号下的原始HTML文本"></a>双大括号下的原始HTML文本</h4><p>双大括号会将数据解释为普通文本，而非 HTML 代码。为了输出真正的 HTML，你需要使用**`v-html  **</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">p</span>&gt;</span>Using mustaches: &#123;&#123; rawHtml &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>Using v-html directive: <span class="tag">&lt;<span class="name">span</span> <span class="attr">v-html</span>=<span class="string">&quot;rawHtml&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>你不能使用 <code>v-html</code> 来复合局部模板，因为 Vue 不是基于字符串的模板引擎。反之，对于用户界面 (UI)，组件更适合作为可重用和可组合的基本单位。</p>
+<blockquote>
+<p>你的站点上动态渲染的任意 HTML 可能会非常危险，因为它很容易导致 <a href="https://en.wikipedia.org/wiki/Cross-site_scripting">XSS 攻击</a>。请只对可信内容使用 HTML 插值，<strong>绝不要</strong>对用户提供的内容使用插值。</p>
+</blockquote>
+<h2 id="对Attribute进行数据绑定"><a href="#对Attribute进行数据绑定" class="headerlink" title="对Attribute进行数据绑定"></a>对Attribute进行数据绑定</h2><p>Mustache 语法不能作用在 HTML attribute 上，遇到这种情况应该使用 <a href="https://cn.vuejs.org/v2/api/#v-bind"><code>v-bind</code> 指令</a>：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;div v-bind:id&#x3D;&quot;dynamicId&quot;&gt;&lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
+<p>对于布尔 attribute (它们只要存在就意味着值为 <code>true</code>)，<code>v-bind</code> 工作起来略有不同，在这个例子中：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;button v-bind:disabled&#x3D;&quot;isButtonDisabled&quot;&gt;Button&lt;&#x2F;button&gt;</span><br></pre></td></tr></table></figure>
+<p>如果 <code>isButtonDisabled</code> 的值是 <code>null</code>、<code>undefined</code> 或 <code>false</code>，则 <code>disabled</code> attribute 甚至不会被包含在渲染出来的 <code>&lt;button&gt;</code> 元素中。</p>
+<h4 id="使用JavaScript表达式-而不是键值"><a href="#使用JavaScript表达式-而不是键值" class="headerlink" title="使用JavaScript表达式(而不是键值)"></a>使用JavaScript表达式(而不是键值)</h4><p>迄今为止，在我们的模板中，我们一直都只绑定简单的 property 键值。但实际上，对于所有的数据绑定，Vue.js 都提供了完全的 JavaScript 表达式支持。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&#123;&#123; number + <span class="number">1</span> &#125;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&#123; ok ? <span class="string">&#x27;YES&#x27;</span> : <span class="string">&#x27;NO&#x27;</span> &#125;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&#123; message.split(<span class="string">&#x27;&#x27;</span>).reverse().join(<span class="string">&#x27;&#x27;</span>) &#125;&#125;</span><br><span class="line"></span><br><span class="line">&lt;div v-bind:id=<span class="string">&quot;&#x27;list-&#x27; + id&quot;</span>&gt;&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+<p>这些表达式会在所属 Vue 实例的数据作用域下作为 JavaScript 被解析。有个限制就是，每个绑定都只能包含<strong>单个表达式</strong>，所以下面的例子都<strong>不会</strong>生效。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&lt;!-- 这是语句，不是表达式 --&gt;</span><br><span class="line">&#123;&#123; <span class="keyword">var</span> a = <span class="number">1</span> &#125;&#125;      </span><br><span class="line"></span><br><span class="line">&lt;!-- 流控制也不会生效，请使用三元表达式 --&gt;</span><br><span class="line">&#123;&#123; <span class="keyword">if</span> (ok) &#123; <span class="keyword">return</span> message &#125; &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h3><p>指令 (Directives) 是带有 <code>v-</code> 前缀的特殊 attribute。指令 attribute 的值预期是<strong>单个 JavaScript 表达式</strong> (<code>v-for</code> 是例外情况，稍后我们再讨论)。指令的职责是，当表达式的值改变时，将其产生的连带影响，响应式地作用于 DOM。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;p v-if&#x3D;&quot;seen&quot;&gt;现在你看到我了&lt;&#x2F;p&gt;</span><br></pre></td></tr></table></figure>
+<p>这里，<code>v-if</code> 指令将根据表达式 <code>seen</code> 的值的真假来插入/移除 <code>&lt;p&gt;</code> 元素</p>
+<h3 id="参数"><a href="#参数" class="headerlink" title="[参数]"></a>[参数]</h3><p>一些指令能够接收一个“参数”，在指令名称之后以冒号表示。例如，<code>v-bind</code> 指令可以用于响应式地更新 HTML attribute：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;a v-bind:href&#x3D;&quot;url&quot;&gt;...&lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<p>在这里 <code>href</code> 是参数，告知 <code>v-bind</code> 指令将该元素的 <code>href</code> attribute 与表达式 <code>url</code> 的值绑定。</p>
+<p>另一个例子是 <code>v-on</code> 指令，它用于监听 DOM 事件：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;a v-on:click&#x3D;&quot;doSomething&quot;&gt;...&lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<p>在这里参数是监听的事件名。 </p>
+<h3 id="动态参数"><a href="#动态参数" class="headerlink" title="动态参数"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#%E5%8A%A8%E6%80%81%E5%8F%82%E6%95%B0">动态参数</a></h3><blockquote>
+<p>2.6.0 新增</p>
+</blockquote>
+<p>从 2.6.0 开始，可以用方括号括起来的 JavaScript 表达式作为一个指令的参数：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!--</span><br><span class="line">注意，参数表达式的写法存在一些约束，如之后的“对动态参数表达式的约束”章节所述。</span><br><span class="line">--&gt;</span><br><span class="line">&lt;a v-bind:[attributeName]&#x3D;&quot;url&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<p>这里的 <code>attributeName</code> 会被作为一个 JavaScript 表达式进行动态求值，求得的值将会作为最终的参数来使用。例如，如果你的 Vue 实例有一个 <code>data</code> property <code>attributeName</code>，其值为 <code>&quot;href&quot;</code>，那么这个绑定将等价于 <code>v-bind:href</code>。</p>
+<p>同样地，你可以使用动态参数为一个动态的事件名绑定处理函数：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;a v-on:[eventName]&#x3D;&quot;doSomething&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<p>在这个示例中，当 <code>eventName</code> 的值为 <code>&quot;focus&quot;</code> 时，<code>v-on:[eventName]</code> 将等价于 <code>v-on:focus</code>。</p>
+<h4 id="对动态参数的值的约束"><a href="#对动态参数的值的约束" class="headerlink" title="对动态参数的值的约束"></a>对动态参数的值的约束</h4><p>动态参数预期会求出一个字符串，异常情况下值为 <code>null</code>。这个<strong>特殊的 <code>null</code> 值可以被显性地用于移除绑定</strong>。任何其它非字符串类型的值都将会触发一个警告。</p>
+<h4 id="对动态参数表达式的约束"><a href="#对动态参数表达式的约束" class="headerlink" title="对动态参数表达式的约束"></a>对动态参数表达式的约束</h4><p>动态参数表达式有一些语法约束，因为某些字符，如空格和引号，放在 HTML attribute 名里是无效的。例如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 这会触发一个编译警告 --&gt;</span><br><span class="line">&lt;a v-bind:[&#39;foo&#39; + bar]&#x3D;&quot;value&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<p>变通的办法是使用没有空格或引号的表达式，或用计算属性替代这种复杂表达式。</p>
+<p>在 DOM 中使用模板时 (直接在一个 HTML 文件里撰写模板)，还需要避免使用大写字符来命名键名，因为浏览器会把 attribute 名全部强制转为小写：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!--</span><br><span class="line">在 DOM 中使用模板时这段代码会被转换为 &#96;v-bind:[someattr]&#96;。</span><br><span class="line">除非在实例中有一个名为“someattr”的 property，否则代码不会工作。</span><br><span class="line">--&gt;</span><br><span class="line">&lt;a v-bind:[someAttr]&#x3D;&quot;value&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="修饰符"><a href="#修饰符" class="headerlink" title="修饰符"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#%E4%BF%AE%E9%A5%B0%E7%AC%A6">修饰符</a></h3><p>修饰符 (modifier) 是以半角句号 <code>.</code> 指明的特殊后缀，用于指出一个指令应该以特殊方式绑定。例如，<code>.prevent</code> 修饰符告诉 <code>v-on</code> 指令对于触发的事件调用 <code>event.preventDefault()</code>：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;form v-on:submit.prevent&#x3D;&quot;onSubmit&quot;&gt;...&lt;&#x2F;form&gt;</span><br></pre></td></tr></table></figure>
+<p>阻止某一事件的默认机制执行，此时组织了submit行为的产生</p>
+<h3 id="缩写"><a href="#缩写" class="headerlink" title="缩写"></a>缩写</h3><p><code>v-</code> 前缀作为一种视觉提示，用来识别模板中 Vue 特定的 attribute。当你在使用 Vue.js 为现有标签添加动态行为 (dynamic behavior) 时，<code>v-</code> 前缀很有帮助，然而，对于一些频繁用到的指令来说，就会感到使用繁琐。同时，在构建由 Vue 管理所有模板的<a href="https://en.wikipedia.org/wiki/Single-page_application">单页面应用程序 (SPA - single page application)</a> 时，<code>v-</code> 前缀也变得没那么重要了。因此，Vue 为 <code>v-bind</code> 和 <code>v-on</code> 这两个最常用的指令，提供了特定简写：</p>
+<h3 id="v-bind-缩写"><a href="#v-bind-缩写" class="headerlink" title="v-bind 缩写"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#v-bind-%E7%BC%A9%E5%86%99"><code>v-bind</code> 缩写</a></h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 完整语法 --&gt;</span><br><span class="line">&lt;a v-bind:href&#x3D;&quot;url&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 缩写 --&gt;</span><br><span class="line">&lt;a :href&#x3D;&quot;url&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 动态参数的缩写 (2.6.0+) --&gt;</span><br><span class="line">&lt;a :[key]&#x3D;&quot;url&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="v-on-缩写"><a href="#v-on-缩写" class="headerlink" title="v-on 缩写"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#v-on-%E7%BC%A9%E5%86%99"><code>v-on</code> 缩写</a></h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 完整语法 --&gt;</span><br><span class="line">&lt;a v-on:click&#x3D;&quot;doSomething&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 缩写 --&gt;</span><br><span class="line">&lt;a @click&#x3D;&quot;doSomething&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 动态参数的缩写 (2.6.0+) --&gt;</span><br><span class="line">&lt;a @[event]&#x3D;&quot;doSomething&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<p>它们看起来可能与普通的 HTML 略有不同，但 <code>:</code> 与 <code>@</code> 对于 attribute 名来说都是合法字符，在所有支持 Vue 的浏览器都能被正确地解析。</p>
+]]></content>
+      <categories>
+        <category>Vue框架</category>
+      </categories>
+      <tags>
+        <tag>Vue</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>组件进阶篇--深入了解组件</title>
     <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E8%BF%9B%E9%98%B6%E7%AF%87-%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E7%BB%84%E4%BB%B6/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>虚拟机种类</title>
+    <url>/2021/03/14/%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%A7%8D%E7%B1%BB/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -3580,11 +3377,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>虚拟机种类</title>
-    <url>/2021/03/14/%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%A7%8D%E7%B1%BB/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>表单输入绑定</title>
     <url>/2021/03/14/%E8%A1%A8%E5%8D%95%E8%BE%93%E5%85%A5%E7%BB%91%E5%AE%9A/</url>
     <content><![CDATA[]]></content>
@@ -3671,6 +3463,214 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
 </ol>
 <p>所以对于日志push送这种最好全局有序，但允许出现小误差的场景，pull模式非常合适。如果你不想看到通篇乱套的日志~~ Anyway，需要顺序消息的场景还是比较有限的而且成本太高，请慎重考虑。</p>
 <p>本文从为何使用消息队列开始讲起，然后主要介绍了如何从零开始设计一个消息队列，包括RPC、事务、最终一致性、广播、消息确认等关键问题。并对消息队列的push、pull模型做了简要分析，最后从批量和异步角度，分析了消息队列性能优化的思路。 </p>
+]]></content>
+      <categories>
+        <category>MQ</category>
+      </categories>
+      <tags>
+        <tag>RabbitMQ</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>类文件结构</title>
+    <url>/2021/01/16/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</url>
+    <content><![CDATA[<p>#类文件结构</p>
+<h2 id="虚拟机的无关性"><a href="#虚拟机的无关性" class="headerlink" title="虚拟机的无关性"></a>虚拟机的无关性</h2><p>Java的宣传口号是: <strong><em>WRITE ONCE , RUN ANYWHREE</em></strong></p>
+<p>java虚拟机力求实现的两种无关性：</p>
+<ol>
+<li><p>平台无关性</p>
+<p>各种不同平台的虚拟机与所有平台都统一使用的程序存储格式——–字节码（ByteCode）是构成平台无关性的基础，虚拟机可以载入同一种平台无关的字节码。</p>
+</li>
+<li><p>语言无关性：</p>
+<p><strong>举例</strong>：除了Java之外，Clojure、Groovy、JRuby、Jython、Scala都可以在Java虚拟机上运行</p>
+<p>实现语言无关性的基础是Java虚拟机不与任何语言绑定，只与**<em>“Class文件”这种特殊的二进制文件格式**</em>相关联，Class文件包含了Java虚拟机指令集和符号表以及若干其他辅助信息，在Class文件中使用了许多强制性的语法和结构化约束，任何一门语言都可以表示为被JAVA虚拟机锁接受的有效的Class文件。虚拟机只关心Class文件本身，而不关心Class文件的来源是哪种语言。</p>
+<p>在Class文件中，各种关键字、变量、和运算符号的语义都是有多条字节码命令组合而成的，字节码命令所能提供的语义描述能力必然要比java语言本身更为强大，所以Java虚拟机提供的支持远比java语言本身强大。</p>
+</li>
+</ol>
+<h2 id="Class类文件的结构"><a href="#Class类文件的结构" class="headerlink" title="Class类文件的结构"></a>Class类文件的结构</h2><p>Class文件是一组以8位字节为基础单位的二进制流，各个数据项目严格的按照顺序紧凑的排列在Class文件中，中间没有任何的分隔符，这使得整个Class文件中存储的内容几乎全是程序运行的必要数据，没有空隙存在。</p>
+<p>Class文件格式采用一种类似于C语言中struct的伪结构来进行存储数据：包括<strong>无符号数+表</strong></p>
+<p>1、无符号数：基本数据类型</p>
+<p>2、表：有多个无符号数或者其他表作为数据项构成的复合数据类型，习惯性的以__info结尾。表用于描述有层次关系的复合结构的数据。整个class文件本质上就是一张表。</p>
+<h3 id="magic-numer与class文件版本"><a href="#magic-numer与class文件版本" class="headerlink" title="magic numer与class文件版本"></a>magic numer与class文件版本</h3><h3 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h3><h3 id="访问标志"><a href="#访问标志" class="headerlink" title="访问标志"></a>访问标志</h3><h3 id="类索引、父类索引、接口索引集合"><a href="#类索引、父类索引、接口索引集合" class="headerlink" title="类索引、父类索引、接口索引集合"></a>类索引、父类索引、接口索引集合</h3><h3 id="字段表集合"><a href="#字段表集合" class="headerlink" title="字段表集合"></a>字段表集合</h3><h3 id="方法表集合"><a href="#方法表集合" class="headerlink" title="方法表集合"></a>方法表集合</h3><p>###属性表集合</p>
+]]></content>
+      <categories>
+        <category>JVM虚拟机</category>
+      </categories>
+      <tags>
+        <tag>JAVA</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>消息队列产品与RabbitMQ的简介</title>
+    <url>/2021/03/13/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E4%BA%A7%E5%93%81%E4%B8%8E%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%9E%8B/</url>
+    <content><![CDATA[<h2 id="MQ常见产品"><a href="#MQ常见产品" class="headerlink" title="MQ常见产品"></a>MQ常见产品</h2><p>目前业界有很多的 MQ 产品，例如 RabbitMQ、RocketMQ、ActiveMQ、Kafka、ZeroMQ、MetaMq等，也有直接使用 Redis 充当消息队列的案例，而这些消息队列产品，各有侧重，在实际选型时，需要结合自身需求及 MQ 产品特征，综合考虑。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><strong>RabbitMQ</strong></th>
+<th><strong>ActiveMQ</strong></th>
+<th><strong>RocketMQ</strong></th>
+<th><strong>Kafka</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>公司/社区</td>
+<td>Rabbit</td>
+<td>Apache</td>
+<td>阿里</td>
+<td>Apache</td>
+</tr>
+<tr>
+<td>开发语言</td>
+<td>Erlang</td>
+<td>Java</td>
+<td>Java</td>
+<td>Scala&amp;Java</td>
+</tr>
+<tr>
+<td>协议支持</td>
+<td>AMQP，XMPP，SMTP，STOMP</td>
+<td>OpenWire,STOMP，REST,XMPP,AMQP</td>
+<td>自定义</td>
+<td>自定义协议，社区封装了http协议支持</td>
+</tr>
+<tr>
+<td>客户端支持语言</td>
+<td>官方支持Erlang，Java，Ruby等,社区产出多种API，几乎支持所有语言</td>
+<td>Java，C，C++，Python，PHP，Perl，.net等</td>
+<td>Java，C++（不成熟）</td>
+<td>官方支持Java,社区产出多种API，如PHP，Python等</td>
+</tr>
+<tr>
+<td>单机吞吐量</td>
+<td>万级（其次）</td>
+<td>万级（最差）</td>
+<td>十万级（最好）</td>
+<td>十万级（次之）</td>
+</tr>
+<tr>
+<td>消息延迟</td>
+<td>微妙级</td>
+<td>毫秒级</td>
+<td>毫秒级</td>
+<td>毫秒以内</td>
+</tr>
+<tr>
+<td>功能特性</td>
+<td>并发能力强，性能极其好，延时低，社区活跃，管理界面丰富</td>
+<td>老牌产品，成熟度高，文档较多</td>
+<td>MQ功能比较完备，扩展性佳</td>
+<td>只支持主要的MQ功能，毕竟是为大数据领域准备的。</td>
+</tr>
+</tbody></table>
+<ul>
+<li>ActiveMQ 的社区算是比较成熟，但是较目前来说，ActiveMQ 的性能比较差，而且版本迭代很慢，不推荐使用。</li>
+<li>RabbitMQ 在吞吐量方面虽然稍逊于 Kafka 和 RocketMQ ，但是由于它基于 erlang 开发，所以并发能力很强，性能极其好，延时很低，达到微秒级。但是也因为 RabbitMQ 基于 erlang 开发，所以国内很少有公司有实力做erlang源码级别的研究和定制。如果业务场景对并发量要求不是太高（十万级、百万级），那这四种消息队列中，RabbitMQ 一定是你的首选。如果是大数据领域的实时计算、日志采集等场景，用 Kafka 是业内标准的，绝对没问题，社区活跃度很高，绝对不会黄，何况几乎是全世界这个领域的事实性规范。</li>
+<li>RocketMQ 阿里出品，Java 系开源项目，源代码我们可以直接阅读，然后可以定制自己公司的MQ，并且 RocketMQ 有阿里巴巴的实际业务场景的实战考验。RocketMQ 社区活跃度相对较为一般，不过也还可以，文档相对来说简单一些，然后接口这块不是按照标准 JMS 规范走的有些系统要迁移需要修改大量代码。还有就是阿里出台的技术，你得做好这个技术万一被抛弃，社区黄掉的风险，那如果你们公司有技术实力我觉得用RocketMQ 挺好的</li>
+<li>kafka 的特点其实很明显，就是仅仅提供较少的核心功能，但是提供超高的吞吐量，ms 级的延迟，极高的可用性以及可靠性，而且分布式可以任意扩展。同时 kafka 最好是支撑较少的 topic 数量即可，保证其超高吞吐量。kafka 唯一的一点劣势是有可能消息重复消费，那么对数据准确性会造成极其轻微的影响，在大数据领域中以及日志采集中，这点轻微影响可以忽略这个特性天然适合大数据实时计算以及日志收集。</li>
+</ul>
+<h2 id="RabbitMQ"><a href="#RabbitMQ" class="headerlink" title="RabbitMQ"></a>RabbitMQ</h2><p>2007年，Rabbit 技术公司基于 AMQP 标准开发的 RabbitMQ 1.0 发布。RabbitMQ 采用 Erlang 语言开发。Erlang 语言由 Ericson 设计，专门为开发高并发和分布式系统的一种语言，在电信领域使用广泛。</p>
+<p>RabbitMQ基础架构如下图：</p>
+<img data-src="/2021/03/13/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E4%BA%A7%E5%93%81%E4%B8%8E%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%9E%8B/02.png" class>
+
+<h3 id="相关概念与基础架构"><a href="#相关概念与基础架构" class="headerlink" title="相关概念与基础架构"></a>相关概念与基础架构</h3><blockquote>
+<p>RabbitMQ的相关概念</p>
+</blockquote>
+<ul>
+<li><p> Broker：接收和分发消息的应用，RabbitMQ Server就是 Message Broker。</p>
+</li>
+<li><p>Virtual host：出于多租户和安全因素设计的，把 AMQP 的基本组件划分到一个虚拟的分组中，类似于网络中的 namespace 概念。当多个不同的用户使用同一个 RabbitMQ server 提供的服务时，可以划分出多个vhost，每个用户在自己的 vhost 创建 exchange／queue 等。</p>
+</li>
+<li><p>Connection：publisher／consumer 和 broker 之间的 TCP 连接。</p>
+</li>
+<li><p>Channel：如果每一次访问 RabbitMQ 都建立一个 Connection，在消息量大的时候建立 TCP Connection的开销将是巨大的，效率也较低。Channel 是在 connection 内部建立的逻辑连接，如果应用程序支持多线程，通常每个thread创建单独的 channel 进行通讯，AMQP method 包含了channel id 帮助客户端和message broker 识别 channel，所以 channel 之间是完全隔离的。Channel 作为轻量级的 Connection 极大减少了操作系统建立 TCP connection 的开销。</p>
+</li>
+<li><p>message 到达 broker 的第一站，根据分发规则，匹配查询表中的 routing key，分发消息到queue 中去。常用的类型有：direct (point-to-point), topic (publish-subscribe) and fanout (multicast)。</p>
+</li>
+<li><p>Queue：消息最终被送到这里等待 consumer 取走。</p>
+</li>
+<li><p>Bingding：exchange 和 queue 之间的虚拟连接，binding 中可以包含 routing key。Binding 信息被保存到 exchange 中的查询表中，用于 message 的分发依据。</p>
+</li>
+</ul>
+<h3 id="工作模式"><a href="#工作模式" class="headerlink" title="工作模式"></a>工作模式</h3><p>RabbitMQ 提供了 6 种工作模式：简单模式、work queues、Publish/Subscribe 发布与订阅模式、Routing 路由模式、Topics 主题模式、RPC 远程调用模式（远程调用，不太算 MQ；暂不作介绍）。</p>
+<p><a href="https://www.rabbitmq.com/getstarted.html">官网对应模式介绍</a></p>
+ <img data-src="/2021/03/13/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E4%BA%A7%E5%93%81%E4%B8%8E%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%9E%8B/03.png" class>
+
+
+
+<h3 id="AMQP与JMS"><a href="#AMQP与JMS" class="headerlink" title="AMQP与JMS"></a>AMQP与JMS</h3><p>首先明确AMQP是协议，类比HTTP；JMS是API规范接口，类比JDBC。</p>
+<h4 id="JMS简介"><a href="#JMS简介" class="headerlink" title="JMS简介"></a>JMS简介</h4><p>JMS（JAVA Message Service,java消息服务）是java的消息服务，JMS的客户端之间可以通过JMS服务进行异步的消息传输。<strong>JMS（JAVA Message Service,Java消息服务）API是一个消息服务的标准或者说是规范</strong>，允许应用程序组件基于JavaEE平台创建、发送、接收和读取消息。它使分布式通信耦合度更低，消息服务更加可靠以及异步性。</p>
+<p><strong>ActiveMQ 就是基于 JMS 规范实现的。</strong></p>
+<h5 id="JMS两种消息模型"><a href="#JMS两种消息模型" class="headerlink" title="JMS两种消息模型"></a>JMS两种消息模型</h5><blockquote>
+<p>点到点（P2P）模型</p>
+</blockquote>
+<img data-src="/2021/03/13/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E4%BA%A7%E5%93%81%E4%B8%8E%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%9E%8B/04.png" class>
+
+
+
+<p>使用<strong>队列（Queue）</strong>作为消息通信载体；满足<strong>生产者与消费者模式</strong>，**<em>一条消息只能被一个消费者使用**</em>，未被消费的消息在队列中保留直到被消费或超时。比如：我们生产者发送100条消息的话，两个消费者来消费一般情况下两个消费者会按照消息发送的顺序各自消费一半（也就是你一个我一个的消费。）</p>
+<blockquote>
+<p>发布、订阅（Pub/Sub)模型</p>
+</blockquote>
+<img data-src="/2021/03/13/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E4%BA%A7%E5%93%81%E4%B8%8E%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%9E%8B/05.png" class>
+
+<p>发布订阅模型（Pub/Sub） 使用<strong>主题（Topic）</strong>作为消息通信载体，类似于<strong>广播模式</strong>；发布者发布一条消息，该消息通过主题传递给所有的订阅者，<strong>在一条消息广播之后才订阅的用户则是收不到该条消息的</strong>。</p>
+<h5 id="JMS五种不同的消息正文格式"><a href="#JMS五种不同的消息正文格式" class="headerlink" title="JMS五种不同的消息正文格式"></a>JMS五种不同的消息正文格式</h5><p>JMS定义了五种不同的消息正文格式，以及调用的消息类型，允许你发送并接收以一些不同形式的数据，提供现有消息格式的一些级别的兼容性。</p>
+<ul>
+<li>StreamMessage – Java原始值的数据流</li>
+<li>MapMessage–一套名称-值对</li>
+<li>TextMessage–一个字符串对象</li>
+<li>ObjectMessage–一个序列化的 Java对象</li>
+<li>BytesMessage–一个字节的数据流</li>
+</ul>
+<h4 id="AMQP"><a href="#AMQP" class="headerlink" title="AMQP"></a>AMQP</h4><p>AMQP，即Advanced Message Queuing Protocol,一个提供统一消息服务的应用层标准 <strong>高级消息队列协议</strong>（二进制应用层协议），是应用层协议的一个开放标准,为面向消息的中间件设计，兼容 JMS。基于此协议的客户端与消息中间件可传递消息，并不受客户端/中间件同产品，不同的开发语言等条件的限制。</p>
+<p><strong>RabbitMQ 就是基于 AMQP 协议实现的。</strong></p>
+<table>
+<thead>
+<tr>
+<th>对比</th>
+<th align="center">JMS</th>
+<th>AMQP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td align="center"></td>
+<td></td>
+</tr>
+<tr>
+<td>定义</td>
+<td align="center">Java API</td>
+<td>协议</td>
+</tr>
+<tr>
+<td>跨语言</td>
+<td align="center">否</td>
+<td>是</td>
+</tr>
+<tr>
+<td>跨平台</td>
+<td align="center">否</td>
+<td>是</td>
+</tr>
+<tr>
+<td>支持消息类型</td>
+<td align="center">提供两种消息模型：①Peer-2-Peer;②Pub/sub</td>
+<td>提供了五种消息模型：①direct exchange；②fanout exchange；③topic change；④headers exchange；⑤system exchange。本质来讲，后四种和JMS的pub/sub模型没有太大差别，仅是在路由机制上做了更详细的划分；</td>
+</tr>
+<tr>
+<td>支持消息类型</td>
+<td align="center">支持多种消息类型 ，我们在上面提到过</td>
+<td>byte[]（二进制</td>
+</tr>
+</tbody></table>
+<p>####总结</p>
+<ul>
+<li>AMQP 为消息定义了线路层（wire-level protocol）的协议，而JMS所定义的是API规范。在 Java 体系中，多个client均可以通过JMS进行交互，不需要应用修改代码，但是其对跨平台的支持较差。而AMQP天然具有跨平台、跨语言特性。</li>
+<li>JMS 支持TextMessage、MapMessage 等复杂的消息类型；而 AMQP 仅支持 byte[] 消息类型（复杂的类型可序列化后发送）。</li>
+<li>由于Exchange 提供的路由算法，AMQP可以提供多样化的路由方式来传递消息到消息队列，而 JMS 仅支持 队列 和 主题/订阅 方式两种。</li>
+</ul>
 ]]></content>
       <categories>
         <category>MQ</category>
