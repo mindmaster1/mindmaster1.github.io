@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>AOP</title>
+    <url>/2021/03/14/AOP/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Ajax异步传输</title>
     <url>/2021/02/25/Ajax%E5%BC%82%E6%AD%A5%E4%BC%A0%E8%BE%93/</url>
     <content><![CDATA[]]></content>
@@ -12,13 +17,13 @@
       </tags>
   </entry>
   <entry>
-    <title>AOP</title>
-    <url>/2021/03/14/AOP/</url>
+    <title>CDN</title>
+    <url>/2021/03/14/CDN/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>CDN</title>
-    <url>/2021/03/14/CDN/</url>
+    <title>Docker虚拟容器入门</title>
+    <url>/2021/03/14/Docker%E8%99%9A%E6%8B%9F%E5%AE%B9%E5%99%A8%E5%85%A5%E9%97%A8/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -31,11 +36,6 @@
       <tags>
         <tag>Cookie</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Docker虚拟容器入门</title>
-    <url>/2021/03/14/Docker%E8%99%9A%E6%8B%9F%E5%AE%B9%E5%99%A8%E5%85%A5%E9%97%A8/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Druid数据库连接池</title>
@@ -87,6 +87,53 @@
       </categories>
       <tags>
         <tag>HTTP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>InnoDB存储引擎</title>
+    <url>/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
+    <content><![CDATA[<h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
+<p>InnoDB存储引擎有多个内存块，这些内存块组成了一个大的内存池</p>
+<p>后台线程的主要作用就是负责刷新内存池中的数据，保证缓存池中的内存缓存的是最近的数据。此外，还将已经修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下，InnoDB可以恢复运行到最佳状态。</p>
+<h4 id="后台线程（InnDB是一个多线程模型"><a href="#后台线程（InnDB是一个多线程模型" class="headerlink" title="后台线程（InnDB是一个多线程模型)"></a>后台线程（InnDB是一个多线程模型)</h4><p>#####Master Thread</p>
+<p><strong>作用：</strong></p>
+<p>​    一个非常核心的后台进程，负责将缓存池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓存、UNDO页的回收等。</p>
+<h5 id="IO-Therad"><a href="#IO-Therad" class="headerlink" title="IO Therad"></a>IO Therad</h5><p>  在InnoDB存储引擎中大量使用了AIO（Async IO）—异步时间非阻塞IO，这样可以极大程度上提高数据库的性能。IO Thread的主要工作就是负责这些IO请求的回调</p>
+<p>共有四个IO Thread:write 、read、insert buffer、log IO thread</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114130216.png" alt="image-20210114114130216"></p>
+<p>通过命令SHOW ENGINE INNODB STASTUS\G来观察IO Thread</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114405936.png" alt="image-20210114114405936"></p>
+<p>有四个write和read IO Thread</p>
+<p>通过innodb_read_io_threads和innodb_write_io_threads参数来进行设置</p>
+<h5 id="Purge-Thread"><a href="#Purge-Thread" class="headerlink" title="Purge Thread"></a>Purge Thread</h5><p><strong>作用</strong>：</p>
+<p>​    Purge Thread回收已经使用并且已经分配的undo页（事务提交之后，其所使用的Undolog可能就不再需要）</p>
+<p>用户需要在<strong>MySQL数据库的配置文件</strong>中添加如下命令来启用独立的Purge Thread: </p>
+<p>​        innodb_purge_threads=1</p>
+<h5 id="Page-Cleaner-Thread"><a href="#Page-Cleaner-Thread" class="headerlink" title="Page Cleaner Thread"></a>Page Cleaner Thread</h5><p><strong>作用</strong>：</p>
+<p>​    将脏页的刷新操作放在单独的线程中完成。减轻Master Thread的工作以及对于用户查询线程的阻塞</p>
+<h4 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h4><h5 id="缓存池"><a href="#缓存池" class="headerlink" title="缓存池"></a>缓存池</h5><p>Innodb存储引擎是基于磁盘存储的（Disk-base Database），将其中的记录按照页来管理。</p>
+<p>缓存池的出现，就是为了解决CPU速度和磁盘速度之间的差异，通过内存的速度来弥补磁盘速度较慢对数据库性能的影响。读取文件时，首先判断给文件是否在缓存池中（没有就去磁盘上找）。</p>
+<p>在修改缓存池中的页时，先以一定频率刷新到缓存池上，然后通过Checkpoint刷新回磁盘。</p>
+<p>数据库服务器最好采用64位操作系统，可以使用更多的内存（512GB），32位（只有64GB）。</p>
+<p>缓存池的配置通过参数innodb_buffer_pool_size来设置。</p>
+<h6 id="缓存池中缓存的数据页类型："><a href="#缓存池中缓存的数据页类型：" class="headerlink" title="缓存池中缓存的数据页类型："></a>缓存池中缓存的数据页类型：</h6><p>​    索引页、数据页、Undo页、插入缓存页、自适应哈希索引页（adaptive hash index）、InnoDB存储的锁信息、数据字典信息等。</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114131120313.png" alt="image-20210114131120313"></p>
+<p><strong>允许有多个缓存池实例</strong>：每个页根据hashcode平均分配到不同的缓存池实例中，减少数据库内部资源的竞争，增加数据库的并发能力。可以通过inodb_buffer_pool_instances来进行配置，通过命令SHOW ENGINE INNODB STATUS可以观察到每个缓存池实例对象运行的状态，还可以通过查看表InnoDB_BUFFER_POOL_STATS来观察缓存的状态(要求在information_schema架构下)</p>
+<h5 id="LRU-LIST-、FREE-LIST-、FLUSH-LIST"><a href="#LRU-LIST-、FREE-LIST-、FLUSH-LIST" class="headerlink" title="LRU LIST 、FREE LIST 、FLUSH LIST"></a>LRU LIST 、FREE LIST 、FLUSH LIST</h5><p><strong>LRU</strong>算法用来管理已经读取的页</p>
+<p>数据库中的缓存池是通过LRU（Latest Recent Used,最近最少使用）算法来管理内部的各种类型的页。</p>
+<p><strong>LRU解释</strong>：将最频繁使用的页放在LRU列表的前端，最少使用的页放在LRU列表的尾端。当缓存池不能存放新读取到的页时，将优先删除列表尾端的页（默认大小为16KB）。</p>
+<p><strong>改进</strong>：</p>
+<p>1、（midpoint insertion strategy）：InnoDB中在LRU中加入了midpoint位置，将新读取到的页放在midpoint，而不是直接放在LRU列表首部。<strong>默认位置在LRU列表长度63%处</strong>（可以通过innodb_old_blocks_pct来控制）</p>
+<p>2、设置了参数innodb_old_blocks_time,用于表示页读取到mid位置后需要等待多久才会加入到LRU列表的热端</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133522544.png" alt="image-20210114133522544"></p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133412580.png" alt="image-20210114133412580"></p>
+<p><strong>为什么要对朴素的LRU算法进行改良</strong>？</p>
+<h5 id="重做日志缓存"><a href="#重做日志缓存" class="headerlink" title="重做日志缓存"></a>重做日志缓存</h5><h5 id="额外的内存池"><a href="#额外的内存池" class="headerlink" title="额外的内存池"></a>额外的内存池</h5>]]></content>
+      <categories>
+        <category>MySQL数据库</category>
+      </categories>
+      <tags>
+        <tag>InnoDB存储引擎</tag>
       </tags>
   </entry>
   <entry>
@@ -193,53 +240,6 @@
       </tags>
   </entry>
   <entry>
-    <title>InnoDB存储引擎</title>
-    <url>/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
-    <content><![CDATA[<h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
-<p>InnoDB存储引擎有多个内存块，这些内存块组成了一个大的内存池</p>
-<p>后台线程的主要作用就是负责刷新内存池中的数据，保证缓存池中的内存缓存的是最近的数据。此外，还将已经修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下，InnoDB可以恢复运行到最佳状态。</p>
-<h4 id="后台线程（InnDB是一个多线程模型"><a href="#后台线程（InnDB是一个多线程模型" class="headerlink" title="后台线程（InnDB是一个多线程模型)"></a>后台线程（InnDB是一个多线程模型)</h4><p>#####Master Thread</p>
-<p><strong>作用：</strong></p>
-<p>​    一个非常核心的后台进程，负责将缓存池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓存、UNDO页的回收等。</p>
-<h5 id="IO-Therad"><a href="#IO-Therad" class="headerlink" title="IO Therad"></a>IO Therad</h5><p>  在InnoDB存储引擎中大量使用了AIO（Async IO）—异步时间非阻塞IO，这样可以极大程度上提高数据库的性能。IO Thread的主要工作就是负责这些IO请求的回调</p>
-<p>共有四个IO Thread:write 、read、insert buffer、log IO thread</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114130216.png" alt="image-20210114114130216"></p>
-<p>通过命令SHOW ENGINE INNODB STASTUS\G来观察IO Thread</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114405936.png" alt="image-20210114114405936"></p>
-<p>有四个write和read IO Thread</p>
-<p>通过innodb_read_io_threads和innodb_write_io_threads参数来进行设置</p>
-<h5 id="Purge-Thread"><a href="#Purge-Thread" class="headerlink" title="Purge Thread"></a>Purge Thread</h5><p><strong>作用</strong>：</p>
-<p>​    Purge Thread回收已经使用并且已经分配的undo页（事务提交之后，其所使用的Undolog可能就不再需要）</p>
-<p>用户需要在<strong>MySQL数据库的配置文件</strong>中添加如下命令来启用独立的Purge Thread: </p>
-<p>​        innodb_purge_threads=1</p>
-<h5 id="Page-Cleaner-Thread"><a href="#Page-Cleaner-Thread" class="headerlink" title="Page Cleaner Thread"></a>Page Cleaner Thread</h5><p><strong>作用</strong>：</p>
-<p>​    将脏页的刷新操作放在单独的线程中完成。减轻Master Thread的工作以及对于用户查询线程的阻塞</p>
-<h4 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h4><h5 id="缓存池"><a href="#缓存池" class="headerlink" title="缓存池"></a>缓存池</h5><p>Innodb存储引擎是基于磁盘存储的（Disk-base Database），将其中的记录按照页来管理。</p>
-<p>缓存池的出现，就是为了解决CPU速度和磁盘速度之间的差异，通过内存的速度来弥补磁盘速度较慢对数据库性能的影响。读取文件时，首先判断给文件是否在缓存池中（没有就去磁盘上找）。</p>
-<p>在修改缓存池中的页时，先以一定频率刷新到缓存池上，然后通过Checkpoint刷新回磁盘。</p>
-<p>数据库服务器最好采用64位操作系统，可以使用更多的内存（512GB），32位（只有64GB）。</p>
-<p>缓存池的配置通过参数innodb_buffer_pool_size来设置。</p>
-<h6 id="缓存池中缓存的数据页类型："><a href="#缓存池中缓存的数据页类型：" class="headerlink" title="缓存池中缓存的数据页类型："></a>缓存池中缓存的数据页类型：</h6><p>​    索引页、数据页、Undo页、插入缓存页、自适应哈希索引页（adaptive hash index）、InnoDB存储的锁信息、数据字典信息等。</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114131120313.png" alt="image-20210114131120313"></p>
-<p><strong>允许有多个缓存池实例</strong>：每个页根据hashcode平均分配到不同的缓存池实例中，减少数据库内部资源的竞争，增加数据库的并发能力。可以通过inodb_buffer_pool_instances来进行配置，通过命令SHOW ENGINE INNODB STATUS可以观察到每个缓存池实例对象运行的状态，还可以通过查看表InnoDB_BUFFER_POOL_STATS来观察缓存的状态(要求在information_schema架构下)</p>
-<h5 id="LRU-LIST-、FREE-LIST-、FLUSH-LIST"><a href="#LRU-LIST-、FREE-LIST-、FLUSH-LIST" class="headerlink" title="LRU LIST 、FREE LIST 、FLUSH LIST"></a>LRU LIST 、FREE LIST 、FLUSH LIST</h5><p><strong>LRU</strong>算法用来管理已经读取的页</p>
-<p>数据库中的缓存池是通过LRU（Latest Recent Used,最近最少使用）算法来管理内部的各种类型的页。</p>
-<p><strong>LRU解释</strong>：将最频繁使用的页放在LRU列表的前端，最少使用的页放在LRU列表的尾端。当缓存池不能存放新读取到的页时，将优先删除列表尾端的页（默认大小为16KB）。</p>
-<p><strong>改进</strong>：</p>
-<p>1、（midpoint insertion strategy）：InnoDB中在LRU中加入了midpoint位置，将新读取到的页放在midpoint，而不是直接放在LRU列表首部。<strong>默认位置在LRU列表长度63%处</strong>（可以通过innodb_old_blocks_pct来控制）</p>
-<p>2、设置了参数innodb_old_blocks_time,用于表示页读取到mid位置后需要等待多久才会加入到LRU列表的热端</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133522544.png" alt="image-20210114133522544"></p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133412580.png" alt="image-20210114133412580"></p>
-<p><strong>为什么要对朴素的LRU算法进行改良</strong>？</p>
-<h5 id="重做日志缓存"><a href="#重做日志缓存" class="headerlink" title="重做日志缓存"></a>重做日志缓存</h5><h5 id="额外的内存池"><a href="#额外的内存池" class="headerlink" title="额外的内存池"></a>额外的内存池</h5>]]></content>
-      <categories>
-        <category>MySQL数据库</category>
-      </categories>
-      <tags>
-        <tag>InnoDB存储引擎</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>InnoDB文件</title>
     <url>/2021/03/14/InnoDB%E6%96%87%E4%BB%B6/</url>
     <content><![CDATA[]]></content>
@@ -252,6 +252,11 @@
   <entry>
     <title>JVM虚拟机栈</title>
     <url>/2021/03/14/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Java高并发JUC</title>
+    <url>/2021/02/25/Java%E9%AB%98%E5%B9%B6%E5%8F%91JUC/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -322,11 +327,6 @@
       <tags>
         <tag>Java内存区域</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Java高并发JUC</title>
-    <url>/2021/02/25/Java%E9%AB%98%E5%B9%B6%E5%8F%91JUC/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Jenkins自动化部署工具</title>
@@ -434,17 +434,6 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>Listener</title>
-    <url>/2021/02/25/Listener/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>Java web</category>
-      </categories>
-      <tags>
-        <tag>Listener</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>MVC框架</title>
     <url>/2021/03/02/MVC%E6%A1%86%E6%9E%B6/</url>
     <content><![CDATA[<h2 id="MVC的定义"><a href="#MVC的定义" class="headerlink" title="MVC的定义"></a>MVC的定义</h2><p><strong>MVC模式</strong>（Model–view–controller）是软件工程中的一种<a href="https://zh.wikipedia.org/wiki/%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84">软件架构</a>模式，把软件系统分为三个基本部分：模型（Model）、视图（View）和控制器（Controller）。</p>
@@ -538,6 +527,17 @@
       </categories>
       <tags>
         <tag>架构模式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Listener</title>
+    <url>/2021/02/25/Listener/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Java web</category>
+      </categories>
+      <tags>
+        <tag>Listener</tag>
       </tags>
   </entry>
   <entry>
@@ -768,181 +768,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Maven学习笔记&lt;一&gt;</title>
-    <url>/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</url>
-    <content><![CDATA[<h2 id="Maven的简介"><a href="#Maven的简介" class="headerlink" title="Maven的简介"></a>Maven的简介</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p> Maven【[ˈmevən]】这个词可以翻译为”专家”,”内⾏”。 作为Apache组织中的⼀个颇为成功的开源项⽬， Maven主要服务于基于java平台的项⽬构建，依赖管理和项⽬信息管理。 ⽆论是⼩型的开源类库项⽬，还是⼤型的企业级应⽤； ⽆论是传统的瀑布式开发，还是流⾏的敏捷开 发，Maven都能⼤显身⼿。</p>
-<p>###项目构建</p>
-<p>不管你是否意识到，构建（build）是每⼀位程序员每天都在做的⼯作。早上来到公司，我们做的第⼀ 件事就是从源码库签出最新的代码，然后进⾏单元测试，如果测试失败，会找相关的同事⼀起调试修复错误代码。 接着回到⾃⼰的⼯作上来，编写⾃⼰的单元测试及产品代码。</p>
-<p>我们会发现，除了编写源代码，我们每天有相当⼀部分时间花在了编译，运⾏单元测 试，⽣成⽂档，打包和部署等繁琐且不起眼的⼯作上，这就是构建。 如果我们现在还⼿⼯这样做，那成 本也太⾼了，于是有⼈⽤软件的⽅法让这⼀系列⼯作完全⾃动化，使得软件的构建可以像全⾃动流⽔线 ⼀样，只需要⼀条简单的命令，w所有繁琐的步骤都能够⾃动完成，很快就能得到最终结果。</p>
-<p>###项目构建工具</p>
-<blockquote>
-<p>Ant构建</p>
-</blockquote>
-<p>最早的构建⼯具，基于IDE, ⼤概是2000年有的，当时是最流⾏java构建⼯具，不过它的XML脚本编写格式让XML⽂件特别⼤。对⼯程构建过程中的过程控制特别好。</p>
-<blockquote>
-<p>Maven【Java】</p>
-</blockquote>
-<p>项⽬对象模型，通过其描述信息来管理项⽬的构建，报告和⽂档的软件项⽬管理⼯具。它填补了Ant缺 点，Maven第⼀次⽀持了从⽹络上下载的功能，仍然采⽤xml作为配置⽂件格式。Maven专注的是依赖管理，使⽤Java编写。</p>
-<blockquote>
-<p>Gradle</p>
-</blockquote>
-<p>属于结合以上两个的优点，它继承了Ant的灵活和Maven的⽣命周期管理，它最后被google作为了 Android御⽤管理⼯具。它最⼤的区别是不⽤XML作为配置⽂件格式，采⽤了DSL格式，使得脚本更加简洁。 ⽬前市⾯上Ant⽐较⽼, 所以⼀般是⼀些⽐较传统的软件企业公司使⽤, Maven使⽤Java编写, 是当下⼤多数互联⽹公司会使⽤的⼀个构建⼯具, 中⽂⽂档也⽐较⻬全, gradle是⽤groovy编写, ⽬前⽐较新型的构建⼯具⼀些初创互联⽹公司会使⽤, 以后会有很⼤的使⽤空间。</p>
-<h3 id="Maven的四大特性"><a href="#Maven的四大特性" class="headerlink" title="Maven的四大特性"></a>Maven的四大特性</h3><h4 id="依赖管理系统"><a href="#依赖管理系统" class="headerlink" title="依赖管理系统"></a>依赖管理系统</h4><p> Maven为Java世界引⼊了⼀个新的依赖管理系统jar包管理 jar 升级时修改配置⽂件即可。在Java世界中，可以⽤<strong>groupId、artifactId、version</strong>组成的Coordination（坐标）<u>唯⼀标识⼀个依赖。</u></p>
-<p>任何基于Maven构建的项⽬⾃身也必须定义这三项属性，⽣成的包可以是Jar包，也可以是war包或者 jar包。⼀个典型的依赖引⽤如下所示：</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.servlet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span> com.baidu</span><br><span class="line"> <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>javax.servlet-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span> ueditor echarts</span><br><span class="line"> <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>坐标属性的理解</p>
-</blockquote>
-<ul>
-<li><strong>groupId</strong></li>
-</ul>
-<p>定义当前Maven项⽬⾪属的实际项⽬-公司名称。(jar包所在仓库路径） 由于Maven中模块的概念，因 此⼀个实际项⽬往往会被划分为很多模块。 ⽐如spring是⼀个实际项⽬，其对应的Maven模块会有很 多，如spring-core,spring-webmvc等。</p>
-<ul>
-<li><strong>artifactId</strong></li>
-</ul>
-<p>该元素定义实际项⽬中的⼀个Maven模块-项⽬名， 推荐的做法是使⽤实际项⽬名称作为artifactId的前 缀。 ⽐如： spring-bean, spring-webmvc等。</p>
-<ul>
-<li><strong>version</strong></li>
-</ul>
-<p>该元素定义Maven当前所处的版本</p>
-<h4 id="项目的多模块构建"><a href="#项目的多模块构建" class="headerlink" title="项目的多模块构建"></a>项目的多模块构建</h4><p>项⽬复查时 dao service controller 层分离将⼀个项⽬分解为多个模块已经是很通⽤的⼀种⽅式。 在Maven中需要定义⼀个parent POM作为⼀组module的聚合POM。在该POM中可以使⽤ 标签来定义⼀ 组⼦模块。parent POM不会有什么实际构建产出。⽽parent POM中的build配置以及依赖配置都会⾃动继承给⼦module。</p>
-<h4 id="一致的构建模型和插件机制"><a href="#一致的构建模型和插件机制" class="headerlink" title="一致的构建模型和插件机制"></a>一致的构建模型和插件机制</h4><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mortbay.jetty<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-jetty-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">version</span>&gt;</span>6.1.25<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">scanIntervalSeconds</span>&gt;</span>10<span class="tag">&lt;/<span class="name">scanIntervalSeconds</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">contextPath</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">contextPath</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-<h2 id="Maven的安装配置和目录结构"><a href="#Maven的安装配置和目录结构" class="headerlink" title="Maven的安装配置和目录结构"></a>Maven的安装配置和目录结构</h2><h3 id="Maven的安装与配置"><a href="#Maven的安装与配置" class="headerlink" title="Maven的安装与配置"></a>Maven的安装与配置</h3><img data-src="/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/createmaven.png" class>
-
-<p>打开cmd窗口，通过命令查看maven是否安装成功</p>
-<img data-src="/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/maventest.png" class>
-
-<h3 id="认识Maven的目录结构"><a href="#认识Maven的目录结构" class="headerlink" title="认识Maven的目录结构"></a>认识Maven的目录结构</h3> <img data-src="/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/mulu.png" class>
-
-<h4 id="创建一个文件夹作为项目的根目录"><a href="#创建一个文件夹作为项目的根目录" class="headerlink" title="创建一个文件夹作为项目的根目录"></a>创建一个文件夹作为项目的根目录</h4><ul>
-<li><p>在根目录中创建一个pom.xml文件</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span></span></span><br><span class="line"><span class="tag"> <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag"> <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0</span></span></span><br><span class="line"><span class="tag"><span class="string"> http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"> <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.xxxx<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven01<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.0.1-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">name</span>&gt;</span>maven01<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.apache.org<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.8.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<p><strong>PS:标签定义解释</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">根⽬录下的第⼀个⼦元素 ModelVersion指定当前Pom模型的版本，对于Maven3来说，它只能是4.0.0 。指定了当前Maven模型的版本号，对于Maven2和Maven3来说，它只能是4.0.0</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">groupId:定义了项目属于哪一个组，这个组通常和项目所在的组织和公司存在关联</span></span><br><span class="line"><span class="comment">比如：com.xxxx</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">artifactId 定义了当前Maven项⽬在组中唯⼀的ID。</span></span><br><span class="line"><span class="comment">Version X.X.X-⾥程碑</span></span><br><span class="line"><span class="comment">⽐如：1.0.0-SNAPSHOT</span></span><br><span class="line"><span class="comment">第⼀个X ⼤版本 有重⼤变⾰</span></span><br><span class="line"><span class="comment">第⼆个X ⼩版本 修复bug，增加功能</span></span><br><span class="line"><span class="comment">第三个X 更新</span></span><br><span class="line"><span class="comment">⾥程碑版本：</span></span><br><span class="line"><span class="comment">SNAPSHOT （快照，开发版）</span></span><br><span class="line"><span class="comment">alpha（内部测试）</span></span><br><span class="line"><span class="comment">beta（公开测试）</span></span><br><span class="line"><span class="comment">Release | RC（ 发布版）</span></span><br><span class="line"><span class="comment">GA（正常版本）</span></span><br><span class="line"><span class="comment">使⽤name标签声明⼀个对于⽤户更为友好的项⽬名称，虽然不是必须的，但还是推荐为每个Pom声明name，以⽅便信息交流。</span></span><br><span class="line"><span class="comment">**/</span></span><br></pre></td></tr></table></figure>
-
-
-<h4 id="编写主函数"><a href="#编写主函数" class="headerlink" title="编写主函数"></a>编写主函数</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.xxxx.demo;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hello</span></span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> System.out.println(<span class="string">&quot;hello maven&quot;</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="cmd下编译并且运行"><a href="#cmd下编译并且运行" class="headerlink" title="cmd下编译并且运行"></a>cmd下编译并且运行</h4><p>cmd下面，进入项目根目录</p>
-<p>1.编译Java文件</p>
-<p>mvn compile</p>
-<p>2.执行main方法</p>
-<p>mvn exec:java -Dexec.mainClass=”com.xxxx.demo.hello”</p>
-<img data-src="/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/mavencreate.png" class>
-
-<p><strong>注：第⼀次下载会⽐较慢，要修改maven解压之后的conf⽬录下的settings.xml。</strong></p>
- <figure class="highlight html"><table><tr><td class="code"><pre><span class="line">1.1.修改默认仓库位置</span><br><span class="line">打开maven⽬录 -&gt; conf -&gt; settings.xml</span><br><span class="line">添加仓库位置配置</span><br><span class="line"><span class="tag">&lt;<span class="name">localRepository</span>&gt;</span>F:/m2/repository<span class="tag">&lt;/<span class="name">localRepository</span>&gt;</span></span><br><span class="line">注：仓库位置改为⾃⼰本机的指定⽬录，&quot;/&quot;不要写反</span><br><span class="line">1.2.更换阿⾥镜像,加快依赖下载</span><br><span class="line"><span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus-aliyun<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">name</span>&gt;</span>Nexus aliyun<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>如果编译不成功，可能出现的问题</p>
-<blockquote>
-<p>1.不是使用管理员权限执行的dos命令</p>
-</blockquote>
-<blockquote>
-<p>2.JDK环境配置有问题，重装JDK</p>
-</blockquote>
-<blockquote>
-<p>3.代码编写时，类里面没有设置包名</p>
-</blockquote>
-<p>##Maven命令</p>
-<p>作为开发利器的maven，为我们提供了⼗分丰富的命令，了解maven的命令⾏操作并熟练运⽤常⻅的 maven命令还是⼗分必要的，即使譬如IDEA等⼯具给我提供了图形界⾯化⼯具，但其底层还是依靠 maven命令来驱动的。</p>
-<p>Maven的命令格式如下：</p>
-<blockquote>
-<p>maven [plugin-name] : [goal-name]</p>
-</blockquote>
-<p>命令代表的含义：执⾏ plugin-name 插件的 goal-name ⽬标</p>
-<table>
-<thead>
-<tr>
-<th align="left">maven命令</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">mvn clean</td>
-<td>清理项⽬⽣产的临时⽂件,⼀般是模块下的target⽬录</td>
-</tr>
-<tr>
-<td align="left">mvn compile</td>
-<td>编译源代码，⼀般编译模块下的src/main/java⽬录</td>
-</tr>
-<tr>
-<td align="left">mvn package</td>
-<td>项⽬打包⼯具,会在模块下的target⽬录⽣成jar或war等⽂件</td>
-</tr>
-<tr>
-<td align="left">mvn test</td>
-<td>测试命令,或执⾏src/test/java/下junit的测试⽤例</td>
-</tr>
-<tr>
-<td align="left">mvn -version</td>
-<td>显示版本信息</td>
-</tr>
-<tr>
-<td align="left">mvn install</td>
-<td>将打包的jar/war⽂件复制到你的本地仓库中,供其他模块使⽤</td>
-</tr>
-<tr>
-<td align="left">mvn deploy</td>
-<td>将打包的⽂件发布到远程参考,提供其他⼈员进⾏下载依赖</td>
-</tr>
-<tr>
-<td align="left">mvn site</td>
-<td>生成项目相关信息的网站</td>
-</tr>
-<tr>
-<td align="left">mvn eclipse:eclipse</td>
-<td>将项目转换为Eclipse项目</td>
-</tr>
-<tr>
-<td align="left">mvn dependency:tree</td>
-<td>打印出整个项目的依赖树</td>
-</tr>
-<tr>
-<td align="left">mvn archetype:generate</td>
-<td>创建maven的普通Java项目</td>
-</tr>
-<tr>
-<td align="left">mvn tomcat:run</td>
-<td>在tomcat容器中运行web应用</td>
-</tr>
-<tr>
-<td align="left">mvn jetty:run</td>
-<td>调用jetty插件的Run目标在jetty servlet容器中启动web应用</td>
-</tr>
-</tbody></table>
-<p>注意：运⾏maven命令的时候，⾸先需要定位到maven项⽬的⽬录，也就是项⽬的pom.xml⽂件所在的⽬录。否则， 必以通过参数来指定项⽬的⽬录。</p>
-<h3 id="命令参数"><a href="#命令参数" class="headerlink" title="命令参数"></a>命令参数</h3><p>上⾯列举的只是⽐较通⽤的命令，其实很多命令都可以携带参数以执⾏更精准的任务。</p>
-<h4 id="D传入属性参数"><a href="#D传入属性参数" class="headerlink" title="-D传入属性参数"></a>-D传入属性参数</h4><p>例如： </p>
-<blockquote>
-<p>mvn package -Dmaven.test.skip=true </p>
-</blockquote>
-<p>以 -D 开头，将 maven.test.skip 的值设为 true ,就是告诉maven打包的时候跳过单元测试。同 理， mvn deploy-Dmaven.test.skip=true 代表部署项⽬并跳过单元测试。</p>
-<h4 id="P使用指定的Profile配置"><a href="#P使用指定的Profile配置" class="headerlink" title="-P使用指定的Profile配置"></a>-P使用指定的Profile配置</h4><p>⽐如项⽬开发需要有多个环境，⼀般为开发，测试，预发，正式4个环境，在pom.xml中的配置如下：</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">profiles</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">id</span>&gt;</span>dev<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">env</span>&gt;</span>dev<span class="tag">&lt;/<span class="name">env</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">activation</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">activeByDefault</span>&gt;</span>true<span class="tag">&lt;/<span class="name">activeByDefault</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">activation</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">id</span>&gt;</span>qa<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">env</span>&gt;</span>qa<span class="tag">&lt;/<span class="name">env</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">id</span>&gt;</span>pre<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">env</span>&gt;</span>pre<span class="tag">&lt;/<span class="name">env</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">id</span>&gt;</span>prod<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">env</span>&gt;</span>prod<span class="tag">&lt;/<span class="name">env</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">profiles</span>&gt;</span></span><br><span class="line">......</span><br><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">filters</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">filter</span>&gt;</span>config/$&#123;env&#125;.properties<span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;/<span class="name">filters</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">directory</span>&gt;</span>src/main/resources<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">filtering</span>&gt;</span>true<span class="tag">&lt;/<span class="name">filtering</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br><span class="line"> ......</span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>profiles 定义了各个环境的变量 id ， filters 中定义了变量配置⽂件的地址，其中地址中的环境 变量就是上⾯ profile 中定义的值， resources 中是定义哪些⽬录下的⽂件会被配置⽂件中定义的变量替换。 通过maven可以实现按不同环境进⾏打包部署，例如：</p>
-<blockquote>
-<p>mvn package -Pdev -Dmaven.test.skip=true</p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>项目工具</category>
-      </categories>
-      <tags>
-        <tag>Maven</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MongoDB数据库</title>
-    <url>/2021/02/25/MongoDB%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Mybatis动态代理与传参</title>
     <url>/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/</url>
     <content><![CDATA[<h2 id="Mybatis动态代理实现CURD"><a href="#Mybatis动态代理实现CURD" class="headerlink" title="Mybatis动态代理实现CURD"></a>Mybatis动态代理实现CURD</h2><h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><blockquote>
@@ -1119,6 +944,181 @@
       <tags>
         <tag>Mybatis</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Maven学习笔记&lt;一&gt;</title>
+    <url>/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</url>
+    <content><![CDATA[<h2 id="Maven的简介"><a href="#Maven的简介" class="headerlink" title="Maven的简介"></a>Maven的简介</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p> Maven【[ˈmevən]】这个词可以翻译为”专家”,”内⾏”。 作为Apache组织中的⼀个颇为成功的开源项⽬， Maven主要服务于基于java平台的项⽬构建，依赖管理和项⽬信息管理。 ⽆论是⼩型的开源类库项⽬，还是⼤型的企业级应⽤； ⽆论是传统的瀑布式开发，还是流⾏的敏捷开 发，Maven都能⼤显身⼿。</p>
+<p>###项目构建</p>
+<p>不管你是否意识到，构建（build）是每⼀位程序员每天都在做的⼯作。早上来到公司，我们做的第⼀ 件事就是从源码库签出最新的代码，然后进⾏单元测试，如果测试失败，会找相关的同事⼀起调试修复错误代码。 接着回到⾃⼰的⼯作上来，编写⾃⼰的单元测试及产品代码。</p>
+<p>我们会发现，除了编写源代码，我们每天有相当⼀部分时间花在了编译，运⾏单元测 试，⽣成⽂档，打包和部署等繁琐且不起眼的⼯作上，这就是构建。 如果我们现在还⼿⼯这样做，那成 本也太⾼了，于是有⼈⽤软件的⽅法让这⼀系列⼯作完全⾃动化，使得软件的构建可以像全⾃动流⽔线 ⼀样，只需要⼀条简单的命令，w所有繁琐的步骤都能够⾃动完成，很快就能得到最终结果。</p>
+<p>###项目构建工具</p>
+<blockquote>
+<p>Ant构建</p>
+</blockquote>
+<p>最早的构建⼯具，基于IDE, ⼤概是2000年有的，当时是最流⾏java构建⼯具，不过它的XML脚本编写格式让XML⽂件特别⼤。对⼯程构建过程中的过程控制特别好。</p>
+<blockquote>
+<p>Maven【Java】</p>
+</blockquote>
+<p>项⽬对象模型，通过其描述信息来管理项⽬的构建，报告和⽂档的软件项⽬管理⼯具。它填补了Ant缺 点，Maven第⼀次⽀持了从⽹络上下载的功能，仍然采⽤xml作为配置⽂件格式。Maven专注的是依赖管理，使⽤Java编写。</p>
+<blockquote>
+<p>Gradle</p>
+</blockquote>
+<p>属于结合以上两个的优点，它继承了Ant的灵活和Maven的⽣命周期管理，它最后被google作为了 Android御⽤管理⼯具。它最⼤的区别是不⽤XML作为配置⽂件格式，采⽤了DSL格式，使得脚本更加简洁。 ⽬前市⾯上Ant⽐较⽼, 所以⼀般是⼀些⽐较传统的软件企业公司使⽤, Maven使⽤Java编写, 是当下⼤多数互联⽹公司会使⽤的⼀个构建⼯具, 中⽂⽂档也⽐较⻬全, gradle是⽤groovy编写, ⽬前⽐较新型的构建⼯具⼀些初创互联⽹公司会使⽤, 以后会有很⼤的使⽤空间。</p>
+<h3 id="Maven的四大特性"><a href="#Maven的四大特性" class="headerlink" title="Maven的四大特性"></a>Maven的四大特性</h3><h4 id="依赖管理系统"><a href="#依赖管理系统" class="headerlink" title="依赖管理系统"></a>依赖管理系统</h4><p> Maven为Java世界引⼊了⼀个新的依赖管理系统jar包管理 jar 升级时修改配置⽂件即可。在Java世界中，可以⽤<strong>groupId、artifactId、version</strong>组成的Coordination（坐标）<u>唯⼀标识⼀个依赖。</u></p>
+<p>任何基于Maven构建的项⽬⾃身也必须定义这三项属性，⽣成的包可以是Jar包，也可以是war包或者 jar包。⼀个典型的依赖引⽤如下所示：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.servlet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span> com.baidu</span><br><span class="line"> <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>javax.servlet-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span> ueditor echarts</span><br><span class="line"> <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>坐标属性的理解</p>
+</blockquote>
+<ul>
+<li><strong>groupId</strong></li>
+</ul>
+<p>定义当前Maven项⽬⾪属的实际项⽬-公司名称。(jar包所在仓库路径） 由于Maven中模块的概念，因 此⼀个实际项⽬往往会被划分为很多模块。 ⽐如spring是⼀个实际项⽬，其对应的Maven模块会有很 多，如spring-core,spring-webmvc等。</p>
+<ul>
+<li><strong>artifactId</strong></li>
+</ul>
+<p>该元素定义实际项⽬中的⼀个Maven模块-项⽬名， 推荐的做法是使⽤实际项⽬名称作为artifactId的前 缀。 ⽐如： spring-bean, spring-webmvc等。</p>
+<ul>
+<li><strong>version</strong></li>
+</ul>
+<p>该元素定义Maven当前所处的版本</p>
+<h4 id="项目的多模块构建"><a href="#项目的多模块构建" class="headerlink" title="项目的多模块构建"></a>项目的多模块构建</h4><p>项⽬复查时 dao service controller 层分离将⼀个项⽬分解为多个模块已经是很通⽤的⼀种⽅式。 在Maven中需要定义⼀个parent POM作为⼀组module的聚合POM。在该POM中可以使⽤ 标签来定义⼀ 组⼦模块。parent POM不会有什么实际构建产出。⽽parent POM中的build配置以及依赖配置都会⾃动继承给⼦module。</p>
+<h4 id="一致的构建模型和插件机制"><a href="#一致的构建模型和插件机制" class="headerlink" title="一致的构建模型和插件机制"></a>一致的构建模型和插件机制</h4><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mortbay.jetty<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-jetty-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">version</span>&gt;</span>6.1.25<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">scanIntervalSeconds</span>&gt;</span>10<span class="tag">&lt;/<span class="name">scanIntervalSeconds</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">contextPath</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">contextPath</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="Maven的安装配置和目录结构"><a href="#Maven的安装配置和目录结构" class="headerlink" title="Maven的安装配置和目录结构"></a>Maven的安装配置和目录结构</h2><h3 id="Maven的安装与配置"><a href="#Maven的安装与配置" class="headerlink" title="Maven的安装与配置"></a>Maven的安装与配置</h3><img data-src="/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/createmaven.png" class>
+
+<p>打开cmd窗口，通过命令查看maven是否安装成功</p>
+<img data-src="/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/maventest.png" class>
+
+<h3 id="认识Maven的目录结构"><a href="#认识Maven的目录结构" class="headerlink" title="认识Maven的目录结构"></a>认识Maven的目录结构</h3> <img data-src="/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/mulu.png" class>
+
+<h4 id="创建一个文件夹作为项目的根目录"><a href="#创建一个文件夹作为项目的根目录" class="headerlink" title="创建一个文件夹作为项目的根目录"></a>创建一个文件夹作为项目的根目录</h4><ul>
+<li><p>在根目录中创建一个pom.xml文件</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span></span></span><br><span class="line"><span class="tag"> <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag"> <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0</span></span></span><br><span class="line"><span class="tag"><span class="string"> http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"> <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.xxxx<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven01<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.0.1-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">name</span>&gt;</span>maven01<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.apache.org<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.8.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<p><strong>PS:标签定义解释</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">根⽬录下的第⼀个⼦元素 ModelVersion指定当前Pom模型的版本，对于Maven3来说，它只能是4.0.0 。指定了当前Maven模型的版本号，对于Maven2和Maven3来说，它只能是4.0.0</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">groupId:定义了项目属于哪一个组，这个组通常和项目所在的组织和公司存在关联</span></span><br><span class="line"><span class="comment">比如：com.xxxx</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">artifactId 定义了当前Maven项⽬在组中唯⼀的ID。</span></span><br><span class="line"><span class="comment">Version X.X.X-⾥程碑</span></span><br><span class="line"><span class="comment">⽐如：1.0.0-SNAPSHOT</span></span><br><span class="line"><span class="comment">第⼀个X ⼤版本 有重⼤变⾰</span></span><br><span class="line"><span class="comment">第⼆个X ⼩版本 修复bug，增加功能</span></span><br><span class="line"><span class="comment">第三个X 更新</span></span><br><span class="line"><span class="comment">⾥程碑版本：</span></span><br><span class="line"><span class="comment">SNAPSHOT （快照，开发版）</span></span><br><span class="line"><span class="comment">alpha（内部测试）</span></span><br><span class="line"><span class="comment">beta（公开测试）</span></span><br><span class="line"><span class="comment">Release | RC（ 发布版）</span></span><br><span class="line"><span class="comment">GA（正常版本）</span></span><br><span class="line"><span class="comment">使⽤name标签声明⼀个对于⽤户更为友好的项⽬名称，虽然不是必须的，但还是推荐为每个Pom声明name，以⽅便信息交流。</span></span><br><span class="line"><span class="comment">**/</span></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="编写主函数"><a href="#编写主函数" class="headerlink" title="编写主函数"></a>编写主函数</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.xxxx.demo;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hello</span></span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> System.out.println(<span class="string">&quot;hello maven&quot;</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="cmd下编译并且运行"><a href="#cmd下编译并且运行" class="headerlink" title="cmd下编译并且运行"></a>cmd下编译并且运行</h4><p>cmd下面，进入项目根目录</p>
+<p>1.编译Java文件</p>
+<p>mvn compile</p>
+<p>2.执行main方法</p>
+<p>mvn exec:java -Dexec.mainClass=”com.xxxx.demo.hello”</p>
+<img data-src="/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/mavencreate.png" class>
+
+<p><strong>注：第⼀次下载会⽐较慢，要修改maven解压之后的conf⽬录下的settings.xml。</strong></p>
+ <figure class="highlight html"><table><tr><td class="code"><pre><span class="line">1.1.修改默认仓库位置</span><br><span class="line">打开maven⽬录 -&gt; conf -&gt; settings.xml</span><br><span class="line">添加仓库位置配置</span><br><span class="line"><span class="tag">&lt;<span class="name">localRepository</span>&gt;</span>F:/m2/repository<span class="tag">&lt;/<span class="name">localRepository</span>&gt;</span></span><br><span class="line">注：仓库位置改为⾃⼰本机的指定⽬录，&quot;/&quot;不要写反</span><br><span class="line">1.2.更换阿⾥镜像,加快依赖下载</span><br><span class="line"><span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus-aliyun<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">name</span>&gt;</span>Nexus aliyun<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>如果编译不成功，可能出现的问题</p>
+<blockquote>
+<p>1.不是使用管理员权限执行的dos命令</p>
+</blockquote>
+<blockquote>
+<p>2.JDK环境配置有问题，重装JDK</p>
+</blockquote>
+<blockquote>
+<p>3.代码编写时，类里面没有设置包名</p>
+</blockquote>
+<p>##Maven命令</p>
+<p>作为开发利器的maven，为我们提供了⼗分丰富的命令，了解maven的命令⾏操作并熟练运⽤常⻅的 maven命令还是⼗分必要的，即使譬如IDEA等⼯具给我提供了图形界⾯化⼯具，但其底层还是依靠 maven命令来驱动的。</p>
+<p>Maven的命令格式如下：</p>
+<blockquote>
+<p>maven [plugin-name] : [goal-name]</p>
+</blockquote>
+<p>命令代表的含义：执⾏ plugin-name 插件的 goal-name ⽬标</p>
+<table>
+<thead>
+<tr>
+<th align="left">maven命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">mvn clean</td>
+<td>清理项⽬⽣产的临时⽂件,⼀般是模块下的target⽬录</td>
+</tr>
+<tr>
+<td align="left">mvn compile</td>
+<td>编译源代码，⼀般编译模块下的src/main/java⽬录</td>
+</tr>
+<tr>
+<td align="left">mvn package</td>
+<td>项⽬打包⼯具,会在模块下的target⽬录⽣成jar或war等⽂件</td>
+</tr>
+<tr>
+<td align="left">mvn test</td>
+<td>测试命令,或执⾏src/test/java/下junit的测试⽤例</td>
+</tr>
+<tr>
+<td align="left">mvn -version</td>
+<td>显示版本信息</td>
+</tr>
+<tr>
+<td align="left">mvn install</td>
+<td>将打包的jar/war⽂件复制到你的本地仓库中,供其他模块使⽤</td>
+</tr>
+<tr>
+<td align="left">mvn deploy</td>
+<td>将打包的⽂件发布到远程参考,提供其他⼈员进⾏下载依赖</td>
+</tr>
+<tr>
+<td align="left">mvn site</td>
+<td>生成项目相关信息的网站</td>
+</tr>
+<tr>
+<td align="left">mvn eclipse:eclipse</td>
+<td>将项目转换为Eclipse项目</td>
+</tr>
+<tr>
+<td align="left">mvn dependency:tree</td>
+<td>打印出整个项目的依赖树</td>
+</tr>
+<tr>
+<td align="left">mvn archetype:generate</td>
+<td>创建maven的普通Java项目</td>
+</tr>
+<tr>
+<td align="left">mvn tomcat:run</td>
+<td>在tomcat容器中运行web应用</td>
+</tr>
+<tr>
+<td align="left">mvn jetty:run</td>
+<td>调用jetty插件的Run目标在jetty servlet容器中启动web应用</td>
+</tr>
+</tbody></table>
+<p>注意：运⾏maven命令的时候，⾸先需要定位到maven项⽬的⽬录，也就是项⽬的pom.xml⽂件所在的⽬录。否则， 必以通过参数来指定项⽬的⽬录。</p>
+<h3 id="命令参数"><a href="#命令参数" class="headerlink" title="命令参数"></a>命令参数</h3><p>上⾯列举的只是⽐较通⽤的命令，其实很多命令都可以携带参数以执⾏更精准的任务。</p>
+<h4 id="D传入属性参数"><a href="#D传入属性参数" class="headerlink" title="-D传入属性参数"></a>-D传入属性参数</h4><p>例如： </p>
+<blockquote>
+<p>mvn package -Dmaven.test.skip=true </p>
+</blockquote>
+<p>以 -D 开头，将 maven.test.skip 的值设为 true ,就是告诉maven打包的时候跳过单元测试。同 理， mvn deploy-Dmaven.test.skip=true 代表部署项⽬并跳过单元测试。</p>
+<h4 id="P使用指定的Profile配置"><a href="#P使用指定的Profile配置" class="headerlink" title="-P使用指定的Profile配置"></a>-P使用指定的Profile配置</h4><p>⽐如项⽬开发需要有多个环境，⼀般为开发，测试，预发，正式4个环境，在pom.xml中的配置如下：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">profiles</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">id</span>&gt;</span>dev<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">env</span>&gt;</span>dev<span class="tag">&lt;/<span class="name">env</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">activation</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">activeByDefault</span>&gt;</span>true<span class="tag">&lt;/<span class="name">activeByDefault</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">activation</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">id</span>&gt;</span>qa<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">env</span>&gt;</span>qa<span class="tag">&lt;/<span class="name">env</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">id</span>&gt;</span>pre<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">env</span>&gt;</span>pre<span class="tag">&lt;/<span class="name">env</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">id</span>&gt;</span>prod<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">env</span>&gt;</span>prod<span class="tag">&lt;/<span class="name">env</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">profiles</span>&gt;</span></span><br><span class="line">......</span><br><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">filters</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">filter</span>&gt;</span>config/$&#123;env&#125;.properties<span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;/<span class="name">filters</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">directory</span>&gt;</span>src/main/resources<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">filtering</span>&gt;</span>true<span class="tag">&lt;/<span class="name">filtering</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br><span class="line"> ......</span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>profiles 定义了各个环境的变量 id ， filters 中定义了变量配置⽂件的地址，其中地址中的环境 变量就是上⾯ profile 中定义的值， resources 中是定义哪些⽬录下的⽂件会被配置⽂件中定义的变量替换。 通过maven可以实现按不同环境进⾏打包部署，例如：</p>
+<blockquote>
+<p>mvn package -Pdev -Dmaven.test.skip=true</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>项目工具</category>
+      </categories>
+      <tags>
+        <tag>Maven</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MongoDB数据库</title>
+    <url>/2021/02/25/MongoDB%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Mybatis框架</title>
@@ -1435,11 +1435,6 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>Redis数据库</title>
-    <url>/2021/02/25/Redis%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>SVN版本控制系统</title>
     <url>/2021/02/06/SVN%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F/</url>
     <content><![CDATA[<h3 id="主要内容"><a href="#主要内容" class="headerlink" title="主要内容"></a>主要内容</h3>]]></content>
@@ -1449,6 +1444,11 @@
       <tags>
         <tag>SVN</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Redis数据库</title>
+    <url>/2021/02/25/Redis%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Servlet规范一</title>
@@ -1648,6 +1648,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
+    <title>Swagger-UI</title>
+    <url>/2021/03/14/Swagger-UI/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Stack</title>
     <url>/2021/03/11/Stack/</url>
     <content><![CDATA[<h2 id="栈刷题总结"><a href="#栈刷题总结" class="headerlink" title="栈刷题总结"></a>栈刷题总结</h2><h3 id="1-有效的括号"><a href="#1-有效的括号" class="headerlink" title="1.有效的括号"></a>1.有效的括号</h3><h4 id="知识点补充："><a href="#知识点补充：" class="headerlink" title="知识点补充："></a>知识点补充：</h4><blockquote>
@@ -1764,11 +1769,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>栈</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Swagger-UI</title>
-    <url>/2021/03/14/Swagger-UI/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Undo页与redo页</title>
@@ -1926,13 +1926,13 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>coding部署</title>
-    <url>/2021/03/15/coding%E9%83%A8%E7%BD%B2/</url>
+    <title>zookeeper</title>
+    <url>/2021/03/14/zookeeper/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>zookeeper</title>
-    <url>/2021/03/14/zookeeper/</url>
+    <title>coding部署</title>
+    <url>/2021/03/15/coding%E9%83%A8%E7%BD%B2/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -2081,6 +2081,131 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
+    <title>使用Docker部署开发环境</title>
+    <url>/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</url>
+    <content><![CDATA[<h2 id="在Linux上安装Docker"><a href="#在Linux上安装Docker" class="headerlink" title="在Linux上安装Docker"></a>在Linux上安装Docker</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> # 系统内核是3.10以上的</span><br><span class="line">root@theSun:&#x2F;# uname -r</span><br><span class="line">4.4.0-185-generic</span><br><span class="line"></span><br><span class="line"># 系统版本</span><br><span class="line">root@theSun:&#x2F;# cat &#x2F;etc&#x2F;os-release </span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> step 1: 安装必要的一些系统工具</span></span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common</span><br><span class="line"><span class="meta">#</span><span class="bash"> step 2: 安装GPG证书</span></span><br><span class="line">curl -fsSL http://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -</span><br><span class="line"><span class="meta">#</span><span class="bash"> Step 3: 写入软件源信息</span></span><br><span class="line">sudo add-apt-repository &quot;deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable&quot;</span><br><span class="line"><span class="meta">#</span><span class="bash"> Step 4: 更新并安装 Docker-CE</span></span><br><span class="line">sudo apt-get -y update</span><br><span class="line">sudo apt-get -y install docker-ce</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看镜像</span></span><br><span class="line">docker image</span><br><span class="line"></span><br><span class="line">卸载：</span><br><span class="line">1、卸载依赖</span><br><span class="line">sudo apt-get purge docker-ce docker-ce-cli containerd.io</span><br><span class="line">2、删除资源</span><br><span class="line">sudo rm -rf /var/lib/docker</span><br></pre></td></tr></table></figure>
+<h2 id="Docker安装部署RabbitMQ"><a href="#Docker安装部署RabbitMQ" class="headerlink" title="Docker安装部署RabbitMQ"></a>Docker安装部署RabbitMQ</h2><p>这里注意获取镜像的时候要获取management版本的，不要获取last版本的，management版本的才带有管理界面。</p>
+<h3 id="查询镜像"><a href="#查询镜像" class="headerlink" title="查询镜像"></a>查询镜像</h3><figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">docker</span> <span class="selector-tag">search</span> <span class="selector-tag">rabbitmq</span><span class="selector-pseudo">:management</span></span><br></pre></td></tr></table></figure>
+<p>可以看到如下结果：</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">[<span class="meta">root@localhost ~</span>]<span class="meta"># docker search rabbitmq:management</span></span><br><span class="line">INDEX       NAME                                          DESCRIPTION                                     STARS     OFFICIAL   AUTOMATED</span><br><span class="line">docker.io   docker.io/macintoshplus/rabbitmq-management   Based <span class="keyword">on</span> rabbitmq:management whit python a...   <span class="number">1</span>                    [OK]</span><br><span class="line">docker.io   docker.io/transmitsms/rabbitmq-sharded        Fork of rabbitmq:management <span class="keyword">with</span> sharded_e...   <span class="number">0</span></span><br><span class="line">[<span class="meta">root@localhost ~</span>]<span class="meta">#</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="获取镜像"><a href="#获取镜像" class="headerlink" title="获取镜像"></a>获取镜像</h3><figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">docker</span> <span class="selector-tag">pull</span> <span class="selector-tag">rabbitmq</span><span class="selector-pseudo">:management</span></span><br></pre></td></tr></table></figure>
+<p>可以看到如下结果</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">[<span class="meta">root@localhost ~</span>]<span class="meta"># docker pull rabbitmq:management</span></span><br><span class="line">Trying to pull repository docker.io/library/rabbitmq ...</span><br><span class="line">management: Pulling <span class="keyword">from</span> docker.io/library/rabbitmq</span><br><span class="line">e7bb522d92ff: Pull complete</span><br><span class="line">ad90649c4d84: Pull complete</span><br><span class="line"><span class="number">5</span>a318b914d6c: Pull complete</span><br><span class="line">cedd60f70052: Pull complete</span><br><span class="line">f4ec28761801: Pull complete</span><br><span class="line">b8fa44aa9074: Pull complete</span><br><span class="line">e8002a209c24: Pull complete</span><br><span class="line">cd1206edcd43: Pull complete</span><br><span class="line"><span class="number">769b</span>e0727074: Pull complete</span><br><span class="line"><span class="number">7308b</span>93d35af: Pull complete</span><br><span class="line">c4102ef22c29: Pull complete</span><br><span class="line">fefc8e1aa4b5: Pull complete</span><br><span class="line">a271d400045b: Pull complete</span><br><span class="line">b0d4c40c62de: Pull complete</span><br><span class="line">Digest: sha256:<span class="number">8761</span>de2c22badfc86dfe89791dc9dbf122f67ff0f8981966573d267af421b97f</span><br><span class="line">[<span class="meta">root@localhost ~</span>]<span class="meta">#</span></span><br></pre></td></tr></table></figure>
+<h3 id="运行镜像"><a href="#运行镜像" class="headerlink" title="运行镜像"></a>运行镜像</h3><figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">docker</span> <span class="selector-tag">run</span> <span class="selector-tag">-d</span> <span class="selector-tag">-p</span> 5672<span class="selector-pseudo">:5672</span> <span class="selector-tag">-p</span> 15672<span class="selector-pseudo">:15672</span> <span class="selector-tag">--name</span> <span class="selector-tag">rabbitmq</span> <span class="selector-tag">rabbitmq</span><span class="selector-pseudo">:management</span></span><br></pre></td></tr></table></figure>
+<p>看到如下结果，变成功了：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-attr">[root@localhost ~]</span># <span class="selector-tag">docker</span> <span class="selector-tag">run</span> <span class="selector-tag">-d</span> <span class="selector-tag">-p</span> 5672<span class="selector-pseudo">:5672</span> <span class="selector-tag">-p</span> 15672<span class="selector-pseudo">:15672</span> <span class="selector-tag">--name</span> <span class="selector-tag">rabbitmq</span> <span class="selector-tag">rabbitmq</span><span class="selector-pseudo">:management</span></span><br><span class="line"><span class="selector-tag">e194a2dbeb52f2296dfb6d1c527cf052d82be5ed9a4c974d70dcd6af3da3eb7e</span></span><br><span class="line"><span class="selector-attr">[root@localhost ~]</span>#</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="访问管理页面"><a href="#访问管理页面" class="headerlink" title="访问管理页面"></a>访问管理页面</h3><p>访问管理界面的地址就是 http://[宿主机IP]:15672，可以使用默认的账户登录，用户名和密码都guest，如：</p>
+<img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/01.png" class>
+
+<blockquote>
+<p><strong>需要注意的是</strong>：</p>
+<ul>
+<li>在云服务器上，默认情况下，RabbitMQ的端口号15672是不开放的，需要自己登陆控制台添加安全组规则，放开对15672端口号的访问限制。</li>
+<li>Linux系统上，宿主IP地址直接就是该系统的公网地址。</li>
+</ul>
+</blockquote>
+<img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/02.png" class>
+
+<h2 id="Docker安装Redis"><a href="#Docker安装Redis" class="headerlink" title="Docker安装Redis"></a>Docker安装Redis</h2><h3 id="找到一个合适的docker的redis的版本"><a href="#找到一个合适的docker的redis的版本" class="headerlink" title="找到一个合适的docker的redis的版本"></a>找到一个合适的docker的redis的版本</h3><p>可以去docker hub中去找一下</p>
+<p><a href="https://hub.docker.com/_/redis?tab=tags">https://hub.docker.com/_/redis?tab=tags</a></p>
+ <img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/03.png" class>
+
+<h3 id="使用docker安装redis"><a href="#使用docker安装redis" class="headerlink" title="使用docker安装redis"></a>使用docker安装redis</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">sudo docker pull redis</span><br></pre></td></tr></table></figure>
+<p>安装好之后使用<code>docker images即可查看</code></p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">truedei@truedei:~$ </span><br><span class="line">truedei@truedei:~$ sudo docker images</span><br><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">redis               latest              987b78fc9e38        <span class="number">10</span> days ago         104MB</span><br><span class="line">httpd               latest              a8a9cbaadb0c        <span class="number">2</span> weeks ago         166MB</span><br><span class="line">fjudith/draw.io     latest              7b136fc80d31        <span class="number">3</span> weeks ago         683MB</span><br><span class="line">mysql               <span class="number">5.7</span><span class="number">.29</span>              f5829c0eee9e        <span class="number">5</span> weeks ago         455MB</span><br><span class="line">truedei@truedei:~$ </span><br><span class="line">truedei@truedei:~$ </span><br></pre></td></tr></table></figure>
+<h3 id="准备redis"><a href="#准备redis" class="headerlink" title="准备redis"></a>准备redis</h3><p>因为需要<a href="https://cloud.tencent.com/product/crs?from=10680">redis</a>的配置文件，这里最好还是去redis的官方去下载一个redis使用里面的配置文件即可</p>
+<p>redis中文官方网站：<a href="http://www.redis.cn/download.html">http://www.redis.cn/download.html</a></p>
+ <img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/04.png" class>
+
+<p>下载后解压出来： </p>
+ <img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/05.png" class>
+
+<p>这个<code>redis.conf</code>文件就是咱们需要的，为了保险，还是拷贝一下，做个备份。</p>
+<h3 id="配置redis"><a href="#配置redis" class="headerlink" title="配置redis"></a>配置redis</h3><p><strong>修改<code>redis.conf</code>配置文件：</strong> 主要配置的如下：</p>
+<blockquote>
+<p> <code>bind 127.0.0.1</code> #注释掉这部分，使redis可以外部访问 <code>daemonize no</code>#用守护线程的方式启动 <code>requirepass 你的密码</code>#给redis设置密码 <code>appendonly yes</code>#redis持久化　　默认是no <code>tcp-keepalive 300</code> #防止出现远程主机强迫关闭了一个现有的连接的错误 默认是300 </p>
+</blockquote>
+<h3 id="创建本地与docker映射的目录，即本地存放的位置"><a href="#创建本地与docker映射的目录，即本地存放的位置" class="headerlink" title="创建本地与docker映射的目录，即本地存放的位置"></a>创建本地与docker映射的目录，即本地存放的位置</h3><p>创建本地存放redis的位置;</p>
+<blockquote>
+<p> 可以自定义，因为我的docker的一些配置文件都是存放在<code>/data</code>目录下面的，所以我依然在<code>/data</code>目录下创建一个<code>redis</code>目录，这样是为了方便后期管理 </p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">truedei@truedei:redis-<span class="number">5.0</span><span class="number">.5</span>$ sudo mkdir /data/redis</span><br><span class="line">truedei@truedei:redis-<span class="number">5.0</span><span class="number">.5</span>$ sudo mkdir /data/redis/data</span><br></pre></td></tr></table></figure>
+<p>把<code>配置文件</code>拷贝到刚才创建好的文件里</p>
+<blockquote>
+<p> 因为我本身就是Linux操作系统，所以我可以直接拷贝过去，如果你是windows的话，可能需要使用ftp拷贝过去，或者直接复制内容，然后粘贴过去。 </p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">truedei@truedei:redis-<span class="number">5.0</span><span class="number">.5</span>$ sudo cp -p redis.conf /data/redis/</span><br><span class="line">truedei@truedei:redis-<span class="number">5.0</span><span class="number">.5</span>$ </span><br></pre></td></tr></table></figure>
+<h3 id="启动docker-redis"><a href="#启动docker-redis" class="headerlink" title="启动docker redis"></a>启动docker redis</h3><p>启动：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">truedei@truedei:~$ sudo docker run -p <span class="number">6379</span>:<span class="number">6379</span> --name redis -v /data/redis/redis.conf:<span class="regexp">/etc/</span>redis/redis.conf  -v /data/redis/data:<span class="regexp">/data -d redis redis-server /</span>etc/redis/redis.conf --appendonly yes</span><br></pre></td></tr></table></figure>
+<p>参数解释：</p>
+<blockquote>
+<p> <code>-p 6379:6379</code>:把容器内的6379端口映射到<a href="https://cloud.tencent.com/product/cdh?from=10680">宿主机</a>6379端口 <code>-v /data/redis/redis.conf:/etc/redis/redis.conf</code>：把宿主机配置好的redis.conf放到容器内的这个位置中 <code>-v /data/redis/data:/data</code>：把redis持久化的数据在宿主机内显示，做数据备份 <code>redis-server /etc/redis/redis.conf</code>：这个是关键配置，让redis不是无配置启动，而是按照这个redis.conf的配置启动 <code>–appendonly yes</code>：redis启动后数据持久化 </p>
+</blockquote>
+<h3 id="查看是否启动成功"><a href="#查看是否启动成功" class="headerlink" title="查看是否启动成功"></a>查看是否启动成功</h3><p>查看是否成功启动：<code>sudo docker ps</code></p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">truedei@truedei:~$ sudo docker ps</span><br><span class="line">CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                               NAMES</span><br><span class="line">85cb7d83a2ff        redis               <span class="string">&quot;docker-entrypoint.s…&quot;</span>   <span class="number">7</span> minutes ago       Up <span class="number">7</span> minutes        <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>:<span class="number">6379</span>-&gt;<span class="number">6379</span>/tcp              redis</span><br><span class="line">0a122a08125f        mysql:<span class="number">5.7</span><span class="number">.29</span>        <span class="string">&quot;docker-entrypoint.s…&quot;</span>   <span class="number">5</span> weeks ago         Up About an hour    <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>:<span class="number">3306</span>-&gt;<span class="number">3306</span>/tcp, <span class="number">33060</span>/tcp   mysql57</span><br><span class="line">truedei@truedei:~$ </span><br></pre></td></tr></table></figure>
+ <img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/06.png" class>
+
+<p>可以查看一下日志：<code>sudo docker logs redis</code></p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">truedei@truedei:~$ sudo docker logs redis</span><br><span class="line">1:C 29 May 2020 01:16:22.107 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo</span><br><span class="line">1:C 29 May 2020 01:16:22.107 # Redis version=6.0.3, bits=64, commit=00000000, modified=0, pid=1, just started</span><br><span class="line">1:C 29 May 2020 01:16:22.107 # Configuration loaded</span><br><span class="line">                _._                                                  </span><br><span class="line">           _.-<span class="string">``</span>__ <span class="string">&#x27;&#x27;</span>-._                                             </span><br><span class="line">      _.-<span class="string">``</span>    <span class="string">`.  `</span>_.  <span class="string">&#x27;&#x27;</span>-._           Redis <span class="number">6.0</span><span class="number">.3</span> (<span class="number">00000000</span>/<span class="number">0</span>) <span class="number">64</span> bit</span><br><span class="line">  .-<span class="string">``</span> .-<span class="string">``</span><span class="string">`.  `</span><span class="string">``</span>\/    _.,_ <span class="string">&#x27;&#x27;</span>-._                                   </span><br><span class="line"> (    <span class="string">&#x27;      ,       .-`  | `,    )     Running in standalone mode</span></span><br><span class="line"><span class="string"> |`-._`-...-` __...-.``-._|&#x27;</span><span class="string">` _.-&#x27;|     Port: 6379</span></span><br><span class="line"><span class="string"> |    `</span>-._   <span class="string">`._    /     _.-&#x27;    |     PID: 1</span></span><br><span class="line"><span class="string">  `</span>-._    <span class="string">`-._  `</span>-./  _.-<span class="string">&#x27;    _.-&#x27;</span>                                   </span><br><span class="line"> |<span class="string">`-._`</span>-._    <span class="string">`-.__.-&#x27;    _.-&#x27;_.-&#x27;|                                  </span></span><br><span class="line"><span class="string"> |    `</span>-._<span class="string">`-._        _.-&#x27;_.-&#x27;    |           http://redis.io        </span></span><br><span class="line"><span class="string">  `</span>-._    <span class="string">`-._`</span>-.__.-<span class="string">&#x27;_.-&#x27;</span>    _.-<span class="string">&#x27;                                   </span></span><br><span class="line"><span class="string"> |`-._`-._    `-.__.-&#x27;</span>    _.-<span class="string">&#x27;_.-&#x27;</span>|                                  </span><br><span class="line"> |    <span class="string">`-._`</span>-._        _.-<span class="string">&#x27;_.-&#x27;</span>    |                                  </span><br><span class="line">  <span class="string">`-._    `</span>-._<span class="string">`-.__.-&#x27;_.-&#x27;    _.-&#x27;                                   </span></span><br><span class="line"><span class="string">      `</span>-._    <span class="string">`-.__.-&#x27;    _.-&#x27;                                       </span></span><br><span class="line"><span class="string">          `</span>-._        _.-<span class="string">&#x27;                                           </span></span><br><span class="line"><span class="string">              `-.__.-&#x27;</span>                                               </span><br><span class="line"></span><br><span class="line">1:M 29 May 2020 01:16:22.108 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.</span><br><span class="line">1:M 29 May 2020 01:16:22.108 # Server initialized</span><br><span class="line">1:M 29 May 2020 01:16:22.108 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add &#x27;vm.overcommit_memory = 1&#x27; to /etc/sysctl.conf and then reboot or run the command &#x27;sysctl vm.overcommit_memory=1&#x27; for this to take effect.</span><br><span class="line">1:M 29 May 2020 01:16:22.108 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command &#x27;echo never &gt; /sys/kernel/mm/transparent_hugepage/enabled&#x27; as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.</span><br><span class="line"><span class="number">1</span>:M <span class="number">29</span> May <span class="number">2020</span> <span class="number">01</span>:<span class="number">16</span>:<span class="number">22.108</span> * Ready to accept connections</span><br><span class="line">truedei@truedei:~$ </span><br></pre></td></tr></table></figure>
+ <img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/07.png" class>
+
+<h2 id="Docker安装MongoDB"><a href="#Docker安装MongoDB" class="headerlink" title="Docker安装MongoDB"></a>Docker安装MongoDB</h2><p>MongoDB 是一个免费的开源跨平台面向文档的 NoSQL 数据库程序。</p>
+<h3 id="1、查看可用的-MongoDB-版本"><a href="#1、查看可用的-MongoDB-版本" class="headerlink" title="1、查看可用的 MongoDB 版本"></a>1、查看可用的 MongoDB 版本</h3><p>访问 MongoDB 镜像库地址： <a href="https://hub.docker.com/_/mongo?tab=tags&amp;page=1%E3%80%82">https://hub.docker.com/_/mongo?tab=tags&amp;page=1。</a></p>
+<p>可以通过 Sort by 查看其他版本的 MongoDB，默认是最新版本 <strong>mongo:latest</strong>。</p>
+<img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/08.png" class>
+
+<img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/09.png" class>
+
+<p>此外，我们还可以用  docker search mongo 命令来查看可用版本：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> docker search mongo</span></span><br><span class="line">NAME                              DESCRIPTION                      STARS     OFFICIAL   AUTOMATED</span><br><span class="line">mongo                             MongoDB document databases ...   1989      [OK]       </span><br><span class="line">mongo-express                     Web-based MongoDB admin int...   22        [OK]       </span><br><span class="line">mvertes/alpine-mongo              light MongoDB container          19                   [OK]</span><br><span class="line">mongooseim/mongooseim-docker      MongooseIM server the lates...   9                    [OK]</span><br><span class="line">torusware/speedus-mongo           Always updated official Mon...   9                    [OK]</span><br><span class="line">jacksoncage/mongo                 Instant MongoDB sharded cluster  6                    [OK]</span><br><span class="line">mongoclient/mongoclient           Official docker image for M...   4                    [OK]</span><br><span class="line">jadsonlourenco/mongo-rocks        Percona Mongodb with Rocksd...   4                    [OK]</span><br><span class="line">asteris/apache-php-mongo          Apache2.4 + PHP + Mongo + m...   2                    [OK]</span><br><span class="line">19hz/mongo-container              Mongodb replicaset for coreos    1                    [OK]</span><br><span class="line">nitra/mongo                       Mongo3 centos7                   1                    [OK]</span><br><span class="line">ackee/mongo                       MongoDB with fixed Bluemix p...  1                    [OK]</span><br><span class="line">kobotoolbox/mongo                 https://github.com/kobotoolb...  1                    [OK]</span><br><span class="line">valtlfelipe/mongo                 Docker Image based on the la...  1                    [OK]</span><br></pre></td></tr></table></figure>
+<h3 id="2、取最新版的-MongoDB-镜像"><a href="#2、取最新版的-MongoDB-镜像" class="headerlink" title="2、取最新版的 MongoDB 镜像"></a>2、取最新版的 MongoDB 镜像</h3><p>这里我们拉取官方的最新版本的镜像：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ docker pull mongo:latest</span><br></pre></td></tr></table></figure>
+<img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/12.png" class>
+
+<h3 id="3、查看本地镜像"><a href="#3、查看本地镜像" class="headerlink" title="3、查看本地镜像"></a>3、查看本地镜像</h3><p>使用以下命令来查看是否已安装了 mongo：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ docker images</span><br></pre></td></tr></table></figure>
+<img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/13.png" class>
+
+<h3 id="4、运行容器"><a href="#4、运行容器" class="headerlink" title="4、运行容器"></a>4、运行容器</h3><p>安装完成后，我们可以使用以下命令来运行 mongo 容器：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ docker run -itd --name mongo -p 27017:27017 mongo --auth</span><br></pre></td></tr></table></figure>
+<p>参数说明：</p>
+<ul>
+<li><strong>-p 27017:27017</strong> ：映射容器服务的 27017 端口到宿主机的 27017 端口。外部可以直接通过 宿主机 ip:27017 访问到 mongo 的服务。</li>
+<li><strong>–auth</strong>：需要密码才能访问容器服务。</li>
+</ul>
+<img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/10.png" class>
+
+<img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/11.png" class>
+
+
+
+<h2 id="Docker安装ElasticSearch"><a href="#Docker安装ElasticSearch" class="headerlink" title="Docker安装ElasticSearch"></a>Docker安装ElasticSearch</h2><h3 id="下载ElasticSearch"><a href="#下载ElasticSearch" class="headerlink" title="下载ElasticSearch"></a>下载ElasticSearch</h3><blockquote>
+<p>docker pull elasticsearch:6.8.6</p>
+</blockquote>
+<h3 id="运行ElasticSearch"><a href="#运行ElasticSearch" class="headerlink" title="运行ElasticSearch"></a>运行ElasticSearch</h3><blockquote>
+<p>docker run -d –name elasticsearch -p 9200:9200 -p 9300:9300 -e “discovery.type=single-node”  -e “ES_JAVA_OPTS=-Xms512m -Xmx512m” elasticsearch:6.8.6</p>
+</blockquote>
+<h3 id="查看正在运行的容器"><a href="#查看正在运行的容器" class="headerlink" title="查看正在运行的容器"></a>查看正在运行的容器</h3><blockquote>
+<p>docker ps</p>
+</blockquote>
+<h3 id="启动测试"><a href="#启动测试" class="headerlink" title="启动测试"></a>启动测试</h3><p>网页输入：“主机地址:9200”，出现如下json数据，即成功！<strong>同样需要放开端口</strong></p>
+<img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/14.png" class>
+
+<h2 id="Docker安装MySQL"><a href="#Docker安装MySQL" class="headerlink" title="Docker安装MySQL"></a>Docker安装MySQL</h2><h2 id="Docker安装JDK"><a href="#Docker安装JDK" class="headerlink" title="Docker安装JDK"></a>Docker安装JDK</h2><h2 id="Docker安装Nginx和Tomcat"><a href="#Docker安装Nginx和Tomcat" class="headerlink" title="Docker安装Nginx和Tomcat"></a>Docker安装Nginx和Tomcat</h2>]]></content>
+      <categories>
+        <category>环境配置</category>
+      </categories>
+      <tags>
+        <tag>环境配置</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>创建一个Vue实例</title>
     <url>/2021/03/07/%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAVue%E5%AE%9E%E4%BE%8B/</url>
     <content><![CDATA[<h2 id="创建一个Vue实例"><a href="#创建一个Vue实例" class="headerlink" title="创建一个Vue实例"></a>创建一个Vue实例</h2><p>虽然没有完全遵循 <a href="https://zh.wikipedia.org/wiki/MVVM">MVVM 模型</a>，但是 Vue 的设计也受到了它的启发。因此在文档中经常会使用 <code>vm</code> (ViewModel 的缩写) 这个变量名表示 Vue 实例。</p>
@@ -2214,6 +2339,81 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <content><![CDATA[]]></content>
   </entry>
   <entry>
+    <title>双指针问题</title>
+    <url>/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h2 id="环形列表I"><a href="#环形列表I" class="headerlink" title="环形列表I"></a>环形列表I</h2><h3 id="题目说明"><a href="#题目说明" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，判断链表中是否有环。</p>
+<p>如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。</p>
+<p>如果链表中存在环，则返回 true 。 否则，返回 false 。</p>
+<p> 进阶：</p>
+<p>你能用 O(1)（即，常量）内存解决此问题吗？</p>
+<p> 示例 1：</p>
+<p> <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100453506.png" alt="image-20210114100453506"></p>
+<p>输入：head = [3,2,0,-4], pos = 1<br>输出：true<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100714252.png" alt="image-20210114100714252"></p>
+<p>输入：head = [1,2], pos = 0<br>输出：true<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
+<img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100749569.png" alt="image-20210114100749569" style="zoom:150%;">
+
+<p>输入：head = [1], pos = -1<br>输出：false<br>解释：链表中没有环。</p>
+<p>提示：</p>
+<p>链表中节点的数目范围是 [0, 104]<br>-105 &lt;= Node.val &lt;= 105<br>pos 为 -1 或者链表中的一个 有效索引 </p>
+<h3 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h3><p>####方法一：哈希表<br>思路及算法</p>
+<p>最容易想到的方法是遍历所有节点，每次遍历到一个节点时，判断该节点此前是否被访问过。</p>
+<p>具体地，我们可以使用哈希表来存储所有已经访问过的节点。每次我们到达一个节点，如果该节点已经存在于哈希表中，则说明该链表是环形链表，否则就将该节点加入哈希表中。重复这一过程，直到我们遍历完整个链表即可。</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">pulic <span class="class"><span class="keyword">class</span> <span class="title">solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascirle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        Set&lt;ListNOde&gt; seen = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span>( head !=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!seen.add(head))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>#####复杂度分析</p>
+<p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。最坏情况下我们需要遍历每个节点一次。</p>
+<p>空间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。主要为哈希表的开销，最坏情况下我们需要将每个节点插入到哈希表中一次。</p>
+<h4 id="方式二；双指针–快慢指针"><a href="#方式二；双指针–快慢指针" class="headerlink" title="方式二；双指针–快慢指针"></a>方式二；双指针–快慢指针</h4><p>方法需要读者对「Floyd 判圈算法」（又称龟兔赛跑算法）有所了解。</p>
+<p>假想「乌龟」和「兔子」在链表上移动，「兔子」跑得快，「乌龟」跑得慢。当「乌龟」和「兔子」从链表上的同一个节点开始移动时，如果该链表中没有环，那么「兔子」将一直处于「乌龟」的前方；如果该链表中有环，那么「兔子」会先于「乌龟」进入环，并且一直在环内移动。等到「乌龟」进入环时，由于「兔子」的速度快，它一定会在某个时刻与乌龟相遇，即套了「乌龟」若干圈。</p>
+<p>我们可以根据上述思路来解决本题。具体地，我们定义两个指针，一快一满。慢指针每次只移动一步，而快指针每次移动两步。初始时，慢指针在位置 head，而快指针在位置 head.next。这样一来，如果在移动的过程中，快指针反过来追上慢指针，就说明该链表为环形链表。否则快指针将到达链表尾部，该链表不为环形链表。</p>
+<p> 为什么我们要规定初始时慢指针在位置 head，快指针在位置 head.next，而不是两个指针都在位置 head（即与「乌龟」和「兔子」中的叙述相同）？</p>
+<p>观察下面的代码，我们使用的是 while 循环，循环条件先于循环体。由于循环条件一定是判断快慢指针是否重合，如果我们将两个指针初始都置于 head，那么 while 循环就不会执行。因此，我们可以假想一个在 head 之前的虚拟节点，慢指针从虚拟节点移动一步到达 head，快指针从虚拟节点移动两步到达 head.next，这样我们就可以使用 while 循环了。</p>
+<p>当然，我们也可以使用 do-while 循环。此时，我们就可以把快慢指针的初始值都置为 head。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">puclic <span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascycle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head;</span><br><span class="line">        ListNode fast = head.next;</span><br><span class="line">        <span class="keyword">while</span>(slow!=fast)&#123;</span><br><span class="line">            <span class="keyword">if</span>(fast==<span class="keyword">null</span>||fast.next==<span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            fast = fast.next.next</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。</p>
+<p>当链表中不存在环时，快指针将先于慢指针到达链表尾部，链表中每个节点至多被访问两次。</p>
+<p>当链表中存在环时，每一轮移动后，快慢指针的距离将减小一。而初始距离为环的长度，因此至多移动 NN 轮。</p>
+<p>空间复杂度：O(1)O(1)。我们只使用了两个指针的额外空间</p>
+<h2 id="环形列表II"><a href="#环形列表II" class="headerlink" title="环形列表II"></a>环形列表II</h2><h3 id="题目说明-1"><a href="#题目说明-1" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。</p>
+<p>为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意，pos 仅仅是用于标识环的情况，并不会作为参数传递到函数中。</p>
+<p>说明：不允许修改给定的链表。</p>
+<p>进阶：</p>
+<p>你是否可以使用 O(1) 空间解决此题？</p>
+<p> 示例 1：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102706369.png" alt="image-20210114102706369"></p>
+<p>输入：head = [3,2,0,-4], pos = 1<br>输出：返回索引为 1 的链表节点<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102721841.png" alt="image-20210114102721841"></p>
+<p>输入：head = [1,2], pos = 0<br>输出：返回索引为 0 的链表节点<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102737481.png" alt="image-20210114102737481"></p>
+<p>输入：head = [1], pos = -1<br>输出：返回 null<br>解释：链表中没有环。</p>
+<p>提示：</p>
+<p>链表中节点的数目范围在范围 [0, 104] 内<br>-105 &lt;= Node.val &lt;= 105<br>pos 的值为 -1 或者链表中的一个有效索引</p>
+<h3 id="题解-1"><a href="#题解-1" class="headerlink" title="题解"></a>题解</h3><h4 id="方法一：哈希表"><a href="#方法一：哈希表" class="headerlink" title="方法一：哈希表"></a>方法一：哈希表</h4><p>一个非常直观的思路是：我们遍历链表中的每个节点，并将它记录下来；一旦遇到了此前遍历过的节点，就可以判定链表中存在环。借助哈希表可以很方便地实现。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        ListNode pos = head;</span><br><span class="line">        Set&lt;ListNode&gt; visited = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span> (pos != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (visited.contains(pos)) &#123;</span><br><span class="line">                <span class="keyword">return</span> pos;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                visited.add(pos);</span><br><span class="line">            &#125;</span><br><span class="line">            pos = pos.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析-1"><a href="#复杂度分析-1" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们恰好需要访问链表中的每一个节点。</p>
+<p>空间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们需要将链表中的每个节点都保存在哈希表当中。</p>
+<h4 id="方法二：双指针–快慢指针"><a href="#方法二：双指针–快慢指针" class="headerlink" title="方法二：双指针–快慢指针"></a>方法二：双指针–快慢指针</h4><p>我们使用两个指针，\textit{fast}fast 与 \textit{slow}slow。它们起始都位于链表的头部。随后，\textit{slow}slow 指针每次向后移动一个位置，而 \textit{fast}fast 指针向后移动两个位置。如果链表中存在环，则 \textit{fast}fast 指针最终将再次与 \textit{slow}slow 指针在环中相遇。</p>
+<p>如下图所示，设链表中环外部分的长度为 aa。\textit{slow}slow 指针进入环后，又走了 bb 的距离与 \textit{fast}fast 相遇。此时，\textit{fast}fast 指针已经走完了环的 nn 圈，因此它走过的总距离为 a+n(b+c)+b=a+(n+1)b+nca+n(b+c)+b=a+(n+1)b+nc</p>
+ <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114103031586.png" alt="image-20210114103031586" style="zoom:50%;">
+
+<p>根据题意，任意时刻，\textit{fast}fast 指针走过的距离都为 \textit{slow}slow 指针的 22 倍。因此，我们有</p>
+<p>a+(n+1)b+nc=2(a+b) \implies a=c+(n-1)(b+c)<br>a+(n+1)b+nc=2(a+b)⟹a=c+(n−1)(b+c)</p>
+<p>有了 a=c+(n-1)(b+c)a=c+(n−1)(b+c) 的等量关系，我们会发现：从相遇点到入环点的距离加上 n-1n−1 圈的环长，恰好等于从链表头部到入环点的距离。</p>
+<p>因此，当发现 \textit{slow}slow 与 \textit{fast}fast 相遇时，我们再额外使用一个指针 \textit{ptr}ptr。起始，它指向链表头部；随后，它和 \textit{slow}slow 每次向后移动一个位置。最终，它们会在入环点相遇。 </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head, fast = head;</span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="keyword">null</span>) &#123;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            <span class="keyword">if</span> (fast.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">                fast = fast.next.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (fast == slow) &#123;</span><br><span class="line">                ListNode ptr = head;</span><br><span class="line">                <span class="keyword">while</span> (ptr != slow) &#123;</span><br><span class="line">                    ptr = ptr.next;</span><br><span class="line">                    slow = slow.next;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> ptr;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>#####复杂度分析</p>
+<p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。在最初判断快慢指针是否相遇时，\textit{slow}slow 指针走过的距离不会超过链表的总长度；随后寻找入环点时，走过的距离也不会超过链表的总长度。因此，总的执行时间为 O(N)+O(N)=O(N)O(N)+O(N)=O(N)。</p>
+<p>空间复杂度：O(1)O(1)。我们只使用了 \textit{slow}, \textit{fast}, \textit{ptr}slow,fast,ptr 三个指针。</p>
+]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>链表</tag>
+        <tag>双指针</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>初识递归</title>
     <url>/2021/02/03/%E5%88%9D%E8%AF%86%E9%80%92%E5%BD%92/</url>
     <content><![CDATA[<h2 id="二叉搜索树的范围和"><a href="#二叉搜索树的范围和" class="headerlink" title="二叉搜索树的范围和"></a>二叉搜索树的范围和</h2><h3 id="DFS深度优先搜索"><a href="#DFS深度优先搜索" class="headerlink" title="DFS深度优先搜索"></a>DFS深度优先搜索</h3><h4 id="1-递归"><a href="#1-递归" class="headerlink" title="1.递归"></a>1.递归</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * public class TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode left;</span></span><br><span class="line"><span class="comment"> *     TreeNode right;</span></span><br><span class="line"><span class="comment"> *     TreeNode() &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val) &#123; this.val = val; &#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val, TreeNode left, TreeNode right) &#123;</span></span><br><span class="line"><span class="comment"> *         this.val = val;</span></span><br><span class="line"><span class="comment"> *         this.left = left;</span></span><br><span class="line"><span class="comment"> *         this.right = right;</span></span><br><span class="line"><span class="comment"> *     &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> ans;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">rangeSumBST</span><span class="params">(TreeNode root, <span class="keyword">int</span> low, <span class="keyword">int</span> high)</span> </span>&#123;</span><br><span class="line">       ans = <span class="number">0</span> ;</span><br><span class="line">        dfs(root,low,high);</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dfs</span><span class="params">(TreeNode node,<span class="keyword">int</span> L,<span class="keyword">int</span> R)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(node!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(L&lt;=node.val&amp;&amp;node.val&lt;=R)&#123;</span><br><span class="line">                ans+=node.val;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(node.val&gt;L)&#123;</span><br><span class="line">                dfs(node.left,L,R);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(node.val&lt;R)&#123;</span><br><span class="line">                dfs(node.right,L,R);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -2315,81 +2515,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </categories>
       <tags>
         <tag>递归</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>双指针问题</title>
-    <url>/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<h2 id="环形列表I"><a href="#环形列表I" class="headerlink" title="环形列表I"></a>环形列表I</h2><h3 id="题目说明"><a href="#题目说明" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，判断链表中是否有环。</p>
-<p>如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。</p>
-<p>如果链表中存在环，则返回 true 。 否则，返回 false 。</p>
-<p> 进阶：</p>
-<p>你能用 O(1)（即，常量）内存解决此问题吗？</p>
-<p> 示例 1：</p>
-<p> <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100453506.png" alt="image-20210114100453506"></p>
-<p>输入：head = [3,2,0,-4], pos = 1<br>输出：true<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100714252.png" alt="image-20210114100714252"></p>
-<p>输入：head = [1,2], pos = 0<br>输出：true<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
-<img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100749569.png" alt="image-20210114100749569" style="zoom:150%;">
-
-<p>输入：head = [1], pos = -1<br>输出：false<br>解释：链表中没有环。</p>
-<p>提示：</p>
-<p>链表中节点的数目范围是 [0, 104]<br>-105 &lt;= Node.val &lt;= 105<br>pos 为 -1 或者链表中的一个 有效索引 </p>
-<h3 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h3><p>####方法一：哈希表<br>思路及算法</p>
-<p>最容易想到的方法是遍历所有节点，每次遍历到一个节点时，判断该节点此前是否被访问过。</p>
-<p>具体地，我们可以使用哈希表来存储所有已经访问过的节点。每次我们到达一个节点，如果该节点已经存在于哈希表中，则说明该链表是环形链表，否则就将该节点加入哈希表中。重复这一过程，直到我们遍历完整个链表即可。</p>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">pulic <span class="class"><span class="keyword">class</span> <span class="title">solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascirle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        Set&lt;ListNOde&gt; seen = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span>( head !=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!seen.add(head))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>#####复杂度分析</p>
-<p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。最坏情况下我们需要遍历每个节点一次。</p>
-<p>空间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。主要为哈希表的开销，最坏情况下我们需要将每个节点插入到哈希表中一次。</p>
-<h4 id="方式二；双指针–快慢指针"><a href="#方式二；双指针–快慢指针" class="headerlink" title="方式二；双指针–快慢指针"></a>方式二；双指针–快慢指针</h4><p>方法需要读者对「Floyd 判圈算法」（又称龟兔赛跑算法）有所了解。</p>
-<p>假想「乌龟」和「兔子」在链表上移动，「兔子」跑得快，「乌龟」跑得慢。当「乌龟」和「兔子」从链表上的同一个节点开始移动时，如果该链表中没有环，那么「兔子」将一直处于「乌龟」的前方；如果该链表中有环，那么「兔子」会先于「乌龟」进入环，并且一直在环内移动。等到「乌龟」进入环时，由于「兔子」的速度快，它一定会在某个时刻与乌龟相遇，即套了「乌龟」若干圈。</p>
-<p>我们可以根据上述思路来解决本题。具体地，我们定义两个指针，一快一满。慢指针每次只移动一步，而快指针每次移动两步。初始时，慢指针在位置 head，而快指针在位置 head.next。这样一来，如果在移动的过程中，快指针反过来追上慢指针，就说明该链表为环形链表。否则快指针将到达链表尾部，该链表不为环形链表。</p>
-<p> 为什么我们要规定初始时慢指针在位置 head，快指针在位置 head.next，而不是两个指针都在位置 head（即与「乌龟」和「兔子」中的叙述相同）？</p>
-<p>观察下面的代码，我们使用的是 while 循环，循环条件先于循环体。由于循环条件一定是判断快慢指针是否重合，如果我们将两个指针初始都置于 head，那么 while 循环就不会执行。因此，我们可以假想一个在 head 之前的虚拟节点，慢指针从虚拟节点移动一步到达 head，快指针从虚拟节点移动两步到达 head.next，这样我们就可以使用 while 循环了。</p>
-<p>当然，我们也可以使用 do-while 循环。此时，我们就可以把快慢指针的初始值都置为 head。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">puclic <span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascycle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head;</span><br><span class="line">        ListNode fast = head.next;</span><br><span class="line">        <span class="keyword">while</span>(slow!=fast)&#123;</span><br><span class="line">            <span class="keyword">if</span>(fast==<span class="keyword">null</span>||fast.next==<span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            fast = fast.next.next</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。</p>
-<p>当链表中不存在环时，快指针将先于慢指针到达链表尾部，链表中每个节点至多被访问两次。</p>
-<p>当链表中存在环时，每一轮移动后，快慢指针的距离将减小一。而初始距离为环的长度，因此至多移动 NN 轮。</p>
-<p>空间复杂度：O(1)O(1)。我们只使用了两个指针的额外空间</p>
-<h2 id="环形列表II"><a href="#环形列表II" class="headerlink" title="环形列表II"></a>环形列表II</h2><h3 id="题目说明-1"><a href="#题目说明-1" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。</p>
-<p>为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意，pos 仅仅是用于标识环的情况，并不会作为参数传递到函数中。</p>
-<p>说明：不允许修改给定的链表。</p>
-<p>进阶：</p>
-<p>你是否可以使用 O(1) 空间解决此题？</p>
-<p> 示例 1：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102706369.png" alt="image-20210114102706369"></p>
-<p>输入：head = [3,2,0,-4], pos = 1<br>输出：返回索引为 1 的链表节点<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102721841.png" alt="image-20210114102721841"></p>
-<p>输入：head = [1,2], pos = 0<br>输出：返回索引为 0 的链表节点<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102737481.png" alt="image-20210114102737481"></p>
-<p>输入：head = [1], pos = -1<br>输出：返回 null<br>解释：链表中没有环。</p>
-<p>提示：</p>
-<p>链表中节点的数目范围在范围 [0, 104] 内<br>-105 &lt;= Node.val &lt;= 105<br>pos 的值为 -1 或者链表中的一个有效索引</p>
-<h3 id="题解-1"><a href="#题解-1" class="headerlink" title="题解"></a>题解</h3><h4 id="方法一：哈希表"><a href="#方法一：哈希表" class="headerlink" title="方法一：哈希表"></a>方法一：哈希表</h4><p>一个非常直观的思路是：我们遍历链表中的每个节点，并将它记录下来；一旦遇到了此前遍历过的节点，就可以判定链表中存在环。借助哈希表可以很方便地实现。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        ListNode pos = head;</span><br><span class="line">        Set&lt;ListNode&gt; visited = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span> (pos != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (visited.contains(pos)) &#123;</span><br><span class="line">                <span class="keyword">return</span> pos;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                visited.add(pos);</span><br><span class="line">            &#125;</span><br><span class="line">            pos = pos.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析-1"><a href="#复杂度分析-1" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们恰好需要访问链表中的每一个节点。</p>
-<p>空间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们需要将链表中的每个节点都保存在哈希表当中。</p>
-<h4 id="方法二：双指针–快慢指针"><a href="#方法二：双指针–快慢指针" class="headerlink" title="方法二：双指针–快慢指针"></a>方法二：双指针–快慢指针</h4><p>我们使用两个指针，\textit{fast}fast 与 \textit{slow}slow。它们起始都位于链表的头部。随后，\textit{slow}slow 指针每次向后移动一个位置，而 \textit{fast}fast 指针向后移动两个位置。如果链表中存在环，则 \textit{fast}fast 指针最终将再次与 \textit{slow}slow 指针在环中相遇。</p>
-<p>如下图所示，设链表中环外部分的长度为 aa。\textit{slow}slow 指针进入环后，又走了 bb 的距离与 \textit{fast}fast 相遇。此时，\textit{fast}fast 指针已经走完了环的 nn 圈，因此它走过的总距离为 a+n(b+c)+b=a+(n+1)b+nca+n(b+c)+b=a+(n+1)b+nc</p>
- <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114103031586.png" alt="image-20210114103031586" style="zoom:50%;">
-
-<p>根据题意，任意时刻，\textit{fast}fast 指针走过的距离都为 \textit{slow}slow 指针的 22 倍。因此，我们有</p>
-<p>a+(n+1)b+nc=2(a+b) \implies a=c+(n-1)(b+c)<br>a+(n+1)b+nc=2(a+b)⟹a=c+(n−1)(b+c)</p>
-<p>有了 a=c+(n-1)(b+c)a=c+(n−1)(b+c) 的等量关系，我们会发现：从相遇点到入环点的距离加上 n-1n−1 圈的环长，恰好等于从链表头部到入环点的距离。</p>
-<p>因此，当发现 \textit{slow}slow 与 \textit{fast}fast 相遇时，我们再额外使用一个指针 \textit{ptr}ptr。起始，它指向链表头部；随后，它和 \textit{slow}slow 每次向后移动一个位置。最终，它们会在入环点相遇。 </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head, fast = head;</span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="keyword">null</span>) &#123;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            <span class="keyword">if</span> (fast.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">                fast = fast.next.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (fast == slow) &#123;</span><br><span class="line">                ListNode ptr = head;</span><br><span class="line">                <span class="keyword">while</span> (ptr != slow) &#123;</span><br><span class="line">                    ptr = ptr.next;</span><br><span class="line">                    slow = slow.next;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> ptr;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>#####复杂度分析</p>
-<p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。在最初判断快慢指针是否相遇时，\textit{slow}slow 指针走过的距离不会超过链表的总长度；随后寻找入环点时，走过的距离也不会超过链表的总长度。因此，总的执行时间为 O(N)+O(N)=O(N)O(N)+O(N)=O(N)。</p>
-<p>空间复杂度：O(1)O(1)。我们只使用了 \textit{slow}, \textit{fast}, \textit{ptr}slow,fast,ptr 三个指针。</p>
-]]></content>
-      <categories>
-        <category>数据结构</category>
-      </categories>
-      <tags>
-        <tag>链表</tag>
-        <tag>双指针</tag>
       </tags>
   </entry>
   <entry>
@@ -3259,6 +3384,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
+    <title>组件基础</title>
+    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>红队攻防入门1</title>
     <url>/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/</url>
     <content><![CDATA[<h2 id="红队攻防入门1–初识红队"><a href="#红队攻防入门1–初识红队" class="headerlink" title="红队攻防入门1–初识红队"></a>红队攻防入门1–初识红队</h2><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F1.png" class>
@@ -3353,8 +3483,8 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>组件基础</title>
-    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E5%9F%BA%E7%A1%80/</url>
+    <title>组件进阶篇--深入了解组件</title>
+    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E8%BF%9B%E9%98%B6%E7%AF%87-%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E7%BB%84%E4%BB%B6/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -3448,11 +3578,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>编程范式</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>组件进阶篇--深入了解组件</title>
-    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E8%BF%9B%E9%98%B6%E7%AF%87-%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E7%BB%84%E4%BB%B6/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>虚拟机种类</title>
