@@ -21,18 +21,30 @@
     var CONFIG = {"hostname":"www.mindmaster.top","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="The world favors the underdog,and I would be the bad guy">
+  <meta name="description" content="对内容分发网络CDN的详解">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CDN">
 <meta property="og:url" content="https://www.mindmaster.top/2021/03/14/CDN/index.html">
 <meta property="og:site_name" content="一只小码农">
-<meta property="og:description" content="The world favors the underdog,and I would be the bad guy">
+<meta property="og:description" content="对内容分发网络CDN的详解">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/14/CDN/01.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/14/CDN/02.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/14/CDN/03.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/14/CDN/04.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/14/CDN/05.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/14/CDN/06.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/14/CDN/07.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/14/CDN/08.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/14/CDN/09.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/14/CDN/10.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/14/CDN/11.png">
 <meta property="article:published_time" content="2021-03-14T14:47:57.000Z">
-<meta property="article:modified_time" content="2021-03-14T06:47:57.710Z">
+<meta property="article:modified_time" content="2021-03-25T03:49:41.047Z">
 <meta property="article:author" content="邢浩东">
-<meta property="article:tag" content="个人博客">
+<meta property="article:tag" content="负载均衡">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.mindmaster.top/2021/03/14/CDN/01.png">
 
 <link rel="canonical" href="https://www.mindmaster.top/2021/03/14/CDN/">
 
@@ -247,9 +259,24 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-03-14 14:47:57 / 修改时间：06:47:57" itemprop="dateCreated datePublished" datetime="2021-03-14T14:47:57Z">2021-03-14</time>
+              <time title="创建时间：2021-03-14 14:47:57" itemprop="dateCreated datePublished" datetime="2021-03-14T14:47:57Z">2021-03-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-25 03:49:41" itemprop="dateModified" datetime="2021-03-25T03:49:41Z">2021-03-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
             </span>
 
           
@@ -279,15 +306,16 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>0</span>
+              <span>6.6k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>6 分钟</span>
             </span>
+            <div class="post-description">对内容分发网络CDN的详解</div>
 
         </div>
       </header>
@@ -298,13 +326,159 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <h2 id="什么是CDN"><a href="#什么是CDN" class="headerlink" title="什么是CDN"></a>什么是CDN</h2><p><code>CDN（内容分发网络）</code>全称是 <code>Content Delivery Network</code>，建立并覆盖在承载网之上、由分布在不同区域的边缘节点服务器群组成的分布式网络，替代传统以 <code>WEB Server</code> 为中心的数据传输模式。</p>
+<p>作用是将源内容发布到边缘节点，配合精准的<strong>调度系统</strong>；将用户的请求分配至最适合他的节点，使用户可以以最快的速度取得他所需的内容，有效解决Internet网络拥塞状况，提高用户访问的响应速度。</p>
+<h3 id="CDN的基本工作过程"><a href="#CDN的基本工作过程" class="headerlink" title="CDN的基本工作过程"></a>CDN的基本工作过程</h3><p>用户通过浏览器等方式访问网站的过程如图所示：</p>
+<img data-src="/2021/03/14/CDN/01.png" class>
+
+<ol>
+<li>用户在自己的浏览器中输入要访问的网站域名。</li>
+<li>浏览器向 <strong>本地DNS服务器</strong> 请求对该域名的解析。</li>
+<li>本地DNS服务器中如果缓存有这个域名的解析结果，则直接响应用户的解析请求。</li>
+<li>本地DNS服务器中如果没有关于这个域名的解析结果的缓存，则以递归方式向整个DNS系统请求解析，获得应答后将结果反馈给浏览器。</li>
+<li>浏览器得到域名解析结果，就是该域名相应的服务设备的 <strong>IP地址</strong> 。</li>
+<li>浏览器向服务器请求内容。</li>
+<li>服务器将用户请求内容传送给浏览器。</li>
+</ol>
+<p>在网站和用户之间加入 CDN 以后，用户不会有任何与原来不同的感觉。最简单的 CDN 网络有一个 DNS 服务器和几台缓存服务器就可以运行了。一个典型的 CDN 用户访问<strong>调度流程</strong>如图所示:</p>
+<img data-src="/2021/03/14/CDN/02.png" class>
+
+<ol>
+<li>当用户点击网站页面上的内容URL，经过本地DNS系统解析，DNS 系统会最终将域名的解析权交给 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/CNAME_record">CNAME</a> 指向的 <strong>CDN 专用 DNS 服务器</strong>。</li>
+<li>CDN 的 DNS 服务器将 CDN 的全局负载均衡设备 IP 地址返回用户。</li>
+<li>用户向 CDN 的全局负载均衡设备发起内容 URL 访问请求。</li>
+<li>CDN 全局负载均衡设备根据用户 IP 地址，以及用户请求的内容URL，选择一台用户所属区域的区域负载均衡设备，告诉用户向这台设备发起请求。</li>
+<li>基于以下这些条件的综合分析之后，区域负载均衡设备会向全局负载均衡设备返回一台缓存服务器的IP地址：<ul>
+<li>根据用户 IP 地址，判断哪一台服务器距用户最近；</li>
+<li>根据用户所请求的 URL 中携带的内容名称，判断哪一台服务器上有用户所需内容；</li>
+<li>查询各个服务器当前的负载情况，判断哪一台服务器尚有服务能力。</li>
+</ul>
+</li>
+<li>全局负载均衡设备把<strong>服务器的 IP 地址</strong>返回给用户。</li>
+<li>用户向缓存服务器发起请求，缓存服务器响应用户请求，将用户所需内容传送到用户终端。如果这台缓存服务器上并没有用户想要的内容，而区域均衡设备依然将它分配给了用户，那么这台服务器就要向它的上一级缓存服务器请求内容，直至追溯到网站的源服务器将内容拉到本地。</li>
+</ol>
+<p><strong>DNS 服务器根据用户 IP 地址，将域名解析成相应节点的缓存服务器IP地址，实现用户就近访问。</strong>使用 CDN 服务的网站，只需将其域名解析权交给 CDN 的全局负载均衡（GSLB）设备，将需要分发的内容注入 CDN，就可以实现内容加速了。</p>
+<p>使用CDN后的<strong>http请求处理流程</strong>如下图，其中左边为<strong>DNS解析过程</strong>，右边为<strong>内容访问过程</strong>：</p>
+<img data-src="/2021/03/14/CDN/03.png" class>
+
+<h3 id="CDN的功能架构"><a href="#CDN的功能架构" class="headerlink" title="CDN的功能架构"></a>CDN的功能架构</h3><p>CDN基于这样的原理：</p>
+<ol>
+<li>挑选最优设备为用户提供服务；</li>
+<li>如果某个内容被很多用户所需要，它就被缓存到距离用户最近的节点中。</li>
+</ol>
+<p>CDN 公司在整个互联网上部署数以百计的CDN服务器（Cache），这些服务器通常在运营商的 <code>IDC (互联网数据中心Internet Data Center）</code>中，尽量靠近接入网络和用户。CDN在Cache中复制内容，当内容的提供者更新内容时，CDN 向Cache重新分发这些被刷新的内容。CDN提供一种机制，当用户请求内容时，该内容能够由以最快速度交付的Cache 来向用户提供，这个挑选”最优”的过程就叫做<strong>负载均衡</strong>。被选中的最优 Cache 可能最靠近用户，或者有一条与用户之间条件最好的路径。</p>
+<p>从功能上划分，典型的 CDN 系统架构由<code>分发服务系统</code>、<code>负载均衡系统</code>和<code>运营管理系统</code>三大部分组成，如图所示：</p>
+<img data-src="/2021/03/14/CDN/04.png" class>
+
+<h4 id="分发服务系统"><a href="#分发服务系统" class="headerlink" title="分发服务系统"></a>分发服务系统</h4><p>该系统的主要作用是实现将内容从内容源中心向边缘的推送和存储，承担实际的内容数据流的全网分发工作和面向最终用户的数据请求服务。分发服务系统最基本的工作单元就是许许多多的 Cache设备（缓存服务器），Cache 负责直接响应最终用户的访问请求，把缓存在本地的内容快速地提供给用户。同时 Cache 还负责与源站点进行内容同步，把更新的内容以及本地没有的内容从源站点获取并保存在本地。</p>
+<p>一般来说，根据承载内容类型和服务种类的不同，分发服务系统会分为多个子服务系统，如<code>网页加速子系统</code>、<code>流媒体加速子系统</code>、<code>应用加速子系统</code>等。每个子服务系统都是一个分布式服务集群，由一群功能近似的、在地理位置上分布部署的 Cache 或 Cache 集群组成，彼此间相互独立。每个子服务系统设备集群的数量根据业务发展和市场需要的不同，少则几十台，多则可达上万台，对外形成一个整体，共同承担分发服务工作。<strong>Cache 设备的数量、规模、总服务能力是衡量一个 CDN 系统服务能力的最基本的指标。</strong></p>
+<p>分发服务系统在承担内容的更新、同步和响应用户需求的同时，还需要向上层的调度控制系统提供每个Cache设备的<strong>健康状况信息、响应情况</strong>，有时还需要提供内容分布信息，以便调度控制系统根据设定的策略决定由哪个Cache（组）来响应用户的请求最优。</p>
+<h4 id="负载均衡系统"><a href="#负载均衡系统" class="headerlink" title="负载均衡系统"></a>负载均衡系统</h4><p>负载均衡系统是一个 CDN 系统的神经中枢，主要功能是负责对所有发起服务请求的用户进行访问调度，确定提供给用户的最终实际访问地址。大多数 CDN 系统的负载均衡系统是分级实现的，这里以最基本的两级调度体系进行简要说明。一般而言，两级调度体系分为<code>全局负载均衡（GSLB）</code>和<code>本地负载均衡（SLB）</code>。</p>
+<p>其中，全局负载均衡（GSLB）主要根据 <strong>用户就近性原则</strong>，通过对每个服务节点进行”最优”判断，确定向用户提供服务的 Cache 的物理位置。最通用的 GSLB 实现方法是基于<code>DNS解析</code>的方式实现，也有一些系统采用了<code>应用层重定向</code>等方式来解决。本地负载均衡（SLB）主要负责节点内部的设备负载均衡，当用户请求从 GSLB 调度到 SLB 时，SLB 会根据节点内各 Cache 设备的实际能力或内容分布等因素对用户进行重定向，常用的本地负载均衡方法有<code>基于4层调度</code>、<code>基于7层调度</code>、<code>链路负载调度</code>等。</p>
+<h4 id="运营管理系统"><a href="#运营管理系统" class="headerlink" title="运营管理系统"></a>运营管理系统</h4><p>CDN的运营管理系统与一般的电信运营管理系统类似，分为运营管理和网络管理两个子系统。</p>
+<p>运营管理子系统是CDN系统的业务管理功能实体，负责处理业务层面的与外界系统交互所必需的一些收集、整理、交付工作，包含客户管理、产品管理、计费管理、统计分析等功能。</p>
+<p>网络管理子系统实现对CDN系统的<strong>网络设备管理、拓扑管理、链路监控和故障管理</strong>，为管理员提供对全网资源进行集中化管理操作的界面，通常是基于Web方式实现的。</p>
+<h3 id="CDN的部署架构"><a href="#CDN的部署架构" class="headerlink" title="CDN的部署架构"></a>CDN的部署架构</h3><p>CDN 系统设计的首要目标是尽量减少用户的访问响应时间，为达到这一目标，CDN 系统应该尽量将用户所需要的内容存放在距离用户最近的位置。也就是说，负责为用户提供内容服务的 Cache 设备应部署在物理上的网络边缘位置，我们称这一层为<code>CDN边缘层</code>。CDN 系统中负责全局性管理和控制的设备组成 <code>中心层</code>，中心层同时保存着最多的内容副本，当边缘层设备未命中时，会向中心层请求，如果在中心层仍未命中，则需要中心层向源站回源。</p>
+<p>不同CDN系统设计之间存在差异，中心层可能具备用户服务能力，也可能不直接提供服务，只向下级节点提供内容。如果CDN网络规模较大，边缘层设备直接向中心层请求内容或服务会造成中心层设备压力过大，就要考虑在边缘层和中心层之间部署一个<code>区域层</code>，负责一个区域的管理和控制，也保存部分内容副本供边缘层访问。</p>
+<p>如图是一个典型的CDN系统三级部署示意图:</p>
+<img data-src="/2021/03/14/CDN/05.png" class>
+
+<p>节点是 CDN 系统中最基本的部署单元，一个CDN系统由大量的、地理位置上分散的 POP（point-of-presence）节点组成，为用户提供就近的内容访问服务。</p>
+<p>CDN 节点网络主要包含 <code>CDN 骨干点</code>和 <code>POP 点</code>。<code>CDN 骨干点</code>和 <code>CDN POP 点</code>在功能上不同。</p>
+<ul>
+<li>中心和区域节点一般称为骨干点，主要作为内容分发和边缘未命中时的服务点；</li>
+<li>边缘节点又被称为<code>POP（point-of-presence）节点</code>，CDN POP点主要作为直接向用户提供服务的节点。</li>
+</ul>
+<p>但是，从节点构成上来说，无论是CDN骨干点还是CDN POP点，都由Cache设备和本地负载均衡设备构成。</p>
+<p>在一个节点中，Cache设备和本地负载均衡设备的连接方式有两种：一种是旁路方式，一种是穿越方式。</p>
+<p>如图所示：</p>
+<img data-src="/2021/03/14/CDN/06.png" class>
+
+<p>在穿越方式下，<code>SLB（Server Load Balancer，负载均衡</code> 一般由 L4-7 交换机实现，SLB 向外提供可访问的 <code>公网IP地址（VIP</code>，每台Cache仅分配私网IP地址，该台SLB下挂的所有Cache构成一个服务组。所有用户请求和媒体流都经过该SLB设备，再由SLB设备进行向上向下转发。SLB实际上承担了 <code>NAT（Network Address Translation，网络地址转换）</code>功能，向用户屏蔽了Cache设备的IP地址。这种方式是CDN系统中应用较多的方式，优点是具有较高的安全性和可靠性，缺点是L4-7交换机通常较为昂贵。另外，当节点容量大时，L4-7交换机容易形成性能瓶颈。不过近年来，随着 <code>LVS (Linux Virtual Server，即Linux虚拟服务器)</code> 等技术的兴起，SLB设备价格有了大幅下降。</p>
+<p>在旁路方式下，有两种 SLB 实现方式：</p>
+<ul>
+<li>在早期，这种 SLB 一般由软件实现。SLB 和 Cache 设备都具有公共的IP地址，SLB 和 Cache 构成并联关系。用户需要先访问 SLB 设备，然后再以重定向的方式访问特定的 Cache。这种实现方式简单灵活，扩展性好，缺点是安全性较差，而且需要依赖于应用层重定向。</li>
+<li>随着技术的发展，L4-7 交换机也可采用旁路部署（负载均衡硬件设备的部署）方式，旁挂在路由交换设备上，数据流量通过三角传输方式进行。</li>
+</ul>
+<p>在CDN系统中，不仅分发服务系统和调度控制系统是分布式部署的，运营管理系统也是分级分布式部署的，每个节点都是运营管理数据的生成点和采集点，通过日志和网管代理等方式上报数据。<strong>可以说，CDN本身就是一个大型的具有中央控制能力的分布式服务系统。</strong></p>
+<h2 id="为什么需要CDN"><a href="#为什么需要CDN" class="headerlink" title="为什么需要CDN"></a>为什么需要CDN</h2><p>当下的互联网应用都包含大量的静态内容，但静态内容以及一些准动态内容又是最耗费带宽的，特别是针对全国甚至全世界的大型网站，如果这些请求都指向主站的服务器的话，不仅是主站服务器受不了，单端口500M左右的带宽也扛不住，所以大多数网站都需要CDN服务。</p>
+<p>根本上的原因是，访问速度对互联网应用的用户体验、口碑、甚至说直接的营收都有巨大的影响，任何的企业都渴望自己站点有更快的访问速度。而HTTP传输时延对web的访问速度的影响很大，在绝大多数情况下是起决定性作用的，这是由TCP/IP协议的一些特点决定的。物理层上的原因是光速有限、信道有限，协议上的原因有丢包、慢启动、拥塞控制等。</p>
+<p>这就是你使用CDN的第一个也是最重要的原因：<strong>为了加速网站的访问。</strong></p>
+<p>除了加速网站的访问之外，CDN还有一些作用：</p>
+<ul>
+<li>为了实现跨运营商、跨地域的全网覆盖</li>
+</ul>
+<p>互联不互通、区域ISP地域局限、出口带宽受限制等种种因素都造成了网站的区域性无法访问。CDN加速可以覆盖全球的线路，通过和运营商合作，部署IDC资源，在全国骨干节点商，合理部署CDN边缘分发存储节点，充分利用带宽资源，平衡源站流量。阿里云在国内有500+节点，海外300+节点，覆盖主流国家和地区不是问题，可以确保CDN服务的稳定和快速。</p>
+<ul>
+<li>为了保障你的网站安全</li>
+</ul>
+<p>CDN的负载均衡和分布式存储技术，可以加强网站的可靠性，相当无无形中给你的网站添加了一把保护伞，应对绝大部分的互联网攻击事件。防攻击系统也能避免网站遭到恶意攻击。</p>
+<ul>
+<li>为了异地备援</li>
+</ul>
+<p>当某个服务器发生意外故障时，系统将会调用其他临近的健康服务器节点进行服务，进而提供接近100%的可靠性，这就让你的网站可以做到永不宕机。</p>
+<ul>
+<li>为了节约成本</li>
+</ul>
+<p>投入使用CDN加速可以实现网站的全国铺设，你根据不用考虑购买服务器与后续的托管运维，服务器之间镜像同步，也不用为了管理维护技术人员而烦恼，节省了人力、精力和财力。</p>
+<ul>
+<li>为了让你更专注业务本身</li>
+</ul>
+<p>CDN加速厂商一般都会提供一站式服务，业务不仅限于CDN，还有配套的云存储、大数据服务、视频云服务等，而且一般会提供7x24运维监控支持，保证网络随时畅通，你可以放心使用。并且将更多的精力投入到发展自身的核心业务之上。</p>
+<h2 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h2><h3 id="网站站点-应用加速"><a href="#网站站点-应用加速" class="headerlink" title="网站站点/应用加速"></a>网站站点/应用加速</h3><p>站点或者应用中大量静态资源的加速分发，建议将站点内容进行动静分离，动态文件可以结合云服务器ECS，静态资源如各类型图片、html、css、js文件等，建议结合 对象存储OSS 存储海量静态资源，可以有效加速内容加载速度，轻松搞定网站图片、短视频等内容分发。</p>
+<img data-src="/2021/03/14/CDN/07.png" class>
+
+<h3 id="视音频点播-大文件下载分发加速"><a href="#视音频点播-大文件下载分发加速" class="headerlink" title="视音频点播/大文件下载分发加速"></a>视音频点播/大文件下载分发加速</h3><p>支持各类文件的下载、分发，支持在线点播加速业务，如mp4、flv视频文件或者平均单个文件大小在20M以上，主要的业务场景是视音频点播、大文件下载（如安装包下载）等，建议搭配对象存储OSS使用，可提升回源速度，节约近2/3回源带宽成本。</p>
+<img data-src="/2021/03/14/CDN/08.png" class>
+
+<h3 id="视频直播加速"><a href="#视频直播加速" class="headerlink" title="视频直播加速"></a>视频直播加速</h3><p>视频流媒体直播服务，支持媒资存储、切片转码、访问鉴权、内容分发加速一体化解决方案。结合弹性伸缩服务，及时调整服务器带宽，应对突发访问流量；结合媒体转码服务，享受高速稳定的并行转码，且任务规模无缝扩展。</p>
+<img data-src="/2021/03/14/CDN/09.png" class>
+
+<h3 id="移动应用加速"><a href="#移动应用加速" class="headerlink" title="移动应用加速"></a>移动应用加速</h3><p>移动APP更新文件（apk文件）分发，移动APP内图片、页面、短视频、UGC等内容的优化加速分发。提供httpDNS服务，避免DNS劫持并获得实时精确的DNS解析结果，有效缩短用户访问时间，提升用户体验。</p>
+<img data-src="/2021/03/14/CDN/10.png" class>
+
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="流量劫持"><a href="#流量劫持" class="headerlink" title="流量劫持"></a>流量劫持</h3><p>其实，CDN本身就是一种DNS劫持，只不过是良性的。 不同于黑客强制DNS把域名解析到自己的钓鱼IP上，CDN则是让DNS主动配合，把域名解析到临近的服务器上。</p>
+<p>劫持通常分为两类：</p>
+<ol>
+<li>域名劫持，又称<code>DNS劫持</code>，通常是指域名指向到非正常IP（恶意IP），该恶意IP通过反向代理的方式，在能返回网页正常内容的情况，可能插入恶意代码、监听网民访问、劫持敏感信息等操作。通常验证一个域名是否被劫持的方法是PING一个域名，如果发现PING出来的IP不是您的服务器真实IP，则可以确定被劫持了（当然如果使用了知道创宇云安全等安全加速平台，得到的IP为平台IP，并非劫持）</li>
+<li>数据劫持，通常由电信运营商中某些员工等勾结犯罪分子，在公网中进行数据支持，插入，此类情况极隐蔽，不会改变用户域名解析IP，而是直接数据流经运营商宽带时在网页中挺入内容，此类情况，建议网页启用<code>HTTPS加密</code>，可以解决这一问题（通信是加密的，运营商无法插入恶意内容）</li>
+</ol>
+<p>某运营商对新浪首页的广告强制插入：</p>
+<img data-src="/2021/03/14/CDN/11.png" class>
+
+<p>如果使用CDN服务时，当源站向CDN返回被劫持的内容时，此时CDN将获取到的并不是正确的网页内容（而是经运营商篡改强制植入广告的页面），此时可能导致该内容在CDN中长时间缓存，发现这种问题，可以清理CDN缓存后，一般即可恢复正常。</p>
+<p>遇到劫持现象，可以向工信部投诉：<a target="_blank" rel="noopener" href="http://www.chinatcc.gov.cn:8080/cms/shensus/">http://www.chinatcc.gov.cn:80…</a></p>
+<p>可参考：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://paper.seebug.org/181/">互联网黑势力之流量劫持</a></li>
+<li><a target="_blank" rel="noopener" href="http://blog.sae.sina.com.cn/archives/3464">流量劫持是如何产生的？</a></li>
+</ul>
+<h3 id="CDN缓存"><a href="#CDN缓存" class="headerlink" title="CDN缓存"></a>CDN缓存</h3><p>CDN边缘节点缓存策略因服务商不同而不同，但一般都会遵循http标准协议，通过http响应头中的 <code>Cache-control: max-age</code>的字段来设置CDN边缘节点数据缓存时间。</p>
+<p>当客户端向CDN节点请求数据时，CDN节点会判断缓存数据是否过期，若缓存数据并没有过期，则直接将缓存数据返回给客户端；否则，CDN节点就会向源站发出<code>回源请求（back to the source request）</code>，从源站拉取最新数据，更新本地缓存，并将最新数据返回给客户端。</p>
+<p>CDN服务商一般会提供基于文件后缀、目录多个维度来指定CDN缓存时间，为用户提供更精细化的缓存管理。</p>
+<p>CDN缓存时间会对<code>回源率</code>产生直接的影响。若CDN缓存时间较短，CDN边缘节点上的数据会经常失效，导致频繁回源，增加了源站的负载，同时也增大的访问延时；若CDN缓存时间太长，会带来数据更新时间慢的问题。开发者需要增对特定的业务，来做特定的数据缓存时间管理。</p>
+<p>CDN边缘节点对开发者是透明的，相比于浏览器 <code>Ctrl+F5</code> 的强制刷新来使浏览器本地缓存失效，开发者可以通过CDN服务商提供的“刷新缓存”接口来达到清理CDN边缘节点缓存的目的。这样开发者在更新数据后，可以使用 <code>刷新缓存</code> 功能来强制CDN节点上的数据缓存过期，保证客户端在访问时，拉取到最新的数据。</p>
+<p>可参考：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://xuexb.com/post/qing-chu-jing-tai-cdnhuan-cun-de-yan-jiu.html">清除静态cdn缓存的研究</a></li>
+</ul>
+<h2 id="深入研究"><a href="#深入研究" class="headerlink" title="深入研究"></a>深入研究</h2><ul>
+<li>阿里基于Nginx开发的高性能HTTP服务器，已经开源，详细请了解 <a href="https://link.zhihu.com/?target=http://tengine.taobao.org/">The Tengine Web Server</a></li>
+</ul>
+
     </div>
 
     
     
     
       
+  <div class="popular-posts-header">相关文章推荐</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2021\03\14\LVS负载均衡\" rel="bookmark">LVS负载均衡</a></div>
+        <div class="popular-posts-excerpt"><p>对LVS做简单了解和学习</p></div>
+    </li>
+  </ul>
 
         <div class="reward-container">
   <div>谢谢你的支持哦，继续加油.</div>
@@ -345,6 +519,9 @@
 
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/" rel="tag"># 负载均衡</a>
+          </div>
 
         
 
@@ -418,6 +595,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFCDN"><span class="nav-number">1.</span> <span class="nav-text">什么是CDN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CDN%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E8%BF%87%E7%A8%8B"><span class="nav-number">1.1.</span> <span class="nav-text">CDN的基本工作过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CDN%E7%9A%84%E5%8A%9F%E8%83%BD%E6%9E%B6%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">CDN的功能架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%8F%91%E6%9C%8D%E5%8A%A1%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.2.1.</span> <span class="nav-text">分发服务系统</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.2.2.</span> <span class="nav-text">负载均衡系统</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%90%E8%90%A5%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.2.3.</span> <span class="nav-text">运营管理系统</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CDN%E7%9A%84%E9%83%A8%E7%BD%B2%E6%9E%B6%E6%9E%84"><span class="nav-number">1.3.</span> <span class="nav-text">CDN的部署架构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81CDN"><span class="nav-number">2.</span> <span class="nav-text">为什么需要CDN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">3.</span> <span class="nav-text">适用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%AB%99%E7%AB%99%E7%82%B9-%E5%BA%94%E7%94%A8%E5%8A%A0%E9%80%9F"><span class="nav-number">3.1.</span> <span class="nav-text">网站站点&#x2F;应用加速</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%86%E9%9F%B3%E9%A2%91%E7%82%B9%E6%92%AD-%E5%A4%A7%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD%E5%88%86%E5%8F%91%E5%8A%A0%E9%80%9F"><span class="nav-number">3.2.</span> <span class="nav-text">视音频点播&#x2F;大文件下载分发加速</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E7%9B%B4%E6%92%AD%E5%8A%A0%E9%80%9F"><span class="nav-number">3.3.</span> <span class="nav-text">视频直播加速</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%BB%E5%8A%A8%E5%BA%94%E7%94%A8%E5%8A%A0%E9%80%9F"><span class="nav-number">3.4.</span> <span class="nav-text">移动应用加速</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">4.</span> <span class="nav-text">其他</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E5%8A%AB%E6%8C%81"><span class="nav-number">4.1.</span> <span class="nav-text">流量劫持</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CDN%E7%BC%93%E5%AD%98"><span class="nav-number">4.2.</span> <span class="nav-text">CDN缓存</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6"><span class="nav-number">5.</span> <span class="nav-text">深入研究</span></a></li></ol></div>
 
       </div>
       <!--/noindex-->
@@ -552,13 +730,13 @@ setInterval(function(){
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">197k</span>
+    <span title="站点总字数">204k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">2:59</span>
+    <span title="站点阅读时长">3:05</span>
 </div>
 
 
