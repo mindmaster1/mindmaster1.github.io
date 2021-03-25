@@ -22,11 +22,6 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>Docker虚拟容器入门</title>
-    <url>/2021/03/14/Docker%E8%99%9A%E6%8B%9F%E5%AE%B9%E5%99%A8%E5%85%A5%E9%97%A8/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Cookie</title>
     <url>/2021/02/25/Cookie/</url>
     <content><![CDATA[]]></content>
@@ -38,6 +33,16 @@
       </tags>
   </entry>
   <entry>
+    <title>Druid数据库连接池</title>
+    <url>/2021/03/14/Druid%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Docker虚拟容器入门</title>
+    <url>/2021/03/14/Docker%E8%99%9A%E6%8B%9F%E5%AE%B9%E5%99%A8%E5%85%A5%E9%97%A8/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Filter</title>
     <url>/2021/02/25/Filter/</url>
     <content><![CDATA[]]></content>
@@ -47,16 +52,6 @@
       <tags>
         <tag>Filter</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Druid数据库连接池</title>
-    <url>/2021/03/14/Druid%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>HTTP缓存</title>
-    <url>/2021/02/03/HTTP%E7%BC%93%E5%AD%98/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>HTTP代理</title>
@@ -88,6 +83,11 @@
       <tags>
         <tag>HTTP</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>HTTP缓存</title>
+    <url>/2021/02/03/HTTP%E7%BC%93%E5%AD%98/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>IOC创建对象</title>
@@ -193,6 +193,11 @@
       </tags>
   </entry>
   <entry>
+    <title>IPVS</title>
+    <url>/2021/03/25/IPVS/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>InnoDB存储引擎</title>
     <url>/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
     <content><![CDATA[<h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
@@ -245,18 +250,8 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>JVM虚拟机栈</title>
-    <url>/2021/03/14/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>InnoDB表</title>
     <url>/2021/03/14/InnoDB%E8%A1%A8/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>Jenkins自动化部署工具</title>
-    <url>/2021/03/14/Jenkins%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E5%B7%A5%E5%85%B7/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -329,6 +324,16 @@
       </tags>
   </entry>
   <entry>
+    <title>JVM虚拟机栈</title>
+    <url>/2021/03/14/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Jenkins自动化部署工具</title>
+    <url>/2021/03/14/Jenkins%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E5%B7%A5%E5%85%B7/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Java高并发JUC</title>
     <url>/2021/02/25/Java%E9%AB%98%E5%B9%B6%E5%8F%91JUC/</url>
     <content><![CDATA[]]></content>
@@ -336,7 +341,130 @@
   <entry>
     <title>LVS负载均衡</title>
     <url>/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[<blockquote>
+<h3 id="LVS是什么"><a href="#LVS是什么" class="headerlink" title="LVS是什么?"></a>LVS是什么?</h3></blockquote>
+<p>LVS，全称Linux Virtual Server，是国人章文嵩发起的一个开源项目。<br> 在社区具有很大的热度，是一个基于四层、具有强大性能的反向代理服务器。<br> <code>早期使用lvs需要修改内核才能使用，但是由于性能优异，现在已经被收入内核。</code></p>
+<p>LVS通过工作于内核的ipvs模块来实现功能，其主要工作于netfilter 的INPUT链上。<br> 而用户需要对ipvs进行操作配置则需要使用ipvsadm这个工具。<br> ipvsadm主要用于设置lvs模型、调度方式以及指定后端主机。</p>
+<blockquote>
+<h3 id="LVS中的角色"><a href="#LVS中的角色" class="headerlink" title="LVS中的角色"></a>LVS中的角色</h3></blockquote>
+<h5 id="LVS的一些相关术语"><a href="#LVS的一些相关术语" class="headerlink" title="LVS的一些相关术语"></a><strong>LVS的一些相关术语</strong></h5><p>LVS的模型中有两个角色：<br> **调度器:**Director，又称为Dispatcher，Balancer<br> <code>调度器主要用于接受用户请求。</code><br> **真实主机:**Real Server，简称为RS。<br> <code>用于真正处理用户的请求。</code></p>
+<p>而为了更好地理解，我们将所在角色的IP地址分为以下三种：<br> <strong>Director Virtual IP:**调度器用于与客户端通信的IP地址，简称为VIP<br> **Director IP</strong>:调度器用于与RealServer通信的IP地址，简称为DIP。<br> <strong>Real Server :</strong> 后端主机的用于与调度器通信的IP地址，简称为RIP。</p>
+<img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/02.webp" class>
+
+<p>基本模型</p>
+<blockquote>
+<h3 id="LVS的三种调度模式"><a href="#LVS的三种调度模式" class="headerlink" title="LVS的三种调度模式"></a>LVS的三种调度模式</h3></blockquote>
+<h3 id="LVS-NATNetwork-Address-Transform"><a href="#LVS-NATNetwork-Address-Transform" class="headerlink" title="LVS-NATNetwork Address Transform"></a>LVS-NAT<code>Network Address Transform</code></h3><h6 id="示意图和调度步骤"><a href="#示意图和调度步骤" class="headerlink" title="示意图和调度步骤"></a><strong>示意图和调度步骤</strong></h6><img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/01.webp" class>
+
+<p>LVS-NAT</p>
+<h6 id="原理："><a href="#原理：" class="headerlink" title="原理："></a><strong>原理：</strong></h6><p>基于ip伪装<code>MASQUERADES</code>，原理是多目标DNAT。<br> 所以请求和响应都经由Director调度器。</p>
+<h6 id="LVS-NAT的优点与缺点"><a href="#LVS-NAT的优点与缺点" class="headerlink" title="LVS-NAT的优点与缺点"></a><strong>LVS-NAT的优点与缺点</strong></h6><h6 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h6><ul>
+<li>支持端口映射</li>
+<li>RS可以使用任意操作系统</li>
+<li>节省公有IP地址。<br> <code>RIP和DIP都应该使用同一网段私有地址，而且RS的网关要指向DIP。</code><br> <code>使用nat另外一个好处就是后端的主机相对比较安全。</code></li>
+</ul>
+<h6 id="缺点："><a href="#缺点：" class="headerlink" title="缺点："></a>缺点：</h6><ul>
+<li>请求和响应报文都要经过Director转发;极高负载时，Director可能成为系统瓶颈。<br> <code>就是效率低的意思。</code></li>
+</ul>
+<h3 id="LVS-TUNIP-Tuneling"><a href="#LVS-TUNIP-Tuneling" class="headerlink" title="LVS-TUNIP Tuneling"></a>LVS-TUN<code>IP Tuneling</code></h3><h6 id="示意图和调度步骤-1"><a href="#示意图和调度步骤-1" class="headerlink" title="示意图和调度步骤"></a><strong>示意图和调度步骤</strong></h6><img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/03.webp" class>
+
+<p>LVS-TUN</p>
+<h6 id="原理：-1"><a href="#原理：-1" class="headerlink" title="原理："></a><strong>原理：</strong></h6><p>基于隧道封装技术。在IP报文的外面再包一层IP报文。<br> 当Director接收到请求的时候，选举出调度的RealServer<br> 当接受到从Director而来的请求时，RealServer则会使用lo接口上的VIP直接响应CIP。<br> 这样CIP请求VIP的资源，收到的也是VIP响应。</p>
+<h6 id="LVS-TUN的优点与缺点"><a href="#LVS-TUN的优点与缺点" class="headerlink" title="LVS-TUN的优点与缺点"></a><strong>LVS-TUN的优点与缺点</strong></h6><h6 id="优点：-1"><a href="#优点：-1" class="headerlink" title="优点："></a>优点：</h6><ul>
+<li>RIP,VIP,DIP都应该使用公网地址，且RS网关不指向DIP;<br> <code>只接受进站请求，解决了LVS-NAT时的问题，减少负载。</code><br> <code>请求报文经由Director调度，但是响应报文不需经由Director。</code></li>
+</ul>
+<h6 id="缺点：-1"><a href="#缺点：-1" class="headerlink" title="缺点："></a>缺点：</h6><ul>
+<li>不指向Director所以不支持端口映射。</li>
+<li>RS的OS必须支持隧道功能。</li>
+<li>隧道技术会额外花费性能，增大开销。</li>
+</ul>
+<h3 id="LVS-DRDirect-Routing"><a href="#LVS-DRDirect-Routing" class="headerlink" title="LVS-DRDirect Routing"></a>LVS-DR<code>Direct Routing</code></h3><h6 id="示意图和调度步骤-2"><a href="#示意图和调度步骤-2" class="headerlink" title="示意图和调度步骤"></a><strong>示意图和调度步骤</strong></h6><img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/04.webp" class>
+
+<p>LVS-DR</p>
+<h6 id="原理"><a href="#原理" class="headerlink" title="原理"></a><strong>原理</strong></h6><p>当Director接收到请求之后，通过调度方法选举出RealServer。<br> 讲目标地址的MAC地址改为RealServer的MAC地址。<br> RealServer接受到转发而来的请求，发现目标地址是VIP。<code>RealServer配置在lo接口上。</code><br> 处理请求之后则使用lo接口上的VIP响应CIP。</p>
+<h6 id="LVS-DR的优点与缺点"><a href="#LVS-DR的优点与缺点" class="headerlink" title="LVS-DR的优点与缺点"></a><strong>LVS-DR的优点与缺点</strong></h6><h6 id="优点：-2"><a href="#优点：-2" class="headerlink" title="优点："></a>优点：</h6><ul>
+<li>RIP可以使用私有地址，也可以使用公网地址。<br> <code>只要求DIP和RIP的地址在同一个网段内。</code></li>
+<li>请求报文经由Director调度，但是响应报文不经由Director。</li>
+<li>RS可以使用大多数OS</li>
+</ul>
+<h6 id="缺点：-2"><a href="#缺点：-2" class="headerlink" title="缺点："></a>缺点：</h6><ul>
+<li>不支持端口映射。</li>
+<li>不能跨局域网。</li>
+</ul>
+<h6 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h6><p>三种模型虽然各有利弊，但是由于追求性能和便捷，DR是目前用得最多的LVS模型。</p>
+<blockquote>
+<h3 id="LVS的八种调度方法"><a href="#LVS的八种调度方法" class="headerlink" title="LVS的八种调度方法"></a>LVS的八种调度方法</h3></blockquote>
+<h5 id="静态方法-仅依据算法本身进行轮询调度"><a href="#静态方法-仅依据算法本身进行轮询调度" class="headerlink" title="静态方法:仅依据算法本身进行轮询调度"></a>静态方法:仅依据算法本身进行轮询调度</h5><ul>
+<li>RR:Round Robin,轮调<br> <code>一个接一个，自上而下</code></li>
+<li>WRR:Weighted RR，加权论调<br> <code>加权，手动让能者多劳。</code></li>
+<li>SH:SourceIP Hash<br> <code>来自同一个IP地址的请求都将调度到同一个RealServer</code></li>
+<li>DH:Destination Hash<br> <code>不管IP，请求特定的东西，都定义到同一个RS上。</code></li>
+</ul>
+<h5 id="动态方法-根据算法及RS的当前负载状态进行调度"><a href="#动态方法-根据算法及RS的当前负载状态进行调度" class="headerlink" title="动态方法:根据算法及RS的当前负载状态进行调度"></a>动态方法:根据算法及RS的当前负载状态进行调度</h5><ul>
+<li>LC:least connections(最小链接数)<br> <code>链接最少，也就是Overhead最小就调度给谁。</code><br> <code>假如都一样，就根据配置的RS自上而下调度。</code></li>
+<li>WLC:Weighted Least Connection (加权最小连接数)<br> <code>这个是LVS的默认算法。</code></li>
+<li>SED:Shortest Expection Delay(最小期望延迟)<br> <code>WLC算法的改进。</code></li>
+<li>NQ:Never Queue<br> <code>SED算法的改进。</code></li>
+<li>LBLC:Locality-Based Least-Connection,基于局部的的LC算法<br> 正向代理缓存机制。访问缓存服务器，调高缓存的命中率。<br> 和传统DH算法比较，考虑缓存服务器负载。可以看做是DH+LC<br> 如果有两个缓存服务器<br> 1.只要调度到其中的一个缓存服务器，那缓存服务器内就会记录下来。下一次访问同一个资源的时候也就是这个服务器了。   (DH)<br> 2.有一个用户从来没有访问过这两个缓存服务器，那就分配到负载较小的服务器。<code>LC</code></li>
+</ul>
+<p>LBLCR:Locality-Based Least-Connection  with  Replication(带复制的lblc算法)<br> 缓存服务器中的缓存可以互相复制。<br> 因为即使没有，也能立即从另外一个服务器内复制一份，并且均衡负载</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">man ipvsadm有讲这几种动态或者静态的rs调度方法</span><br></pre></td></tr></table></figure>
+<blockquote>
+<h4 id="配置LVS-DR"><a href="#配置LVS-DR" class="headerlink" title="配置LVS-DR"></a>配置LVS-DR</h4></blockquote>
+<table>
+<thead>
+<tr>
+<th align="center">主机名</th>
+<th align="center">主机地址</th>
+<th align="center">角色</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">node1</td>
+<td align="center">DIP:192.168.2.201，VIP:192.168.2.211</td>
+<td align="center">Director</td>
+</tr>
+<tr>
+<td align="center">node3</td>
+<td align="center">RIP:192.168.2.203，VIP:192.168.2.211</td>
+<td align="center">RealServer</td>
+</tr>
+<tr>
+<td align="center">node4</td>
+<td align="center">RIP:192.168.2.204，VIP:192.168.2.211</td>
+<td align="center">RealServer</td>
+</tr>
+</tbody></table>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">本文中的主机系统均为CentOS7.1，Apache2.4，数据库：MariaDB-5.5.50</span><br></pre></td></tr></table></figure>
+<p>实验拓扑：</p>
+<img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/05.webp" class>
+
+<p>lvs-dr实验拓扑</p>
+<p><strong>(1)在Director上配置VIP和DIP</strong></p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">  [root@bc ~]# vim /etc/sysconfig/network-scripts/ifcfg-eno16777736</span><br><span class="line">    TYPE=Ethernet</span><br><span class="line">    BOOTPROTO=<span class="string">&quot;static&quot;</span></span><br><span class="line">    DEFROUTE=yes</span><br><span class="line">    PEERDNS=yes</span><br><span class="line">    PEERROUTES=yes</span><br><span class="line">    NAME=eno16777736</span><br><span class="line">    DEVICE=eno16777736</span><br><span class="line">    ONBOOT=yes</span><br><span class="line">    IPADDR=<span class="string">&quot;192.168.2.201&quot;</span></span><br><span class="line">    NETMASK=<span class="string">&quot;255.255.255.0&quot;</span></span><br><span class="line">    DNS1=<span class="string">&quot;192.168.2.1&quot;</span></span><br><span class="line">    GATEWAY=<span class="string">&quot;192.168.2.1&quot;</span></span><br><span class="line"></span><br><span class="line">[root@bc ~]# vim /etc/sysconfig/network-scripts/ifcfg-eno16777736:0</span><br><span class="line">    TYPE=Ethernet</span><br><span class="line">    BOOTPROTO=<span class="string">&quot;static&quot;</span></span><br><span class="line">    NAME=eno16777736:<span class="number">0</span></span><br><span class="line">    ONBOOT=yes</span><br><span class="line">    IPADDR=<span class="string">&quot;192.168.2.211&quot;</span></span><br><span class="line">    NETMASK=<span class="string">&quot;255.255.255.0&quot;</span></span><br><span class="line">    DNS1=<span class="string">&quot;192.168.2.1&quot;</span></span><br><span class="line">    GATEWAY=<span class="string">&quot;192.168.2.1&quot;</span></span><br><span class="line">    ONPARENT=yes</span><br></pre></td></tr></table></figure>
+<p>重启网络之后查看配置</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">[root@bc ~]# service NetworkManager stop</span><br><span class="line">  Redirecting to /bin/systemctl stop  NetworkManager.service</span><br><span class="line">[root@bc ~]# service network restart</span><br><span class="line">  Restarting network (via systemctl):                        [  OK  ]</span><br><span class="line">[root@bc ~]# ifconfig</span><br><span class="line">  eno16777736: flags=<span class="number">4163</span>&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu <span class="number">1500</span></span><br><span class="line">        inet <span class="number">192.168</span><span class="number">.2</span><span class="number">.201</span>  netmask <span class="number">255.255</span><span class="number">.255</span><span class="number">.0</span>  broadcast <span class="number">192.168</span><span class="number">.2</span><span class="number">.255</span></span><br><span class="line">        inet6 fe80::<span class="number">250</span>:56ff:fe3c:d757  prefixlen <span class="number">64</span>  scopeid <span class="number">0x20</span>&lt;link&gt;</span><br><span class="line">        ether <span class="number">00</span>:<span class="number">50</span>:<span class="number">56</span>:3c:d7:<span class="number">57</span>  txqueuelen <span class="number">1000</span>  (Ethernet)</span><br><span class="line">        RX packets <span class="number">88853</span>  bytes <span class="number">14843664</span> (<span class="number">14.1</span> MiB)</span><br><span class="line">        RX errors <span class="number">0</span>  dropped <span class="number">0</span>  overruns <span class="number">0</span>  frame <span class="number">0</span></span><br><span class="line">        TX packets <span class="number">79195</span>  bytes <span class="number">6551143</span> (<span class="number">6.2</span> MiB)</span><br><span class="line">        TX errors <span class="number">0</span>  dropped <span class="number">0</span> overruns <span class="number">0</span>  carrier <span class="number">0</span>  collisions <span class="number">0</span></span><br><span class="line"></span><br><span class="line">  eno16777736:<span class="number">0</span>: flags=<span class="number">4163</span>&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu <span class="number">1500</span></span><br><span class="line">        inet <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span>  netmask <span class="number">255.255</span><span class="number">.255</span><span class="number">.0</span>  broadcast <span class="number">192.168</span><span class="number">.2</span><span class="number">.255</span></span><br><span class="line">        ether <span class="number">00</span>:<span class="number">50</span>:<span class="number">56</span>:3c:d7:<span class="number">57</span>  txqueuelen <span class="number">1000</span>  (Ethernet)</span><br><span class="line"></span><br><span class="line">  lo: flags=<span class="number">73</span>&lt;UP,LOOPBACK,RUNNING&gt;  mtu <span class="number">65536</span></span><br><span class="line">        inet <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>  netmask <span class="number">255.0</span><span class="number">.0</span><span class="number">.0</span></span><br><span class="line">        inet6 ::<span class="number">1</span>  prefixlen <span class="number">128</span>  scopeid <span class="number">0x10</span>&lt;host&gt;</span><br><span class="line">        loop  txqueuelen <span class="number">0</span>  (Local Loopback)</span><br><span class="line">        RX packets <span class="number">12998</span>  bytes <span class="number">1140269</span> (<span class="number">1.0</span> MiB)</span><br><span class="line">        RX errors <span class="number">0</span>  dropped <span class="number">0</span>  overruns <span class="number">0</span>  frame <span class="number">0</span></span><br><span class="line">        TX packets <span class="number">12998</span>  bytes <span class="number">1140269</span> (<span class="number">1.0</span> MiB)</span><br><span class="line">        TX errors <span class="number">0</span>  dropped <span class="number">0</span> overruns <span class="number">0</span>  carrier <span class="number">0</span>  collisions <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p><strong>(2)Director使用ipvsadm修改创建ipvs规则</strong></p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">[root@bc ~]# ipvsadm -A -t 192.168.2.211:80 -s rr</span><br><span class="line">[root@bc ~]# ipvsadm -a -t 192.168.2.211:80 -r 192.168.2.203 -g</span><br><span class="line">[root@bc ~]# ipvsadm -a -t 192.168.2.211:80 -r 192.168.2.204 -g</span><br><span class="line">[root@bc ~]# ipvsadm -L -n</span><br><span class="line">IP Virtual Server version <span class="number">1.2</span><span class="number">.1</span> (size=<span class="number">4096</span>)</span><br><span class="line">Prot LocalAddress:Port Scheduler Flags</span><br><span class="line">  -&gt; RemoteAddress:Port           Forward Weight ActiveConn InActConn</span><br><span class="line">TCP  <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span>:<span class="number">80</span> rr</span><br><span class="line">  -&gt; <span class="number">192.168</span><span class="number">.2</span><span class="number">.203</span>:<span class="number">80</span>             Route   <span class="number">1</span>      <span class="number">0</span>          <span class="number">0</span>         </span><br><span class="line">  -&gt; <span class="number">192.168</span><span class="number">.2</span><span class="number">.204</span>:<span class="number">80</span>             Route   <span class="number">1</span>      <span class="number">0</span>          <span class="number">0</span>   </span><br></pre></td></tr></table></figure>
+<p><strong>(3)RealServer安装httpd</strong></p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">[root@node3 ~]# yum install httpd -y</span><br><span class="line">[root@node4 ~]# yum install httpd -y</span><br></pre></td></tr></table></figure>
+<p><code>可以在里面放一个Wordpress,也可以简单echo几个字到index.html</code><br> <strong>(4)node3和node4修改RealServer内核参数</strong></p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">echo <span class="string">&quot;1&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/ip_forward</span><br><span class="line">echo <span class="string">&quot;2&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/conf/all/arp_announce</span><br><span class="line">echo <span class="string">&quot;1&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/conf/all/arp_ignore</span><br><span class="line">echo <span class="string">&quot;1&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/conf/lo/arp_ignore</span><br><span class="line">echo <span class="string">&quot;2&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/conf/lo/arp_announce</span><br><span class="line">ifconfig lo:<span class="number">0</span> <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span>/<span class="number">32</span> broadcast <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span> up</span><br><span class="line">route add -host <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span> dev lo:<span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p><code>修改内核参数，并且配置VIP地址到RealServer的loopback接口上。</code><br> <strong><code>那样的话，当RealServer接到从Director转发而来的数据报文时，RealServer也不会丢弃报文。</code></strong><br> <code>同时，修改了RealServer的参数，局域网内的arp表就只有Director有VIP。</code><br> <code>RealServer的的机器上有VIP这件事，只有RealServer自己知道。</code><br> <strong><code>这样可以保证，当请求到来的时候，第一个会送到Director那里去。</code></strong></p>
+<p><strong>(5)测试结果</strong></p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">[root@node3 httpd]# vim  /var/log/httpd/access_log </span><br><span class="line">[root@node4 httpd]# vim  /var/log/httpd/access_log </span><br></pre></td></tr></table></figure>
+<p>效果差不多就是这样:<br> <code>因为我们使用了RR静态调度方法,所以这node3和node4的请求是一人一个。</code></p>
+<img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/05.webp" class>
+
+
+
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>负载均衡</tag>
+      </tags>
   </entry>
   <entry>
     <title>Leetcode树刷题总结</title>
@@ -429,9 +557,82 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
+    <title>Listener</title>
+    <url>/2021/02/25/Listener/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Java web</category>
+      </categories>
+      <tags>
+        <tag>Listener</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Linux进程调度</title>
     <url>/2021/03/14/Linux%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/</url>
     <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>MVVM框架</title>
+    <url>/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/</url>
+    <content><![CDATA[<p>一个软件或者 APP都是服务于某种需求，这称之为“业务需求”。随着业务需求的增多、软件会变得越来越庞大，越来越复杂。所以就会设计一套完整的架构设计、研发流程以及质量管理体系来保证整个研发过程。“架构设计”是一个非常大的话题，它涉及到各方面，近年来前端一个明显的开发趋势就是架构从传统的 MVC 模式向 MVVM 模式迁移，这里来谈谈——MVVM模式。</p>
+<h2 id="什么是MVVM"><a href="#什么是MVVM" class="headerlink" title="什么是MVVM"></a>什么是MVVM</h2><blockquote>
+<p>MVVM（Model–View–Viewmodel）是一种软件架构模式。<br>MVVM有助于将图形用户界面的开发与业务逻辑或后端逻辑（数据模型）的开发分离开，这是通过标记语言或GUI代码实现的。MVVM的视图模型是一个值转换器， 这意味着视图模型负责从模型中暴露（转换）数据对象，以便轻松管理和呈现对象。在这方面，视图模型比视图做得更多，并且处理大部分视图的显示逻辑。 视图模型可以实现中介者模式，组织对视图所支持的用例集的后端逻辑的访问</p>
+</blockquote>
+<p><a href="https://zh.wikipedia.org/wiki/MVVM">想要了解更多关于MVVM的定义，点击访问维基百科</a></p>
+<h2 id="MVVM涉及到的概念"><a href="#MVVM涉及到的概念" class="headerlink" title="MVVM涉及到的概念"></a>MVVM涉及到的概念</h2><ul>
+<li>M(odel)层：模型，定义数据结构。</li>
+<li>C(ontroller)层：实现业务逻辑，数据的增删改查。在MVVM模式中一般把C层算在M层中，（只有在理想的双向绑定模式下，Controller 才会完全的消失。这种理想状态一般不存在）</li>
+<li>ViewModel层：顾名思义是视图View的模型、映射和显示逻辑（如if for等，非业务逻辑），另外绑定器也在此层。ViewModel是基于视图开发的一套模型，如果你的应用是给盲人用的，那么也可以开发一套基于Audio的模型AudioModel。</li>
+<li>V(iew)层：将ViewModel通过特定的GUI展示出来，并在GUI控件上绑定视图交互事件，V(iew)一般由MVVM框架自动生成在浏览器中。</li>
+</ul>
+<h2 id="MVVM的工作机制"><a href="#MVVM的工作机制" class="headerlink" title="MVVM的工作机制"></a>MVVM的工作机制</h2><p>在MVVM架构下，View 和 Model 之间其实并没有直接的联系，而是通<strong>过ViewModel进行交互</strong>，Model 和 ViewModel 之间的交互是*<u>双向</u>*的， 因此View 数据的变化会同步到Model中，而Model 数据的变化也会立即反应到View 上。</p>
+<p>ViewModel 通过双向数据绑定把 View 层和 Model 层连接了起来。ViewModel里面包含DOM Listeners(数据监听)和Data Bindings(数据绑定)，DOM Listeners和Data Bindings是实现双向绑定的关键。</p>
+<blockquote>
+<p>DOM Listeners监听页面所有View层DOM元素的变化，当发生变化，Model层的数据随之变化；</p>
+</blockquote>
+<blockquote>
+<p>Data Bindings监听Model层的数据，当数据发生变化，View层的DOM元素随之变化。</p>
+</blockquote>
+<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/01.png" class>
+
+
+
+<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/02.png" class>
+
+
+
+<h2 id="MVVM模式的优缺点"><a href="#MVVM模式的优缺点" class="headerlink" title="MVVM模式的优缺点"></a>MVVM模式的优缺点</h2><p>MVVM模式相较于原先的MVP模式至少省下30%编码量，甚至能省下70%DOM操作，因为用MVP模式的话主要是在进行DOM操作</p>
+<blockquote>
+<p>优点</p>
+</blockquote>
+<ul>
+<li><strong>低耦合</strong>。View可以独立于Model变化和修改，一个ViewModel可以绑定到不同的View上，当View变化的时候Model可以不变，当Model变化的时候View也可以不变。</li>
+<li><strong>可重用性</strong>。可以把一些视图的逻辑放在ViewModel里面，让很多View重用这段视图逻辑。</li>
+<li>独立开发。开发人员可以专注与业务逻辑和数据的开发(ViewModel)。设计人员可以专注于界面(View)的设计。</li>
+<li><strong>可测试性</strong>。可以针对ViewModel来对界面(View)进行测试</li>
+</ul>
+<blockquote>
+<p>缺点</p>
+</blockquote>
+<ul>
+<li>学习成本高。</li>
+<li>DEBUG困难</li>
+<li>实现MVVM的开销对于简单的UI操作是过度的。而对于更大的应用来说，推广ViewModel将变得更加困难，非常大的应用程序中的数据绑定会导致相当大的内存消耗。</li>
+</ul>
+<h2 id="MVVM应用场景"><a href="#MVVM应用场景" class="headerlink" title="MVVM应用场景"></a>MVVM应用场景</h2><ul>
+<li>针对具有复杂交互逻辑的前端应用</li>
+<li>提供基础的架构抽象</li>
+<li>通过Ajax数据持久化，保证前端用户体验</li>
+</ul>
+<h2 id="常见的MVVM框架"><a href="#常见的MVVM框架" class="headerlink" title="常见的MVVM框架"></a>常见的MVVM框架</h2><p>Vue.js   AngularJs，ReactJs</p>
+]]></content>
+      <categories>
+        <category>项目架构</category>
+      </categories>
+      <tags>
+        <tag>架构模式</tag>
+      </tags>
   </entry>
   <entry>
     <title>MVC框架</title>
@@ -528,249 +729,6 @@
       <tags>
         <tag>架构模式</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Listener</title>
-    <url>/2021/02/25/Listener/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>Java web</category>
-      </categories>
-      <tags>
-        <tag>Listener</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MVVM框架</title>
-    <url>/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/</url>
-    <content><![CDATA[<p>一个软件或者 APP都是服务于某种需求，这称之为“业务需求”。随着业务需求的增多、软件会变得越来越庞大，越来越复杂。所以就会设计一套完整的架构设计、研发流程以及质量管理体系来保证整个研发过程。“架构设计”是一个非常大的话题，它涉及到各方面，近年来前端一个明显的开发趋势就是架构从传统的 MVC 模式向 MVVM 模式迁移，这里来谈谈——MVVM模式。</p>
-<h2 id="什么是MVVM"><a href="#什么是MVVM" class="headerlink" title="什么是MVVM"></a>什么是MVVM</h2><blockquote>
-<p>MVVM（Model–View–Viewmodel）是一种软件架构模式。<br>MVVM有助于将图形用户界面的开发与业务逻辑或后端逻辑（数据模型）的开发分离开，这是通过标记语言或GUI代码实现的。MVVM的视图模型是一个值转换器， 这意味着视图模型负责从模型中暴露（转换）数据对象，以便轻松管理和呈现对象。在这方面，视图模型比视图做得更多，并且处理大部分视图的显示逻辑。 视图模型可以实现中介者模式，组织对视图所支持的用例集的后端逻辑的访问</p>
-</blockquote>
-<p><a href="https://zh.wikipedia.org/wiki/MVVM">想要了解更多关于MVVM的定义，点击访问维基百科</a></p>
-<h2 id="MVVM涉及到的概念"><a href="#MVVM涉及到的概念" class="headerlink" title="MVVM涉及到的概念"></a>MVVM涉及到的概念</h2><ul>
-<li>M(odel)层：模型，定义数据结构。</li>
-<li>C(ontroller)层：实现业务逻辑，数据的增删改查。在MVVM模式中一般把C层算在M层中，（只有在理想的双向绑定模式下，Controller 才会完全的消失。这种理想状态一般不存在）</li>
-<li>ViewModel层：顾名思义是视图View的模型、映射和显示逻辑（如if for等，非业务逻辑），另外绑定器也在此层。ViewModel是基于视图开发的一套模型，如果你的应用是给盲人用的，那么也可以开发一套基于Audio的模型AudioModel。</li>
-<li>V(iew)层：将ViewModel通过特定的GUI展示出来，并在GUI控件上绑定视图交互事件，V(iew)一般由MVVM框架自动生成在浏览器中。</li>
-</ul>
-<h2 id="MVVM的工作机制"><a href="#MVVM的工作机制" class="headerlink" title="MVVM的工作机制"></a>MVVM的工作机制</h2><p>在MVVM架构下，View 和 Model 之间其实并没有直接的联系，而是通<strong>过ViewModel进行交互</strong>，Model 和 ViewModel 之间的交互是*<u>双向</u>*的， 因此View 数据的变化会同步到Model中，而Model 数据的变化也会立即反应到View 上。</p>
-<p>ViewModel 通过双向数据绑定把 View 层和 Model 层连接了起来。ViewModel里面包含DOM Listeners(数据监听)和Data Bindings(数据绑定)，DOM Listeners和Data Bindings是实现双向绑定的关键。</p>
-<blockquote>
-<p>DOM Listeners监听页面所有View层DOM元素的变化，当发生变化，Model层的数据随之变化；</p>
-</blockquote>
-<blockquote>
-<p>Data Bindings监听Model层的数据，当数据发生变化，View层的DOM元素随之变化。</p>
-</blockquote>
-<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/01.png" class>
-
-
-
-<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/02.png" class>
-
-
-
-<h2 id="MVVM模式的优缺点"><a href="#MVVM模式的优缺点" class="headerlink" title="MVVM模式的优缺点"></a>MVVM模式的优缺点</h2><p>MVVM模式相较于原先的MVP模式至少省下30%编码量，甚至能省下70%DOM操作，因为用MVP模式的话主要是在进行DOM操作</p>
-<blockquote>
-<p>优点</p>
-</blockquote>
-<ul>
-<li><strong>低耦合</strong>。View可以独立于Model变化和修改，一个ViewModel可以绑定到不同的View上，当View变化的时候Model可以不变，当Model变化的时候View也可以不变。</li>
-<li><strong>可重用性</strong>。可以把一些视图的逻辑放在ViewModel里面，让很多View重用这段视图逻辑。</li>
-<li>独立开发。开发人员可以专注与业务逻辑和数据的开发(ViewModel)。设计人员可以专注于界面(View)的设计。</li>
-<li><strong>可测试性</strong>。可以针对ViewModel来对界面(View)进行测试</li>
-</ul>
-<blockquote>
-<p>缺点</p>
-</blockquote>
-<ul>
-<li>学习成本高。</li>
-<li>DEBUG困难</li>
-<li>实现MVVM的开销对于简单的UI操作是过度的。而对于更大的应用来说，推广ViewModel将变得更加困难，非常大的应用程序中的数据绑定会导致相当大的内存消耗。</li>
-</ul>
-<h2 id="MVVM应用场景"><a href="#MVVM应用场景" class="headerlink" title="MVVM应用场景"></a>MVVM应用场景</h2><ul>
-<li>针对具有复杂交互逻辑的前端应用</li>
-<li>提供基础的架构抽象</li>
-<li>通过Ajax数据持久化，保证前端用户体验</li>
-</ul>
-<h2 id="常见的MVVM框架"><a href="#常见的MVVM框架" class="headerlink" title="常见的MVVM框架"></a>常见的MVVM框架</h2><p>Vue.js   AngularJs，ReactJs</p>
-]]></content>
-      <categories>
-        <category>基础架构</category>
-      </categories>
-      <tags>
-        <tag>架构模式</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Maven学习笔记</title>
-    <url>/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/</url>
-    <content><![CDATA[<h2 id="IDEA编辑器集成maven环境"><a href="#IDEA编辑器集成maven环境" class="headerlink" title="IDEA编辑器集成maven环境"></a>IDEA编辑器集成maven环境</h2><p>###设置Maven版本</p>
-<ul>
-<li> 设置Maven版本–选择下载好的maven版本（⽬录选到bin⽬录的上⼀级⽬录）</li>
-</ul>
-
-
- <img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven2.png" class>
-
-<ul>
-<li><p>设置settings.xml文件</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven3.png" class>
-
-</li>
-</ul>
-<h3 id="Maven项目的创建"><a href="#Maven项目的创建" class="headerlink" title="Maven项目的创建"></a>Maven项目的创建</h3><ul>
-<li><p>选择Maven,设置JDK版本，选择maven项目里的模板</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven4.png" class>
-</li>
-<li><p>设置项目里的GroupID和ArtifactID</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven5.png" class>
-</li>
-<li><p>检查项目的Maven环境</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven6.png" class>
-</li>
-<li><p>项目的目录结构</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven7.png" class>
-
-</li>
-</ul>
-<p>###项目的编译</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven8.png" class>
-
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven9.png" class>
-
-<ul>
-<li>执⾏编译命令，两个图标分别代表”普通模式”和”调试模式”</li>
-</ul>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven10.png" class>
-
-<h3 id="创建WEB项目"><a href="#创建WEB项目" class="headerlink" title="创建WEB项目"></a>创建WEB项目</h3><p>创建web项目与创建普通Java项目步骤基本一致，区别在于选择Maven模板（WEB项目选择webapp)</p>
-<h4 id="启动项目"><a href="#启动项目" class="headerlink" title="启动项目"></a>启动项目</h4><ul>
-<li><p>修改相关版本</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- JDK的版本修改为1.8 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">maven.compiler.target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.target</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- junit的版本修改为4.12 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.12<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li><p>删除pluginManagement标签</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 将这个标签及标签中的内容全部删除 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line">...</span><br><span class="line"><span class="tag">&lt;/<span class="name">pluginManagement</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li><p>添加web部署的插件</p>
-<p>1.jetty插件</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置在plugins标签中 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mortbay.jetty<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-jetty-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">version</span>&gt;</span>6.1.25<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">		 <span class="comment">&lt;!-- 热部署，每10秒扫描⼀次 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">scanIntervalSeconds</span>&gt;</span>10<span class="tag">&lt;/<span class="name">scanIntervalSeconds</span>&gt;</span></span><br><span class="line">		 <span class="comment">&lt;!-- 可指定当前项⽬的站点名 --&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">contextPath</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">contextPath</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">connectors</span>&gt;</span></span><br><span class="line">			 &lt;connector</span><br><span class="line">implementation=&quot;org.mortbay.jetty.nio.SelectChannelConnector&quot;&gt;</span><br><span class="line"> <span class="tag">&lt;<span class="name">port</span>&gt;</span>9090<span class="tag">&lt;/<span class="name">port</span>&gt;</span> <span class="comment">&lt;!-- 设置启动的端⼝号 --&gt;</span></span><br><span class="line"> 			 <span class="tag">&lt;/<span class="name">connector</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">connectors</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<p>  2.tomcat插件</p>
-  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置在plugins标签中 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.tomcat.maven<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>tomcat7-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">port</span>&gt;</span>8081<span class="tag">&lt;/<span class="name">port</span>&gt;</span> <span class="comment">&lt;!-- 启动端⼝ 默认:8080 --&gt;</span></span><br><span class="line"> 		 <span class="tag">&lt;<span class="name">path</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">path</span>&gt;</span> <span class="comment">&lt;!-- 项⽬的站点名，即对外访问路径 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">uriEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">uriEncoding</span>&gt;</span> <span class="comment">&lt;!-- 字符集编码 默认：ISO-8859-1 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">server</span>&gt;</span>tomcat7<span class="tag">&lt;/<span class="name">server</span>&gt;</span> <span class="comment">&lt;!-- 服务器名称 --&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
-  <img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven11.png" class>
-
-
-
-<p>**maven依赖仓库：<a href="https://mvnrepository.com/">https://mvnrepository.com/</a> **</p>
-]]></content>
-      <categories>
-        <category>项目工具</category>
-      </categories>
-      <tags>
-        <tag>Maven</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Maven学习笔记</title>
-    <url>/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-3/</url>
-    <content><![CDATA[<h3 id="Maven仓库的基本概念"><a href="#Maven仓库的基本概念" class="headerlink" title="Maven仓库的基本概念"></a>Maven仓库的基本概念</h3><p> 当第⼀次运⾏Maven命令的时候， 你需要Internet链接， 因为它需要从⽹上下载⼀些⽂件。 那么它从 哪⾥下载呢？ 它是从Maven默认的远程库下载的。 这个远程仓库有Maven的核⼼插件和可供下载的jar⽂件。</p>
-<p>对于Maven来说， 仓库只分为两类： 本地仓库和远程仓库。</p>
-<p>当Maven根据坐标寻找构件的时候，它⾸先会查看本地仓库，如果本地仓库存在，则直接使⽤； 如果 本地没有，Maven就会去远程仓库查找，发现需要的构件之后，下载到本地仓库再使⽤。 如果本地仓库和远程仓库都没有，Maven就会报错。 </p>
-<p>远程仓库分为三种： 中央仓库，私服， 其他公共库。</p>
-<ul>
-<li><p>中央仓库：默认配置下，Maven下载jar包的地⽅。</p>
-<blockquote>
-<p>由于原始的本地仓库是空的，maven必须知道⾄少⼀个可⽤的远程仓库，才能执⾏maven命令的时候 下载到需要的构件。中央仓库就是这样⼀个默认的远程仓库。 maven-model-builder-3.3.9.jar maven⾃动的 jar 中包含了⼀个 超级POM。定义了默认中央仓库的位 置。 中央仓库包含了2000多个开源项⽬，接收每天1亿次以上的访问</p>
-</blockquote>
-</li>
-<li><p>私服：是另⼀种特殊的远程仓库，为了节省带宽和时间，应该在局域⽹内架设⼀个私有的仓库服务器， ⽤其代理所有外部的远程仓库。 内部的项⽬还能部署到私服上供其他项⽬使用</p>
-<blockquote>
-<p>私服是⼀种特殊的远程仓库，它是架设在局域⽹内的仓库服务， 私服代理⼴域⽹上的远程仓库，供局 域⽹内的maven⽤户使⽤。 当maven需要下载构件时， 它去私服当中找，如果私服没有， 则从外部远 程仓库下载，并缓存在私服上， 再为maven提供。 此外，⼀些⽆法从外部仓库下载的构件也能从本地上传到私服提供局域⽹中其他⼈使⽤</p>
-</blockquote>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">repositories</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">snapshots</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">enabled</span>&gt;</span>true<span class="tag">&lt;/<span class="name">enabled</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;/<span class="name">snapshots</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">id</span>&gt;</span>public<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>Public Repositories<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://192.168.0.96:8081/content/groups/public/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">id</span>&gt;</span>getui-nexus<span class="tag">&lt;/<span class="name">id</span>&gt;</span>       				<span class="tag">&lt;<span class="name">url</span>&gt;</span>http://mvn.gt.igexin.com/nexus/content/repositories/releases/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">repositories</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<p>公司内部为何需要建立私服：</p>
-<blockquote>
-<p>节省⾃⼰的外⽹带宽 加速maven构建 部署第三⽅控件 提⾼稳定性 降低中央仓库的负荷</p>
-</blockquote>
-<p>常用的阿里云仓库配置，需要修改settings.xml文件</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus-aliyun<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">name</span>&gt;</span>Nexus aliyun<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-<p>⼀般来说，在Maven项⽬⽬录下，没有诸如lib/这样⽤来存放依赖⽂件的⽬录。 当Maven在执⾏编译或 测试时，如果需要使⽤依赖⽂件，它总是基于坐标使⽤本地仓库的依赖⽂件。</p>
-<p>每个⽤户在⾃⼰的⽤户⽬录下都有⼀个路径名为.m2/repository/的仓库⽬录。 有时候， 因为某些原因（⽐如c盘空间不⾜）,需要修改本地仓库⽬录地址。</p>
-<p>对于仓库路径的修改，可以通过maven 配置⽂件conf ⽬录下settings.xml来指定仓库路径。</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置到指定⽬录中，路径的斜杆不要写反 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">settings</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">localRepository</span>&gt;</span>D:/m2/repository<span class="tag">&lt;/<span class="name">localRepository</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-<h3 id="Maven依赖的基本概念"><a href="#Maven依赖的基本概念" class="headerlink" title="Maven依赖的基本概念"></a>Maven依赖的基本概念</h3><p>根元素project下的dependencies可以包含多个 dependence元素，以声明多个依赖。每个依赖都应该包含以下元素：</p>
-<ol>
-<li><p>groupId, artifactId, version : 依赖的基本坐标， 对于任何⼀个依赖来说，基本坐标是最重要的， Maven根据坐标才能找到需要的依赖。</p>
-</li>
-<li><p>Type： 依赖的类型，⼤部分情况下不需要声明。 默认值为jar</p>
-</li>
-<li><p>Scope： 依赖范围（compile,test,provided,runtime,system）</p>
-</li>
-</ol>
-<blockquote>
-<p>compile：编译依赖范围</p>
-</blockquote>
-<p>如果没有指定，就会默认使⽤该依赖范围。使⽤此依赖范围的Maven依赖，对于编译、测 试、运⾏三种classpath都有效。</p>
-<blockquote>
-<p>test：测试依赖范围</p>
-</blockquote>
-<p>使⽤此依赖范围的Maven依赖，只对于测试classpath有效，在编译主代码或者运⾏项⽬的使 ⽤时将⽆法使⽤此类依赖。典型的例⼦就是JUnit，它只有在编译测试代码及运⾏测试的时候才需要</p>
-<blockquote>
-<p>provided：已提供依赖范围</p>
-</blockquote>
-<p>使⽤此依赖范围的Maven依赖，对于编译和测试classpath有效，但在运⾏时⽆效。典型的例 ⼦是servlet-api，编译和测试项⽬的时候需要该依赖，但在运⾏项⽬的时候，由于容器已经提供，就不需要Maven重复地引⼊⼀遍(如：servlet-api)。</p>
-<blockquote>
-<p>runtime：运行时依赖范围</p>
-</blockquote>
-<p>使⽤此依赖范围的Maven依赖，对于测试和运⾏classpath有效，但在编译主代码时⽆效。典 型的例⼦是JDBC驱动实现，项⽬主代码的编译只需要JDK提供的JDBC接⼝，只有在执⾏测 试或者运⾏项⽬的时候才需要实现上述接⼝的具体JDBC驱动。</p>
-<blockquote>
-<p>system：系统依赖范围</p>
-</blockquote>
-<p>该依赖与三种classpath的关系，和provided依赖范围完全⼀致。但是，使⽤system范围依赖 时必须通过systemPath元素显式地指定依赖⽂件的路径。由于此类依赖不是通过Maven仓库 解析的，⽽且往往与本机系统绑定，可能造成构建的不可移植，因此应该谨慎使⽤。</p>
-<ol start="4">
-<li><p>Optional：标记依赖是否可选</p>
-</li>
-<li><p>Exclusions： ⽤来排除传递性依赖。</p>
-</li>
-</ol>
-<h3 id="Maven依赖的依赖范围"><a href="#Maven依赖的依赖范围" class="headerlink" title="Maven依赖的依赖范围"></a>Maven依赖的依赖范围</h3><p>⾸先需要知道，Maven在编译项⽬主代码的时候需要使⽤⼀套classpath。 ⽐如：编译项⽬代码的时候 需要⽤到spring-core, 该⽂件以依赖的⽅式被引⼊到classpath中。 其次， Maven在执⾏测试的时候会使 ⽤另外⼀套classpath。 如：junit。</p>
-<p>最后在实际运⾏项⽬时，⼜会使⽤⼀套classpath， spring-core需要在该classpath中，⽽junit不需要。</p>
-<p>那么依赖范围就是⽤来控制依赖与这三种classpath(编译classpath，测试classpath，运⾏时classpath)的 关系， Maven有以下⼏种依赖范围：<strong>（如上所述）</strong></p>
-<h3 id="传递性依赖"><a href="#传递性依赖" class="headerlink" title="传递性依赖"></a>传递性依赖</h3><p>传递依赖机制， 让我们在使⽤某个jar的时候就不⽤去考虑它依赖了什么。也不⽤担⼼引⼊多余的依 赖。 Maven会解析各个直接依赖的POM，将那些必要的间接依赖，以传递性依赖的形式引⼊到当前项⽬中。</p>
-<p><strong>注意：传递依赖有可能产生冲突</strong></p>
-<p>冲突场景”</p>
-<blockquote>
-<p>A–&gt;B—&gt;C (2.0) </p>
-<p>A–&gt;E—&gt;C (1.0)</p>
-</blockquote>
-<p>如果A下同时存在两个不同version的C，冲突！！（选取同时适合A、B的版本）</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">version</span>&gt;</span>xxx<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>项目工具</category>
-      </categories>
-      <tags>
-        <tag>Maven</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MongoDB数据库</title>
-    <url>/2021/02/25/MongoDB%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Maven学习笔记&lt;一&gt;</title>
@@ -943,107 +901,168 @@
       </tags>
   </entry>
   <entry>
-    <title>Mybatis框架</title>
-    <url>/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6-1/</url>
-    <content><![CDATA[<h2 id="Mybatis入门案例"><a href="#Mybatis入门案例" class="headerlink" title="Mybatis入门案例"></a>Mybatis入门案例</h2><h3 id="搭建Mybatis开发环境–基础CRUD操作实例"><a href="#搭建Mybatis开发环境–基础CRUD操作实例" class="headerlink" title="搭建Mybatis开发环境–基础CRUD操作实例"></a>搭建Mybatis开发环境–基础CRUD操作实例</h3><h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><blockquote>
-<p>创建MySQL数据库和表</p>
-</blockquote>
-<img data-src="/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6-1/01.png" class>
-
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `student` (</span><br><span class="line"> `id` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> ,</span><br><span class="line"> `name` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line"> `email` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line"> `age` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line"> <span class="keyword">PRIMARY</span> <span class="keyword">KEY</span> (`id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>创建Maven工程，并且在pom.xml中加入maven坐标</p>
-</blockquote>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">     	<span class="tag">&lt;<span class="name">version</span>&gt;</span>4.11<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">   	 	<span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mybatis<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.5.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.1.9<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>加入maven插件</p>
-</blockquote>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">directory</span>&gt;</span>src/main/java<span class="tag">&lt;/<span class="name">directory</span>&gt;</span><span class="comment">&lt;!--所在的目录--&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">includes</span>&gt;</span><span class="comment">&lt;!--包括目录下的.properties,.xml 文件都会扫描到--&gt;</span></span><br><span class="line"> 			 <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.properties<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.xml<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;/<span class="name">includes</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">filtering</span>&gt;</span>false<span class="tag">&lt;/<span class="name">filtering</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span> </span><br><span class="line">			<span class="tag">&lt;<span class="name">source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">build</span>/&gt;</span> </span><br></pre></td></tr></table></figure>
-
-
-<blockquote>
-<p>编写Student实体类</p>
-</blockquote>
-<p>创建包com.bytedance.domain,包中创建Student类</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.bjpowernode.domain;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Description: 实体类 &lt;/p&gt;</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Company: http://www.bjpowernode.com</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123;</span><br><span class="line"> <span class="comment">//属性名和列名一样</span></span><br><span class="line">     <span class="keyword">private</span> Integer id;</span><br><span class="line">     <span class="keyword">private</span> String name;</span><br><span class="line">     <span class="keyword">private</span> String email;</span><br><span class="line">     <span class="keyword">private</span> Integer age;</span><br><span class="line">     <span class="comment">// set ,get , toString</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>编写Dao接口 StudentDao</p>
-</blockquote>
-<p>创建包com.bytedance.dao,创建StudentDao接口</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.bjpowernode.dao;</span><br><span class="line"><span class="keyword">import</span> com.bjpowernode.domain.Student;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Description: Dao 接口 &lt;/p&gt;</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Company: http://www.bjpowernode.com</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">StudentDao</span> </span>&#123;</span><br><span class="line">	 <span class="comment">/*查询所有数据*/</span></span><br><span class="line">	 <span class="function">List&lt;Student&gt; <span class="title">selectStudents</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>编写Dao接口Mapper映射文件StudentDao.xml</p>
-<p>要求：</p>
+    <title>Maven学习笔记</title>
+    <url>/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/</url>
+    <content><![CDATA[<h2 id="IDEA编辑器集成maven环境"><a href="#IDEA编辑器集成maven环境" class="headerlink" title="IDEA编辑器集成maven环境"></a>IDEA编辑器集成maven环境</h2><p>###设置Maven版本</p>
 <ul>
-<li> 在 dao 包中创建文件 StudentDao.xml </li>
-<li>要 StudentDao.xml 文件名称和接口 StudentDao 一样，区分大小写的一样</li>
+<li> 设置Maven版本–选择下载好的maven版本（⽬录选到bin⽬录的上⼀级⽬录）</li>
 </ul>
-</blockquote>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">mapper</span></span></span><br><span class="line"><span class="meta">     <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span></span><br><span class="line"><span class="meta">     <span class="meta-string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">     namespace：必须有值，自定义的唯一字符串</span></span><br><span class="line"><span class="comment">     推荐使用：dao 接口的全限定名称</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;com.bytedance.dao.StudentDao&quot;</span>&gt;</span></span><br><span class="line"> <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment"> 		&lt;select&gt;: 查询数据， 标签中必须是 select 语句</span></span><br><span class="line"><span class="comment"> 			id: sql 语句的自定义名称，推荐使用 dao 接口中方法名称，使用名称表示要执行的 sql 语句</span></span><br><span class="line"><span class="comment"> 		resultType: 查询语句的返回结果数据类型，使用全限定类名</span></span><br><span class="line"><span class="comment"> --&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectStudents&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.bytedance.domain.Student&quot;</span>&gt;</span></span><br><span class="line">         <span class="comment">&lt;!--要执行的 sql 语句--&gt;</span></span><br><span class="line">         select id,name,email,age from student</span><br><span class="line"> <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>创建Mybatis主配置文件</p>
-</blockquote>
-<p>项目 src/main 下创建 resources 目录，设置 resources 目录为 resources root 创建主配置文件：名称为 mybatis.xml 说明：主配置文件名称是自定义的，内容如下</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">configuration</span></span></span><br><span class="line"><span class="meta">     <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//mybatis.org//DTD Config 3.0//EN&quot;</span></span></span><br><span class="line"><span class="meta">     <span class="meta-string">&quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line"> 	<span class="comment">&lt;!--配置 mybatis 环境--&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">environments</span> <span class="attr">default</span>=<span class="string">&quot;mysql&quot;</span>&gt;</span></span><br><span class="line">         <span class="comment">&lt;!--id:数据源的名称--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">environment</span> <span class="attr">id</span>=<span class="string">&quot;mysql&quot;</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--配置事务类型：使用 JDBC 事务（使用 Connection 的提交和回滚）--&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">transactionManager</span> <span class="attr">type</span>=<span class="string">&quot;JDBC&quot;</span>/&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--数据源 dataSource：创建数据库 Connection 对象</span></span><br><span class="line"><span class="comment">        type: POOLED 使用数据库的连接池</span></span><br><span class="line"><span class="comment">        --&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">dataSource</span> <span class="attr">type</span>=<span class="string">&quot;POOLED&quot;</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--连接数据库的四个要素--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;driver&quot;</span> <span class="attr">value</span>=<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;url&quot;</span> <span class="attr">value</span>=<span class="string">&quot;jdbc:mysql://localhost:3306/ssm&quot;</span>/&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> <span class="attr">value</span>=<span class="string">&quot;root&quot;</span>/&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span> <span class="attr">value</span>=<span class="string">&quot;123456&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dataSource</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">environment</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">environments</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">mappers</span>&gt;</span></span><br><span class="line">	 <span class="comment">&lt;!--告诉 mybatis 要执行的 sql 语句的位置--&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">mapper</span> <span class="attr">resource</span>=<span class="string">&quot;com/bytedance/dao/StudentDao.xml&quot;</span>/&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">mappers</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>创建测试类</p>
-</blockquote>
-<p> src/test/java/com/bytedance/ 创建 MyBatisTest.java 文件</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* mybatis 入门</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testStart</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="comment">//1.mybatis 主配置文件</span></span><br><span class="line">     String config = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">     <span class="comment">//2.读取配置文件</span></span><br><span class="line">     InputStream in = Resources.getResourceAsStream(config);</span><br><span class="line">     <span class="comment">//3.创建 SqlSessionFactory 对象,目的是获取 SqlSession</span></span><br><span class="line">     SqlSessionFactory factory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(in);</span><br><span class="line">     <span class="comment">//4.获取 SqlSession,SqlSession 能执行 sql 语句</span></span><br><span class="line">     SqlSession session = factory.openSession();</span><br><span class="line">     <span class="comment">//5.执行 SqlSession 的 selectList()</span></span><br><span class="line">     List&lt;Student&gt; studentList = 	session.selectList(<span class="string">&quot;com.bytedance.dao.StudentDao.selectStudents&quot;</span>);</span><br><span class="line">    <span class="comment">//6.循环输出查询结果</span></span><br><span class="line">	 studentList.forEach( student -&gt; System.out.println(student));</span><br><span class="line"> 	<span class="comment">//7.关闭 SqlSession，释放资源</span></span><br><span class="line">	 session.close();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>配置日志功能</p>
-</blockquote>
-<p>mybatis.xml 文件加入日志配置，可以在控制台输出执行的 sql 语句和参数</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">settings</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">&quot;logImpl&quot;</span> <span class="attr">value</span>=<span class="string">&quot;STDOUT_LOGGING&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 
-<h3 id="insert"><a href="#insert" class="headerlink" title="insert"></a>insert</h3><ul>
-<li><p>StudentDao 接口中增加方法</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">int insertStudent(Student student);</span><br></pre></td></tr></table></figure></li>
-<li><p>StudentDao.xml中加入SQL语句</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">（<span class="number">2</span>） StudentDao.xml 加入 <span class="keyword">sql</span> 语句</span><br><span class="line"><span class="operator">&lt;</span><span class="keyword">insert</span> id<span class="operator">=</span>&quot;insertStudent&quot;<span class="operator">&gt;</span></span><br><span class="line"> 	<span class="keyword">insert</span> <span class="keyword">into</span> student(id,name,email,age)</span><br><span class="line">	values(#&#123;id&#125;,#&#123;name&#125;,#&#123;email&#125;,#&#123;age&#125;)</span><br><span class="line"><span class="operator">&lt;</span><span class="operator">/</span><span class="keyword">insert</span><span class="operator">&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li><p>增加测试方法</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testInsert</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="comment">//1.mybatis 主配置文件</span></span><br><span class="line">     String config = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">     <span class="comment">//2.读取配置文件</span></span><br><span class="line">     InputStream in = Resources.getResourceAsStream(config);</span><br><span class="line">     <span class="comment">//3.创建 SqlSessionFactory 对象</span></span><br><span class="line">     SqlSessionFactory factory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(in);</span><br><span class="line">     <span class="comment">//4.获取 SqlSession</span></span><br><span class="line">     SqlSession session = factory.openSession();</span><br><span class="line">     <span class="comment">//5.创建保存数据的对象</span></span><br><span class="line">     Student student = <span class="keyword">new</span> Student();</span><br><span class="line">     student.setId(<span class="number">1005</span>);</span><br><span class="line">     student.setName(<span class="string">&quot;张丽&quot;</span>);</span><br><span class="line">     student.setEmail(<span class="string">&quot;zhangli@163.com&quot;</span>);</span><br><span class="line">     student.setAge(<span class="number">20</span>);</span><br><span class="line">     <span class="comment">//6.执行插入 insert</span></span><br><span class="line">     <span class="keyword">int</span> rows = session.insert(</span><br><span class="line">    <span class="string">&quot;com.bytedance.dao.StudentDao.insertStudent&quot;</span>,student);</span><br><span class="line">     <span class="comment">//7.提交事务</span></span><br><span class="line">     session.commit();</span><br><span class="line">     System.out.println(<span class="string">&quot;增加记录的行数:&quot;</span>+rows);</span><br><span class="line">     <span class="comment">//8.关闭 SqlSession</span></span><br><span class="line">     session.close();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+ <img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven2.png" class>
+
+<ul>
+<li><p>设置settings.xml文件</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven3.png" class>
+
+</li>
+</ul>
+<h3 id="Maven项目的创建"><a href="#Maven项目的创建" class="headerlink" title="Maven项目的创建"></a>Maven项目的创建</h3><ul>
+<li><p>选择Maven,设置JDK版本，选择maven项目里的模板</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven4.png" class>
+</li>
+<li><p>设置项目里的GroupID和ArtifactID</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven5.png" class>
+</li>
+<li><p>检查项目的Maven环境</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven6.png" class>
+</li>
+<li><p>项目的目录结构</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven7.png" class>
+
+</li>
+</ul>
+<p>###项目的编译</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven8.png" class>
+
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven9.png" class>
+
+<ul>
+<li>执⾏编译命令，两个图标分别代表”普通模式”和”调试模式”</li>
+</ul>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven10.png" class>
+
+<h3 id="创建WEB项目"><a href="#创建WEB项目" class="headerlink" title="创建WEB项目"></a>创建WEB项目</h3><p>创建web项目与创建普通Java项目步骤基本一致，区别在于选择Maven模板（WEB项目选择webapp)</p>
+<h4 id="启动项目"><a href="#启动项目" class="headerlink" title="启动项目"></a>启动项目</h4><ul>
+<li><p>修改相关版本</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- JDK的版本修改为1.8 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">maven.compiler.target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.target</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- junit的版本修改为4.12 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.12<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>删除pluginManagement标签</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 将这个标签及标签中的内容全部删除 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line">...</span><br><span class="line"><span class="tag">&lt;/<span class="name">pluginManagement</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>添加web部署的插件</p>
+<p>1.jetty插件</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置在plugins标签中 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mortbay.jetty<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-jetty-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">version</span>&gt;</span>6.1.25<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">		 <span class="comment">&lt;!-- 热部署，每10秒扫描⼀次 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">scanIntervalSeconds</span>&gt;</span>10<span class="tag">&lt;/<span class="name">scanIntervalSeconds</span>&gt;</span></span><br><span class="line">		 <span class="comment">&lt;!-- 可指定当前项⽬的站点名 --&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">contextPath</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">contextPath</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">connectors</span>&gt;</span></span><br><span class="line">			 &lt;connector</span><br><span class="line">implementation=&quot;org.mortbay.jetty.nio.SelectChannelConnector&quot;&gt;</span><br><span class="line"> <span class="tag">&lt;<span class="name">port</span>&gt;</span>9090<span class="tag">&lt;/<span class="name">port</span>&gt;</span> <span class="comment">&lt;!-- 设置启动的端⼝号 --&gt;</span></span><br><span class="line"> 			 <span class="tag">&lt;/<span class="name">connector</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">connectors</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 
 </li>
 </ul>
-<h3 id="update"><a href="#update" class="headerlink" title="update"></a>update</h3><ul>
-<li><p>StudentDao接口中增加方法</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">updateStudent</span><span class="params">(Student student)</span></span>;</span><br></pre></td></tr></table></figure></li>
-<li><p>StudentDao.xml文件中增加SQL语句</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="operator">&lt;</span><span class="keyword">update</span> id<span class="operator">=</span>&quot;updateStudent&quot;<span class="operator">&gt;</span></span><br><span class="line"> 	update student set age = #&#123;age&#125; where id=#&#123;id&#125;</span><br><span class="line"><span class="operator">&lt;</span><span class="operator">/</span><span class="keyword">update</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li><p>增加测试方法</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testUpdate</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="comment">//1.mybatis 主配置文件</span></span><br><span class="line">     String config = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">     <span class="comment">//2.读取配置文件</span></span><br><span class="line">     InputStream in = Resources.getResourceAsStream(config);</span><br><span class="line">     <span class="comment">//3.创建 SqlSessionFactory 对象</span></span><br><span class="line">     SqlSessionFactory factory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(in);</span><br><span class="line">     <span class="comment">//4.获取 SqlSession</span></span><br><span class="line">     SqlSession session = factory.openSession();</span><br><span class="line">     <span class="comment">//5.创建保存数据的对象</span></span><br><span class="line">     Student student = <span class="keyword">new</span> Student();</span><br><span class="line">     student.setId(<span class="number">1005</span>);<span class="comment">//要修改的 id</span></span><br><span class="line">     student.setAge(<span class="number">30</span>); <span class="comment">//要修改的年龄值</span></span><br><span class="line">     <span class="comment">//6.执行更新 update</span></span><br><span class="line">     <span class="keyword">int</span> rows = session.update(</span><br><span class="line">    <span class="string">&quot;com.bytedance.dao.StudentDao.updateStudent&quot;</span>,student);</span><br><span class="line">     <span class="comment">//7.提交事务</span></span><br><span class="line">     session.commit();</span><br><span class="line">     System.out.println(<span class="string">&quot;修改记录的行数:&quot;</span>+rows);</span><br><span class="line">     <span class="comment">//8.关闭 SqlSession</span></span><br><span class="line">     session.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<h3 id="delete"><a href="#delete" class="headerlink" title="delete"></a>delete</h3><ul>
-<li><p>StudentDao接口中增加方法</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">deleteStudent</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br></pre></td></tr></table></figure></li>
-<li><p>StudentDao.xml文件中增加SQL语句</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">delete</span> <span class="attr">id</span>=<span class="string">&quot;deleteStudent&quot;</span>&gt;</span></span><br><span class="line"> delete from student where id=#&#123;studentId&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">delete</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li><p>增加测试方法</p>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testDelete</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="comment">//1.mybatis 主配置文件</span></span><br><span class="line">     String config = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">     <span class="comment">//2.读取配置文件</span></span><br><span class="line">     InputStream in = Resources.getResourceAsStream(config);</span><br><span class="line">     <span class="comment">//3.创建 SqlSessionFactory 对象</span></span><br><span class="line">     SqlSessionFactory factory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(in);</span><br><span class="line">     <span class="comment">//4.获取 SqlSession</span></span><br><span class="line">     SqlSession session = factory.openSession();</span><br><span class="line">     <span class="comment">//5.删除的 id</span></span><br><span class="line">     <span class="keyword">int</span> id = <span class="number">1001</span>;</span><br><span class="line">     <span class="comment">//6.执行删除 delete</span></span><br><span class="line">     <span class="keyword">int</span> rows = session.delete(</span><br><span class="line">    <span class="string">&quot;com.bytedance.dao.StudentDao.deleteStudent&quot;</span>,id);</span><br><span class="line">     <span class="comment">//7.提交事务</span></span><br><span class="line">     session.commit();</span><br><span class="line">     System.out.println(<span class="string">&quot;修改记录的行数:&quot;</span>+rows);</span><br><span class="line">    <span class="comment">//8.关闭SqlSession</span></span><br><span class="line">    session.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  2.tomcat插件</p>
+  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置在plugins标签中 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.tomcat.maven<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>tomcat7-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">port</span>&gt;</span>8081<span class="tag">&lt;/<span class="name">port</span>&gt;</span> <span class="comment">&lt;!-- 启动端⼝ 默认:8080 --&gt;</span></span><br><span class="line"> 		 <span class="tag">&lt;<span class="name">path</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">path</span>&gt;</span> <span class="comment">&lt;!-- 项⽬的站点名，即对外访问路径 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">uriEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">uriEncoding</span>&gt;</span> <span class="comment">&lt;!-- 字符集编码 默认：ISO-8859-1 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">server</span>&gt;</span>tomcat7<span class="tag">&lt;/<span class="name">server</span>&gt;</span> <span class="comment">&lt;!-- 服务器名称 --&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+  <img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven11.png" class>
 
 
 
-
-
-
-
-
-
-
+<p>**maven依赖仓库：<a href="https://mvnrepository.com/">https://mvnrepository.com/</a> **</p>
 ]]></content>
       <categories>
-        <category>Mybatis框架</category>
+        <category>项目工具</category>
       </categories>
       <tags>
-        <tag>Mybatis</tag>
+        <tag>Maven</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Maven学习笔记</title>
+    <url>/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-3/</url>
+    <content><![CDATA[<h3 id="Maven仓库的基本概念"><a href="#Maven仓库的基本概念" class="headerlink" title="Maven仓库的基本概念"></a>Maven仓库的基本概念</h3><p> 当第⼀次运⾏Maven命令的时候， 你需要Internet链接， 因为它需要从⽹上下载⼀些⽂件。 那么它从 哪⾥下载呢？ 它是从Maven默认的远程库下载的。 这个远程仓库有Maven的核⼼插件和可供下载的jar⽂件。</p>
+<p>对于Maven来说， 仓库只分为两类： 本地仓库和远程仓库。</p>
+<p>当Maven根据坐标寻找构件的时候，它⾸先会查看本地仓库，如果本地仓库存在，则直接使⽤； 如果 本地没有，Maven就会去远程仓库查找，发现需要的构件之后，下载到本地仓库再使⽤。 如果本地仓库和远程仓库都没有，Maven就会报错。 </p>
+<p>远程仓库分为三种： 中央仓库，私服， 其他公共库。</p>
+<ul>
+<li><p>中央仓库：默认配置下，Maven下载jar包的地⽅。</p>
+<blockquote>
+<p>由于原始的本地仓库是空的，maven必须知道⾄少⼀个可⽤的远程仓库，才能执⾏maven命令的时候 下载到需要的构件。中央仓库就是这样⼀个默认的远程仓库。 maven-model-builder-3.3.9.jar maven⾃动的 jar 中包含了⼀个 超级POM。定义了默认中央仓库的位 置。 中央仓库包含了2000多个开源项⽬，接收每天1亿次以上的访问</p>
+</blockquote>
+</li>
+<li><p>私服：是另⼀种特殊的远程仓库，为了节省带宽和时间，应该在局域⽹内架设⼀个私有的仓库服务器， ⽤其代理所有外部的远程仓库。 内部的项⽬还能部署到私服上供其他项⽬使用</p>
+<blockquote>
+<p>私服是⼀种特殊的远程仓库，它是架设在局域⽹内的仓库服务， 私服代理⼴域⽹上的远程仓库，供局 域⽹内的maven⽤户使⽤。 当maven需要下载构件时， 它去私服当中找，如果私服没有， 则从外部远 程仓库下载，并缓存在私服上， 再为maven提供。 此外，⼀些⽆法从外部仓库下载的构件也能从本地上传到私服提供局域⽹中其他⼈使⽤</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">repositories</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">snapshots</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">enabled</span>&gt;</span>true<span class="tag">&lt;/<span class="name">enabled</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;/<span class="name">snapshots</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">id</span>&gt;</span>public<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>Public Repositories<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://192.168.0.96:8081/content/groups/public/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">id</span>&gt;</span>getui-nexus<span class="tag">&lt;/<span class="name">id</span>&gt;</span>       				<span class="tag">&lt;<span class="name">url</span>&gt;</span>http://mvn.gt.igexin.com/nexus/content/repositories/releases/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">repositories</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<p>公司内部为何需要建立私服：</p>
+<blockquote>
+<p>节省⾃⼰的外⽹带宽 加速maven构建 部署第三⽅控件 提⾼稳定性 降低中央仓库的负荷</p>
+</blockquote>
+<p>常用的阿里云仓库配置，需要修改settings.xml文件</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus-aliyun<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">name</span>&gt;</span>Nexus aliyun<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+<p>⼀般来说，在Maven项⽬⽬录下，没有诸如lib/这样⽤来存放依赖⽂件的⽬录。 当Maven在执⾏编译或 测试时，如果需要使⽤依赖⽂件，它总是基于坐标使⽤本地仓库的依赖⽂件。</p>
+<p>每个⽤户在⾃⼰的⽤户⽬录下都有⼀个路径名为.m2/repository/的仓库⽬录。 有时候， 因为某些原因（⽐如c盘空间不⾜）,需要修改本地仓库⽬录地址。</p>
+<p>对于仓库路径的修改，可以通过maven 配置⽂件conf ⽬录下settings.xml来指定仓库路径。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置到指定⽬录中，路径的斜杆不要写反 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">settings</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">localRepository</span>&gt;</span>D:/m2/repository<span class="tag">&lt;/<span class="name">localRepository</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+<h3 id="Maven依赖的基本概念"><a href="#Maven依赖的基本概念" class="headerlink" title="Maven依赖的基本概念"></a>Maven依赖的基本概念</h3><p>根元素project下的dependencies可以包含多个 dependence元素，以声明多个依赖。每个依赖都应该包含以下元素：</p>
+<ol>
+<li><p>groupId, artifactId, version : 依赖的基本坐标， 对于任何⼀个依赖来说，基本坐标是最重要的， Maven根据坐标才能找到需要的依赖。</p>
+</li>
+<li><p>Type： 依赖的类型，⼤部分情况下不需要声明。 默认值为jar</p>
+</li>
+<li><p>Scope： 依赖范围（compile,test,provided,runtime,system）</p>
+</li>
+</ol>
+<blockquote>
+<p>compile：编译依赖范围</p>
+</blockquote>
+<p>如果没有指定，就会默认使⽤该依赖范围。使⽤此依赖范围的Maven依赖，对于编译、测 试、运⾏三种classpath都有效。</p>
+<blockquote>
+<p>test：测试依赖范围</p>
+</blockquote>
+<p>使⽤此依赖范围的Maven依赖，只对于测试classpath有效，在编译主代码或者运⾏项⽬的使 ⽤时将⽆法使⽤此类依赖。典型的例⼦就是JUnit，它只有在编译测试代码及运⾏测试的时候才需要</p>
+<blockquote>
+<p>provided：已提供依赖范围</p>
+</blockquote>
+<p>使⽤此依赖范围的Maven依赖，对于编译和测试classpath有效，但在运⾏时⽆效。典型的例 ⼦是servlet-api，编译和测试项⽬的时候需要该依赖，但在运⾏项⽬的时候，由于容器已经提供，就不需要Maven重复地引⼊⼀遍(如：servlet-api)。</p>
+<blockquote>
+<p>runtime：运行时依赖范围</p>
+</blockquote>
+<p>使⽤此依赖范围的Maven依赖，对于测试和运⾏classpath有效，但在编译主代码时⽆效。典 型的例⼦是JDBC驱动实现，项⽬主代码的编译只需要JDK提供的JDBC接⼝，只有在执⾏测 试或者运⾏项⽬的时候才需要实现上述接⼝的具体JDBC驱动。</p>
+<blockquote>
+<p>system：系统依赖范围</p>
+</blockquote>
+<p>该依赖与三种classpath的关系，和provided依赖范围完全⼀致。但是，使⽤system范围依赖 时必须通过systemPath元素显式地指定依赖⽂件的路径。由于此类依赖不是通过Maven仓库 解析的，⽽且往往与本机系统绑定，可能造成构建的不可移植，因此应该谨慎使⽤。</p>
+<ol start="4">
+<li><p>Optional：标记依赖是否可选</p>
+</li>
+<li><p>Exclusions： ⽤来排除传递性依赖。</p>
+</li>
+</ol>
+<h3 id="Maven依赖的依赖范围"><a href="#Maven依赖的依赖范围" class="headerlink" title="Maven依赖的依赖范围"></a>Maven依赖的依赖范围</h3><p>⾸先需要知道，Maven在编译项⽬主代码的时候需要使⽤⼀套classpath。 ⽐如：编译项⽬代码的时候 需要⽤到spring-core, 该⽂件以依赖的⽅式被引⼊到classpath中。 其次， Maven在执⾏测试的时候会使 ⽤另外⼀套classpath。 如：junit。</p>
+<p>最后在实际运⾏项⽬时，⼜会使⽤⼀套classpath， spring-core需要在该classpath中，⽽junit不需要。</p>
+<p>那么依赖范围就是⽤来控制依赖与这三种classpath(编译classpath，测试classpath，运⾏时classpath)的 关系， Maven有以下⼏种依赖范围：<strong>（如上所述）</strong></p>
+<h3 id="传递性依赖"><a href="#传递性依赖" class="headerlink" title="传递性依赖"></a>传递性依赖</h3><p>传递依赖机制， 让我们在使⽤某个jar的时候就不⽤去考虑它依赖了什么。也不⽤担⼼引⼊多余的依 赖。 Maven会解析各个直接依赖的POM，将那些必要的间接依赖，以传递性依赖的形式引⼊到当前项⽬中。</p>
+<p><strong>注意：传递依赖有可能产生冲突</strong></p>
+<p>冲突场景”</p>
+<blockquote>
+<p>A–&gt;B—&gt;C (2.0) </p>
+<p>A–&gt;E—&gt;C (1.0)</p>
+</blockquote>
+<p>如果A下同时存在两个不同version的C，冲突！！（选取同时适合A、B的版本）</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">version</span>&gt;</span>xxx<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>项目工具</category>
+      </categories>
+      <tags>
+        <tag>Maven</tag>
       </tags>
   </entry>
   <entry>
@@ -1225,6 +1244,11 @@
       </tags>
   </entry>
   <entry>
+    <title>MongoDB数据库</title>
+    <url>/2021/02/25/MongoDB%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Mybatis框架概述</title>
     <url>/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6/</url>
     <content><![CDATA[<h2 id="软件开发常用结构"><a href="#软件开发常用结构" class="headerlink" title="软件开发常用结构"></a>软件开发常用结构</h2><h3 id="三层架构"><a href="#三层架构" class="headerlink" title="三层架构"></a>三层架构</h3><p>三层架构包含的三层： 界面层（User Interface layer）、业务逻辑层（Business Logic Layer）、数据访问层（Data access layer）</p>
@@ -1286,6 +1310,110 @@
 <li>从 xml 中获取 sql，并执行 sql 语句，把 ResultSet 结果转换 java 对象</li>
 <li>关闭资源 ResultSet.close() , Statement.close() , Conenection.close()</li>
 </ul>
+]]></content>
+      <categories>
+        <category>Mybatis框架</category>
+      </categories>
+      <tags>
+        <tag>Mybatis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Mybatis框架</title>
+    <url>/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6-1/</url>
+    <content><![CDATA[<h2 id="Mybatis入门案例"><a href="#Mybatis入门案例" class="headerlink" title="Mybatis入门案例"></a>Mybatis入门案例</h2><h3 id="搭建Mybatis开发环境–基础CRUD操作实例"><a href="#搭建Mybatis开发环境–基础CRUD操作实例" class="headerlink" title="搭建Mybatis开发环境–基础CRUD操作实例"></a>搭建Mybatis开发环境–基础CRUD操作实例</h3><h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><blockquote>
+<p>创建MySQL数据库和表</p>
+</blockquote>
+<img data-src="/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6-1/01.png" class>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `student` (</span><br><span class="line"> `id` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> ,</span><br><span class="line"> `name` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line"> `email` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line"> `age` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line"> <span class="keyword">PRIMARY</span> <span class="keyword">KEY</span> (`id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>创建Maven工程，并且在pom.xml中加入maven坐标</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">     	<span class="tag">&lt;<span class="name">version</span>&gt;</span>4.11<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">   	 	<span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mybatis<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.5.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.1.9<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>加入maven插件</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">directory</span>&gt;</span>src/main/java<span class="tag">&lt;/<span class="name">directory</span>&gt;</span><span class="comment">&lt;!--所在的目录--&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">includes</span>&gt;</span><span class="comment">&lt;!--包括目录下的.properties,.xml 文件都会扫描到--&gt;</span></span><br><span class="line"> 			 <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.properties<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.xml<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;/<span class="name">includes</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">filtering</span>&gt;</span>false<span class="tag">&lt;/<span class="name">filtering</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span> </span><br><span class="line">			<span class="tag">&lt;<span class="name">source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">build</span>/&gt;</span> </span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>编写Student实体类</p>
+</blockquote>
+<p>创建包com.bytedance.domain,包中创建Student类</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.bjpowernode.domain;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Description: 实体类 &lt;/p&gt;</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Company: http://www.bjpowernode.com</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123;</span><br><span class="line"> <span class="comment">//属性名和列名一样</span></span><br><span class="line">     <span class="keyword">private</span> Integer id;</span><br><span class="line">     <span class="keyword">private</span> String name;</span><br><span class="line">     <span class="keyword">private</span> String email;</span><br><span class="line">     <span class="keyword">private</span> Integer age;</span><br><span class="line">     <span class="comment">// set ,get , toString</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>编写Dao接口 StudentDao</p>
+</blockquote>
+<p>创建包com.bytedance.dao,创建StudentDao接口</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.bjpowernode.dao;</span><br><span class="line"><span class="keyword">import</span> com.bjpowernode.domain.Student;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Description: Dao 接口 &lt;/p&gt;</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Company: http://www.bjpowernode.com</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">StudentDao</span> </span>&#123;</span><br><span class="line">	 <span class="comment">/*查询所有数据*/</span></span><br><span class="line">	 <span class="function">List&lt;Student&gt; <span class="title">selectStudents</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>编写Dao接口Mapper映射文件StudentDao.xml</p>
+<p>要求：</p>
+<ul>
+<li> 在 dao 包中创建文件 StudentDao.xml </li>
+<li>要 StudentDao.xml 文件名称和接口 StudentDao 一样，区分大小写的一样</li>
+</ul>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">mapper</span></span></span><br><span class="line"><span class="meta">     <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span></span><br><span class="line"><span class="meta">     <span class="meta-string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">     namespace：必须有值，自定义的唯一字符串</span></span><br><span class="line"><span class="comment">     推荐使用：dao 接口的全限定名称</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;com.bytedance.dao.StudentDao&quot;</span>&gt;</span></span><br><span class="line"> <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment"> 		&lt;select&gt;: 查询数据， 标签中必须是 select 语句</span></span><br><span class="line"><span class="comment"> 			id: sql 语句的自定义名称，推荐使用 dao 接口中方法名称，使用名称表示要执行的 sql 语句</span></span><br><span class="line"><span class="comment"> 		resultType: 查询语句的返回结果数据类型，使用全限定类名</span></span><br><span class="line"><span class="comment"> --&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectStudents&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.bytedance.domain.Student&quot;</span>&gt;</span></span><br><span class="line">         <span class="comment">&lt;!--要执行的 sql 语句--&gt;</span></span><br><span class="line">         select id,name,email,age from student</span><br><span class="line"> <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>创建Mybatis主配置文件</p>
+</blockquote>
+<p>项目 src/main 下创建 resources 目录，设置 resources 目录为 resources root 创建主配置文件：名称为 mybatis.xml 说明：主配置文件名称是自定义的，内容如下</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">configuration</span></span></span><br><span class="line"><span class="meta">     <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//mybatis.org//DTD Config 3.0//EN&quot;</span></span></span><br><span class="line"><span class="meta">     <span class="meta-string">&quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line"> 	<span class="comment">&lt;!--配置 mybatis 环境--&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">environments</span> <span class="attr">default</span>=<span class="string">&quot;mysql&quot;</span>&gt;</span></span><br><span class="line">         <span class="comment">&lt;!--id:数据源的名称--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">environment</span> <span class="attr">id</span>=<span class="string">&quot;mysql&quot;</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--配置事务类型：使用 JDBC 事务（使用 Connection 的提交和回滚）--&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">transactionManager</span> <span class="attr">type</span>=<span class="string">&quot;JDBC&quot;</span>/&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--数据源 dataSource：创建数据库 Connection 对象</span></span><br><span class="line"><span class="comment">        type: POOLED 使用数据库的连接池</span></span><br><span class="line"><span class="comment">        --&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">dataSource</span> <span class="attr">type</span>=<span class="string">&quot;POOLED&quot;</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--连接数据库的四个要素--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;driver&quot;</span> <span class="attr">value</span>=<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;url&quot;</span> <span class="attr">value</span>=<span class="string">&quot;jdbc:mysql://localhost:3306/ssm&quot;</span>/&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> <span class="attr">value</span>=<span class="string">&quot;root&quot;</span>/&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span> <span class="attr">value</span>=<span class="string">&quot;123456&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dataSource</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">environment</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">environments</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">mappers</span>&gt;</span></span><br><span class="line">	 <span class="comment">&lt;!--告诉 mybatis 要执行的 sql 语句的位置--&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">mapper</span> <span class="attr">resource</span>=<span class="string">&quot;com/bytedance/dao/StudentDao.xml&quot;</span>/&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">mappers</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>创建测试类</p>
+</blockquote>
+<p> src/test/java/com/bytedance/ 创建 MyBatisTest.java 文件</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* mybatis 入门</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testStart</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="comment">//1.mybatis 主配置文件</span></span><br><span class="line">     String config = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">     <span class="comment">//2.读取配置文件</span></span><br><span class="line">     InputStream in = Resources.getResourceAsStream(config);</span><br><span class="line">     <span class="comment">//3.创建 SqlSessionFactory 对象,目的是获取 SqlSession</span></span><br><span class="line">     SqlSessionFactory factory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(in);</span><br><span class="line">     <span class="comment">//4.获取 SqlSession,SqlSession 能执行 sql 语句</span></span><br><span class="line">     SqlSession session = factory.openSession();</span><br><span class="line">     <span class="comment">//5.执行 SqlSession 的 selectList()</span></span><br><span class="line">     List&lt;Student&gt; studentList = 	session.selectList(<span class="string">&quot;com.bytedance.dao.StudentDao.selectStudents&quot;</span>);</span><br><span class="line">    <span class="comment">//6.循环输出查询结果</span></span><br><span class="line">	 studentList.forEach( student -&gt; System.out.println(student));</span><br><span class="line"> 	<span class="comment">//7.关闭 SqlSession，释放资源</span></span><br><span class="line">	 session.close();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>配置日志功能</p>
+</blockquote>
+<p>mybatis.xml 文件加入日志配置，可以在控制台输出执行的 sql 语句和参数</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">settings</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">&quot;logImpl&quot;</span> <span class="attr">value</span>=<span class="string">&quot;STDOUT_LOGGING&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="insert"><a href="#insert" class="headerlink" title="insert"></a>insert</h3><ul>
+<li><p>StudentDao 接口中增加方法</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">int insertStudent(Student student);</span><br></pre></td></tr></table></figure></li>
+<li><p>StudentDao.xml中加入SQL语句</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">（<span class="number">2</span>） StudentDao.xml 加入 <span class="keyword">sql</span> 语句</span><br><span class="line"><span class="operator">&lt;</span><span class="keyword">insert</span> id<span class="operator">=</span>&quot;insertStudent&quot;<span class="operator">&gt;</span></span><br><span class="line"> 	<span class="keyword">insert</span> <span class="keyword">into</span> student(id,name,email,age)</span><br><span class="line">	values(#&#123;id&#125;,#&#123;name&#125;,#&#123;email&#125;,#&#123;age&#125;)</span><br><span class="line"><span class="operator">&lt;</span><span class="operator">/</span><span class="keyword">insert</span><span class="operator">&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p>增加测试方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testInsert</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="comment">//1.mybatis 主配置文件</span></span><br><span class="line">     String config = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">     <span class="comment">//2.读取配置文件</span></span><br><span class="line">     InputStream in = Resources.getResourceAsStream(config);</span><br><span class="line">     <span class="comment">//3.创建 SqlSessionFactory 对象</span></span><br><span class="line">     SqlSessionFactory factory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(in);</span><br><span class="line">     <span class="comment">//4.获取 SqlSession</span></span><br><span class="line">     SqlSession session = factory.openSession();</span><br><span class="line">     <span class="comment">//5.创建保存数据的对象</span></span><br><span class="line">     Student student = <span class="keyword">new</span> Student();</span><br><span class="line">     student.setId(<span class="number">1005</span>);</span><br><span class="line">     student.setName(<span class="string">&quot;张丽&quot;</span>);</span><br><span class="line">     student.setEmail(<span class="string">&quot;zhangli@163.com&quot;</span>);</span><br><span class="line">     student.setAge(<span class="number">20</span>);</span><br><span class="line">     <span class="comment">//6.执行插入 insert</span></span><br><span class="line">     <span class="keyword">int</span> rows = session.insert(</span><br><span class="line">    <span class="string">&quot;com.bytedance.dao.StudentDao.insertStudent&quot;</span>,student);</span><br><span class="line">     <span class="comment">//7.提交事务</span></span><br><span class="line">     session.commit();</span><br><span class="line">     System.out.println(<span class="string">&quot;增加记录的行数:&quot;</span>+rows);</span><br><span class="line">     <span class="comment">//8.关闭 SqlSession</span></span><br><span class="line">     session.close();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<h3 id="update"><a href="#update" class="headerlink" title="update"></a>update</h3><ul>
+<li><p>StudentDao接口中增加方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">updateStudent</span><span class="params">(Student student)</span></span>;</span><br></pre></td></tr></table></figure></li>
+<li><p>StudentDao.xml文件中增加SQL语句</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="operator">&lt;</span><span class="keyword">update</span> id<span class="operator">=</span>&quot;updateStudent&quot;<span class="operator">&gt;</span></span><br><span class="line"> 	update student set age = #&#123;age&#125; where id=#&#123;id&#125;</span><br><span class="line"><span class="operator">&lt;</span><span class="operator">/</span><span class="keyword">update</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>增加测试方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testUpdate</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="comment">//1.mybatis 主配置文件</span></span><br><span class="line">     String config = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">     <span class="comment">//2.读取配置文件</span></span><br><span class="line">     InputStream in = Resources.getResourceAsStream(config);</span><br><span class="line">     <span class="comment">//3.创建 SqlSessionFactory 对象</span></span><br><span class="line">     SqlSessionFactory factory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(in);</span><br><span class="line">     <span class="comment">//4.获取 SqlSession</span></span><br><span class="line">     SqlSession session = factory.openSession();</span><br><span class="line">     <span class="comment">//5.创建保存数据的对象</span></span><br><span class="line">     Student student = <span class="keyword">new</span> Student();</span><br><span class="line">     student.setId(<span class="number">1005</span>);<span class="comment">//要修改的 id</span></span><br><span class="line">     student.setAge(<span class="number">30</span>); <span class="comment">//要修改的年龄值</span></span><br><span class="line">     <span class="comment">//6.执行更新 update</span></span><br><span class="line">     <span class="keyword">int</span> rows = session.update(</span><br><span class="line">    <span class="string">&quot;com.bytedance.dao.StudentDao.updateStudent&quot;</span>,student);</span><br><span class="line">     <span class="comment">//7.提交事务</span></span><br><span class="line">     session.commit();</span><br><span class="line">     System.out.println(<span class="string">&quot;修改记录的行数:&quot;</span>+rows);</span><br><span class="line">     <span class="comment">//8.关闭 SqlSession</span></span><br><span class="line">     session.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<h3 id="delete"><a href="#delete" class="headerlink" title="delete"></a>delete</h3><ul>
+<li><p>StudentDao接口中增加方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">deleteStudent</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br></pre></td></tr></table></figure></li>
+<li><p>StudentDao.xml文件中增加SQL语句</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">delete</span> <span class="attr">id</span>=<span class="string">&quot;deleteStudent&quot;</span>&gt;</span></span><br><span class="line"> delete from student where id=#&#123;studentId&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">delete</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>增加测试方法</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testDelete</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="comment">//1.mybatis 主配置文件</span></span><br><span class="line">     String config = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">     <span class="comment">//2.读取配置文件</span></span><br><span class="line">     InputStream in = Resources.getResourceAsStream(config);</span><br><span class="line">     <span class="comment">//3.创建 SqlSessionFactory 对象</span></span><br><span class="line">     SqlSessionFactory factory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(in);</span><br><span class="line">     <span class="comment">//4.获取 SqlSession</span></span><br><span class="line">     SqlSession session = factory.openSession();</span><br><span class="line">     <span class="comment">//5.删除的 id</span></span><br><span class="line">     <span class="keyword">int</span> id = <span class="number">1001</span>;</span><br><span class="line">     <span class="comment">//6.执行删除 delete</span></span><br><span class="line">     <span class="keyword">int</span> rows = session.delete(</span><br><span class="line">    <span class="string">&quot;com.bytedance.dao.StudentDao.deleteStudent&quot;</span>,id);</span><br><span class="line">     <span class="comment">//7.提交事务</span></span><br><span class="line">     session.commit();</span><br><span class="line">     System.out.println(<span class="string">&quot;修改记录的行数:&quot;</span>+rows);</span><br><span class="line">    <span class="comment">//8.关闭SqlSession</span></span><br><span class="line">    session.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
 ]]></content>
       <categories>
         <category>Mybatis框架</category>
@@ -1430,36 +1558,19 @@
       </tags>
   </entry>
   <entry>
-    <title>SVN版本控制系统</title>
-    <url>/2021/02/06/SVN%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F/</url>
-    <content><![CDATA[<h3 id="主要内容"><a href="#主要内容" class="headerlink" title="主要内容"></a>主要内容</h3>]]></content>
-      <categories>
-        <category>项目工具</category>
-      </categories>
-      <tags>
-        <tag>SVN</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>PC寄存器</title>
     <url>/2021/03/14/PC%E5%AF%84%E5%AD%98%E5%99%A8/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>NetFilter</title>
+    <url>/2021/03/25/NetFilter/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Redis数据库</title>
     <url>/2021/02/25/Redis%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
     <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>Session</title>
-    <url>/2021/02/25/Session/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>Java web</category>
-      </categories>
-      <tags>
-        <tag>Session</tag>
-      </tags>
   </entry>
   <entry>
     <title>Servlet规范一</title>
@@ -1542,6 +1653,66 @@
       </tags>
   </entry>
   <entry>
+    <title>SVN版本控制系统</title>
+    <url>/2021/02/06/SVN%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F/</url>
+    <content><![CDATA[<h3 id="主要内容"><a href="#主要内容" class="headerlink" title="主要内容"></a>主要内容</h3>]]></content>
+      <categories>
+        <category>项目工具</category>
+      </categories>
+      <tags>
+        <tag>SVN</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Session</title>
+    <url>/2021/02/25/Session/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Java web</category>
+      </categories>
+      <tags>
+        <tag>Session</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SpringBoot入门二</title>
+    <url>/2021/03/21/SpringBoot%E5%85%A5%E9%97%A8%E4%BA%8C/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Spring学习第一跳</title>
+    <url>/2021/02/03/Spring%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E8%B7%B3/</url>
+    <content><![CDATA[<h2 id="初识Spring"><a href="#初识Spring" class="headerlink" title="初识Spring"></a>初识Spring</h2><h3 id="Spring框架概述"><a href="#Spring框架概述" class="headerlink" title="Spring框架概述"></a>Spring框架概述</h3><p>Spring 是于 2003 年兴起的一个轻量级的 Java 开发框架，它是为了解决企业应用开发的复杂性而创建的。Spring 的核心是控制反转（IoC）和面向切面编程（AOP）。Spring 是可 以在 Java SE/EE 中使用的轻量级开源框架。</p>
+<p>Spring 的主要作用就是为代码<strong>“解耦”</strong>，降低代码间的耦合度。就是让对象和对象（模 块和模块）之间关系不是使用代码关联，而是<u>通过配置</u>来说明。即在 Spring 中说明对象（模块）的关系。 </p>
+<p>Spring 根据代码的功能特点，使用 Ioc 降低业务对象之间耦合度。IoC 使得主业务在相互 调用过程中，不用再自己维护关系了，即不用再自己创建要使用的对象了。而是由 Spring 容器统一管理，自动“注入”,注入即赋值。 而 AOP 使得系统级服务得到了最大复用，且不用再由程序员手工将系统级服务“混杂”到主业务逻辑中了，而是由 Spring 容器统一完成 “织入”。</p>
+<h3 id="Spring的优点"><a href="#Spring的优点" class="headerlink" title="Spring的优点"></a>Spring的优点</h3><p>Spring 是一个框架，是一个半成品的软件。有 20 个模块组成。它是一个容器管理对象， 容器是装东西的，Spring 容器不装文本，数字。装的是对象。Spring 是存储对象的容器。</p>
+<ul>
+<li><p>轻量</p>
+<p>Spring 框架使用的 jar 都比较小，一般在 1M 以下或者几百 kb。Spring 核心功能的所需 的 jar 总共在 3M 左右。 Spring 框架运行占用的资源少，运行效率高。不依赖其他 jar</p>
+</li>
+<li><p>针对接口编程，解耦合</p>
+<p>Spring 提供了 Ioc 控制反转，由容器管理对象，对象的依赖关系。原来在程序代码中的 对象创建方式，现在由容器完成。对象之间的依赖解耦合。</p>
+</li>
+<li><p>AOP编程的支持</p>
+<p>通过 Spring 提供的 AOP 功能，方便进行面向切面的编程，许多不容易用传统 OOP 实现 的功能可以通过 AOP 轻松应付 。</p>
+<p>在 Spring 中，开发人员可以从繁杂的事务管理代码中解脱出来，通过声明方式灵活地进行事务的管理，提高开发效率和质量。</p>
+</li>
+<li><p>方便集成各种优秀框架</p>
+<p>Spring 不排斥各种优秀的开源框架，相反 Spring 可以降低各种框架的使用难度，Spring 提供了对各种优秀框架（如 Struts,Hibernate、MyBatis）等的直接支持。简化框架的使用。 Spring 像插线板一样，其他框架是插头，可以容易的组合到一起。需要使用哪个框架，就把 这个插头放入插线板。不需要可以轻易的移除。</p>
+</li>
+</ul>
+<h3 id="Spring体系结构"><a href="#Spring体系结构" class="headerlink" title="Spring体系结构"></a>Spring体系结构</h3><img data-src="/2021/02/03/Spring%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E8%B7%B3/image.png" class>
+
+<p>Spring 由 20 多个模块组成，它们可以分为数据访问/集成（Data Access/Integration）、 Web、面向切面编程（AOP, Aspects）、提供JVM的代理（Instrumentation）、消息发送（Messaging）、 核心容器（Core Container）和测试（Test）。</p>
+]]></content>
+      <categories>
+        <category>spring框架</category>
+      </categories>
+      <tags>
+        <tag>spring框架</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>SpringBoot入门一</title>
     <url>/2021/03/19/SpringBoot%E5%85%A5%E9%97%A8%E4%B8%80/</url>
     <content><![CDATA[<h2 id="SpringBoot介绍"><a href="#SpringBoot介绍" class="headerlink" title="SpringBoot介绍"></a>SpringBoot介绍</h2><p>先通过来一些概念，会让我们对技术有着更加清晰的理解。J2EE笨重的开发、繁多的配置、低下的开发效率、复杂的部署流程、第三方技术集成难度大，如果开发过SpringMVC或者单纯使用过SSH、SSM框架的同学，肯定是体验过被很多配置文件支配的恐惧，很难受吧，不过不用担心，我们有了SpringBoot。Spring Boot用来简化Spring应用开发，约定大于配置，去繁从简，just run就能创建一个独立的，产品级别的应用。随着Spring全家桶时代的到来，SpringBoot给我们带来了J2EE一站式解决方案，SpringCloud给我们带来了分布式整体解决方案。从此我们可以使用 SpringBoot 快速的开发基于 Spring 框架的项目，由于围绕 SpringBoot 存在很多开箱即用的 Starter 依赖，使得我们在开发业务代码时能够非常方便的、不需要过多关注框架的配置，而只需要关注业务即可。</p>
@@ -1610,42 +1781,9 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>SpringBoot入门二</title>
-    <url>/2021/03/21/SpringBoot%E5%85%A5%E9%97%A8%E4%BA%8C/</url>
+    <title>Swagger-UI</title>
+    <url>/2021/03/14/Swagger-UI/</url>
     <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>Spring学习第一跳</title>
-    <url>/2021/02/03/Spring%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E8%B7%B3/</url>
-    <content><![CDATA[<h2 id="初识Spring"><a href="#初识Spring" class="headerlink" title="初识Spring"></a>初识Spring</h2><h3 id="Spring框架概述"><a href="#Spring框架概述" class="headerlink" title="Spring框架概述"></a>Spring框架概述</h3><p>Spring 是于 2003 年兴起的一个轻量级的 Java 开发框架，它是为了解决企业应用开发的复杂性而创建的。Spring 的核心是控制反转（IoC）和面向切面编程（AOP）。Spring 是可 以在 Java SE/EE 中使用的轻量级开源框架。</p>
-<p>Spring 的主要作用就是为代码<strong>“解耦”</strong>，降低代码间的耦合度。就是让对象和对象（模 块和模块）之间关系不是使用代码关联，而是<u>通过配置</u>来说明。即在 Spring 中说明对象（模块）的关系。 </p>
-<p>Spring 根据代码的功能特点，使用 Ioc 降低业务对象之间耦合度。IoC 使得主业务在相互 调用过程中，不用再自己维护关系了，即不用再自己创建要使用的对象了。而是由 Spring 容器统一管理，自动“注入”,注入即赋值。 而 AOP 使得系统级服务得到了最大复用，且不用再由程序员手工将系统级服务“混杂”到主业务逻辑中了，而是由 Spring 容器统一完成 “织入”。</p>
-<h3 id="Spring的优点"><a href="#Spring的优点" class="headerlink" title="Spring的优点"></a>Spring的优点</h3><p>Spring 是一个框架，是一个半成品的软件。有 20 个模块组成。它是一个容器管理对象， 容器是装东西的，Spring 容器不装文本，数字。装的是对象。Spring 是存储对象的容器。</p>
-<ul>
-<li><p>轻量</p>
-<p>Spring 框架使用的 jar 都比较小，一般在 1M 以下或者几百 kb。Spring 核心功能的所需 的 jar 总共在 3M 左右。 Spring 框架运行占用的资源少，运行效率高。不依赖其他 jar</p>
-</li>
-<li><p>针对接口编程，解耦合</p>
-<p>Spring 提供了 Ioc 控制反转，由容器管理对象，对象的依赖关系。原来在程序代码中的 对象创建方式，现在由容器完成。对象之间的依赖解耦合。</p>
-</li>
-<li><p>AOP编程的支持</p>
-<p>通过 Spring 提供的 AOP 功能，方便进行面向切面的编程，许多不容易用传统 OOP 实现 的功能可以通过 AOP 轻松应付 。</p>
-<p>在 Spring 中，开发人员可以从繁杂的事务管理代码中解脱出来，通过声明方式灵活地进行事务的管理，提高开发效率和质量。</p>
-</li>
-<li><p>方便集成各种优秀框架</p>
-<p>Spring 不排斥各种优秀的开源框架，相反 Spring 可以降低各种框架的使用难度，Spring 提供了对各种优秀框架（如 Struts,Hibernate、MyBatis）等的直接支持。简化框架的使用。 Spring 像插线板一样，其他框架是插头，可以容易的组合到一起。需要使用哪个框架，就把 这个插头放入插线板。不需要可以轻易的移除。</p>
-</li>
-</ul>
-<h3 id="Spring体系结构"><a href="#Spring体系结构" class="headerlink" title="Spring体系结构"></a>Spring体系结构</h3><img data-src="/2021/02/03/Spring%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E8%B7%B3/image.png" class>
-
-<p>Spring 由 20 多个模块组成，它们可以分为数据访问/集成（Data Access/Integration）、 Web、面向切面编程（AOP, Aspects）、提供JVM的代理（Instrumentation）、消息发送（Messaging）、 核心容器（Core Container）和测试（Test）。</p>
-]]></content>
-      <categories>
-        <category>spring框架</category>
-      </categories>
-      <tags>
-        <tag>spring框架</tag>
-      </tags>
   </entry>
   <entry>
     <title>Stack</title>
@@ -1766,11 +1904,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>Swagger-UI</title>
-    <url>/2021/03/14/Swagger-UI/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Undo页与redo页</title>
     <url>/2021/02/14/Undo%E9%A1%B5%E4%B8%8Eredo%E9%A1%B5/</url>
     <content><![CDATA[<h2 id="Undo-Log"><a href="#Undo-Log" class="headerlink" title="Undo Log"></a>Undo Log</h2><p>是为了实现事务的原子性，在MySQL数据库InnoDB存储引擎中，还用Undo Log来实现多版本并发控制(简称：MVCC)。</p>
@@ -1804,11 +1937,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>InnoDB存储引擎</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>XML映射文件详解</title>
-    <url>/2021/03/14/XML%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>XML配置文件详解</title>
@@ -1926,6 +2054,21 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
+    <title>XML映射文件详解</title>
+    <url>/2021/03/14/XML%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>coding部署</title>
+    <url>/2021/03/15/coding%E9%83%A8%E7%BD%B2/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>zookeeper</title>
+    <url>/2021/03/14/zookeeper/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>中断</title>
     <url>/2021/02/03/%E4%B8%AD%E6%96%AD/</url>
     <content><![CDATA[<h3 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h3><p>中断使得硬件得以发出通知给处理器，是一种变内核主动为硬件主动的方式。中断本质上是一种特殊的电信号。硬件在生成中断的时候并不需要考虑与处理器的时钟同步，即中断可以随时产生，<strong>内核随时可能因为新到来的中断而被打断</strong>。</p>
@@ -1970,16 +2113,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>中断</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>coding部署</title>
-    <url>/2021/03/15/coding%E9%83%A8%E7%BD%B2/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>zookeeper</title>
-    <url>/2021/03/14/zookeeper/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>优秀项目</title>
@@ -2214,6 +2347,81 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <content><![CDATA[]]></content>
   </entry>
   <entry>
+    <title>双指针问题</title>
+    <url>/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h2 id="环形列表I"><a href="#环形列表I" class="headerlink" title="环形列表I"></a>环形列表I</h2><h3 id="题目说明"><a href="#题目说明" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，判断链表中是否有环。</p>
+<p>如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。</p>
+<p>如果链表中存在环，则返回 true 。 否则，返回 false 。</p>
+<p> 进阶：</p>
+<p>你能用 O(1)（即，常量）内存解决此问题吗？</p>
+<p> 示例 1：</p>
+<p> <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100453506.png" alt="image-20210114100453506"></p>
+<p>输入：head = [3,2,0,-4], pos = 1<br>输出：true<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100714252.png" alt="image-20210114100714252"></p>
+<p>输入：head = [1,2], pos = 0<br>输出：true<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
+<img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100749569.png" alt="image-20210114100749569" style="zoom:150%;">
+
+<p>输入：head = [1], pos = -1<br>输出：false<br>解释：链表中没有环。</p>
+<p>提示：</p>
+<p>链表中节点的数目范围是 [0, 104]<br>-105 &lt;= Node.val &lt;= 105<br>pos 为 -1 或者链表中的一个 有效索引 </p>
+<h3 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h3><p>####方法一：哈希表<br>思路及算法</p>
+<p>最容易想到的方法是遍历所有节点，每次遍历到一个节点时，判断该节点此前是否被访问过。</p>
+<p>具体地，我们可以使用哈希表来存储所有已经访问过的节点。每次我们到达一个节点，如果该节点已经存在于哈希表中，则说明该链表是环形链表，否则就将该节点加入哈希表中。重复这一过程，直到我们遍历完整个链表即可。</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">pulic <span class="class"><span class="keyword">class</span> <span class="title">solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascirle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        Set&lt;ListNOde&gt; seen = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span>( head !=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!seen.add(head))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>#####复杂度分析</p>
+<p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。最坏情况下我们需要遍历每个节点一次。</p>
+<p>空间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。主要为哈希表的开销，最坏情况下我们需要将每个节点插入到哈希表中一次。</p>
+<h4 id="方式二；双指针–快慢指针"><a href="#方式二；双指针–快慢指针" class="headerlink" title="方式二；双指针–快慢指针"></a>方式二；双指针–快慢指针</h4><p>方法需要读者对「Floyd 判圈算法」（又称龟兔赛跑算法）有所了解。</p>
+<p>假想「乌龟」和「兔子」在链表上移动，「兔子」跑得快，「乌龟」跑得慢。当「乌龟」和「兔子」从链表上的同一个节点开始移动时，如果该链表中没有环，那么「兔子」将一直处于「乌龟」的前方；如果该链表中有环，那么「兔子」会先于「乌龟」进入环，并且一直在环内移动。等到「乌龟」进入环时，由于「兔子」的速度快，它一定会在某个时刻与乌龟相遇，即套了「乌龟」若干圈。</p>
+<p>我们可以根据上述思路来解决本题。具体地，我们定义两个指针，一快一满。慢指针每次只移动一步，而快指针每次移动两步。初始时，慢指针在位置 head，而快指针在位置 head.next。这样一来，如果在移动的过程中，快指针反过来追上慢指针，就说明该链表为环形链表。否则快指针将到达链表尾部，该链表不为环形链表。</p>
+<p> 为什么我们要规定初始时慢指针在位置 head，快指针在位置 head.next，而不是两个指针都在位置 head（即与「乌龟」和「兔子」中的叙述相同）？</p>
+<p>观察下面的代码，我们使用的是 while 循环，循环条件先于循环体。由于循环条件一定是判断快慢指针是否重合，如果我们将两个指针初始都置于 head，那么 while 循环就不会执行。因此，我们可以假想一个在 head 之前的虚拟节点，慢指针从虚拟节点移动一步到达 head，快指针从虚拟节点移动两步到达 head.next，这样我们就可以使用 while 循环了。</p>
+<p>当然，我们也可以使用 do-while 循环。此时，我们就可以把快慢指针的初始值都置为 head。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">puclic <span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascycle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head;</span><br><span class="line">        ListNode fast = head.next;</span><br><span class="line">        <span class="keyword">while</span>(slow!=fast)&#123;</span><br><span class="line">            <span class="keyword">if</span>(fast==<span class="keyword">null</span>||fast.next==<span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            fast = fast.next.next</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。</p>
+<p>当链表中不存在环时，快指针将先于慢指针到达链表尾部，链表中每个节点至多被访问两次。</p>
+<p>当链表中存在环时，每一轮移动后，快慢指针的距离将减小一。而初始距离为环的长度，因此至多移动 NN 轮。</p>
+<p>空间复杂度：O(1)O(1)。我们只使用了两个指针的额外空间</p>
+<h2 id="环形列表II"><a href="#环形列表II" class="headerlink" title="环形列表II"></a>环形列表II</h2><h3 id="题目说明-1"><a href="#题目说明-1" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。</p>
+<p>为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意，pos 仅仅是用于标识环的情况，并不会作为参数传递到函数中。</p>
+<p>说明：不允许修改给定的链表。</p>
+<p>进阶：</p>
+<p>你是否可以使用 O(1) 空间解决此题？</p>
+<p> 示例 1：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102706369.png" alt="image-20210114102706369"></p>
+<p>输入：head = [3,2,0,-4], pos = 1<br>输出：返回索引为 1 的链表节点<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102721841.png" alt="image-20210114102721841"></p>
+<p>输入：head = [1,2], pos = 0<br>输出：返回索引为 0 的链表节点<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102737481.png" alt="image-20210114102737481"></p>
+<p>输入：head = [1], pos = -1<br>输出：返回 null<br>解释：链表中没有环。</p>
+<p>提示：</p>
+<p>链表中节点的数目范围在范围 [0, 104] 内<br>-105 &lt;= Node.val &lt;= 105<br>pos 的值为 -1 或者链表中的一个有效索引</p>
+<h3 id="题解-1"><a href="#题解-1" class="headerlink" title="题解"></a>题解</h3><h4 id="方法一：哈希表"><a href="#方法一：哈希表" class="headerlink" title="方法一：哈希表"></a>方法一：哈希表</h4><p>一个非常直观的思路是：我们遍历链表中的每个节点，并将它记录下来；一旦遇到了此前遍历过的节点，就可以判定链表中存在环。借助哈希表可以很方便地实现。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        ListNode pos = head;</span><br><span class="line">        Set&lt;ListNode&gt; visited = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span> (pos != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (visited.contains(pos)) &#123;</span><br><span class="line">                <span class="keyword">return</span> pos;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                visited.add(pos);</span><br><span class="line">            &#125;</span><br><span class="line">            pos = pos.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析-1"><a href="#复杂度分析-1" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们恰好需要访问链表中的每一个节点。</p>
+<p>空间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们需要将链表中的每个节点都保存在哈希表当中。</p>
+<h4 id="方法二：双指针–快慢指针"><a href="#方法二：双指针–快慢指针" class="headerlink" title="方法二：双指针–快慢指针"></a>方法二：双指针–快慢指针</h4><p>我们使用两个指针，\textit{fast}fast 与 \textit{slow}slow。它们起始都位于链表的头部。随后，\textit{slow}slow 指针每次向后移动一个位置，而 \textit{fast}fast 指针向后移动两个位置。如果链表中存在环，则 \textit{fast}fast 指针最终将再次与 \textit{slow}slow 指针在环中相遇。</p>
+<p>如下图所示，设链表中环外部分的长度为 aa。\textit{slow}slow 指针进入环后，又走了 bb 的距离与 \textit{fast}fast 相遇。此时，\textit{fast}fast 指针已经走完了环的 nn 圈，因此它走过的总距离为 a+n(b+c)+b=a+(n+1)b+nca+n(b+c)+b=a+(n+1)b+nc</p>
+ <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114103031586.png" alt="image-20210114103031586" style="zoom:50%;">
+
+<p>根据题意，任意时刻，\textit{fast}fast 指针走过的距离都为 \textit{slow}slow 指针的 22 倍。因此，我们有</p>
+<p>a+(n+1)b+nc=2(a+b) \implies a=c+(n-1)(b+c)<br>a+(n+1)b+nc=2(a+b)⟹a=c+(n−1)(b+c)</p>
+<p>有了 a=c+(n-1)(b+c)a=c+(n−1)(b+c) 的等量关系，我们会发现：从相遇点到入环点的距离加上 n-1n−1 圈的环长，恰好等于从链表头部到入环点的距离。</p>
+<p>因此，当发现 \textit{slow}slow 与 \textit{fast}fast 相遇时，我们再额外使用一个指针 \textit{ptr}ptr。起始，它指向链表头部；随后，它和 \textit{slow}slow 每次向后移动一个位置。最终，它们会在入环点相遇。 </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head, fast = head;</span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="keyword">null</span>) &#123;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            <span class="keyword">if</span> (fast.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">                fast = fast.next.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (fast == slow) &#123;</span><br><span class="line">                ListNode ptr = head;</span><br><span class="line">                <span class="keyword">while</span> (ptr != slow) &#123;</span><br><span class="line">                    ptr = ptr.next;</span><br><span class="line">                    slow = slow.next;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> ptr;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>#####复杂度分析</p>
+<p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。在最初判断快慢指针是否相遇时，\textit{slow}slow 指针走过的距离不会超过链表的总长度；随后寻找入环点时，走过的距离也不会超过链表的总长度。因此，总的执行时间为 O(N)+O(N)=O(N)O(N)+O(N)=O(N)。</p>
+<p>空间复杂度：O(1)O(1)。我们只使用了 \textit{slow}, \textit{fast}, \textit{ptr}slow,fast,ptr 三个指针。</p>
+]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>链表</tag>
+        <tag>双指针</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>初识递归</title>
     <url>/2021/02/03/%E5%88%9D%E8%AF%86%E9%80%92%E5%BD%92/</url>
     <content><![CDATA[<h2 id="二叉搜索树的范围和"><a href="#二叉搜索树的范围和" class="headerlink" title="二叉搜索树的范围和"></a>二叉搜索树的范围和</h2><h3 id="DFS深度优先搜索"><a href="#DFS深度优先搜索" class="headerlink" title="DFS深度优先搜索"></a>DFS深度优先搜索</h3><h4 id="1-递归"><a href="#1-递归" class="headerlink" title="1.递归"></a>1.递归</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * public class TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode left;</span></span><br><span class="line"><span class="comment"> *     TreeNode right;</span></span><br><span class="line"><span class="comment"> *     TreeNode() &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val) &#123; this.val = val; &#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val, TreeNode left, TreeNode right) &#123;</span></span><br><span class="line"><span class="comment"> *         this.val = val;</span></span><br><span class="line"><span class="comment"> *         this.left = left;</span></span><br><span class="line"><span class="comment"> *         this.right = right;</span></span><br><span class="line"><span class="comment"> *     &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> ans;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">rangeSumBST</span><span class="params">(TreeNode root, <span class="keyword">int</span> low, <span class="keyword">int</span> high)</span> </span>&#123;</span><br><span class="line">       ans = <span class="number">0</span> ;</span><br><span class="line">        dfs(root,low,high);</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dfs</span><span class="params">(TreeNode node,<span class="keyword">int</span> L,<span class="keyword">int</span> R)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(node!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(L&lt;=node.val&amp;&amp;node.val&lt;=R)&#123;</span><br><span class="line">                ans+=node.val;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(node.val&gt;L)&#123;</span><br><span class="line">                dfs(node.left,L,R);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(node.val&lt;R)&#123;</span><br><span class="line">                dfs(node.right,L,R);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -2394,79 +2602,9 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>双指针问题</title>
-    <url>/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<h2 id="环形列表I"><a href="#环形列表I" class="headerlink" title="环形列表I"></a>环形列表I</h2><h3 id="题目说明"><a href="#题目说明" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，判断链表中是否有环。</p>
-<p>如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。</p>
-<p>如果链表中存在环，则返回 true 。 否则，返回 false 。</p>
-<p> 进阶：</p>
-<p>你能用 O(1)（即，常量）内存解决此问题吗？</p>
-<p> 示例 1：</p>
-<p> <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100453506.png" alt="image-20210114100453506"></p>
-<p>输入：head = [3,2,0,-4], pos = 1<br>输出：true<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100714252.png" alt="image-20210114100714252"></p>
-<p>输入：head = [1,2], pos = 0<br>输出：true<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
-<img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100749569.png" alt="image-20210114100749569" style="zoom:150%;">
-
-<p>输入：head = [1], pos = -1<br>输出：false<br>解释：链表中没有环。</p>
-<p>提示：</p>
-<p>链表中节点的数目范围是 [0, 104]<br>-105 &lt;= Node.val &lt;= 105<br>pos 为 -1 或者链表中的一个 有效索引 </p>
-<h3 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h3><p>####方法一：哈希表<br>思路及算法</p>
-<p>最容易想到的方法是遍历所有节点，每次遍历到一个节点时，判断该节点此前是否被访问过。</p>
-<p>具体地，我们可以使用哈希表来存储所有已经访问过的节点。每次我们到达一个节点，如果该节点已经存在于哈希表中，则说明该链表是环形链表，否则就将该节点加入哈希表中。重复这一过程，直到我们遍历完整个链表即可。</p>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">pulic <span class="class"><span class="keyword">class</span> <span class="title">solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascirle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        Set&lt;ListNOde&gt; seen = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span>( head !=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!seen.add(head))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>#####复杂度分析</p>
-<p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。最坏情况下我们需要遍历每个节点一次。</p>
-<p>空间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。主要为哈希表的开销，最坏情况下我们需要将每个节点插入到哈希表中一次。</p>
-<h4 id="方式二；双指针–快慢指针"><a href="#方式二；双指针–快慢指针" class="headerlink" title="方式二；双指针–快慢指针"></a>方式二；双指针–快慢指针</h4><p>方法需要读者对「Floyd 判圈算法」（又称龟兔赛跑算法）有所了解。</p>
-<p>假想「乌龟」和「兔子」在链表上移动，「兔子」跑得快，「乌龟」跑得慢。当「乌龟」和「兔子」从链表上的同一个节点开始移动时，如果该链表中没有环，那么「兔子」将一直处于「乌龟」的前方；如果该链表中有环，那么「兔子」会先于「乌龟」进入环，并且一直在环内移动。等到「乌龟」进入环时，由于「兔子」的速度快，它一定会在某个时刻与乌龟相遇，即套了「乌龟」若干圈。</p>
-<p>我们可以根据上述思路来解决本题。具体地，我们定义两个指针，一快一满。慢指针每次只移动一步，而快指针每次移动两步。初始时，慢指针在位置 head，而快指针在位置 head.next。这样一来，如果在移动的过程中，快指针反过来追上慢指针，就说明该链表为环形链表。否则快指针将到达链表尾部，该链表不为环形链表。</p>
-<p> 为什么我们要规定初始时慢指针在位置 head，快指针在位置 head.next，而不是两个指针都在位置 head（即与「乌龟」和「兔子」中的叙述相同）？</p>
-<p>观察下面的代码，我们使用的是 while 循环，循环条件先于循环体。由于循环条件一定是判断快慢指针是否重合，如果我们将两个指针初始都置于 head，那么 while 循环就不会执行。因此，我们可以假想一个在 head 之前的虚拟节点，慢指针从虚拟节点移动一步到达 head，快指针从虚拟节点移动两步到达 head.next，这样我们就可以使用 while 循环了。</p>
-<p>当然，我们也可以使用 do-while 循环。此时，我们就可以把快慢指针的初始值都置为 head。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">puclic <span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascycle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head;</span><br><span class="line">        ListNode fast = head.next;</span><br><span class="line">        <span class="keyword">while</span>(slow!=fast)&#123;</span><br><span class="line">            <span class="keyword">if</span>(fast==<span class="keyword">null</span>||fast.next==<span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            fast = fast.next.next</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。</p>
-<p>当链表中不存在环时，快指针将先于慢指针到达链表尾部，链表中每个节点至多被访问两次。</p>
-<p>当链表中存在环时，每一轮移动后，快慢指针的距离将减小一。而初始距离为环的长度，因此至多移动 NN 轮。</p>
-<p>空间复杂度：O(1)O(1)。我们只使用了两个指针的额外空间</p>
-<h2 id="环形列表II"><a href="#环形列表II" class="headerlink" title="环形列表II"></a>环形列表II</h2><h3 id="题目说明-1"><a href="#题目说明-1" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。</p>
-<p>为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意，pos 仅仅是用于标识环的情况，并不会作为参数传递到函数中。</p>
-<p>说明：不允许修改给定的链表。</p>
-<p>进阶：</p>
-<p>你是否可以使用 O(1) 空间解决此题？</p>
-<p> 示例 1：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102706369.png" alt="image-20210114102706369"></p>
-<p>输入：head = [3,2,0,-4], pos = 1<br>输出：返回索引为 1 的链表节点<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102721841.png" alt="image-20210114102721841"></p>
-<p>输入：head = [1,2], pos = 0<br>输出：返回索引为 0 的链表节点<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102737481.png" alt="image-20210114102737481"></p>
-<p>输入：head = [1], pos = -1<br>输出：返回 null<br>解释：链表中没有环。</p>
-<p>提示：</p>
-<p>链表中节点的数目范围在范围 [0, 104] 内<br>-105 &lt;= Node.val &lt;= 105<br>pos 的值为 -1 或者链表中的一个有效索引</p>
-<h3 id="题解-1"><a href="#题解-1" class="headerlink" title="题解"></a>题解</h3><h4 id="方法一：哈希表"><a href="#方法一：哈希表" class="headerlink" title="方法一：哈希表"></a>方法一：哈希表</h4><p>一个非常直观的思路是：我们遍历链表中的每个节点，并将它记录下来；一旦遇到了此前遍历过的节点，就可以判定链表中存在环。借助哈希表可以很方便地实现。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        ListNode pos = head;</span><br><span class="line">        Set&lt;ListNode&gt; visited = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span> (pos != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (visited.contains(pos)) &#123;</span><br><span class="line">                <span class="keyword">return</span> pos;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                visited.add(pos);</span><br><span class="line">            &#125;</span><br><span class="line">            pos = pos.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析-1"><a href="#复杂度分析-1" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们恰好需要访问链表中的每一个节点。</p>
-<p>空间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们需要将链表中的每个节点都保存在哈希表当中。</p>
-<h4 id="方法二：双指针–快慢指针"><a href="#方法二：双指针–快慢指针" class="headerlink" title="方法二：双指针–快慢指针"></a>方法二：双指针–快慢指针</h4><p>我们使用两个指针，\textit{fast}fast 与 \textit{slow}slow。它们起始都位于链表的头部。随后，\textit{slow}slow 指针每次向后移动一个位置，而 \textit{fast}fast 指针向后移动两个位置。如果链表中存在环，则 \textit{fast}fast 指针最终将再次与 \textit{slow}slow 指针在环中相遇。</p>
-<p>如下图所示，设链表中环外部分的长度为 aa。\textit{slow}slow 指针进入环后，又走了 bb 的距离与 \textit{fast}fast 相遇。此时，\textit{fast}fast 指针已经走完了环的 nn 圈，因此它走过的总距离为 a+n(b+c)+b=a+(n+1)b+nca+n(b+c)+b=a+(n+1)b+nc</p>
- <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114103031586.png" alt="image-20210114103031586" style="zoom:50%;">
-
-<p>根据题意，任意时刻，\textit{fast}fast 指针走过的距离都为 \textit{slow}slow 指针的 22 倍。因此，我们有</p>
-<p>a+(n+1)b+nc=2(a+b) \implies a=c+(n-1)(b+c)<br>a+(n+1)b+nc=2(a+b)⟹a=c+(n−1)(b+c)</p>
-<p>有了 a=c+(n-1)(b+c)a=c+(n−1)(b+c) 的等量关系，我们会发现：从相遇点到入环点的距离加上 n-1n−1 圈的环长，恰好等于从链表头部到入环点的距离。</p>
-<p>因此，当发现 \textit{slow}slow 与 \textit{fast}fast 相遇时，我们再额外使用一个指针 \textit{ptr}ptr。起始，它指向链表头部；随后，它和 \textit{slow}slow 每次向后移动一个位置。最终，它们会在入环点相遇。 </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head, fast = head;</span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="keyword">null</span>) &#123;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            <span class="keyword">if</span> (fast.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">                fast = fast.next.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (fast == slow) &#123;</span><br><span class="line">                ListNode ptr = head;</span><br><span class="line">                <span class="keyword">while</span> (ptr != slow) &#123;</span><br><span class="line">                    ptr = ptr.next;</span><br><span class="line">                    slow = slow.next;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> ptr;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>#####复杂度分析</p>
-<p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。在最初判断快慢指针是否相遇时，\textit{slow}slow 指针走过的距离不会超过链表的总长度；随后寻找入环点时，走过的距离也不会超过链表的总长度。因此，总的执行时间为 O(N)+O(N)=O(N)O(N)+O(N)=O(N)。</p>
-<p>空间复杂度：O(1)O(1)。我们只使用了 \textit{slow}, \textit{fast}, \textit{ptr}slow,fast,ptr 三个指针。</p>
-]]></content>
-      <categories>
-        <category>数据结构</category>
-      </categories>
-      <tags>
-        <tag>链表</tag>
-        <tag>双指针</tag>
-      </tags>
+    <title>垃圾收集器与内存分配策略</title>
+    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>在Linux环境安装redis</title>
@@ -2554,11 +2692,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>垃圾收集器与内存分配策略</title>
-    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>基础注解的DI</title>
     <url>/2021/02/28/%E5%9F%BA%E7%A1%80%E6%B3%A8%E8%A7%A3%E7%9A%84DI/</url>
     <content><![CDATA[]]></content>
@@ -2643,6 +2776,16 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>IOC</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>客户端识别与Cookie</title>
+    <url>/2021/03/14/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%AF%86%E5%88%AB%E4%B8%8ECookie/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>条件渲染与列表渲染</title>
+    <url>/2021/03/14/%E6%9D%A1%E4%BB%B6%E6%B8%B2%E6%9F%93%E4%B8%8E%E5%88%97%E8%A1%A8%E6%B8%B2%E6%9F%93/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>封装Mybatis输出结果与模糊查询</title>
@@ -2754,16 +2897,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>Mybatis</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>客户端识别与Cookie</title>
-    <url>/2021/03/14/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%AF%86%E5%88%AB%E4%B8%8ECookie/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>条件渲染与列表渲染</title>
-    <url>/2021/03/14/%E6%9D%A1%E4%BB%B6%E6%B8%B2%E6%9F%93%E4%B8%8E%E5%88%97%E8%A1%A8%E6%B8%B2%E6%9F%93/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Vue模板语法</title>
@@ -3015,6 +3148,35 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
+    <title>类文件结构</title>
+    <url>/2021/01/16/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</url>
+    <content><![CDATA[<p>#类文件结构</p>
+<h2 id="虚拟机的无关性"><a href="#虚拟机的无关性" class="headerlink" title="虚拟机的无关性"></a>虚拟机的无关性</h2><p>Java的宣传口号是: <strong><em>WRITE ONCE , RUN ANYWHREE</em></strong></p>
+<p>java虚拟机力求实现的两种无关性：</p>
+<ol>
+<li><p>平台无关性</p>
+<p>各种不同平台的虚拟机与所有平台都统一使用的程序存储格式——–字节码（ByteCode）是构成平台无关性的基础，虚拟机可以载入同一种平台无关的字节码。</p>
+</li>
+<li><p>语言无关性：</p>
+<p><strong>举例</strong>：除了Java之外，Clojure、Groovy、JRuby、Jython、Scala都可以在Java虚拟机上运行</p>
+<p>实现语言无关性的基础是Java虚拟机不与任何语言绑定，只与**<em>“Class文件”这种特殊的二进制文件格式**</em>相关联，Class文件包含了Java虚拟机指令集和符号表以及若干其他辅助信息，在Class文件中使用了许多强制性的语法和结构化约束，任何一门语言都可以表示为被JAVA虚拟机锁接受的有效的Class文件。虚拟机只关心Class文件本身，而不关心Class文件的来源是哪种语言。</p>
+<p>在Class文件中，各种关键字、变量、和运算符号的语义都是有多条字节码命令组合而成的，字节码命令所能提供的语义描述能力必然要比java语言本身更为强大，所以Java虚拟机提供的支持远比java语言本身强大。</p>
+</li>
+</ol>
+<h2 id="Class类文件的结构"><a href="#Class类文件的结构" class="headerlink" title="Class类文件的结构"></a>Class类文件的结构</h2><p>Class文件是一组以8位字节为基础单位的二进制流，各个数据项目严格的按照顺序紧凑的排列在Class文件中，中间没有任何的分隔符，这使得整个Class文件中存储的内容几乎全是程序运行的必要数据，没有空隙存在。</p>
+<p>Class文件格式采用一种类似于C语言中struct的伪结构来进行存储数据：包括<strong>无符号数+表</strong></p>
+<p>1、无符号数：基本数据类型</p>
+<p>2、表：有多个无符号数或者其他表作为数据项构成的复合数据类型，习惯性的以__info结尾。表用于描述有层次关系的复合结构的数据。整个class文件本质上就是一张表。</p>
+<h3 id="magic-numer与class文件版本"><a href="#magic-numer与class文件版本" class="headerlink" title="magic numer与class文件版本"></a>magic numer与class文件版本</h3><h3 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h3><h3 id="访问标志"><a href="#访问标志" class="headerlink" title="访问标志"></a>访问标志</h3><h3 id="类索引、父类索引、接口索引集合"><a href="#类索引、父类索引、接口索引集合" class="headerlink" title="类索引、父类索引、接口索引集合"></a>类索引、父类索引、接口索引集合</h3><h3 id="字段表集合"><a href="#字段表集合" class="headerlink" title="字段表集合"></a>字段表集合</h3><h3 id="方法表集合"><a href="#方法表集合" class="headerlink" title="方法表集合"></a>方法表集合</h3><p>###属性表集合</p>
+]]></content>
+      <categories>
+        <category>JVM虚拟机</category>
+      </categories>
+      <tags>
+        <tag>JAVA</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>系统调用</title>
     <url>/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/</url>
     <content><![CDATA[<h2 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h2><h3 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h3><p>系统调用是内核与用户进程进行交互的一组接口，这些接口让应用程序受限制的访问硬件设备，提供了创建新进程并与已有进程进行交互通信的机制，也提供了申请操作系统其他资源的能力。</p>
@@ -3098,35 +3260,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </categories>
       <tags>
         <tag>Linux系统内核设计</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>类文件结构</title>
-    <url>/2021/01/16/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</url>
-    <content><![CDATA[<p>#类文件结构</p>
-<h2 id="虚拟机的无关性"><a href="#虚拟机的无关性" class="headerlink" title="虚拟机的无关性"></a>虚拟机的无关性</h2><p>Java的宣传口号是: <strong><em>WRITE ONCE , RUN ANYWHREE</em></strong></p>
-<p>java虚拟机力求实现的两种无关性：</p>
-<ol>
-<li><p>平台无关性</p>
-<p>各种不同平台的虚拟机与所有平台都统一使用的程序存储格式——–字节码（ByteCode）是构成平台无关性的基础，虚拟机可以载入同一种平台无关的字节码。</p>
-</li>
-<li><p>语言无关性：</p>
-<p><strong>举例</strong>：除了Java之外，Clojure、Groovy、JRuby、Jython、Scala都可以在Java虚拟机上运行</p>
-<p>实现语言无关性的基础是Java虚拟机不与任何语言绑定，只与**<em>“Class文件”这种特殊的二进制文件格式**</em>相关联，Class文件包含了Java虚拟机指令集和符号表以及若干其他辅助信息，在Class文件中使用了许多强制性的语法和结构化约束，任何一门语言都可以表示为被JAVA虚拟机锁接受的有效的Class文件。虚拟机只关心Class文件本身，而不关心Class文件的来源是哪种语言。</p>
-<p>在Class文件中，各种关键字、变量、和运算符号的语义都是有多条字节码命令组合而成的，字节码命令所能提供的语义描述能力必然要比java语言本身更为强大，所以Java虚拟机提供的支持远比java语言本身强大。</p>
-</li>
-</ol>
-<h2 id="Class类文件的结构"><a href="#Class类文件的结构" class="headerlink" title="Class类文件的结构"></a>Class类文件的结构</h2><p>Class文件是一组以8位字节为基础单位的二进制流，各个数据项目严格的按照顺序紧凑的排列在Class文件中，中间没有任何的分隔符，这使得整个Class文件中存储的内容几乎全是程序运行的必要数据，没有空隙存在。</p>
-<p>Class文件格式采用一种类似于C语言中struct的伪结构来进行存储数据：包括<strong>无符号数+表</strong></p>
-<p>1、无符号数：基本数据类型</p>
-<p>2、表：有多个无符号数或者其他表作为数据项构成的复合数据类型，习惯性的以__info结尾。表用于描述有层次关系的复合结构的数据。整个class文件本质上就是一张表。</p>
-<h3 id="magic-numer与class文件版本"><a href="#magic-numer与class文件版本" class="headerlink" title="magic numer与class文件版本"></a>magic numer与class文件版本</h3><h3 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h3><h3 id="访问标志"><a href="#访问标志" class="headerlink" title="访问标志"></a>访问标志</h3><h3 id="类索引、父类索引、接口索引集合"><a href="#类索引、父类索引、接口索引集合" class="headerlink" title="类索引、父类索引、接口索引集合"></a>类索引、父类索引、接口索引集合</h3><h3 id="字段表集合"><a href="#字段表集合" class="headerlink" title="字段表集合"></a>字段表集合</h3><h3 id="方法表集合"><a href="#方法表集合" class="headerlink" title="方法表集合"></a>方法表集合</h3><p>###属性表集合</p>
-]]></content>
-      <categories>
-        <category>JVM虚拟机</category>
-      </categories>
-      <tags>
-        <tag>JAVA</tag>
       </tags>
   </entry>
   <entry>
@@ -3358,11 +3491,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>组件进阶篇--深入了解组件</title>
-    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E8%BF%9B%E9%98%B6%E7%AF%87-%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E7%BB%84%E4%BB%B6/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>编程范式</title>
     <url>/2021/03/02/%E7%BC%96%E7%A8%8B%E8%8C%83%E5%BC%8F/</url>
     <content><![CDATA[<p>相信绝大部分开发人员、DBA都听过范式这个词，在MySQL中有第一范式、第二范式、第三范式、BCNF范式等，在开发中也有相应的范式，专业词汇叫编程范式(ProgrammingParadigm)。由于笔者能力、精力都有限，本篇主要通过针对同一业务场景，基于编程范式的概念，核心原理以及用例实现来对比不同范式及其实现业务功能的差异。</p>
@@ -3455,6 +3583,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
+    <title>组件进阶篇--深入了解组件</title>
+    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E8%BF%9B%E9%98%B6%E7%AF%87-%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E7%BB%84%E4%BB%B6/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>虚拟机种类</title>
     <url>/2021/03/14/%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%A7%8D%E7%B1%BB/</url>
     <content><![CDATA[]]></content>
@@ -3467,6 +3600,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
   <entry>
     <title>计算属性与监听器setter</title>
     <url>/2021/03/14/%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7%E4%B8%8E%E7%9B%91%E5%90%AC%E5%99%A8setter/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>过度与动画</title>
+    <url>/2021/03/14/%E8%BF%87%E5%BA%A6%E4%B8%8E%E5%8A%A8%E7%94%BB/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -3555,11 +3693,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>过度与动画</title>
-    <url>/2021/03/14/%E8%BF%87%E5%BA%A6%E4%B8%8E%E5%8A%A8%E7%94%BB/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>链表</title>
     <url>/2021/01/13/%E9%93%BE%E8%A1%A8/</url>
     <content><![CDATA[<h2 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h2><h3 id="单链表"><a href="#单链表" class="headerlink" title="单链表"></a>单链表</h3><p>单链表中的每个结点不仅包含值，还包含链接到下一个结点的引用字段。通过这种方式，单链表将所有结点按顺序组织起来。习惯于用头节点来代表整个单链表。</p>
@@ -3635,6 +3768,12 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>链表</tag>
       </tags>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/2021/03/02/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/JVM%E5%90%AC%E8%AF%BE%E7%AC%94%E8%AE%B0%E8%A1%A5%E5%85%85/</url>
+    <content><![CDATA[<p>java的指令是根据栈来设计的，不适用基于寄存器的，是因为基于寄存器与CPU耦合度太高，不太好实现跨平台运行</p>
+<img data-src="https://tse1-mm.cn.bing.net/th/id/OIP.f3N7J7-cCRt2cBZM2z-XlQHaGV?w=223&h=191&c=7&o=5&dpr=1.5&pid=1.7" alt=" JVM内存结构 的图像结果" style="zoom: 200%;">]]></content>
   </entry>
   <entry>
     <title>链表刷题总结（easy篇）</title>
@@ -3754,12 +3893,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>阿里云ECS部署</tag>
       </tags>
-  </entry>
-  <entry>
-    <title></title>
-    <url>/2021/03/02/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/JVM%E5%90%AC%E8%AF%BE%E7%AC%94%E8%AE%B0%E8%A1%A5%E5%85%85/</url>
-    <content><![CDATA[<p>java的指令是根据栈来设计的，不适用基于寄存器的，是因为基于寄存器与CPU耦合度太高，不太好实现跨平台运行</p>
-<img data-src="https://tse1-mm.cn.bing.net/th/id/OIP.f3N7J7-cCRt2cBZM2z-XlQHaGV?w=223&h=191&c=7&o=5&dpr=1.5&pid=1.7" alt=" JVM内存结构 的图像结果" style="zoom: 200%;">]]></content>
   </entry>
   <entry>
     <title>Tomcat服务器</title>
@@ -4098,7 +4231,7 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
 
 ]]></content>
       <categories>
-        <category>环境配置</category>
+        <category>环境部署</category>
       </categories>
       <tags>
         <tag>环境配置</tag>
