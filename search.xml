@@ -367,11 +367,6 @@
       </tags>
   </entry>
   <entry>
-    <title>JVM虚拟机栈</title>
-    <url>/2021/03/14/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Java内存区域与内存溢出异常</title>
     <url>/2021/02/05/Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/</url>
     <content><![CDATA[<h3 id="1-内存管理那些事"><a href="#1-内存管理那些事" class="headerlink" title="1.内存管理那些事"></a>1.内存管理那些事</h3><p>C、C++：在内存管理领域，没有所谓的内存动态分配机制和垃圾收集技术，他们即拥有每一个对象的所有权，又担负着每一个对象从开始到终结的维护责任。</p>
@@ -441,13 +436,18 @@
       </tags>
   </entry>
   <entry>
-    <title>Java高并发JUC</title>
-    <url>/2021/02/25/Java%E9%AB%98%E5%B9%B6%E5%8F%91JUC/</url>
+    <title>JVM虚拟机栈</title>
+    <url>/2021/03/14/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Jenkins自动化部署工具</title>
     <url>/2021/03/14/Jenkins%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E5%B7%A5%E5%85%B7/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Java高并发JUC</title>
+    <url>/2021/02/25/Java%E9%AB%98%E5%B9%B6%E5%8F%91JUC/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -600,6 +600,68 @@
       </tags>
   </entry>
   <entry>
+    <title>MVVM框架</title>
+    <url>/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/</url>
+    <content><![CDATA[<p>一个软件或者 APP都是服务于某种需求，这称之为“业务需求”。随着业务需求的增多、软件会变得越来越庞大，越来越复杂。所以就会设计一套完整的架构设计、研发流程以及质量管理体系来保证整个研发过程。“架构设计”是一个非常大的话题，它涉及到各方面，近年来前端一个明显的开发趋势就是架构从传统的 MVC 模式向 MVVM 模式迁移，这里来谈谈——MVVM模式。</p>
+<h2 id="什么是MVVM"><a href="#什么是MVVM" class="headerlink" title="什么是MVVM"></a>什么是MVVM</h2><blockquote>
+<p>MVVM（Model–View–Viewmodel）是一种软件架构模式。<br>MVVM有助于将图形用户界面的开发与业务逻辑或后端逻辑（数据模型）的开发分离开，这是通过标记语言或GUI代码实现的。MVVM的视图模型是一个值转换器， 这意味着视图模型负责从模型中暴露（转换）数据对象，以便轻松管理和呈现对象。在这方面，视图模型比视图做得更多，并且处理大部分视图的显示逻辑。 视图模型可以实现中介者模式，组织对视图所支持的用例集的后端逻辑的访问</p>
+</blockquote>
+<p><a href="https://zh.wikipedia.org/wiki/MVVM">想要了解更多关于MVVM的定义，点击访问维基百科</a></p>
+<h2 id="MVVM涉及到的概念"><a href="#MVVM涉及到的概念" class="headerlink" title="MVVM涉及到的概念"></a>MVVM涉及到的概念</h2><ul>
+<li>M(odel)层：模型，定义数据结构。</li>
+<li>C(ontroller)层：实现业务逻辑，数据的增删改查。在MVVM模式中一般把C层算在M层中，（只有在理想的双向绑定模式下，Controller 才会完全的消失。这种理想状态一般不存在）</li>
+<li>ViewModel层：顾名思义是视图View的模型、映射和显示逻辑（如if for等，非业务逻辑），另外绑定器也在此层。ViewModel是基于视图开发的一套模型，如果你的应用是给盲人用的，那么也可以开发一套基于Audio的模型AudioModel。</li>
+<li>V(iew)层：将ViewModel通过特定的GUI展示出来，并在GUI控件上绑定视图交互事件，V(iew)一般由MVVM框架自动生成在浏览器中。</li>
+</ul>
+<h2 id="MVVM的工作机制"><a href="#MVVM的工作机制" class="headerlink" title="MVVM的工作机制"></a>MVVM的工作机制</h2><p>在MVVM架构下，View 和 Model 之间其实并没有直接的联系，而是通<strong>过ViewModel进行交互</strong>，Model 和 ViewModel 之间的交互是*<u>双向</u>*的， 因此View 数据的变化会同步到Model中，而Model 数据的变化也会立即反应到View 上。</p>
+<p>ViewModel 通过双向数据绑定把 View 层和 Model 层连接了起来。ViewModel里面包含DOM Listeners(数据监听)和Data Bindings(数据绑定)，DOM Listeners和Data Bindings是实现双向绑定的关键。</p>
+<blockquote>
+<p>DOM Listeners监听页面所有View层DOM元素的变化，当发生变化，Model层的数据随之变化；</p>
+</blockquote>
+<blockquote>
+<p>Data Bindings监听Model层的数据，当数据发生变化，View层的DOM元素随之变化。</p>
+</blockquote>
+<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/01.png" class>
+
+
+
+<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/02.png" class>
+
+
+
+<h2 id="MVVM模式的优缺点"><a href="#MVVM模式的优缺点" class="headerlink" title="MVVM模式的优缺点"></a>MVVM模式的优缺点</h2><p>MVVM模式相较于原先的MVP模式至少省下30%编码量，甚至能省下70%DOM操作，因为用MVP模式的话主要是在进行DOM操作</p>
+<blockquote>
+<p>优点</p>
+</blockquote>
+<ul>
+<li><strong>低耦合</strong>。View可以独立于Model变化和修改，一个ViewModel可以绑定到不同的View上，当View变化的时候Model可以不变，当Model变化的时候View也可以不变。</li>
+<li><strong>可重用性</strong>。可以把一些视图的逻辑放在ViewModel里面，让很多View重用这段视图逻辑。</li>
+<li>独立开发。开发人员可以专注与业务逻辑和数据的开发(ViewModel)。设计人员可以专注于界面(View)的设计。</li>
+<li><strong>可测试性</strong>。可以针对ViewModel来对界面(View)进行测试</li>
+</ul>
+<blockquote>
+<p>缺点</p>
+</blockquote>
+<ul>
+<li>学习成本高。</li>
+<li>DEBUG困难</li>
+<li>实现MVVM的开销对于简单的UI操作是过度的。而对于更大的应用来说，推广ViewModel将变得更加困难，非常大的应用程序中的数据绑定会导致相当大的内存消耗。</li>
+</ul>
+<h2 id="MVVM应用场景"><a href="#MVVM应用场景" class="headerlink" title="MVVM应用场景"></a>MVVM应用场景</h2><ul>
+<li>针对具有复杂交互逻辑的前端应用</li>
+<li>提供基础的架构抽象</li>
+<li>通过Ajax数据持久化，保证前端用户体验</li>
+</ul>
+<h2 id="常见的MVVM框架"><a href="#常见的MVVM框架" class="headerlink" title="常见的MVVM框架"></a>常见的MVVM框架</h2><p>Vue.js   AngularJs，ReactJs</p>
+]]></content>
+      <categories>
+        <category>项目架构</category>
+      </categories>
+      <tags>
+        <tag>架构模式</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MVC框架</title>
     <url>/2021/03/02/MVC%E6%A1%86%E6%9E%B6/</url>
     <content><![CDATA[<h2 id="MVC的定义"><a href="#MVC的定义" class="headerlink" title="MVC的定义"></a>MVC的定义</h2><p><strong>MVC模式</strong>（Model–view–controller）是软件工程中的一种<a href="https://zh.wikipedia.org/wiki/%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84">软件架构</a>模式，把软件系统分为三个基本部分：模型（Model）、视图（View）和控制器（Controller）。</p>
@@ -696,65 +758,73 @@
       </tags>
   </entry>
   <entry>
-    <title>MVVM框架</title>
-    <url>/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/</url>
-    <content><![CDATA[<p>一个软件或者 APP都是服务于某种需求，这称之为“业务需求”。随着业务需求的增多、软件会变得越来越庞大，越来越复杂。所以就会设计一套完整的架构设计、研发流程以及质量管理体系来保证整个研发过程。“架构设计”是一个非常大的话题，它涉及到各方面，近年来前端一个明显的开发趋势就是架构从传统的 MVC 模式向 MVVM 模式迁移，这里来谈谈——MVVM模式。</p>
-<h2 id="什么是MVVM"><a href="#什么是MVVM" class="headerlink" title="什么是MVVM"></a>什么是MVVM</h2><blockquote>
-<p>MVVM（Model–View–Viewmodel）是一种软件架构模式。<br>MVVM有助于将图形用户界面的开发与业务逻辑或后端逻辑（数据模型）的开发分离开，这是通过标记语言或GUI代码实现的。MVVM的视图模型是一个值转换器， 这意味着视图模型负责从模型中暴露（转换）数据对象，以便轻松管理和呈现对象。在这方面，视图模型比视图做得更多，并且处理大部分视图的显示逻辑。 视图模型可以实现中介者模式，组织对视图所支持的用例集的后端逻辑的访问</p>
-</blockquote>
-<p><a href="https://zh.wikipedia.org/wiki/MVVM">想要了解更多关于MVVM的定义，点击访问维基百科</a></p>
-<h2 id="MVVM涉及到的概念"><a href="#MVVM涉及到的概念" class="headerlink" title="MVVM涉及到的概念"></a>MVVM涉及到的概念</h2><ul>
-<li>M(odel)层：模型，定义数据结构。</li>
-<li>C(ontroller)层：实现业务逻辑，数据的增删改查。在MVVM模式中一般把C层算在M层中，（只有在理想的双向绑定模式下，Controller 才会完全的消失。这种理想状态一般不存在）</li>
-<li>ViewModel层：顾名思义是视图View的模型、映射和显示逻辑（如if for等，非业务逻辑），另外绑定器也在此层。ViewModel是基于视图开发的一套模型，如果你的应用是给盲人用的，那么也可以开发一套基于Audio的模型AudioModel。</li>
-<li>V(iew)层：将ViewModel通过特定的GUI展示出来，并在GUI控件上绑定视图交互事件，V(iew)一般由MVVM框架自动生成在浏览器中。</li>
-</ul>
-<h2 id="MVVM的工作机制"><a href="#MVVM的工作机制" class="headerlink" title="MVVM的工作机制"></a>MVVM的工作机制</h2><p>在MVVM架构下，View 和 Model 之间其实并没有直接的联系，而是通<strong>过ViewModel进行交互</strong>，Model 和 ViewModel 之间的交互是*<u>双向</u>*的， 因此View 数据的变化会同步到Model中，而Model 数据的变化也会立即反应到View 上。</p>
-<p>ViewModel 通过双向数据绑定把 View 层和 Model 层连接了起来。ViewModel里面包含DOM Listeners(数据监听)和Data Bindings(数据绑定)，DOM Listeners和Data Bindings是实现双向绑定的关键。</p>
-<blockquote>
-<p>DOM Listeners监听页面所有View层DOM元素的变化，当发生变化，Model层的数据随之变化；</p>
-</blockquote>
-<blockquote>
-<p>Data Bindings监听Model层的数据，当数据发生变化，View层的DOM元素随之变化。</p>
-</blockquote>
-<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/01.png" class>
-
-
-
-<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/02.png" class>
-
-
-
-<h2 id="MVVM模式的优缺点"><a href="#MVVM模式的优缺点" class="headerlink" title="MVVM模式的优缺点"></a>MVVM模式的优缺点</h2><p>MVVM模式相较于原先的MVP模式至少省下30%编码量，甚至能省下70%DOM操作，因为用MVP模式的话主要是在进行DOM操作</p>
-<blockquote>
-<p>优点</p>
-</blockquote>
+    <title>Maven学习笔记</title>
+    <url>/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/</url>
+    <content><![CDATA[<h2 id="IDEA编辑器集成maven环境"><a href="#IDEA编辑器集成maven环境" class="headerlink" title="IDEA编辑器集成maven环境"></a>IDEA编辑器集成maven环境</h2><p>###设置Maven版本</p>
 <ul>
-<li><strong>低耦合</strong>。View可以独立于Model变化和修改，一个ViewModel可以绑定到不同的View上，当View变化的时候Model可以不变，当Model变化的时候View也可以不变。</li>
-<li><strong>可重用性</strong>。可以把一些视图的逻辑放在ViewModel里面，让很多View重用这段视图逻辑。</li>
-<li>独立开发。开发人员可以专注与业务逻辑和数据的开发(ViewModel)。设计人员可以专注于界面(View)的设计。</li>
-<li><strong>可测试性</strong>。可以针对ViewModel来对界面(View)进行测试</li>
+<li> 设置Maven版本–选择下载好的maven版本（⽬录选到bin⽬录的上⼀级⽬录）</li>
 </ul>
-<blockquote>
-<p>缺点</p>
-</blockquote>
+
+
+ <img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven2.png" class>
+
 <ul>
-<li>学习成本高。</li>
-<li>DEBUG困难</li>
-<li>实现MVVM的开销对于简单的UI操作是过度的。而对于更大的应用来说，推广ViewModel将变得更加困难，非常大的应用程序中的数据绑定会导致相当大的内存消耗。</li>
+<li><p>设置settings.xml文件</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven3.png" class>
+
+</li>
 </ul>
-<h2 id="MVVM应用场景"><a href="#MVVM应用场景" class="headerlink" title="MVVM应用场景"></a>MVVM应用场景</h2><ul>
-<li>针对具有复杂交互逻辑的前端应用</li>
-<li>提供基础的架构抽象</li>
-<li>通过Ajax数据持久化，保证前端用户体验</li>
+<h3 id="Maven项目的创建"><a href="#Maven项目的创建" class="headerlink" title="Maven项目的创建"></a>Maven项目的创建</h3><ul>
+<li><p>选择Maven,设置JDK版本，选择maven项目里的模板</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven4.png" class>
+</li>
+<li><p>设置项目里的GroupID和ArtifactID</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven5.png" class>
+</li>
+<li><p>检查项目的Maven环境</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven6.png" class>
+</li>
+<li><p>项目的目录结构</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven7.png" class>
+
+</li>
 </ul>
-<h2 id="常见的MVVM框架"><a href="#常见的MVVM框架" class="headerlink" title="常见的MVVM框架"></a>常见的MVVM框架</h2><p>Vue.js   AngularJs，ReactJs</p>
+<p>###项目的编译</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven8.png" class>
+
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven9.png" class>
+
+<ul>
+<li>执⾏编译命令，两个图标分别代表”普通模式”和”调试模式”</li>
+</ul>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven10.png" class>
+
+<h3 id="创建WEB项目"><a href="#创建WEB项目" class="headerlink" title="创建WEB项目"></a>创建WEB项目</h3><p>创建web项目与创建普通Java项目步骤基本一致，区别在于选择Maven模板（WEB项目选择webapp)</p>
+<h4 id="启动项目"><a href="#启动项目" class="headerlink" title="启动项目"></a>启动项目</h4><ul>
+<li><p>修改相关版本</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- JDK的版本修改为1.8 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">maven.compiler.target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.target</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- junit的版本修改为4.12 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.12<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>删除pluginManagement标签</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 将这个标签及标签中的内容全部删除 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line">...</span><br><span class="line"><span class="tag">&lt;/<span class="name">pluginManagement</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>添加web部署的插件</p>
+<p>1.jetty插件</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置在plugins标签中 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mortbay.jetty<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-jetty-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">version</span>&gt;</span>6.1.25<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">		 <span class="comment">&lt;!-- 热部署，每10秒扫描⼀次 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">scanIntervalSeconds</span>&gt;</span>10<span class="tag">&lt;/<span class="name">scanIntervalSeconds</span>&gt;</span></span><br><span class="line">		 <span class="comment">&lt;!-- 可指定当前项⽬的站点名 --&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">contextPath</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">contextPath</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">connectors</span>&gt;</span></span><br><span class="line">			 &lt;connector</span><br><span class="line">implementation=&quot;org.mortbay.jetty.nio.SelectChannelConnector&quot;&gt;</span><br><span class="line"> <span class="tag">&lt;<span class="name">port</span>&gt;</span>9090<span class="tag">&lt;/<span class="name">port</span>&gt;</span> <span class="comment">&lt;!-- 设置启动的端⼝号 --&gt;</span></span><br><span class="line"> 			 <span class="tag">&lt;/<span class="name">connector</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">connectors</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<p>  2.tomcat插件</p>
+  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置在plugins标签中 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.tomcat.maven<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>tomcat7-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">port</span>&gt;</span>8081<span class="tag">&lt;/<span class="name">port</span>&gt;</span> <span class="comment">&lt;!-- 启动端⼝ 默认:8080 --&gt;</span></span><br><span class="line"> 		 <span class="tag">&lt;<span class="name">path</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">path</span>&gt;</span> <span class="comment">&lt;!-- 项⽬的站点名，即对外访问路径 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">uriEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">uriEncoding</span>&gt;</span> <span class="comment">&lt;!-- 字符集编码 默认：ISO-8859-1 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">server</span>&gt;</span>tomcat7<span class="tag">&lt;/<span class="name">server</span>&gt;</span> <span class="comment">&lt;!-- 服务器名称 --&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+  <img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven11.png" class>
+
+
+
+<p>**maven依赖仓库：<a href="https://mvnrepository.com/">https://mvnrepository.com/</a> **</p>
 ]]></content>
       <categories>
-        <category>项目架构</category>
+        <category>项目工具</category>
       </categories>
       <tags>
-        <tag>架构模式</tag>
+        <tag>Maven</tag>
       </tags>
   </entry>
   <entry>
@@ -844,76 +914,6 @@
 </blockquote>
 <p>如果A下同时存在两个不同version的C，冲突！！（选取同时适合A、B的版本）</p>
 <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">version</span>&gt;</span>xxx<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>项目工具</category>
-      </categories>
-      <tags>
-        <tag>Maven</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Maven学习笔记</title>
-    <url>/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/</url>
-    <content><![CDATA[<h2 id="IDEA编辑器集成maven环境"><a href="#IDEA编辑器集成maven环境" class="headerlink" title="IDEA编辑器集成maven环境"></a>IDEA编辑器集成maven环境</h2><p>###设置Maven版本</p>
-<ul>
-<li> 设置Maven版本–选择下载好的maven版本（⽬录选到bin⽬录的上⼀级⽬录）</li>
-</ul>
-
-
- <img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven2.png" class>
-
-<ul>
-<li><p>设置settings.xml文件</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven3.png" class>
-
-</li>
-</ul>
-<h3 id="Maven项目的创建"><a href="#Maven项目的创建" class="headerlink" title="Maven项目的创建"></a>Maven项目的创建</h3><ul>
-<li><p>选择Maven,设置JDK版本，选择maven项目里的模板</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven4.png" class>
-</li>
-<li><p>设置项目里的GroupID和ArtifactID</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven5.png" class>
-</li>
-<li><p>检查项目的Maven环境</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven6.png" class>
-</li>
-<li><p>项目的目录结构</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven7.png" class>
-
-</li>
-</ul>
-<p>###项目的编译</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven8.png" class>
-
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven9.png" class>
-
-<ul>
-<li>执⾏编译命令，两个图标分别代表”普通模式”和”调试模式”</li>
-</ul>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven10.png" class>
-
-<h3 id="创建WEB项目"><a href="#创建WEB项目" class="headerlink" title="创建WEB项目"></a>创建WEB项目</h3><p>创建web项目与创建普通Java项目步骤基本一致，区别在于选择Maven模板（WEB项目选择webapp)</p>
-<h4 id="启动项目"><a href="#启动项目" class="headerlink" title="启动项目"></a>启动项目</h4><ul>
-<li><p>修改相关版本</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- JDK的版本修改为1.8 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">maven.compiler.target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.target</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- junit的版本修改为4.12 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.12<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li><p>删除pluginManagement标签</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 将这个标签及标签中的内容全部删除 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line">...</span><br><span class="line"><span class="tag">&lt;/<span class="name">pluginManagement</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li><p>添加web部署的插件</p>
-<p>1.jetty插件</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置在plugins标签中 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mortbay.jetty<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-jetty-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">version</span>&gt;</span>6.1.25<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">		 <span class="comment">&lt;!-- 热部署，每10秒扫描⼀次 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">scanIntervalSeconds</span>&gt;</span>10<span class="tag">&lt;/<span class="name">scanIntervalSeconds</span>&gt;</span></span><br><span class="line">		 <span class="comment">&lt;!-- 可指定当前项⽬的站点名 --&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">contextPath</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">contextPath</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">connectors</span>&gt;</span></span><br><span class="line">			 &lt;connector</span><br><span class="line">implementation=&quot;org.mortbay.jetty.nio.SelectChannelConnector&quot;&gt;</span><br><span class="line"> <span class="tag">&lt;<span class="name">port</span>&gt;</span>9090<span class="tag">&lt;/<span class="name">port</span>&gt;</span> <span class="comment">&lt;!-- 设置启动的端⼝号 --&gt;</span></span><br><span class="line"> 			 <span class="tag">&lt;/<span class="name">connector</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">connectors</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<p>  2.tomcat插件</p>
-  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置在plugins标签中 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.tomcat.maven<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>tomcat7-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">port</span>&gt;</span>8081<span class="tag">&lt;/<span class="name">port</span>&gt;</span> <span class="comment">&lt;!-- 启动端⼝ 默认:8080 --&gt;</span></span><br><span class="line"> 		 <span class="tag">&lt;<span class="name">path</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">path</span>&gt;</span> <span class="comment">&lt;!-- 项⽬的站点名，即对外访问路径 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">uriEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">uriEncoding</span>&gt;</span> <span class="comment">&lt;!-- 字符集编码 默认：ISO-8859-1 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">server</span>&gt;</span>tomcat7<span class="tag">&lt;/<span class="name">server</span>&gt;</span> <span class="comment">&lt;!-- 服务器名称 --&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
-  <img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven11.png" class>
-
-
-
-<p>**maven依赖仓库：<a href="https://mvnrepository.com/">https://mvnrepository.com/</a> **</p>
 ]]></content>
       <categories>
         <category>项目工具</category>
@@ -1597,6 +1597,11 @@
       </tags>
   </entry>
   <entry>
+    <title>PC寄存器</title>
+    <url>/2021/03/14/PC%E5%AF%84%E5%AD%98%E5%99%A8/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Nginx服务器的使用</title>
     <url>/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<h1 id="Nginx服务器使用"><a href="#Nginx服务器使用" class="headerlink" title="Nginx服务器使用"></a>Nginx服务器使用</h1><h2 id="内容概览"><a href="#内容概览" class="headerlink" title="内容概览"></a>内容概览</h2><h3 id="1、nginx简介"><a href="#1、nginx简介" class="headerlink" title="1、nginx简介"></a>1、nginx简介</h3><p>（1）介绍nginx的应用场景和具体可以做什么事情</p>
@@ -1669,16 +1674,6 @@
       </tags>
   </entry>
   <entry>
-    <title>PC寄存器</title>
-    <url>/2021/03/14/PC%E5%AF%84%E5%AD%98%E5%99%A8/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>Redis数据库</title>
-    <url>/2021/02/25/Redis%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>SVN版本控制系统</title>
     <url>/2021/02/06/SVN%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F/</url>
     <content><![CDATA[<h3 id="主要内容"><a href="#主要内容" class="headerlink" title="主要内容"></a>主要内容</h3>]]></content>
@@ -1687,6 +1682,22 @@
       </categories>
       <tags>
         <tag>SVN</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Redis数据库</title>
+    <url>/2021/02/25/Redis%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Session</title>
+    <url>/2021/02/25/Session/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Java web</category>
+      </categories>
+      <tags>
+        <tag>Session</tag>
       </tags>
   </entry>
   <entry>
@@ -1770,15 +1781,9 @@
       </tags>
   </entry>
   <entry>
-    <title>Session</title>
-    <url>/2021/02/25/Session/</url>
+    <title>SpringBoot入门二</title>
+    <url>/2021/03/21/SpringBoot%E5%85%A5%E9%97%A8%E4%BA%8C/</url>
     <content><![CDATA[]]></content>
-      <categories>
-        <category>Java web</category>
-      </categories>
-      <tags>
-        <tag>Session</tag>
-      </tags>
   </entry>
   <entry>
     <title>SpringBoot入门一</title>
@@ -1847,11 +1852,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>SpringBoot框架</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>SpringBoot入门二</title>
-    <url>/2021/03/21/SpringBoot%E5%85%A5%E9%97%A8%E4%BA%8C/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Spring学习第一跳</title>
@@ -2151,6 +2151,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <content><![CDATA[]]></content>
   </entry>
   <entry>
+    <title>zookeeper</title>
+    <url>/2021/03/14/zookeeper/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>XML配置文件详解</title>
     <url>/2021/03/13/XML%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/</url>
     <content><![CDATA[<h2 id="配置文档顶层结构"><a href="#配置文档顶层结构" class="headerlink" title="配置文档顶层结构"></a>配置文档顶层结构</h2><img data-src="/2021/03/13/XML%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/01.png" class>
@@ -2268,11 +2273,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
   <entry>
     <title>coding部署</title>
     <url>/2021/03/15/coding%E9%83%A8%E7%BD%B2/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>zookeeper</title>
-    <url>/2021/03/14/zookeeper/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -2658,6 +2658,82 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
+    <title>哈希表easy篇总结</title>
+    <url>/2021/03/11/%E5%93%88%E5%B8%8C%E8%A1%A8easy%E7%AF%87%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<p>##哈希表刷题总结</p>
+<h3 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h3><p>哈希表（Hash Table，也叫散列表），是根据键（Key）而直接访问在内存存储位置的数据结构。也就是说，它通过计算一个关于键值的函数，将所需查询的数据映射到表中一个位置来访问记录，这加快了查找速度。这个映射函数称做哈希函数，存放记录的数组称做哈希表。</p>
+<p>一个通俗的例子是，为了查找电话簿中某人的号码，可以创建一个按照人名首字母顺序排列的表（即建立人名 xx 到首字母 F(x)F(x) 的一个函数关系），在首字母为 WW 的表中查找 “王” 姓的电话号码，显然比直接查找就要快得多。这里使用人名作为关键字，“取首字母” 是这个例子中哈希函数的函数法则 F()F()，存放首字母的表对应哈希表。关键字和函数法则理论上可以任意确定。</p>
+<p>哈希表是使用 O(1)O(1) 时间进行数据的插入删除和查找，但是哈希表不保证表中数据的有序性，<del>这样在哈希表中查找最大数据或者最小数据的时间是 O(N)O(N) 实现。</del>哈希表不支持需要元素间任何排序信息的操作，例如findMin、findMax或者打印输出排序号的整张表。</p>
+<h3 id="设计哈希映射"><a href="#设计哈希映射" class="headerlink" title="设计哈希映射"></a>设计哈希映射</h3><p>哈希表是一个在不同语言中都有的通用数据结构。例如，Python 中的 dict 和 Java 中的 Hashmap。哈希表的特性是可以根据给出的 key 快速访问 value。</p>
+<p>设计哈希表有两个问题需要去解决： 1). 如何设计哈希方法？ 和 2).如何避免哈希碰撞？ 。</p>
+<p>1). 如何设计哈希方法？：哈希方法会将键值映射到某块存储空间，一个好的哈希方法应该将不同的键值 均匀 地分布在存储空间中。</p>
+<p>2). 如何避免哈希碰撞？：哈希方法要将大量的键值映射到一个有限的空间里,这样就有可能会将不同的键值映射到同一个存储空间，这种情况称为 ‘哈希碰撞’ 。哈希碰撞是不可避免的，但可以用策略来解决哈希碰撞。</p>
+<h3 id="1-有多少小于当前数字的数字"><a href="#1-有多少小于当前数字的数字" class="headerlink" title="1.有多少小于当前数字的数字"></a>1.有多少小于当前数字的数字</h3><p>####一、暴力求解法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>[] smallerNumbersThanCurrent(<span class="keyword">int</span>[] nums) &#123;</span><br><span class="line">        <span class="comment">//第一种方法1：暴力求解法，逐一遍历除当前元素之外的所有元素</span></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">        复杂度分析：</span></span><br><span class="line"><span class="comment">        空间复杂度为O(n)，需要存储新的答案数组</span></span><br><span class="line"><span class="comment">        时间复杂度为O(n^2)</span></span><br><span class="line"><span class="comment">        **/</span></span><br><span class="line">        <span class="keyword">int</span> length = nums.length;</span><br><span class="line">        <span class="keyword">int</span> newtime[] = <span class="keyword">new</span> <span class="keyword">int</span>[length];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;length;i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> time = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> h=<span class="number">0</span>;h&lt;length;h++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(nums[i]&gt;nums[h])&#123;</span><br><span class="line">                    time++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            newtime[i] = time;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> newtime;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="二、计数排序"><a href="#二、计数排序" class="headerlink" title="二、计数排序"></a>二、计数排序</h4><h4 id="三、快速排序"><a href="#三、快速排序" class="headerlink" title="三、快速排序"></a>三、快速排序</h4><h4 id="四、排序与映射结合"><a href="#四、排序与映射结合" class="headerlink" title="四、排序与映射结合"></a>四、排序与映射结合</h4><h3 id="2-第一个只出现一次的字符"><a href="#2-第一个只出现一次的字符" class="headerlink" title="2.第一个只出现一次的字符"></a>2.第一个只出现一次的字符</h3><h4 id="3-1哈希表的遍历"><a href="#3-1哈希表的遍历" class="headerlink" title="3.1哈希表的遍历"></a>3.1哈希表的遍历</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">char</span> <span class="title">firstUniqChar</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        HashMap&lt;Character,Boolean&gt; dic = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">char</span>[] string = s.toCharArray();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">char</span> c:string)&#123;</span><br><span class="line">            dic.put(c,!dic.containsKey(c));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">char</span> c:string)&#123;</span><br><span class="line">            <span class="keyword">if</span>(dic.get(c))</span><br><span class="line">                <span class="keyword">return</span> c;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">复杂度分析：</span></span><br><span class="line"><span class="comment">时间复杂度：O(n)</span></span><br><span class="line"><span class="comment">空间复杂度：O(1)</span></span><br><span class="line"><span class="comment">**/</span></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="3-2有序hash表的遍历"><a href="#3-2有序hash表的遍历" class="headerlink" title="3.2有序hash表的遍历"></a>3.2有序hash表的遍历</h4><p>哈希表是 去重 的，即哈希表中键值对数量 ≤ 字符串 s 的长度。因此，相比于方法一，方法二减少了第二轮遍历的循环次数。当字符串很长（重复字符很多）时，方法二则效率更高。</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">char</span> <span class="title">firstUniqChar</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        Map&lt;Character,Boolean&gt; dic = <span class="keyword">new</span> LinkedHashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">char</span>[] string = s.toCharArray();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">char</span> c:string)&#123;</span><br><span class="line">            dic.put(c,!dic.containsKey(c));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(Map.Entry&lt;Character,Boolean&gt; d : dic.entrySet())&#123;</span><br><span class="line">            <span class="keyword">if</span>(d.getValue())</span><br><span class="line">                <span class="keyword">return</span> d.getKey();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="3-3补充知识：Java中的Character类"><a href="#3-3补充知识：Java中的Character类" class="headerlink" title="3.3补充知识：Java中的Character类"></a>3.3补充知识：Java中的Character类</h4><p>Character 类用于对单个字符进行操作。</p>
+<p>Character 类在对象中包装一个基本类型 <strong>char</strong> 的值(类似于Integer与int的关系)</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">char</span> ch = <span class="string">&#x27;a&#x27;</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// Unicode 字符表示形式</span></span><br><span class="line"><span class="keyword">char</span> uniChar = <span class="string">&#x27;\u039A&#x27;</span>; </span><br><span class="line"> </span><br><span class="line"><span class="comment">// 字符数组</span></span><br><span class="line"><span class="keyword">char</span>[] charArray =&#123; <span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;c&#x27;</span>, <span class="string">&#x27;d&#x27;</span>, <span class="string">&#x27;e&#x27;</span> &#125;;</span><br></pre></td></tr></table></figure>
+<p>然而，在实际开发过程中，我们经常会遇到需要使用对象，而不是内置数据类型的情况。为了解决这个问题，Java语言为内置数据类型char提供了<strong>包装类Character类</strong>。</p>
+<p>Character类提供了一系列方法来操纵字符。你可以使用Character的构造方法创建一个Character类对象，例如：</p>
+<p>在某些情况下，Java编译器会自动创建一个Character对象。</p>
+<p>例如，将一个char类型的参数传递给需要一个Character类型参数的方法时，那么编译器会自动地将char类型参数转换为Character对象。 这种特征称为装箱，反过来称为拆箱。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 原始字符 &#x27;a&#x27; 装箱到 Character 对象 ch 中</span></span><br><span class="line">Character ch = <span class="string">&#x27;a&#x27;</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 原始字符 &#x27;x&#x27; 用 test 方法装箱</span></span><br><span class="line"><span class="comment">// 返回拆箱的值到 &#x27;c&#x27;</span></span><br><span class="line"><span class="keyword">char</span> c = test(<span class="string">&#x27;x&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+
+<p><img data-src="/2021/03/11/%E5%93%88%E5%B8%8C%E8%A1%A8easy%E7%AF%87%E6%80%BB%E7%BB%93/Users\xinghaodong\AppData\Roaming\Typora\typora-user-images\image-20210202160601128.png" alt="image-20210202160601128"></p>
+<p>###3.只出现一次的字符</p>
+<p>####3.1哈希表两次遍历</p>
+<p>使用哈希表存储每个数字和该数字出现的次数。遍历数组即可得到每个数字出现的次数，并更新哈希表，最后遍历哈希表，得到只出现一次的数字。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">singleNumber</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//使用Hash表的第一次遍历</span></span><br><span class="line">        HashMap&lt;Integer,Boolean&gt; dic = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            dic.put(i,!dic.containsKey(i));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            <span class="keyword">if</span>(dic.get(i))</span><br><span class="line">                <span class="keyword">return</span> i;   <span class="comment">//不能返回nums[i],这里的增强for循环中的i代表的是nums[]中的某一个元素</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;   <span class="comment">//当表示如不存在所求值时，，不能返回null,要返回-1.    </span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-2位运算"><a href="#3-2位运算" class="headerlink" title="3.2位运算"></a>3.2位运算</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">singleNumber</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> single = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> num : nums) &#123;</span><br><span class="line">            single ^= num;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> single;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="3-3集合运算"><a href="#3-3集合运算" class="headerlink" title="3.3集合运算"></a>3.3集合运算</h4><p>使用集合存储数组中出现的所有数字，并计算数组中的元素之和。由于集合保证元素无重复，因此计算集合中的所有元素之和的两倍，即为每个元素出现两次的情况下的元素之和。由于数组中只有一个元素出现一次，其余元素都出现两次，因此用集合中的元素之和的两倍减去数组中的元素之和，剩下的数就是数组中只出现一次的数字。</p>
+<h4 id="3-4集合放入与删除"><a href="#3-4集合放入与删除" class="headerlink" title="3.4集合放入与删除"></a>3.4集合放入与删除</h4><p>使用集合存储数字。遍历数组中的每个数字，如果集合中没有该数字，则将该数字加入集合，如果集合中已经有该数字，则将该数字从集合中删除，最后剩下的数字就是只出现一次的数字。</p>
+<h3 id="4-岛屿的周长"><a href="#4-岛屿的周长" class="headerlink" title="4.岛屿的周长"></a>4.岛屿的周长</h3><p>####方法一：迭代</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">islandPerimeter</span><span class="params">(<span class="keyword">int</span>[][] grid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> land=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> border=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> j = grid.length;</span><br><span class="line">        <span class="keyword">int</span> k = grid[<span class="number">0</span>].length;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;j;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> h=<span class="number">0</span>;h&lt;k;h++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(grid[i][h]==<span class="number">1</span>)&#123;</span><br><span class="line">                    land++;</span><br><span class="line">                    <span class="keyword">if</span>(i&lt;grid.length-<span class="number">1</span>&amp;&amp;grid[i+<span class="number">1</span>][h]==<span class="number">1</span>)&#123;</span><br><span class="line">                    border++;</span><br><span class="line">                    &#125;</span><br><span class="line">                     <span class="keyword">if</span>(h&lt;grid[<span class="number">0</span>].length-<span class="number">1</span>&amp;&amp;grid[i][h+<span class="number">1</span>]==<span class="number">1</span>)&#123;</span><br><span class="line">                    border++;</span><br><span class="line">                     &#125;</span><br><span class="line">                &#125;</span><br><span class="line">             &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">4</span>*land-<span class="number">2</span>*border;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">找规律，凡是两个陆地相接，必然在最后的周长计算里面损失两个边长值</span></span><br><span class="line"><span class="comment">**/</span></span><br></pre></td></tr></table></figure>
+<h4 id="方法二：DFS深度优先搜索"><a href="#方法二：DFS深度优先搜索" class="headerlink" title="方法二：DFS深度优先搜索"></a>方法二：DFS深度优先搜索</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">从土地到土地，之间不会产生周长，但从土地迈入海洋，之间会产生 1 个周长，从土地迈出矩阵边界，也会产生 1 个周长。</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">dfsfunction</span><span class="params">(<span class="keyword">int</span> i,<span class="keyword">int</span> j,<span class="keyword">int</span>[][]grid)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(i&lt;<span class="number">0</span>||i&gt;=grid.length||j&lt;<span class="number">0</span>||j&gt;=grid[<span class="number">0</span>].length)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;   <span class="comment">//当前正好要越界，周长值+1</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(grid[i][j]==<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;  <span class="comment">//说明从陆地来到了海上，周长值+1</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(grid[i][j]==<span class="number">2</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;   <span class="comment">//DFS需要记录状态，避免重复访问</span></span><br><span class="line">        &#125;</span><br><span class="line">        grid[i][j]=<span class="number">2</span>; <span class="comment">//到此，该节点已经访问完毕，状态变更</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">//从当前模块开始，向上下左右进行遍历，其实有递归的思想，最后的结果随着递归的出栈，子问题的解自上而下的返回，最终得出大问题的解</span></span><br><span class="line">        <span class="keyword">return</span> dfsfunction(i-<span class="number">1</span>,j,grid)+dfsfunction(i,j-<span class="number">1</span>,grid)+dfsfunction(i+<span class="number">1</span>,j,grid)+dfsfunction(i,j+<span class="number">1</span>,grid);       </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">islandPerimeter</span><span class="params">(<span class="keyword">int</span>[][] grid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> row = grid.length;</span><br><span class="line">        <span class="keyword">int</span> col = grid[<span class="number">0</span>].length;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;row;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;col;j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(grid[i][j]==<span class="number">1</span>)&#123;</span><br><span class="line">                       <span class="keyword">return</span> dfsfunction(i,j,grid); </span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="官方题解1-迭代—-利用算子"><a href="#官方题解1-迭代—-利用算子" class="headerlink" title="官方题解1:迭代—-利用算子"></a>官方题解1:迭代—-利用算子</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span>[] dx = &#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span>[] dy = &#123;<span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>, <span class="number">0</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">islandPerimeter</span><span class="params">(<span class="keyword">int</span>[][] grid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = grid.length, m = grid[<span class="number">0</span>].length;</span><br><span class="line">        <span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; m; ++j) &#123;</span><br><span class="line">                <span class="keyword">if</span> (grid[i][j] == <span class="number">1</span>) &#123;</span><br><span class="line">                    <span class="keyword">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">                    <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; <span class="number">4</span>; ++k) &#123;</span><br><span class="line">                        <span class="keyword">int</span> tx = i + dx[k];</span><br><span class="line">                        <span class="keyword">int</span> ty = j + dy[k];</span><br><span class="line">                        <span class="keyword">if</span> (tx &lt; <span class="number">0</span> || tx &gt;= n || ty &lt; <span class="number">0</span> || ty &gt;= m || grid[tx][ty] == <span class="number">0</span>) &#123;</span><br><span class="line">                            cnt += <span class="number">1</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    ans += cnt;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+<p>####官方题解2:DFS—-利用算子</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    constexpr <span class="keyword">static</span> <span class="keyword">int</span> dx[<span class="number">4</span>] = &#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>&#125;;</span><br><span class="line">    constexpr <span class="keyword">static</span> <span class="keyword">int</span> dy[<span class="number">4</span>] = &#123;<span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>, <span class="number">0</span>&#125;;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y, vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt; &amp;grid, <span class="keyword">int</span> n, <span class="keyword">int</span> m)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (x &lt; <span class="number">0</span> || x &gt;= n || y &lt; <span class="number">0</span> || y &gt;= m || grid[x][y] == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (grid[x][y] == <span class="number">2</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        grid[x][y] = <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; ++i) &#123;</span><br><span class="line">            <span class="keyword">int</span> tx = x + dx[i];</span><br><span class="line">            <span class="keyword">int</span> ty = y + dy[i];</span><br><span class="line">            res += dfs(tx, ty, grid, n, m);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">islandPerimeter</span><span class="params">(vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt; &amp;grid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = grid.size(), m = grid[<span class="number">0</span>].size();</span><br><span class="line">        <span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; m; ++j) &#123;</span><br><span class="line">                <span class="keyword">if</span> (grid[i][j] == <span class="number">1</span>) &#123;</span><br><span class="line">                    ans += dfs(i, j, grid, n, m);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+<p>这个题放在散列表题目下，个人觉得是因为可以使用散列表去记录方格的访问状态</p>
+<p>key用来放方格点，value用true或者false来代表方格是否被访问过。</p>
+<h3 id="5-岛屿的数量"><a href="#5-岛屿的数量" class="headerlink" title="5.岛屿的数量"></a>5.岛屿的数量</h3><p>###6.岛屿的最大面积</p>
+<h3 id="7-查找常用字符"><a href="#7-查找常用字符" class="headerlink" title="7.查找常用字符"></a>7.查找常用字符</h3><p>总体来说，还是hash表的思路，重点在于用一个数组创建索引，用另外一个数组更新值。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//遍历、计数、更新</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">用数组实现一个哈希表，以字符为数组下标索引：字符-&#x27;a&#x27;=索引---即：0-&#x27;a&#x27;,2-&#x27;b&#x27;,3-&#x27;c&#x27;,25-&#x27;z&#x27;.</span></span><br><span class="line"><span class="comment">用freq数组存储当前遍历字符串中各字符的数量,在遍历完成后，</span></span><br><span class="line"><span class="comment">以各字符数量的最小值更新minfreq数组，遍历完成后即可得到公共字符的数量集合hash，</span></span><br><span class="line"><span class="comment">将minfreq数组中的非0值还原成字符串加入到列表中，即可得到答案。</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">commonChars</span><span class="params">(String[] A)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] minfreq = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">26</span>];   <span class="comment">//建立minfreq[c]来存储各字符串中c出现的最小次数</span></span><br><span class="line">        Arrays.fill(minfreq,Integer.MAX_VALUE);<span class="comment">//将指定的int值分配给指定的int数组的每个元素，即此时minfreq中的每个元素值均为Integer.MAX_VALUE。</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(String word:A)&#123;</span><br><span class="line">            <span class="keyword">int</span>[] freq = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">26</span>];</span><br><span class="line">            <span class="keyword">int</span> length = word.length();</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;length;i++)&#123;</span><br><span class="line">                <span class="keyword">char</span> ch =word.charAt(i);</span><br><span class="line">                ++freq[ch-<span class="string">&#x27;a&#x27;</span>];             <span class="comment">//ch-&#x27;a&#x27;创建索引</span></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">26</span>;i++)&#123;</span><br><span class="line">                minfreq[i] = Math.min(minfreq[i],freq[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        List&lt;String&gt; ans = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">26</span>;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;minfreq[i];j++)&#123;</span><br><span class="line">                ans.add(String.valueOf((<span class="keyword">char</span>)(i+<span class="string">&#x27;a&#x27;</span>)));  <span class="comment">//i+&#x27;a&#x27;是在将还原minfreq中的字符还原成字符串</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="8-唯一元素的和"><a href="#8-唯一元素的和" class="headerlink" title="8.唯一元素的和"></a>8.唯一元素的和</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">sumOfUnique</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        HashMap&lt;Integer,Boolean&gt; dic = <span class="keyword">new</span> HashMap&lt;Integer,Boolean&gt;();</span><br><span class="line">        <span class="keyword">int</span> length = nums.length;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            dic.put(i,!dic.containsKey(i));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> sum=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            <span class="keyword">if</span>(dic.get(i))&#123;</span><br><span class="line">                sum+=i;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> sum;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//字符串调用length，调用的是方法，因而要加()；数组调用length，调用的是属性，不需要加()。</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>哈希表</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>双指针问题</title>
     <url>/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/</url>
     <content><![CDATA[<h2 id="环形列表I"><a href="#环形列表I" class="headerlink" title="环形列表I"></a>环形列表I</h2><h3 id="题目说明"><a href="#题目说明" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，判断链表中是否有环。</p>
@@ -2733,80 +2809,9 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>哈希表easy篇总结</title>
-    <url>/2021/03/11/%E5%93%88%E5%B8%8C%E8%A1%A8easy%E7%AF%87%E6%80%BB%E7%BB%93/</url>
-    <content><![CDATA[<p>##哈希表刷题总结</p>
-<h3 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h3><p>哈希表（Hash Table，也叫散列表），是根据键（Key）而直接访问在内存存储位置的数据结构。也就是说，它通过计算一个关于键值的函数，将所需查询的数据映射到表中一个位置来访问记录，这加快了查找速度。这个映射函数称做哈希函数，存放记录的数组称做哈希表。</p>
-<p>一个通俗的例子是，为了查找电话簿中某人的号码，可以创建一个按照人名首字母顺序排列的表（即建立人名 xx 到首字母 F(x)F(x) 的一个函数关系），在首字母为 WW 的表中查找 “王” 姓的电话号码，显然比直接查找就要快得多。这里使用人名作为关键字，“取首字母” 是这个例子中哈希函数的函数法则 F()F()，存放首字母的表对应哈希表。关键字和函数法则理论上可以任意确定。</p>
-<p>哈希表是使用 O(1)O(1) 时间进行数据的插入删除和查找，但是哈希表不保证表中数据的有序性，<del>这样在哈希表中查找最大数据或者最小数据的时间是 O(N)O(N) 实现。</del>哈希表不支持需要元素间任何排序信息的操作，例如findMin、findMax或者打印输出排序号的整张表。</p>
-<h3 id="设计哈希映射"><a href="#设计哈希映射" class="headerlink" title="设计哈希映射"></a>设计哈希映射</h3><p>哈希表是一个在不同语言中都有的通用数据结构。例如，Python 中的 dict 和 Java 中的 Hashmap。哈希表的特性是可以根据给出的 key 快速访问 value。</p>
-<p>设计哈希表有两个问题需要去解决： 1). 如何设计哈希方法？ 和 2).如何避免哈希碰撞？ 。</p>
-<p>1). 如何设计哈希方法？：哈希方法会将键值映射到某块存储空间，一个好的哈希方法应该将不同的键值 均匀 地分布在存储空间中。</p>
-<p>2). 如何避免哈希碰撞？：哈希方法要将大量的键值映射到一个有限的空间里,这样就有可能会将不同的键值映射到同一个存储空间，这种情况称为 ‘哈希碰撞’ 。哈希碰撞是不可避免的，但可以用策略来解决哈希碰撞。</p>
-<h3 id="1-有多少小于当前数字的数字"><a href="#1-有多少小于当前数字的数字" class="headerlink" title="1.有多少小于当前数字的数字"></a>1.有多少小于当前数字的数字</h3><p>####一、暴力求解法</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>[] smallerNumbersThanCurrent(<span class="keyword">int</span>[] nums) &#123;</span><br><span class="line">        <span class="comment">//第一种方法1：暴力求解法，逐一遍历除当前元素之外的所有元素</span></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">        复杂度分析：</span></span><br><span class="line"><span class="comment">        空间复杂度为O(n)，需要存储新的答案数组</span></span><br><span class="line"><span class="comment">        时间复杂度为O(n^2)</span></span><br><span class="line"><span class="comment">        **/</span></span><br><span class="line">        <span class="keyword">int</span> length = nums.length;</span><br><span class="line">        <span class="keyword">int</span> newtime[] = <span class="keyword">new</span> <span class="keyword">int</span>[length];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;length;i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> time = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> h=<span class="number">0</span>;h&lt;length;h++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(nums[i]&gt;nums[h])&#123;</span><br><span class="line">                    time++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            newtime[i] = time;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> newtime;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="二、计数排序"><a href="#二、计数排序" class="headerlink" title="二、计数排序"></a>二、计数排序</h4><h4 id="三、快速排序"><a href="#三、快速排序" class="headerlink" title="三、快速排序"></a>三、快速排序</h4><h4 id="四、排序与映射结合"><a href="#四、排序与映射结合" class="headerlink" title="四、排序与映射结合"></a>四、排序与映射结合</h4><h3 id="2-第一个只出现一次的字符"><a href="#2-第一个只出现一次的字符" class="headerlink" title="2.第一个只出现一次的字符"></a>2.第一个只出现一次的字符</h3><h4 id="3-1哈希表的遍历"><a href="#3-1哈希表的遍历" class="headerlink" title="3.1哈希表的遍历"></a>3.1哈希表的遍历</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">char</span> <span class="title">firstUniqChar</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        HashMap&lt;Character,Boolean&gt; dic = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">char</span>[] string = s.toCharArray();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">char</span> c:string)&#123;</span><br><span class="line">            dic.put(c,!dic.containsKey(c));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">char</span> c:string)&#123;</span><br><span class="line">            <span class="keyword">if</span>(dic.get(c))</span><br><span class="line">                <span class="keyword">return</span> c;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">复杂度分析：</span></span><br><span class="line"><span class="comment">时间复杂度：O(n)</span></span><br><span class="line"><span class="comment">空间复杂度：O(1)</span></span><br><span class="line"><span class="comment">**/</span></span><br></pre></td></tr></table></figure>
-
-
-<h4 id="3-2有序hash表的遍历"><a href="#3-2有序hash表的遍历" class="headerlink" title="3.2有序hash表的遍历"></a>3.2有序hash表的遍历</h4><p>哈希表是 去重 的，即哈希表中键值对数量 ≤ 字符串 s 的长度。因此，相比于方法一，方法二减少了第二轮遍历的循环次数。当字符串很长（重复字符很多）时，方法二则效率更高。</p>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">char</span> <span class="title">firstUniqChar</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        Map&lt;Character,Boolean&gt; dic = <span class="keyword">new</span> LinkedHashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">char</span>[] string = s.toCharArray();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">char</span> c:string)&#123;</span><br><span class="line">            dic.put(c,!dic.containsKey(c));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(Map.Entry&lt;Character,Boolean&gt; d : dic.entrySet())&#123;</span><br><span class="line">            <span class="keyword">if</span>(d.getValue())</span><br><span class="line">                <span class="keyword">return</span> d.getKey();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="3-3补充知识：Java中的Character类"><a href="#3-3补充知识：Java中的Character类" class="headerlink" title="3.3补充知识：Java中的Character类"></a>3.3补充知识：Java中的Character类</h4><p>Character 类用于对单个字符进行操作。</p>
-<p>Character 类在对象中包装一个基本类型 <strong>char</strong> 的值(类似于Integer与int的关系)</p>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">char</span> ch = <span class="string">&#x27;a&#x27;</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// Unicode 字符表示形式</span></span><br><span class="line"><span class="keyword">char</span> uniChar = <span class="string">&#x27;\u039A&#x27;</span>; </span><br><span class="line"> </span><br><span class="line"><span class="comment">// 字符数组</span></span><br><span class="line"><span class="keyword">char</span>[] charArray =&#123; <span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;c&#x27;</span>, <span class="string">&#x27;d&#x27;</span>, <span class="string">&#x27;e&#x27;</span> &#125;;</span><br></pre></td></tr></table></figure>
-<p>然而，在实际开发过程中，我们经常会遇到需要使用对象，而不是内置数据类型的情况。为了解决这个问题，Java语言为内置数据类型char提供了<strong>包装类Character类</strong>。</p>
-<p>Character类提供了一系列方法来操纵字符。你可以使用Character的构造方法创建一个Character类对象，例如：</p>
-<p>在某些情况下，Java编译器会自动创建一个Character对象。</p>
-<p>例如，将一个char类型的参数传递给需要一个Character类型参数的方法时，那么编译器会自动地将char类型参数转换为Character对象。 这种特征称为装箱，反过来称为拆箱。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 原始字符 &#x27;a&#x27; 装箱到 Character 对象 ch 中</span></span><br><span class="line">Character ch = <span class="string">&#x27;a&#x27;</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 原始字符 &#x27;x&#x27; 用 test 方法装箱</span></span><br><span class="line"><span class="comment">// 返回拆箱的值到 &#x27;c&#x27;</span></span><br><span class="line"><span class="keyword">char</span> c = test(<span class="string">&#x27;x&#x27;</span>);</span><br></pre></td></tr></table></figure>
-
-
-<p><img data-src="/2021/03/11/%E5%93%88%E5%B8%8C%E8%A1%A8easy%E7%AF%87%E6%80%BB%E7%BB%93/Users\xinghaodong\AppData\Roaming\Typora\typora-user-images\image-20210202160601128.png" alt="image-20210202160601128"></p>
-<p>###3.只出现一次的字符</p>
-<p>####3.1哈希表两次遍历</p>
-<p>使用哈希表存储每个数字和该数字出现的次数。遍历数组即可得到每个数字出现的次数，并更新哈希表，最后遍历哈希表，得到只出现一次的数字。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">singleNumber</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//使用Hash表的第一次遍历</span></span><br><span class="line">        HashMap&lt;Integer,Boolean&gt; dic = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            dic.put(i,!dic.containsKey(i));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            <span class="keyword">if</span>(dic.get(i))</span><br><span class="line">                <span class="keyword">return</span> i;   <span class="comment">//不能返回nums[i],这里的增强for循环中的i代表的是nums[]中的某一个元素</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;   <span class="comment">//当表示如不存在所求值时，，不能返回null,要返回-1.    </span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="3-2位运算"><a href="#3-2位运算" class="headerlink" title="3.2位运算"></a>3.2位运算</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">singleNumber</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> single = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> num : nums) &#123;</span><br><span class="line">            single ^= num;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> single;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="3-3集合运算"><a href="#3-3集合运算" class="headerlink" title="3.3集合运算"></a>3.3集合运算</h4><p>使用集合存储数组中出现的所有数字，并计算数组中的元素之和。由于集合保证元素无重复，因此计算集合中的所有元素之和的两倍，即为每个元素出现两次的情况下的元素之和。由于数组中只有一个元素出现一次，其余元素都出现两次，因此用集合中的元素之和的两倍减去数组中的元素之和，剩下的数就是数组中只出现一次的数字。</p>
-<h4 id="3-4集合放入与删除"><a href="#3-4集合放入与删除" class="headerlink" title="3.4集合放入与删除"></a>3.4集合放入与删除</h4><p>使用集合存储数字。遍历数组中的每个数字，如果集合中没有该数字，则将该数字加入集合，如果集合中已经有该数字，则将该数字从集合中删除，最后剩下的数字就是只出现一次的数字。</p>
-<h3 id="4-岛屿的周长"><a href="#4-岛屿的周长" class="headerlink" title="4.岛屿的周长"></a>4.岛屿的周长</h3><p>####方法一：迭代</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">islandPerimeter</span><span class="params">(<span class="keyword">int</span>[][] grid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> land=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> border=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> j = grid.length;</span><br><span class="line">        <span class="keyword">int</span> k = grid[<span class="number">0</span>].length;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;j;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> h=<span class="number">0</span>;h&lt;k;h++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(grid[i][h]==<span class="number">1</span>)&#123;</span><br><span class="line">                    land++;</span><br><span class="line">                    <span class="keyword">if</span>(i&lt;grid.length-<span class="number">1</span>&amp;&amp;grid[i+<span class="number">1</span>][h]==<span class="number">1</span>)&#123;</span><br><span class="line">                    border++;</span><br><span class="line">                    &#125;</span><br><span class="line">                     <span class="keyword">if</span>(h&lt;grid[<span class="number">0</span>].length-<span class="number">1</span>&amp;&amp;grid[i][h+<span class="number">1</span>]==<span class="number">1</span>)&#123;</span><br><span class="line">                    border++;</span><br><span class="line">                     &#125;</span><br><span class="line">                &#125;</span><br><span class="line">             &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">4</span>*land-<span class="number">2</span>*border;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">找规律，凡是两个陆地相接，必然在最后的周长计算里面损失两个边长值</span></span><br><span class="line"><span class="comment">**/</span></span><br></pre></td></tr></table></figure>
-<h4 id="方法二：DFS深度优先搜索"><a href="#方法二：DFS深度优先搜索" class="headerlink" title="方法二：DFS深度优先搜索"></a>方法二：DFS深度优先搜索</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">从土地到土地，之间不会产生周长，但从土地迈入海洋，之间会产生 1 个周长，从土地迈出矩阵边界，也会产生 1 个周长。</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">dfsfunction</span><span class="params">(<span class="keyword">int</span> i,<span class="keyword">int</span> j,<span class="keyword">int</span>[][]grid)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(i&lt;<span class="number">0</span>||i&gt;=grid.length||j&lt;<span class="number">0</span>||j&gt;=grid[<span class="number">0</span>].length)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;   <span class="comment">//当前正好要越界，周长值+1</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(grid[i][j]==<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;  <span class="comment">//说明从陆地来到了海上，周长值+1</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(grid[i][j]==<span class="number">2</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;   <span class="comment">//DFS需要记录状态，避免重复访问</span></span><br><span class="line">        &#125;</span><br><span class="line">        grid[i][j]=<span class="number">2</span>; <span class="comment">//到此，该节点已经访问完毕，状态变更</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">//从当前模块开始，向上下左右进行遍历，其实有递归的思想，最后的结果随着递归的出栈，子问题的解自上而下的返回，最终得出大问题的解</span></span><br><span class="line">        <span class="keyword">return</span> dfsfunction(i-<span class="number">1</span>,j,grid)+dfsfunction(i,j-<span class="number">1</span>,grid)+dfsfunction(i+<span class="number">1</span>,j,grid)+dfsfunction(i,j+<span class="number">1</span>,grid);       </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">islandPerimeter</span><span class="params">(<span class="keyword">int</span>[][] grid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> row = grid.length;</span><br><span class="line">        <span class="keyword">int</span> col = grid[<span class="number">0</span>].length;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;row;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;col;j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(grid[i][j]==<span class="number">1</span>)&#123;</span><br><span class="line">                       <span class="keyword">return</span> dfsfunction(i,j,grid); </span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="官方题解1-迭代—-利用算子"><a href="#官方题解1-迭代—-利用算子" class="headerlink" title="官方题解1:迭代—-利用算子"></a>官方题解1:迭代—-利用算子</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span>[] dx = &#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span>[] dy = &#123;<span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>, <span class="number">0</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">islandPerimeter</span><span class="params">(<span class="keyword">int</span>[][] grid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = grid.length, m = grid[<span class="number">0</span>].length;</span><br><span class="line">        <span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; m; ++j) &#123;</span><br><span class="line">                <span class="keyword">if</span> (grid[i][j] == <span class="number">1</span>) &#123;</span><br><span class="line">                    <span class="keyword">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">                    <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; <span class="number">4</span>; ++k) &#123;</span><br><span class="line">                        <span class="keyword">int</span> tx = i + dx[k];</span><br><span class="line">                        <span class="keyword">int</span> ty = j + dy[k];</span><br><span class="line">                        <span class="keyword">if</span> (tx &lt; <span class="number">0</span> || tx &gt;= n || ty &lt; <span class="number">0</span> || ty &gt;= m || grid[tx][ty] == <span class="number">0</span>) &#123;</span><br><span class="line">                            cnt += <span class="number">1</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    ans += cnt;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
-<p>####官方题解2:DFS—-利用算子</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    constexpr <span class="keyword">static</span> <span class="keyword">int</span> dx[<span class="number">4</span>] = &#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>&#125;;</span><br><span class="line">    constexpr <span class="keyword">static</span> <span class="keyword">int</span> dy[<span class="number">4</span>] = &#123;<span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>, <span class="number">0</span>&#125;;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y, vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt; &amp;grid, <span class="keyword">int</span> n, <span class="keyword">int</span> m)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (x &lt; <span class="number">0</span> || x &gt;= n || y &lt; <span class="number">0</span> || y &gt;= m || grid[x][y] == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (grid[x][y] == <span class="number">2</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        grid[x][y] = <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; ++i) &#123;</span><br><span class="line">            <span class="keyword">int</span> tx = x + dx[i];</span><br><span class="line">            <span class="keyword">int</span> ty = y + dy[i];</span><br><span class="line">            res += dfs(tx, ty, grid, n, m);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">islandPerimeter</span><span class="params">(vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt; &amp;grid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = grid.size(), m = grid[<span class="number">0</span>].size();</span><br><span class="line">        <span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; m; ++j) &#123;</span><br><span class="line">                <span class="keyword">if</span> (grid[i][j] == <span class="number">1</span>) &#123;</span><br><span class="line">                    ans += dfs(i, j, grid, n, m);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
-<p>这个题放在散列表题目下，个人觉得是因为可以使用散列表去记录方格的访问状态</p>
-<p>key用来放方格点，value用true或者false来代表方格是否被访问过。</p>
-<h3 id="5-岛屿的数量"><a href="#5-岛屿的数量" class="headerlink" title="5.岛屿的数量"></a>5.岛屿的数量</h3><p>###6.岛屿的最大面积</p>
-<h3 id="7-查找常用字符"><a href="#7-查找常用字符" class="headerlink" title="7.查找常用字符"></a>7.查找常用字符</h3><p>总体来说，还是hash表的思路，重点在于用一个数组创建索引，用另外一个数组更新值。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//遍历、计数、更新</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">用数组实现一个哈希表，以字符为数组下标索引：字符-&#x27;a&#x27;=索引---即：0-&#x27;a&#x27;,2-&#x27;b&#x27;,3-&#x27;c&#x27;,25-&#x27;z&#x27;.</span></span><br><span class="line"><span class="comment">用freq数组存储当前遍历字符串中各字符的数量,在遍历完成后，</span></span><br><span class="line"><span class="comment">以各字符数量的最小值更新minfreq数组，遍历完成后即可得到公共字符的数量集合hash，</span></span><br><span class="line"><span class="comment">将minfreq数组中的非0值还原成字符串加入到列表中，即可得到答案。</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">commonChars</span><span class="params">(String[] A)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] minfreq = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">26</span>];   <span class="comment">//建立minfreq[c]来存储各字符串中c出现的最小次数</span></span><br><span class="line">        Arrays.fill(minfreq,Integer.MAX_VALUE);<span class="comment">//将指定的int值分配给指定的int数组的每个元素，即此时minfreq中的每个元素值均为Integer.MAX_VALUE。</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(String word:A)&#123;</span><br><span class="line">            <span class="keyword">int</span>[] freq = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">26</span>];</span><br><span class="line">            <span class="keyword">int</span> length = word.length();</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;length;i++)&#123;</span><br><span class="line">                <span class="keyword">char</span> ch =word.charAt(i);</span><br><span class="line">                ++freq[ch-<span class="string">&#x27;a&#x27;</span>];             <span class="comment">//ch-&#x27;a&#x27;创建索引</span></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">26</span>;i++)&#123;</span><br><span class="line">                minfreq[i] = Math.min(minfreq[i],freq[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        List&lt;String&gt; ans = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">26</span>;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;minfreq[i];j++)&#123;</span><br><span class="line">                ans.add(String.valueOf((<span class="keyword">char</span>)(i+<span class="string">&#x27;a&#x27;</span>)));  <span class="comment">//i+&#x27;a&#x27;是在将还原minfreq中的字符还原成字符串</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="8-唯一元素的和"><a href="#8-唯一元素的和" class="headerlink" title="8.唯一元素的和"></a>8.唯一元素的和</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">sumOfUnique</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        HashMap&lt;Integer,Boolean&gt; dic = <span class="keyword">new</span> HashMap&lt;Integer,Boolean&gt;();</span><br><span class="line">        <span class="keyword">int</span> length = nums.length;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            dic.put(i,!dic.containsKey(i));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> sum=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            <span class="keyword">if</span>(dic.get(i))&#123;</span><br><span class="line">                sum+=i;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> sum;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//字符串调用length，调用的是方法，因而要加()；数组调用length，调用的是属性，不需要加()。</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>数据结构</category>
-      </categories>
-      <tags>
-        <tag>哈希表</tag>
-      </tags>
+    <title>垃圾收集器与内存分配策略</title>
+    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>在Linux环境安装redis</title>
@@ -2892,11 +2897,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>环境部署</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>垃圾收集器与内存分配策略</title>
-    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>基于XML的DI</title>
@@ -3429,92 +3429,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>系统调用</title>
-    <url>/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/</url>
-    <content><![CDATA[<h2 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h2><h3 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h3><p>系统调用是内核与用户进程进行交互的一组接口，这些接口让应用程序受限制的访问硬件设备，提供了创建新进程并与已有进程进行交互通信的机制，也提供了申请操作系统其他资源的能力。</p>
-<p>系统调用在Linux系统中的地位如下图所示：</p>
-<img data-src="/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/OIP1.jpg" class>
-
-<h3 id="2-与内核通信"><a href="#2-与内核通信" class="headerlink" title="2.与内核通信"></a>2.与内核通信</h3><p>系统调用在用户空间进程和硬件设备之间添加了一个中间层。这样的中间层有如下作用：</p>
-<blockquote>
-<p>1.为用户空间提供了一种硬件的抽象接口。</p>
-</blockquote>
-<blockquote>
-<p>2.系统调用确保了系统的稳定与安全。内核可以作为硬件设备与用户空间之间的中间人，基于权限、用户类型和一些其他的规则对需要进行的访问做出裁决。</p>
-</blockquote>
-<blockquote>
-<p>3.避免用户空间的应用程序对硬件资源随意访问而内核一无所知，这样既无法实现多任务和虚拟内存，也不能确保良好的稳定性和安全性。</p>
-</blockquote>
-<p><strong>Linux中：系统调用是用户空间访问内核的唯一手段—-除了异常和陷入外，它们是内核唯一的合法入口</strong></p>
-<h3 id="3-API、POSIX、C库"><a href="#3-API、POSIX、C库" class="headerlink" title="3.API、POSIX、C库"></a>3.API、POSIX、C库</h3><p>应用程序通过在用户空间实现的应用编程接口（API）而不是直接通过系统调用。</p>
-<blockquote>
-<p>1.API实际上并不需要与内核提供的系统调用一一对应，程序员只跟API打交道。</p>
-<p>2.内核只跟系统调用打交道，库函数以及应用程序如何使用系统调用不是内核所关心的。</p>
-<p>3.API可以实现成一个系统调用，也可以实现多个系统调用，甚至也可以不实现系统调用。</p>
-</blockquote>
-<p>在UNIX中，最流行的应用编程接口是基于POSIX标准的。</p>
-<p>Linux系统调用作为C库的一部分提供。C库实现了Unix系统的主要API，包括标准C库函数和系统调用接口，此外，C库提供了POSIX的绝大部分API。</p>
-<h3 id="4-系统调用-syscall"><a href="#4-系统调用-syscall" class="headerlink" title="4.系统调用(syscall)"></a>4.系统调用(syscall)</h3><p><strong>通过在C库中定义的函数调用来执行</strong></p>
-<p>系统调用在出现错误的时候C库会将错误码写入errno全局变量。通过调用perror()库函数，可以把该变量翻译成用户可以理解的错误字符串。</p>
-<p>为了保证32为操作系统和64位操作系统的兼容，系统调用在用户空间和内核空间有着不同的返回值类型。用户空间为int，内核空间为long。系统调用在内核中前面会加上sys_。例如：返回当前进程PID的系统调用get_pid（）在内核中被定义为sys_getpid()。</p>
-<h4 id="4-1系统调用号"><a href="#4-1系统调用号" class="headerlink" title="4.1系统调用号"></a>4.1系统调用号</h4><p>在Linux中，每个系统调用都会被赋予一个系统调用号（独一无二的）。进程在执行系统调用时，不需要提及系统调用的名称，只需要使用系统调用号即可。</p>
-<p><strong>系统调用号相当重要，一旦分配好就不能再更改，因为会导致之前编译好的应用程序崩溃。</strong>即使这个系统调用被删除，它所占用的系统调用号也不允许被回收利用。</p>
-<p>内核记录了系统调用表中的所有已经注册过的系统调用的列表，存储在sys_call_table中，这个表为每一个有效的</p>
-<p>系统调用指定了唯一的系统调用号。</p>
-<h4 id="4-2系统调用的性能"><a href="#4-2系统调用的性能" class="headerlink" title="4.2系统调用的性能"></a>4.2系统调用的性能</h4><p>Linux系统调用比其他许多的操作系统执行要快。原因如下：</p>
-<blockquote>
-<p>1.Linux很短的上下文切换时间，进出内核都被优化的极为高效。</p>
-<p>2.系统调用处理程序和每个系统调用本身非常简洁。</p>
-</blockquote>
-<h3 id="5-系统调用处理程序"><a href="#5-系统调用处理程序" class="headerlink" title="5.系统调用处理程序"></a>5.系统调用处理程序</h3><p>应用程序通过<strong>软中断</strong>的方式来告诉内核自己期望执行一个系统调用，希望系统当前可以从用户态切换到内核态，这样内核就可以代表应用程序在内核空间中执行系统调用。</p>
-<p><strong>软中断</strong>：通过引起一个异常来促使系统切换到内核态前去执行异常处理程序。此时的异常处理程序其实就是<strong>系统调用处理程序</strong>。</p>
-<p>在X86系统中预定义的软中断是中断号128，通过int $0x80来触发中断。这条指令会触发一个异常导致系统切换到内核态并执行128号异常处理程序（系统调用处理程序）。</p>
-<h4 id="5-1指定恰当的系统调用"><a href="#5-1指定恰当的系统调用" class="headerlink" title="5.1指定恰当的系统调用"></a>5.1指定恰当的系统调用</h4><p>在陷入内核空间时，要将系统调用号传给内核空间。X86系统，系统调用号是通过eax寄存器传递给内核的。system_call()函数通过将给定的系统调用号与NR_syscalls做比较来检查其有效性。大于或者等于NR_syscalls，函数就返回-ENOSYS,否则，执行相应的系统调用。</p>
-<p>系统调用表中的表项是以64位类型存放的，所以内核需要将给定的系统调用号乘4，然后用所得结果在表中查询位置。</p>
-<h4 id="5-2参数传递"><a href="#5-2参数传递" class="headerlink" title="5.2参数传递"></a>5.2参数传递</h4><p>部分系统调用除了系统调用号之外，还需要传入一些外部参数，在发生陷入的时候，一并传给内核，同样是放在寄存器中。<strong>给用户空间的返回值同样是通过寄存器来传递的</strong></p>
-<h3 id="6-系统调用的实现"><a href="#6-系统调用的实现" class="headerlink" title="6.系统调用的实现"></a>6.系统调用的实现</h3><h4 id="6-1实现系统调用"><a href="#6-1实现系统调用" class="headerlink" title="6.1实现系统调用"></a>6.1实现系统调用</h4><p>要求：</p>
-<ul>
-<li>Linux中不提倡采用多用途的系统调用（一个系统调用通过传递不同的参数值来完成选择的工作）</li>
-<li>系统调用的接口应该力求简洁，参数尽量少。提供标志参数以确保向前兼容。</li>
-<li>系统调用的设计越通用越好。</li>
-</ul>
-<h4 id="6-2参数验证"><a href="#6-2参数验证" class="headerlink" title="6.2参数验证"></a>6.2参数验证</h4><p>系统调用必须检查参数是否合法有效。系统调用在内核空间中执行，任由用户将不合法的输入传递给内核，系统大的安全和稳定性将面临考验。进程不能让内核访问那些他没有权限访问的数据。</p>
-<ul>
-<li>与文件IO有关的系统调用需要检查文件描述符是否有效，与进程有关的函数必须检查提供的PID是否有效。</li>
-<li>检查用户提供的指针是否有效<ul>
-<li>指针指向的内存区域只能属于用户空间，进程不能告诉内核去读内核空间中的数据。</li>
-<li>指针指向的内存区域在自己的进程中，不能让内核去读其他进程中的数据。</li>
-<li>进程不能越过内存访问限制（可读、可写、可执行）</li>
-</ul>
-</li>
-<li>检查是否有合法权限</li>
-</ul>
-<p>内核提供了两个方法来完成必须的检查和内核空间与用户空间之间的数据来回拷贝</p>
-<ul>
-<li>写入：copy_to_user()</li>
-<li>读取：copy_from_user()</li>
-</ul>
-<p>这两个方法可能会引起阻塞。当包含用户数据的页被换出到硬盘上而不是在物理内存上的时候，进程会休眠，直到缺页处理程序将该页从硬盘从新换回物理内存。</p>
-<h3 id="7-系统调用上下文"><a href="#7-系统调用上下文" class="headerlink" title="7.系统调用上下文"></a>7.系统调用上下文</h3><p>在进程调用系统调用时，会有进程上下文。既可以被抢占也可以休眠。</p>
-<p>可以休眠说明系统调用可以利用内核提供的绝大部分功能。可以被抢占说明该系统调用时可重入的（新的进程同样可以使用相同的系统调用）。</p>
-<p>系统调用返回时，控制权仍然在system_call()中，它最终会负责切换到内核工作空间，并让用户进程继续执行下去。</p>
-<h4 id="7-1绑定一个系统调用的最后步骤"><a href="#7-1绑定一个系统调用的最后步骤" class="headerlink" title="7.1绑定一个系统调用的最后步骤"></a>7.1绑定一个系统调用的最后步骤</h4><blockquote>
-<p>1.在系统调用表中的最后加入一个表项。从0开始算起，系统调用在表中的位置就是他的系统调用号。</p>
-</blockquote>
-<blockquote>
-<p>2.系统调用必须被编译进内核映像（不能被编译成模块）</p>
-</blockquote>
-<h4 id="7-2从用户空间访问系统调用"><a href="#7-2从用户空间访问系统调用" class="headerlink" title="7.2从用户空间访问系统调用"></a>7.2从用户空间访问系统调用</h4><p>系统调用靠的时C库的支持，用户程序通过包含标准头文件并和C库链接，就可以使用系统调用。</p>
-<p><strong>Linux新系统调用增添频率很低，说明Linux系统是一个相对较为稳定并且功能已经较为完善的操作系统</strong></p>
-]]></content>
-      <categories>
-        <category>Linux系统内核相关</category>
-      </categories>
-      <tags>
-        <tag>Linux系统内核设计</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>红队常用行话总结一</title>
     <url>/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/</url>
     <content><![CDATA[<h2 id="漏洞利用术语解读"><a href="#漏洞利用术语解读" class="headerlink" title="漏洞利用术语解读"></a>漏洞利用术语解读</h2><blockquote>
@@ -3641,6 +3555,92 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </categories>
       <tags>
         <tag>红队攻防</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>系统调用</title>
+    <url>/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/</url>
+    <content><![CDATA[<h2 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h2><h3 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h3><p>系统调用是内核与用户进程进行交互的一组接口，这些接口让应用程序受限制的访问硬件设备，提供了创建新进程并与已有进程进行交互通信的机制，也提供了申请操作系统其他资源的能力。</p>
+<p>系统调用在Linux系统中的地位如下图所示：</p>
+<img data-src="/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/OIP1.jpg" class>
+
+<h3 id="2-与内核通信"><a href="#2-与内核通信" class="headerlink" title="2.与内核通信"></a>2.与内核通信</h3><p>系统调用在用户空间进程和硬件设备之间添加了一个中间层。这样的中间层有如下作用：</p>
+<blockquote>
+<p>1.为用户空间提供了一种硬件的抽象接口。</p>
+</blockquote>
+<blockquote>
+<p>2.系统调用确保了系统的稳定与安全。内核可以作为硬件设备与用户空间之间的中间人，基于权限、用户类型和一些其他的规则对需要进行的访问做出裁决。</p>
+</blockquote>
+<blockquote>
+<p>3.避免用户空间的应用程序对硬件资源随意访问而内核一无所知，这样既无法实现多任务和虚拟内存，也不能确保良好的稳定性和安全性。</p>
+</blockquote>
+<p><strong>Linux中：系统调用是用户空间访问内核的唯一手段—-除了异常和陷入外，它们是内核唯一的合法入口</strong></p>
+<h3 id="3-API、POSIX、C库"><a href="#3-API、POSIX、C库" class="headerlink" title="3.API、POSIX、C库"></a>3.API、POSIX、C库</h3><p>应用程序通过在用户空间实现的应用编程接口（API）而不是直接通过系统调用。</p>
+<blockquote>
+<p>1.API实际上并不需要与内核提供的系统调用一一对应，程序员只跟API打交道。</p>
+<p>2.内核只跟系统调用打交道，库函数以及应用程序如何使用系统调用不是内核所关心的。</p>
+<p>3.API可以实现成一个系统调用，也可以实现多个系统调用，甚至也可以不实现系统调用。</p>
+</blockquote>
+<p>在UNIX中，最流行的应用编程接口是基于POSIX标准的。</p>
+<p>Linux系统调用作为C库的一部分提供。C库实现了Unix系统的主要API，包括标准C库函数和系统调用接口，此外，C库提供了POSIX的绝大部分API。</p>
+<h3 id="4-系统调用-syscall"><a href="#4-系统调用-syscall" class="headerlink" title="4.系统调用(syscall)"></a>4.系统调用(syscall)</h3><p><strong>通过在C库中定义的函数调用来执行</strong></p>
+<p>系统调用在出现错误的时候C库会将错误码写入errno全局变量。通过调用perror()库函数，可以把该变量翻译成用户可以理解的错误字符串。</p>
+<p>为了保证32为操作系统和64位操作系统的兼容，系统调用在用户空间和内核空间有着不同的返回值类型。用户空间为int，内核空间为long。系统调用在内核中前面会加上sys_。例如：返回当前进程PID的系统调用get_pid（）在内核中被定义为sys_getpid()。</p>
+<h4 id="4-1系统调用号"><a href="#4-1系统调用号" class="headerlink" title="4.1系统调用号"></a>4.1系统调用号</h4><p>在Linux中，每个系统调用都会被赋予一个系统调用号（独一无二的）。进程在执行系统调用时，不需要提及系统调用的名称，只需要使用系统调用号即可。</p>
+<p><strong>系统调用号相当重要，一旦分配好就不能再更改，因为会导致之前编译好的应用程序崩溃。</strong>即使这个系统调用被删除，它所占用的系统调用号也不允许被回收利用。</p>
+<p>内核记录了系统调用表中的所有已经注册过的系统调用的列表，存储在sys_call_table中，这个表为每一个有效的</p>
+<p>系统调用指定了唯一的系统调用号。</p>
+<h4 id="4-2系统调用的性能"><a href="#4-2系统调用的性能" class="headerlink" title="4.2系统调用的性能"></a>4.2系统调用的性能</h4><p>Linux系统调用比其他许多的操作系统执行要快。原因如下：</p>
+<blockquote>
+<p>1.Linux很短的上下文切换时间，进出内核都被优化的极为高效。</p>
+<p>2.系统调用处理程序和每个系统调用本身非常简洁。</p>
+</blockquote>
+<h3 id="5-系统调用处理程序"><a href="#5-系统调用处理程序" class="headerlink" title="5.系统调用处理程序"></a>5.系统调用处理程序</h3><p>应用程序通过<strong>软中断</strong>的方式来告诉内核自己期望执行一个系统调用，希望系统当前可以从用户态切换到内核态，这样内核就可以代表应用程序在内核空间中执行系统调用。</p>
+<p><strong>软中断</strong>：通过引起一个异常来促使系统切换到内核态前去执行异常处理程序。此时的异常处理程序其实就是<strong>系统调用处理程序</strong>。</p>
+<p>在X86系统中预定义的软中断是中断号128，通过int $0x80来触发中断。这条指令会触发一个异常导致系统切换到内核态并执行128号异常处理程序（系统调用处理程序）。</p>
+<h4 id="5-1指定恰当的系统调用"><a href="#5-1指定恰当的系统调用" class="headerlink" title="5.1指定恰当的系统调用"></a>5.1指定恰当的系统调用</h4><p>在陷入内核空间时，要将系统调用号传给内核空间。X86系统，系统调用号是通过eax寄存器传递给内核的。system_call()函数通过将给定的系统调用号与NR_syscalls做比较来检查其有效性。大于或者等于NR_syscalls，函数就返回-ENOSYS,否则，执行相应的系统调用。</p>
+<p>系统调用表中的表项是以64位类型存放的，所以内核需要将给定的系统调用号乘4，然后用所得结果在表中查询位置。</p>
+<h4 id="5-2参数传递"><a href="#5-2参数传递" class="headerlink" title="5.2参数传递"></a>5.2参数传递</h4><p>部分系统调用除了系统调用号之外，还需要传入一些外部参数，在发生陷入的时候，一并传给内核，同样是放在寄存器中。<strong>给用户空间的返回值同样是通过寄存器来传递的</strong></p>
+<h3 id="6-系统调用的实现"><a href="#6-系统调用的实现" class="headerlink" title="6.系统调用的实现"></a>6.系统调用的实现</h3><h4 id="6-1实现系统调用"><a href="#6-1实现系统调用" class="headerlink" title="6.1实现系统调用"></a>6.1实现系统调用</h4><p>要求：</p>
+<ul>
+<li>Linux中不提倡采用多用途的系统调用（一个系统调用通过传递不同的参数值来完成选择的工作）</li>
+<li>系统调用的接口应该力求简洁，参数尽量少。提供标志参数以确保向前兼容。</li>
+<li>系统调用的设计越通用越好。</li>
+</ul>
+<h4 id="6-2参数验证"><a href="#6-2参数验证" class="headerlink" title="6.2参数验证"></a>6.2参数验证</h4><p>系统调用必须检查参数是否合法有效。系统调用在内核空间中执行，任由用户将不合法的输入传递给内核，系统大的安全和稳定性将面临考验。进程不能让内核访问那些他没有权限访问的数据。</p>
+<ul>
+<li>与文件IO有关的系统调用需要检查文件描述符是否有效，与进程有关的函数必须检查提供的PID是否有效。</li>
+<li>检查用户提供的指针是否有效<ul>
+<li>指针指向的内存区域只能属于用户空间，进程不能告诉内核去读内核空间中的数据。</li>
+<li>指针指向的内存区域在自己的进程中，不能让内核去读其他进程中的数据。</li>
+<li>进程不能越过内存访问限制（可读、可写、可执行）</li>
+</ul>
+</li>
+<li>检查是否有合法权限</li>
+</ul>
+<p>内核提供了两个方法来完成必须的检查和内核空间与用户空间之间的数据来回拷贝</p>
+<ul>
+<li>写入：copy_to_user()</li>
+<li>读取：copy_from_user()</li>
+</ul>
+<p>这两个方法可能会引起阻塞。当包含用户数据的页被换出到硬盘上而不是在物理内存上的时候，进程会休眠，直到缺页处理程序将该页从硬盘从新换回物理内存。</p>
+<h3 id="7-系统调用上下文"><a href="#7-系统调用上下文" class="headerlink" title="7.系统调用上下文"></a>7.系统调用上下文</h3><p>在进程调用系统调用时，会有进程上下文。既可以被抢占也可以休眠。</p>
+<p>可以休眠说明系统调用可以利用内核提供的绝大部分功能。可以被抢占说明该系统调用时可重入的（新的进程同样可以使用相同的系统调用）。</p>
+<p>系统调用返回时，控制权仍然在system_call()中，它最终会负责切换到内核工作空间，并让用户进程继续执行下去。</p>
+<h4 id="7-1绑定一个系统调用的最后步骤"><a href="#7-1绑定一个系统调用的最后步骤" class="headerlink" title="7.1绑定一个系统调用的最后步骤"></a>7.1绑定一个系统调用的最后步骤</h4><blockquote>
+<p>1.在系统调用表中的最后加入一个表项。从0开始算起，系统调用在表中的位置就是他的系统调用号。</p>
+</blockquote>
+<blockquote>
+<p>2.系统调用必须被编译进内核映像（不能被编译成模块）</p>
+</blockquote>
+<h4 id="7-2从用户空间访问系统调用"><a href="#7-2从用户空间访问系统调用" class="headerlink" title="7.2从用户空间访问系统调用"></a>7.2从用户空间访问系统调用</h4><p>系统调用靠的时C库的支持，用户程序通过包含标准头文件并和C库链接，就可以使用系统调用。</p>
+<p><strong>Linux新系统调用增添频率很低，说明Linux系统是一个相对较为稳定并且功能已经较为完善的操作系统</strong></p>
+]]></content>
+      <categories>
+        <category>Linux系统内核相关</category>
+      </categories>
+      <tags>
+        <tag>Linux系统内核设计</tag>
       </tags>
   </entry>
   <entry>
@@ -4141,12 +4141,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title></title>
-    <url>/2021/03/02/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/JVM%E5%90%AC%E8%AF%BE%E7%AC%94%E8%AE%B0%E8%A1%A5%E5%85%85/</url>
-    <content><![CDATA[<p>java的指令是根据栈来设计的，不适用基于寄存器的，是因为基于寄存器与CPU耦合度太高，不太好实现跨平台运行</p>
-<img data-src="https://tse1-mm.cn.bing.net/th/id/OIP.f3N7J7-cCRt2cBZM2z-XlQHaGV?w=223&h=191&c=7&o=5&dpr=1.5&pid=1.7" alt=" JVM内存结构 的图像结果" style="zoom: 200%;">]]></content>
-  </entry>
-  <entry>
     <title>CDN</title>
     <url>/2021/03/14/CDN/</url>
     <content><![CDATA[<h2 id="什么是CDN"><a href="#什么是CDN" class="headerlink" title="什么是CDN"></a>什么是CDN</h2><p><code>CDN（内容分发网络）</code>全称是 <code>Content Delivery Network</code>，建立并覆盖在承载网之上、由分布在不同区域的边缘节点服务器群组成的分布式网络，替代传统以 <code>WEB Server</code> 为中心的数据传输模式。</p>
@@ -4295,6 +4289,12 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>负载均衡</tag>
       </tags>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/2021/03/02/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/JVM%E5%90%AC%E8%AF%BE%E7%AC%94%E8%AE%B0%E8%A1%A5%E5%85%85/</url>
+    <content><![CDATA[<p>java的指令是根据栈来设计的，不适用基于寄存器的，是因为基于寄存器与CPU耦合度太高，不太好实现跨平台运行</p>
+<img data-src="https://tse1-mm.cn.bing.net/th/id/OIP.f3N7J7-cCRt2cBZM2z-XlQHaGV?w=223&h=191&c=7&o=5&dpr=1.5&pid=1.7" alt=" JVM内存结构 的图像结果" style="zoom: 200%;">]]></content>
   </entry>
   <entry>
     <title>Leetcode树刷题总结</title>
