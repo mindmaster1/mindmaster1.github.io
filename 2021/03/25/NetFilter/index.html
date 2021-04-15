@@ -21,18 +21,24 @@
     var CONFIG = {"hostname":"www.mindmaster.top","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="The world favors the underdog,and I would be the bad guy">
+  <meta name="description" content="对Linux防火墙知识学习中盲点NetFilter和IPTable的总结">
 <meta property="og:type" content="article">
-<meta property="og:title" content="NetFilter">
+<meta property="og:title" content="NetFilter and IPTable">
 <meta property="og:url" content="https://www.mindmaster.top/2021/03/25/NetFilter/index.html">
 <meta property="og:site_name" content="一只小码农">
-<meta property="og:description" content="The world favors the underdog,and I would be the bad guy">
+<meta property="og:description" content="对Linux防火墙知识学习中盲点NetFilter和IPTable的总结">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/25/NetFilter/01.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/25/NetFilter/02.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/25/NetFilter/03.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/25/NetFilter/04.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/25/NetFilter/05.png">
 <meta property="article:published_time" content="2021-03-25T11:25:28.000Z">
-<meta property="article:modified_time" content="2021-03-25T03:25:28.900Z">
+<meta property="article:modified_time" content="2021-04-15T14:13:30.594Z">
 <meta property="article:author" content="邢浩东">
-<meta property="article:tag" content="个人博客">
+<meta property="article:tag" content="防火墙配置">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.mindmaster.top/2021/03/25/NetFilter/01.png">
 
 <link rel="canonical" href="https://www.mindmaster.top/2021/03/25/NetFilter/">
 
@@ -47,7 +53,7 @@
   };
 </script>
 
-  <title>NetFilter | 一只小码农</title>
+  <title>NetFilter and IPTable | 一只小码农</title>
   
 
 
@@ -128,7 +134,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">42</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">43</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -238,7 +244,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          NetFilter
+          NetFilter and IPTable
         </h1>
 
         <div class="post-meta">
@@ -247,9 +253,24 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-03-25 11:25:28 / 修改时间：03:25:28" itemprop="dateCreated datePublished" datetime="2021-03-25T11:25:28Z">2021-03-25</time>
+              <time title="创建时间：2021-03-25 11:25:28" itemprop="dateCreated datePublished" datetime="2021-03-25T11:25:28Z">2021-03-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-15 14:13:30" itemprop="dateModified" datetime="2021-04-15T14:13:30Z">2021-04-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E7%9B%B8%E5%85%B3/" itemprop="url" rel="index"><span itemprop="name">Linux系统内核相关</span></a>
+                </span>
             </span>
 
           
@@ -279,15 +300,16 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>0</span>
+              <span>3.6k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>3 分钟</span>
             </span>
+            <div class="post-description">对Linux防火墙知识学习中盲点NetFilter和IPTable的总结</div>
 
         </div>
       </header>
@@ -298,7 +320,80 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <p>netfilter 是 Linux 内置的一种防火墙机制，我们一般也称之为数据包过滤机制。iptables 则是一个命令行工具，用来配置 netfilter 防火墙。下图展示了一个带有防火墙的简单网络拓扑结构：</p>
+<img data-src="/2021/03/25/NetFilter/01.png" class> 
+
+<p>图中的 Linux 主机既充当了路由器的角色，同时又充当了防火墙的角色。本文我们将以该拓扑结构介绍 netfilter/iptables 防火墙中的基本概念和主要功能。<br>说明：本文的演示环境为 ubuntu 16.04。</p>
+<h1 id="netfilter-与-iptables-的关系"><a href="#netfilter-与-iptables-的关系" class="headerlink" title="netfilter 与 iptables 的关系"></a>netfilter 与 iptables 的关系</h1><p>netfilter 指整个项目，其官网叫 <a target="_blank" rel="noopener" href="https://netfilter.org/">netfilter.org</a>。在这个项目里面，netfilter 特指内核中的 netfilter 框架，iptables 指运行在用户态的配置工具。</p>
+<p>netfilter 在协议栈中添加了一些钩子，它允许内核模块通过这些钩子注册回调函数，这样经过钩子的所有数据包都会被注册在相应钩子上的函数所处理，包括修改数据包内容、给数据包打标记或者丢掉数据包等。netfilter 框架负责维护钩子上注册的处理函数或者模块，以及它们的优先级。netfilter 框架负责在需要的时候动态加载其它的内核模块，比如 ip_conntrack、nf_conntrack、NAT subsystem 等。</p>
+<p>iptables 是运行在用户态的一个程序，通过 netlink 和内核的 netfilter 框架打交道，并负责往钩子上配置回调函数。</p>
+<h1 id="netfilter-防火墙原理"><a href="#netfilter-防火墙原理" class="headerlink" title="netfilter 防火墙原理"></a>netfilter 防火墙原理</h1><p>简单说 netfilter 机制就是对进出主机的数据包进行过滤。 我们可以通过 iptables 设置一些规则(rules)。所有进出主机的数据包都会按照一定的顺序匹配这些规则，如果匹配到某条规则，就执行这条规则对应的行为，比如抛弃该数据包或接受该数据包。下图展示了 netfilter 依据 iptables 规则对数据包过滤的大致过程：</p>
+ <img data-src="/2021/03/25/NetFilter/02.png" class> 
+
+<p>对数据包进行过滤。检查通过则接受(ACCEPT)数据包进入主机获取资源，如果检查不通过，则予以丢弃(DROP)！如果所有的规则都没有匹配上，就通过默认的策略(Policy)决定数据包的去向。注意，上图中的规则是有顺序的！比如数据包与 rule1 指定的规则匹配，那么这个数据包就会执行 action1 指定的行为，而不会继续匹配后面的规则了。</p>
+<p>下面我们看一个例子。假设我们的 Linux 主机提供了 web 服务，所以需要放行访问 80 端口的数据包。<br>但是你发现来自 13.76.1.65 的数据包总是恶意的尝试入侵我们的 web 服务器，所以需要丢弃来自 13.76.1.65 数据包。<br>我们的 web 服务器并不提供 web 服务之外的其它服务，所以直接丢弃所有的非 web 请求的数据包。<br>总结后就是我们需要下面三条规则：</p>
+<ul>
+<li>rule1 丢弃来自 13.76.1.65 数据包</li>
+<li>rule2 接受访问 web 服务的数据包</li>
+<li>rule3 丢弃所有的数据包</li>
+</ul>
+<p>如果我们不小心把上面的规则顺序写错了，比如写成了下面的样子：</p>
+<ul>
+<li>rule1 接受访问 web 服务的数据包</li>
+<li>rule2 丢弃来自 13.76.1.65 数据包</li>
+<li>rule3 丢弃所有的数据包</li>
+</ul>
+<p>这时来自 13.76.1.65 的数据包是可以访问 web 服务的，因为来自 13.76.1.65 的数据包是符合第一条规则的，所以会被接受，此时就不会再考虑第二条规则了。</p>
+<h1 id="iptables-中的-table-与-chain"><a href="#iptables-中的-table-与-chain" class="headerlink" title="iptables 中的 table 与 chain"></a>iptables 中的 table 与 chain</h1><p>iptables 用表(table)来分类管理它的规则(rule)，这也是 iptables 名称的由来。根据 rule 的作用分成了好几个表，比如用来过滤数据包的 rule 就会放到 filter 表中，用于处理地址转换的 rule 就会放到 nat 表中，其中 rule 就是应用在 netfilter 钩子上的函数，用来修改数据包的内容或过滤数据包。下面我们简单的介绍下最常用的 filter 表和 nat 表。<br><strong>filter</strong><br>从名字就可以看出，filter 表里面的规则主要用来过滤数据，用来控制让哪些数据可以通过，哪些数据不能通过，它是最常用的表。<br><strong>nat</strong><br>里面的规则都是用来处理网络地址转换的，控制要不要进行地址转换，以及怎样修改源地址或目的地址，从而影响数据包的路由，达到连通的目的，这是路由器必备的功能。</p>
+<p>下图展示了 iptables 中常用的 tables 及其 rule chains：</p>
+ <img data-src="/2021/03/25/NetFilter/03.png" class> 
+
+<p>从上图可以看出，filter 和 nat 表中默认都存在着数条 rule chain。也就是说表中的规则(rule)又被编入了不同的链(chain)，由 chain 来决定什么时候触发 chain 上的这些规则。<br>iptables 里面有 5 个内置的 chain：</p>
+<ul>
+<li>PREROUTING：接收的数据包刚进来，还没有经过路由选择，即还不知道数据包是要发给本机还是其它机器。这时会触发该 chain 上的规则。</li>
+<li>INPUT：已经经过路由选择，并且该数据包的目的 IP 是本机，进入本地数据包处理流程。此时会触发该 chain 上的规则。</li>
+<li>FORWARD：已经经过路由选择，但该数据包的目的 IP 不是本机，而是其它机器，进入 forward 流程。此时会触发该 chain 上的规则。</li>
+<li>OUTPUT：本地程序要发出去的数据包刚到 IP 层，还没进行路由选择。此时会触发该 chain 上的规则。</li>
+<li>POSTROUTING：本地程序发出去的数据包，或者转发(forward)的数据包已经经过了路由选择，即将交由下层发送出去。此时会触发该 chain 上的规则。</li>
+</ul>
+<p>我们可以通过下图来理解这五条默认的规则链：</p>
+ <img data-src="/2021/03/25/NetFilter/04.png" class> 
+
+<p>从上图可知，不考虑特殊情况的话，一个数据包只会经过下面三个路径中的一个：<br>A，主机收到目的 IP 是本机的数据包<br>B，主机收到目的 IP 不是本机的数据包<br>C，本机发出去的数据包</p>
+<ul>
+<li>路径 A，数据包进入 Linux 主机访问其资源，在路由判断后确定是向 Linux 主机请求数据的数据包，此时主要是通过 filter 表的 INPUT 链来进行控制。</li>
+<li>路径 B，数据包经由 Linux 主机转发，没有使用主机资源，而是流向后端主机。在路由判断之前对数据包进行表头的修改后，发现数据包需要透过防火墙去后端，此时的数据包就会通过路径B。也就是说，该封包的目标并非我们的 Linux 主机。该场景下数据包主要经过的链是 filter 表的 FORWARD 以及 nat 表的 POSTROUTING 和 PREROUTING。</li>
+<li>路径 C，数据包由 Linux 主机向外发送。比如响应客户端的请求要求，或者是 Linux 主机主动发送出去的数据包，都会通过路径 C。它会先进行路由判断，在确定了输出的路径后，再通过 filter 表的 OUTPUT 链来传送。当然，最终还是会经过 nat 表的 POSTROUTING 链。</li>
+</ul>
+<p>由此我们可以总结出下面的规律。<br>filter 表主要跟进入 Linux 主机的数据包有关，其 chains 如下：</p>
+<ul>
+<li>INPUT：主要与想要进入 Linux 主机的数据包有关</li>
+<li>OUTPUT：主要与 Linux 主机所要发送出去的数据包有关</li>
+<li>FORWARD：与 Linux 主机没有关系，它可以对数据包进行转发</li>
+</ul>
+<p>nat(地址转换) 表主要在进行来源与目的之 IP 或 port 的转换，其 chains 如下：</p>
+<ul>
+<li>PREROUTING：在进行路由判断之前所要执行的规则(DNAT)</li>
+<li>POSTROUTING：在进行路由判断之后所要执行的规则(SNAT)</li>
+<li>OUTPUT：与发送出去的数据包有关</li>
+</ul>
+<h1 id="iptables-中的规则-rules"><a href="#iptables-中的规则-rules" class="headerlink" title="iptables 中的规则(rules)"></a>iptables 中的规则(rules)</h1><p>规则(rules)存放在特定表的特定 chain 上，每条 rule 包含下面两部分信息：</p>
+<p><strong>Matching</strong><br>Matching 就是如何匹配一个数据包，匹配条件很多，比如协议类型、源/目的IP、源/目的端口、in/out接口、包头里面的数据以及连接状态等，这些条件可以任意组合从而实现复杂情况下的匹配。</p>
+<p><strong>Targets</strong><br>Targets 就是找到匹配的数据包之后怎么办，常见的有下面几种：</p>
+<ul>
+<li>DROP：直接将数据包丢弃，不再进行后续的处理</li>
+<li>RETURN： 跳出当前 chain，该 chain 里后续的 rule 不再执行</li>
+<li>QUEUE： 将数据包放入用户空间的队列，供用户空间的程序处理</li>
+<li>ACCEPT： 同意数据包通过，继续执行后续的 rule</li>
+<li>跳转到其它用户自定义的 chain 继续执行</li>
+</ul>
+<p>比如下面的规则，只要是来自内网的(192.168.1.0/24)数据包都被接受：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -A INPUT -i eth0 -s 192.168.1.0&#x2F;24 -j ACCEPT</span><br></pre></td></tr></table></figure>
+<h1 id="用户自定义-chains"><a href="#用户自定义-chains" class="headerlink" title="用户自定义 chains"></a>用户自定义 chains</h1><p>除了 iptables 预定义的 5 个 chain 之外，用户还可以在表中定义自己的 chain，用户自定义的 chain 中的规则和预定义 chain 里的规则没有区别，不过由于自定义的 chain 没有和 netfilter 里面的钩子进行绑定，所以它不会自动触发，只能从其它 chain 的规则中跳转过来。比如 docker 就创建了一些自定义的 chain：</p>
+ <img data-src="/2021/03/25/NetFilter/05.png" class> 
+
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>netfilter/iptables 是当前 Linux 系统的主要防火墙机制，学习并掌握它可以为我们使用 Linux 系统打下坚实的基础。本文只是介绍了 netfilter/iptables 的概念和原理，在接下来的文章中，笔者将详细地介绍 iptables 命令的用法以及典型用例的设置方法。</p>
+
     </div>
 
     
@@ -335,7 +430,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://www.mindmaster.top/2021/03/25/NetFilter/" title="NetFilter">https://www.mindmaster.top/2021/03/25/NetFilter/</a>
+    <a href="https://www.mindmaster.top/2021/03/25/NetFilter/" title="NetFilter and IPTable">https://www.mindmaster.top/2021/03/25/NetFilter/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-%E9%82%A2%E6%B5%A9%E4%B8%9C/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-邢浩东</a> 许可协议。转载请注明出处！
@@ -345,6 +440,9 @@
 
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%98%B2%E7%81%AB%E5%A2%99%E9%85%8D%E7%BD%AE/" rel="tag"># 防火墙配置</a>
+          </div>
 
         
 
@@ -418,6 +516,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#netfilter-%E4%B8%8E-iptables-%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">1.</span> <span class="nav-text">netfilter 与 iptables 的关系</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#netfilter-%E9%98%B2%E7%81%AB%E5%A2%99%E5%8E%9F%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">netfilter 防火墙原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#iptables-%E4%B8%AD%E7%9A%84-table-%E4%B8%8E-chain"><span class="nav-number">3.</span> <span class="nav-text">iptables 中的 table 与 chain</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#iptables-%E4%B8%AD%E7%9A%84%E8%A7%84%E5%88%99-rules"><span class="nav-number">4.</span> <span class="nav-text">iptables 中的规则(rules)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E8%87%AA%E5%AE%9A%E4%B9%89-chains"><span class="nav-number">5.</span> <span class="nav-text">用户自定义 chains</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
 
       </div>
       <!--/noindex-->
@@ -447,7 +546,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">42</span>
+        <span class="site-state-item-count">43</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -552,13 +651,13 @@ setInterval(function(){
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">242k</span>
+    <span title="站点总字数">246k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">3:40</span>
+    <span title="站点阅读时长">3:43</span>
 </div>
 
 
