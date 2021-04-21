@@ -23,7 +23,7 @@
 
   <meta name="description" content="docker第一阶段学习的总结">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Docker学习第一阶段">
+<meta property="og:title" content="Docker基础命令与镜像">
 <meta property="og:url" content="https://www.mindmaster.top/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/index.html">
 <meta property="og:site_name" content="一只小码农">
 <meta property="og:description" content="docker第一阶段学习的总结">
@@ -70,8 +70,19 @@
 <meta property="og:image" content="https://www.mindmaster.top/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/临时markdown文件保存/docker_learning/Docker.assets/image-20200617210932306.png">
 <meta property="og:image" content="https://www.mindmaster.top/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/临时markdown文件保存/docker_learning/Docker.assets/image-20200617211021003.png">
 <meta property="og:image" content="https://www.mindmaster.top/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/临时markdown文件保存/docker_learning/Docker.assets/image-20200617211039508.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/40.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/41.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/42.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/43.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/44.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/45.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/46.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/47.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/48.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/49.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/50.png">
 <meta property="article:published_time" content="2021-04-15T19:29:38.000Z">
-<meta property="article:modified_time" content="2021-04-15T11:54:36.678Z">
+<meta property="article:modified_time" content="2021-04-21T08:29:43.461Z">
 <meta property="article:author" content="邢浩东">
 <meta property="article:tag" content="Docker">
 <meta name="twitter:card" content="summary">
@@ -90,7 +101,7 @@
   };
 </script>
 
-  <title>Docker学习第一阶段 | 一只小码农</title>
+  <title>Docker基础命令与镜像 | 一只小码农</title>
   
 
 
@@ -281,7 +292,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Docker学习第一阶段
+          Docker基础命令与镜像
         </h1>
 
         <div class="post-meta">
@@ -290,10 +301,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-04-15 19:29:38 / 修改时间：11:54:36" itemprop="dateCreated datePublished" datetime="2021-04-15T19:29:38Z">2021-04-15</time>
+              <time title="创建时间：2021-04-15 19:29:38" itemprop="dateCreated datePublished" datetime="2021-04-15T19:29:38Z">2021-04-15</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-21 08:29:43" itemprop="dateModified" datetime="2021-04-21T08:29:43Z">2021-04-21</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -331,14 +348,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>25k</span>
+              <span>26k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>23 分钟</span>
+              <span>24 分钟</span>
             </span>
             <div class="post-description">docker第一阶段学习的总结</div>
 
@@ -664,6 +681,82 @@
 <p><img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/临时markdown文件保存\docker_learning\Docker.assets\image-20200617210932306.png" alt="image-20200617210932306"></p>
 <p><img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/临时markdown文件保存\docker_learning\Docker.assets\image-20200617211021003.png" alt="image-20200617211021003"></p>
 <p><img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/临时markdown文件保存\docker_learning\Docker.assets\image-20200617211039508.png" alt="image-20200617211039508"></p>
+<h2 id="Docker镜像"><a href="#Docker镜像" class="headerlink" title="Docker镜像"></a>Docker镜像</h2><h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><h4 id="UnionFS-联合文件系统"><a href="#UnionFS-联合文件系统" class="headerlink" title="UnionFS 联合文件系统"></a>UnionFS 联合文件系统</h4><p>联合文件系统（<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/UnionFS">UnionFS</a>）是一种分层、轻量级并且高性能的文件系统，它支持对文件系统的修改作为一次提交来一层层的叠加，同时可以将不同目录挂载到同一个虚拟文件系统下(unite several directories into a single virtual filesystem)。</p>
+<p>联合文件系统是 Docker 镜像的基础。镜像可以通过分层来进行继承，基于基础镜像（没有父镜像），可以制作各种具体的应用镜像。</p>
+<p>另外，不同 Docker 容器就可以共享一些基础的文件系统层，同时再加上自己独有的改动层，大大提高了存储的效率。</p>
+<p>Docker 中使用的 AUFS（Advanced Multi-Layered Unification Filesystem）就是一种联合文件系统。 <code>AUFS</code> 支持为每一个成员目录（类似 Git 的分支）设定只读（readonly）、读写（readwrite）和写出（whiteout-able）权限, 同时 <code>AUFS</code> 里有一个类似分层的概念, 对只读权限的分支可以逻辑上进行增量地修改(不影响只读部分的)。</p>
+<p>Docker 目前支持的联合文件系统包括 <code>OverlayFS</code>, <code>AUFS</code>, <code>Btrfs</code>, <code>VFS</code>, <code>ZFS</code> 和 <code>Device Mapper</code>。</p>
+<p>各 Linux 发行版 Docker 推荐使用的存储驱动如下表。</p>
+<table>
+<thead>
+<tr>
+<th>Linux 发行版</th>
+<th>Docker 推荐使用的存储驱动</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Docker on Ubuntu</td>
+<td><code>overlay2</code> (16.04 +)</td>
+</tr>
+<tr>
+<td>Docker on Debian</td>
+<td><code>overlay2</code> (Debian Stretch), <code>aufs</code>, <code>devicemapper</code></td>
+</tr>
+<tr>
+<td>Docker on CentOS</td>
+<td><code>overlay2</code></td>
+</tr>
+<tr>
+<td>Docker on Fedora</td>
+<td><code>overlay2</code></td>
+</tr>
+</tbody></table>
+<p>在可能的情况下，<a target="_blank" rel="noopener" href="https://docs.docker.com/storage/storagedriver/select-storage-driver/">推荐</a> 使用 <code>overlay2</code> 存储驱动，<code>overlay2</code> 是目前 Docker 默认的存储驱动，以前则是 <code>aufs</code>。你可以通过配置来使用以上提到的其他类型的存储驱动。</p>
+ <img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/40.png" class>
+
+<p>bootfs：boot file system</p>
+<p>rootfs：root file system</p>
+ <img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/41.png" class>
+
+
+
+
+
+ <img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/42.png" class>
+
+ <img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/43.png" class>
+
+
+
+ <img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/44.png" class>
+
+<p>Docker镜像都是只读的，当容器启动时，一个新的可写层被加到镜像的顶部，这一层就是我们通常说的容器层，容器层之下的都叫镜像层</p>
+ <img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/45.png" class>
+
+<h3 id="commit提交镜像"><a href="#commit提交镜像" class="headerlink" title="commit提交镜像"></a>commit提交镜像</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker commit # 提交容器成为一个新的副本</span><br><span class="line">docker commit -m=&quot;提交的描述信息&quot; -a=&quot;作者&quot; 容器id 目标镜像名：[TAG]</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br><span class="line">docker run -it -p 8080:8080 tomcat</span><br></pre></td></tr></table></figure>
+ <img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/46.png" class>
+
+<p>这是一个前台程序</p>
+ <img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/47.png" class>
+
+<p>将webapps.dist里面所有的文件拷贝到webapps里面，其中-r必须有，表示目录递归拷贝</p>
+ <img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/48.png" class>
+
+
+
+ <img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/49.png" class>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker commit -a=&quot;paidaxing&quot; -m=&quot;add webapps app&quot; 当前容器的id tomcat02:1.0</span><br></pre></td></tr></table></figure>
+ <img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/50.png" class>
+
+<p>发现新的版本，比之前的大了一些，因为里面记录了我们的改动</p>
+<blockquote>
+<p>如果想保存当前容器的状态，可以通过commit提交，获得一个镜像</p>
+<p>好比我们以前学习VM的时候的快照</p>
+<p>到这里算是入门了</p>
+<p>接下来三个部分是docker的精髓</p>
+</blockquote>
 
     </div>
 
@@ -701,7 +794,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://www.mindmaster.top/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/" title="Docker学习第一阶段">https://www.mindmaster.top/2021/04/16/Docker学习第一阶段/</a>
+    <a href="https://www.mindmaster.top/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/" title="Docker基础命令与镜像">https://www.mindmaster.top/2021/04/16/Docker学习第一阶段/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-%E9%82%A2%E6%B5%A9%E4%B8%9C/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-邢浩东</a> 许可协议。转载请注明出处！
@@ -784,7 +877,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker"><span class="nav-number">1.</span> <span class="nav-text">Docker</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">1.1.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E6%9C%9F%E5%9F%BA%E7%A1%80"><span class="nav-number">1.2.</span> <span class="nav-text">前期基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker%E6%A6%82%E8%BF%B0"><span class="nav-number">1.3.</span> <span class="nav-text">Docker概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E5%87%BA%E7%8E%B0"><span class="nav-number">1.3.1.</span> <span class="nav-text">Docker为什么会出现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker%E7%9A%84%E5%8E%86%E5%8F%B2"><span class="nav-number">1.3.2.</span> <span class="nav-text">Docker的历史</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%B9%E5%99%A8vs%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="nav-number">1.3.3.</span> <span class="nav-text">容器vs虚拟机</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%8E%9F%E7%90%86%E7%A4%BA%E6%84%8F%E5%9B%BE"><span class="nav-number">1.3.3.1.</span> <span class="nav-text">虚拟机原理示意图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%B9%E5%99%A8%E5%8C%96%E6%8A%80%E6%9C%AF%E7%A4%BA%E6%84%8F%E5%9B%BE"><span class="nav-number">1.3.3.2.</span> <span class="nav-text">容器化技术示意图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8C%E8%80%85%E5%AF%B9%E6%AF%94"><span class="nav-number">1.3.3.3.</span> <span class="nav-text">二者对比</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker%E5%AE%89%E8%A3%85"><span class="nav-number">1.4.</span> <span class="nav-text">Docker安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%84%E6%88%90"><span class="nav-number">1.4.1.</span> <span class="nav-text">Docker的基本组成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="nav-number">1.4.2.</span> <span class="nav-text">环境准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85xshell"><span class="nav-number">1.4.3.</span> <span class="nav-text">安装xshell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Centos%E5%AE%89%E8%A3%85"><span class="nav-number">1.4.4.</span> <span class="nav-text">Centos安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BD%E6%97%A7%E7%9A%84%E7%89%88%E6%9C%AC"><span class="nav-number">1.4.5.</span> <span class="nav-text">卸载旧的版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%9F%BA%E6%9C%AC%E7%8E%AF%E5%A2%83"><span class="nav-number">1.4.6.</span> <span class="nav-text">安装基本环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E9%95%9C%E5%83%8F%E7%9A%84%E4%BB%93%E5%BA%93"><span class="nav-number">1.4.7.</span> <span class="nav-text">设置镜像的仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85docker%E5%BC%95%E6%93%8E"><span class="nav-number">1.4.8.</span> <span class="nav-text">安装docker引擎</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8Docker"><span class="nav-number">1.4.9.</span> <span class="nav-text">启动Docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BDDocker"><span class="nav-number">1.4.10.</span> <span class="nav-text">卸载Docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%BF%E9%87%8C%E4%BA%91%E9%95%9C%E5%83%8F%E5%8A%A0%E9%80%9F"><span class="nav-number">1.4.11.</span> <span class="nav-text">阿里云镜像加速</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86"><span class="nav-number">1.5.</span> <span class="nav-text">底层原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker%E5%91%BD%E4%BB%A4"><span class="nav-number">1.6.</span> <span class="nav-text">Docker命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%AE%E5%8A%A9%E5%91%BD%E4%BB%A4"><span class="nav-number">1.6.1.</span> <span class="nav-text">帮助命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%95%9C%E5%83%8F%E5%91%BD%E4%BB%A4"><span class="nav-number">1.6.2.</span> <span class="nav-text">镜像命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#docker-images"><span class="nav-number">1.6.2.1.</span> <span class="nav-text">docker images</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#docker-search"><span class="nav-number">1.6.2.2.</span> <span class="nav-text">docker search</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#docker-pull"><span class="nav-number">1.6.2.3.</span> <span class="nav-text">docker pull</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#docker-rmi"><span class="nav-number">1.6.2.4.</span> <span class="nav-text">docker rmi</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%B9%E5%99%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">1.6.3.</span> <span class="nav-text">容器命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B0%E5%BB%BA%E5%AE%B9%E5%99%A8%E5%B9%B6%E5%90%AF%E5%8A%A8"><span class="nav-number">1.6.3.1.</span> <span class="nav-text">新建容器并启动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9B%E5%85%A5%E9%80%80%E5%87%BA%E5%AE%B9%E5%99%A8"><span class="nav-number">1.6.3.2.</span> <span class="nav-text">进入退出容器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E8%BF%90%E8%A1%8C%E7%9A%84%E5%AE%B9%E5%99%A8"><span class="nav-number">1.6.3.3.</span> <span class="nav-text">查看运行的容器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%80%E5%87%BA%E5%AE%B9%E5%99%A8"><span class="nav-number">1.6.3.4.</span> <span class="nav-text">退出容器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E5%AE%B9%E5%99%A8"><span class="nav-number">1.6.3.5.</span> <span class="nav-text">删除容器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E5%92%8C%E5%81%9C%E6%AD%A2%E5%AE%B9%E5%99%A8%E7%9A%84%E6%93%8D%E4%BD%9C"><span class="nav-number">1.6.3.6.</span> <span class="nav-text">启动和停止容器的操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8E%E5%8F%B0%E5%90%AF%E5%8A%A8docker"><span class="nav-number">1.6.3.7.</span> <span class="nav-text">后台启动docker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%97%A5%E5%BF%97"><span class="nav-number">1.6.3.8.</span> <span class="nav-text">查看日志</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%AD%A3%E5%9C%A8%E8%BF%90%E8%A1%8C%E7%9A%84%E5%AE%B9%E5%99%A8%E4%BF%A1%E6%81%AF"><span class="nav-number">1.6.3.9.</span> <span class="nav-text">查看正在运行的容器信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9B%E5%85%A5%E5%BD%93%E5%89%8D%E6%AD%A3%E5%9C%A8%E8%BF%90%E8%A1%8C%E7%9A%84%E5%AE%B9%E5%99%A8"><span class="nav-number">1.6.3.10.</span> <span class="nav-text">进入当前正在运行的容器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%8E%E5%AE%B9%E5%99%A8%E5%86%85%E6%8B%B7%E8%B4%9D%E6%96%87%E4%BB%B6%E5%88%B0%E4%B8%BB%E6%9C%BA%E4%B8%8A"><span class="nav-number">1.6.3.11.</span> <span class="nav-text">从容器内拷贝文件到主机上</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E5%86%85%E5%AE%B9%E5%8D%A0%E7%94%A8"><span class="nav-number">1.6.3.12.</span> <span class="nav-text">查看内容占用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">1.6.3.13.</span> <span class="nav-text">小结</span></a></li></ol></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker"><span class="nav-number">1.</span> <span class="nav-text">Docker</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">1.1.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E6%9C%9F%E5%9F%BA%E7%A1%80"><span class="nav-number">1.2.</span> <span class="nav-text">前期基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker%E6%A6%82%E8%BF%B0"><span class="nav-number">1.3.</span> <span class="nav-text">Docker概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E5%87%BA%E7%8E%B0"><span class="nav-number">1.3.1.</span> <span class="nav-text">Docker为什么会出现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker%E7%9A%84%E5%8E%86%E5%8F%B2"><span class="nav-number">1.3.2.</span> <span class="nav-text">Docker的历史</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%B9%E5%99%A8vs%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="nav-number">1.3.3.</span> <span class="nav-text">容器vs虚拟机</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%8E%9F%E7%90%86%E7%A4%BA%E6%84%8F%E5%9B%BE"><span class="nav-number">1.3.3.1.</span> <span class="nav-text">虚拟机原理示意图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%B9%E5%99%A8%E5%8C%96%E6%8A%80%E6%9C%AF%E7%A4%BA%E6%84%8F%E5%9B%BE"><span class="nav-number">1.3.3.2.</span> <span class="nav-text">容器化技术示意图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8C%E8%80%85%E5%AF%B9%E6%AF%94"><span class="nav-number">1.3.3.3.</span> <span class="nav-text">二者对比</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker%E5%AE%89%E8%A3%85"><span class="nav-number">1.4.</span> <span class="nav-text">Docker安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%84%E6%88%90"><span class="nav-number">1.4.1.</span> <span class="nav-text">Docker的基本组成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="nav-number">1.4.2.</span> <span class="nav-text">环境准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85xshell"><span class="nav-number">1.4.3.</span> <span class="nav-text">安装xshell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Centos%E5%AE%89%E8%A3%85"><span class="nav-number">1.4.4.</span> <span class="nav-text">Centos安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BD%E6%97%A7%E7%9A%84%E7%89%88%E6%9C%AC"><span class="nav-number">1.4.5.</span> <span class="nav-text">卸载旧的版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%9F%BA%E6%9C%AC%E7%8E%AF%E5%A2%83"><span class="nav-number">1.4.6.</span> <span class="nav-text">安装基本环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E9%95%9C%E5%83%8F%E7%9A%84%E4%BB%93%E5%BA%93"><span class="nav-number">1.4.7.</span> <span class="nav-text">设置镜像的仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85docker%E5%BC%95%E6%93%8E"><span class="nav-number">1.4.8.</span> <span class="nav-text">安装docker引擎</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8Docker"><span class="nav-number">1.4.9.</span> <span class="nav-text">启动Docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BDDocker"><span class="nav-number">1.4.10.</span> <span class="nav-text">卸载Docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%BF%E9%87%8C%E4%BA%91%E9%95%9C%E5%83%8F%E5%8A%A0%E9%80%9F"><span class="nav-number">1.4.11.</span> <span class="nav-text">阿里云镜像加速</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86"><span class="nav-number">1.5.</span> <span class="nav-text">底层原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker%E5%91%BD%E4%BB%A4"><span class="nav-number">1.6.</span> <span class="nav-text">Docker命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%AE%E5%8A%A9%E5%91%BD%E4%BB%A4"><span class="nav-number">1.6.1.</span> <span class="nav-text">帮助命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%95%9C%E5%83%8F%E5%91%BD%E4%BB%A4"><span class="nav-number">1.6.2.</span> <span class="nav-text">镜像命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#docker-images"><span class="nav-number">1.6.2.1.</span> <span class="nav-text">docker images</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#docker-search"><span class="nav-number">1.6.2.2.</span> <span class="nav-text">docker search</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#docker-pull"><span class="nav-number">1.6.2.3.</span> <span class="nav-text">docker pull</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#docker-rmi"><span class="nav-number">1.6.2.4.</span> <span class="nav-text">docker rmi</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%B9%E5%99%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">1.6.3.</span> <span class="nav-text">容器命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B0%E5%BB%BA%E5%AE%B9%E5%99%A8%E5%B9%B6%E5%90%AF%E5%8A%A8"><span class="nav-number">1.6.3.1.</span> <span class="nav-text">新建容器并启动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9B%E5%85%A5%E9%80%80%E5%87%BA%E5%AE%B9%E5%99%A8"><span class="nav-number">1.6.3.2.</span> <span class="nav-text">进入退出容器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E8%BF%90%E8%A1%8C%E7%9A%84%E5%AE%B9%E5%99%A8"><span class="nav-number">1.6.3.3.</span> <span class="nav-text">查看运行的容器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%80%E5%87%BA%E5%AE%B9%E5%99%A8"><span class="nav-number">1.6.3.4.</span> <span class="nav-text">退出容器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E5%AE%B9%E5%99%A8"><span class="nav-number">1.6.3.5.</span> <span class="nav-text">删除容器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E5%92%8C%E5%81%9C%E6%AD%A2%E5%AE%B9%E5%99%A8%E7%9A%84%E6%93%8D%E4%BD%9C"><span class="nav-number">1.6.3.6.</span> <span class="nav-text">启动和停止容器的操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8E%E5%8F%B0%E5%90%AF%E5%8A%A8docker"><span class="nav-number">1.6.3.7.</span> <span class="nav-text">后台启动docker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%97%A5%E5%BF%97"><span class="nav-number">1.6.3.8.</span> <span class="nav-text">查看日志</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%AD%A3%E5%9C%A8%E8%BF%90%E8%A1%8C%E7%9A%84%E5%AE%B9%E5%99%A8%E4%BF%A1%E6%81%AF"><span class="nav-number">1.6.3.9.</span> <span class="nav-text">查看正在运行的容器信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9B%E5%85%A5%E5%BD%93%E5%89%8D%E6%AD%A3%E5%9C%A8%E8%BF%90%E8%A1%8C%E7%9A%84%E5%AE%B9%E5%99%A8"><span class="nav-number">1.6.3.10.</span> <span class="nav-text">进入当前正在运行的容器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%8E%E5%AE%B9%E5%99%A8%E5%86%85%E6%8B%B7%E8%B4%9D%E6%96%87%E4%BB%B6%E5%88%B0%E4%B8%BB%E6%9C%BA%E4%B8%8A"><span class="nav-number">1.6.3.11.</span> <span class="nav-text">从容器内拷贝文件到主机上</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E5%86%85%E5%AE%B9%E5%8D%A0%E7%94%A8"><span class="nav-number">1.6.3.12.</span> <span class="nav-text">查看内容占用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">1.6.3.13.</span> <span class="nav-text">小结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker%E9%95%9C%E5%83%8F"><span class="nav-number">1.7.</span> <span class="nav-text">Docker镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number">1.7.1.</span> <span class="nav-text">原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#UnionFS-%E8%81%94%E5%90%88%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.7.1.1.</span> <span class="nav-text">UnionFS 联合文件系统</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#commit%E6%8F%90%E4%BA%A4%E9%95%9C%E5%83%8F"><span class="nav-number">1.7.2.</span> <span class="nav-text">commit提交镜像</span></a></li></ol></li></ol></li></ol></div>
 
       </div>
       <!--/noindex-->
@@ -919,13 +1012,13 @@ setInterval(function(){
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">248k</span>
+    <span title="站点总字数">250k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">3:46</span>
+    <span title="站点阅读时长">3:47</span>
 </div>
 
 

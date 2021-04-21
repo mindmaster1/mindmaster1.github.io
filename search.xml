@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>AOP</title>
+    <url>/2021/03/14/AOP/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Ajax异步传输</title>
     <url>/2021/02/25/Ajax%E5%BC%82%E6%AD%A5%E4%BC%A0%E8%BE%93/</url>
     <content><![CDATA[]]></content>
@@ -10,11 +15,6 @@
       <tags>
         <tag>Ajax</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>AOP</title>
-    <url>/2021/03/14/AOP/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Cookie</title>
@@ -86,6 +86,16 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
+    <title>HTTP报文</title>
+    <url>/2021/03/14/HTTP%E6%8A%A5%E6%96%87/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>HTTP代理</title>
+    <url>/2021/02/03/HTTP%E4%BB%A3%E7%90%86/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Filter</title>
     <url>/2021/02/25/Filter/</url>
     <content><![CDATA[]]></content>
@@ -95,11 +105,6 @@
       <tags>
         <tag>Filter</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>HTTP代理</title>
-    <url>/2021/02/03/HTTP%E4%BB%A3%E7%90%86/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>HTTP缓存</title>
@@ -128,9 +133,114 @@
       </tags>
   </entry>
   <entry>
-    <title>HTTP报文</title>
-    <url>/2021/03/14/HTTP%E6%8A%A5%E6%96%87/</url>
-    <content><![CDATA[]]></content>
+    <title>IPVS</title>
+    <url>/2021/03/25/IPVS/</url>
+    <content><![CDATA[<h1 id="一、LVS简介"><a href="#一、LVS简介" class="headerlink" title="一、LVS简介"></a>一、LVS简介</h1><p>LVS是Linux Virtual Server的简称，也就是Linux虚拟服务器, 是一个由章文嵩博士发起的自由软件项目，现在已经是 Linux标准内核的一部分。LVS是一种叫基于TCP/IP的负载均衡技术，转发效率极高，具有处理百万计并发连接请求的能力。</p>
+<p>LVS的IP负载均衡技术是通过IPVS模块实现的。IPVS模块是LVS集群的核心软件模块，它安装在LVS集群作为负载均衡的主节点上，虚拟出一个IP地址和端口对外提供服务。用户通过访问这个虚拟服务（VS），然后访问请求由负载均衡器（LB）调度到后端真实服务器（RS）中，由RS实际处理用户的请求给返回响应。</p>
+ <img data-src="/2021/03/25/IPVS/01.png" class>
+
+<h1 id="二、IPVS的三种转发模式"><a href="#二、IPVS的三种转发模式" class="headerlink" title="二、IPVS的三种转发模式"></a>二、IPVS的三种转发模式</h1><p>根据负载均衡器转发客户端请求以及RS返回响应机制的不同，将IPVS的转发模式分为三种：NAT，DR，FULLNAT。（还有一种IP TUNNEL模式，IP通道技术，接触比较少）</p>
+<h2 id="1-DR模式（Direct-Routing）"><a href="#1-DR模式（Direct-Routing）" class="headerlink" title="1. DR模式（Direct Routing）"></a>1. DR模式（Direct Routing）</h2><p>DR模式下，客户端的请求包到达负载均衡器的虚拟服务IP端口后，负载均衡器不会改写请求包的IP和端口，但是会改写请求包的MAC地址为后端RS的MAC地址，然后将数据包转发；真实服务器处理请求后，响应包直接回给客户端，不再经过负载均衡器。所以DR模式的转发效率是最高的，特别适合下行流量较大的业务场景，比如请求视频等大文件。</p>
+<h3 id="DR模式的特点："><a href="#DR模式的特点：" class="headerlink" title="DR模式的特点："></a>DR模式的特点：</h3><p><strong>数据包在LB转发过程中，源/目的IP端口都不会变化</strong></p>
+<p>LB只是将数据包的MAC地址改写为RS的MAC地址，然后转发给相应的RS。</p>
+<p><strong>每台RS上都必须在环回网卡上绑定LB的虚拟服务IP</strong></p>
+<p>因为LB转发时并不会改写数据包的目的IP，所以RS收到的数据包的目的IP仍是LB的虚拟服务IP。为了保证RS能够正确处理该数据包，而不是丢弃，必须在RS的环回网卡上绑定LB的虚拟服务IP。这样RS会认为这个虚拟服务IP是自己的IP，自己是能够处理这个数据包的。否则RS会直接丢弃该数据包！</p>
+<p><strong>RS上的业务进程必须监听在环回网卡的虚拟服务IP上，且端口必须和LB上的虚拟服务端口一致</strong></p>
+<p>因为LB不会改写数据包的目的端口，所以RS服务的监听端口必须和虚拟服务端口一致，否则RS会直接拒绝该数据包。</p>
+<p><strong>RS处理完请求后，响应直接回给客户端，不再经过LB</strong></p>
+<p>因为RS收到的请求数据包的源IP是客户端的IP，所以理所当然RS的响应会直接回给客户端，而不会再经过LB。这时候要求RS和客户端之间的网络是可达的。</p>
+<p><strong>LB和RS须位于同一个子网</strong></p>
+<p>因为LB在转发过程中需要改写数据包的MAC为RS的MAC地址，所以要能够查询到RS的MAC。而要获取到RS的MAC，则需要保证二者位于一个子网，否则LB只能获取到RS网关的MAC地址。</p>
+  <img data-src="/2021/03/25/IPVS/02.png" class>
+
+<h2 id="2-NAT模式（Network-Address-Translation）"><a href="#2-NAT模式（Network-Address-Translation）" class="headerlink" title="2. NAT模式（Network Address Translation）"></a>2. NAT模式（Network Address Translation）</h2><p>NAT模式下，请求包和响应包都需要经过LB处理。当客户端的请求到达虚拟服务后，LB会对请求包做目的地址转换（DNAT），将请求包的目的IP改写为RS的IP。当收到RS的响应后，LB会对响应包做源地址转换（SNAT），将响应包的源IP改写为LB的IP。</p>
+<h3 id="NAT模式的特点："><a href="#NAT模式的特点：" class="headerlink" title="NAT模式的特点："></a>NAT模式的特点：</h3><p><strong>LB会修改数据包的地址</strong></p>
+<p>对于请求包，会进行DNAT；对于响应包，会进行SNAT。</p>
+<p><strong>LB会透传客户端IP到RS（DR模式也会透传）</strong></p>
+<p>虽然LB在转发过程中做了NAT转换，但是因为只是做了部分地址转发，所以RS收到的请求包里是能看到客户端IP的。</p>
+<p><strong>需要将RS的默认网关地址配置为LB的浮动IP地址</strong></p>
+<p>因为RS收到的请求包源IP是客户端的IP，为了保证响应包在返回时能走到LB上面，所以需要将RS的默认网关地址配置为LB的虚拟服务IP地址。当然，如果客户端的IP是固定的，也可以在RS上添加明细路由指向LB的虚拟服务IP，不用改默认网关。</p>
+<p><strong>LB和RS须位于同一个子网，并且客户端不能和LB/RS位于同一子网</strong></p>
+<p>因为需要将RS的默认网关配置为LB的虚拟服务IP地址，所以需要保证LB和RS位于同一子网。</p>
+<p>又因为需要保证RS的响应包能走回到LB上，则客户端不能和RS位于同一子网。否则RS直接就能获取到客户端的MAC，响应包就直接回给客户端了，不会走网关，也就走不到LB上面了。这时候由于没有LB做SNAT，客户端收到的响应包源IP是RS的IP，而客户端的请求包目的IP是LB的虚拟服务IP，这时候客户端无法识别响应包，会直接丢弃。</p>
+  <img data-src="/2021/03/25/IPVS/03.png" class>
+
+<h2 id="3-FULLNAT模式"><a href="#3-FULLNAT模式" class="headerlink" title="3. FULLNAT模式"></a>3. FULLNAT模式</h2><p>FULLNAT模式下，LB会对请求包和响应包都做SNAT+DNAT。</p>
+<h3 id="FULLNAT模式的特点："><a href="#FULLNAT模式的特点：" class="headerlink" title="FULLNAT模式的特点："></a>FULLNAT模式的特点：</h3><p><strong>LB完全作为一个代理服务器</strong></p>
+<p>FULLNAT下，客户端感知不到RS，RS也感知不到客户端，它们都只能看到LB。此种模式和七层负载均衡有点相似，只不过不会去解析应用层协议，而是在TCP层将消息转发</p>
+<p><strong>LB和RS对于组网结构没有要求</strong></p>
+<p>不同于NAT和DR要求LB和RS位于一个子网，FULLNAT对于组网结构没有要求。只需要保证客户端和LB、LB和RS之间网络互通即可。</p>
+  <img data-src="/2021/03/25/IPVS/04.png" class>
+
+<p>三种转发模式性能从高到低：DR &gt; NAT &gt;FULLNAT。</p>
+<p>虽然FULLNAT模式的性能比不上DR和NAT，但是FULLNAT模式没有组网要求，允许LB和RS部署在不同的子网中，这给运维带来了便利。并且 FULLNAT模式具有更好的可拓展性，可以通过增加更多的LB节点，提升系统整体的负载均衡能力。</p>
+<img data-src="/2021/03/25/IPVS/05.png" class>
+
+<h1 id="三、IPVS支持的调度算法"><a href="#三、IPVS支持的调度算法" class="headerlink" title="三、IPVS支持的调度算法"></a>三、IPVS支持的调度算法</h1><p>对于后端的RS集群，LB是如何决策应该把消息调度到哪个RS节点呢？这是由负载均衡调度算法决定的。IPVS常用的调度算法有：</p>
+<p>轮询（Round Robin）</p>
+<p>LB认为集群内每台RS都是相同的，会轮流进行调度分发。从数据统计上看，RR模式是调度最均衡的。</p>
+<p>加权轮询（Weighted Round Robin）</p>
+<p>LB会根据RS上配置的权重，将消息按权重比分发到不同的RS上。可以给性能更好的RS节点配置更高的权重，提升集群整体的性能。</p>
+<p>最小连接数（Least Connections）</p>
+<p>LB会根据和集群内每台RS的连接数统计情况，将消息调度到连接数最少的RS节点上。在长连接业务场景下，LC算法对于系统整体负载均衡的情况较好；但是在短连接业务场景下，由于连接会迅速释放，可能会导致消息每次都调度到同一个RS节点，造成严重的负载不均衡。</p>
+<p>加权最小连接数（Weighted Least Connections）</p>
+<p>最小连接数算法的加权版~</p>
+<p>地址哈希（Address Hash）</p>
+<p>LB上会保存一张哈希表，通过哈希映射将客户端和RS节点关联起来</p>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>IPVS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>InnoDB存储引擎</title>
+    <url>/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
+    <content><![CDATA[<h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
+<p>InnoDB存储引擎有多个内存块，这些内存块组成了一个大的内存池</p>
+<p>后台线程的主要作用就是负责刷新内存池中的数据，保证缓存池中的内存缓存的是最近的数据。此外，还将已经修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下，InnoDB可以恢复运行到最佳状态。</p>
+<h4 id="后台线程（InnDB是一个多线程模型"><a href="#后台线程（InnDB是一个多线程模型" class="headerlink" title="后台线程（InnDB是一个多线程模型)"></a>后台线程（InnDB是一个多线程模型)</h4><p>#####Master Thread</p>
+<p><strong>作用：</strong></p>
+<p>​    一个非常核心的后台进程，负责将缓存池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓存、UNDO页的回收等。</p>
+<h5 id="IO-Therad"><a href="#IO-Therad" class="headerlink" title="IO Therad"></a>IO Therad</h5><p>  在InnoDB存储引擎中大量使用了AIO（Async IO）—异步时间非阻塞IO，这样可以极大程度上提高数据库的性能。IO Thread的主要工作就是负责这些IO请求的回调</p>
+<p>共有四个IO Thread:write 、read、insert buffer、log IO thread</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114130216.png" alt="image-20210114114130216"></p>
+<p>通过命令SHOW ENGINE INNODB STASTUS\G来观察IO Thread</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114405936.png" alt="image-20210114114405936"></p>
+<p>有四个write和read IO Thread</p>
+<p>通过innodb_read_io_threads和innodb_write_io_threads参数来进行设置</p>
+<h5 id="Purge-Thread"><a href="#Purge-Thread" class="headerlink" title="Purge Thread"></a>Purge Thread</h5><p><strong>作用</strong>：</p>
+<p>​    Purge Thread回收已经使用并且已经分配的undo页（事务提交之后，其所使用的Undolog可能就不再需要）</p>
+<p>用户需要在<strong>MySQL数据库的配置文件</strong>中添加如下命令来启用独立的Purge Thread: </p>
+<p>​        innodb_purge_threads=1</p>
+<h5 id="Page-Cleaner-Thread"><a href="#Page-Cleaner-Thread" class="headerlink" title="Page Cleaner Thread"></a>Page Cleaner Thread</h5><p><strong>作用</strong>：</p>
+<p>​    将脏页的刷新操作放在单独的线程中完成。减轻Master Thread的工作以及对于用户查询线程的阻塞</p>
+<h4 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h4><h5 id="缓存池"><a href="#缓存池" class="headerlink" title="缓存池"></a>缓存池</h5><p>Innodb存储引擎是基于磁盘存储的（Disk-base Database），将其中的记录按照页来管理。</p>
+<p>缓存池的出现，就是为了解决CPU速度和磁盘速度之间的差异，通过内存的速度来弥补磁盘速度较慢对数据库性能的影响。读取文件时，首先判断给文件是否在缓存池中（没有就去磁盘上找）。</p>
+<p>在修改缓存池中的页时，先以一定频率刷新到缓存池上，然后通过Checkpoint刷新回磁盘。</p>
+<p>数据库服务器最好采用64位操作系统，可以使用更多的内存（512GB），32位（只有64GB）。</p>
+<p>缓存池的配置通过参数innodb_buffer_pool_size来设置。</p>
+<h6 id="缓存池中缓存的数据页类型："><a href="#缓存池中缓存的数据页类型：" class="headerlink" title="缓存池中缓存的数据页类型："></a>缓存池中缓存的数据页类型：</h6><p>​    索引页、数据页、Undo页、插入缓存页、自适应哈希索引页（adaptive hash index）、InnoDB存储的锁信息、数据字典信息等。</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114131120313.png" alt="image-20210114131120313"></p>
+<p><strong>允许有多个缓存池实例</strong>：每个页根据hashcode平均分配到不同的缓存池实例中，减少数据库内部资源的竞争，增加数据库的并发能力。可以通过inodb_buffer_pool_instances来进行配置，通过命令SHOW ENGINE INNODB STATUS可以观察到每个缓存池实例对象运行的状态，还可以通过查看表InnoDB_BUFFER_POOL_STATS来观察缓存的状态(要求在information_schema架构下)</p>
+<h5 id="LRU-LIST-、FREE-LIST-、FLUSH-LIST"><a href="#LRU-LIST-、FREE-LIST-、FLUSH-LIST" class="headerlink" title="LRU LIST 、FREE LIST 、FLUSH LIST"></a>LRU LIST 、FREE LIST 、FLUSH LIST</h5><p><strong>LRU</strong>算法用来管理已经读取的页</p>
+<p>数据库中的缓存池是通过LRU（Latest Recent Used,最近最少使用）算法来管理内部的各种类型的页。</p>
+<p><strong>LRU解释</strong>：将最频繁使用的页放在LRU列表的前端，最少使用的页放在LRU列表的尾端。当缓存池不能存放新读取到的页时，将优先删除列表尾端的页（默认大小为16KB）。</p>
+<p><strong>改进</strong>：</p>
+<p>1、（midpoint insertion strategy）：InnoDB中在LRU中加入了midpoint位置，将新读取到的页放在midpoint，而不是直接放在LRU列表首部。<strong>默认位置在LRU列表长度63%处</strong>（可以通过innodb_old_blocks_pct来控制）</p>
+<p>2、设置了参数innodb_old_blocks_time,用于表示页读取到mid位置后需要等待多久才会加入到LRU列表的热端</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133522544.png" alt="image-20210114133522544"></p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133412580.png" alt="image-20210114133412580"></p>
+<p><strong>为什么要对朴素的LRU算法进行改良</strong>？</p>
+<h5 id="重做日志缓存"><a href="#重做日志缓存" class="headerlink" title="重做日志缓存"></a>重做日志缓存</h5><h5 id="额外的内存池"><a href="#额外的内存池" class="headerlink" title="额外的内存池"></a>额外的内存池</h5>]]></content>
+      <categories>
+        <category>MySQL数据库</category>
+      </categories>
+      <tags>
+        <tag>InnoDB存储引擎</tag>
+      </tags>
   </entry>
   <entry>
     <title>IOC创建对象</title>
@@ -236,114 +346,9 @@
       </tags>
   </entry>
   <entry>
-    <title>InnoDB存储引擎</title>
-    <url>/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
-    <content><![CDATA[<h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
-<p>InnoDB存储引擎有多个内存块，这些内存块组成了一个大的内存池</p>
-<p>后台线程的主要作用就是负责刷新内存池中的数据，保证缓存池中的内存缓存的是最近的数据。此外，还将已经修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下，InnoDB可以恢复运行到最佳状态。</p>
-<h4 id="后台线程（InnDB是一个多线程模型"><a href="#后台线程（InnDB是一个多线程模型" class="headerlink" title="后台线程（InnDB是一个多线程模型)"></a>后台线程（InnDB是一个多线程模型)</h4><p>#####Master Thread</p>
-<p><strong>作用：</strong></p>
-<p>​    一个非常核心的后台进程，负责将缓存池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓存、UNDO页的回收等。</p>
-<h5 id="IO-Therad"><a href="#IO-Therad" class="headerlink" title="IO Therad"></a>IO Therad</h5><p>  在InnoDB存储引擎中大量使用了AIO（Async IO）—异步时间非阻塞IO，这样可以极大程度上提高数据库的性能。IO Thread的主要工作就是负责这些IO请求的回调</p>
-<p>共有四个IO Thread:write 、read、insert buffer、log IO thread</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114130216.png" alt="image-20210114114130216"></p>
-<p>通过命令SHOW ENGINE INNODB STASTUS\G来观察IO Thread</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114405936.png" alt="image-20210114114405936"></p>
-<p>有四个write和read IO Thread</p>
-<p>通过innodb_read_io_threads和innodb_write_io_threads参数来进行设置</p>
-<h5 id="Purge-Thread"><a href="#Purge-Thread" class="headerlink" title="Purge Thread"></a>Purge Thread</h5><p><strong>作用</strong>：</p>
-<p>​    Purge Thread回收已经使用并且已经分配的undo页（事务提交之后，其所使用的Undolog可能就不再需要）</p>
-<p>用户需要在<strong>MySQL数据库的配置文件</strong>中添加如下命令来启用独立的Purge Thread: </p>
-<p>​        innodb_purge_threads=1</p>
-<h5 id="Page-Cleaner-Thread"><a href="#Page-Cleaner-Thread" class="headerlink" title="Page Cleaner Thread"></a>Page Cleaner Thread</h5><p><strong>作用</strong>：</p>
-<p>​    将脏页的刷新操作放在单独的线程中完成。减轻Master Thread的工作以及对于用户查询线程的阻塞</p>
-<h4 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h4><h5 id="缓存池"><a href="#缓存池" class="headerlink" title="缓存池"></a>缓存池</h5><p>Innodb存储引擎是基于磁盘存储的（Disk-base Database），将其中的记录按照页来管理。</p>
-<p>缓存池的出现，就是为了解决CPU速度和磁盘速度之间的差异，通过内存的速度来弥补磁盘速度较慢对数据库性能的影响。读取文件时，首先判断给文件是否在缓存池中（没有就去磁盘上找）。</p>
-<p>在修改缓存池中的页时，先以一定频率刷新到缓存池上，然后通过Checkpoint刷新回磁盘。</p>
-<p>数据库服务器最好采用64位操作系统，可以使用更多的内存（512GB），32位（只有64GB）。</p>
-<p>缓存池的配置通过参数innodb_buffer_pool_size来设置。</p>
-<h6 id="缓存池中缓存的数据页类型："><a href="#缓存池中缓存的数据页类型：" class="headerlink" title="缓存池中缓存的数据页类型："></a>缓存池中缓存的数据页类型：</h6><p>​    索引页、数据页、Undo页、插入缓存页、自适应哈希索引页（adaptive hash index）、InnoDB存储的锁信息、数据字典信息等。</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114131120313.png" alt="image-20210114131120313"></p>
-<p><strong>允许有多个缓存池实例</strong>：每个页根据hashcode平均分配到不同的缓存池实例中，减少数据库内部资源的竞争，增加数据库的并发能力。可以通过inodb_buffer_pool_instances来进行配置，通过命令SHOW ENGINE INNODB STATUS可以观察到每个缓存池实例对象运行的状态，还可以通过查看表InnoDB_BUFFER_POOL_STATS来观察缓存的状态(要求在information_schema架构下)</p>
-<h5 id="LRU-LIST-、FREE-LIST-、FLUSH-LIST"><a href="#LRU-LIST-、FREE-LIST-、FLUSH-LIST" class="headerlink" title="LRU LIST 、FREE LIST 、FLUSH LIST"></a>LRU LIST 、FREE LIST 、FLUSH LIST</h5><p><strong>LRU</strong>算法用来管理已经读取的页</p>
-<p>数据库中的缓存池是通过LRU（Latest Recent Used,最近最少使用）算法来管理内部的各种类型的页。</p>
-<p><strong>LRU解释</strong>：将最频繁使用的页放在LRU列表的前端，最少使用的页放在LRU列表的尾端。当缓存池不能存放新读取到的页时，将优先删除列表尾端的页（默认大小为16KB）。</p>
-<p><strong>改进</strong>：</p>
-<p>1、（midpoint insertion strategy）：InnoDB中在LRU中加入了midpoint位置，将新读取到的页放在midpoint，而不是直接放在LRU列表首部。<strong>默认位置在LRU列表长度63%处</strong>（可以通过innodb_old_blocks_pct来控制）</p>
-<p>2、设置了参数innodb_old_blocks_time,用于表示页读取到mid位置后需要等待多久才会加入到LRU列表的热端</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133522544.png" alt="image-20210114133522544"></p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133412580.png" alt="image-20210114133412580"></p>
-<p><strong>为什么要对朴素的LRU算法进行改良</strong>？</p>
-<h5 id="重做日志缓存"><a href="#重做日志缓存" class="headerlink" title="重做日志缓存"></a>重做日志缓存</h5><h5 id="额外的内存池"><a href="#额外的内存池" class="headerlink" title="额外的内存池"></a>额外的内存池</h5>]]></content>
-      <categories>
-        <category>MySQL数据库</category>
-      </categories>
-      <tags>
-        <tag>InnoDB存储引擎</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>IPVS</title>
-    <url>/2021/03/25/IPVS/</url>
-    <content><![CDATA[<h1 id="一、LVS简介"><a href="#一、LVS简介" class="headerlink" title="一、LVS简介"></a>一、LVS简介</h1><p>LVS是Linux Virtual Server的简称，也就是Linux虚拟服务器, 是一个由章文嵩博士发起的自由软件项目，现在已经是 Linux标准内核的一部分。LVS是一种叫基于TCP/IP的负载均衡技术，转发效率极高，具有处理百万计并发连接请求的能力。</p>
-<p>LVS的IP负载均衡技术是通过IPVS模块实现的。IPVS模块是LVS集群的核心软件模块，它安装在LVS集群作为负载均衡的主节点上，虚拟出一个IP地址和端口对外提供服务。用户通过访问这个虚拟服务（VS），然后访问请求由负载均衡器（LB）调度到后端真实服务器（RS）中，由RS实际处理用户的请求给返回响应。</p>
- <img data-src="/2021/03/25/IPVS/01.png" class>
-
-<h1 id="二、IPVS的三种转发模式"><a href="#二、IPVS的三种转发模式" class="headerlink" title="二、IPVS的三种转发模式"></a>二、IPVS的三种转发模式</h1><p>根据负载均衡器转发客户端请求以及RS返回响应机制的不同，将IPVS的转发模式分为三种：NAT，DR，FULLNAT。（还有一种IP TUNNEL模式，IP通道技术，接触比较少）</p>
-<h2 id="1-DR模式（Direct-Routing）"><a href="#1-DR模式（Direct-Routing）" class="headerlink" title="1. DR模式（Direct Routing）"></a>1. DR模式（Direct Routing）</h2><p>DR模式下，客户端的请求包到达负载均衡器的虚拟服务IP端口后，负载均衡器不会改写请求包的IP和端口，但是会改写请求包的MAC地址为后端RS的MAC地址，然后将数据包转发；真实服务器处理请求后，响应包直接回给客户端，不再经过负载均衡器。所以DR模式的转发效率是最高的，特别适合下行流量较大的业务场景，比如请求视频等大文件。</p>
-<h3 id="DR模式的特点："><a href="#DR模式的特点：" class="headerlink" title="DR模式的特点："></a>DR模式的特点：</h3><p><strong>数据包在LB转发过程中，源/目的IP端口都不会变化</strong></p>
-<p>LB只是将数据包的MAC地址改写为RS的MAC地址，然后转发给相应的RS。</p>
-<p><strong>每台RS上都必须在环回网卡上绑定LB的虚拟服务IP</strong></p>
-<p>因为LB转发时并不会改写数据包的目的IP，所以RS收到的数据包的目的IP仍是LB的虚拟服务IP。为了保证RS能够正确处理该数据包，而不是丢弃，必须在RS的环回网卡上绑定LB的虚拟服务IP。这样RS会认为这个虚拟服务IP是自己的IP，自己是能够处理这个数据包的。否则RS会直接丢弃该数据包！</p>
-<p><strong>RS上的业务进程必须监听在环回网卡的虚拟服务IP上，且端口必须和LB上的虚拟服务端口一致</strong></p>
-<p>因为LB不会改写数据包的目的端口，所以RS服务的监听端口必须和虚拟服务端口一致，否则RS会直接拒绝该数据包。</p>
-<p><strong>RS处理完请求后，响应直接回给客户端，不再经过LB</strong></p>
-<p>因为RS收到的请求数据包的源IP是客户端的IP，所以理所当然RS的响应会直接回给客户端，而不会再经过LB。这时候要求RS和客户端之间的网络是可达的。</p>
-<p><strong>LB和RS须位于同一个子网</strong></p>
-<p>因为LB在转发过程中需要改写数据包的MAC为RS的MAC地址，所以要能够查询到RS的MAC。而要获取到RS的MAC，则需要保证二者位于一个子网，否则LB只能获取到RS网关的MAC地址。</p>
-  <img data-src="/2021/03/25/IPVS/02.png" class>
-
-<h2 id="2-NAT模式（Network-Address-Translation）"><a href="#2-NAT模式（Network-Address-Translation）" class="headerlink" title="2. NAT模式（Network Address Translation）"></a>2. NAT模式（Network Address Translation）</h2><p>NAT模式下，请求包和响应包都需要经过LB处理。当客户端的请求到达虚拟服务后，LB会对请求包做目的地址转换（DNAT），将请求包的目的IP改写为RS的IP。当收到RS的响应后，LB会对响应包做源地址转换（SNAT），将响应包的源IP改写为LB的IP。</p>
-<h3 id="NAT模式的特点："><a href="#NAT模式的特点：" class="headerlink" title="NAT模式的特点："></a>NAT模式的特点：</h3><p><strong>LB会修改数据包的地址</strong></p>
-<p>对于请求包，会进行DNAT；对于响应包，会进行SNAT。</p>
-<p><strong>LB会透传客户端IP到RS（DR模式也会透传）</strong></p>
-<p>虽然LB在转发过程中做了NAT转换，但是因为只是做了部分地址转发，所以RS收到的请求包里是能看到客户端IP的。</p>
-<p><strong>需要将RS的默认网关地址配置为LB的浮动IP地址</strong></p>
-<p>因为RS收到的请求包源IP是客户端的IP，为了保证响应包在返回时能走到LB上面，所以需要将RS的默认网关地址配置为LB的虚拟服务IP地址。当然，如果客户端的IP是固定的，也可以在RS上添加明细路由指向LB的虚拟服务IP，不用改默认网关。</p>
-<p><strong>LB和RS须位于同一个子网，并且客户端不能和LB/RS位于同一子网</strong></p>
-<p>因为需要将RS的默认网关配置为LB的虚拟服务IP地址，所以需要保证LB和RS位于同一子网。</p>
-<p>又因为需要保证RS的响应包能走回到LB上，则客户端不能和RS位于同一子网。否则RS直接就能获取到客户端的MAC，响应包就直接回给客户端了，不会走网关，也就走不到LB上面了。这时候由于没有LB做SNAT，客户端收到的响应包源IP是RS的IP，而客户端的请求包目的IP是LB的虚拟服务IP，这时候客户端无法识别响应包，会直接丢弃。</p>
-  <img data-src="/2021/03/25/IPVS/03.png" class>
-
-<h2 id="3-FULLNAT模式"><a href="#3-FULLNAT模式" class="headerlink" title="3. FULLNAT模式"></a>3. FULLNAT模式</h2><p>FULLNAT模式下，LB会对请求包和响应包都做SNAT+DNAT。</p>
-<h3 id="FULLNAT模式的特点："><a href="#FULLNAT模式的特点：" class="headerlink" title="FULLNAT模式的特点："></a>FULLNAT模式的特点：</h3><p><strong>LB完全作为一个代理服务器</strong></p>
-<p>FULLNAT下，客户端感知不到RS，RS也感知不到客户端，它们都只能看到LB。此种模式和七层负载均衡有点相似，只不过不会去解析应用层协议，而是在TCP层将消息转发</p>
-<p><strong>LB和RS对于组网结构没有要求</strong></p>
-<p>不同于NAT和DR要求LB和RS位于一个子网，FULLNAT对于组网结构没有要求。只需要保证客户端和LB、LB和RS之间网络互通即可。</p>
-  <img data-src="/2021/03/25/IPVS/04.png" class>
-
-<p>三种转发模式性能从高到低：DR &gt; NAT &gt;FULLNAT。</p>
-<p>虽然FULLNAT模式的性能比不上DR和NAT，但是FULLNAT模式没有组网要求，允许LB和RS部署在不同的子网中，这给运维带来了便利。并且 FULLNAT模式具有更好的可拓展性，可以通过增加更多的LB节点，提升系统整体的负载均衡能力。</p>
-<img data-src="/2021/03/25/IPVS/05.png" class>
-
-<h1 id="三、IPVS支持的调度算法"><a href="#三、IPVS支持的调度算法" class="headerlink" title="三、IPVS支持的调度算法"></a>三、IPVS支持的调度算法</h1><p>对于后端的RS集群，LB是如何决策应该把消息调度到哪个RS节点呢？这是由负载均衡调度算法决定的。IPVS常用的调度算法有：</p>
-<p>轮询（Round Robin）</p>
-<p>LB认为集群内每台RS都是相同的，会轮流进行调度分发。从数据统计上看，RR模式是调度最均衡的。</p>
-<p>加权轮询（Weighted Round Robin）</p>
-<p>LB会根据RS上配置的权重，将消息按权重比分发到不同的RS上。可以给性能更好的RS节点配置更高的权重，提升集群整体的性能。</p>
-<p>最小连接数（Least Connections）</p>
-<p>LB会根据和集群内每台RS的连接数统计情况，将消息调度到连接数最少的RS节点上。在长连接业务场景下，LC算法对于系统整体负载均衡的情况较好；但是在短连接业务场景下，由于连接会迅速释放，可能会导致消息每次都调度到同一个RS节点，造成严重的负载不均衡。</p>
-<p>加权最小连接数（Weighted Least Connections）</p>
-<p>最小连接数算法的加权版~</p>
-<p>地址哈希（Address Hash）</p>
-<p>LB上会保存一张哈希表，通过哈希映射将客户端和RS节点关联起来</p>
-]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>IPVS</tag>
-      </tags>
+    <title>InnoDB表</title>
+    <url>/2021/03/14/InnoDB%E8%A1%A8/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>InnoDB文件</title>
@@ -360,11 +365,6 @@
       <tags>
         <tag>JVM堆</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>InnoDB表</title>
-    <url>/2021/03/14/InnoDB%E8%A1%A8/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>JVM虚拟机栈</title>
@@ -441,13 +441,13 @@
       </tags>
   </entry>
   <entry>
-    <title>Java高并发JUC</title>
-    <url>/2021/02/25/Java%E9%AB%98%E5%B9%B6%E5%8F%91JUC/</url>
+    <title>Jenkins自动化部署工具</title>
+    <url>/2021/03/14/Jenkins%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E5%B7%A5%E5%85%B7/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>Jenkins自动化部署工具</title>
-    <url>/2021/03/14/Jenkins%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E5%B7%A5%E5%85%B7/</url>
+    <title>Java高并发JUC</title>
+    <url>/2021/02/25/Java%E9%AB%98%E5%B9%B6%E5%8F%91JUC/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -696,68 +696,6 @@
       </tags>
   </entry>
   <entry>
-    <title>MVVM框架</title>
-    <url>/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/</url>
-    <content><![CDATA[<p>一个软件或者 APP都是服务于某种需求，这称之为“业务需求”。随着业务需求的增多、软件会变得越来越庞大，越来越复杂。所以就会设计一套完整的架构设计、研发流程以及质量管理体系来保证整个研发过程。“架构设计”是一个非常大的话题，它涉及到各方面，近年来前端一个明显的开发趋势就是架构从传统的 MVC 模式向 MVVM 模式迁移，这里来谈谈——MVVM模式。</p>
-<h2 id="什么是MVVM"><a href="#什么是MVVM" class="headerlink" title="什么是MVVM"></a>什么是MVVM</h2><blockquote>
-<p>MVVM（Model–View–Viewmodel）是一种软件架构模式。<br>MVVM有助于将图形用户界面的开发与业务逻辑或后端逻辑（数据模型）的开发分离开，这是通过标记语言或GUI代码实现的。MVVM的视图模型是一个值转换器， 这意味着视图模型负责从模型中暴露（转换）数据对象，以便轻松管理和呈现对象。在这方面，视图模型比视图做得更多，并且处理大部分视图的显示逻辑。 视图模型可以实现中介者模式，组织对视图所支持的用例集的后端逻辑的访问</p>
-</blockquote>
-<p><a href="https://zh.wikipedia.org/wiki/MVVM">想要了解更多关于MVVM的定义，点击访问维基百科</a></p>
-<h2 id="MVVM涉及到的概念"><a href="#MVVM涉及到的概念" class="headerlink" title="MVVM涉及到的概念"></a>MVVM涉及到的概念</h2><ul>
-<li>M(odel)层：模型，定义数据结构。</li>
-<li>C(ontroller)层：实现业务逻辑，数据的增删改查。在MVVM模式中一般把C层算在M层中，（只有在理想的双向绑定模式下，Controller 才会完全的消失。这种理想状态一般不存在）</li>
-<li>ViewModel层：顾名思义是视图View的模型、映射和显示逻辑（如if for等，非业务逻辑），另外绑定器也在此层。ViewModel是基于视图开发的一套模型，如果你的应用是给盲人用的，那么也可以开发一套基于Audio的模型AudioModel。</li>
-<li>V(iew)层：将ViewModel通过特定的GUI展示出来，并在GUI控件上绑定视图交互事件，V(iew)一般由MVVM框架自动生成在浏览器中。</li>
-</ul>
-<h2 id="MVVM的工作机制"><a href="#MVVM的工作机制" class="headerlink" title="MVVM的工作机制"></a>MVVM的工作机制</h2><p>在MVVM架构下，View 和 Model 之间其实并没有直接的联系，而是通<strong>过ViewModel进行交互</strong>，Model 和 ViewModel 之间的交互是*<u>双向</u>*的， 因此View 数据的变化会同步到Model中，而Model 数据的变化也会立即反应到View 上。</p>
-<p>ViewModel 通过双向数据绑定把 View 层和 Model 层连接了起来。ViewModel里面包含DOM Listeners(数据监听)和Data Bindings(数据绑定)，DOM Listeners和Data Bindings是实现双向绑定的关键。</p>
-<blockquote>
-<p>DOM Listeners监听页面所有View层DOM元素的变化，当发生变化，Model层的数据随之变化；</p>
-</blockquote>
-<blockquote>
-<p>Data Bindings监听Model层的数据，当数据发生变化，View层的DOM元素随之变化。</p>
-</blockquote>
-<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/01.png" class>
-
-
-
-<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/02.png" class>
-
-
-
-<h2 id="MVVM模式的优缺点"><a href="#MVVM模式的优缺点" class="headerlink" title="MVVM模式的优缺点"></a>MVVM模式的优缺点</h2><p>MVVM模式相较于原先的MVP模式至少省下30%编码量，甚至能省下70%DOM操作，因为用MVP模式的话主要是在进行DOM操作</p>
-<blockquote>
-<p>优点</p>
-</blockquote>
-<ul>
-<li><strong>低耦合</strong>。View可以独立于Model变化和修改，一个ViewModel可以绑定到不同的View上，当View变化的时候Model可以不变，当Model变化的时候View也可以不变。</li>
-<li><strong>可重用性</strong>。可以把一些视图的逻辑放在ViewModel里面，让很多View重用这段视图逻辑。</li>
-<li>独立开发。开发人员可以专注与业务逻辑和数据的开发(ViewModel)。设计人员可以专注于界面(View)的设计。</li>
-<li><strong>可测试性</strong>。可以针对ViewModel来对界面(View)进行测试</li>
-</ul>
-<blockquote>
-<p>缺点</p>
-</blockquote>
-<ul>
-<li>学习成本高。</li>
-<li>DEBUG困难</li>
-<li>实现MVVM的开销对于简单的UI操作是过度的。而对于更大的应用来说，推广ViewModel将变得更加困难，非常大的应用程序中的数据绑定会导致相当大的内存消耗。</li>
-</ul>
-<h2 id="MVVM应用场景"><a href="#MVVM应用场景" class="headerlink" title="MVVM应用场景"></a>MVVM应用场景</h2><ul>
-<li>针对具有复杂交互逻辑的前端应用</li>
-<li>提供基础的架构抽象</li>
-<li>通过Ajax数据持久化，保证前端用户体验</li>
-</ul>
-<h2 id="常见的MVVM框架"><a href="#常见的MVVM框架" class="headerlink" title="常见的MVVM框架"></a>常见的MVVM框架</h2><p>Vue.js   AngularJs，ReactJs</p>
-]]></content>
-      <categories>
-        <category>项目架构</category>
-      </categories>
-      <tags>
-        <tag>架构模式</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Maven学习笔记</title>
     <url>/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/</url>
     <content><![CDATA[<h2 id="IDEA编辑器集成maven环境"><a href="#IDEA编辑器集成maven环境" class="headerlink" title="IDEA编辑器集成maven环境"></a>IDEA编辑器集成maven环境</h2><p>###设置Maven版本</p>
@@ -825,6 +763,68 @@
       </categories>
       <tags>
         <tag>Maven</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MVVM框架</title>
+    <url>/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/</url>
+    <content><![CDATA[<p>一个软件或者 APP都是服务于某种需求，这称之为“业务需求”。随着业务需求的增多、软件会变得越来越庞大，越来越复杂。所以就会设计一套完整的架构设计、研发流程以及质量管理体系来保证整个研发过程。“架构设计”是一个非常大的话题，它涉及到各方面，近年来前端一个明显的开发趋势就是架构从传统的 MVC 模式向 MVVM 模式迁移，这里来谈谈——MVVM模式。</p>
+<h2 id="什么是MVVM"><a href="#什么是MVVM" class="headerlink" title="什么是MVVM"></a>什么是MVVM</h2><blockquote>
+<p>MVVM（Model–View–Viewmodel）是一种软件架构模式。<br>MVVM有助于将图形用户界面的开发与业务逻辑或后端逻辑（数据模型）的开发分离开，这是通过标记语言或GUI代码实现的。MVVM的视图模型是一个值转换器， 这意味着视图模型负责从模型中暴露（转换）数据对象，以便轻松管理和呈现对象。在这方面，视图模型比视图做得更多，并且处理大部分视图的显示逻辑。 视图模型可以实现中介者模式，组织对视图所支持的用例集的后端逻辑的访问</p>
+</blockquote>
+<p><a href="https://zh.wikipedia.org/wiki/MVVM">想要了解更多关于MVVM的定义，点击访问维基百科</a></p>
+<h2 id="MVVM涉及到的概念"><a href="#MVVM涉及到的概念" class="headerlink" title="MVVM涉及到的概念"></a>MVVM涉及到的概念</h2><ul>
+<li>M(odel)层：模型，定义数据结构。</li>
+<li>C(ontroller)层：实现业务逻辑，数据的增删改查。在MVVM模式中一般把C层算在M层中，（只有在理想的双向绑定模式下，Controller 才会完全的消失。这种理想状态一般不存在）</li>
+<li>ViewModel层：顾名思义是视图View的模型、映射和显示逻辑（如if for等，非业务逻辑），另外绑定器也在此层。ViewModel是基于视图开发的一套模型，如果你的应用是给盲人用的，那么也可以开发一套基于Audio的模型AudioModel。</li>
+<li>V(iew)层：将ViewModel通过特定的GUI展示出来，并在GUI控件上绑定视图交互事件，V(iew)一般由MVVM框架自动生成在浏览器中。</li>
+</ul>
+<h2 id="MVVM的工作机制"><a href="#MVVM的工作机制" class="headerlink" title="MVVM的工作机制"></a>MVVM的工作机制</h2><p>在MVVM架构下，View 和 Model 之间其实并没有直接的联系，而是通<strong>过ViewModel进行交互</strong>，Model 和 ViewModel 之间的交互是*<u>双向</u>*的， 因此View 数据的变化会同步到Model中，而Model 数据的变化也会立即反应到View 上。</p>
+<p>ViewModel 通过双向数据绑定把 View 层和 Model 层连接了起来。ViewModel里面包含DOM Listeners(数据监听)和Data Bindings(数据绑定)，DOM Listeners和Data Bindings是实现双向绑定的关键。</p>
+<blockquote>
+<p>DOM Listeners监听页面所有View层DOM元素的变化，当发生变化，Model层的数据随之变化；</p>
+</blockquote>
+<blockquote>
+<p>Data Bindings监听Model层的数据，当数据发生变化，View层的DOM元素随之变化。</p>
+</blockquote>
+<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/01.png" class>
+
+
+
+<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/02.png" class>
+
+
+
+<h2 id="MVVM模式的优缺点"><a href="#MVVM模式的优缺点" class="headerlink" title="MVVM模式的优缺点"></a>MVVM模式的优缺点</h2><p>MVVM模式相较于原先的MVP模式至少省下30%编码量，甚至能省下70%DOM操作，因为用MVP模式的话主要是在进行DOM操作</p>
+<blockquote>
+<p>优点</p>
+</blockquote>
+<ul>
+<li><strong>低耦合</strong>。View可以独立于Model变化和修改，一个ViewModel可以绑定到不同的View上，当View变化的时候Model可以不变，当Model变化的时候View也可以不变。</li>
+<li><strong>可重用性</strong>。可以把一些视图的逻辑放在ViewModel里面，让很多View重用这段视图逻辑。</li>
+<li>独立开发。开发人员可以专注与业务逻辑和数据的开发(ViewModel)。设计人员可以专注于界面(View)的设计。</li>
+<li><strong>可测试性</strong>。可以针对ViewModel来对界面(View)进行测试</li>
+</ul>
+<blockquote>
+<p>缺点</p>
+</blockquote>
+<ul>
+<li>学习成本高。</li>
+<li>DEBUG困难</li>
+<li>实现MVVM的开销对于简单的UI操作是过度的。而对于更大的应用来说，推广ViewModel将变得更加困难，非常大的应用程序中的数据绑定会导致相当大的内存消耗。</li>
+</ul>
+<h2 id="MVVM应用场景"><a href="#MVVM应用场景" class="headerlink" title="MVVM应用场景"></a>MVVM应用场景</h2><ul>
+<li>针对具有复杂交互逻辑的前端应用</li>
+<li>提供基础的架构抽象</li>
+<li>通过Ajax数据持久化，保证前端用户体验</li>
+</ul>
+<h2 id="常见的MVVM框架"><a href="#常见的MVVM框架" class="headerlink" title="常见的MVVM框架"></a>常见的MVVM框架</h2><p>Vue.js   AngularJs，ReactJs</p>
+]]></content>
+      <categories>
+        <category>项目架构</category>
+      </categories>
+      <tags>
+        <tag>架构模式</tag>
       </tags>
   </entry>
   <entry>
@@ -914,6 +914,176 @@
 </blockquote>
 <p>如果A下同时存在两个不同version的C，冲突！！（选取同时适合A、B的版本）</p>
 <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">version</span>&gt;</span>xxx<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>项目工具</category>
+      </categories>
+      <tags>
+        <tag>Maven</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Maven学习笔记&lt;一&gt;</title>
+    <url>/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</url>
+    <content><![CDATA[<h2 id="Maven的简介"><a href="#Maven的简介" class="headerlink" title="Maven的简介"></a>Maven的简介</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p> Maven【[ˈmevən]】这个词可以翻译为”专家”,”内⾏”。 作为Apache组织中的⼀个颇为成功的开源项⽬， Maven主要服务于基于java平台的项⽬构建，依赖管理和项⽬信息管理。 ⽆论是⼩型的开源类库项⽬，还是⼤型的企业级应⽤； ⽆论是传统的瀑布式开发，还是流⾏的敏捷开 发，Maven都能⼤显身⼿。</p>
+<p>###项目构建</p>
+<p>不管你是否意识到，构建（build）是每⼀位程序员每天都在做的⼯作。早上来到公司，我们做的第⼀ 件事就是从源码库签出最新的代码，然后进⾏单元测试，如果测试失败，会找相关的同事⼀起调试修复错误代码。 接着回到⾃⼰的⼯作上来，编写⾃⼰的单元测试及产品代码。</p>
+<p>我们会发现，除了编写源代码，我们每天有相当⼀部分时间花在了编译，运⾏单元测 试，⽣成⽂档，打包和部署等繁琐且不起眼的⼯作上，这就是构建。 如果我们现在还⼿⼯这样做，那成 本也太⾼了，于是有⼈⽤软件的⽅法让这⼀系列⼯作完全⾃动化，使得软件的构建可以像全⾃动流⽔线 ⼀样，只需要⼀条简单的命令，w所有繁琐的步骤都能够⾃动完成，很快就能得到最终结果。</p>
+<p>###项目构建工具</p>
+<blockquote>
+<p>Ant构建</p>
+</blockquote>
+<p>最早的构建⼯具，基于IDE, ⼤概是2000年有的，当时是最流⾏java构建⼯具，不过它的XML脚本编写格式让XML⽂件特别⼤。对⼯程构建过程中的过程控制特别好。</p>
+<blockquote>
+<p>Maven【Java】</p>
+</blockquote>
+<p>项⽬对象模型，通过其描述信息来管理项⽬的构建，报告和⽂档的软件项⽬管理⼯具。它填补了Ant缺 点，Maven第⼀次⽀持了从⽹络上下载的功能，仍然采⽤xml作为配置⽂件格式。Maven专注的是依赖管理，使⽤Java编写。</p>
+<blockquote>
+<p>Gradle</p>
+</blockquote>
+<p>属于结合以上两个的优点，它继承了Ant的灵活和Maven的⽣命周期管理，它最后被google作为了 Android御⽤管理⼯具。它最⼤的区别是不⽤XML作为配置⽂件格式，采⽤了DSL格式，使得脚本更加简洁。 ⽬前市⾯上Ant⽐较⽼, 所以⼀般是⼀些⽐较传统的软件企业公司使⽤, Maven使⽤Java编写, 是当下⼤多数互联⽹公司会使⽤的⼀个构建⼯具, 中⽂⽂档也⽐较⻬全, gradle是⽤groovy编写, ⽬前⽐较新型的构建⼯具⼀些初创互联⽹公司会使⽤, 以后会有很⼤的使⽤空间。</p>
+<h3 id="Maven的四大特性"><a href="#Maven的四大特性" class="headerlink" title="Maven的四大特性"></a>Maven的四大特性</h3><h4 id="依赖管理系统"><a href="#依赖管理系统" class="headerlink" title="依赖管理系统"></a>依赖管理系统</h4><p> Maven为Java世界引⼊了⼀个新的依赖管理系统jar包管理 jar 升级时修改配置⽂件即可。在Java世界中，可以⽤<strong>groupId、artifactId、version</strong>组成的Coordination（坐标）<u>唯⼀标识⼀个依赖。</u></p>
+<p>任何基于Maven构建的项⽬⾃身也必须定义这三项属性，⽣成的包可以是Jar包，也可以是war包或者 jar包。⼀个典型的依赖引⽤如下所示：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.servlet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span> com.baidu</span><br><span class="line"> <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>javax.servlet-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span> ueditor echarts</span><br><span class="line"> <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>坐标属性的理解</p>
+</blockquote>
+<ul>
+<li><strong>groupId</strong></li>
+</ul>
+<p>定义当前Maven项⽬⾪属的实际项⽬-公司名称。(jar包所在仓库路径） 由于Maven中模块的概念，因 此⼀个实际项⽬往往会被划分为很多模块。 ⽐如spring是⼀个实际项⽬，其对应的Maven模块会有很 多，如spring-core,spring-webmvc等。</p>
+<ul>
+<li><strong>artifactId</strong></li>
+</ul>
+<p>该元素定义实际项⽬中的⼀个Maven模块-项⽬名， 推荐的做法是使⽤实际项⽬名称作为artifactId的前 缀。 ⽐如： spring-bean, spring-webmvc等。</p>
+<ul>
+<li><strong>version</strong></li>
+</ul>
+<p>该元素定义Maven当前所处的版本</p>
+<h4 id="项目的多模块构建"><a href="#项目的多模块构建" class="headerlink" title="项目的多模块构建"></a>项目的多模块构建</h4><p>项⽬复查时 dao service controller 层分离将⼀个项⽬分解为多个模块已经是很通⽤的⼀种⽅式。 在Maven中需要定义⼀个parent POM作为⼀组module的聚合POM。在该POM中可以使⽤ 标签来定义⼀ 组⼦模块。parent POM不会有什么实际构建产出。⽽parent POM中的build配置以及依赖配置都会⾃动继承给⼦module。</p>
+<h4 id="一致的构建模型和插件机制"><a href="#一致的构建模型和插件机制" class="headerlink" title="一致的构建模型和插件机制"></a>一致的构建模型和插件机制</h4><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mortbay.jetty<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-jetty-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">version</span>&gt;</span>6.1.25<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">scanIntervalSeconds</span>&gt;</span>10<span class="tag">&lt;/<span class="name">scanIntervalSeconds</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">contextPath</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">contextPath</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="Maven的安装配置和目录结构"><a href="#Maven的安装配置和目录结构" class="headerlink" title="Maven的安装配置和目录结构"></a>Maven的安装配置和目录结构</h2><h3 id="Maven的安装与配置"><a href="#Maven的安装与配置" class="headerlink" title="Maven的安装与配置"></a>Maven的安装与配置</h3><img data-src="/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/createmaven.png" class>
+
+<p>打开cmd窗口，通过命令查看maven是否安装成功</p>
+<img data-src="/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/maventest.png" class>
+
+<h3 id="认识Maven的目录结构"><a href="#认识Maven的目录结构" class="headerlink" title="认识Maven的目录结构"></a>认识Maven的目录结构</h3> <img data-src="/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/mulu.png" class>
+
+<h4 id="创建一个文件夹作为项目的根目录"><a href="#创建一个文件夹作为项目的根目录" class="headerlink" title="创建一个文件夹作为项目的根目录"></a>创建一个文件夹作为项目的根目录</h4><ul>
+<li><p>在根目录中创建一个pom.xml文件</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span></span></span><br><span class="line"><span class="tag"> <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag"> <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0</span></span></span><br><span class="line"><span class="tag"><span class="string"> http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"> <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.xxxx<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven01<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.0.1-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">name</span>&gt;</span>maven01<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.apache.org<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.8.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<p><strong>PS:标签定义解释</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">根⽬录下的第⼀个⼦元素 ModelVersion指定当前Pom模型的版本，对于Maven3来说，它只能是4.0.0 。指定了当前Maven模型的版本号，对于Maven2和Maven3来说，它只能是4.0.0</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">groupId:定义了项目属于哪一个组，这个组通常和项目所在的组织和公司存在关联</span></span><br><span class="line"><span class="comment">比如：com.xxxx</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">artifactId 定义了当前Maven项⽬在组中唯⼀的ID。</span></span><br><span class="line"><span class="comment">Version X.X.X-⾥程碑</span></span><br><span class="line"><span class="comment">⽐如：1.0.0-SNAPSHOT</span></span><br><span class="line"><span class="comment">第⼀个X ⼤版本 有重⼤变⾰</span></span><br><span class="line"><span class="comment">第⼆个X ⼩版本 修复bug，增加功能</span></span><br><span class="line"><span class="comment">第三个X 更新</span></span><br><span class="line"><span class="comment">⾥程碑版本：</span></span><br><span class="line"><span class="comment">SNAPSHOT （快照，开发版）</span></span><br><span class="line"><span class="comment">alpha（内部测试）</span></span><br><span class="line"><span class="comment">beta（公开测试）</span></span><br><span class="line"><span class="comment">Release | RC（ 发布版）</span></span><br><span class="line"><span class="comment">GA（正常版本）</span></span><br><span class="line"><span class="comment">使⽤name标签声明⼀个对于⽤户更为友好的项⽬名称，虽然不是必须的，但还是推荐为每个Pom声明name，以⽅便信息交流。</span></span><br><span class="line"><span class="comment">**/</span></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="编写主函数"><a href="#编写主函数" class="headerlink" title="编写主函数"></a>编写主函数</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.xxxx.demo;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hello</span></span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> System.out.println(<span class="string">&quot;hello maven&quot;</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="cmd下编译并且运行"><a href="#cmd下编译并且运行" class="headerlink" title="cmd下编译并且运行"></a>cmd下编译并且运行</h4><p>cmd下面，进入项目根目录</p>
+<p>1.编译Java文件</p>
+<p>mvn compile</p>
+<p>2.执行main方法</p>
+<p>mvn exec:java -Dexec.mainClass=”com.xxxx.demo.hello”</p>
+<img data-src="/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/mavencreate.png" class>
+
+<p><strong>注：第⼀次下载会⽐较慢，要修改maven解压之后的conf⽬录下的settings.xml。</strong></p>
+ <figure class="highlight html"><table><tr><td class="code"><pre><span class="line">1.1.修改默认仓库位置</span><br><span class="line">打开maven⽬录 -&gt; conf -&gt; settings.xml</span><br><span class="line">添加仓库位置配置</span><br><span class="line"><span class="tag">&lt;<span class="name">localRepository</span>&gt;</span>F:/m2/repository<span class="tag">&lt;/<span class="name">localRepository</span>&gt;</span></span><br><span class="line">注：仓库位置改为⾃⼰本机的指定⽬录，&quot;/&quot;不要写反</span><br><span class="line">1.2.更换阿⾥镜像,加快依赖下载</span><br><span class="line"><span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus-aliyun<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">name</span>&gt;</span>Nexus aliyun<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>如果编译不成功，可能出现的问题</p>
+<blockquote>
+<p>1.不是使用管理员权限执行的dos命令</p>
+</blockquote>
+<blockquote>
+<p>2.JDK环境配置有问题，重装JDK</p>
+</blockquote>
+<blockquote>
+<p>3.代码编写时，类里面没有设置包名</p>
+</blockquote>
+<p>##Maven命令</p>
+<p>作为开发利器的maven，为我们提供了⼗分丰富的命令，了解maven的命令⾏操作并熟练运⽤常⻅的 maven命令还是⼗分必要的，即使譬如IDEA等⼯具给我提供了图形界⾯化⼯具，但其底层还是依靠 maven命令来驱动的。</p>
+<p>Maven的命令格式如下：</p>
+<blockquote>
+<p>maven [plugin-name] : [goal-name]</p>
+</blockquote>
+<p>命令代表的含义：执⾏ plugin-name 插件的 goal-name ⽬标</p>
+<table>
+<thead>
+<tr>
+<th align="left">maven命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">mvn clean</td>
+<td>清理项⽬⽣产的临时⽂件,⼀般是模块下的target⽬录</td>
+</tr>
+<tr>
+<td align="left">mvn compile</td>
+<td>编译源代码，⼀般编译模块下的src/main/java⽬录</td>
+</tr>
+<tr>
+<td align="left">mvn package</td>
+<td>项⽬打包⼯具,会在模块下的target⽬录⽣成jar或war等⽂件</td>
+</tr>
+<tr>
+<td align="left">mvn test</td>
+<td>测试命令,或执⾏src/test/java/下junit的测试⽤例</td>
+</tr>
+<tr>
+<td align="left">mvn -version</td>
+<td>显示版本信息</td>
+</tr>
+<tr>
+<td align="left">mvn install</td>
+<td>将打包的jar/war⽂件复制到你的本地仓库中,供其他模块使⽤</td>
+</tr>
+<tr>
+<td align="left">mvn deploy</td>
+<td>将打包的⽂件发布到远程参考,提供其他⼈员进⾏下载依赖</td>
+</tr>
+<tr>
+<td align="left">mvn site</td>
+<td>生成项目相关信息的网站</td>
+</tr>
+<tr>
+<td align="left">mvn eclipse:eclipse</td>
+<td>将项目转换为Eclipse项目</td>
+</tr>
+<tr>
+<td align="left">mvn dependency:tree</td>
+<td>打印出整个项目的依赖树</td>
+</tr>
+<tr>
+<td align="left">mvn archetype:generate</td>
+<td>创建maven的普通Java项目</td>
+</tr>
+<tr>
+<td align="left">mvn tomcat:run</td>
+<td>在tomcat容器中运行web应用</td>
+</tr>
+<tr>
+<td align="left">mvn jetty:run</td>
+<td>调用jetty插件的Run目标在jetty servlet容器中启动web应用</td>
+</tr>
+</tbody></table>
+<p>注意：运⾏maven命令的时候，⾸先需要定位到maven项⽬的⽬录，也就是项⽬的pom.xml⽂件所在的⽬录。否则， 必以通过参数来指定项⽬的⽬录。</p>
+<h3 id="命令参数"><a href="#命令参数" class="headerlink" title="命令参数"></a>命令参数</h3><p>上⾯列举的只是⽐较通⽤的命令，其实很多命令都可以携带参数以执⾏更精准的任务。</p>
+<h4 id="D传入属性参数"><a href="#D传入属性参数" class="headerlink" title="-D传入属性参数"></a>-D传入属性参数</h4><p>例如： </p>
+<blockquote>
+<p>mvn package -Dmaven.test.skip=true </p>
+</blockquote>
+<p>以 -D 开头，将 maven.test.skip 的值设为 true ,就是告诉maven打包的时候跳过单元测试。同 理， mvn deploy-Dmaven.test.skip=true 代表部署项⽬并跳过单元测试。</p>
+<h4 id="P使用指定的Profile配置"><a href="#P使用指定的Profile配置" class="headerlink" title="-P使用指定的Profile配置"></a>-P使用指定的Profile配置</h4><p>⽐如项⽬开发需要有多个环境，⼀般为开发，测试，预发，正式4个环境，在pom.xml中的配置如下：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">profiles</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">id</span>&gt;</span>dev<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">env</span>&gt;</span>dev<span class="tag">&lt;/<span class="name">env</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">activation</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">activeByDefault</span>&gt;</span>true<span class="tag">&lt;/<span class="name">activeByDefault</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">activation</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">id</span>&gt;</span>qa<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">env</span>&gt;</span>qa<span class="tag">&lt;/<span class="name">env</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">id</span>&gt;</span>pre<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">env</span>&gt;</span>pre<span class="tag">&lt;/<span class="name">env</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">id</span>&gt;</span>prod<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">env</span>&gt;</span>prod<span class="tag">&lt;/<span class="name">env</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">profiles</span>&gt;</span></span><br><span class="line">......</span><br><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">filters</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">filter</span>&gt;</span>config/$&#123;env&#125;.properties<span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;/<span class="name">filters</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">directory</span>&gt;</span>src/main/resources<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">filtering</span>&gt;</span>true<span class="tag">&lt;/<span class="name">filtering</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br><span class="line"> ......</span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>profiles 定义了各个环境的变量 id ， filters 中定义了变量配置⽂件的地址，其中地址中的环境 变量就是上⾯ profile 中定义的值， resources 中是定义哪些⽬录下的⽂件会被配置⽂件中定义的变量替换。 通过maven可以实现按不同环境进⾏打包部署，例如：</p>
+<blockquote>
+<p>mvn package -Pdev -Dmaven.test.skip=true</p>
+</blockquote>
 ]]></content>
       <categories>
         <category>项目工具</category>
@@ -1101,237 +1271,9 @@
       </tags>
   </entry>
   <entry>
-    <title>Maven学习笔记&lt;一&gt;</title>
-    <url>/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</url>
-    <content><![CDATA[<h2 id="Maven的简介"><a href="#Maven的简介" class="headerlink" title="Maven的简介"></a>Maven的简介</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p> Maven【[ˈmevən]】这个词可以翻译为”专家”,”内⾏”。 作为Apache组织中的⼀个颇为成功的开源项⽬， Maven主要服务于基于java平台的项⽬构建，依赖管理和项⽬信息管理。 ⽆论是⼩型的开源类库项⽬，还是⼤型的企业级应⽤； ⽆论是传统的瀑布式开发，还是流⾏的敏捷开 发，Maven都能⼤显身⼿。</p>
-<p>###项目构建</p>
-<p>不管你是否意识到，构建（build）是每⼀位程序员每天都在做的⼯作。早上来到公司，我们做的第⼀ 件事就是从源码库签出最新的代码，然后进⾏单元测试，如果测试失败，会找相关的同事⼀起调试修复错误代码。 接着回到⾃⼰的⼯作上来，编写⾃⼰的单元测试及产品代码。</p>
-<p>我们会发现，除了编写源代码，我们每天有相当⼀部分时间花在了编译，运⾏单元测 试，⽣成⽂档，打包和部署等繁琐且不起眼的⼯作上，这就是构建。 如果我们现在还⼿⼯这样做，那成 本也太⾼了，于是有⼈⽤软件的⽅法让这⼀系列⼯作完全⾃动化，使得软件的构建可以像全⾃动流⽔线 ⼀样，只需要⼀条简单的命令，w所有繁琐的步骤都能够⾃动完成，很快就能得到最终结果。</p>
-<p>###项目构建工具</p>
-<blockquote>
-<p>Ant构建</p>
-</blockquote>
-<p>最早的构建⼯具，基于IDE, ⼤概是2000年有的，当时是最流⾏java构建⼯具，不过它的XML脚本编写格式让XML⽂件特别⼤。对⼯程构建过程中的过程控制特别好。</p>
-<blockquote>
-<p>Maven【Java】</p>
-</blockquote>
-<p>项⽬对象模型，通过其描述信息来管理项⽬的构建，报告和⽂档的软件项⽬管理⼯具。它填补了Ant缺 点，Maven第⼀次⽀持了从⽹络上下载的功能，仍然采⽤xml作为配置⽂件格式。Maven专注的是依赖管理，使⽤Java编写。</p>
-<blockquote>
-<p>Gradle</p>
-</blockquote>
-<p>属于结合以上两个的优点，它继承了Ant的灵活和Maven的⽣命周期管理，它最后被google作为了 Android御⽤管理⼯具。它最⼤的区别是不⽤XML作为配置⽂件格式，采⽤了DSL格式，使得脚本更加简洁。 ⽬前市⾯上Ant⽐较⽼, 所以⼀般是⼀些⽐较传统的软件企业公司使⽤, Maven使⽤Java编写, 是当下⼤多数互联⽹公司会使⽤的⼀个构建⼯具, 中⽂⽂档也⽐较⻬全, gradle是⽤groovy编写, ⽬前⽐较新型的构建⼯具⼀些初创互联⽹公司会使⽤, 以后会有很⼤的使⽤空间。</p>
-<h3 id="Maven的四大特性"><a href="#Maven的四大特性" class="headerlink" title="Maven的四大特性"></a>Maven的四大特性</h3><h4 id="依赖管理系统"><a href="#依赖管理系统" class="headerlink" title="依赖管理系统"></a>依赖管理系统</h4><p> Maven为Java世界引⼊了⼀个新的依赖管理系统jar包管理 jar 升级时修改配置⽂件即可。在Java世界中，可以⽤<strong>groupId、artifactId、version</strong>组成的Coordination（坐标）<u>唯⼀标识⼀个依赖。</u></p>
-<p>任何基于Maven构建的项⽬⾃身也必须定义这三项属性，⽣成的包可以是Jar包，也可以是war包或者 jar包。⼀个典型的依赖引⽤如下所示：</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.servlet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span> com.baidu</span><br><span class="line"> <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>javax.servlet-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span> ueditor echarts</span><br><span class="line"> <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>坐标属性的理解</p>
-</blockquote>
-<ul>
-<li><strong>groupId</strong></li>
-</ul>
-<p>定义当前Maven项⽬⾪属的实际项⽬-公司名称。(jar包所在仓库路径） 由于Maven中模块的概念，因 此⼀个实际项⽬往往会被划分为很多模块。 ⽐如spring是⼀个实际项⽬，其对应的Maven模块会有很 多，如spring-core,spring-webmvc等。</p>
-<ul>
-<li><strong>artifactId</strong></li>
-</ul>
-<p>该元素定义实际项⽬中的⼀个Maven模块-项⽬名， 推荐的做法是使⽤实际项⽬名称作为artifactId的前 缀。 ⽐如： spring-bean, spring-webmvc等。</p>
-<ul>
-<li><strong>version</strong></li>
-</ul>
-<p>该元素定义Maven当前所处的版本</p>
-<h4 id="项目的多模块构建"><a href="#项目的多模块构建" class="headerlink" title="项目的多模块构建"></a>项目的多模块构建</h4><p>项⽬复查时 dao service controller 层分离将⼀个项⽬分解为多个模块已经是很通⽤的⼀种⽅式。 在Maven中需要定义⼀个parent POM作为⼀组module的聚合POM。在该POM中可以使⽤ 标签来定义⼀ 组⼦模块。parent POM不会有什么实际构建产出。⽽parent POM中的build配置以及依赖配置都会⾃动继承给⼦module。</p>
-<h4 id="一致的构建模型和插件机制"><a href="#一致的构建模型和插件机制" class="headerlink" title="一致的构建模型和插件机制"></a>一致的构建模型和插件机制</h4><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mortbay.jetty<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-jetty-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">version</span>&gt;</span>6.1.25<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">scanIntervalSeconds</span>&gt;</span>10<span class="tag">&lt;/<span class="name">scanIntervalSeconds</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">contextPath</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">contextPath</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-<h2 id="Maven的安装配置和目录结构"><a href="#Maven的安装配置和目录结构" class="headerlink" title="Maven的安装配置和目录结构"></a>Maven的安装配置和目录结构</h2><h3 id="Maven的安装与配置"><a href="#Maven的安装与配置" class="headerlink" title="Maven的安装与配置"></a>Maven的安装与配置</h3><img data-src="/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/createmaven.png" class>
-
-<p>打开cmd窗口，通过命令查看maven是否安装成功</p>
-<img data-src="/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/maventest.png" class>
-
-<h3 id="认识Maven的目录结构"><a href="#认识Maven的目录结构" class="headerlink" title="认识Maven的目录结构"></a>认识Maven的目录结构</h3> <img data-src="/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/mulu.png" class>
-
-<h4 id="创建一个文件夹作为项目的根目录"><a href="#创建一个文件夹作为项目的根目录" class="headerlink" title="创建一个文件夹作为项目的根目录"></a>创建一个文件夹作为项目的根目录</h4><ul>
-<li><p>在根目录中创建一个pom.xml文件</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span></span></span><br><span class="line"><span class="tag"> <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag"> <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0</span></span></span><br><span class="line"><span class="tag"><span class="string"> http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"> <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.xxxx<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven01<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.0.1-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">name</span>&gt;</span>maven01<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.apache.org<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.8.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<p><strong>PS:标签定义解释</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">根⽬录下的第⼀个⼦元素 ModelVersion指定当前Pom模型的版本，对于Maven3来说，它只能是4.0.0 。指定了当前Maven模型的版本号，对于Maven2和Maven3来说，它只能是4.0.0</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">groupId:定义了项目属于哪一个组，这个组通常和项目所在的组织和公司存在关联</span></span><br><span class="line"><span class="comment">比如：com.xxxx</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">artifactId 定义了当前Maven项⽬在组中唯⼀的ID。</span></span><br><span class="line"><span class="comment">Version X.X.X-⾥程碑</span></span><br><span class="line"><span class="comment">⽐如：1.0.0-SNAPSHOT</span></span><br><span class="line"><span class="comment">第⼀个X ⼤版本 有重⼤变⾰</span></span><br><span class="line"><span class="comment">第⼆个X ⼩版本 修复bug，增加功能</span></span><br><span class="line"><span class="comment">第三个X 更新</span></span><br><span class="line"><span class="comment">⾥程碑版本：</span></span><br><span class="line"><span class="comment">SNAPSHOT （快照，开发版）</span></span><br><span class="line"><span class="comment">alpha（内部测试）</span></span><br><span class="line"><span class="comment">beta（公开测试）</span></span><br><span class="line"><span class="comment">Release | RC（ 发布版）</span></span><br><span class="line"><span class="comment">GA（正常版本）</span></span><br><span class="line"><span class="comment">使⽤name标签声明⼀个对于⽤户更为友好的项⽬名称，虽然不是必须的，但还是推荐为每个Pom声明name，以⽅便信息交流。</span></span><br><span class="line"><span class="comment">**/</span></span><br></pre></td></tr></table></figure>
-
-
-<h4 id="编写主函数"><a href="#编写主函数" class="headerlink" title="编写主函数"></a>编写主函数</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.xxxx.demo;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hello</span></span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> System.out.println(<span class="string">&quot;hello maven&quot;</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="cmd下编译并且运行"><a href="#cmd下编译并且运行" class="headerlink" title="cmd下编译并且运行"></a>cmd下编译并且运行</h4><p>cmd下面，进入项目根目录</p>
-<p>1.编译Java文件</p>
-<p>mvn compile</p>
-<p>2.执行main方法</p>
-<p>mvn exec:java -Dexec.mainClass=”com.xxxx.demo.hello”</p>
-<img data-src="/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/mavencreate.png" class>
-
-<p><strong>注：第⼀次下载会⽐较慢，要修改maven解压之后的conf⽬录下的settings.xml。</strong></p>
- <figure class="highlight html"><table><tr><td class="code"><pre><span class="line">1.1.修改默认仓库位置</span><br><span class="line">打开maven⽬录 -&gt; conf -&gt; settings.xml</span><br><span class="line">添加仓库位置配置</span><br><span class="line"><span class="tag">&lt;<span class="name">localRepository</span>&gt;</span>F:/m2/repository<span class="tag">&lt;/<span class="name">localRepository</span>&gt;</span></span><br><span class="line">注：仓库位置改为⾃⼰本机的指定⽬录，&quot;/&quot;不要写反</span><br><span class="line">1.2.更换阿⾥镜像,加快依赖下载</span><br><span class="line"><span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus-aliyun<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">name</span>&gt;</span>Nexus aliyun<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>如果编译不成功，可能出现的问题</p>
-<blockquote>
-<p>1.不是使用管理员权限执行的dos命令</p>
-</blockquote>
-<blockquote>
-<p>2.JDK环境配置有问题，重装JDK</p>
-</blockquote>
-<blockquote>
-<p>3.代码编写时，类里面没有设置包名</p>
-</blockquote>
-<p>##Maven命令</p>
-<p>作为开发利器的maven，为我们提供了⼗分丰富的命令，了解maven的命令⾏操作并熟练运⽤常⻅的 maven命令还是⼗分必要的，即使譬如IDEA等⼯具给我提供了图形界⾯化⼯具，但其底层还是依靠 maven命令来驱动的。</p>
-<p>Maven的命令格式如下：</p>
-<blockquote>
-<p>maven [plugin-name] : [goal-name]</p>
-</blockquote>
-<p>命令代表的含义：执⾏ plugin-name 插件的 goal-name ⽬标</p>
-<table>
-<thead>
-<tr>
-<th align="left">maven命令</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">mvn clean</td>
-<td>清理项⽬⽣产的临时⽂件,⼀般是模块下的target⽬录</td>
-</tr>
-<tr>
-<td align="left">mvn compile</td>
-<td>编译源代码，⼀般编译模块下的src/main/java⽬录</td>
-</tr>
-<tr>
-<td align="left">mvn package</td>
-<td>项⽬打包⼯具,会在模块下的target⽬录⽣成jar或war等⽂件</td>
-</tr>
-<tr>
-<td align="left">mvn test</td>
-<td>测试命令,或执⾏src/test/java/下junit的测试⽤例</td>
-</tr>
-<tr>
-<td align="left">mvn -version</td>
-<td>显示版本信息</td>
-</tr>
-<tr>
-<td align="left">mvn install</td>
-<td>将打包的jar/war⽂件复制到你的本地仓库中,供其他模块使⽤</td>
-</tr>
-<tr>
-<td align="left">mvn deploy</td>
-<td>将打包的⽂件发布到远程参考,提供其他⼈员进⾏下载依赖</td>
-</tr>
-<tr>
-<td align="left">mvn site</td>
-<td>生成项目相关信息的网站</td>
-</tr>
-<tr>
-<td align="left">mvn eclipse:eclipse</td>
-<td>将项目转换为Eclipse项目</td>
-</tr>
-<tr>
-<td align="left">mvn dependency:tree</td>
-<td>打印出整个项目的依赖树</td>
-</tr>
-<tr>
-<td align="left">mvn archetype:generate</td>
-<td>创建maven的普通Java项目</td>
-</tr>
-<tr>
-<td align="left">mvn tomcat:run</td>
-<td>在tomcat容器中运行web应用</td>
-</tr>
-<tr>
-<td align="left">mvn jetty:run</td>
-<td>调用jetty插件的Run目标在jetty servlet容器中启动web应用</td>
-</tr>
-</tbody></table>
-<p>注意：运⾏maven命令的时候，⾸先需要定位到maven项⽬的⽬录，也就是项⽬的pom.xml⽂件所在的⽬录。否则， 必以通过参数来指定项⽬的⽬录。</p>
-<h3 id="命令参数"><a href="#命令参数" class="headerlink" title="命令参数"></a>命令参数</h3><p>上⾯列举的只是⽐较通⽤的命令，其实很多命令都可以携带参数以执⾏更精准的任务。</p>
-<h4 id="D传入属性参数"><a href="#D传入属性参数" class="headerlink" title="-D传入属性参数"></a>-D传入属性参数</h4><p>例如： </p>
-<blockquote>
-<p>mvn package -Dmaven.test.skip=true </p>
-</blockquote>
-<p>以 -D 开头，将 maven.test.skip 的值设为 true ,就是告诉maven打包的时候跳过单元测试。同 理， mvn deploy-Dmaven.test.skip=true 代表部署项⽬并跳过单元测试。</p>
-<h4 id="P使用指定的Profile配置"><a href="#P使用指定的Profile配置" class="headerlink" title="-P使用指定的Profile配置"></a>-P使用指定的Profile配置</h4><p>⽐如项⽬开发需要有多个环境，⼀般为开发，测试，预发，正式4个环境，在pom.xml中的配置如下：</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">profiles</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">id</span>&gt;</span>dev<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">env</span>&gt;</span>dev<span class="tag">&lt;/<span class="name">env</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">activation</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">activeByDefault</span>&gt;</span>true<span class="tag">&lt;/<span class="name">activeByDefault</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">activation</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">id</span>&gt;</span>qa<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">env</span>&gt;</span>qa<span class="tag">&lt;/<span class="name">env</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">id</span>&gt;</span>pre<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">env</span>&gt;</span>pre<span class="tag">&lt;/<span class="name">env</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">id</span>&gt;</span>prod<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">env</span>&gt;</span>prod<span class="tag">&lt;/<span class="name">env</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">profiles</span>&gt;</span></span><br><span class="line">......</span><br><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">filters</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">filter</span>&gt;</span>config/$&#123;env&#125;.properties<span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;/<span class="name">filters</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">directory</span>&gt;</span>src/main/resources<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">filtering</span>&gt;</span>true<span class="tag">&lt;/<span class="name">filtering</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br><span class="line"> ......</span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>profiles 定义了各个环境的变量 id ， filters 中定义了变量配置⽂件的地址，其中地址中的环境 变量就是上⾯ profile 中定义的值， resources 中是定义哪些⽬录下的⽂件会被配置⽂件中定义的变量替换。 通过maven可以实现按不同环境进⾏打包部署，例如：</p>
-<blockquote>
-<p>mvn package -Pdev -Dmaven.test.skip=true</p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>项目工具</category>
-      </categories>
-      <tags>
-        <tag>Maven</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>MongoDB数据库</title>
     <url>/2021/02/25/MongoDB%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
     <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>Mybatis入门案例知识补充</title>
-    <url>/2021/03/07/Mybatis%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E8%A1%A5%E5%85%85/</url>
-    <content><![CDATA[<h2 id="不使用XML构建SqlSessionFactory"><a href="#不使用XML构建SqlSessionFactory" class="headerlink" title="不使用XML构建SqlSessionFactory"></a>不使用XML构建SqlSessionFactory</h2><p>如果你更愿意直接从 Java 代码而不是 XML 文件中创建配置，或者想要创建你自己的配置建造器，MyBatis 也<strong>提供了完整的配置类</strong>，提供了所有与 XML 文件等价的配置项。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">DataSource dataSource = BlogDataSourceFactory.getBlogDataSource();</span><br><span class="line"><span class="comment">//指定事务类型</span></span><br><span class="line">TransactionFactory transactionFactory = <span class="keyword">new</span> JdbcTransactionFactory();</span><br><span class="line">Environment environment = <span class="keyword">new</span> Environment(<span class="string">&quot;development&quot;</span>, transactionFactory, dataSource);</span><br><span class="line">Configuration configuration = <span class="keyword">new</span> Configuration(environment);</span><br><span class="line"><span class="comment">//添加一个映射器类,相较于XML文件构建存在一定的局限性</span></span><br><span class="line">configuration.addMapper(BlogMapper.class);</span><br><span class="line"><span class="comment">//构造SqlSessionFactory</span></span><br><span class="line">SqlSessionFactory sqlSessionFactory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(configuration);</span><br></pre></td></tr></table></figure>
-<p>注意该例中，configuration 添加了一个映射器类（mapper class）。映射器类是 Java 类，它们**<u>包含 SQL 映射注解从而避免依赖 XML 文件</u>**。不过，由于 Java 注解的一些限制以及某些 MyBatis 映射的复杂性，要使用大多数高级映射（比如：嵌套联合映射），仍然需要使用 XML 配置。有鉴于此，如果存在一个同名 XML 配置文件，MyBatis 会自动查找并加载它（在这个例子中，基于类路径和 BlogMapper.class 的类名，会加载 BlogMapper.xml）。</p>
-<h2 id="从SqlSessionFactory中获取SqlSession"><a href="#从SqlSessionFactory中获取SqlSession" class="headerlink" title="从SqlSessionFactory中获取SqlSession"></a>从SqlSessionFactory中获取SqlSession</h2><p> 既然有了 SqlSessionFactory，顾名思义，我们可以从中获得 SqlSession 的实例。SqlSession 提供了在数据库执行 SQL 命令所需的所有方法。你可以通过 SqlSession 实例来直接执行已映射的 SQL 语句。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span>(SqlSession session = SqlSessionFactory.opensession())&#123;</span><br><span class="line">	 Blog blog = (Blog) session.selectOne(<span class="string">&quot;org.mybatis.example.BlogMapper.selectBlog&quot;</span>, <span class="number">101</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>另一种更加简洁的方式</p>
-</blockquote>
-<p>使用和指定语句的参数和返回值**<u>相匹配的接口</u>**（比如 BlogMapper.class），现在你的代码不仅更清晰，更加类型安全，还不用担心可能出错的字符串字面值以及强制类型转换。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">    <span class="comment">//传参的时候传了一个接口</span></span><br><span class="line">  BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">  Blog blog = mapper.selectBlog(<span class="number">101</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="探究已经映射的SQL语句"><a href="#探究已经映射的SQL语句" class="headerlink" title="探究已经映射的SQL语句"></a>探究已经映射的SQL语句</h2><p>粗略的讨论一下SqlSession和Mapper到底执行了什么操作</p>
-<p>一个语句既可以通过 XML 定义，也可以通过注解定义。我们先看看 XML 定义语句的方式，事实上 MyBatis 提供的所有特性都可以利用基于 XML 的映射语言来实现，这使得 MyBatis 在过去的数年间得以流行。下面是一个XML文件示例</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span> ?&gt;</span><br><span class="line">&lt;!DOCTYPE mapper</span><br><span class="line">  PUBLIC <span class="string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span><br><span class="line">  <span class="string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span><br><span class="line">&lt;mapper namespace=<span class="string">&quot;org.mybatis.example.BlogMapper&quot;</span>&gt;</span><br><span class="line">  &lt;select id=<span class="string">&quot;selectBlog&quot;</span> resultType=<span class="string">&quot;Blog&quot;</span>&gt;</span><br><span class="line">    select * from Blog where id = #&#123;id&#125;</span><br><span class="line">  &lt;/select&gt;</span><br><span class="line">&lt;/mapper&gt;</span><br></pre></td></tr></table></figure>
-<p>为了这个简单的例子，我们似乎写了不少配置，但其实并不多。在一个 XML 映射文件中，可以定义无数个映射语句，这样一来，XML 头部和文档类型声明部分就显得微不足道了。文档的其它部分很直白，容易理解。 它在命名空间 “org.mybatis.example.BlogMapper” 中定义了一个名为 “selectBlog” 的映射语句，这样你就可以用全限定名 “org.mybatis.example.BlogMapper.selectBlog” 来调用映射语句了，就像上面例子中那样：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Blog blog = (Blog) session.selectOne(<span class="string">&quot;org.mybatis.example.BlogMapper.selectBlog&quot;</span>, <span class="number">101</span>);</span><br></pre></td></tr></table></figure>
-<ul>
-<li>说明：此时org.mybatis.example.BlogMapper应该是一个接口</li>
-<li>selectBlog是接口中定义的一个方法</li>
-</ul>
-<p>你可能会注意到，这种方式和用全限定名调用 Java 对象的方法类似。这样，该命名就可以<strong>直接映射到在命名空间中同名的映射器类</strong>，并将已映射的 select 语句匹配到对应名称、参数和返回类型的方法。因此你就可以像上面那样，不费吹灰之力地在对应的映射器接口调用方法，就像下面这样：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">Blog blog = mapper.selectBlog(<span class="number">101</span>);</span><br></pre></td></tr></table></figure>
-<p>第二种方法有很多优势，首先它不依赖于字符串字面值，会更安全一点；其次，如果你的 IDE 有代码补全功能，那么代码补全可以帮你快速选择到映射好的 SQL 语句。</p>
-<h2 id="命名空间"><a href="#命名空间" class="headerlink" title="命名空间"></a>命名空间</h2><p>在之前版本的 MyBatis 中，<strong>命名空间（Namespaces）</strong>的作用并不大，是可选的。 但现在，随着命名空间越发重要，你必须指定命名空间。</p>
-<p>命名空间的作用有两个，一个是利用更长的全限定名来将不同的语句隔离开来，同时也实现了你上面见到的接口绑定。就算你觉得暂时用不到接口绑定，你也应该遵循这里的规定，以防哪天你改变了主意。 长远来看，只要将命名空间置于合适的 Java 包命名空间之中，你的代码会变得更加整洁，也有利于你更方便地使用 MyBatis。</p>
-<p><strong>命名解析：</strong>为了减少输入量，MyBatis 对所有具有名称的配置元素（包括语句，结果映射，缓存等）使用了如下的命名解析规则。</p>
-<ul>
-<li>全限定名（比如 “com.mypackage.MyMapper.selectAllThings）将被直接用于查找及使用。</li>
-<li>短名称（比如 “selectAllThings”）如果全局唯一也可以作为一个单独的引用。 如果不唯一，有两个或两个以上的相同名称（比如 “com.foo.selectAllThings” 和 “com.bar.selectAllThings”），那么使用时就会产生“短名称不唯一”的错误，这种情况下就必须使用全限定名。</li>
-</ul>
-<hr>
-<p>对于像 BlogMapper 这样的映射器类来说，还有另一种方法来完成语句映射。 它们映射的语句可以不用 XML 来配置，而可以使用 Java 注解来配置。比如，上面的 XML 示例可以被替换成如下的配置：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> org.mybatis.example;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">BlogMapper</span> </span>&#123;</span><br><span class="line">  <span class="meta">@Select(&quot;SELECT * FROM blog WHERE id = #&#123;id&#125;&quot;)</span></span><br><span class="line">  <span class="function">Blog <span class="title">selectBlog</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用注解来映射简单语句会使代码显得更加简洁，但对于稍微复杂一点的语句，Java 注解不仅力不从心，还会让你本就复杂的 SQL 语句更加混乱不堪。 因此，如果你需要做一些很复杂的操作，最好用 XML 来映射语句。</p>
-<p>选择何种方式来配置映射，以及认为是否应该要统一映射语句定义的形式，完全取决于你和你的团队。 换句话说，永远不要拘泥于一种方式，你可以很轻松的在基于注解和 XML 的语句映射方式间自由移植和切换。</p>
-<h2 id="作用域和生命周期"><a href="#作用域和生命周期" class="headerlink" title="作用域和生命周期"></a>作用域和生命周期</h2><blockquote>
-<p>对象生命周期和依赖注入框架</p>
-</blockquote>
-<p>依赖注入框架可以创建线程安全的、基于事务的 SqlSession 和映射器，并将它们直接注入到你的 bean 中，因此可以直接忽略它们的生命周期。 如果对如何通过依赖注入框架使用 MyBatis 感兴趣，可以研究一下 MyBatis-Spring 或 MyBatis-Guice 两个子项目。</p>
-<h3 id="SqlSessionFactoryBuilder"><a href="#SqlSessionFactoryBuilder" class="headerlink" title="SqlSessionFactoryBuilder"></a>SqlSessionFactoryBuilder</h3><p>这个类可以被实例化、使用和丢弃，一旦创建了 SqlSessionFactory，就不再需要它了。 因此 SqlSessionFactoryBuilder 实例的最佳作用域是方法作用域（也就是局部方法变量）。 你可以重用 SqlSessionFactoryBuilder 来创建多个 SqlSessionFactory 实例，但最好还是不要一直保留着它，以保证所有的 XML 解析资源可以被释放给更重要的事情。</p>
-<h3 id="SqlSessionFactory"><a href="#SqlSessionFactory" class="headerlink" title="SqlSessionFactory"></a>SqlSessionFactory</h3><p>SqlSessionFactory 一旦被创建就应该在应用的运行期间一直存在，没有任何理由丢弃它或重新创建另一个实例。 使用 SqlSessionFactory 的最佳实践是在应用运行期间不要重复创建多次，多次重建 SqlSessionFactory 被视为一种代码“坏习惯”。因此 SqlSessionFactory 的最佳作用域是应用作用域。 有很多方法可以做到，最简单的就是使用单例模式或者静态单例模式。</p>
-<h3 id="SqlSession"><a href="#SqlSession" class="headerlink" title="SqlSession"></a>SqlSession</h3><p>每个线程都应该有它自己的 SqlSession 实例。SqlSession 的实例不是线程安全的，因此是不能被共享的，所以它的最佳的作用域是请求或方法作用域。 绝对不能将 SqlSession 实例的引用放在一个类的静态域，甚至一个类的实例变量也不行。 也绝不能将 SqlSession 实例的引用放在任何类型的托管作用域中，比如 Servlet 框架中的 HttpSession。 如果你现在正在使用一种 Web 框架，考虑将 SqlSession 放在一个和 HTTP 请求相似的作用域中。 换句话说，每次收到 HTTP 请求，就可以打开一个 SqlSession，返回一个响应后，就关闭它。 这个关闭操作很重要，为了确保每次都能执行关闭操作，你应该把这个关闭操作放到 finally 块中。 下面的示例就是一个确保 SqlSession 关闭的标准模式：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">  <span class="comment">// 你的应用逻辑代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在所有代码中都遵循这种使用模式，可以保证所有数据库资源都能被正确地关闭。</p>
-<h3 id="映射器实例"><a href="#映射器实例" class="headerlink" title="映射器实例"></a>映射器实例</h3><p>映射器是一些绑定映射语句的接口。映射器接口的实例是从 SqlSession 中获得的。虽然从技术层面上来讲，任何映射器实例的最大作用域与请求它们的 SqlSession 相同。但方法作用域才是映射器实例的最合适的作用域。 也就是说，映射器实例应该在调用它们的方法中被获取，使用完毕之后即可丢弃。 映射器实例并不需要被显式地关闭。尽管在整个请求作用域保留映射器实例不会有什么问题，但是你很快会发现，在这个作用域上管理太多像 SqlSession 的资源会让你忙不过来。 因此，最好将映射器放在方法作用域内。就像下面的例子一样：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">  BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">  <span class="comment">// 你的应用逻辑代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-]]></content>
-      <categories>
-        <category>Mybatis框架</category>
-      </categories>
-      <tags>
-        <tag>Mybatis</tag>
-      </tags>
   </entry>
   <entry>
     <title>Mybatis框架</title>
@@ -1438,11 +1380,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Mycat</title>
-    <url>/2021/03/14/Mycat/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Mybatis框架概述</title>
     <url>/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6/</url>
     <content><![CDATA[<h2 id="软件开发常用结构"><a href="#软件开发常用结构" class="headerlink" title="软件开发常用结构"></a>软件开发常用结构</h2><h3 id="三层架构"><a href="#三层架构" class="headerlink" title="三层架构"></a>三层架构</h3><p>三层架构包含的三层： 界面层（User Interface layer）、业务逻辑层（Business Logic Layer）、数据访问层（Data access layer）</p>
@@ -1504,6 +1441,69 @@
 <li>从 xml 中获取 sql，并执行 sql 语句，把 ResultSet 结果转换 java 对象</li>
 <li>关闭资源 ResultSet.close() , Statement.close() , Conenection.close()</li>
 </ul>
+]]></content>
+      <categories>
+        <category>Mybatis框架</category>
+      </categories>
+      <tags>
+        <tag>Mybatis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Mycat</title>
+    <url>/2021/03/14/Mycat/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Mybatis入门案例知识补充</title>
+    <url>/2021/03/07/Mybatis%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E8%A1%A5%E5%85%85/</url>
+    <content><![CDATA[<h2 id="不使用XML构建SqlSessionFactory"><a href="#不使用XML构建SqlSessionFactory" class="headerlink" title="不使用XML构建SqlSessionFactory"></a>不使用XML构建SqlSessionFactory</h2><p>如果你更愿意直接从 Java 代码而不是 XML 文件中创建配置，或者想要创建你自己的配置建造器，MyBatis 也<strong>提供了完整的配置类</strong>，提供了所有与 XML 文件等价的配置项。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">DataSource dataSource = BlogDataSourceFactory.getBlogDataSource();</span><br><span class="line"><span class="comment">//指定事务类型</span></span><br><span class="line">TransactionFactory transactionFactory = <span class="keyword">new</span> JdbcTransactionFactory();</span><br><span class="line">Environment environment = <span class="keyword">new</span> Environment(<span class="string">&quot;development&quot;</span>, transactionFactory, dataSource);</span><br><span class="line">Configuration configuration = <span class="keyword">new</span> Configuration(environment);</span><br><span class="line"><span class="comment">//添加一个映射器类,相较于XML文件构建存在一定的局限性</span></span><br><span class="line">configuration.addMapper(BlogMapper.class);</span><br><span class="line"><span class="comment">//构造SqlSessionFactory</span></span><br><span class="line">SqlSessionFactory sqlSessionFactory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(configuration);</span><br></pre></td></tr></table></figure>
+<p>注意该例中，configuration 添加了一个映射器类（mapper class）。映射器类是 Java 类，它们**<u>包含 SQL 映射注解从而避免依赖 XML 文件</u>**。不过，由于 Java 注解的一些限制以及某些 MyBatis 映射的复杂性，要使用大多数高级映射（比如：嵌套联合映射），仍然需要使用 XML 配置。有鉴于此，如果存在一个同名 XML 配置文件，MyBatis 会自动查找并加载它（在这个例子中，基于类路径和 BlogMapper.class 的类名，会加载 BlogMapper.xml）。</p>
+<h2 id="从SqlSessionFactory中获取SqlSession"><a href="#从SqlSessionFactory中获取SqlSession" class="headerlink" title="从SqlSessionFactory中获取SqlSession"></a>从SqlSessionFactory中获取SqlSession</h2><p> 既然有了 SqlSessionFactory，顾名思义，我们可以从中获得 SqlSession 的实例。SqlSession 提供了在数据库执行 SQL 命令所需的所有方法。你可以通过 SqlSession 实例来直接执行已映射的 SQL 语句。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span>(SqlSession session = SqlSessionFactory.opensession())&#123;</span><br><span class="line">	 Blog blog = (Blog) session.selectOne(<span class="string">&quot;org.mybatis.example.BlogMapper.selectBlog&quot;</span>, <span class="number">101</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>另一种更加简洁的方式</p>
+</blockquote>
+<p>使用和指定语句的参数和返回值**<u>相匹配的接口</u>**（比如 BlogMapper.class），现在你的代码不仅更清晰，更加类型安全，还不用担心可能出错的字符串字面值以及强制类型转换。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">    <span class="comment">//传参的时候传了一个接口</span></span><br><span class="line">  BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">  Blog blog = mapper.selectBlog(<span class="number">101</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="探究已经映射的SQL语句"><a href="#探究已经映射的SQL语句" class="headerlink" title="探究已经映射的SQL语句"></a>探究已经映射的SQL语句</h2><p>粗略的讨论一下SqlSession和Mapper到底执行了什么操作</p>
+<p>一个语句既可以通过 XML 定义，也可以通过注解定义。我们先看看 XML 定义语句的方式，事实上 MyBatis 提供的所有特性都可以利用基于 XML 的映射语言来实现，这使得 MyBatis 在过去的数年间得以流行。下面是一个XML文件示例</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span> ?&gt;</span><br><span class="line">&lt;!DOCTYPE mapper</span><br><span class="line">  PUBLIC <span class="string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span><br><span class="line">  <span class="string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span><br><span class="line">&lt;mapper namespace=<span class="string">&quot;org.mybatis.example.BlogMapper&quot;</span>&gt;</span><br><span class="line">  &lt;select id=<span class="string">&quot;selectBlog&quot;</span> resultType=<span class="string">&quot;Blog&quot;</span>&gt;</span><br><span class="line">    select * from Blog where id = #&#123;id&#125;</span><br><span class="line">  &lt;/select&gt;</span><br><span class="line">&lt;/mapper&gt;</span><br></pre></td></tr></table></figure>
+<p>为了这个简单的例子，我们似乎写了不少配置，但其实并不多。在一个 XML 映射文件中，可以定义无数个映射语句，这样一来，XML 头部和文档类型声明部分就显得微不足道了。文档的其它部分很直白，容易理解。 它在命名空间 “org.mybatis.example.BlogMapper” 中定义了一个名为 “selectBlog” 的映射语句，这样你就可以用全限定名 “org.mybatis.example.BlogMapper.selectBlog” 来调用映射语句了，就像上面例子中那样：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Blog blog = (Blog) session.selectOne(<span class="string">&quot;org.mybatis.example.BlogMapper.selectBlog&quot;</span>, <span class="number">101</span>);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>说明：此时org.mybatis.example.BlogMapper应该是一个接口</li>
+<li>selectBlog是接口中定义的一个方法</li>
+</ul>
+<p>你可能会注意到，这种方式和用全限定名调用 Java 对象的方法类似。这样，该命名就可以<strong>直接映射到在命名空间中同名的映射器类</strong>，并将已映射的 select 语句匹配到对应名称、参数和返回类型的方法。因此你就可以像上面那样，不费吹灰之力地在对应的映射器接口调用方法，就像下面这样：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">Blog blog = mapper.selectBlog(<span class="number">101</span>);</span><br></pre></td></tr></table></figure>
+<p>第二种方法有很多优势，首先它不依赖于字符串字面值，会更安全一点；其次，如果你的 IDE 有代码补全功能，那么代码补全可以帮你快速选择到映射好的 SQL 语句。</p>
+<h2 id="命名空间"><a href="#命名空间" class="headerlink" title="命名空间"></a>命名空间</h2><p>在之前版本的 MyBatis 中，<strong>命名空间（Namespaces）</strong>的作用并不大，是可选的。 但现在，随着命名空间越发重要，你必须指定命名空间。</p>
+<p>命名空间的作用有两个，一个是利用更长的全限定名来将不同的语句隔离开来，同时也实现了你上面见到的接口绑定。就算你觉得暂时用不到接口绑定，你也应该遵循这里的规定，以防哪天你改变了主意。 长远来看，只要将命名空间置于合适的 Java 包命名空间之中，你的代码会变得更加整洁，也有利于你更方便地使用 MyBatis。</p>
+<p><strong>命名解析：</strong>为了减少输入量，MyBatis 对所有具有名称的配置元素（包括语句，结果映射，缓存等）使用了如下的命名解析规则。</p>
+<ul>
+<li>全限定名（比如 “com.mypackage.MyMapper.selectAllThings）将被直接用于查找及使用。</li>
+<li>短名称（比如 “selectAllThings”）如果全局唯一也可以作为一个单独的引用。 如果不唯一，有两个或两个以上的相同名称（比如 “com.foo.selectAllThings” 和 “com.bar.selectAllThings”），那么使用时就会产生“短名称不唯一”的错误，这种情况下就必须使用全限定名。</li>
+</ul>
+<hr>
+<p>对于像 BlogMapper 这样的映射器类来说，还有另一种方法来完成语句映射。 它们映射的语句可以不用 XML 来配置，而可以使用 Java 注解来配置。比如，上面的 XML 示例可以被替换成如下的配置：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> org.mybatis.example;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">BlogMapper</span> </span>&#123;</span><br><span class="line">  <span class="meta">@Select(&quot;SELECT * FROM blog WHERE id = #&#123;id&#125;&quot;)</span></span><br><span class="line">  <span class="function">Blog <span class="title">selectBlog</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用注解来映射简单语句会使代码显得更加简洁，但对于稍微复杂一点的语句，Java 注解不仅力不从心，还会让你本就复杂的 SQL 语句更加混乱不堪。 因此，如果你需要做一些很复杂的操作，最好用 XML 来映射语句。</p>
+<p>选择何种方式来配置映射，以及认为是否应该要统一映射语句定义的形式，完全取决于你和你的团队。 换句话说，永远不要拘泥于一种方式，你可以很轻松的在基于注解和 XML 的语句映射方式间自由移植和切换。</p>
+<h2 id="作用域和生命周期"><a href="#作用域和生命周期" class="headerlink" title="作用域和生命周期"></a>作用域和生命周期</h2><blockquote>
+<p>对象生命周期和依赖注入框架</p>
+</blockquote>
+<p>依赖注入框架可以创建线程安全的、基于事务的 SqlSession 和映射器，并将它们直接注入到你的 bean 中，因此可以直接忽略它们的生命周期。 如果对如何通过依赖注入框架使用 MyBatis 感兴趣，可以研究一下 MyBatis-Spring 或 MyBatis-Guice 两个子项目。</p>
+<h3 id="SqlSessionFactoryBuilder"><a href="#SqlSessionFactoryBuilder" class="headerlink" title="SqlSessionFactoryBuilder"></a>SqlSessionFactoryBuilder</h3><p>这个类可以被实例化、使用和丢弃，一旦创建了 SqlSessionFactory，就不再需要它了。 因此 SqlSessionFactoryBuilder 实例的最佳作用域是方法作用域（也就是局部方法变量）。 你可以重用 SqlSessionFactoryBuilder 来创建多个 SqlSessionFactory 实例，但最好还是不要一直保留着它，以保证所有的 XML 解析资源可以被释放给更重要的事情。</p>
+<h3 id="SqlSessionFactory"><a href="#SqlSessionFactory" class="headerlink" title="SqlSessionFactory"></a>SqlSessionFactory</h3><p>SqlSessionFactory 一旦被创建就应该在应用的运行期间一直存在，没有任何理由丢弃它或重新创建另一个实例。 使用 SqlSessionFactory 的最佳实践是在应用运行期间不要重复创建多次，多次重建 SqlSessionFactory 被视为一种代码“坏习惯”。因此 SqlSessionFactory 的最佳作用域是应用作用域。 有很多方法可以做到，最简单的就是使用单例模式或者静态单例模式。</p>
+<h3 id="SqlSession"><a href="#SqlSession" class="headerlink" title="SqlSession"></a>SqlSession</h3><p>每个线程都应该有它自己的 SqlSession 实例。SqlSession 的实例不是线程安全的，因此是不能被共享的，所以它的最佳的作用域是请求或方法作用域。 绝对不能将 SqlSession 实例的引用放在一个类的静态域，甚至一个类的实例变量也不行。 也绝不能将 SqlSession 实例的引用放在任何类型的托管作用域中，比如 Servlet 框架中的 HttpSession。 如果你现在正在使用一种 Web 框架，考虑将 SqlSession 放在一个和 HTTP 请求相似的作用域中。 换句话说，每次收到 HTTP 请求，就可以打开一个 SqlSession，返回一个响应后，就关闭它。 这个关闭操作很重要，为了确保每次都能执行关闭操作，你应该把这个关闭操作放到 finally 块中。 下面的示例就是一个确保 SqlSession 关闭的标准模式：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">  <span class="comment">// 你的应用逻辑代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在所有代码中都遵循这种使用模式，可以保证所有数据库资源都能被正确地关闭。</p>
+<h3 id="映射器实例"><a href="#映射器实例" class="headerlink" title="映射器实例"></a>映射器实例</h3><p>映射器是一些绑定映射语句的接口。映射器接口的实例是从 SqlSession 中获得的。虽然从技术层面上来讲，任何映射器实例的最大作用域与请求它们的 SqlSession 相同。但方法作用域才是映射器实例的最合适的作用域。 也就是说，映射器实例应该在调用它们的方法中被获取，使用完毕之后即可丢弃。 映射器实例并不需要被显式地关闭。尽管在整个请求作用域保留映射器实例不会有什么问题，但是你很快会发现，在这个作用域上管理太多像 SqlSession 的资源会让你忙不过来。 因此，最好将映射器放在方法作用域内。就像下面的例子一样：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">  BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">  <span class="comment">// 你的应用逻辑代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
 ]]></content>
       <categories>
         <category>Mybatis框架</category>
@@ -1679,6 +1679,17 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
+    <title>SVN版本控制系统</title>
+    <url>/2021/02/06/SVN%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F/</url>
+    <content><![CDATA[<h3 id="主要内容"><a href="#主要内容" class="headerlink" title="主要内容"></a>主要内容</h3>]]></content>
+      <categories>
+        <category>项目工具</category>
+      </categories>
+      <tags>
+        <tag>SVN</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Servlet规范一</title>
     <url>/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/</url>
     <content><![CDATA[<h2 id="Servlet规范（一）"><a href="#Servlet规范（一）" class="headerlink" title="Servlet规范（一）"></a>Servlet规范（一）</h2><h3 id="一、Servlet基础"><a href="#一、Servlet基础" class="headerlink" title="一、Servlet基础"></a>一、Servlet基础</h3><p>宏观地讲，Servlet 是连接 Web 服务器与服务端 Java 程序的协议，是一种通信规范。这个规范是以一套接口的形式体现的。 通常来说，Servlet 是宏观上 Servlet 规范中的一个具体的接口，Servlet 规范中包含一套接口。而 Servlet 接口仅仅是其中之一。 微观地讲，Servlet 是 Servlet 接口实现类的一个实例对象，是运行在服务器上的一段 Java 小程序，即 Server Applet，也就是 Servlet 这个单词的来历。Servlet 的主要功能是根据客户 端提交的请求，调用服务器端相关 Java 代码，完成对请求的处理与运算。</p>
@@ -1759,26 +1770,9 @@
       </tags>
   </entry>
   <entry>
-    <title>SVN版本控制系统</title>
-    <url>/2021/02/06/SVN%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F/</url>
-    <content><![CDATA[<h3 id="主要内容"><a href="#主要内容" class="headerlink" title="主要内容"></a>主要内容</h3>]]></content>
-      <categories>
-        <category>项目工具</category>
-      </categories>
-      <tags>
-        <tag>SVN</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Session</title>
-    <url>/2021/02/25/Session/</url>
+    <title>SpringBoot入门二</title>
+    <url>/2021/03/21/SpringBoot%E5%85%A5%E9%97%A8%E4%BA%8C/</url>
     <content><![CDATA[]]></content>
-      <categories>
-        <category>Java web</category>
-      </categories>
-      <tags>
-        <tag>Session</tag>
-      </tags>
   </entry>
   <entry>
     <title>SpringBoot入门一</title>
@@ -1849,42 +1843,15 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>Spring学习第一跳</title>
-    <url>/2021/02/03/Spring%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E8%B7%B3/</url>
-    <content><![CDATA[<h2 id="初识Spring"><a href="#初识Spring" class="headerlink" title="初识Spring"></a>初识Spring</h2><h3 id="Spring框架概述"><a href="#Spring框架概述" class="headerlink" title="Spring框架概述"></a>Spring框架概述</h3><p>Spring 是于 2003 年兴起的一个轻量级的 Java 开发框架，它是为了解决企业应用开发的复杂性而创建的。Spring 的核心是控制反转（IoC）和面向切面编程（AOP）。Spring 是可 以在 Java SE/EE 中使用的轻量级开源框架。</p>
-<p>Spring 的主要作用就是为代码<strong>“解耦”</strong>，降低代码间的耦合度。就是让对象和对象（模 块和模块）之间关系不是使用代码关联，而是<u>通过配置</u>来说明。即在 Spring 中说明对象（模块）的关系。 </p>
-<p>Spring 根据代码的功能特点，使用 Ioc 降低业务对象之间耦合度。IoC 使得主业务在相互 调用过程中，不用再自己维护关系了，即不用再自己创建要使用的对象了。而是由 Spring 容器统一管理，自动“注入”,注入即赋值。 而 AOP 使得系统级服务得到了最大复用，且不用再由程序员手工将系统级服务“混杂”到主业务逻辑中了，而是由 Spring 容器统一完成 “织入”。</p>
-<h3 id="Spring的优点"><a href="#Spring的优点" class="headerlink" title="Spring的优点"></a>Spring的优点</h3><p>Spring 是一个框架，是一个半成品的软件。有 20 个模块组成。它是一个容器管理对象， 容器是装东西的，Spring 容器不装文本，数字。装的是对象。Spring 是存储对象的容器。</p>
-<ul>
-<li><p>轻量</p>
-<p>Spring 框架使用的 jar 都比较小，一般在 1M 以下或者几百 kb。Spring 核心功能的所需 的 jar 总共在 3M 左右。 Spring 框架运行占用的资源少，运行效率高。不依赖其他 jar</p>
-</li>
-<li><p>针对接口编程，解耦合</p>
-<p>Spring 提供了 Ioc 控制反转，由容器管理对象，对象的依赖关系。原来在程序代码中的 对象创建方式，现在由容器完成。对象之间的依赖解耦合。</p>
-</li>
-<li><p>AOP编程的支持</p>
-<p>通过 Spring 提供的 AOP 功能，方便进行面向切面的编程，许多不容易用传统 OOP 实现 的功能可以通过 AOP 轻松应付 。</p>
-<p>在 Spring 中，开发人员可以从繁杂的事务管理代码中解脱出来，通过声明方式灵活地进行事务的管理，提高开发效率和质量。</p>
-</li>
-<li><p>方便集成各种优秀框架</p>
-<p>Spring 不排斥各种优秀的开源框架，相反 Spring 可以降低各种框架的使用难度，Spring 提供了对各种优秀框架（如 Struts,Hibernate、MyBatis）等的直接支持。简化框架的使用。 Spring 像插线板一样，其他框架是插头，可以容易的组合到一起。需要使用哪个框架，就把 这个插头放入插线板。不需要可以轻易的移除。</p>
-</li>
-</ul>
-<h3 id="Spring体系结构"><a href="#Spring体系结构" class="headerlink" title="Spring体系结构"></a>Spring体系结构</h3><img data-src="/2021/02/03/Spring%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E8%B7%B3/image.png" class>
-
-<p>Spring 由 20 多个模块组成，它们可以分为数据访问/集成（Data Access/Integration）、 Web、面向切面编程（AOP, Aspects）、提供JVM的代理（Instrumentation）、消息发送（Messaging）、 核心容器（Core Container）和测试（Test）。</p>
-]]></content>
+    <title>Session</title>
+    <url>/2021/02/25/Session/</url>
+    <content><![CDATA[]]></content>
       <categories>
-        <category>spring框架</category>
+        <category>Java web</category>
       </categories>
       <tags>
-        <tag>spring框架</tag>
+        <tag>Session</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>SpringBoot入门二</title>
-    <url>/2021/03/21/SpringBoot%E5%85%A5%E9%97%A8%E4%BA%8C/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Stack</title>
@@ -2108,6 +2075,39 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </categories>
       <tags>
         <tag>Swagger</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Spring学习第一跳</title>
+    <url>/2021/02/03/Spring%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E8%B7%B3/</url>
+    <content><![CDATA[<h2 id="初识Spring"><a href="#初识Spring" class="headerlink" title="初识Spring"></a>初识Spring</h2><h3 id="Spring框架概述"><a href="#Spring框架概述" class="headerlink" title="Spring框架概述"></a>Spring框架概述</h3><p>Spring 是于 2003 年兴起的一个轻量级的 Java 开发框架，它是为了解决企业应用开发的复杂性而创建的。Spring 的核心是控制反转（IoC）和面向切面编程（AOP）。Spring 是可 以在 Java SE/EE 中使用的轻量级开源框架。</p>
+<p>Spring 的主要作用就是为代码<strong>“解耦”</strong>，降低代码间的耦合度。就是让对象和对象（模 块和模块）之间关系不是使用代码关联，而是<u>通过配置</u>来说明。即在 Spring 中说明对象（模块）的关系。 </p>
+<p>Spring 根据代码的功能特点，使用 Ioc 降低业务对象之间耦合度。IoC 使得主业务在相互 调用过程中，不用再自己维护关系了，即不用再自己创建要使用的对象了。而是由 Spring 容器统一管理，自动“注入”,注入即赋值。 而 AOP 使得系统级服务得到了最大复用，且不用再由程序员手工将系统级服务“混杂”到主业务逻辑中了，而是由 Spring 容器统一完成 “织入”。</p>
+<h3 id="Spring的优点"><a href="#Spring的优点" class="headerlink" title="Spring的优点"></a>Spring的优点</h3><p>Spring 是一个框架，是一个半成品的软件。有 20 个模块组成。它是一个容器管理对象， 容器是装东西的，Spring 容器不装文本，数字。装的是对象。Spring 是存储对象的容器。</p>
+<ul>
+<li><p>轻量</p>
+<p>Spring 框架使用的 jar 都比较小，一般在 1M 以下或者几百 kb。Spring 核心功能的所需 的 jar 总共在 3M 左右。 Spring 框架运行占用的资源少，运行效率高。不依赖其他 jar</p>
+</li>
+<li><p>针对接口编程，解耦合</p>
+<p>Spring 提供了 Ioc 控制反转，由容器管理对象，对象的依赖关系。原来在程序代码中的 对象创建方式，现在由容器完成。对象之间的依赖解耦合。</p>
+</li>
+<li><p>AOP编程的支持</p>
+<p>通过 Spring 提供的 AOP 功能，方便进行面向切面的编程，许多不容易用传统 OOP 实现 的功能可以通过 AOP 轻松应付 。</p>
+<p>在 Spring 中，开发人员可以从繁杂的事务管理代码中解脱出来，通过声明方式灵活地进行事务的管理，提高开发效率和质量。</p>
+</li>
+<li><p>方便集成各种优秀框架</p>
+<p>Spring 不排斥各种优秀的开源框架，相反 Spring 可以降低各种框架的使用难度，Spring 提供了对各种优秀框架（如 Struts,Hibernate、MyBatis）等的直接支持。简化框架的使用。 Spring 像插线板一样，其他框架是插头，可以容易的组合到一起。需要使用哪个框架，就把 这个插头放入插线板。不需要可以轻易的移除。</p>
+</li>
+</ul>
+<h3 id="Spring体系结构"><a href="#Spring体系结构" class="headerlink" title="Spring体系结构"></a>Spring体系结构</h3><img data-src="/2021/02/03/Spring%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E8%B7%B3/image.png" class>
+
+<p>Spring 由 20 多个模块组成，它们可以分为数据访问/集成（Data Access/Integration）、 Web、面向切面编程（AOP, Aspects）、提供JVM的代理（Instrumentation）、消息发送（Messaging）、 核心容器（Core Container）和测试（Test）。</p>
+]]></content>
+      <categories>
+        <category>spring框架</category>
+      </categories>
+      <tags>
+        <tag>spring框架</tag>
       </tags>
   </entry>
   <entry>
@@ -2421,44 +2421,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>创建一个Vue实例</title>
-    <url>/2021/03/07/%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAVue%E5%AE%9E%E4%BE%8B/</url>
-    <content><![CDATA[<h2 id="创建一个Vue实例"><a href="#创建一个Vue实例" class="headerlink" title="创建一个Vue实例"></a>创建一个Vue实例</h2><p>虽然没有完全遵循 <a href="https://zh.wikipedia.org/wiki/MVVM">MVVM 模型</a>，但是 Vue 的设计也受到了它的启发。因此在文档中经常会使用 <code>vm</code> (ViewModel 的缩写) 这个变量名表示 Vue 实例。</p>
-<p>当创建一个 Vue 实例时，你可以传入一个<strong>选项对象</strong> </p>
-<p>一个 Vue 应用由一个通过 <code>new Vue</code> 创建的<strong>根 Vue 实例</strong>，以及可选的嵌套的、可复用的组件树组成。举个例子，一个 todo 应用的组件树可以是这样的：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">根实例</span><br><span class="line">└─ TodoList</span><br><span class="line">   ├─ TodoItem</span><br><span class="line">   │  ├─ TodoButtonDelete</span><br><span class="line">   │  └─ TodoButtonEdit</span><br><span class="line">   └─ TodoListFooter</span><br><span class="line">      ├─ TodosButtonClear</span><br><span class="line">      └─ TodoListStatistics</span><br></pre></td></tr></table></figure>
-<p>当一个 Vue 实例被创建时，它将 <code>data</code> 对象中的所有的 property 加入到 Vue 的<strong>响应式系统</strong>中。当这些 property 的值发生改变时，<strong>视图</strong>将会产生“响应”，即匹配更新为新的值</p>
-<p>当这些数据改变时，视图会进行重渲染。值得注意的是只有当实例被创建时就已经存在于 <code>data</code> 中的 property 才是<strong>响应式</strong>的。也就是说如果你添加一个新的 property，</p>
-<p>你知道你会在晚些时候需要一个 property，但是一开始它为空或不存在，那么你仅需要设置一些初始值。比如：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">data: &#123;</span><br><span class="line">  newTodoText: &#39;&#39;,</span><br><span class="line">  visitCount: 0,</span><br><span class="line">  hideCompletedTodos: false,</span><br><span class="line">  todos: [],</span><br><span class="line">  error: null</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用 <code>Object.freeze()</code>，这会阻止修改现有的 property，也意味着响应系统无法再<em>追踪</em>变化。</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;app&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; foo &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 这里的 `foo` 不会更新！ --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span> <span class="attr">v-on:click</span>=<span class="string">&quot;foo = &#x27;baz&#x27;&quot;</span>&gt;</span>Change it<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">var obj = &#123;</span><br><span class="line">	foot:&#x27;bar&#x27;</span><br><span class="line">&#125;</span><br><span class="line">Object.freeze(obj)</span><br><span class="line">new Vue(&#123;</span><br><span class="line">	el:&#x27;#app&#x27;</span><br><span class="line">	data: obj</span><br><span class="line">&#125;)     //没办法对obj进行修改</span><br></pre></td></tr></table></figure>
-<p><a href="https://cn.vuejs.org/v2/api/#%E9%80%89%E9%A1%B9-%E6%95%B0%E6%8D%AE">选项对象API</a></p>
-<p>有用的property与方法，带有前缀$,以便于用户定义的property区分开</p>
-<p><a href="https://cn.vuejs.org/v2/api/#%E5%AE%9E%E4%BE%8B-property">具体API文档</a></p>
-<h2 id="实例的生命周期"><a href="#实例的生命周期" class="headerlink" title="实例的生命周期"></a>实例的生命周期</h2><p>每个 Vue 实例在被创建时都要经过一系列的初始化过程——例如，需要设置数据监听、编译模板、将实例挂载到 DOM 并在数据变化时更新 DOM 等。同时在这个过程中也会运行一些叫做<strong>生命周期钩子</strong>的函数，这给了用户在不同阶段添加自己的代码的机会。</p>
-<p>比如 <a href="https://cn.vuejs.org/v2/api/#created"><code>created</code></a> 钩子可以用来在一个实例被创建之后执行代码：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  data: &#123;</span><br><span class="line">    a: <span class="number">1</span></span><br><span class="line">  &#125;,</span><br><span class="line">  created: function () &#123;</span><br><span class="line">    <span class="comment">// `this` 指向 vm 实例</span></span><br><span class="line">    console.log(<span class="string">&#x27;a is: &#x27;</span> + <span class="keyword">this</span>.a)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// =&gt; &quot;a is: 1&quot;</span></span><br></pre></td></tr></table></figure>
-<p> 有一些其它的钩子，在实例生命周期的不同阶段被调用，如 <a href="https://cn.vuejs.org/v2/api/#mounted"><code>mounted</code></a>、<a href="https://cn.vuejs.org/v2/api/#updated"><code>updated</code></a> 和 <a href="https://cn.vuejs.org/v2/api/#destroyed"><code>destroyed</code></a>。<u>生命周</u><u>期钩子的 <code>this</code> 上下文指向调用它的 Vue 实例</u>。</p>
-<blockquote>
-<p>不要在选项 property 或回调上使用<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions">箭头函数</a>，比如 <code>created: () =&gt; console.log(this.a)</code> 或 <code>vm.$watch(&#39;a&#39;, newValue =&gt; this.myMethod())</code>。**因为箭头函数并没有 <code>this</code>**，<code>this</code> 会作为变量一直向上级词法作用域查找，直至找到为止，经常导致 <code>Uncaught TypeError: Cannot read property of undefined</code> 或 <code>Uncaught TypeError: this.myMethod is not a function</code> 之类的错误。</p>
-</blockquote>
-<p>生命周期的图示</p>
-<img data-src="/2021/03/07/%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAVue%E5%AE%9E%E4%BE%8B/lifecycle.png" class>
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>Vue框架</category>
-      </categories>
-      <tags>
-        <tag>Vue</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>消息队列MQ</title>
     <url>/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/</url>
     <content><![CDATA[<h2 id="MQ的基本概念"><a href="#MQ的基本概念" class="headerlink" title="MQ的基本概念"></a>MQ的基本概念</h2><p>MQ全称 Message Queue（消息队列），是在消息的传输过程中保存消息的容器。多用于分布式系统之间进行通信。消息队列已经逐渐成为企业IT系统内部通信的核心手段。它具有低耦合、可靠投递、广播、流量控制、最终一致性等一系列功能，成为异步RPC的主要手段之一。 当今市面上有很多主流的消息中间件，如老牌的ActiveMQ、RabbitMQ，炙手可热的Kafka，阿里巴巴自主开发的Notify、MetaQ、RocketMQ等。</p>
@@ -2546,6 +2508,44 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </categories>
       <tags>
         <tag>RabbitMQ</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>创建一个Vue实例</title>
+    <url>/2021/03/07/%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAVue%E5%AE%9E%E4%BE%8B/</url>
+    <content><![CDATA[<h2 id="创建一个Vue实例"><a href="#创建一个Vue实例" class="headerlink" title="创建一个Vue实例"></a>创建一个Vue实例</h2><p>虽然没有完全遵循 <a href="https://zh.wikipedia.org/wiki/MVVM">MVVM 模型</a>，但是 Vue 的设计也受到了它的启发。因此在文档中经常会使用 <code>vm</code> (ViewModel 的缩写) 这个变量名表示 Vue 实例。</p>
+<p>当创建一个 Vue 实例时，你可以传入一个<strong>选项对象</strong> </p>
+<p>一个 Vue 应用由一个通过 <code>new Vue</code> 创建的<strong>根 Vue 实例</strong>，以及可选的嵌套的、可复用的组件树组成。举个例子，一个 todo 应用的组件树可以是这样的：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">根实例</span><br><span class="line">└─ TodoList</span><br><span class="line">   ├─ TodoItem</span><br><span class="line">   │  ├─ TodoButtonDelete</span><br><span class="line">   │  └─ TodoButtonEdit</span><br><span class="line">   └─ TodoListFooter</span><br><span class="line">      ├─ TodosButtonClear</span><br><span class="line">      └─ TodoListStatistics</span><br></pre></td></tr></table></figure>
+<p>当一个 Vue 实例被创建时，它将 <code>data</code> 对象中的所有的 property 加入到 Vue 的<strong>响应式系统</strong>中。当这些 property 的值发生改变时，<strong>视图</strong>将会产生“响应”，即匹配更新为新的值</p>
+<p>当这些数据改变时，视图会进行重渲染。值得注意的是只有当实例被创建时就已经存在于 <code>data</code> 中的 property 才是<strong>响应式</strong>的。也就是说如果你添加一个新的 property，</p>
+<p>你知道你会在晚些时候需要一个 property，但是一开始它为空或不存在，那么你仅需要设置一些初始值。比如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">data: &#123;</span><br><span class="line">  newTodoText: &#39;&#39;,</span><br><span class="line">  visitCount: 0,</span><br><span class="line">  hideCompletedTodos: false,</span><br><span class="line">  todos: [],</span><br><span class="line">  error: null</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用 <code>Object.freeze()</code>，这会阻止修改现有的 property，也意味着响应系统无法再<em>追踪</em>变化。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;app&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; foo &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 这里的 `foo` 不会更新！ --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span> <span class="attr">v-on:click</span>=<span class="string">&quot;foo = &#x27;baz&#x27;&quot;</span>&gt;</span>Change it<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">var obj = &#123;</span><br><span class="line">	foot:&#x27;bar&#x27;</span><br><span class="line">&#125;</span><br><span class="line">Object.freeze(obj)</span><br><span class="line">new Vue(&#123;</span><br><span class="line">	el:&#x27;#app&#x27;</span><br><span class="line">	data: obj</span><br><span class="line">&#125;)     //没办法对obj进行修改</span><br></pre></td></tr></table></figure>
+<p><a href="https://cn.vuejs.org/v2/api/#%E9%80%89%E9%A1%B9-%E6%95%B0%E6%8D%AE">选项对象API</a></p>
+<p>有用的property与方法，带有前缀$,以便于用户定义的property区分开</p>
+<p><a href="https://cn.vuejs.org/v2/api/#%E5%AE%9E%E4%BE%8B-property">具体API文档</a></p>
+<h2 id="实例的生命周期"><a href="#实例的生命周期" class="headerlink" title="实例的生命周期"></a>实例的生命周期</h2><p>每个 Vue 实例在被创建时都要经过一系列的初始化过程——例如，需要设置数据监听、编译模板、将实例挂载到 DOM 并在数据变化时更新 DOM 等。同时在这个过程中也会运行一些叫做<strong>生命周期钩子</strong>的函数，这给了用户在不同阶段添加自己的代码的机会。</p>
+<p>比如 <a href="https://cn.vuejs.org/v2/api/#created"><code>created</code></a> 钩子可以用来在一个实例被创建之后执行代码：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  data: &#123;</span><br><span class="line">    a: <span class="number">1</span></span><br><span class="line">  &#125;,</span><br><span class="line">  created: function () &#123;</span><br><span class="line">    <span class="comment">// `this` 指向 vm 实例</span></span><br><span class="line">    console.log(<span class="string">&#x27;a is: &#x27;</span> + <span class="keyword">this</span>.a)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// =&gt; &quot;a is: 1&quot;</span></span><br></pre></td></tr></table></figure>
+<p> 有一些其它的钩子，在实例生命周期的不同阶段被调用，如 <a href="https://cn.vuejs.org/v2/api/#mounted"><code>mounted</code></a>、<a href="https://cn.vuejs.org/v2/api/#updated"><code>updated</code></a> 和 <a href="https://cn.vuejs.org/v2/api/#destroyed"><code>destroyed</code></a>。<u>生命周</u><u>期钩子的 <code>this</code> 上下文指向调用它的 Vue 实例</u>。</p>
+<blockquote>
+<p>不要在选项 property 或回调上使用<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions">箭头函数</a>，比如 <code>created: () =&gt; console.log(this.a)</code> 或 <code>vm.$watch(&#39;a&#39;, newValue =&gt; this.myMethod())</code>。**因为箭头函数并没有 <code>this</code>**，<code>this</code> 会作为变量一直向上级词法作用域查找，直至找到为止，经常导致 <code>Uncaught TypeError: Cannot read property of undefined</code> 或 <code>Uncaught TypeError: this.myMethod is not a function</code> 之类的错误。</p>
+</blockquote>
+<p>生命周期的图示</p>
+<img data-src="/2021/03/07/%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAVue%E5%AE%9E%E4%BE%8B/lifecycle.png" class>
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>Vue框架</category>
+      </categories>
+      <tags>
+        <tag>Vue</tag>
       </tags>
   </entry>
   <entry>
@@ -2809,6 +2809,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
+    <title>垃圾收集器与内存分配策略</title>
+    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>在Linux环境安装redis</title>
     <url>/2021/03/18/%E5%9C%A8Linux%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85redis/</url>
     <content><![CDATA[<h2 id="开发环境搭建"><a href="#开发环境搭建" class="headerlink" title="开发环境搭建"></a>开发环境搭建</h2><h3 id="云服务器部署redis"><a href="#云服务器部署redis" class="headerlink" title="云服务器部署redis"></a>云服务器部署redis</h3><h4 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h4><blockquote>
@@ -2894,11 +2899,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>垃圾收集器与内存分配策略</title>
-    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>基于XML的DI</title>
     <url>/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/</url>
     <content><![CDATA[<h2 id="基于XML的DI"><a href="#基于XML的DI" class="headerlink" title="基于XML的DI"></a>基于XML的DI</h2> <img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/01.png" class>
@@ -2980,59 +2980,14 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>客户端识别与Cookie</title>
-    <url>/2021/03/14/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%AF%86%E5%88%AB%E4%B8%8ECookie/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>基础注解的DI</title>
     <url>/2021/02/28/%E5%9F%BA%E7%A1%80%E6%B3%A8%E8%A7%A3%E7%9A%84DI/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>小程序开发文档</title>
-    <url>/2021/03/31/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/</url>
-    <content><![CDATA[<h2 id="微信小程序开发文档"><a href="#微信小程序开发文档" class="headerlink" title="微信小程序开发文档"></a>微信小程序开发文档</h2><h3 id="项目开发周期"><a href="#项目开发周期" class="headerlink" title="项目开发周期:"></a>项目开发周期:</h3><ul>
-<li><p> 项目提交日期： 5.21~5.30</p>
-</li>
-<li><p> 相当于50天的开发周期  </p>
-</li>
-<li><p> 先写小程序的前端页面，后期再写后台处理相关                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               </p>
-</li>
-</ul>
-<h3 id="项目实现功能："><a href="#项目实现功能：" class="headerlink" title="项目实现功能："></a>项目实现功能：</h3><blockquote>
-<p>表白墙+树洞（一个发布消息界面）</p>
-<pre><code>----消息的发布、收藏、聊天、评论、点赞、图片上传</code></pre>
-<p>二手交易</p>
-<p>​      —-交易物品相关信息的发布收藏、聊天、购买（需要调用微信支付接口）</p>
-<p>教务：</p>
-<p>​     —– 后台教务成绩、课表、一卡通消费使用情况</p>
-<p>辅助教学：</p>
-<p>​     —-班级管理、教学直播</p>
-<p>线上通知：</p>
-<p>​    —– 篮球赛、大创、开会等校内相关事宜的通知发布</p>
-<p>社团集合：</p>
-<p>​    —–综合学校的社团，介绍等</p>
-</blockquote>
-<h3 id="项目功能实现-技术选型-："><a href="#项目功能实现-技术选型-：" class="headerlink" title="项目功能实现(技术选型)："></a>项目功能实现(技术选型)：</h3><blockquote>
-<p>前端</p>
-<p>​    —- 使用mpVue框架，将原生vue通过编译之后转换为小程序格式。</p>
-<p>​    —–UI库：ElementUI+QueasrUI</p>
-<p>后端：</p>
-<p>​    —–借助小程序的云上开发能力，包括其云存储、数据库、函数调用，后期需要根据用户流量情况确定需要使用的云开发等级</p>
-<p>相关API文档（涉及教务）：</p>
-<p>​    —–在写完前端之后，向老师咨询一下</p>
-</blockquote>
-<h4 id="界面UI设计（墨刀）"><a href="#界面UI设计（墨刀）" class="headerlink" title="界面UI设计（墨刀）"></a>界面UI设计（墨刀）</h4><ul>
-<li>原则：简约大气，不失逼格</li>
-</ul>
-]]></content>
-      <categories>
-        <category>项目</category>
-      </categories>
-      <tags>
-        <tag>项目</tag>
-      </tags>
+    <title>客户端识别与Cookie</title>
+    <url>/2021/03/14/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%AF%86%E5%88%AB%E4%B8%8ECookie/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>封装Mybatis输出结果与模糊查询</title>
@@ -3146,9 +3101,49 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>条件渲染与列表渲染</title>
-    <url>/2021/03/14/%E6%9D%A1%E4%BB%B6%E6%B8%B2%E6%9F%93%E4%B8%8E%E5%88%97%E8%A1%A8%E6%B8%B2%E6%9F%93/</url>
-    <content><![CDATA[]]></content>
+    <title>小程序开发文档</title>
+    <url>/2021/03/31/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/</url>
+    <content><![CDATA[<h2 id="微信小程序开发文档"><a href="#微信小程序开发文档" class="headerlink" title="微信小程序开发文档"></a>微信小程序开发文档</h2><h3 id="项目开发周期"><a href="#项目开发周期" class="headerlink" title="项目开发周期:"></a>项目开发周期:</h3><ul>
+<li><p> 项目提交日期： 5.21~5.30</p>
+</li>
+<li><p> 相当于50天的开发周期  </p>
+</li>
+<li><p> 先写小程序的前端页面，后期再写后台处理相关                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               </p>
+</li>
+</ul>
+<h3 id="项目实现功能："><a href="#项目实现功能：" class="headerlink" title="项目实现功能："></a>项目实现功能：</h3><blockquote>
+<p>表白墙+树洞（一个发布消息界面）</p>
+<pre><code>----消息的发布、收藏、聊天、评论、点赞、图片上传</code></pre>
+<p>二手交易</p>
+<p>​      —-交易物品相关信息的发布收藏、聊天、购买（需要调用微信支付接口）</p>
+<p>教务：</p>
+<p>​     —– 后台教务成绩、课表、一卡通消费使用情况</p>
+<p>辅助教学：</p>
+<p>​     —-班级管理、教学直播</p>
+<p>线上通知：</p>
+<p>​    —– 篮球赛、大创、开会等校内相关事宜的通知发布</p>
+<p>社团集合：</p>
+<p>​    —–综合学校的社团，介绍等</p>
+</blockquote>
+<h3 id="项目功能实现-技术选型-："><a href="#项目功能实现-技术选型-：" class="headerlink" title="项目功能实现(技术选型)："></a>项目功能实现(技术选型)：</h3><blockquote>
+<p>前端</p>
+<p>​    —- 使用mpVue框架，将原生vue通过编译之后转换为小程序格式。</p>
+<p>​    —–UI库：ElementUI+QueasrUI</p>
+<p>后端：</p>
+<p>​    —–借助小程序的云上开发能力，包括其云存储、数据库、函数调用，后期需要根据用户流量情况确定需要使用的云开发等级</p>
+<p>相关API文档（涉及教务）：</p>
+<p>​    —–在写完前端之后，向老师咨询一下</p>
+</blockquote>
+<h4 id="界面UI设计（墨刀）"><a href="#界面UI设计（墨刀）" class="headerlink" title="界面UI设计（墨刀）"></a>界面UI设计（墨刀）</h4><ul>
+<li>原则：简约大气，不失逼格</li>
+</ul>
+]]></content>
+      <categories>
+        <category>项目</category>
+      </categories>
+      <tags>
+        <tag>项目</tag>
+      </tags>
   </entry>
   <entry>
     <title>Vue模板语法</title>
@@ -3219,6 +3214,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>Vue</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>条件渲染与列表渲染</title>
+    <url>/2021/03/14/%E6%9D%A1%E4%BB%B6%E6%B8%B2%E6%9F%93%E4%B8%8E%E5%88%97%E8%A1%A8%E6%B8%B2%E6%9F%93/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>消息队列产品与RabbitMQ的简介</title>
@@ -3743,6 +3743,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <content><![CDATA[]]></content>
   </entry>
   <entry>
+    <title>组件进阶篇--深入了解组件</title>
+    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E8%BF%9B%E9%98%B6%E7%AF%87-%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E7%BB%84%E4%BB%B6/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>编程范式</title>
     <url>/2021/03/02/%E7%BC%96%E7%A8%8B%E8%8C%83%E5%BC%8F/</url>
     <content><![CDATA[<p>相信绝大部分开发人员、DBA都听过范式这个词，在MySQL中有第一范式、第二范式、第三范式、BCNF范式等，在开发中也有相应的范式，专业词汇叫编程范式(ProgrammingParadigm)。由于笔者能力、精力都有限，本篇主要通过针对同一业务场景，基于编程范式的概念，核心原理以及用例实现来对比不同范式及其实现业务功能的差异。</p>
@@ -3840,11 +3845,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>组件进阶篇--深入了解组件</title>
-    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E8%BF%9B%E9%98%B6%E7%AF%87-%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E7%BB%84%E4%BB%B6/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>表单输入绑定</title>
     <url>/2021/03/14/%E8%A1%A8%E5%8D%95%E8%BE%93%E5%85%A5%E7%BB%91%E5%AE%9A/</url>
     <content><![CDATA[]]></content>
@@ -3853,6 +3853,91 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <title>计算属性与监听器setter</title>
     <url>/2021/03/14/%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7%E4%B8%8E%E7%9B%91%E5%90%AC%E5%99%A8setter/</url>
     <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>设计消息队列--&gt;2</title>
+    <url>/2021/03/13/%E8%AE%BE%E8%AE%A1%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E9%83%A8%E5%88%86/</url>
+    <content><![CDATA[<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p>持久性是事务的一个特性，然而只满足持久性却不一定能满足事务的特性。还是拿扣钱/加钱的例子讲。满足事务的一致性特征，则必须要么都不进行，要么都能成功。 解决方案从大方向上有两种：</p>
+<blockquote>
+<p>两阶段提交，分布式事务。</p>
+</blockquote>
+<blockquote>
+<p>本地事务，本地落地，补偿发送。</p>
+</blockquote>
+<p>分布式事务存在的最大问题是成本太高，两阶段提交协议，对于仲裁down机或者单点故障，几乎是一个无解的黑洞。对于交易密集型或者I/O密集型的应用，没有办法承受这么高的网络延迟，系统复杂性。 并且成熟的分布式事务一定构建与比较靠谱的商用DB和商用中间件上，成本也太高。 那如何使用本地事务解决分布式事务的问题呢？以本地和业务在一个数据库实例中建表为例子，与扣钱的业务操作同一个事务里，将消息插入本地数据库。如果消息入库失败，则业务回滚；如果消息入库成功，事务提交。 然后发送消息（注意这里可以实时发送，不需要等定时任务检出，以提高消息实时性）。以后的问题就是前文的最终一致性问题所提到的了，只要消息没有发送成功，就一直靠定时任务重试。 这里有一个关键的点，本地事务做的，是业务落地和消息落地的事务，而不是业务落地和RPC成功的事务。这里很多人容易混淆，如果是后者，无疑是事务嵌套RPC，是大忌，会有长事务死锁等各种风险。 而消息只要成功落地，很大程度上就没有丢失的风险（磁盘物理损坏除外）。而消息只要投递到服务端确认后本地才做删除，就完成了producer-&gt;broker的可靠投递，并且当消息存储异常时，业务也是可以回滚的。 本地事务存在两个最大的使用障碍：</p>
+<blockquote>
+<p>配置较为复杂，“绑架”业务方，必须本地数据库实例提供一个库表。</p>
+</blockquote>
+<blockquote>
+<p>对于消息延迟高敏感的业务不适用。</p>
+</blockquote>
+<p>话说回来，不是每个业务都需要强事务的。扣钱和加钱需要事务保证，但下单和生成短信却不需要事务，不能因为要求发短信的消息存储投递失败而要求下单业务回滚。所以，一个完整的消息队列应该定义清楚自己可以投递的消息类型，如事务型消息，本地非持久型消息，以及服务端不落地的非可靠消息等。对不同的业务场景做不同的选择。另外事务的使用应该尽量低成本、透明化，可以依托于现有的成熟框架，如Spring的声明式事务做扩展。业务方只需要使用@Transactional标签即可。</p>
+<h2 id="性能相关"><a href="#性能相关" class="headerlink" title="性能相关"></a>性能相关</h2><h3 id="异步、同步"><a href="#异步、同步" class="headerlink" title="异步、同步"></a>异步、同步</h3><p>首先澄清一个概念，异步，同步和oneway是三件事。异步，归根结底你还是需要关心结果的，但可能不是当时的时间点关心，可以用轮询或者回调等方式处理结果；同步是需要当时关心 的结果的；而oneway是发出去就不管死活的方式，这种对于某些完全对可靠性没有要求的场景还是适用的，但不是我们重点讨论的范畴。 回归来看，任何的RPC都是存在客户端异步与服务端异步的，而且是可以任意组合的：客户端同步对服务端异步，客户端异步对服务端异步，客户端同步对服务端同步，客户端异步对服务端同步。 对于客户端来说，同步与异步主要是拿到一个Result，还是Future(Listenable)的区别。实现方式可以是线程池，NIO或者其他事件机制，这里先不展开讲。 服务端异步可能稍微难理解一点，这个是需要RPC协议支持的。参考servlet 3.0规范，服务端可以吐一个future给客户端，并且在future done的时候通知客户端。 整个过程可以参考下面的代码：</p>
+<blockquote>
+<p>客户端同步服务端异步</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Future&lt;Result&gt; future = request(server);<span class="comment">//server立刻返回future</span></span><br><span class="line"><span class="keyword">synchronized</span>(future)&#123;</span><br><span class="line"><span class="keyword">while</span>(!future.isDone())&#123;</span><br><span class="line">   future.wait();<span class="comment">//server处理结束后会notify这个future，并修改isdone标志</span></span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> future.get();</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>客户端同步服务端同步</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Result result = request(server);</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>客户端异步服务端同步（使用线程池方式）</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Future&lt;Result&gt; future = executor.submit(<span class="keyword">new</span> Callable()&#123;<span class="keyword">public</span> <span class="keyword">void</span> call&lt;Result&gt;()&#123;</span><br><span class="line">    result = request(server);</span><br><span class="line">&#125;&#125;)</span><br><span class="line"><span class="keyword">return</span> future;</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>客户端异步服务端异步</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Future&lt;Result&gt; future = request(server);<span class="comment">//server立刻返回future</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> future</span><br></pre></td></tr></table></figure>
+<p>上面说了这么多，其实是想让大家脱离两个误区：</p>
+<ul>
+<li><p>RPC只有客户端能做异步，服务端不能。</p>
+</li>
+<li><p>异步只能通过线程池。</p>
+</li>
+</ul>
+<p>那么，服务端使用异步最大的好处是什么呢？说到底，是解放了线程和I/O。试想服务端有一堆I/O等待处理，如果每个请求都需要同步响应，每条消息都需要结果立刻返回，那么就几乎没法做I/O合并 （当然接口可以设计成batch的，但可能batch发过来的仍然数量较少）。而如果用异步的方式返回给客户端future，就可以有机会进行I/O的合并，把几个批次发过来的消息一起落地（这种合并对于MySQL等允许batch insert的数据库效果尤其明显），并且彻底释放了线程。不至于说来多少请求开多少线程，能够支持的并发量直线提高。 来看第二个误区，返回future的方式不一定只有线程池。换句话说，可以在线程池里面进行同步操作，也可以进行异步操作，也可以不使用线程池使用异步操作（NIO、事件）。 回到消息队列的议题上，我们当然不希望消息的发送阻塞主流程（前面提到了，server端如果使用异步模型，则可能因消息合并带来一定程度上的消息延迟），所以可以先使用线程池提交一个发送请求，主流程继续往下走。 但是线程池中的请求关心结果吗？Of course，必须等待服务端消息成功落地，才算是消息发送成功。所以这里的模型，准确地说事客户端半同步半异步（使用线程池不阻塞主流程，但线程池中的任务需要等待server端的返回），server端是纯异步。客户端的线程池wait在server端吐回的future上，直到server端处理完毕，才解除阻塞继续进行。 总结一句，同步能够保证结果，异步能够保证效率，要合理的结合才能做到最好的效率。</p>
+<h2 id="批量"><a href="#批量" class="headerlink" title="批量"></a>批量</h2><p>谈到批量就不得不提生产者消费者模型。但生产者消费者模型中最大的痛点是：消费者到底应该何时进行消费。大处着眼来看，消费动作都是事件驱动的。主要事件包括：</p>
+<ol>
+<li>攒够了一定数量。</li>
+<li>到达了一定时间。</li>
+<li>队列里有新的数据到来。</li>
+</ol>
+<p>对于及时性要求高的数据，可用采用方式3来完成，比如客户端向服务端投递数据。只要队列有数据，就把队列中的所有数据刷出，否则将自己挂起，等待新数据的到来。 在第一次把队列数据往外刷的过程中，又积攒了一部分数据，第二次又可以形成一个批量。伪代码如下:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Executor executor = Executors.newFixedThreadPool(<span class="number">4</span>);</span><br><span class="line"><span class="keyword">final</span> BlockingQueue&lt;Message&gt; queue = <span class="keyword">new</span> ArrayBlockingQueue&lt;&gt;();</span><br><span class="line"><span class="keyword">private</span> Runnable task = <span class="keyword">new</span> Runnable(&#123;<span class="comment">//这里由于共享队列，Runnable可以复用，故做成全局的</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">      List&lt;Message&gt; messages  = <span class="keyword">new</span> ArrayList&lt;&gt;(<span class="number">20</span>);</span><br><span class="line">      queue.drainTo(messages，<span class="number">20</span>);</span><br><span class="line">      doSend(messages);<span class="comment">//阻塞，在这个过程中会有新的消息到来，如果4个线程都占满，队列就有机会囤新的消息</span></span><br><span class="line">   &#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">send</span><span class="params">(Message message)</span></span>&#123;</span><br><span class="line">    queue.offer(message);</span><br><span class="line">    executor.submit(task)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种方式是消息延迟和批量的一个比较好的平衡，但优先响应低延迟。延迟的最高程度由上一次发送的等待时间决定。但可能造成的问题是发送过快的话批量的大小不够满足性能的极致。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Executor executor = Executors.newFixedThreadPool(<span class="number">4</span>);</span><br><span class="line"><span class="keyword">final</span> BlockingQueue&lt;Message&gt; queue = <span class="keyword">new</span> ArrayBlockingQueue&lt;&gt;();</span><br><span class="line"><span class="keyword">volatile</span> <span class="keyword">long</span> last = System.currentMills();</span><br><span class="line">Executors.newSingleThreadScheduledExecutor().submit(<span class="keyword">new</span> Runnable()&#123;</span><br><span class="line">   flush();</span><br><span class="line">&#125;，<span class="number">500</span>，<span class="number">500</span>，TimeUnits.MILLS);</span><br><span class="line"><span class="keyword">private</span> Runnable task = <span class="keyword">new</span> Runnable(&#123;<span class="comment">//这里由于共享队列，Runnable可以复用，顾做成全局的。</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">      List&lt;Message&gt; messages  = <span class="keyword">new</span> ArrayList&lt;&gt;(<span class="number">20</span>);</span><br><span class="line">      queue.drainTo(messages，<span class="number">20</span>);</span><br><span class="line">      doSend(messages);<span class="comment">//阻塞，在这个过程中会有新的消息到来，如果4个线程都占满，队列就有机会屯新的消息。</span></span><br><span class="line">   &#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">send</span><span class="params">(Message message)</span></span>&#123;</span><br><span class="line">    last = System.currentMills();</span><br><span class="line">    queue.offer(message);</span><br><span class="line">    flush();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">flush</span><span class="params">()</span></span>&#123;</span><br><span class="line"> <span class="keyword">if</span>(queue.size&gt;<span class="number">200</span>||System.currentMills()-last&gt;<span class="number">200</span>)&#123;</span><br><span class="line">       executor.submit(task)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>相反对于可以用适量的延迟来换取高性能的场景来说，用定时/定量二选一的方式可能会更为理想，既到达一定数量才发送，但如果数量一直达不到，也不能干等，有一个时间上限。 具体说来，在上文的submit之前，多判断一个时间和数量，并且Runnable内部维护一个定时器，避免没有新任务到来时旧的任务永远没有机会触发发送条件。对于server端的数据落地，使用这种方式就非常方便。</p>
+<p>最后啰嗦几句，曾经有人问我，为什么网络请求小包合并成大包会提高性能？主要原因有两个：</p>
+<ul>
+<li><p>减少无谓的请求头，如果你每个请求只有几字节，而头却有几十字节，无疑效率非常低下。</p>
+</li>
+<li><p>减少回复的ack包个数。把请求合并后，ack包数量必然减少，确认和重发的成本就会降低。</p>
+</li>
+</ul>
+<h3 id="push还是pull"><a href="#push还是pull" class="headerlink" title="push还是pull"></a>push还是pull</h3><p>上文提到的消息队列，大多是针对push模型的设计。现在市面上有很多经典的也比较成熟的pull模型的消息队列，如Kafka、MetaQ等。这跟JMS中传统的push方式有很大的区别，可谓另辟蹊径。 我们简要分析下push和pull模型各自存在的利弊。</p>
+<h4 id="慢消费"><a href="#慢消费" class="headerlink" title="慢消费"></a>慢消费</h4><p>慢消费无疑是push模型最大的致命伤，穿成流水线来看，如果消费者的速度比发送者的速度慢很多，势必造成消息在broker的堆积。假设这些消息都是有用的无法丢弃的，消息就要一直在broker端保存。当然这还不是最致命的，最致命的是broker给consumer推送一堆consumer无法处理的消息，consumer不是reject就是error，然后来回踢皮球。 反观pull模式，consumer可以按需消费，不用担心自己处理不了的消息来骚扰自己，而broker堆积消息也会相对简单，无需记录每一个要发送消息的状态，只需要维护所有消息的队列和偏移量就可以了。所以对于建立索引等慢消费，消息量有限且到来的速度不均匀的情况，pull模式比较合适。</p>
+<h3 id="消息延迟与忙等"><a href="#消息延迟与忙等" class="headerlink" title="消息延迟与忙等"></a>消息延迟与忙等</h3><p>这是pull模式最大的短板。由于主动权在消费方，消费方无法准确地决定何时去拉取最新的消息。如果一次pull取到消息了还可以继续去pull，如果没有pull取到则需要等待一段时间重新pull。 但等待多久就很难判定了。你可能会说，我可以有xx动态pull取时间调整算法，但问题的本质在于，有没有消息到来这件事情决定权不在消费方。也许1分钟内连续来了1000条消息，然后半个小时没有新消息产生， 可能你的算法算出下次最有可能到来的时间点是31分钟之后，或者60分钟之后，结果下条消息10分钟后到了，是不是很让人沮丧？ 当然也不是说延迟就没有解决方案了，业界较成熟的做法是从短时间开始（不会对broker有太大负担），然后指数级增长等待。比如开始等5ms，然后10ms，然后20ms，然后40ms……直到有消息到来，然后再回到5ms。 即使这样，依然存在延迟问题：假设40ms到80ms之间的50ms消息到来，消息就延迟了30ms，而且对于半个小时来一次的消息，这些开销就是白白浪费的。 在阿里的RocketMq里，有一种优化的做法-长轮询，来平衡推拉模型各自的缺点。基本思路是:消费者如果尝试拉取失败，不是直接return,而是把连接挂在那里wait,服务端如果有新的消息到来，把连接notify起来，这也是不错的思路。但海量的长连接block对系统的开销还是不容小觑的，还是要合理的评估时间间隔，给wait加一个时间上限比较好~</p>
+<h3 id="顺序消息"><a href="#顺序消息" class="headerlink" title="顺序消息"></a>顺序消息</h3><p>如果push模式的消息队列，支持分区，单分区只支持一个消费者消费，并且消费者只有确认一个消息消费后才能push送另外一个消息，还要发送者保证全局顺序唯一，听起来也能做顺序消息，但成本太高了，尤其是必须每个消息消费确认后才能发下一条消息，这对于本身堆积能力和慢消费就是瓶颈的push模式的消息队列，简直是一场灾难。 反观pull模式，如果想做到全局顺序消息，就相对容易很多：</p>
+<ol>
+<li>producer对应partition，并且单线程。</li>
+<li>consumer对应partition，消费确认（或批量确认），继续消费即可。</li>
+</ol>
+<p>所以对于日志push送这种最好全局有序，但允许出现小误差的场景，pull模式非常合适。如果你不想看到通篇乱套的日志~~ Anyway，需要顺序消息的场景还是比较有限的而且成本太高，请慎重考虑。</p>
+<p>本文从为何使用消息队列开始讲起，然后主要介绍了如何从零开始设计一个消息队列，包括RPC、事务、最终一致性、广播、消息确认等关键问题。并对消息队列的push、pull模型做了简要分析，最后从批量和异步角度，分析了消息队列性能优化的思路。 </p>
+]]></content>
+      <categories>
+        <category>MQ</category>
+      </categories>
+      <tags>
+        <tag>RabbitMQ</tag>
+      </tags>
   </entry>
   <entry>
     <title>过度与动画</title>
@@ -3989,91 +4074,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </categories>
       <tags>
         <tag>链表</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>设计消息队列--&gt;2</title>
-    <url>/2021/03/13/%E8%AE%BE%E8%AE%A1%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E9%83%A8%E5%88%86/</url>
-    <content><![CDATA[<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p>持久性是事务的一个特性，然而只满足持久性却不一定能满足事务的特性。还是拿扣钱/加钱的例子讲。满足事务的一致性特征，则必须要么都不进行，要么都能成功。 解决方案从大方向上有两种：</p>
-<blockquote>
-<p>两阶段提交，分布式事务。</p>
-</blockquote>
-<blockquote>
-<p>本地事务，本地落地，补偿发送。</p>
-</blockquote>
-<p>分布式事务存在的最大问题是成本太高，两阶段提交协议，对于仲裁down机或者单点故障，几乎是一个无解的黑洞。对于交易密集型或者I/O密集型的应用，没有办法承受这么高的网络延迟，系统复杂性。 并且成熟的分布式事务一定构建与比较靠谱的商用DB和商用中间件上，成本也太高。 那如何使用本地事务解决分布式事务的问题呢？以本地和业务在一个数据库实例中建表为例子，与扣钱的业务操作同一个事务里，将消息插入本地数据库。如果消息入库失败，则业务回滚；如果消息入库成功，事务提交。 然后发送消息（注意这里可以实时发送，不需要等定时任务检出，以提高消息实时性）。以后的问题就是前文的最终一致性问题所提到的了，只要消息没有发送成功，就一直靠定时任务重试。 这里有一个关键的点，本地事务做的，是业务落地和消息落地的事务，而不是业务落地和RPC成功的事务。这里很多人容易混淆，如果是后者，无疑是事务嵌套RPC，是大忌，会有长事务死锁等各种风险。 而消息只要成功落地，很大程度上就没有丢失的风险（磁盘物理损坏除外）。而消息只要投递到服务端确认后本地才做删除，就完成了producer-&gt;broker的可靠投递，并且当消息存储异常时，业务也是可以回滚的。 本地事务存在两个最大的使用障碍：</p>
-<blockquote>
-<p>配置较为复杂，“绑架”业务方，必须本地数据库实例提供一个库表。</p>
-</blockquote>
-<blockquote>
-<p>对于消息延迟高敏感的业务不适用。</p>
-</blockquote>
-<p>话说回来，不是每个业务都需要强事务的。扣钱和加钱需要事务保证，但下单和生成短信却不需要事务，不能因为要求发短信的消息存储投递失败而要求下单业务回滚。所以，一个完整的消息队列应该定义清楚自己可以投递的消息类型，如事务型消息，本地非持久型消息，以及服务端不落地的非可靠消息等。对不同的业务场景做不同的选择。另外事务的使用应该尽量低成本、透明化，可以依托于现有的成熟框架，如Spring的声明式事务做扩展。业务方只需要使用@Transactional标签即可。</p>
-<h2 id="性能相关"><a href="#性能相关" class="headerlink" title="性能相关"></a>性能相关</h2><h3 id="异步、同步"><a href="#异步、同步" class="headerlink" title="异步、同步"></a>异步、同步</h3><p>首先澄清一个概念，异步，同步和oneway是三件事。异步，归根结底你还是需要关心结果的，但可能不是当时的时间点关心，可以用轮询或者回调等方式处理结果；同步是需要当时关心 的结果的；而oneway是发出去就不管死活的方式，这种对于某些完全对可靠性没有要求的场景还是适用的，但不是我们重点讨论的范畴。 回归来看，任何的RPC都是存在客户端异步与服务端异步的，而且是可以任意组合的：客户端同步对服务端异步，客户端异步对服务端异步，客户端同步对服务端同步，客户端异步对服务端同步。 对于客户端来说，同步与异步主要是拿到一个Result，还是Future(Listenable)的区别。实现方式可以是线程池，NIO或者其他事件机制，这里先不展开讲。 服务端异步可能稍微难理解一点，这个是需要RPC协议支持的。参考servlet 3.0规范，服务端可以吐一个future给客户端，并且在future done的时候通知客户端。 整个过程可以参考下面的代码：</p>
-<blockquote>
-<p>客户端同步服务端异步</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Future&lt;Result&gt; future = request(server);<span class="comment">//server立刻返回future</span></span><br><span class="line"><span class="keyword">synchronized</span>(future)&#123;</span><br><span class="line"><span class="keyword">while</span>(!future.isDone())&#123;</span><br><span class="line">   future.wait();<span class="comment">//server处理结束后会notify这个future，并修改isdone标志</span></span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> future.get();</span><br></pre></td></tr></table></figure>
-
-
-<blockquote>
-<p>客户端同步服务端同步</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Result result = request(server);</span><br></pre></td></tr></table></figure>
-
-
-<blockquote>
-<p>客户端异步服务端同步（使用线程池方式）</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Future&lt;Result&gt; future = executor.submit(<span class="keyword">new</span> Callable()&#123;<span class="keyword">public</span> <span class="keyword">void</span> call&lt;Result&gt;()&#123;</span><br><span class="line">    result = request(server);</span><br><span class="line">&#125;&#125;)</span><br><span class="line"><span class="keyword">return</span> future;</span><br></pre></td></tr></table></figure>
-
-
-<blockquote>
-<p>客户端异步服务端异步</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Future&lt;Result&gt; future = request(server);<span class="comment">//server立刻返回future</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> future</span><br></pre></td></tr></table></figure>
-<p>上面说了这么多，其实是想让大家脱离两个误区：</p>
-<ul>
-<li><p>RPC只有客户端能做异步，服务端不能。</p>
-</li>
-<li><p>异步只能通过线程池。</p>
-</li>
-</ul>
-<p>那么，服务端使用异步最大的好处是什么呢？说到底，是解放了线程和I/O。试想服务端有一堆I/O等待处理，如果每个请求都需要同步响应，每条消息都需要结果立刻返回，那么就几乎没法做I/O合并 （当然接口可以设计成batch的，但可能batch发过来的仍然数量较少）。而如果用异步的方式返回给客户端future，就可以有机会进行I/O的合并，把几个批次发过来的消息一起落地（这种合并对于MySQL等允许batch insert的数据库效果尤其明显），并且彻底释放了线程。不至于说来多少请求开多少线程，能够支持的并发量直线提高。 来看第二个误区，返回future的方式不一定只有线程池。换句话说，可以在线程池里面进行同步操作，也可以进行异步操作，也可以不使用线程池使用异步操作（NIO、事件）。 回到消息队列的议题上，我们当然不希望消息的发送阻塞主流程（前面提到了，server端如果使用异步模型，则可能因消息合并带来一定程度上的消息延迟），所以可以先使用线程池提交一个发送请求，主流程继续往下走。 但是线程池中的请求关心结果吗？Of course，必须等待服务端消息成功落地，才算是消息发送成功。所以这里的模型，准确地说事客户端半同步半异步（使用线程池不阻塞主流程，但线程池中的任务需要等待server端的返回），server端是纯异步。客户端的线程池wait在server端吐回的future上，直到server端处理完毕，才解除阻塞继续进行。 总结一句，同步能够保证结果，异步能够保证效率，要合理的结合才能做到最好的效率。</p>
-<h2 id="批量"><a href="#批量" class="headerlink" title="批量"></a>批量</h2><p>谈到批量就不得不提生产者消费者模型。但生产者消费者模型中最大的痛点是：消费者到底应该何时进行消费。大处着眼来看，消费动作都是事件驱动的。主要事件包括：</p>
-<ol>
-<li>攒够了一定数量。</li>
-<li>到达了一定时间。</li>
-<li>队列里有新的数据到来。</li>
-</ol>
-<p>对于及时性要求高的数据，可用采用方式3来完成，比如客户端向服务端投递数据。只要队列有数据，就把队列中的所有数据刷出，否则将自己挂起，等待新数据的到来。 在第一次把队列数据往外刷的过程中，又积攒了一部分数据，第二次又可以形成一个批量。伪代码如下:</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Executor executor = Executors.newFixedThreadPool(<span class="number">4</span>);</span><br><span class="line"><span class="keyword">final</span> BlockingQueue&lt;Message&gt; queue = <span class="keyword">new</span> ArrayBlockingQueue&lt;&gt;();</span><br><span class="line"><span class="keyword">private</span> Runnable task = <span class="keyword">new</span> Runnable(&#123;<span class="comment">//这里由于共享队列，Runnable可以复用，故做成全局的</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">      List&lt;Message&gt; messages  = <span class="keyword">new</span> ArrayList&lt;&gt;(<span class="number">20</span>);</span><br><span class="line">      queue.drainTo(messages，<span class="number">20</span>);</span><br><span class="line">      doSend(messages);<span class="comment">//阻塞，在这个过程中会有新的消息到来，如果4个线程都占满，队列就有机会囤新的消息</span></span><br><span class="line">   &#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">send</span><span class="params">(Message message)</span></span>&#123;</span><br><span class="line">    queue.offer(message);</span><br><span class="line">    executor.submit(task)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这种方式是消息延迟和批量的一个比较好的平衡，但优先响应低延迟。延迟的最高程度由上一次发送的等待时间决定。但可能造成的问题是发送过快的话批量的大小不够满足性能的极致。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Executor executor = Executors.newFixedThreadPool(<span class="number">4</span>);</span><br><span class="line"><span class="keyword">final</span> BlockingQueue&lt;Message&gt; queue = <span class="keyword">new</span> ArrayBlockingQueue&lt;&gt;();</span><br><span class="line"><span class="keyword">volatile</span> <span class="keyword">long</span> last = System.currentMills();</span><br><span class="line">Executors.newSingleThreadScheduledExecutor().submit(<span class="keyword">new</span> Runnable()&#123;</span><br><span class="line">   flush();</span><br><span class="line">&#125;，<span class="number">500</span>，<span class="number">500</span>，TimeUnits.MILLS);</span><br><span class="line"><span class="keyword">private</span> Runnable task = <span class="keyword">new</span> Runnable(&#123;<span class="comment">//这里由于共享队列，Runnable可以复用，顾做成全局的。</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">      List&lt;Message&gt; messages  = <span class="keyword">new</span> ArrayList&lt;&gt;(<span class="number">20</span>);</span><br><span class="line">      queue.drainTo(messages，<span class="number">20</span>);</span><br><span class="line">      doSend(messages);<span class="comment">//阻塞，在这个过程中会有新的消息到来，如果4个线程都占满，队列就有机会屯新的消息。</span></span><br><span class="line">   &#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">send</span><span class="params">(Message message)</span></span>&#123;</span><br><span class="line">    last = System.currentMills();</span><br><span class="line">    queue.offer(message);</span><br><span class="line">    flush();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">flush</span><span class="params">()</span></span>&#123;</span><br><span class="line"> <span class="keyword">if</span>(queue.size&gt;<span class="number">200</span>||System.currentMills()-last&gt;<span class="number">200</span>)&#123;</span><br><span class="line">       executor.submit(task)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>相反对于可以用适量的延迟来换取高性能的场景来说，用定时/定量二选一的方式可能会更为理想，既到达一定数量才发送，但如果数量一直达不到，也不能干等，有一个时间上限。 具体说来，在上文的submit之前，多判断一个时间和数量，并且Runnable内部维护一个定时器，避免没有新任务到来时旧的任务永远没有机会触发发送条件。对于server端的数据落地，使用这种方式就非常方便。</p>
-<p>最后啰嗦几句，曾经有人问我，为什么网络请求小包合并成大包会提高性能？主要原因有两个：</p>
-<ul>
-<li><p>减少无谓的请求头，如果你每个请求只有几字节，而头却有几十字节，无疑效率非常低下。</p>
-</li>
-<li><p>减少回复的ack包个数。把请求合并后，ack包数量必然减少，确认和重发的成本就会降低。</p>
-</li>
-</ul>
-<h3 id="push还是pull"><a href="#push还是pull" class="headerlink" title="push还是pull"></a>push还是pull</h3><p>上文提到的消息队列，大多是针对push模型的设计。现在市面上有很多经典的也比较成熟的pull模型的消息队列，如Kafka、MetaQ等。这跟JMS中传统的push方式有很大的区别，可谓另辟蹊径。 我们简要分析下push和pull模型各自存在的利弊。</p>
-<h4 id="慢消费"><a href="#慢消费" class="headerlink" title="慢消费"></a>慢消费</h4><p>慢消费无疑是push模型最大的致命伤，穿成流水线来看，如果消费者的速度比发送者的速度慢很多，势必造成消息在broker的堆积。假设这些消息都是有用的无法丢弃的，消息就要一直在broker端保存。当然这还不是最致命的，最致命的是broker给consumer推送一堆consumer无法处理的消息，consumer不是reject就是error，然后来回踢皮球。 反观pull模式，consumer可以按需消费，不用担心自己处理不了的消息来骚扰自己，而broker堆积消息也会相对简单，无需记录每一个要发送消息的状态，只需要维护所有消息的队列和偏移量就可以了。所以对于建立索引等慢消费，消息量有限且到来的速度不均匀的情况，pull模式比较合适。</p>
-<h3 id="消息延迟与忙等"><a href="#消息延迟与忙等" class="headerlink" title="消息延迟与忙等"></a>消息延迟与忙等</h3><p>这是pull模式最大的短板。由于主动权在消费方，消费方无法准确地决定何时去拉取最新的消息。如果一次pull取到消息了还可以继续去pull，如果没有pull取到则需要等待一段时间重新pull。 但等待多久就很难判定了。你可能会说，我可以有xx动态pull取时间调整算法，但问题的本质在于，有没有消息到来这件事情决定权不在消费方。也许1分钟内连续来了1000条消息，然后半个小时没有新消息产生， 可能你的算法算出下次最有可能到来的时间点是31分钟之后，或者60分钟之后，结果下条消息10分钟后到了，是不是很让人沮丧？ 当然也不是说延迟就没有解决方案了，业界较成熟的做法是从短时间开始（不会对broker有太大负担），然后指数级增长等待。比如开始等5ms，然后10ms，然后20ms，然后40ms……直到有消息到来，然后再回到5ms。 即使这样，依然存在延迟问题：假设40ms到80ms之间的50ms消息到来，消息就延迟了30ms，而且对于半个小时来一次的消息，这些开销就是白白浪费的。 在阿里的RocketMq里，有一种优化的做法-长轮询，来平衡推拉模型各自的缺点。基本思路是:消费者如果尝试拉取失败，不是直接return,而是把连接挂在那里wait,服务端如果有新的消息到来，把连接notify起来，这也是不错的思路。但海量的长连接block对系统的开销还是不容小觑的，还是要合理的评估时间间隔，给wait加一个时间上限比较好~</p>
-<h3 id="顺序消息"><a href="#顺序消息" class="headerlink" title="顺序消息"></a>顺序消息</h3><p>如果push模式的消息队列，支持分区，单分区只支持一个消费者消费，并且消费者只有确认一个消息消费后才能push送另外一个消息，还要发送者保证全局顺序唯一，听起来也能做顺序消息，但成本太高了，尤其是必须每个消息消费确认后才能发下一条消息，这对于本身堆积能力和慢消费就是瓶颈的push模式的消息队列，简直是一场灾难。 反观pull模式，如果想做到全局顺序消息，就相对容易很多：</p>
-<ol>
-<li>producer对应partition，并且单线程。</li>
-<li>consumer对应partition，消费确认（或批量确认），继续消费即可。</li>
-</ol>
-<p>所以对于日志push送这种最好全局有序，但允许出现小误差的场景，pull模式非常合适。如果你不想看到通篇乱套的日志~~ Anyway，需要顺序消息的场景还是比较有限的而且成本太高，请慎重考虑。</p>
-<p>本文从为何使用消息队列开始讲起，然后主要介绍了如何从零开始设计一个消息队列，包括RPC、事务、最终一致性、广播、消息确认等关键问题。并对消息队列的push、pull模型做了简要分析，最后从批量和异步角度，分析了消息队列性能优化的思路。 </p>
-]]></content>
-      <categories>
-        <category>MQ</category>
-      </categories>
-      <tags>
-        <tag>RabbitMQ</tag>
       </tags>
   </entry>
   <entry>
@@ -4737,7 +4737,13 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
 
 
 
-]]></content>
+<h3 id="相关问题"><a href="#相关问题" class="headerlink" title="相关问题"></a>相关问题</h3><h4 id="Docker中安装Tomcat外部访问报错404资源未找到"><a href="#Docker中安装Tomcat外部访问报错404资源未找到" class="headerlink" title="Docker中安装Tomcat外部访问报错404资源未找到"></a>Docker中安装Tomcat外部访问报错404资源未找到</h4><p>1.将webapps.dist更名为webapps</p>
+ <img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/20.png" class>
+
+
+
+<p>2.将webapps.dist中的内容复制到webapps</p>
+ <img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/21.png" class>]]></content>
       <categories>
         <category>Docker</category>
       </categories>
@@ -4817,7 +4823,7 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>Docker学习第一阶段</title>
+    <title>Docker基础命令与镜像</title>
     <url>/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/</url>
     <content><![CDATA[<h1 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h1><img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/01.png" class>
 
@@ -5132,6 +5138,82 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
 <p><img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/临时markdown文件保存\docker_learning\Docker.assets\image-20200617210932306.png" alt="image-20200617210932306"></p>
 <p><img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/临时markdown文件保存\docker_learning\Docker.assets\image-20200617211021003.png" alt="image-20200617211021003"></p>
 <p><img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/临时markdown文件保存\docker_learning\Docker.assets\image-20200617211039508.png" alt="image-20200617211039508"></p>
+<h2 id="Docker镜像"><a href="#Docker镜像" class="headerlink" title="Docker镜像"></a>Docker镜像</h2><h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><h4 id="UnionFS-联合文件系统"><a href="#UnionFS-联合文件系统" class="headerlink" title="UnionFS 联合文件系统"></a>UnionFS 联合文件系统</h4><p>联合文件系统（<a href="https://en.wikipedia.org/wiki/UnionFS">UnionFS</a>）是一种分层、轻量级并且高性能的文件系统，它支持对文件系统的修改作为一次提交来一层层的叠加，同时可以将不同目录挂载到同一个虚拟文件系统下(unite several directories into a single virtual filesystem)。</p>
+<p>联合文件系统是 Docker 镜像的基础。镜像可以通过分层来进行继承，基于基础镜像（没有父镜像），可以制作各种具体的应用镜像。</p>
+<p>另外，不同 Docker 容器就可以共享一些基础的文件系统层，同时再加上自己独有的改动层，大大提高了存储的效率。</p>
+<p>Docker 中使用的 AUFS（Advanced Multi-Layered Unification Filesystem）就是一种联合文件系统。 <code>AUFS</code> 支持为每一个成员目录（类似 Git 的分支）设定只读（readonly）、读写（readwrite）和写出（whiteout-able）权限, 同时 <code>AUFS</code> 里有一个类似分层的概念, 对只读权限的分支可以逻辑上进行增量地修改(不影响只读部分的)。</p>
+<p>Docker 目前支持的联合文件系统包括 <code>OverlayFS</code>, <code>AUFS</code>, <code>Btrfs</code>, <code>VFS</code>, <code>ZFS</code> 和 <code>Device Mapper</code>。</p>
+<p>各 Linux 发行版 Docker 推荐使用的存储驱动如下表。</p>
+<table>
+<thead>
+<tr>
+<th>Linux 发行版</th>
+<th>Docker 推荐使用的存储驱动</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Docker on Ubuntu</td>
+<td><code>overlay2</code> (16.04 +)</td>
+</tr>
+<tr>
+<td>Docker on Debian</td>
+<td><code>overlay2</code> (Debian Stretch), <code>aufs</code>, <code>devicemapper</code></td>
+</tr>
+<tr>
+<td>Docker on CentOS</td>
+<td><code>overlay2</code></td>
+</tr>
+<tr>
+<td>Docker on Fedora</td>
+<td><code>overlay2</code></td>
+</tr>
+</tbody></table>
+<p>在可能的情况下，<a href="https://docs.docker.com/storage/storagedriver/select-storage-driver/">推荐</a> 使用 <code>overlay2</code> 存储驱动，<code>overlay2</code> 是目前 Docker 默认的存储驱动，以前则是 <code>aufs</code>。你可以通过配置来使用以上提到的其他类型的存储驱动。</p>
+ <img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/40.png" class>
+
+<p>bootfs：boot file system</p>
+<p>rootfs：root file system</p>
+ <img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/41.png" class>
+
+
+
+
+
+ <img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/42.png" class>
+
+ <img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/43.png" class>
+
+
+
+ <img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/44.png" class>
+
+<p>Docker镜像都是只读的，当容器启动时，一个新的可写层被加到镜像的顶部，这一层就是我们通常说的容器层，容器层之下的都叫镜像层</p>
+ <img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/45.png" class>
+
+<h3 id="commit提交镜像"><a href="#commit提交镜像" class="headerlink" title="commit提交镜像"></a>commit提交镜像</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker commit # 提交容器成为一个新的副本</span><br><span class="line">docker commit -m=&quot;提交的描述信息&quot; -a=&quot;作者&quot; 容器id 目标镜像名：[TAG]</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker images</span><br><span class="line">docker run -it -p 8080:8080 tomcat</span><br></pre></td></tr></table></figure>
+ <img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/46.png" class>
+
+<p>这是一个前台程序</p>
+ <img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/47.png" class>
+
+<p>将webapps.dist里面所有的文件拷贝到webapps里面，其中-r必须有，表示目录递归拷贝</p>
+ <img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/48.png" class>
+
+
+
+ <img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/49.png" class>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker commit -a=&quot;paidaxing&quot; -m=&quot;add webapps app&quot; 当前容器的id tomcat02:1.0</span><br></pre></td></tr></table></figure>
+ <img data-src="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/50.png" class>
+
+<p>发现新的版本，比之前的大了一些，因为里面记录了我们的改动</p>
+<blockquote>
+<p>如果想保存当前容器的状态，可以通过commit提交，获得一个镜像</p>
+<p>好比我们以前学习VM的时候的快照</p>
+<p>到这里算是入门了</p>
+<p>接下来三个部分是docker的精髓</p>
+</blockquote>
 ]]></content>
       <categories>
         <category>Docker</category>
