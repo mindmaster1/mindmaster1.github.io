@@ -107,6 +107,11 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
+    <title>HTTP缓存</title>
+    <url>/2021/02/03/HTTP%E7%BC%93%E5%AD%98/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>HTTP认证机制</title>
     <url>/2021/03/03/HTTP%E8%AE%A4%E8%AF%81%E6%9C%BA%E5%88%B6/</url>
     <content><![CDATA[<h2 id="认证"><a href="#认证" class="headerlink" title="认证"></a>认证</h2><p>认证就是给出一些身份证明，当然，不论哪一种认证策略都不是绝对有效的，但每种证据都有助于构建合理的信任。</p>
@@ -231,6 +236,53 @@
       </tags>
   </entry>
   <entry>
+    <title>InnoDB存储引擎</title>
+    <url>/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
+    <content><![CDATA[<h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
+<p>InnoDB存储引擎有多个内存块，这些内存块组成了一个大的内存池</p>
+<p>后台线程的主要作用就是负责刷新内存池中的数据，保证缓存池中的内存缓存的是最近的数据。此外，还将已经修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下，InnoDB可以恢复运行到最佳状态。</p>
+<h4 id="后台线程（InnDB是一个多线程模型"><a href="#后台线程（InnDB是一个多线程模型" class="headerlink" title="后台线程（InnDB是一个多线程模型)"></a>后台线程（InnDB是一个多线程模型)</h4><p>#####Master Thread</p>
+<p><strong>作用：</strong></p>
+<p>​    一个非常核心的后台进程，负责将缓存池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓存、UNDO页的回收等。</p>
+<h5 id="IO-Therad"><a href="#IO-Therad" class="headerlink" title="IO Therad"></a>IO Therad</h5><p>  在InnoDB存储引擎中大量使用了AIO（Async IO）—异步时间非阻塞IO，这样可以极大程度上提高数据库的性能。IO Thread的主要工作就是负责这些IO请求的回调</p>
+<p>共有四个IO Thread:write 、read、insert buffer、log IO thread</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114130216.png" alt="image-20210114114130216"></p>
+<p>通过命令SHOW ENGINE INNODB STASTUS\G来观察IO Thread</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114405936.png" alt="image-20210114114405936"></p>
+<p>有四个write和read IO Thread</p>
+<p>通过innodb_read_io_threads和innodb_write_io_threads参数来进行设置</p>
+<h5 id="Purge-Thread"><a href="#Purge-Thread" class="headerlink" title="Purge Thread"></a>Purge Thread</h5><p><strong>作用</strong>：</p>
+<p>​    Purge Thread回收已经使用并且已经分配的undo页（事务提交之后，其所使用的Undolog可能就不再需要）</p>
+<p>用户需要在<strong>MySQL数据库的配置文件</strong>中添加如下命令来启用独立的Purge Thread: </p>
+<p>​        innodb_purge_threads=1</p>
+<h5 id="Page-Cleaner-Thread"><a href="#Page-Cleaner-Thread" class="headerlink" title="Page Cleaner Thread"></a>Page Cleaner Thread</h5><p><strong>作用</strong>：</p>
+<p>​    将脏页的刷新操作放在单独的线程中完成。减轻Master Thread的工作以及对于用户查询线程的阻塞</p>
+<h4 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h4><h5 id="缓存池"><a href="#缓存池" class="headerlink" title="缓存池"></a>缓存池</h5><p>Innodb存储引擎是基于磁盘存储的（Disk-base Database），将其中的记录按照页来管理。</p>
+<p>缓存池的出现，就是为了解决CPU速度和磁盘速度之间的差异，通过内存的速度来弥补磁盘速度较慢对数据库性能的影响。读取文件时，首先判断给文件是否在缓存池中（没有就去磁盘上找）。</p>
+<p>在修改缓存池中的页时，先以一定频率刷新到缓存池上，然后通过Checkpoint刷新回磁盘。</p>
+<p>数据库服务器最好采用64位操作系统，可以使用更多的内存（512GB），32位（只有64GB）。</p>
+<p>缓存池的配置通过参数innodb_buffer_pool_size来设置。</p>
+<h6 id="缓存池中缓存的数据页类型："><a href="#缓存池中缓存的数据页类型：" class="headerlink" title="缓存池中缓存的数据页类型："></a>缓存池中缓存的数据页类型：</h6><p>​    索引页、数据页、Undo页、插入缓存页、自适应哈希索引页（adaptive hash index）、InnoDB存储的锁信息、数据字典信息等。</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114131120313.png" alt="image-20210114131120313"></p>
+<p><strong>允许有多个缓存池实例</strong>：每个页根据hashcode平均分配到不同的缓存池实例中，减少数据库内部资源的竞争，增加数据库的并发能力。可以通过inodb_buffer_pool_instances来进行配置，通过命令SHOW ENGINE INNODB STATUS可以观察到每个缓存池实例对象运行的状态，还可以通过查看表InnoDB_BUFFER_POOL_STATS来观察缓存的状态(要求在information_schema架构下)</p>
+<h5 id="LRU-LIST-、FREE-LIST-、FLUSH-LIST"><a href="#LRU-LIST-、FREE-LIST-、FLUSH-LIST" class="headerlink" title="LRU LIST 、FREE LIST 、FLUSH LIST"></a>LRU LIST 、FREE LIST 、FLUSH LIST</h5><p><strong>LRU</strong>算法用来管理已经读取的页</p>
+<p>数据库中的缓存池是通过LRU（Latest Recent Used,最近最少使用）算法来管理内部的各种类型的页。</p>
+<p><strong>LRU解释</strong>：将最频繁使用的页放在LRU列表的前端，最少使用的页放在LRU列表的尾端。当缓存池不能存放新读取到的页时，将优先删除列表尾端的页（默认大小为16KB）。</p>
+<p><strong>改进</strong>：</p>
+<p>1、（midpoint insertion strategy）：InnoDB中在LRU中加入了midpoint位置，将新读取到的页放在midpoint，而不是直接放在LRU列表首部。<strong>默认位置在LRU列表长度63%处</strong>（可以通过innodb_old_blocks_pct来控制）</p>
+<p>2、设置了参数innodb_old_blocks_time,用于表示页读取到mid位置后需要等待多久才会加入到LRU列表的热端</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133522544.png" alt="image-20210114133522544"></p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133412580.png" alt="image-20210114133412580"></p>
+<p><strong>为什么要对朴素的LRU算法进行改良</strong>？</p>
+<h5 id="重做日志缓存"><a href="#重做日志缓存" class="headerlink" title="重做日志缓存"></a>重做日志缓存</h5><h5 id="额外的内存池"><a href="#额外的内存池" class="headerlink" title="额外的内存池"></a>额外的内存池</h5>]]></content>
+      <categories>
+        <category>MySQL数据库</category>
+      </categories>
+      <tags>
+        <tag>InnoDB存储引擎</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>IPVS</title>
     <url>/2021/03/25/IPVS/</url>
     <content><![CDATA[<h1 id="一、LVS简介"><a href="#一、LVS简介" class="headerlink" title="一、LVS简介"></a>一、LVS简介</h1><p>LVS是Linux Virtual Server的简称，也就是Linux虚拟服务器, 是一个由章文嵩博士发起的自由软件项目，现在已经是 Linux标准内核的一部分。LVS是一种叫基于TCP/IP的负载均衡技术，转发效率极高，具有处理百万计并发连接请求的能力。</p>
@@ -299,61 +351,9 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>HTTP缓存</title>
-    <url>/2021/02/03/HTTP%E7%BC%93%E5%AD%98/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>InnoDB表</title>
     <url>/2021/03/14/InnoDB%E8%A1%A8/</url>
     <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>InnoDB存储引擎</title>
-    <url>/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
-    <content><![CDATA[<h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
-<p>InnoDB存储引擎有多个内存块，这些内存块组成了一个大的内存池</p>
-<p>后台线程的主要作用就是负责刷新内存池中的数据，保证缓存池中的内存缓存的是最近的数据。此外，还将已经修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下，InnoDB可以恢复运行到最佳状态。</p>
-<h4 id="后台线程（InnDB是一个多线程模型"><a href="#后台线程（InnDB是一个多线程模型" class="headerlink" title="后台线程（InnDB是一个多线程模型)"></a>后台线程（InnDB是一个多线程模型)</h4><p>#####Master Thread</p>
-<p><strong>作用：</strong></p>
-<p>​    一个非常核心的后台进程，负责将缓存池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓存、UNDO页的回收等。</p>
-<h5 id="IO-Therad"><a href="#IO-Therad" class="headerlink" title="IO Therad"></a>IO Therad</h5><p>  在InnoDB存储引擎中大量使用了AIO（Async IO）—异步时间非阻塞IO，这样可以极大程度上提高数据库的性能。IO Thread的主要工作就是负责这些IO请求的回调</p>
-<p>共有四个IO Thread:write 、read、insert buffer、log IO thread</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114130216.png" alt="image-20210114114130216"></p>
-<p>通过命令SHOW ENGINE INNODB STASTUS\G来观察IO Thread</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114405936.png" alt="image-20210114114405936"></p>
-<p>有四个write和read IO Thread</p>
-<p>通过innodb_read_io_threads和innodb_write_io_threads参数来进行设置</p>
-<h5 id="Purge-Thread"><a href="#Purge-Thread" class="headerlink" title="Purge Thread"></a>Purge Thread</h5><p><strong>作用</strong>：</p>
-<p>​    Purge Thread回收已经使用并且已经分配的undo页（事务提交之后，其所使用的Undolog可能就不再需要）</p>
-<p>用户需要在<strong>MySQL数据库的配置文件</strong>中添加如下命令来启用独立的Purge Thread: </p>
-<p>​        innodb_purge_threads=1</p>
-<h5 id="Page-Cleaner-Thread"><a href="#Page-Cleaner-Thread" class="headerlink" title="Page Cleaner Thread"></a>Page Cleaner Thread</h5><p><strong>作用</strong>：</p>
-<p>​    将脏页的刷新操作放在单独的线程中完成。减轻Master Thread的工作以及对于用户查询线程的阻塞</p>
-<h4 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h4><h5 id="缓存池"><a href="#缓存池" class="headerlink" title="缓存池"></a>缓存池</h5><p>Innodb存储引擎是基于磁盘存储的（Disk-base Database），将其中的记录按照页来管理。</p>
-<p>缓存池的出现，就是为了解决CPU速度和磁盘速度之间的差异，通过内存的速度来弥补磁盘速度较慢对数据库性能的影响。读取文件时，首先判断给文件是否在缓存池中（没有就去磁盘上找）。</p>
-<p>在修改缓存池中的页时，先以一定频率刷新到缓存池上，然后通过Checkpoint刷新回磁盘。</p>
-<p>数据库服务器最好采用64位操作系统，可以使用更多的内存（512GB），32位（只有64GB）。</p>
-<p>缓存池的配置通过参数innodb_buffer_pool_size来设置。</p>
-<h6 id="缓存池中缓存的数据页类型："><a href="#缓存池中缓存的数据页类型：" class="headerlink" title="缓存池中缓存的数据页类型："></a>缓存池中缓存的数据页类型：</h6><p>​    索引页、数据页、Undo页、插入缓存页、自适应哈希索引页（adaptive hash index）、InnoDB存储的锁信息、数据字典信息等。</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114131120313.png" alt="image-20210114131120313"></p>
-<p><strong>允许有多个缓存池实例</strong>：每个页根据hashcode平均分配到不同的缓存池实例中，减少数据库内部资源的竞争，增加数据库的并发能力。可以通过inodb_buffer_pool_instances来进行配置，通过命令SHOW ENGINE INNODB STATUS可以观察到每个缓存池实例对象运行的状态，还可以通过查看表InnoDB_BUFFER_POOL_STATS来观察缓存的状态(要求在information_schema架构下)</p>
-<h5 id="LRU-LIST-、FREE-LIST-、FLUSH-LIST"><a href="#LRU-LIST-、FREE-LIST-、FLUSH-LIST" class="headerlink" title="LRU LIST 、FREE LIST 、FLUSH LIST"></a>LRU LIST 、FREE LIST 、FLUSH LIST</h5><p><strong>LRU</strong>算法用来管理已经读取的页</p>
-<p>数据库中的缓存池是通过LRU（Latest Recent Used,最近最少使用）算法来管理内部的各种类型的页。</p>
-<p><strong>LRU解释</strong>：将最频繁使用的页放在LRU列表的前端，最少使用的页放在LRU列表的尾端。当缓存池不能存放新读取到的页时，将优先删除列表尾端的页（默认大小为16KB）。</p>
-<p><strong>改进</strong>：</p>
-<p>1、（midpoint insertion strategy）：InnoDB中在LRU中加入了midpoint位置，将新读取到的页放在midpoint，而不是直接放在LRU列表首部。<strong>默认位置在LRU列表长度63%处</strong>（可以通过innodb_old_blocks_pct来控制）</p>
-<p>2、设置了参数innodb_old_blocks_time,用于表示页读取到mid位置后需要等待多久才会加入到LRU列表的热端</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133522544.png" alt="image-20210114133522544"></p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133412580.png" alt="image-20210114133412580"></p>
-<p><strong>为什么要对朴素的LRU算法进行改良</strong>？</p>
-<h5 id="重做日志缓存"><a href="#重做日志缓存" class="headerlink" title="重做日志缓存"></a>重做日志缓存</h5><h5 id="额外的内存池"><a href="#额外的内存池" class="headerlink" title="额外的内存池"></a>额外的内存池</h5>]]></content>
-      <categories>
-        <category>MySQL数据库</category>
-      </categories>
-      <tags>
-        <tag>InnoDB存储引擎</tag>
-      </tags>
   </entry>
   <entry>
     <title>JVM系列之堆</title>
@@ -443,6 +443,11 @@
   <entry>
     <title>Java高并发JUC</title>
     <url>/2021/02/25/Java%E9%AB%98%E5%B9%B6%E5%8F%91JUC/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Jenkins自动化部署工具</title>
+    <url>/2021/03/14/Jenkins%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E5%B7%A5%E5%85%B7/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -574,11 +579,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Jenkins自动化部署工具</title>
-    <url>/2021/03/14/Jenkins%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E5%B7%A5%E5%85%B7/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Linux进程管理</title>
     <url>/2021/03/14/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/</url>
     <content><![CDATA[]]></content>
@@ -696,6 +696,68 @@
       </tags>
   </entry>
   <entry>
+    <title>MVVM框架</title>
+    <url>/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/</url>
+    <content><![CDATA[<p>一个软件或者 APP都是服务于某种需求，这称之为“业务需求”。随着业务需求的增多、软件会变得越来越庞大，越来越复杂。所以就会设计一套完整的架构设计、研发流程以及质量管理体系来保证整个研发过程。“架构设计”是一个非常大的话题，它涉及到各方面，近年来前端一个明显的开发趋势就是架构从传统的 MVC 模式向 MVVM 模式迁移，这里来谈谈——MVVM模式。</p>
+<h2 id="什么是MVVM"><a href="#什么是MVVM" class="headerlink" title="什么是MVVM"></a>什么是MVVM</h2><blockquote>
+<p>MVVM（Model–View–Viewmodel）是一种软件架构模式。<br>MVVM有助于将图形用户界面的开发与业务逻辑或后端逻辑（数据模型）的开发分离开，这是通过标记语言或GUI代码实现的。MVVM的视图模型是一个值转换器， 这意味着视图模型负责从模型中暴露（转换）数据对象，以便轻松管理和呈现对象。在这方面，视图模型比视图做得更多，并且处理大部分视图的显示逻辑。 视图模型可以实现中介者模式，组织对视图所支持的用例集的后端逻辑的访问</p>
+</blockquote>
+<p><a href="https://zh.wikipedia.org/wiki/MVVM">想要了解更多关于MVVM的定义，点击访问维基百科</a></p>
+<h2 id="MVVM涉及到的概念"><a href="#MVVM涉及到的概念" class="headerlink" title="MVVM涉及到的概念"></a>MVVM涉及到的概念</h2><ul>
+<li>M(odel)层：模型，定义数据结构。</li>
+<li>C(ontroller)层：实现业务逻辑，数据的增删改查。在MVVM模式中一般把C层算在M层中，（只有在理想的双向绑定模式下，Controller 才会完全的消失。这种理想状态一般不存在）</li>
+<li>ViewModel层：顾名思义是视图View的模型、映射和显示逻辑（如if for等，非业务逻辑），另外绑定器也在此层。ViewModel是基于视图开发的一套模型，如果你的应用是给盲人用的，那么也可以开发一套基于Audio的模型AudioModel。</li>
+<li>V(iew)层：将ViewModel通过特定的GUI展示出来，并在GUI控件上绑定视图交互事件，V(iew)一般由MVVM框架自动生成在浏览器中。</li>
+</ul>
+<h2 id="MVVM的工作机制"><a href="#MVVM的工作机制" class="headerlink" title="MVVM的工作机制"></a>MVVM的工作机制</h2><p>在MVVM架构下，View 和 Model 之间其实并没有直接的联系，而是通<strong>过ViewModel进行交互</strong>，Model 和 ViewModel 之间的交互是*<u>双向</u>*的， 因此View 数据的变化会同步到Model中，而Model 数据的变化也会立即反应到View 上。</p>
+<p>ViewModel 通过双向数据绑定把 View 层和 Model 层连接了起来。ViewModel里面包含DOM Listeners(数据监听)和Data Bindings(数据绑定)，DOM Listeners和Data Bindings是实现双向绑定的关键。</p>
+<blockquote>
+<p>DOM Listeners监听页面所有View层DOM元素的变化，当发生变化，Model层的数据随之变化；</p>
+</blockquote>
+<blockquote>
+<p>Data Bindings监听Model层的数据，当数据发生变化，View层的DOM元素随之变化。</p>
+</blockquote>
+<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/01.png" class>
+
+
+
+<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/02.png" class>
+
+
+
+<h2 id="MVVM模式的优缺点"><a href="#MVVM模式的优缺点" class="headerlink" title="MVVM模式的优缺点"></a>MVVM模式的优缺点</h2><p>MVVM模式相较于原先的MVP模式至少省下30%编码量，甚至能省下70%DOM操作，因为用MVP模式的话主要是在进行DOM操作</p>
+<blockquote>
+<p>优点</p>
+</blockquote>
+<ul>
+<li><strong>低耦合</strong>。View可以独立于Model变化和修改，一个ViewModel可以绑定到不同的View上，当View变化的时候Model可以不变，当Model变化的时候View也可以不变。</li>
+<li><strong>可重用性</strong>。可以把一些视图的逻辑放在ViewModel里面，让很多View重用这段视图逻辑。</li>
+<li>独立开发。开发人员可以专注与业务逻辑和数据的开发(ViewModel)。设计人员可以专注于界面(View)的设计。</li>
+<li><strong>可测试性</strong>。可以针对ViewModel来对界面(View)进行测试</li>
+</ul>
+<blockquote>
+<p>缺点</p>
+</blockquote>
+<ul>
+<li>学习成本高。</li>
+<li>DEBUG困难</li>
+<li>实现MVVM的开销对于简单的UI操作是过度的。而对于更大的应用来说，推广ViewModel将变得更加困难，非常大的应用程序中的数据绑定会导致相当大的内存消耗。</li>
+</ul>
+<h2 id="MVVM应用场景"><a href="#MVVM应用场景" class="headerlink" title="MVVM应用场景"></a>MVVM应用场景</h2><ul>
+<li>针对具有复杂交互逻辑的前端应用</li>
+<li>提供基础的架构抽象</li>
+<li>通过Ajax数据持久化，保证前端用户体验</li>
+</ul>
+<h2 id="常见的MVVM框架"><a href="#常见的MVVM框架" class="headerlink" title="常见的MVVM框架"></a>常见的MVVM框架</h2><p>Vue.js   AngularJs，ReactJs</p>
+]]></content>
+      <categories>
+        <category>项目架构</category>
+      </categories>
+      <tags>
+        <tag>架构模式</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Maven学习笔记</title>
     <url>/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/</url>
     <content><![CDATA[<h2 id="IDEA编辑器集成maven环境"><a href="#IDEA编辑器集成maven环境" class="headerlink" title="IDEA编辑器集成maven环境"></a>IDEA编辑器集成maven环境</h2><p>###设置Maven版本</p>
@@ -763,68 +825,6 @@
       </categories>
       <tags>
         <tag>Maven</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MVVM框架</title>
-    <url>/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/</url>
-    <content><![CDATA[<p>一个软件或者 APP都是服务于某种需求，这称之为“业务需求”。随着业务需求的增多、软件会变得越来越庞大，越来越复杂。所以就会设计一套完整的架构设计、研发流程以及质量管理体系来保证整个研发过程。“架构设计”是一个非常大的话题，它涉及到各方面，近年来前端一个明显的开发趋势就是架构从传统的 MVC 模式向 MVVM 模式迁移，这里来谈谈——MVVM模式。</p>
-<h2 id="什么是MVVM"><a href="#什么是MVVM" class="headerlink" title="什么是MVVM"></a>什么是MVVM</h2><blockquote>
-<p>MVVM（Model–View–Viewmodel）是一种软件架构模式。<br>MVVM有助于将图形用户界面的开发与业务逻辑或后端逻辑（数据模型）的开发分离开，这是通过标记语言或GUI代码实现的。MVVM的视图模型是一个值转换器， 这意味着视图模型负责从模型中暴露（转换）数据对象，以便轻松管理和呈现对象。在这方面，视图模型比视图做得更多，并且处理大部分视图的显示逻辑。 视图模型可以实现中介者模式，组织对视图所支持的用例集的后端逻辑的访问</p>
-</blockquote>
-<p><a href="https://zh.wikipedia.org/wiki/MVVM">想要了解更多关于MVVM的定义，点击访问维基百科</a></p>
-<h2 id="MVVM涉及到的概念"><a href="#MVVM涉及到的概念" class="headerlink" title="MVVM涉及到的概念"></a>MVVM涉及到的概念</h2><ul>
-<li>M(odel)层：模型，定义数据结构。</li>
-<li>C(ontroller)层：实现业务逻辑，数据的增删改查。在MVVM模式中一般把C层算在M层中，（只有在理想的双向绑定模式下，Controller 才会完全的消失。这种理想状态一般不存在）</li>
-<li>ViewModel层：顾名思义是视图View的模型、映射和显示逻辑（如if for等，非业务逻辑），另外绑定器也在此层。ViewModel是基于视图开发的一套模型，如果你的应用是给盲人用的，那么也可以开发一套基于Audio的模型AudioModel。</li>
-<li>V(iew)层：将ViewModel通过特定的GUI展示出来，并在GUI控件上绑定视图交互事件，V(iew)一般由MVVM框架自动生成在浏览器中。</li>
-</ul>
-<h2 id="MVVM的工作机制"><a href="#MVVM的工作机制" class="headerlink" title="MVVM的工作机制"></a>MVVM的工作机制</h2><p>在MVVM架构下，View 和 Model 之间其实并没有直接的联系，而是通<strong>过ViewModel进行交互</strong>，Model 和 ViewModel 之间的交互是*<u>双向</u>*的， 因此View 数据的变化会同步到Model中，而Model 数据的变化也会立即反应到View 上。</p>
-<p>ViewModel 通过双向数据绑定把 View 层和 Model 层连接了起来。ViewModel里面包含DOM Listeners(数据监听)和Data Bindings(数据绑定)，DOM Listeners和Data Bindings是实现双向绑定的关键。</p>
-<blockquote>
-<p>DOM Listeners监听页面所有View层DOM元素的变化，当发生变化，Model层的数据随之变化；</p>
-</blockquote>
-<blockquote>
-<p>Data Bindings监听Model层的数据，当数据发生变化，View层的DOM元素随之变化。</p>
-</blockquote>
-<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/01.png" class>
-
-
-
-<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/02.png" class>
-
-
-
-<h2 id="MVVM模式的优缺点"><a href="#MVVM模式的优缺点" class="headerlink" title="MVVM模式的优缺点"></a>MVVM模式的优缺点</h2><p>MVVM模式相较于原先的MVP模式至少省下30%编码量，甚至能省下70%DOM操作，因为用MVP模式的话主要是在进行DOM操作</p>
-<blockquote>
-<p>优点</p>
-</blockquote>
-<ul>
-<li><strong>低耦合</strong>。View可以独立于Model变化和修改，一个ViewModel可以绑定到不同的View上，当View变化的时候Model可以不变，当Model变化的时候View也可以不变。</li>
-<li><strong>可重用性</strong>。可以把一些视图的逻辑放在ViewModel里面，让很多View重用这段视图逻辑。</li>
-<li>独立开发。开发人员可以专注与业务逻辑和数据的开发(ViewModel)。设计人员可以专注于界面(View)的设计。</li>
-<li><strong>可测试性</strong>。可以针对ViewModel来对界面(View)进行测试</li>
-</ul>
-<blockquote>
-<p>缺点</p>
-</blockquote>
-<ul>
-<li>学习成本高。</li>
-<li>DEBUG困难</li>
-<li>实现MVVM的开销对于简单的UI操作是过度的。而对于更大的应用来说，推广ViewModel将变得更加困难，非常大的应用程序中的数据绑定会导致相当大的内存消耗。</li>
-</ul>
-<h2 id="MVVM应用场景"><a href="#MVVM应用场景" class="headerlink" title="MVVM应用场景"></a>MVVM应用场景</h2><ul>
-<li>针对具有复杂交互逻辑的前端应用</li>
-<li>提供基础的架构抽象</li>
-<li>通过Ajax数据持久化，保证前端用户体验</li>
-</ul>
-<h2 id="常见的MVVM框架"><a href="#常见的MVVM框架" class="headerlink" title="常见的MVVM框架"></a>常见的MVVM框架</h2><p>Vue.js   AngularJs，ReactJs</p>
-]]></content>
-      <categories>
-        <category>项目架构</category>
-      </categories>
-      <tags>
-        <tag>架构模式</tag>
       </tags>
   </entry>
   <entry>
@@ -1093,6 +1093,11 @@
       </tags>
   </entry>
   <entry>
+    <title>MongoDB数据库</title>
+    <url>/2021/02/25/MongoDB%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Mybatis动态代理与传参</title>
     <url>/2021/03/13/Mybatis%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/</url>
     <content><![CDATA[<h2 id="Mybatis动态代理实现CURD"><a href="#Mybatis动态代理实现CURD" class="headerlink" title="Mybatis动态代理实现CURD"></a>Mybatis动态代理实现CURD</h2><h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><blockquote>
@@ -1269,11 +1274,6 @@
       <tags>
         <tag>Mybatis</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>MongoDB数据库</title>
-    <url>/2021/02/25/MongoDB%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Mybatis框架</title>
@@ -1674,6 +1674,11 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
+    <title>Redis数据库</title>
+    <url>/2021/02/25/Redis%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>SVN版本控制系统</title>
     <url>/2021/02/06/SVN%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F/</url>
     <content><![CDATA[<h3 id="主要内容"><a href="#主要内容" class="headerlink" title="主要内容"></a>主要内容</h3>]]></content>
@@ -1683,22 +1688,6 @@
       <tags>
         <tag>SVN</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Session</title>
-    <url>/2021/02/25/Session/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>Java web</category>
-      </categories>
-      <tags>
-        <tag>Session</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Redis数据库</title>
-    <url>/2021/02/25/Redis%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Servlet规范一</title>
@@ -1781,9 +1770,15 @@
       </tags>
   </entry>
   <entry>
-    <title>SpringBoot入门二</title>
-    <url>/2021/03/21/SpringBoot%E5%85%A5%E9%97%A8%E4%BA%8C/</url>
+    <title>Session</title>
+    <url>/2021/02/25/Session/</url>
     <content><![CDATA[]]></content>
+      <categories>
+        <category>Java web</category>
+      </categories>
+      <tags>
+        <tag>Session</tag>
+      </tags>
   </entry>
   <entry>
     <title>SpringBoot入门一</title>
@@ -1852,6 +1847,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>SpringBoot框架</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>SpringBoot入门二</title>
+    <url>/2021/03/21/SpringBoot%E5%85%A5%E9%97%A8%E4%BA%8C/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Spring学习第一跳</title>
@@ -2111,11 +2111,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>XML映射文件详解</title>
-    <url>/2021/03/14/XML%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Undo页与redo页</title>
     <url>/2021/02/14/Undo%E9%A1%B5%E4%B8%8Eredo%E9%A1%B5/</url>
     <content><![CDATA[<h2 id="Undo-Log"><a href="#Undo-Log" class="headerlink" title="Undo Log"></a>Undo Log</h2><p>是为了实现事务的原子性，在MySQL数据库InnoDB存储引擎中，还用Undo Log来实现多版本并发控制(简称：MVCC)。</p>
@@ -2149,6 +2144,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>InnoDB存储引擎</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>XML映射文件详解</title>
+    <url>/2021/03/14/XML%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>XML配置文件详解</title>
@@ -2276,11 +2276,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>事件处理</title>
-    <url>/2021/03/14/%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>中断</title>
     <url>/2021/02/03/%E4%B8%AD%E6%96%AD/</url>
     <content><![CDATA[<h3 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h3><p>中断使得硬件得以发出通知给处理器，是一种变内核主动为硬件主动的方式。中断本质上是一种特殊的电信号。硬件在生成中断的时候并不需要考虑与处理器的时钟同步，即中断可以随时产生，<strong>内核随时可能因为新到来的中断而被打断</strong>。</p>
@@ -2325,6 +2320,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>中断</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>事件处理</title>
+    <url>/2021/03/14/%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>优秀项目</title>
@@ -2658,6 +2658,81 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
+    <title>双指针问题</title>
+    <url>/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h2 id="环形列表I"><a href="#环形列表I" class="headerlink" title="环形列表I"></a>环形列表I</h2><h3 id="题目说明"><a href="#题目说明" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，判断链表中是否有环。</p>
+<p>如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。</p>
+<p>如果链表中存在环，则返回 true 。 否则，返回 false 。</p>
+<p> 进阶：</p>
+<p>你能用 O(1)（即，常量）内存解决此问题吗？</p>
+<p> 示例 1：</p>
+<p> <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100453506.png" alt="image-20210114100453506"></p>
+<p>输入：head = [3,2,0,-4], pos = 1<br>输出：true<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100714252.png" alt="image-20210114100714252"></p>
+<p>输入：head = [1,2], pos = 0<br>输出：true<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
+<img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100749569.png" alt="image-20210114100749569" style="zoom:150%;">
+
+<p>输入：head = [1], pos = -1<br>输出：false<br>解释：链表中没有环。</p>
+<p>提示：</p>
+<p>链表中节点的数目范围是 [0, 104]<br>-105 &lt;= Node.val &lt;= 105<br>pos 为 -1 或者链表中的一个 有效索引 </p>
+<h3 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h3><p>####方法一：哈希表<br>思路及算法</p>
+<p>最容易想到的方法是遍历所有节点，每次遍历到一个节点时，判断该节点此前是否被访问过。</p>
+<p>具体地，我们可以使用哈希表来存储所有已经访问过的节点。每次我们到达一个节点，如果该节点已经存在于哈希表中，则说明该链表是环形链表，否则就将该节点加入哈希表中。重复这一过程，直到我们遍历完整个链表即可。</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">pulic <span class="class"><span class="keyword">class</span> <span class="title">solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascirle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        Set&lt;ListNOde&gt; seen = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span>( head !=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!seen.add(head))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>#####复杂度分析</p>
+<p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。最坏情况下我们需要遍历每个节点一次。</p>
+<p>空间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。主要为哈希表的开销，最坏情况下我们需要将每个节点插入到哈希表中一次。</p>
+<h4 id="方式二；双指针–快慢指针"><a href="#方式二；双指针–快慢指针" class="headerlink" title="方式二；双指针–快慢指针"></a>方式二；双指针–快慢指针</h4><p>方法需要读者对「Floyd 判圈算法」（又称龟兔赛跑算法）有所了解。</p>
+<p>假想「乌龟」和「兔子」在链表上移动，「兔子」跑得快，「乌龟」跑得慢。当「乌龟」和「兔子」从链表上的同一个节点开始移动时，如果该链表中没有环，那么「兔子」将一直处于「乌龟」的前方；如果该链表中有环，那么「兔子」会先于「乌龟」进入环，并且一直在环内移动。等到「乌龟」进入环时，由于「兔子」的速度快，它一定会在某个时刻与乌龟相遇，即套了「乌龟」若干圈。</p>
+<p>我们可以根据上述思路来解决本题。具体地，我们定义两个指针，一快一满。慢指针每次只移动一步，而快指针每次移动两步。初始时，慢指针在位置 head，而快指针在位置 head.next。这样一来，如果在移动的过程中，快指针反过来追上慢指针，就说明该链表为环形链表。否则快指针将到达链表尾部，该链表不为环形链表。</p>
+<p> 为什么我们要规定初始时慢指针在位置 head，快指针在位置 head.next，而不是两个指针都在位置 head（即与「乌龟」和「兔子」中的叙述相同）？</p>
+<p>观察下面的代码，我们使用的是 while 循环，循环条件先于循环体。由于循环条件一定是判断快慢指针是否重合，如果我们将两个指针初始都置于 head，那么 while 循环就不会执行。因此，我们可以假想一个在 head 之前的虚拟节点，慢指针从虚拟节点移动一步到达 head，快指针从虚拟节点移动两步到达 head.next，这样我们就可以使用 while 循环了。</p>
+<p>当然，我们也可以使用 do-while 循环。此时，我们就可以把快慢指针的初始值都置为 head。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">puclic <span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascycle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head;</span><br><span class="line">        ListNode fast = head.next;</span><br><span class="line">        <span class="keyword">while</span>(slow!=fast)&#123;</span><br><span class="line">            <span class="keyword">if</span>(fast==<span class="keyword">null</span>||fast.next==<span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            fast = fast.next.next</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。</p>
+<p>当链表中不存在环时，快指针将先于慢指针到达链表尾部，链表中每个节点至多被访问两次。</p>
+<p>当链表中存在环时，每一轮移动后，快慢指针的距离将减小一。而初始距离为环的长度，因此至多移动 NN 轮。</p>
+<p>空间复杂度：O(1)O(1)。我们只使用了两个指针的额外空间</p>
+<h2 id="环形列表II"><a href="#环形列表II" class="headerlink" title="环形列表II"></a>环形列表II</h2><h3 id="题目说明-1"><a href="#题目说明-1" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。</p>
+<p>为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意，pos 仅仅是用于标识环的情况，并不会作为参数传递到函数中。</p>
+<p>说明：不允许修改给定的链表。</p>
+<p>进阶：</p>
+<p>你是否可以使用 O(1) 空间解决此题？</p>
+<p> 示例 1：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102706369.png" alt="image-20210114102706369"></p>
+<p>输入：head = [3,2,0,-4], pos = 1<br>输出：返回索引为 1 的链表节点<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102721841.png" alt="image-20210114102721841"></p>
+<p>输入：head = [1,2], pos = 0<br>输出：返回索引为 0 的链表节点<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102737481.png" alt="image-20210114102737481"></p>
+<p>输入：head = [1], pos = -1<br>输出：返回 null<br>解释：链表中没有环。</p>
+<p>提示：</p>
+<p>链表中节点的数目范围在范围 [0, 104] 内<br>-105 &lt;= Node.val &lt;= 105<br>pos 的值为 -1 或者链表中的一个有效索引</p>
+<h3 id="题解-1"><a href="#题解-1" class="headerlink" title="题解"></a>题解</h3><h4 id="方法一：哈希表"><a href="#方法一：哈希表" class="headerlink" title="方法一：哈希表"></a>方法一：哈希表</h4><p>一个非常直观的思路是：我们遍历链表中的每个节点，并将它记录下来；一旦遇到了此前遍历过的节点，就可以判定链表中存在环。借助哈希表可以很方便地实现。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        ListNode pos = head;</span><br><span class="line">        Set&lt;ListNode&gt; visited = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span> (pos != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (visited.contains(pos)) &#123;</span><br><span class="line">                <span class="keyword">return</span> pos;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                visited.add(pos);</span><br><span class="line">            &#125;</span><br><span class="line">            pos = pos.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析-1"><a href="#复杂度分析-1" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们恰好需要访问链表中的每一个节点。</p>
+<p>空间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们需要将链表中的每个节点都保存在哈希表当中。</p>
+<h4 id="方法二：双指针–快慢指针"><a href="#方法二：双指针–快慢指针" class="headerlink" title="方法二：双指针–快慢指针"></a>方法二：双指针–快慢指针</h4><p>我们使用两个指针，\textit{fast}fast 与 \textit{slow}slow。它们起始都位于链表的头部。随后，\textit{slow}slow 指针每次向后移动一个位置，而 \textit{fast}fast 指针向后移动两个位置。如果链表中存在环，则 \textit{fast}fast 指针最终将再次与 \textit{slow}slow 指针在环中相遇。</p>
+<p>如下图所示，设链表中环外部分的长度为 aa。\textit{slow}slow 指针进入环后，又走了 bb 的距离与 \textit{fast}fast 相遇。此时，\textit{fast}fast 指针已经走完了环的 nn 圈，因此它走过的总距离为 a+n(b+c)+b=a+(n+1)b+nca+n(b+c)+b=a+(n+1)b+nc</p>
+ <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114103031586.png" alt="image-20210114103031586" style="zoom:50%;">
+
+<p>根据题意，任意时刻，\textit{fast}fast 指针走过的距离都为 \textit{slow}slow 指针的 22 倍。因此，我们有</p>
+<p>a+(n+1)b+nc=2(a+b) \implies a=c+(n-1)(b+c)<br>a+(n+1)b+nc=2(a+b)⟹a=c+(n−1)(b+c)</p>
+<p>有了 a=c+(n-1)(b+c)a=c+(n−1)(b+c) 的等量关系，我们会发现：从相遇点到入环点的距离加上 n-1n−1 圈的环长，恰好等于从链表头部到入环点的距离。</p>
+<p>因此，当发现 \textit{slow}slow 与 \textit{fast}fast 相遇时，我们再额外使用一个指针 \textit{ptr}ptr。起始，它指向链表头部；随后，它和 \textit{slow}slow 每次向后移动一个位置。最终，它们会在入环点相遇。 </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head, fast = head;</span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="keyword">null</span>) &#123;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            <span class="keyword">if</span> (fast.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">                fast = fast.next.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (fast == slow) &#123;</span><br><span class="line">                ListNode ptr = head;</span><br><span class="line">                <span class="keyword">while</span> (ptr != slow) &#123;</span><br><span class="line">                    ptr = ptr.next;</span><br><span class="line">                    slow = slow.next;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> ptr;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>#####复杂度分析</p>
+<p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。在最初判断快慢指针是否相遇时，\textit{slow}slow 指针走过的距离不会超过链表的总长度；随后寻找入环点时，走过的距离也不会超过链表的总长度。因此，总的执行时间为 O(N)+O(N)=O(N)O(N)+O(N)=O(N)。</p>
+<p>空间复杂度：O(1)O(1)。我们只使用了 \textit{slow}, \textit{fast}, \textit{ptr}slow,fast,ptr 三个指针。</p>
+]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>链表</tag>
+        <tag>双指针</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>哈希表easy篇总结</title>
     <url>/2021/03/11/%E5%93%88%E5%B8%8C%E8%A1%A8easy%E7%AF%87%E6%80%BB%E7%BB%93/</url>
     <content><![CDATA[<p>##哈希表刷题总结</p>
@@ -2731,81 +2806,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </categories>
       <tags>
         <tag>哈希表</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>双指针问题</title>
-    <url>/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<h2 id="环形列表I"><a href="#环形列表I" class="headerlink" title="环形列表I"></a>环形列表I</h2><h3 id="题目说明"><a href="#题目说明" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，判断链表中是否有环。</p>
-<p>如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。</p>
-<p>如果链表中存在环，则返回 true 。 否则，返回 false 。</p>
-<p> 进阶：</p>
-<p>你能用 O(1)（即，常量）内存解决此问题吗？</p>
-<p> 示例 1：</p>
-<p> <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100453506.png" alt="image-20210114100453506"></p>
-<p>输入：head = [3,2,0,-4], pos = 1<br>输出：true<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100714252.png" alt="image-20210114100714252"></p>
-<p>输入：head = [1,2], pos = 0<br>输出：true<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
-<img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100749569.png" alt="image-20210114100749569" style="zoom:150%;">
-
-<p>输入：head = [1], pos = -1<br>输出：false<br>解释：链表中没有环。</p>
-<p>提示：</p>
-<p>链表中节点的数目范围是 [0, 104]<br>-105 &lt;= Node.val &lt;= 105<br>pos 为 -1 或者链表中的一个 有效索引 </p>
-<h3 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h3><p>####方法一：哈希表<br>思路及算法</p>
-<p>最容易想到的方法是遍历所有节点，每次遍历到一个节点时，判断该节点此前是否被访问过。</p>
-<p>具体地，我们可以使用哈希表来存储所有已经访问过的节点。每次我们到达一个节点，如果该节点已经存在于哈希表中，则说明该链表是环形链表，否则就将该节点加入哈希表中。重复这一过程，直到我们遍历完整个链表即可。</p>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">pulic <span class="class"><span class="keyword">class</span> <span class="title">solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascirle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        Set&lt;ListNOde&gt; seen = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span>( head !=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!seen.add(head))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>#####复杂度分析</p>
-<p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。最坏情况下我们需要遍历每个节点一次。</p>
-<p>空间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。主要为哈希表的开销，最坏情况下我们需要将每个节点插入到哈希表中一次。</p>
-<h4 id="方式二；双指针–快慢指针"><a href="#方式二；双指针–快慢指针" class="headerlink" title="方式二；双指针–快慢指针"></a>方式二；双指针–快慢指针</h4><p>方法需要读者对「Floyd 判圈算法」（又称龟兔赛跑算法）有所了解。</p>
-<p>假想「乌龟」和「兔子」在链表上移动，「兔子」跑得快，「乌龟」跑得慢。当「乌龟」和「兔子」从链表上的同一个节点开始移动时，如果该链表中没有环，那么「兔子」将一直处于「乌龟」的前方；如果该链表中有环，那么「兔子」会先于「乌龟」进入环，并且一直在环内移动。等到「乌龟」进入环时，由于「兔子」的速度快，它一定会在某个时刻与乌龟相遇，即套了「乌龟」若干圈。</p>
-<p>我们可以根据上述思路来解决本题。具体地，我们定义两个指针，一快一满。慢指针每次只移动一步，而快指针每次移动两步。初始时，慢指针在位置 head，而快指针在位置 head.next。这样一来，如果在移动的过程中，快指针反过来追上慢指针，就说明该链表为环形链表。否则快指针将到达链表尾部，该链表不为环形链表。</p>
-<p> 为什么我们要规定初始时慢指针在位置 head，快指针在位置 head.next，而不是两个指针都在位置 head（即与「乌龟」和「兔子」中的叙述相同）？</p>
-<p>观察下面的代码，我们使用的是 while 循环，循环条件先于循环体。由于循环条件一定是判断快慢指针是否重合，如果我们将两个指针初始都置于 head，那么 while 循环就不会执行。因此，我们可以假想一个在 head 之前的虚拟节点，慢指针从虚拟节点移动一步到达 head，快指针从虚拟节点移动两步到达 head.next，这样我们就可以使用 while 循环了。</p>
-<p>当然，我们也可以使用 do-while 循环。此时，我们就可以把快慢指针的初始值都置为 head。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">puclic <span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascycle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head;</span><br><span class="line">        ListNode fast = head.next;</span><br><span class="line">        <span class="keyword">while</span>(slow!=fast)&#123;</span><br><span class="line">            <span class="keyword">if</span>(fast==<span class="keyword">null</span>||fast.next==<span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            fast = fast.next.next</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。</p>
-<p>当链表中不存在环时，快指针将先于慢指针到达链表尾部，链表中每个节点至多被访问两次。</p>
-<p>当链表中存在环时，每一轮移动后，快慢指针的距离将减小一。而初始距离为环的长度，因此至多移动 NN 轮。</p>
-<p>空间复杂度：O(1)O(1)。我们只使用了两个指针的额外空间</p>
-<h2 id="环形列表II"><a href="#环形列表II" class="headerlink" title="环形列表II"></a>环形列表II</h2><h3 id="题目说明-1"><a href="#题目说明-1" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。</p>
-<p>为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意，pos 仅仅是用于标识环的情况，并不会作为参数传递到函数中。</p>
-<p>说明：不允许修改给定的链表。</p>
-<p>进阶：</p>
-<p>你是否可以使用 O(1) 空间解决此题？</p>
-<p> 示例 1：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102706369.png" alt="image-20210114102706369"></p>
-<p>输入：head = [3,2,0,-4], pos = 1<br>输出：返回索引为 1 的链表节点<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102721841.png" alt="image-20210114102721841"></p>
-<p>输入：head = [1,2], pos = 0<br>输出：返回索引为 0 的链表节点<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102737481.png" alt="image-20210114102737481"></p>
-<p>输入：head = [1], pos = -1<br>输出：返回 null<br>解释：链表中没有环。</p>
-<p>提示：</p>
-<p>链表中节点的数目范围在范围 [0, 104] 内<br>-105 &lt;= Node.val &lt;= 105<br>pos 的值为 -1 或者链表中的一个有效索引</p>
-<h3 id="题解-1"><a href="#题解-1" class="headerlink" title="题解"></a>题解</h3><h4 id="方法一：哈希表"><a href="#方法一：哈希表" class="headerlink" title="方法一：哈希表"></a>方法一：哈希表</h4><p>一个非常直观的思路是：我们遍历链表中的每个节点，并将它记录下来；一旦遇到了此前遍历过的节点，就可以判定链表中存在环。借助哈希表可以很方便地实现。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        ListNode pos = head;</span><br><span class="line">        Set&lt;ListNode&gt; visited = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span> (pos != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (visited.contains(pos)) &#123;</span><br><span class="line">                <span class="keyword">return</span> pos;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                visited.add(pos);</span><br><span class="line">            &#125;</span><br><span class="line">            pos = pos.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析-1"><a href="#复杂度分析-1" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们恰好需要访问链表中的每一个节点。</p>
-<p>空间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们需要将链表中的每个节点都保存在哈希表当中。</p>
-<h4 id="方法二：双指针–快慢指针"><a href="#方法二：双指针–快慢指针" class="headerlink" title="方法二：双指针–快慢指针"></a>方法二：双指针–快慢指针</h4><p>我们使用两个指针，\textit{fast}fast 与 \textit{slow}slow。它们起始都位于链表的头部。随后，\textit{slow}slow 指针每次向后移动一个位置，而 \textit{fast}fast 指针向后移动两个位置。如果链表中存在环，则 \textit{fast}fast 指针最终将再次与 \textit{slow}slow 指针在环中相遇。</p>
-<p>如下图所示，设链表中环外部分的长度为 aa。\textit{slow}slow 指针进入环后，又走了 bb 的距离与 \textit{fast}fast 相遇。此时，\textit{fast}fast 指针已经走完了环的 nn 圈，因此它走过的总距离为 a+n(b+c)+b=a+(n+1)b+nca+n(b+c)+b=a+(n+1)b+nc</p>
- <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114103031586.png" alt="image-20210114103031586" style="zoom:50%;">
-
-<p>根据题意，任意时刻，\textit{fast}fast 指针走过的距离都为 \textit{slow}slow 指针的 22 倍。因此，我们有</p>
-<p>a+(n+1)b+nc=2(a+b) \implies a=c+(n-1)(b+c)<br>a+(n+1)b+nc=2(a+b)⟹a=c+(n−1)(b+c)</p>
-<p>有了 a=c+(n-1)(b+c)a=c+(n−1)(b+c) 的等量关系，我们会发现：从相遇点到入环点的距离加上 n-1n−1 圈的环长，恰好等于从链表头部到入环点的距离。</p>
-<p>因此，当发现 \textit{slow}slow 与 \textit{fast}fast 相遇时，我们再额外使用一个指针 \textit{ptr}ptr。起始，它指向链表头部；随后，它和 \textit{slow}slow 每次向后移动一个位置。最终，它们会在入环点相遇。 </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head, fast = head;</span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="keyword">null</span>) &#123;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            <span class="keyword">if</span> (fast.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">                fast = fast.next.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (fast == slow) &#123;</span><br><span class="line">                ListNode ptr = head;</span><br><span class="line">                <span class="keyword">while</span> (ptr != slow) &#123;</span><br><span class="line">                    ptr = ptr.next;</span><br><span class="line">                    slow = slow.next;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> ptr;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>#####复杂度分析</p>
-<p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。在最初判断快慢指针是否相遇时，\textit{slow}slow 指针走过的距离不会超过链表的总长度；随后寻找入环点时，走过的距离也不会超过链表的总长度。因此，总的执行时间为 O(N)+O(N)=O(N)O(N)+O(N)=O(N)。</p>
-<p>空间复杂度：O(1)O(1)。我们只使用了 \textit{slow}, \textit{fast}, \textit{ptr}slow,fast,ptr 三个指针。</p>
-]]></content>
-      <categories>
-        <category>数据结构</category>
-      </categories>
-      <tags>
-        <tag>链表</tag>
-        <tag>双指针</tag>
       </tags>
   </entry>
   <entry>
@@ -3221,164 +3221,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>类文件结构</title>
-    <url>/2021/01/16/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</url>
-    <content><![CDATA[<p>#类文件结构</p>
-<h2 id="虚拟机的无关性"><a href="#虚拟机的无关性" class="headerlink" title="虚拟机的无关性"></a>虚拟机的无关性</h2><p>Java的宣传口号是: <strong><em>WRITE ONCE , RUN ANYWHREE</em></strong></p>
-<p>java虚拟机力求实现的两种无关性：</p>
-<ol>
-<li><p>平台无关性</p>
-<p>各种不同平台的虚拟机与所有平台都统一使用的程序存储格式——–字节码（ByteCode）是构成平台无关性的基础，虚拟机可以载入同一种平台无关的字节码。</p>
-</li>
-<li><p>语言无关性：</p>
-<p><strong>举例</strong>：除了Java之外，Clojure、Groovy、JRuby、Jython、Scala都可以在Java虚拟机上运行</p>
-<p>实现语言无关性的基础是Java虚拟机不与任何语言绑定，只与**<em>“Class文件”这种特殊的二进制文件格式**</em>相关联，Class文件包含了Java虚拟机指令集和符号表以及若干其他辅助信息，在Class文件中使用了许多强制性的语法和结构化约束，任何一门语言都可以表示为被JAVA虚拟机锁接受的有效的Class文件。虚拟机只关心Class文件本身，而不关心Class文件的来源是哪种语言。</p>
-<p>在Class文件中，各种关键字、变量、和运算符号的语义都是有多条字节码命令组合而成的，字节码命令所能提供的语义描述能力必然要比java语言本身更为强大，所以Java虚拟机提供的支持远比java语言本身强大。</p>
-</li>
-</ol>
-<h2 id="Class类文件的结构"><a href="#Class类文件的结构" class="headerlink" title="Class类文件的结构"></a>Class类文件的结构</h2><p>Class文件是一组以8位字节为基础单位的二进制流，各个数据项目严格的按照顺序紧凑的排列在Class文件中，中间没有任何的分隔符，这使得整个Class文件中存储的内容几乎全是程序运行的必要数据，没有空隙存在。</p>
-<p>Class文件格式采用一种类似于C语言中struct的伪结构来进行存储数据：包括<strong>无符号数+表</strong></p>
-<p>1、无符号数：基本数据类型</p>
-<p>2、表：有多个无符号数或者其他表作为数据项构成的复合数据类型，习惯性的以__info结尾。表用于描述有层次关系的复合结构的数据。整个class文件本质上就是一张表。</p>
-<h3 id="magic-numer与class文件版本"><a href="#magic-numer与class文件版本" class="headerlink" title="magic numer与class文件版本"></a>magic numer与class文件版本</h3><h3 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h3><h3 id="访问标志"><a href="#访问标志" class="headerlink" title="访问标志"></a>访问标志</h3><h3 id="类索引、父类索引、接口索引集合"><a href="#类索引、父类索引、接口索引集合" class="headerlink" title="类索引、父类索引、接口索引集合"></a>类索引、父类索引、接口索引集合</h3><h3 id="字段表集合"><a href="#字段表集合" class="headerlink" title="字段表集合"></a>字段表集合</h3><h3 id="方法表集合"><a href="#方法表集合" class="headerlink" title="方法表集合"></a>方法表集合</h3><p>###属性表集合</p>
-]]></content>
-      <categories>
-        <category>JVM虚拟机</category>
-      </categories>
-      <tags>
-        <tag>JAVA</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>红队常用行话总结一</title>
-    <url>/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/</url>
-    <content><![CDATA[<h2 id="漏洞利用术语解读"><a href="#漏洞利用术语解读" class="headerlink" title="漏洞利用术语解读"></a>漏洞利用术语解读</h2><blockquote>
-<p>Vulnerability:即漏洞，</p>
-</blockquote>
-<p>是指计算机软件、硬件、系统、应用、协议等方面的缺陷，使得其保密性、完整性、可用性、访问控制等方面面临威胁。</p>
-<ul>
-<li><p>基于技术分类，有命令执行、权限绕过、缓存区溢出、注入、解析、弱口令、信息泄露等漏洞</p>
-</li>
-<li><p>基于时间分类，有0day、1day、Nday等漏洞</p>
- <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/01.png" class>
-
-<img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/02.png" class>
-
-</li>
-</ul>
-<blockquote>
-<p>Poc (Proof of Content)概念验证</p>
-</blockquote>
-<p>泛指对某些想法的一个较短而不完整的实现；在网络安全领域，通常指的是一段漏洞验证程序或者说是攻击样例，仅能验证漏洞存在，但并不能对漏洞造成实质性利用。在[计算机安全]术语中，<strong>概念验证</strong>经常被用来作为<a href="https://zh.wikipedia.org/wiki/0day">0day</a>、<a href="https://zh.wikipedia.org/wiki/Exploit">exploit</a>的别名。（通常指并没有充分利用这个漏洞的exploit）</p>
- <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/03.png" class>
-
-<blockquote>
-<p>Exploit 漏洞利用</p>
-</blockquote>
-  <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/04.png" class>
-
-
-
-<p>代表一段有漏洞价值的攻击代码或者漏洞利用过程，目的是获取未经授权的访问或者执行意外操作。常见的漏洞利用手段包括SQL注入、缓存区溢出、远程代码执行等。</p>
- <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/05.png" class>
-
- <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/06.png" class>
-
-
-
-<blockquote>
-<p>Payload 攻击载荷</p>
-</blockquote>
-<p>通常是指Exploit在拿下目标之后，攻击者在目标机器上执行的定制代码或者程序，包括但不限于系统命令、会话建立、Shellcode等。</p>
-  <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/07.png" class>
-
-
-
-<blockquote>
-<p>Shellcode</p>
-</blockquote>
-<ul>
-<li><p>shell：泛指系统控制权或者操作界面（CLI/GUI），通常在Exploit漏洞利用之后，首先要做的就是拿shell，以此进行进一步操作。</p>
-</li>
-<li><p>shellcode：用于获取控制权或者操作界面的攻击载荷代码，通常采用二进制机器代码，shellcode也是payload的一种类型</p>
-</li>
-<li><p>正反shell：shell需要绑定至指定IP地址后端口号上面，这个动作就是bindshell；有攻击方主动连接至受害者，则为正向shell；反之，由受害者主动连接至攻击方，则为反向shell。</p>
- <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/08.png" class>
-
-</li>
-</ul>
-<p>shellcode常常使用机器语言编写。 可在暂存器eip溢出后，塞入一段可让CPU执行的shellcode机械码，让电脑可以执行攻击者的任意指令。</p>
-<ul>
-<li>本地shellcode：本地运行的shellcode经常用于利用软件<a href="https://zh.wikipedia.org/wiki/%E6%BC%8F%E6%B4%9E">漏洞</a>提升权限。比如在Linux下由普通权限提升至<a href="https://zh.wikipedia.org/wiki/Root%E6%9D%83%E9%99%90">root权限</a>。</li>
-<li>远程shellcode：借由抓软件漏洞获得特定的shellcode，再经由C或Python撰写远端攻击程式，进而取得对方电脑之root权限。</li>
-</ul>
-<h2 id="恶意程序术语解读"><a href="#恶意程序术语解读" class="headerlink" title="恶意程序术语解读"></a>恶意程序术语解读</h2><blockquote>
-<p>Malware(Malicious Software) </p>
-</blockquote>
-<p>即恶意程序或软件，泛指病毒、蠕虫、木马、勒索软件、间谍软件，用于对目标系统进行入侵、控制、窃取、破坏等。</p>
-  <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/09.png" class>
-
-<blockquote>
-<p>Worm</p>
-</blockquote>
-<p>Worm即蠕虫病毒，能够独立于其他文件或者程序运行，能够给予网络进行自我复制或者传播，能实现从点到面的超大规模的破坏行为（例如占用CPU或带宽资源、修改删除文件）。</p>
-<p>计算机病毒不同的是，计算机蠕虫不需要附在别的程序内，可能不用用户介入操作也能自我复制或运行。计算机蠕虫未必会直接破坏被感染的系统，却几乎都对网络有害。计算机蠕虫可能会执行垃圾代码以发动分布式拒绝服务攻击，令计算机的执行效率极大程度降低，从而影响计算机的正常使用；可能会损毁或修改目标计算机的文件；亦可能只是浪费<a href="https://zh.wikipedia.org/wiki/%E9%A0%BB%E5%AF%AC">带宽</a>。（恶意的）计算机蠕虫可根据其目的分成2类：</p>
-<ul>
-<li>一种是面对大规模计算机使用网络发动拒绝服务的计算机蠕虫，虽说会绑架计算机，但用户可能还可以正常使用，只是会被占用一部分运算、连网能力。</li>
-<li>另一种是针对个人用户的以执行大量垃圾代码的计算机蠕虫。计算机蠕虫多不具有跨平台性，但是在其他平台下，可能会出现其平台特有的非跨平台性的平台版本。</li>
-</ul>
-<p>计算机蠕虫的传播过程：蠕虫程序常驻于一台或多台机器中，通常它会扫描其他机器是否有感染同种计算机蠕虫，如果没有，就会通过其内置的传播手段进行感染，以达到使计算机瘫痪的目的。其通常会以宿主机器作为扫描源。通常采用：<a href="https://zh.wikipedia.org/wiki/%E5%9E%83%E5%9C%BE%E9%82%AE%E4%BB%B6">垃圾邮件</a>、漏洞传播这2种方法来传播</p>
-<p>例子：2006年的熊猫烧香，通过网站投毒、局域网共享等方式植入系统并进行传播，Windows用户中毒后，后缀名为.exe的文件无法执行，文件图标会变成熊猫烧香的图案。</p>
-  <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/10.png" class>
-
-
-
-
-
-<blockquote>
-<p>Virus病毒</p>
-</blockquote>
-<p>通常依附于其他文件或者程序上，不进行自我复制获知或者传播，当受害者运行其它程序时则病毒启动，对目标系统造成破坏（例如修改删除文件）。</p>
-<p>例子：1998年的<strong>CIH病毒</strong>，能够破坏BIOS和硬盘，是电脑可以完全瘫痪，被公认为有史以来最为危险、破坏力最强的病毒之一。</p>
- <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/11.png" class>
-
-<p>! <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/12.png" class></p>
-<p>由于<a href="https://zh.wikipedia.org/wiki/%E4%B8%96%E7%95%8C">世界</a><a href="https://zh.wikipedia.org/wiki/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F">操作系统</a>[桌面环境]90%的市场都是使用<a href="https://zh.wikipedia.org/wiki/%E5%BE%AE%E8%BD%AF">微软</a>[Windows] 系列产品 ， 所以病毒作者纷纷把病毒攻击对象选为Windows。制作病毒者首先应该确定要攻击的操作系统版本有何<a href="https://zh.wikipedia.org/wiki/%E6%BC%8F%E6%B4%9E">漏洞</a>，这才是他所写的病毒能够利用的关键。Windows当时并没有有效的安全与防御功能，且用户常以管理员权限运行未经安全检查的软件，这也为Windows下病毒的泛滥提供了温床。<a href="https://zh.wikipedia.org/wiki/Linux">Linux</a>、<a href="https://zh.wikipedia.org/wiki/Mac_OS">Mac OS</a>等<a href="https://zh.wikipedia.org/wiki/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F">操作系统</a>，因使用的人群比较少，病毒一般不容易扩散。大多病毒发布作者的目的有多种，包括恶作剧、想搞破坏、报复及想出名与对研究病毒有特殊嗜好。 病毒主要通过<a href="https://zh.wikipedia.org/wiki/%E7%B6%B2%E8%B7%AF">网路</a>浏览以及<a href="https://zh.wikipedia.org/wiki/%E4%B8%8B%E8%BD%BD">下载</a>，<a href="https://zh.wikipedia.org/wiki/%E9%9B%BB%E5%AD%90%E9%83%B5%E4%BB%B6">电子邮件</a>以及可移动<a href="https://zh.wikipedia.org/wiki/%E7%A3%81%E7%A2%9F">磁盘</a>等途径迅速传播。[<a href="https://zh.wikipedia.org/wiki/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%97%85%E6%AF%92#cite_note-mc-4">4</a></p>
-<p>Trojan Horse(特洛伊木马)</p>
-<p>通常潜伏于“合法”软件中运行（也可以独立运行），不复制传播且高度隐蔽。木马运行时可以创建“后门”或者“隧道”，攻击者通过后门实现对目标系统的远程控制、监听、破坏行为。RAT（Remote Access Trojan）远控木马属于木马的一种，例如灰鸽子、冰河、Gh0st、ZXShell。</p>
- <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/13.png" class>
-
-
-
-
-
-<blockquote>
-<p>Ransomware(勒索软件)</p>
-</blockquote>
-<p>能够独立于其他文件运行，能够基于网络进行自我复制或者传播，通过对目标系统进行加密劫持，实现对受害者的钱财勒索。在所有的恶意程序类别中，勒索软件时面向个人和机构的最直接、最有效、最野蛮的“敛财方式”。</p>
- <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/14.png" class>
-
-<blockquote>
-<p>Spyware(间谍软件)</p>
-</blockquote>
-<p>流氓软件或者恶意软件，指未经用户许可搜集用户个人信息的恶意程序。通过搜集网站的浏览记录、键盘记录、账号密码等隐私信息，再以网站劫持、网址导航、弹框广告等方式变现盈利。</p>
-  <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/15.png" class>
-
-
-
-<blockquote>
-<p>Rootkits</p>
-</blockquote>
-<p>可看作升级型的木马病毒，泛指可以获取到<strong>root</strong>权限的恶意程序，以管理员权限运行、修改系统核心文件、绕过杀毒软件，包括系统内核rootkit、硬件固件rootkit、内存rootkit等类型。相比木马，Rootkits通常具备更高权限、更加隐蔽、更难查杀、更大危害等特征。、</p>
-]]></content>
-      <categories>
-        <category>网络安全</category>
-      </categories>
-      <tags>
-        <tag>红队攻防</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>消息队列产品与RabbitMQ的简介</title>
     <url>/2021/03/13/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E4%BA%A7%E5%93%81%E4%B8%8E%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%9E%8B/</url>
     <content><![CDATA[<h2 id="MQ常见产品"><a href="#MQ常见产品" class="headerlink" title="MQ常见产品"></a>MQ常见产品</h2><p>目前业界有很多的 MQ 产品，例如 RabbitMQ、RocketMQ、ActiveMQ、Kafka、ZeroMQ、MetaMq等，也有直接使用 Redis 充当消息队列的案例，而这些消息队列产品，各有侧重，在实际选型时，需要结合自身需求及 MQ 产品特征，综合考虑。</p>
@@ -3558,6 +3400,35 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
+    <title>类文件结构</title>
+    <url>/2021/01/16/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</url>
+    <content><![CDATA[<p>#类文件结构</p>
+<h2 id="虚拟机的无关性"><a href="#虚拟机的无关性" class="headerlink" title="虚拟机的无关性"></a>虚拟机的无关性</h2><p>Java的宣传口号是: <strong><em>WRITE ONCE , RUN ANYWHREE</em></strong></p>
+<p>java虚拟机力求实现的两种无关性：</p>
+<ol>
+<li><p>平台无关性</p>
+<p>各种不同平台的虚拟机与所有平台都统一使用的程序存储格式——–字节码（ByteCode）是构成平台无关性的基础，虚拟机可以载入同一种平台无关的字节码。</p>
+</li>
+<li><p>语言无关性：</p>
+<p><strong>举例</strong>：除了Java之外，Clojure、Groovy、JRuby、Jython、Scala都可以在Java虚拟机上运行</p>
+<p>实现语言无关性的基础是Java虚拟机不与任何语言绑定，只与**<em>“Class文件”这种特殊的二进制文件格式**</em>相关联，Class文件包含了Java虚拟机指令集和符号表以及若干其他辅助信息，在Class文件中使用了许多强制性的语法和结构化约束，任何一门语言都可以表示为被JAVA虚拟机锁接受的有效的Class文件。虚拟机只关心Class文件本身，而不关心Class文件的来源是哪种语言。</p>
+<p>在Class文件中，各种关键字、变量、和运算符号的语义都是有多条字节码命令组合而成的，字节码命令所能提供的语义描述能力必然要比java语言本身更为强大，所以Java虚拟机提供的支持远比java语言本身强大。</p>
+</li>
+</ol>
+<h2 id="Class类文件的结构"><a href="#Class类文件的结构" class="headerlink" title="Class类文件的结构"></a>Class类文件的结构</h2><p>Class文件是一组以8位字节为基础单位的二进制流，各个数据项目严格的按照顺序紧凑的排列在Class文件中，中间没有任何的分隔符，这使得整个Class文件中存储的内容几乎全是程序运行的必要数据，没有空隙存在。</p>
+<p>Class文件格式采用一种类似于C语言中struct的伪结构来进行存储数据：包括<strong>无符号数+表</strong></p>
+<p>1、无符号数：基本数据类型</p>
+<p>2、表：有多个无符号数或者其他表作为数据项构成的复合数据类型，习惯性的以__info结尾。表用于描述有层次关系的复合结构的数据。整个class文件本质上就是一张表。</p>
+<h3 id="magic-numer与class文件版本"><a href="#magic-numer与class文件版本" class="headerlink" title="magic numer与class文件版本"></a>magic numer与class文件版本</h3><h3 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h3><h3 id="访问标志"><a href="#访问标志" class="headerlink" title="访问标志"></a>访问标志</h3><h3 id="类索引、父类索引、接口索引集合"><a href="#类索引、父类索引、接口索引集合" class="headerlink" title="类索引、父类索引、接口索引集合"></a>类索引、父类索引、接口索引集合</h3><h3 id="字段表集合"><a href="#字段表集合" class="headerlink" title="字段表集合"></a>字段表集合</h3><h3 id="方法表集合"><a href="#方法表集合" class="headerlink" title="方法表集合"></a>方法表集合</h3><p>###属性表集合</p>
+]]></content>
+      <categories>
+        <category>JVM虚拟机</category>
+      </categories>
+      <tags>
+        <tag>JAVA</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>系统调用</title>
     <url>/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/</url>
     <content><![CDATA[<h2 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h2><h3 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h3><p>系统调用是内核与用户进程进行交互的一组接口，这些接口让应用程序受限制的访问硬件设备，提供了创建新进程并与已有进程进行交互通信的机制，也提供了申请操作系统其他资源的能力。</p>
@@ -3641,6 +3512,135 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </categories>
       <tags>
         <tag>Linux系统内核设计</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>红队常用行话总结一</title>
+    <url>/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/</url>
+    <content><![CDATA[<h2 id="漏洞利用术语解读"><a href="#漏洞利用术语解读" class="headerlink" title="漏洞利用术语解读"></a>漏洞利用术语解读</h2><blockquote>
+<p>Vulnerability:即漏洞，</p>
+</blockquote>
+<p>是指计算机软件、硬件、系统、应用、协议等方面的缺陷，使得其保密性、完整性、可用性、访问控制等方面面临威胁。</p>
+<ul>
+<li><p>基于技术分类，有命令执行、权限绕过、缓存区溢出、注入、解析、弱口令、信息泄露等漏洞</p>
+</li>
+<li><p>基于时间分类，有0day、1day、Nday等漏洞</p>
+ <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/01.png" class>
+
+<img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/02.png" class>
+
+</li>
+</ul>
+<blockquote>
+<p>Poc (Proof of Content)概念验证</p>
+</blockquote>
+<p>泛指对某些想法的一个较短而不完整的实现；在网络安全领域，通常指的是一段漏洞验证程序或者说是攻击样例，仅能验证漏洞存在，但并不能对漏洞造成实质性利用。在[计算机安全]术语中，<strong>概念验证</strong>经常被用来作为<a href="https://zh.wikipedia.org/wiki/0day">0day</a>、<a href="https://zh.wikipedia.org/wiki/Exploit">exploit</a>的别名。（通常指并没有充分利用这个漏洞的exploit）</p>
+ <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/03.png" class>
+
+<blockquote>
+<p>Exploit 漏洞利用</p>
+</blockquote>
+  <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/04.png" class>
+
+
+
+<p>代表一段有漏洞价值的攻击代码或者漏洞利用过程，目的是获取未经授权的访问或者执行意外操作。常见的漏洞利用手段包括SQL注入、缓存区溢出、远程代码执行等。</p>
+ <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/05.png" class>
+
+ <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/06.png" class>
+
+
+
+<blockquote>
+<p>Payload 攻击载荷</p>
+</blockquote>
+<p>通常是指Exploit在拿下目标之后，攻击者在目标机器上执行的定制代码或者程序，包括但不限于系统命令、会话建立、Shellcode等。</p>
+  <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/07.png" class>
+
+
+
+<blockquote>
+<p>Shellcode</p>
+</blockquote>
+<ul>
+<li><p>shell：泛指系统控制权或者操作界面（CLI/GUI），通常在Exploit漏洞利用之后，首先要做的就是拿shell，以此进行进一步操作。</p>
+</li>
+<li><p>shellcode：用于获取控制权或者操作界面的攻击载荷代码，通常采用二进制机器代码，shellcode也是payload的一种类型</p>
+</li>
+<li><p>正反shell：shell需要绑定至指定IP地址后端口号上面，这个动作就是bindshell；有攻击方主动连接至受害者，则为正向shell；反之，由受害者主动连接至攻击方，则为反向shell。</p>
+ <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/08.png" class>
+
+</li>
+</ul>
+<p>shellcode常常使用机器语言编写。 可在暂存器eip溢出后，塞入一段可让CPU执行的shellcode机械码，让电脑可以执行攻击者的任意指令。</p>
+<ul>
+<li>本地shellcode：本地运行的shellcode经常用于利用软件<a href="https://zh.wikipedia.org/wiki/%E6%BC%8F%E6%B4%9E">漏洞</a>提升权限。比如在Linux下由普通权限提升至<a href="https://zh.wikipedia.org/wiki/Root%E6%9D%83%E9%99%90">root权限</a>。</li>
+<li>远程shellcode：借由抓软件漏洞获得特定的shellcode，再经由C或Python撰写远端攻击程式，进而取得对方电脑之root权限。</li>
+</ul>
+<h2 id="恶意程序术语解读"><a href="#恶意程序术语解读" class="headerlink" title="恶意程序术语解读"></a>恶意程序术语解读</h2><blockquote>
+<p>Malware(Malicious Software) </p>
+</blockquote>
+<p>即恶意程序或软件，泛指病毒、蠕虫、木马、勒索软件、间谍软件，用于对目标系统进行入侵、控制、窃取、破坏等。</p>
+  <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/09.png" class>
+
+<blockquote>
+<p>Worm</p>
+</blockquote>
+<p>Worm即蠕虫病毒，能够独立于其他文件或者程序运行，能够给予网络进行自我复制或者传播，能实现从点到面的超大规模的破坏行为（例如占用CPU或带宽资源、修改删除文件）。</p>
+<p>计算机病毒不同的是，计算机蠕虫不需要附在别的程序内，可能不用用户介入操作也能自我复制或运行。计算机蠕虫未必会直接破坏被感染的系统，却几乎都对网络有害。计算机蠕虫可能会执行垃圾代码以发动分布式拒绝服务攻击，令计算机的执行效率极大程度降低，从而影响计算机的正常使用；可能会损毁或修改目标计算机的文件；亦可能只是浪费<a href="https://zh.wikipedia.org/wiki/%E9%A0%BB%E5%AF%AC">带宽</a>。（恶意的）计算机蠕虫可根据其目的分成2类：</p>
+<ul>
+<li>一种是面对大规模计算机使用网络发动拒绝服务的计算机蠕虫，虽说会绑架计算机，但用户可能还可以正常使用，只是会被占用一部分运算、连网能力。</li>
+<li>另一种是针对个人用户的以执行大量垃圾代码的计算机蠕虫。计算机蠕虫多不具有跨平台性，但是在其他平台下，可能会出现其平台特有的非跨平台性的平台版本。</li>
+</ul>
+<p>计算机蠕虫的传播过程：蠕虫程序常驻于一台或多台机器中，通常它会扫描其他机器是否有感染同种计算机蠕虫，如果没有，就会通过其内置的传播手段进行感染，以达到使计算机瘫痪的目的。其通常会以宿主机器作为扫描源。通常采用：<a href="https://zh.wikipedia.org/wiki/%E5%9E%83%E5%9C%BE%E9%82%AE%E4%BB%B6">垃圾邮件</a>、漏洞传播这2种方法来传播</p>
+<p>例子：2006年的熊猫烧香，通过网站投毒、局域网共享等方式植入系统并进行传播，Windows用户中毒后，后缀名为.exe的文件无法执行，文件图标会变成熊猫烧香的图案。</p>
+  <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/10.png" class>
+
+
+
+
+
+<blockquote>
+<p>Virus病毒</p>
+</blockquote>
+<p>通常依附于其他文件或者程序上，不进行自我复制获知或者传播，当受害者运行其它程序时则病毒启动，对目标系统造成破坏（例如修改删除文件）。</p>
+<p>例子：1998年的<strong>CIH病毒</strong>，能够破坏BIOS和硬盘，是电脑可以完全瘫痪，被公认为有史以来最为危险、破坏力最强的病毒之一。</p>
+ <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/11.png" class>
+
+<p>! <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/12.png" class></p>
+<p>由于<a href="https://zh.wikipedia.org/wiki/%E4%B8%96%E7%95%8C">世界</a><a href="https://zh.wikipedia.org/wiki/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F">操作系统</a>[桌面环境]90%的市场都是使用<a href="https://zh.wikipedia.org/wiki/%E5%BE%AE%E8%BD%AF">微软</a>[Windows] 系列产品 ， 所以病毒作者纷纷把病毒攻击对象选为Windows。制作病毒者首先应该确定要攻击的操作系统版本有何<a href="https://zh.wikipedia.org/wiki/%E6%BC%8F%E6%B4%9E">漏洞</a>，这才是他所写的病毒能够利用的关键。Windows当时并没有有效的安全与防御功能，且用户常以管理员权限运行未经安全检查的软件，这也为Windows下病毒的泛滥提供了温床。<a href="https://zh.wikipedia.org/wiki/Linux">Linux</a>、<a href="https://zh.wikipedia.org/wiki/Mac_OS">Mac OS</a>等<a href="https://zh.wikipedia.org/wiki/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F">操作系统</a>，因使用的人群比较少，病毒一般不容易扩散。大多病毒发布作者的目的有多种，包括恶作剧、想搞破坏、报复及想出名与对研究病毒有特殊嗜好。 病毒主要通过<a href="https://zh.wikipedia.org/wiki/%E7%B6%B2%E8%B7%AF">网路</a>浏览以及<a href="https://zh.wikipedia.org/wiki/%E4%B8%8B%E8%BD%BD">下载</a>，<a href="https://zh.wikipedia.org/wiki/%E9%9B%BB%E5%AD%90%E9%83%B5%E4%BB%B6">电子邮件</a>以及可移动<a href="https://zh.wikipedia.org/wiki/%E7%A3%81%E7%A2%9F">磁盘</a>等途径迅速传播。[<a href="https://zh.wikipedia.org/wiki/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%97%85%E6%AF%92#cite_note-mc-4">4</a></p>
+<p>Trojan Horse(特洛伊木马)</p>
+<p>通常潜伏于“合法”软件中运行（也可以独立运行），不复制传播且高度隐蔽。木马运行时可以创建“后门”或者“隧道”，攻击者通过后门实现对目标系统的远程控制、监听、破坏行为。RAT（Remote Access Trojan）远控木马属于木马的一种，例如灰鸽子、冰河、Gh0st、ZXShell。</p>
+ <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/13.png" class>
+
+
+
+
+
+<blockquote>
+<p>Ransomware(勒索软件)</p>
+</blockquote>
+<p>能够独立于其他文件运行，能够基于网络进行自我复制或者传播，通过对目标系统进行加密劫持，实现对受害者的钱财勒索。在所有的恶意程序类别中，勒索软件时面向个人和机构的最直接、最有效、最野蛮的“敛财方式”。</p>
+ <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/14.png" class>
+
+<blockquote>
+<p>Spyware(间谍软件)</p>
+</blockquote>
+<p>流氓软件或者恶意软件，指未经用户许可搜集用户个人信息的恶意程序。通过搜集网站的浏览记录、键盘记录、账号密码等隐私信息，再以网站劫持、网址导航、弹框广告等方式变现盈利。</p>
+  <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/15.png" class>
+
+
+
+<blockquote>
+<p>Rootkits</p>
+</blockquote>
+<p>可看作升级型的木马病毒，泛指可以获取到<strong>root</strong>权限的恶意程序，以管理员权限运行、修改系统核心文件、绕过杀毒软件，包括系统内核rootkit、硬件固件rootkit、内存rootkit等类型。相比木马，Rootkits通常具备更高权限、更加隐蔽、更难查杀、更大危害等特征。、</p>
+]]></content>
+      <categories>
+        <category>网络安全</category>
+      </categories>
+      <tags>
+        <tag>红队攻防</tag>
       </tags>
   </entry>
   <entry>
@@ -3945,67 +3945,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>链表刷题总结（easy篇）</title>
-    <url>/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/</url>
-    <content><![CDATA[<h1 id="链表知识刷题总结（easy篇）"><a href="#链表知识刷题总结（easy篇）" class="headerlink" title="链表知识刷题总结（easy篇）"></a>链表知识刷题总结（easy篇）</h1><p>###1.返回链表的倒数第k个结点</p>
-<p>###题目描述：</p>
-<p>实现一种算法，找出单向链表中倒数第 k 个节点。返回该节点的值。</p>
-<p>注意：本题相对原题稍作改动</p>
-<p>示例：</p>
-<p>输入： 1-&gt;2-&gt;3-&gt;4-&gt;5 和 k = 2<br>输出： 4<br>说明：</p>
-<p>给定的 k 保证是有效的。</p>
-<h3 id="题解："><a href="#题解：" class="headerlink" title="题解："></a>题解：</h3><h4 id="题解一-双指针"><a href="#题解一-双指针" class="headerlink" title="题解一:双指针"></a>题解一:双指针</h4><p> 这题要求链表的倒数第k个节点，最简单的方式就是使用两个指针，第一个指针先移动k步，然后第二个指针再从头开始，这个时候这两个指针同时移动，当第一个指针到链表的末尾的时候，返回第二个指针即可</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">kthToLast</span><span class="params">(ListNode head, <span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">        ListNode first = head;</span><br><span class="line">    	ListNode second = head;</span><br><span class="line">    </span><br><span class="line">    	<span class="keyword">while</span>(k-- &gt;<span class="number">0</span>)&#123;</span><br><span class="line">            first = first.next;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="keyword">while</span>(first!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            first =  first.next;</span><br><span class="line">            second = second.next;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="keyword">return</span> second.val;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<p>####题解二：使用栈求解(一看到倒数某某元素，要先想到栈)</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">kthTolast</span><span class="params">(ListNode head , <span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">        Stack&lt;ListNode&gt; stack = <span class="keyword">new</span> stack&lt;&gt;();</span><br><span class="line">        <span class="comment">//链表结点压栈处理</span></span><br><span class="line">        <span class="keyword">while</span>(head!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            stack.push(head);</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//出栈串成新的链表</span></span><br><span class="line">        ListNode firstnode = stack.pop();</span><br><span class="line">        <span class="keyword">while</span>(--k&gt;<span class="number">0</span>)&#123;</span><br><span class="line">            ListNode temp = stack.pop();</span><br><span class="line">            temp.next = firstNode;     <span class="comment">//这一步是不必要的，除非要求返回最后一个到倒数第k个结点链表，需要从新连接构建</span></span><br><span class="line">            firstNode = temp;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> firstnode.val;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="2-删除中间结点"><a href="#2-删除中间结点" class="headerlink" title="2.删除中间结点"></a>2.删除中间结点</h3><h4 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h4><h4 id="题解：-1"><a href="#题解：-1" class="headerlink" title="题解："></a>题解：</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="3-合并两个有序列表"><a href="#3-合并两个有序列表" class="headerlink" title="3.合并两个有序列表"></a>3.合并两个有序列表</h3><h4 id="题目描述：-1"><a href="#题目描述：-1" class="headerlink" title="题目描述："></a>题目描述：</h4><p>将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。 </p>
-<p>示例 1：</p>
-<p><img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120112941925.png" alt="image-20210120112941925"></p>
-<p>输入：l1 = [1,2,4], l2 = [1,3,4]<br>输出：[1,1,2,3,4,4]<br>示例 2：</p>
-<p>输入：l1 = [], l2 = []<br>输出：[]<br>示例 3：</p>
-<p>输入：l1 = [], l2 = [0]<br>输出：[0]</p>
-<h4 id="题解：-2"><a href="#题解：-2" class="headerlink" title="题解："></a>题解：</h4><h5 id="题解一：递归"><a href="#题解一：递归" class="headerlink" title="题解一：递归"></a>题解一：递归</h5><p>思路</p>
-<p>我们可以如下递归地定义两个链表里的 merge 操作（忽略边界情况，比如空链表等）：<br>    <img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120113648210.png" alt="image-20210120113648210"></p>
-<p>也就是说，两个链表头部值较小的一个节点与剩下元素的 merge 操作结果合并。</p>
-<p>算法</p>
-<p>我们直接将以上递归过程建模，同时需要考虑边界情况。</p>
-<p>如果 l1 或者 l2 一开始就是空链表 ，那么没有任何操作需要合并，所以我们只需要返回非空链表。否则，我们要判断 l1 和 l2 哪一个链表的头节点的值更小，然后递归地决定下一个添加到结果里的节点。如果两个链表有一个为空，递归结束</p>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">mergeTwoLists</span><span class="params">(ListNode l1, ListNode l2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (l1 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> l2;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (l2 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> l1;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (l1.val &lt; l2.val) &#123;</span><br><span class="line">            l1.next = mergeTwoLists(l1.next, l2);</span><br><span class="line">            <span class="keyword">return</span> l1;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            l2.next = mergeTwoLists(l1, l2.next);</span><br><span class="line">            <span class="keyword">return</span> l2;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析："><a href="#复杂度分析：" class="headerlink" title="复杂度分析："></a>复杂度分析：</h5><h3 id="4-回文链表"><a href="#4-回文链表" class="headerlink" title="4.回文链表"></a>4.回文链表</h3><p>####题目描述</p>
-<h4 id="题解：-3"><a href="#题解：-3" class="headerlink" title="题解："></a>题解：</h4><p>#####题解一：将链表中的值复制到数组中在用双指针</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isPalindrome</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        List&lt;Interger&gt; vals = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//将链表中的值赋值到数组中</span></span><br><span class="line">        ListNode currentNode = head;</span><br><span class="line">        <span class="keyword">while</span>(currentNode != <span class="keyword">null</span>)&#123;</span><br><span class="line">            vals.add(currentNode.val);        <span class="comment">//复制的是currentNode的值，而不是其本身</span></span><br><span class="line">            currentNode = currentNode.next;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//使用双指针判断回文</span></span><br><span class="line">        <span class="keyword">int</span> front=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> back = vals.size()-<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(front&lt;back)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!vals.get(front).equals(vals.get(back)))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            front++;</span><br><span class="line">            back--;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析：-1"><a href="#复杂度分析：-1" class="headerlink" title="复杂度分析："></a>复杂度分析：</h5><p><img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120205633023.png" alt="image-20210120205633023"></p>
-<h5 id="题解二：递归"><a href="#题解二：递归" class="headerlink" title="题解二：递归"></a>题解二：递归</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>数据结构</category>
-      </categories>
-      <tags>
-        <tag>链表</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title></title>
-    <url>/2021/03/02/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/JVM%E5%90%AC%E8%AF%BE%E7%AC%94%E8%AE%B0%E8%A1%A5%E5%85%85/</url>
-    <content><![CDATA[<p>java的指令是根据栈来设计的，不适用基于寄存器的，是因为基于寄存器与CPU耦合度太高，不太好实现跨平台运行</p>
-<img data-src="https://tse1-mm.cn.bing.net/th/id/OIP.f3N7J7-cCRt2cBZM2z-XlQHaGV?w=223&h=191&c=7&o=5&dpr=1.5&pid=1.7" alt=" JVM内存结构 的图像结果" style="zoom: 200%;">]]></content>
-  </entry>
-  <entry>
     <title>链表</title>
     <url>/2021/01/13/%E9%93%BE%E8%A1%A8/</url>
     <content><![CDATA[<h2 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h2><h3 id="单链表"><a href="#单链表" class="headerlink" title="单链表"></a>单链表</h3><p>单链表中的每个结点不仅包含值，还包含链接到下一个结点的引用字段。通过这种方式，单链表将所有结点按顺序组织起来。习惯于用头节点来代表整个单链表。</p>
@@ -4083,68 +4022,10 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>阿里云ECS部署服务器</title>
-    <url>/2021/01/22/%E9%98%BF%E9%87%8C%E4%BA%91ECS%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
-    <content><![CDATA[<h2 id="阿里云ECS部署Tomcat、Nginx服务器"><a href="#阿里云ECS部署Tomcat、Nginx服务器" class="headerlink" title="阿里云ECS部署Tomcat、Nginx服务器"></a>阿里云ECS部署Tomcat、Nginx服务器</h2><h3 id="Nginx服务器"><a href="#Nginx服务器" class="headerlink" title="Nginx服务器"></a>Nginx服务器</h3><p>####一、简介</p>
-<p>Nginx是一款轻量级的网页服务器、反向代理服务器。相较于Apache、lighttpd具有占有内存少，稳定性高等优势。它最常的用途是提供反向代理服务。</p>
-<h4 id="二、安装"><a href="#二、安装" class="headerlink" title="二、安装"></a>二、安装</h4><h2 id="1、准备工作"><a href="#1、准备工作" class="headerlink" title="1、准备工作"></a>1、准备工作</h2><p>Nginx的安装依赖于以下三个包，意思就是在安装Nginx之前首先必须安装一下的三个包，注意安装顺序如下：</p>
-<p>　　1 SSL功能需要openssl库，直接通过yum安装: #yum install openssl</p>
-<p>　　2 gzip模块需要zlib库，直接通过yum安装: #yum install zlib</p>
-<p>　　3 rewrite模块需要pcre库，直接通过yum安装: #yum install pcre</p>
-<h2 id="2、安装Nginx依赖项和Nginx"><a href="#2、安装Nginx依赖项和Nginx" class="headerlink" title="2、安装Nginx依赖项和Nginx"></a>2、安装Nginx依赖项和Nginx</h2><p>1 、使用yum安装nginx需要包括Nginx的库，安装Nginx的库</p>
-<p>rpm -Uvh <a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm">http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm</a></p>
-<p>2 、使用下面命令安装nginx</p>
-<p> yum install nginx</p>
-<p>3、 启动Nginx</p>
-<p>service nginx start（Centos 6.0）,如果是Centos7.0以上，使用systemctl start nginx启动。</p>
-<p>4、直接浏览器访问localhost就会出现Nginx的欢迎界面表示你安装成功了，否则就是安装失败了</p>
-<p>　　默认80端口加入防火墙访问白名单中：firewall-cmd –permanent –zone=public –add-port=80/tcp</p>
-<p>　　使用firewall-cmd –reload命令使其生效</p>
-<p>5、配置Nginx</p>
-<p>CentOS安装Nginx后，安装在了 /etc/nginx/目录下，你可以打开/etc/nginx/conf.d/default/conf查看里面的配置，包括监听端口，域名和nginx访问的根目录</p>
-<p><strong>如果出现nginx启动之后，通过自己服务器的公网IP地址无法访问，是服务器端口没有开放访问权限的缘故，可以参考博客：<a href="https://blog.csdn.net/inite/article/details/73658214">https://blog.csdn.net/inite/article/details/73658214</a></strong></p>
-<p>####三、配置</p>
-<p>以上安装方法nginx的配置文件位于</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;usr&#x2F;local&#x2F;nginx&#x2F;conf&#x2F;nginx.conf</span><br></pre></td></tr></table></figure>
-<p>Nginx配置文件常见结构的从外到内依次是「http」「server」「location」等等，缺省的继承关系是从外到内，也就是说内层块会自动获取外层块的值作为缺省值。</p>
-<h5 id="Server"><a href="#Server" class="headerlink" title="Server"></a>Server</h5><p>接收请求的服务器需要将不同的请求按规则转发到不同的后端服务器上，在 nginx 中我们可以通过构建虚拟主机（server）的概念来将这些不同的服务配置隔离。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  localhost;</span><br><span class="line">root   html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>例如我们笔戈玩下的两个子项目 passport 和 wan 就可以通过在 nginx 的配置文件中配置两个 server，servername 分别为 passport.bigertech.com 和 wan.bigertech.com。这样的话不同的 url 请求就会对应到 nginx 相应的设置，转发到不同的后端服务器上。</p>
-<p>这里的 listen 指监听端口，server_name 用来指定IP或域名，多个域名对应统一规则可以空格分开，index 用于设定访问的默认首页地址，root 指令用于指定虚拟主机的网页跟目录，这个地方可以是相对地址也可以是绝对地址。</p>
-<p>通常情况下我们可以在 nginx.conf 中配置多个server，对不同的请求进行设置。就像这样：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  host1;</span><br><span class="line">root   html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  host2;</span><br><span class="line">root   &#x2F;data&#x2F;www&#x2F;html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>但是当 server 超过2个时，建议将不同对虚拟主机的配置放在另一个文件中，然后通过在主配置文件 nginx.conf 加上 include 指令包含进来。更便于管理。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">include vhosts&#x2F;*.conf;</span><br></pre></td></tr></table></figure>
-<p>就可以把vhosts的文件都包含进去啦。</p>
-<p>#####Localtion</p>
-<p>每个 url 请求都会对应的一个服务，nginx 进行处理转发或者是本地的一个文件路径，或者是其他服务器的一个服务路径。而这个路径的匹配是通过 location 来进行的。我们可以将 server 当做对应一个域名进行的配置，而 location 是在一个域名下对更精细的路径进行配置。</p>
-<p>以上面的例子，可以将root和index指令放到一个location中，那么只有在匹配到这个location时才会访问root后的内容：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> location &#x2F; &#123;</span><br><span class="line">      root   &#x2F;data&#x2F;www&#x2F;host2;</span><br><span class="line">      index  index.html index.htm;</span><br><span class="line">  &#125;</span><br><span class="line">location 匹配规则</span><br><span class="line"></span><br><span class="line">~      波浪线表示执行一个正则匹配，区分大小写</span><br><span class="line">~*    表示执行一个正则匹配，不区分大小写</span><br><span class="line">^~    ^~表示普通字符匹配，如果该选项匹配，只匹配该选项，不匹配别的选项，一般用来匹配目录</span><br><span class="line">&#x3D;      进行普通字符精确匹配</span><br><span class="line">匹配例子：</span><br><span class="line"></span><br><span class="line">  location  &#x3D; &#x2F; &#123;</span><br><span class="line"># 只匹配&quot;&#x2F;&quot;.</span><br><span class="line">[ configuration A ] </span><br><span class="line">  &#125;</span><br><span class="line">location  &#x2F; &#123;</span><br><span class="line"># 匹配任何请求，因为所有请求都是以&quot;&#x2F;&quot;开始</span><br><span class="line"># 但是更长字符匹配或者正则表达式匹配会优先匹配</span><br><span class="line">[ configuration B ] </span><br><span class="line">&#125;</span><br><span class="line">location ^~ &#x2F;images&#x2F; &#123;</span><br><span class="line"> #匹配任何以 &#x2F;images&#x2F; 开始的请求，并停止匹配 其它location</span><br><span class="line">[ configuration C ] </span><br><span class="line">&#125;</span><br><span class="line">location ~* \.(gif|jpg|jpeg)$ &#123;</span><br><span class="line"># 匹配以 gif, jpg, or jpeg结尾的请求. </span><br><span class="line"># 但是所有 &#x2F;images&#x2F; 目录的请求将由 [Configuration C]处理.   </span><br><span class="line">[ configuration D ] </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">请求:</span><br><span class="line">&#x2F; -&gt; 符合configuration A</span><br><span class="line">&#x2F;documents&#x2F;document.html -&gt; 符合configuration B</span><br><span class="line">&#x2F;images&#x2F;1.gif -&gt; 符合configuration C</span><br><span class="line">&#x2F;documents&#x2F;1.jpg -&gt;符合 configuration D</span><br></pre></td></tr></table></figure>
-<p>#####静态文件映射</p>
-<p>访问文件的配置主要有 root 和 aliasp’s 两个指令。这两个指令的区别容易弄混：</p>
-<p>alias<br>alias后跟的指定目录是准确的，并且末尾必须加 /。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F;c&#x2F; &#123;</span><br><span class="line">    alias &#x2F;a&#x2F;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果访问站点<a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://location/c">http://location/c</a>访问的就是/a/目录下的站点信息。</p>
-<p>#####root</p>
-<p>root后跟的指定目录是上级目录，并且该上级目录下要含有和location后指定名称的同名目录才行。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F;c&#x2F; &#123;</span><br><span class="line">    root &#x2F;a&#x2F;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这时访问站点<a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://location/c">http://location/c</a>访问的就是/a/c目录下的站点信息。</p>
-<p>如果你需要将这个目录展开，在这个location的末尾加上「autoindex on; 」就可以了</p>
-<p>#####转发</p>
-<p>配置起来很简单比如我要将所有的请求到转移到真正提供服务的一台机器的 8001 端口，只要这样：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">proxy_pass 172.16.1.1:8001;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这样访问host时，就都被转发到 172.16.1.1的8001端口去了。</p>
-<p>#####负载均衡</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">upstream myserver; &#123;</span><br><span class="line">ip_hash;    </span><br><span class="line">server 172.16.1.1:8001;</span><br><span class="line">server 172.16.1.2:8002;</span><br><span class="line">server 172.16.1.3;</span><br><span class="line">server 172.16.1.4;</span><br><span class="line">&#125;</span><br><span class="line">location &#x2F; &#123;</span><br><span class="line">proxy_pass http:&#x2F;&#x2F;myserver;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们在 upstream 中指定了一组机器，并将这个组命名为 myserver，这样在 proxypass 中只要将请求转移到 myserver 这个 upstream 中我们就实现了在四台机器的反向代理加负载均衡。其中的 ip_hash 指明了我们均衡的方式是按照用户的 ip 地址进行分配。另外还有轮询、指定权重轮询、fair、url_hash几种调度算法。</p>
-<p>###Tomcat服务器</p>
-<h4 id="一、下载Tomcat"><a href="#一、下载Tomcat" class="headerlink" title="一、下载Tomcat"></a>一、下载Tomcat</h4>]]></content>
-      <categories>
-        <category>阿里云ECS</category>
-      </categories>
-      <tags>
-        <tag>阿里云ECS部署</tag>
-      </tags>
+    <title></title>
+    <url>/2021/03/02/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/JVM%E5%90%AC%E8%AF%BE%E7%AC%94%E8%AE%B0%E8%A1%A5%E5%85%85/</url>
+    <content><![CDATA[<p>java的指令是根据栈来设计的，不适用基于寄存器的，是因为基于寄存器与CPU耦合度太高，不太好实现跨平台运行</p>
+<img data-src="https://tse1-mm.cn.bing.net/th/id/OIP.f3N7J7-cCRt2cBZM2z-XlQHaGV?w=223&h=191&c=7&o=5&dpr=1.5&pid=1.7" alt=" JVM内存结构 的图像结果" style="zoom: 200%;">]]></content>
   </entry>
   <entry>
     <title>CDN</title>
@@ -5332,6 +5213,125 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </categories>
       <tags>
         <tag>Docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>阿里云ECS部署服务器</title>
+    <url>/2021/01/22/%E9%98%BF%E9%87%8C%E4%BA%91ECS%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
+    <content><![CDATA[<h2 id="阿里云ECS部署Tomcat、Nginx服务器"><a href="#阿里云ECS部署Tomcat、Nginx服务器" class="headerlink" title="阿里云ECS部署Tomcat、Nginx服务器"></a>阿里云ECS部署Tomcat、Nginx服务器</h2><h3 id="Nginx服务器"><a href="#Nginx服务器" class="headerlink" title="Nginx服务器"></a>Nginx服务器</h3><p>####一、简介</p>
+<p>Nginx是一款轻量级的网页服务器、反向代理服务器。相较于Apache、lighttpd具有占有内存少，稳定性高等优势。它最常的用途是提供反向代理服务。</p>
+<h4 id="二、安装"><a href="#二、安装" class="headerlink" title="二、安装"></a>二、安装</h4><h2 id="1、准备工作"><a href="#1、准备工作" class="headerlink" title="1、准备工作"></a>1、准备工作</h2><p>Nginx的安装依赖于以下三个包，意思就是在安装Nginx之前首先必须安装一下的三个包，注意安装顺序如下：</p>
+<p>　　1 SSL功能需要openssl库，直接通过yum安装: #yum install openssl</p>
+<p>　　2 gzip模块需要zlib库，直接通过yum安装: #yum install zlib</p>
+<p>　　3 rewrite模块需要pcre库，直接通过yum安装: #yum install pcre</p>
+<h2 id="2、安装Nginx依赖项和Nginx"><a href="#2、安装Nginx依赖项和Nginx" class="headerlink" title="2、安装Nginx依赖项和Nginx"></a>2、安装Nginx依赖项和Nginx</h2><p>1 、使用yum安装nginx需要包括Nginx的库，安装Nginx的库</p>
+<p>rpm -Uvh <a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm">http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm</a></p>
+<p>2 、使用下面命令安装nginx</p>
+<p> yum install nginx</p>
+<p>3、 启动Nginx</p>
+<p>service nginx start（Centos 6.0）,如果是Centos7.0以上，使用systemctl start nginx启动。</p>
+<p>4、直接浏览器访问localhost就会出现Nginx的欢迎界面表示你安装成功了，否则就是安装失败了</p>
+<p>　　默认80端口加入防火墙访问白名单中：firewall-cmd –permanent –zone=public –add-port=80/tcp</p>
+<p>　　使用firewall-cmd –reload命令使其生效</p>
+<p>5、配置Nginx</p>
+<p>CentOS安装Nginx后，安装在了 /etc/nginx/目录下，你可以打开/etc/nginx/conf.d/default/conf查看里面的配置，包括监听端口，域名和nginx访问的根目录</p>
+<p><strong>如果出现nginx启动之后，通过自己服务器的公网IP地址无法访问，是服务器端口没有开放访问权限的缘故，可以参考博客：<a href="https://blog.csdn.net/inite/article/details/73658214">https://blog.csdn.net/inite/article/details/73658214</a></strong></p>
+<p>####三、配置</p>
+<p>以上安装方法nginx的配置文件位于</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;usr&#x2F;local&#x2F;nginx&#x2F;conf&#x2F;nginx.conf</span><br></pre></td></tr></table></figure>
+<p>Nginx配置文件常见结构的从外到内依次是「http」「server」「location」等等，缺省的继承关系是从外到内，也就是说内层块会自动获取外层块的值作为缺省值。</p>
+<h5 id="Server"><a href="#Server" class="headerlink" title="Server"></a>Server</h5><p>接收请求的服务器需要将不同的请求按规则转发到不同的后端服务器上，在 nginx 中我们可以通过构建虚拟主机（server）的概念来将这些不同的服务配置隔离。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  localhost;</span><br><span class="line">root   html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>例如我们笔戈玩下的两个子项目 passport 和 wan 就可以通过在 nginx 的配置文件中配置两个 server，servername 分别为 passport.bigertech.com 和 wan.bigertech.com。这样的话不同的 url 请求就会对应到 nginx 相应的设置，转发到不同的后端服务器上。</p>
+<p>这里的 listen 指监听端口，server_name 用来指定IP或域名，多个域名对应统一规则可以空格分开，index 用于设定访问的默认首页地址，root 指令用于指定虚拟主机的网页跟目录，这个地方可以是相对地址也可以是绝对地址。</p>
+<p>通常情况下我们可以在 nginx.conf 中配置多个server，对不同的请求进行设置。就像这样：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  host1;</span><br><span class="line">root   html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  host2;</span><br><span class="line">root   &#x2F;data&#x2F;www&#x2F;html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是当 server 超过2个时，建议将不同对虚拟主机的配置放在另一个文件中，然后通过在主配置文件 nginx.conf 加上 include 指令包含进来。更便于管理。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">include vhosts&#x2F;*.conf;</span><br></pre></td></tr></table></figure>
+<p>就可以把vhosts的文件都包含进去啦。</p>
+<p>#####Localtion</p>
+<p>每个 url 请求都会对应的一个服务，nginx 进行处理转发或者是本地的一个文件路径，或者是其他服务器的一个服务路径。而这个路径的匹配是通过 location 来进行的。我们可以将 server 当做对应一个域名进行的配置，而 location 是在一个域名下对更精细的路径进行配置。</p>
+<p>以上面的例子，可以将root和index指令放到一个location中，那么只有在匹配到这个location时才会访问root后的内容：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> location &#x2F; &#123;</span><br><span class="line">      root   &#x2F;data&#x2F;www&#x2F;host2;</span><br><span class="line">      index  index.html index.htm;</span><br><span class="line">  &#125;</span><br><span class="line">location 匹配规则</span><br><span class="line"></span><br><span class="line">~      波浪线表示执行一个正则匹配，区分大小写</span><br><span class="line">~*    表示执行一个正则匹配，不区分大小写</span><br><span class="line">^~    ^~表示普通字符匹配，如果该选项匹配，只匹配该选项，不匹配别的选项，一般用来匹配目录</span><br><span class="line">&#x3D;      进行普通字符精确匹配</span><br><span class="line">匹配例子：</span><br><span class="line"></span><br><span class="line">  location  &#x3D; &#x2F; &#123;</span><br><span class="line"># 只匹配&quot;&#x2F;&quot;.</span><br><span class="line">[ configuration A ] </span><br><span class="line">  &#125;</span><br><span class="line">location  &#x2F; &#123;</span><br><span class="line"># 匹配任何请求，因为所有请求都是以&quot;&#x2F;&quot;开始</span><br><span class="line"># 但是更长字符匹配或者正则表达式匹配会优先匹配</span><br><span class="line">[ configuration B ] </span><br><span class="line">&#125;</span><br><span class="line">location ^~ &#x2F;images&#x2F; &#123;</span><br><span class="line"> #匹配任何以 &#x2F;images&#x2F; 开始的请求，并停止匹配 其它location</span><br><span class="line">[ configuration C ] </span><br><span class="line">&#125;</span><br><span class="line">location ~* \.(gif|jpg|jpeg)$ &#123;</span><br><span class="line"># 匹配以 gif, jpg, or jpeg结尾的请求. </span><br><span class="line"># 但是所有 &#x2F;images&#x2F; 目录的请求将由 [Configuration C]处理.   </span><br><span class="line">[ configuration D ] </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">请求:</span><br><span class="line">&#x2F; -&gt; 符合configuration A</span><br><span class="line">&#x2F;documents&#x2F;document.html -&gt; 符合configuration B</span><br><span class="line">&#x2F;images&#x2F;1.gif -&gt; 符合configuration C</span><br><span class="line">&#x2F;documents&#x2F;1.jpg -&gt;符合 configuration D</span><br></pre></td></tr></table></figure>
+<p>#####静态文件映射</p>
+<p>访问文件的配置主要有 root 和 aliasp’s 两个指令。这两个指令的区别容易弄混：</p>
+<p>alias<br>alias后跟的指定目录是准确的，并且末尾必须加 /。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F;c&#x2F; &#123;</span><br><span class="line">    alias &#x2F;a&#x2F;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果访问站点<a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://location/c">http://location/c</a>访问的就是/a/目录下的站点信息。</p>
+<p>#####root</p>
+<p>root后跟的指定目录是上级目录，并且该上级目录下要含有和location后指定名称的同名目录才行。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F;c&#x2F; &#123;</span><br><span class="line">    root &#x2F;a&#x2F;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这时访问站点<a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://location/c">http://location/c</a>访问的就是/a/c目录下的站点信息。</p>
+<p>如果你需要将这个目录展开，在这个location的末尾加上「autoindex on; 」就可以了</p>
+<p>#####转发</p>
+<p>配置起来很简单比如我要将所有的请求到转移到真正提供服务的一台机器的 8001 端口，只要这样：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">proxy_pass 172.16.1.1:8001;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样访问host时，就都被转发到 172.16.1.1的8001端口去了。</p>
+<p>#####负载均衡</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">upstream myserver; &#123;</span><br><span class="line">ip_hash;    </span><br><span class="line">server 172.16.1.1:8001;</span><br><span class="line">server 172.16.1.2:8002;</span><br><span class="line">server 172.16.1.3;</span><br><span class="line">server 172.16.1.4;</span><br><span class="line">&#125;</span><br><span class="line">location &#x2F; &#123;</span><br><span class="line">proxy_pass http:&#x2F;&#x2F;myserver;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们在 upstream 中指定了一组机器，并将这个组命名为 myserver，这样在 proxypass 中只要将请求转移到 myserver 这个 upstream 中我们就实现了在四台机器的反向代理加负载均衡。其中的 ip_hash 指明了我们均衡的方式是按照用户的 ip 地址进行分配。另外还有轮询、指定权重轮询、fair、url_hash几种调度算法。</p>
+<p>###Tomcat服务器</p>
+<h4 id="一、下载Tomcat"><a href="#一、下载Tomcat" class="headerlink" title="一、下载Tomcat"></a>一、下载Tomcat</h4>]]></content>
+      <categories>
+        <category>阿里云ECS</category>
+      </categories>
+      <tags>
+        <tag>阿里云ECS部署</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>链表刷题总结（easy篇）</title>
+    <url>/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<h1 id="链表知识刷题总结（easy篇）"><a href="#链表知识刷题总结（easy篇）" class="headerlink" title="链表知识刷题总结（easy篇）"></a>链表知识刷题总结（easy篇）</h1><p>###1.返回链表的倒数第k个结点</p>
+<p>###题目描述：</p>
+<p>实现一种算法，找出单向链表中倒数第 k 个节点。返回该节点的值。</p>
+<p>注意：本题相对原题稍作改动</p>
+<p>示例：</p>
+<p>输入： 1-&gt;2-&gt;3-&gt;4-&gt;5 和 k = 2<br>输出： 4<br>说明：</p>
+<p>给定的 k 保证是有效的。</p>
+<h3 id="题解："><a href="#题解：" class="headerlink" title="题解："></a>题解：</h3><h4 id="题解一-双指针"><a href="#题解一-双指针" class="headerlink" title="题解一:双指针"></a>题解一:双指针</h4><p> 这题要求链表的倒数第k个节点，最简单的方式就是使用两个指针，第一个指针先移动k步，然后第二个指针再从头开始，这个时候这两个指针同时移动，当第一个指针到链表的末尾的时候，返回第二个指针即可</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">kthToLast</span><span class="params">(ListNode head, <span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">        ListNode first = head;</span><br><span class="line">    	ListNode second = head;</span><br><span class="line">    </span><br><span class="line">    	<span class="keyword">while</span>(k-- &gt;<span class="number">0</span>)&#123;</span><br><span class="line">            first = first.next;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="keyword">while</span>(first!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            first =  first.next;</span><br><span class="line">            second = second.next;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="keyword">return</span> second.val;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>####题解二：使用栈求解(一看到倒数某某元素，要先想到栈)</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">kthTolast</span><span class="params">(ListNode head , <span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">        Stack&lt;ListNode&gt; stack = <span class="keyword">new</span> stack&lt;&gt;();</span><br><span class="line">        <span class="comment">//链表结点压栈处理</span></span><br><span class="line">        <span class="keyword">while</span>(head!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            stack.push(head);</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//出栈串成新的链表</span></span><br><span class="line">        ListNode firstnode = stack.pop();</span><br><span class="line">        <span class="keyword">while</span>(--k&gt;<span class="number">0</span>)&#123;</span><br><span class="line">            ListNode temp = stack.pop();</span><br><span class="line">            temp.next = firstNode;     <span class="comment">//这一步是不必要的，除非要求返回最后一个到倒数第k个结点链表，需要从新连接构建</span></span><br><span class="line">            firstNode = temp;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> firstnode.val;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="2-删除中间结点"><a href="#2-删除中间结点" class="headerlink" title="2.删除中间结点"></a>2.删除中间结点</h3><h4 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h4><h4 id="题解：-1"><a href="#题解：-1" class="headerlink" title="题解："></a>题解：</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="3-合并两个有序列表"><a href="#3-合并两个有序列表" class="headerlink" title="3.合并两个有序列表"></a>3.合并两个有序列表</h3><h4 id="题目描述：-1"><a href="#题目描述：-1" class="headerlink" title="题目描述："></a>题目描述：</h4><p>将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。 </p>
+<p>示例 1：</p>
+<p><img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120112941925.png" alt="image-20210120112941925"></p>
+<p>输入：l1 = [1,2,4], l2 = [1,3,4]<br>输出：[1,1,2,3,4,4]<br>示例 2：</p>
+<p>输入：l1 = [], l2 = []<br>输出：[]<br>示例 3：</p>
+<p>输入：l1 = [], l2 = [0]<br>输出：[0]</p>
+<h4 id="题解：-2"><a href="#题解：-2" class="headerlink" title="题解："></a>题解：</h4><h5 id="题解一：递归"><a href="#题解一：递归" class="headerlink" title="题解一：递归"></a>题解一：递归</h5><p>思路</p>
+<p>我们可以如下递归地定义两个链表里的 merge 操作（忽略边界情况，比如空链表等）：<br>    <img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120113648210.png" alt="image-20210120113648210"></p>
+<p>也就是说，两个链表头部值较小的一个节点与剩下元素的 merge 操作结果合并。</p>
+<p>算法</p>
+<p>我们直接将以上递归过程建模，同时需要考虑边界情况。</p>
+<p>如果 l1 或者 l2 一开始就是空链表 ，那么没有任何操作需要合并，所以我们只需要返回非空链表。否则，我们要判断 l1 和 l2 哪一个链表的头节点的值更小，然后递归地决定下一个添加到结果里的节点。如果两个链表有一个为空，递归结束</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">mergeTwoLists</span><span class="params">(ListNode l1, ListNode l2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (l1 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> l2;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (l2 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> l1;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (l1.val &lt; l2.val) &#123;</span><br><span class="line">            l1.next = mergeTwoLists(l1.next, l2);</span><br><span class="line">            <span class="keyword">return</span> l1;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            l2.next = mergeTwoLists(l1, l2.next);</span><br><span class="line">            <span class="keyword">return</span> l2;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析："><a href="#复杂度分析：" class="headerlink" title="复杂度分析："></a>复杂度分析：</h5><h3 id="4-回文链表"><a href="#4-回文链表" class="headerlink" title="4.回文链表"></a>4.回文链表</h3><p>####题目描述</p>
+<h4 id="题解：-3"><a href="#题解：-3" class="headerlink" title="题解："></a>题解：</h4><p>#####题解一：将链表中的值复制到数组中在用双指针</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isPalindrome</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        List&lt;Interger&gt; vals = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//将链表中的值赋值到数组中</span></span><br><span class="line">        ListNode currentNode = head;</span><br><span class="line">        <span class="keyword">while</span>(currentNode != <span class="keyword">null</span>)&#123;</span><br><span class="line">            vals.add(currentNode.val);        <span class="comment">//复制的是currentNode的值，而不是其本身</span></span><br><span class="line">            currentNode = currentNode.next;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//使用双指针判断回文</span></span><br><span class="line">        <span class="keyword">int</span> front=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> back = vals.size()-<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(front&lt;back)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!vals.get(front).equals(vals.get(back)))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            front++;</span><br><span class="line">            back--;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析：-1"><a href="#复杂度分析：-1" class="headerlink" title="复杂度分析："></a>复杂度分析：</h5><p><img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120205633023.png" alt="image-20210120205633023"></p>
+<h5 id="题解二：递归"><a href="#题解二：递归" class="headerlink" title="题解二：递归"></a>题解二：递归</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>链表</tag>
       </tags>
   </entry>
 </search>
