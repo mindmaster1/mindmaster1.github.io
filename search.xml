@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>5G下的云网融合</title>
+    <url>/2021/10/07/5G%E4%B8%8B%E7%9A%84%E4%BA%91%E7%BD%91%E8%9E%8D%E5%90%88/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>AOP</title>
     <url>/2021/03/14/AOP/</url>
     <content><![CDATA[]]></content>
@@ -81,13 +86,13 @@
       </tags>
   </entry>
   <entry>
-    <title>5G下的云网融合</title>
-    <url>/2021/10/07/5G%E4%B8%8B%E7%9A%84%E4%BA%91%E7%BD%91%E8%9E%8D%E5%90%88/</url>
+    <title>Druid数据库连接池</title>
+    <url>/2021/03/14/Druid%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>Druid数据库连接池</title>
-    <url>/2021/03/14/Druid%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/</url>
+    <title>HTTP报文</title>
+    <url>/2021/03/14/HTTP%E6%8A%A5%E6%96%87/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -107,9 +112,30 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>HTTP报文</title>
-    <url>/2021/03/14/HTTP%E6%8A%A5%E6%96%87/</url>
+    <title>HTTP缓存</title>
+    <url>/2021/02/03/HTTP%E7%BC%93%E5%AD%98/</url>
     <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>HTTP认证机制</title>
+    <url>/2021/03/03/HTTP%E8%AE%A4%E8%AF%81%E6%9C%BA%E5%88%B6/</url>
+    <content><![CDATA[<h2 id="认证"><a href="#认证" class="headerlink" title="认证"></a>认证</h2><p>认证就是给出一些身份证明，当然，不论哪一种认证策略都不是绝对有效的，但每种证据都有助于构建合理的信任。</p>
+<h3 id="HTTP的质询-响应认证框架"><a href="#HTTP的质询-响应认证框架" class="headerlink" title="HTTP的质询/响应认证框架"></a>HTTP的质询/响应认证框架</h3><p>HTTP提供了一个原生的质询/响应框架（challenge/response），简化了对用户的认证过程。</p>
+<h4 id="认证协议与首部"><a href="#认证协议与首部" class="headerlink" title="认证协议与首部"></a>认证协议与首部</h4><p>HTTP通过一组可定制的控制首部，为不同的认证协议提供了一个可扩展框架，认证协议也是在HTTP认证首部中指定的。</p>
+<p>HTTP定义了两个官方的认证协议：</p>
+<blockquote>
+<p>基本认证</p>
+</blockquote>
+<blockquote>
+<p>摘要认证</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>HTTP</category>
+      </categories>
+      <tags>
+        <tag>HTTP</tag>
+      </tags>
   </entry>
   <entry>
     <title>IOC创建对象</title>
@@ -215,53 +241,6 @@
       </tags>
   </entry>
   <entry>
-    <title>InnoDB存储引擎</title>
-    <url>/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
-    <content><![CDATA[<h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
-<p>InnoDB存储引擎有多个内存块，这些内存块组成了一个大的内存池</p>
-<p>后台线程的主要作用就是负责刷新内存池中的数据，保证缓存池中的内存缓存的是最近的数据。此外，还将已经修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下，InnoDB可以恢复运行到最佳状态。</p>
-<h4 id="后台线程（InnDB是一个多线程模型"><a href="#后台线程（InnDB是一个多线程模型" class="headerlink" title="后台线程（InnDB是一个多线程模型)"></a>后台线程（InnDB是一个多线程模型)</h4><p>#####Master Thread</p>
-<p><strong>作用：</strong></p>
-<p>​    一个非常核心的后台进程，负责将缓存池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓存、UNDO页的回收等。</p>
-<h5 id="IO-Therad"><a href="#IO-Therad" class="headerlink" title="IO Therad"></a>IO Therad</h5><p>  在InnoDB存储引擎中大量使用了AIO（Async IO）—异步时间非阻塞IO，这样可以极大程度上提高数据库的性能。IO Thread的主要工作就是负责这些IO请求的回调</p>
-<p>共有四个IO Thread:write 、read、insert buffer、log IO thread</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114130216.png" alt="image-20210114114130216"></p>
-<p>通过命令SHOW ENGINE INNODB STASTUS\G来观察IO Thread</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114405936.png" alt="image-20210114114405936"></p>
-<p>有四个write和read IO Thread</p>
-<p>通过innodb_read_io_threads和innodb_write_io_threads参数来进行设置</p>
-<h5 id="Purge-Thread"><a href="#Purge-Thread" class="headerlink" title="Purge Thread"></a>Purge Thread</h5><p><strong>作用</strong>：</p>
-<p>​    Purge Thread回收已经使用并且已经分配的undo页（事务提交之后，其所使用的Undolog可能就不再需要）</p>
-<p>用户需要在<strong>MySQL数据库的配置文件</strong>中添加如下命令来启用独立的Purge Thread: </p>
-<p>​        innodb_purge_threads=1</p>
-<h5 id="Page-Cleaner-Thread"><a href="#Page-Cleaner-Thread" class="headerlink" title="Page Cleaner Thread"></a>Page Cleaner Thread</h5><p><strong>作用</strong>：</p>
-<p>​    将脏页的刷新操作放在单独的线程中完成。减轻Master Thread的工作以及对于用户查询线程的阻塞</p>
-<h4 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h4><h5 id="缓存池"><a href="#缓存池" class="headerlink" title="缓存池"></a>缓存池</h5><p>Innodb存储引擎是基于磁盘存储的（Disk-base Database），将其中的记录按照页来管理。</p>
-<p>缓存池的出现，就是为了解决CPU速度和磁盘速度之间的差异，通过内存的速度来弥补磁盘速度较慢对数据库性能的影响。读取文件时，首先判断给文件是否在缓存池中（没有就去磁盘上找）。</p>
-<p>在修改缓存池中的页时，先以一定频率刷新到缓存池上，然后通过Checkpoint刷新回磁盘。</p>
-<p>数据库服务器最好采用64位操作系统，可以使用更多的内存（512GB），32位（只有64GB）。</p>
-<p>缓存池的配置通过参数innodb_buffer_pool_size来设置。</p>
-<h6 id="缓存池中缓存的数据页类型："><a href="#缓存池中缓存的数据页类型：" class="headerlink" title="缓存池中缓存的数据页类型："></a>缓存池中缓存的数据页类型：</h6><p>​    索引页、数据页、Undo页、插入缓存页、自适应哈希索引页（adaptive hash index）、InnoDB存储的锁信息、数据字典信息等。</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114131120313.png" alt="image-20210114131120313"></p>
-<p><strong>允许有多个缓存池实例</strong>：每个页根据hashcode平均分配到不同的缓存池实例中，减少数据库内部资源的竞争，增加数据库的并发能力。可以通过inodb_buffer_pool_instances来进行配置，通过命令SHOW ENGINE INNODB STATUS可以观察到每个缓存池实例对象运行的状态，还可以通过查看表InnoDB_BUFFER_POOL_STATS来观察缓存的状态(要求在information_schema架构下)</p>
-<h5 id="LRU-LIST-、FREE-LIST-、FLUSH-LIST"><a href="#LRU-LIST-、FREE-LIST-、FLUSH-LIST" class="headerlink" title="LRU LIST 、FREE LIST 、FLUSH LIST"></a>LRU LIST 、FREE LIST 、FLUSH LIST</h5><p><strong>LRU</strong>算法用来管理已经读取的页</p>
-<p>数据库中的缓存池是通过LRU（Latest Recent Used,最近最少使用）算法来管理内部的各种类型的页。</p>
-<p><strong>LRU解释</strong>：将最频繁使用的页放在LRU列表的前端，最少使用的页放在LRU列表的尾端。当缓存池不能存放新读取到的页时，将优先删除列表尾端的页（默认大小为16KB）。</p>
-<p><strong>改进</strong>：</p>
-<p>1、（midpoint insertion strategy）：InnoDB中在LRU中加入了midpoint位置，将新读取到的页放在midpoint，而不是直接放在LRU列表首部。<strong>默认位置在LRU列表长度63%处</strong>（可以通过innodb_old_blocks_pct来控制）</p>
-<p>2、设置了参数innodb_old_blocks_time,用于表示页读取到mid位置后需要等待多久才会加入到LRU列表的热端</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133522544.png" alt="image-20210114133522544"></p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133412580.png" alt="image-20210114133412580"></p>
-<p><strong>为什么要对朴素的LRU算法进行改良</strong>？</p>
-<h5 id="重做日志缓存"><a href="#重做日志缓存" class="headerlink" title="重做日志缓存"></a>重做日志缓存</h5><h5 id="额外的内存池"><a href="#额外的内存池" class="headerlink" title="额外的内存池"></a>额外的内存池</h5>]]></content>
-      <categories>
-        <category>MySQL数据库</category>
-      </categories>
-      <tags>
-        <tag>InnoDB存储引擎</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>IPVS</title>
     <url>/2021/03/25/IPVS/</url>
     <content><![CDATA[<h1 id="一、LVS简介"><a href="#一、LVS简介" class="headerlink" title="一、LVS简介"></a>一、LVS简介</h1><p>LVS是Linux Virtual Server的简称，也就是Linux虚拟服务器, 是一个由章文嵩博士发起的自由软件项目，现在已经是 Linux标准内核的一部分。LVS是一种叫基于TCP/IP的负载均衡技术，转发效率极高，具有处理百万计并发连接请求的能力。</p>
@@ -325,29 +304,65 @@
       </tags>
   </entry>
   <entry>
-    <title>HTTP认证机制</title>
-    <url>/2021/03/03/HTTP%E8%AE%A4%E8%AF%81%E6%9C%BA%E5%88%B6/</url>
-    <content><![CDATA[<h2 id="认证"><a href="#认证" class="headerlink" title="认证"></a>认证</h2><p>认证就是给出一些身份证明，当然，不论哪一种认证策略都不是绝对有效的，但每种证据都有助于构建合理的信任。</p>
-<h3 id="HTTP的质询-响应认证框架"><a href="#HTTP的质询-响应认证框架" class="headerlink" title="HTTP的质询/响应认证框架"></a>HTTP的质询/响应认证框架</h3><p>HTTP提供了一个原生的质询/响应框架（challenge/response），简化了对用户的认证过程。</p>
-<h4 id="认证协议与首部"><a href="#认证协议与首部" class="headerlink" title="认证协议与首部"></a>认证协议与首部</h4><p>HTTP通过一组可定制的控制首部，为不同的认证协议提供了一个可扩展框架，认证协议也是在HTTP认证首部中指定的。</p>
-<p>HTTP定义了两个官方的认证协议：</p>
-<blockquote>
-<p>基本认证</p>
-</blockquote>
-<blockquote>
-<p>摘要认证</p>
-</blockquote>
-]]></content>
+    <title>InnoDB存储引擎</title>
+    <url>/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
+    <content><![CDATA[<h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
+<p>InnoDB存储引擎有多个内存块，这些内存块组成了一个大的内存池</p>
+<p>后台线程的主要作用就是负责刷新内存池中的数据，保证缓存池中的内存缓存的是最近的数据。此外，还将已经修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下，InnoDB可以恢复运行到最佳状态。</p>
+<h4 id="后台线程（InnDB是一个多线程模型"><a href="#后台线程（InnDB是一个多线程模型" class="headerlink" title="后台线程（InnDB是一个多线程模型)"></a>后台线程（InnDB是一个多线程模型)</h4><p>#####Master Thread</p>
+<p><strong>作用：</strong></p>
+<p>​    一个非常核心的后台进程，负责将缓存池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓存、UNDO页的回收等。</p>
+<h5 id="IO-Therad"><a href="#IO-Therad" class="headerlink" title="IO Therad"></a>IO Therad</h5><p>  在InnoDB存储引擎中大量使用了AIO（Async IO）—异步时间非阻塞IO，这样可以极大程度上提高数据库的性能。IO Thread的主要工作就是负责这些IO请求的回调</p>
+<p>共有四个IO Thread:write 、read、insert buffer、log IO thread</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114130216.png" alt="image-20210114114130216"></p>
+<p>通过命令SHOW ENGINE INNODB STASTUS\G来观察IO Thread</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114405936.png" alt="image-20210114114405936"></p>
+<p>有四个write和read IO Thread</p>
+<p>通过innodb_read_io_threads和innodb_write_io_threads参数来进行设置</p>
+<h5 id="Purge-Thread"><a href="#Purge-Thread" class="headerlink" title="Purge Thread"></a>Purge Thread</h5><p><strong>作用</strong>：</p>
+<p>​    Purge Thread回收已经使用并且已经分配的undo页（事务提交之后，其所使用的Undolog可能就不再需要）</p>
+<p>用户需要在<strong>MySQL数据库的配置文件</strong>中添加如下命令来启用独立的Purge Thread: </p>
+<p>​        innodb_purge_threads=1</p>
+<h5 id="Page-Cleaner-Thread"><a href="#Page-Cleaner-Thread" class="headerlink" title="Page Cleaner Thread"></a>Page Cleaner Thread</h5><p><strong>作用</strong>：</p>
+<p>​    将脏页的刷新操作放在单独的线程中完成。减轻Master Thread的工作以及对于用户查询线程的阻塞</p>
+<h4 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h4><h5 id="缓存池"><a href="#缓存池" class="headerlink" title="缓存池"></a>缓存池</h5><p>Innodb存储引擎是基于磁盘存储的（Disk-base Database），将其中的记录按照页来管理。</p>
+<p>缓存池的出现，就是为了解决CPU速度和磁盘速度之间的差异，通过内存的速度来弥补磁盘速度较慢对数据库性能的影响。读取文件时，首先判断给文件是否在缓存池中（没有就去磁盘上找）。</p>
+<p>在修改缓存池中的页时，先以一定频率刷新到缓存池上，然后通过Checkpoint刷新回磁盘。</p>
+<p>数据库服务器最好采用64位操作系统，可以使用更多的内存（512GB），32位（只有64GB）。</p>
+<p>缓存池的配置通过参数innodb_buffer_pool_size来设置。</p>
+<h6 id="缓存池中缓存的数据页类型："><a href="#缓存池中缓存的数据页类型：" class="headerlink" title="缓存池中缓存的数据页类型："></a>缓存池中缓存的数据页类型：</h6><p>​    索引页、数据页、Undo页、插入缓存页、自适应哈希索引页（adaptive hash index）、InnoDB存储的锁信息、数据字典信息等。</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114131120313.png" alt="image-20210114131120313"></p>
+<p><strong>允许有多个缓存池实例</strong>：每个页根据hashcode平均分配到不同的缓存池实例中，减少数据库内部资源的竞争，增加数据库的并发能力。可以通过inodb_buffer_pool_instances来进行配置，通过命令SHOW ENGINE INNODB STATUS可以观察到每个缓存池实例对象运行的状态，还可以通过查看表InnoDB_BUFFER_POOL_STATS来观察缓存的状态(要求在information_schema架构下)</p>
+<h5 id="LRU-LIST-、FREE-LIST-、FLUSH-LIST"><a href="#LRU-LIST-、FREE-LIST-、FLUSH-LIST" class="headerlink" title="LRU LIST 、FREE LIST 、FLUSH LIST"></a>LRU LIST 、FREE LIST 、FLUSH LIST</h5><p><strong>LRU</strong>算法用来管理已经读取的页</p>
+<p>数据库中的缓存池是通过LRU（Latest Recent Used,最近最少使用）算法来管理内部的各种类型的页。</p>
+<p><strong>LRU解释</strong>：将最频繁使用的页放在LRU列表的前端，最少使用的页放在LRU列表的尾端。当缓存池不能存放新读取到的页时，将优先删除列表尾端的页（默认大小为16KB）。</p>
+<p><strong>改进</strong>：</p>
+<p>1、（midpoint insertion strategy）：InnoDB中在LRU中加入了midpoint位置，将新读取到的页放在midpoint，而不是直接放在LRU列表首部。<strong>默认位置在LRU列表长度63%处</strong>（可以通过innodb_old_blocks_pct来控制）</p>
+<p>2、设置了参数innodb_old_blocks_time,用于表示页读取到mid位置后需要等待多久才会加入到LRU列表的热端</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133522544.png" alt="image-20210114133522544"></p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133412580.png" alt="image-20210114133412580"></p>
+<p><strong>为什么要对朴素的LRU算法进行改良</strong>？</p>
+<h5 id="重做日志缓存"><a href="#重做日志缓存" class="headerlink" title="重做日志缓存"></a>重做日志缓存</h5><h5 id="额外的内存池"><a href="#额外的内存池" class="headerlink" title="额外的内存池"></a>额外的内存池</h5>]]></content>
       <categories>
-        <category>HTTP</category>
+        <category>MySQL数据库</category>
       </categories>
       <tags>
-        <tag>HTTP</tag>
+        <tag>InnoDB存储引擎</tag>
       </tags>
   </entry>
   <entry>
     <title>InnoDB表</title>
     <url>/2021/03/14/InnoDB%E8%A1%A8/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>InnoDB文件</title>
+    <url>/2021/03/14/InnoDB%E6%96%87%E4%BB%B6/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>JVM虚拟机栈</title>
+    <url>/2021/03/14/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -360,26 +375,6 @@
       <tags>
         <tag>JVM堆</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>InnoDB文件</title>
-    <url>/2021/03/14/InnoDB%E6%96%87%E4%BB%B6/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>HTTP缓存</title>
-    <url>/2021/02/03/HTTP%E7%BC%93%E5%AD%98/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>JVM虚拟机栈</title>
-    <url>/2021/03/14/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>Java高并发JUC</title>
-    <url>/2021/02/25/Java%E9%AB%98%E5%B9%B6%E5%8F%91JUC/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Java内存区域与内存溢出异常</title>
@@ -451,13 +446,13 @@
       </tags>
   </entry>
   <entry>
-    <title>Jenkins自动化部署工具</title>
-    <url>/2021/03/14/Jenkins%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E5%B7%A5%E5%85%B7/</url>
+    <title>Java高并发JUC</title>
+    <url>/2021/02/25/Java%E9%AB%98%E5%B9%B6%E5%8F%91JUC/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>Linux进程调度</title>
-    <url>/2021/03/14/Linux%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/</url>
+    <title>Jenkins自动化部署工具</title>
+    <url>/2021/03/14/Jenkins%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E5%B7%A5%E5%85%B7/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -589,6 +584,11 @@
       </tags>
   </entry>
   <entry>
+    <title>Linux进程调度</title>
+    <url>/2021/03/14/Linux%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Linux进程管理</title>
     <url>/2021/03/14/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/</url>
     <content><![CDATA[]]></content>
@@ -701,6 +701,76 @@
       </tags>
   </entry>
   <entry>
+    <title>Maven学习笔记</title>
+    <url>/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/</url>
+    <content><![CDATA[<h2 id="IDEA编辑器集成maven环境"><a href="#IDEA编辑器集成maven环境" class="headerlink" title="IDEA编辑器集成maven环境"></a>IDEA编辑器集成maven环境</h2><p>###设置Maven版本</p>
+<ul>
+<li> 设置Maven版本–选择下载好的maven版本（⽬录选到bin⽬录的上⼀级⽬录）</li>
+</ul>
+
+
+ <img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven2.png" class>
+
+<ul>
+<li><p>设置settings.xml文件</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven3.png" class>
+
+</li>
+</ul>
+<h3 id="Maven项目的创建"><a href="#Maven项目的创建" class="headerlink" title="Maven项目的创建"></a>Maven项目的创建</h3><ul>
+<li><p>选择Maven,设置JDK版本，选择maven项目里的模板</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven4.png" class>
+</li>
+<li><p>设置项目里的GroupID和ArtifactID</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven5.png" class>
+</li>
+<li><p>检查项目的Maven环境</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven6.png" class>
+</li>
+<li><p>项目的目录结构</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven7.png" class>
+
+</li>
+</ul>
+<p>###项目的编译</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven8.png" class>
+
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven9.png" class>
+
+<ul>
+<li>执⾏编译命令，两个图标分别代表”普通模式”和”调试模式”</li>
+</ul>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven10.png" class>
+
+<h3 id="创建WEB项目"><a href="#创建WEB项目" class="headerlink" title="创建WEB项目"></a>创建WEB项目</h3><p>创建web项目与创建普通Java项目步骤基本一致，区别在于选择Maven模板（WEB项目选择webapp)</p>
+<h4 id="启动项目"><a href="#启动项目" class="headerlink" title="启动项目"></a>启动项目</h4><ul>
+<li><p>修改相关版本</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- JDK的版本修改为1.8 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">maven.compiler.target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.target</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- junit的版本修改为4.12 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.12<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>删除pluginManagement标签</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 将这个标签及标签中的内容全部删除 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line">...</span><br><span class="line"><span class="tag">&lt;/<span class="name">pluginManagement</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>添加web部署的插件</p>
+<p>1.jetty插件</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置在plugins标签中 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mortbay.jetty<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-jetty-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">version</span>&gt;</span>6.1.25<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">		 <span class="comment">&lt;!-- 热部署，每10秒扫描⼀次 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">scanIntervalSeconds</span>&gt;</span>10<span class="tag">&lt;/<span class="name">scanIntervalSeconds</span>&gt;</span></span><br><span class="line">		 <span class="comment">&lt;!-- 可指定当前项⽬的站点名 --&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">contextPath</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">contextPath</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">connectors</span>&gt;</span></span><br><span class="line">			 &lt;connector</span><br><span class="line">implementation=&quot;org.mortbay.jetty.nio.SelectChannelConnector&quot;&gt;</span><br><span class="line"> <span class="tag">&lt;<span class="name">port</span>&gt;</span>9090<span class="tag">&lt;/<span class="name">port</span>&gt;</span> <span class="comment">&lt;!-- 设置启动的端⼝号 --&gt;</span></span><br><span class="line"> 			 <span class="tag">&lt;/<span class="name">connector</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">connectors</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<p>  2.tomcat插件</p>
+  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置在plugins标签中 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.tomcat.maven<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>tomcat7-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">port</span>&gt;</span>8081<span class="tag">&lt;/<span class="name">port</span>&gt;</span> <span class="comment">&lt;!-- 启动端⼝ 默认:8080 --&gt;</span></span><br><span class="line"> 		 <span class="tag">&lt;<span class="name">path</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">path</span>&gt;</span> <span class="comment">&lt;!-- 项⽬的站点名，即对外访问路径 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">uriEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">uriEncoding</span>&gt;</span> <span class="comment">&lt;!-- 字符集编码 默认：ISO-8859-1 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">server</span>&gt;</span>tomcat7<span class="tag">&lt;/<span class="name">server</span>&gt;</span> <span class="comment">&lt;!-- 服务器名称 --&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+  <img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven11.png" class>
+
+
+
+<p>**maven依赖仓库：<a href="https://mvnrepository.com/">https://mvnrepository.com/</a> **</p>
+]]></content>
+      <categories>
+        <category>项目工具</category>
+      </categories>
+      <tags>
+        <tag>Maven</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MVVM框架</title>
     <url>/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/</url>
     <content><![CDATA[<p>一个软件或者 APP都是服务于某种需求，这称之为“业务需求”。随着业务需求的增多、软件会变得越来越庞大，越来越复杂。所以就会设计一套完整的架构设计、研发流程以及质量管理体系来保证整个研发过程。“架构设计”是一个非常大的话题，它涉及到各方面，近年来前端一个明显的开发趋势就是架构从传统的 MVC 模式向 MVVM 模式迁移，这里来谈谈——MVVM模式。</p>
@@ -760,6 +830,101 @@
       </categories>
       <tags>
         <tag>架构模式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Maven学习笔记</title>
+    <url>/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-3/</url>
+    <content><![CDATA[<h3 id="Maven仓库的基本概念"><a href="#Maven仓库的基本概念" class="headerlink" title="Maven仓库的基本概念"></a>Maven仓库的基本概念</h3><p> 当第⼀次运⾏Maven命令的时候， 你需要Internet链接， 因为它需要从⽹上下载⼀些⽂件。 那么它从 哪⾥下载呢？ 它是从Maven默认的远程库下载的。 这个远程仓库有Maven的核⼼插件和可供下载的jar⽂件。</p>
+<p>对于Maven来说， 仓库只分为两类： 本地仓库和远程仓库。</p>
+<p>当Maven根据坐标寻找构件的时候，它⾸先会查看本地仓库，如果本地仓库存在，则直接使⽤； 如果 本地没有，Maven就会去远程仓库查找，发现需要的构件之后，下载到本地仓库再使⽤。 如果本地仓库和远程仓库都没有，Maven就会报错。 </p>
+<p>远程仓库分为三种： 中央仓库，私服， 其他公共库。</p>
+<ul>
+<li><p>中央仓库：默认配置下，Maven下载jar包的地⽅。</p>
+<blockquote>
+<p>由于原始的本地仓库是空的，maven必须知道⾄少⼀个可⽤的远程仓库，才能执⾏maven命令的时候 下载到需要的构件。中央仓库就是这样⼀个默认的远程仓库。 maven-model-builder-3.3.9.jar maven⾃动的 jar 中包含了⼀个 超级POM。定义了默认中央仓库的位 置。 中央仓库包含了2000多个开源项⽬，接收每天1亿次以上的访问</p>
+</blockquote>
+</li>
+<li><p>私服：是另⼀种特殊的远程仓库，为了节省带宽和时间，应该在局域⽹内架设⼀个私有的仓库服务器， ⽤其代理所有外部的远程仓库。 内部的项⽬还能部署到私服上供其他项⽬使用</p>
+<blockquote>
+<p>私服是⼀种特殊的远程仓库，它是架设在局域⽹内的仓库服务， 私服代理⼴域⽹上的远程仓库，供局 域⽹内的maven⽤户使⽤。 当maven需要下载构件时， 它去私服当中找，如果私服没有， 则从外部远 程仓库下载，并缓存在私服上， 再为maven提供。 此外，⼀些⽆法从外部仓库下载的构件也能从本地上传到私服提供局域⽹中其他⼈使⽤</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">repositories</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">snapshots</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">enabled</span>&gt;</span>true<span class="tag">&lt;/<span class="name">enabled</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;/<span class="name">snapshots</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">id</span>&gt;</span>public<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>Public Repositories<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://192.168.0.96:8081/content/groups/public/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">id</span>&gt;</span>getui-nexus<span class="tag">&lt;/<span class="name">id</span>&gt;</span>       				<span class="tag">&lt;<span class="name">url</span>&gt;</span>http://mvn.gt.igexin.com/nexus/content/repositories/releases/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">repositories</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<p>公司内部为何需要建立私服：</p>
+<blockquote>
+<p>节省⾃⼰的外⽹带宽 加速maven构建 部署第三⽅控件 提⾼稳定性 降低中央仓库的负荷</p>
+</blockquote>
+<p>常用的阿里云仓库配置，需要修改settings.xml文件</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus-aliyun<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">name</span>&gt;</span>Nexus aliyun<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+<p>⼀般来说，在Maven项⽬⽬录下，没有诸如lib/这样⽤来存放依赖⽂件的⽬录。 当Maven在执⾏编译或 测试时，如果需要使⽤依赖⽂件，它总是基于坐标使⽤本地仓库的依赖⽂件。</p>
+<p>每个⽤户在⾃⼰的⽤户⽬录下都有⼀个路径名为.m2/repository/的仓库⽬录。 有时候， 因为某些原因（⽐如c盘空间不⾜）,需要修改本地仓库⽬录地址。</p>
+<p>对于仓库路径的修改，可以通过maven 配置⽂件conf ⽬录下settings.xml来指定仓库路径。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置到指定⽬录中，路径的斜杆不要写反 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">settings</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">localRepository</span>&gt;</span>D:/m2/repository<span class="tag">&lt;/<span class="name">localRepository</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+<h3 id="Maven依赖的基本概念"><a href="#Maven依赖的基本概念" class="headerlink" title="Maven依赖的基本概念"></a>Maven依赖的基本概念</h3><p>根元素project下的dependencies可以包含多个 dependence元素，以声明多个依赖。每个依赖都应该包含以下元素：</p>
+<ol>
+<li><p>groupId, artifactId, version : 依赖的基本坐标， 对于任何⼀个依赖来说，基本坐标是最重要的， Maven根据坐标才能找到需要的依赖。</p>
+</li>
+<li><p>Type： 依赖的类型，⼤部分情况下不需要声明。 默认值为jar</p>
+</li>
+<li><p>Scope： 依赖范围（compile,test,provided,runtime,system）</p>
+</li>
+</ol>
+<blockquote>
+<p>compile：编译依赖范围</p>
+</blockquote>
+<p>如果没有指定，就会默认使⽤该依赖范围。使⽤此依赖范围的Maven依赖，对于编译、测 试、运⾏三种classpath都有效。</p>
+<blockquote>
+<p>test：测试依赖范围</p>
+</blockquote>
+<p>使⽤此依赖范围的Maven依赖，只对于测试classpath有效，在编译主代码或者运⾏项⽬的使 ⽤时将⽆法使⽤此类依赖。典型的例⼦就是JUnit，它只有在编译测试代码及运⾏测试的时候才需要</p>
+<blockquote>
+<p>provided：已提供依赖范围</p>
+</blockquote>
+<p>使⽤此依赖范围的Maven依赖，对于编译和测试classpath有效，但在运⾏时⽆效。典型的例 ⼦是servlet-api，编译和测试项⽬的时候需要该依赖，但在运⾏项⽬的时候，由于容器已经提供，就不需要Maven重复地引⼊⼀遍(如：servlet-api)。</p>
+<blockquote>
+<p>runtime：运行时依赖范围</p>
+</blockquote>
+<p>使⽤此依赖范围的Maven依赖，对于测试和运⾏classpath有效，但在编译主代码时⽆效。典 型的例⼦是JDBC驱动实现，项⽬主代码的编译只需要JDK提供的JDBC接⼝，只有在执⾏测 试或者运⾏项⽬的时候才需要实现上述接⼝的具体JDBC驱动。</p>
+<blockquote>
+<p>system：系统依赖范围</p>
+</blockquote>
+<p>该依赖与三种classpath的关系，和provided依赖范围完全⼀致。但是，使⽤system范围依赖 时必须通过systemPath元素显式地指定依赖⽂件的路径。由于此类依赖不是通过Maven仓库 解析的，⽽且往往与本机系统绑定，可能造成构建的不可移植，因此应该谨慎使⽤。</p>
+<ol start="4">
+<li><p>Optional：标记依赖是否可选</p>
+</li>
+<li><p>Exclusions： ⽤来排除传递性依赖。</p>
+</li>
+</ol>
+<h3 id="Maven依赖的依赖范围"><a href="#Maven依赖的依赖范围" class="headerlink" title="Maven依赖的依赖范围"></a>Maven依赖的依赖范围</h3><p>⾸先需要知道，Maven在编译项⽬主代码的时候需要使⽤⼀套classpath。 ⽐如：编译项⽬代码的时候 需要⽤到spring-core, 该⽂件以依赖的⽅式被引⼊到classpath中。 其次， Maven在执⾏测试的时候会使 ⽤另外⼀套classpath。 如：junit。</p>
+<p>最后在实际运⾏项⽬时，⼜会使⽤⼀套classpath， spring-core需要在该classpath中，⽽junit不需要。</p>
+<p>那么依赖范围就是⽤来控制依赖与这三种classpath(编译classpath，测试classpath，运⾏时classpath)的 关系， Maven有以下⼏种依赖范围：<strong>（如上所述）</strong></p>
+<h3 id="传递性依赖"><a href="#传递性依赖" class="headerlink" title="传递性依赖"></a>传递性依赖</h3><p>传递依赖机制， 让我们在使⽤某个jar的时候就不⽤去考虑它依赖了什么。也不⽤担⼼引⼊多余的依 赖。 Maven会解析各个直接依赖的POM，将那些必要的间接依赖，以传递性依赖的形式引⼊到当前项⽬中。</p>
+<p><strong>注意：传递依赖有可能产生冲突</strong></p>
+<p>冲突场景”</p>
+<blockquote>
+<p>A–&gt;B—&gt;C (2.0) </p>
+<p>A–&gt;E—&gt;C (1.0)</p>
+</blockquote>
+<p>如果A下同时存在两个不同version的C，冲突！！（选取同时适合A、B的版本）</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">version</span>&gt;</span>xxx<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>项目工具</category>
+      </categories>
+      <tags>
+        <tag>Maven</tag>
       </tags>
   </entry>
   <entry>
@@ -933,232 +1098,9 @@
       </tags>
   </entry>
   <entry>
-    <title>Maven学习笔记</title>
-    <url>/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-3/</url>
-    <content><![CDATA[<h3 id="Maven仓库的基本概念"><a href="#Maven仓库的基本概念" class="headerlink" title="Maven仓库的基本概念"></a>Maven仓库的基本概念</h3><p> 当第⼀次运⾏Maven命令的时候， 你需要Internet链接， 因为它需要从⽹上下载⼀些⽂件。 那么它从 哪⾥下载呢？ 它是从Maven默认的远程库下载的。 这个远程仓库有Maven的核⼼插件和可供下载的jar⽂件。</p>
-<p>对于Maven来说， 仓库只分为两类： 本地仓库和远程仓库。</p>
-<p>当Maven根据坐标寻找构件的时候，它⾸先会查看本地仓库，如果本地仓库存在，则直接使⽤； 如果 本地没有，Maven就会去远程仓库查找，发现需要的构件之后，下载到本地仓库再使⽤。 如果本地仓库和远程仓库都没有，Maven就会报错。 </p>
-<p>远程仓库分为三种： 中央仓库，私服， 其他公共库。</p>
-<ul>
-<li><p>中央仓库：默认配置下，Maven下载jar包的地⽅。</p>
-<blockquote>
-<p>由于原始的本地仓库是空的，maven必须知道⾄少⼀个可⽤的远程仓库，才能执⾏maven命令的时候 下载到需要的构件。中央仓库就是这样⼀个默认的远程仓库。 maven-model-builder-3.3.9.jar maven⾃动的 jar 中包含了⼀个 超级POM。定义了默认中央仓库的位 置。 中央仓库包含了2000多个开源项⽬，接收每天1亿次以上的访问</p>
-</blockquote>
-</li>
-<li><p>私服：是另⼀种特殊的远程仓库，为了节省带宽和时间，应该在局域⽹内架设⼀个私有的仓库服务器， ⽤其代理所有外部的远程仓库。 内部的项⽬还能部署到私服上供其他项⽬使用</p>
-<blockquote>
-<p>私服是⼀种特殊的远程仓库，它是架设在局域⽹内的仓库服务， 私服代理⼴域⽹上的远程仓库，供局 域⽹内的maven⽤户使⽤。 当maven需要下载构件时， 它去私服当中找，如果私服没有， 则从外部远 程仓库下载，并缓存在私服上， 再为maven提供。 此外，⼀些⽆法从外部仓库下载的构件也能从本地上传到私服提供局域⽹中其他⼈使⽤</p>
-</blockquote>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">repositories</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">snapshots</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">enabled</span>&gt;</span>true<span class="tag">&lt;/<span class="name">enabled</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;/<span class="name">snapshots</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">id</span>&gt;</span>public<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>Public Repositories<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://192.168.0.96:8081/content/groups/public/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">id</span>&gt;</span>getui-nexus<span class="tag">&lt;/<span class="name">id</span>&gt;</span>       				<span class="tag">&lt;<span class="name">url</span>&gt;</span>http://mvn.gt.igexin.com/nexus/content/repositories/releases/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">repositories</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<p>公司内部为何需要建立私服：</p>
-<blockquote>
-<p>节省⾃⼰的外⽹带宽 加速maven构建 部署第三⽅控件 提⾼稳定性 降低中央仓库的负荷</p>
-</blockquote>
-<p>常用的阿里云仓库配置，需要修改settings.xml文件</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus-aliyun<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">name</span>&gt;</span>Nexus aliyun<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-<p>⼀般来说，在Maven项⽬⽬录下，没有诸如lib/这样⽤来存放依赖⽂件的⽬录。 当Maven在执⾏编译或 测试时，如果需要使⽤依赖⽂件，它总是基于坐标使⽤本地仓库的依赖⽂件。</p>
-<p>每个⽤户在⾃⼰的⽤户⽬录下都有⼀个路径名为.m2/repository/的仓库⽬录。 有时候， 因为某些原因（⽐如c盘空间不⾜）,需要修改本地仓库⽬录地址。</p>
-<p>对于仓库路径的修改，可以通过maven 配置⽂件conf ⽬录下settings.xml来指定仓库路径。</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置到指定⽬录中，路径的斜杆不要写反 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">settings</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">localRepository</span>&gt;</span>D:/m2/repository<span class="tag">&lt;/<span class="name">localRepository</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-<h3 id="Maven依赖的基本概念"><a href="#Maven依赖的基本概念" class="headerlink" title="Maven依赖的基本概念"></a>Maven依赖的基本概念</h3><p>根元素project下的dependencies可以包含多个 dependence元素，以声明多个依赖。每个依赖都应该包含以下元素：</p>
-<ol>
-<li><p>groupId, artifactId, version : 依赖的基本坐标， 对于任何⼀个依赖来说，基本坐标是最重要的， Maven根据坐标才能找到需要的依赖。</p>
-</li>
-<li><p>Type： 依赖的类型，⼤部分情况下不需要声明。 默认值为jar</p>
-</li>
-<li><p>Scope： 依赖范围（compile,test,provided,runtime,system）</p>
-</li>
-</ol>
-<blockquote>
-<p>compile：编译依赖范围</p>
-</blockquote>
-<p>如果没有指定，就会默认使⽤该依赖范围。使⽤此依赖范围的Maven依赖，对于编译、测 试、运⾏三种classpath都有效。</p>
-<blockquote>
-<p>test：测试依赖范围</p>
-</blockquote>
-<p>使⽤此依赖范围的Maven依赖，只对于测试classpath有效，在编译主代码或者运⾏项⽬的使 ⽤时将⽆法使⽤此类依赖。典型的例⼦就是JUnit，它只有在编译测试代码及运⾏测试的时候才需要</p>
-<blockquote>
-<p>provided：已提供依赖范围</p>
-</blockquote>
-<p>使⽤此依赖范围的Maven依赖，对于编译和测试classpath有效，但在运⾏时⽆效。典型的例 ⼦是servlet-api，编译和测试项⽬的时候需要该依赖，但在运⾏项⽬的时候，由于容器已经提供，就不需要Maven重复地引⼊⼀遍(如：servlet-api)。</p>
-<blockquote>
-<p>runtime：运行时依赖范围</p>
-</blockquote>
-<p>使⽤此依赖范围的Maven依赖，对于测试和运⾏classpath有效，但在编译主代码时⽆效。典 型的例⼦是JDBC驱动实现，项⽬主代码的编译只需要JDK提供的JDBC接⼝，只有在执⾏测 试或者运⾏项⽬的时候才需要实现上述接⼝的具体JDBC驱动。</p>
-<blockquote>
-<p>system：系统依赖范围</p>
-</blockquote>
-<p>该依赖与三种classpath的关系，和provided依赖范围完全⼀致。但是，使⽤system范围依赖 时必须通过systemPath元素显式地指定依赖⽂件的路径。由于此类依赖不是通过Maven仓库 解析的，⽽且往往与本机系统绑定，可能造成构建的不可移植，因此应该谨慎使⽤。</p>
-<ol start="4">
-<li><p>Optional：标记依赖是否可选</p>
-</li>
-<li><p>Exclusions： ⽤来排除传递性依赖。</p>
-</li>
-</ol>
-<h3 id="Maven依赖的依赖范围"><a href="#Maven依赖的依赖范围" class="headerlink" title="Maven依赖的依赖范围"></a>Maven依赖的依赖范围</h3><p>⾸先需要知道，Maven在编译项⽬主代码的时候需要使⽤⼀套classpath。 ⽐如：编译项⽬代码的时候 需要⽤到spring-core, 该⽂件以依赖的⽅式被引⼊到classpath中。 其次， Maven在执⾏测试的时候会使 ⽤另外⼀套classpath。 如：junit。</p>
-<p>最后在实际运⾏项⽬时，⼜会使⽤⼀套classpath， spring-core需要在该classpath中，⽽junit不需要。</p>
-<p>那么依赖范围就是⽤来控制依赖与这三种classpath(编译classpath，测试classpath，运⾏时classpath)的 关系， Maven有以下⼏种依赖范围：<strong>（如上所述）</strong></p>
-<h3 id="传递性依赖"><a href="#传递性依赖" class="headerlink" title="传递性依赖"></a>传递性依赖</h3><p>传递依赖机制， 让我们在使⽤某个jar的时候就不⽤去考虑它依赖了什么。也不⽤担⼼引⼊多余的依 赖。 Maven会解析各个直接依赖的POM，将那些必要的间接依赖，以传递性依赖的形式引⼊到当前项⽬中。</p>
-<p><strong>注意：传递依赖有可能产生冲突</strong></p>
-<p>冲突场景”</p>
-<blockquote>
-<p>A–&gt;B—&gt;C (2.0) </p>
-<p>A–&gt;E—&gt;C (1.0)</p>
-</blockquote>
-<p>如果A下同时存在两个不同version的C，冲突！！（选取同时适合A、B的版本）</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">version</span>&gt;</span>xxx<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>项目工具</category>
-      </categories>
-      <tags>
-        <tag>Maven</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Maven学习笔记</title>
-    <url>/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/</url>
-    <content><![CDATA[<h2 id="IDEA编辑器集成maven环境"><a href="#IDEA编辑器集成maven环境" class="headerlink" title="IDEA编辑器集成maven环境"></a>IDEA编辑器集成maven环境</h2><p>###设置Maven版本</p>
-<ul>
-<li> 设置Maven版本–选择下载好的maven版本（⽬录选到bin⽬录的上⼀级⽬录）</li>
-</ul>
-
-
- <img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven2.png" class>
-
-<ul>
-<li><p>设置settings.xml文件</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven3.png" class>
-
-</li>
-</ul>
-<h3 id="Maven项目的创建"><a href="#Maven项目的创建" class="headerlink" title="Maven项目的创建"></a>Maven项目的创建</h3><ul>
-<li><p>选择Maven,设置JDK版本，选择maven项目里的模板</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven4.png" class>
-</li>
-<li><p>设置项目里的GroupID和ArtifactID</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven5.png" class>
-</li>
-<li><p>检查项目的Maven环境</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven6.png" class>
-</li>
-<li><p>项目的目录结构</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven7.png" class>
-
-</li>
-</ul>
-<p>###项目的编译</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven8.png" class>
-
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven9.png" class>
-
-<ul>
-<li>执⾏编译命令，两个图标分别代表”普通模式”和”调试模式”</li>
-</ul>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven10.png" class>
-
-<h3 id="创建WEB项目"><a href="#创建WEB项目" class="headerlink" title="创建WEB项目"></a>创建WEB项目</h3><p>创建web项目与创建普通Java项目步骤基本一致，区别在于选择Maven模板（WEB项目选择webapp)</p>
-<h4 id="启动项目"><a href="#启动项目" class="headerlink" title="启动项目"></a>启动项目</h4><ul>
-<li><p>修改相关版本</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- JDK的版本修改为1.8 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">maven.compiler.target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.target</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- junit的版本修改为4.12 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.12<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li><p>删除pluginManagement标签</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 将这个标签及标签中的内容全部删除 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line">...</span><br><span class="line"><span class="tag">&lt;/<span class="name">pluginManagement</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li><p>添加web部署的插件</p>
-<p>1.jetty插件</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置在plugins标签中 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mortbay.jetty<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-jetty-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">version</span>&gt;</span>6.1.25<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">		 <span class="comment">&lt;!-- 热部署，每10秒扫描⼀次 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">scanIntervalSeconds</span>&gt;</span>10<span class="tag">&lt;/<span class="name">scanIntervalSeconds</span>&gt;</span></span><br><span class="line">		 <span class="comment">&lt;!-- 可指定当前项⽬的站点名 --&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">contextPath</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">contextPath</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">connectors</span>&gt;</span></span><br><span class="line">			 &lt;connector</span><br><span class="line">implementation=&quot;org.mortbay.jetty.nio.SelectChannelConnector&quot;&gt;</span><br><span class="line"> <span class="tag">&lt;<span class="name">port</span>&gt;</span>9090<span class="tag">&lt;/<span class="name">port</span>&gt;</span> <span class="comment">&lt;!-- 设置启动的端⼝号 --&gt;</span></span><br><span class="line"> 			 <span class="tag">&lt;/<span class="name">connector</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">connectors</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<p>  2.tomcat插件</p>
-  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置在plugins标签中 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.tomcat.maven<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>tomcat7-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">port</span>&gt;</span>8081<span class="tag">&lt;/<span class="name">port</span>&gt;</span> <span class="comment">&lt;!-- 启动端⼝ 默认:8080 --&gt;</span></span><br><span class="line"> 		 <span class="tag">&lt;<span class="name">path</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">path</span>&gt;</span> <span class="comment">&lt;!-- 项⽬的站点名，即对外访问路径 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">uriEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">uriEncoding</span>&gt;</span> <span class="comment">&lt;!-- 字符集编码 默认：ISO-8859-1 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">server</span>&gt;</span>tomcat7<span class="tag">&lt;/<span class="name">server</span>&gt;</span> <span class="comment">&lt;!-- 服务器名称 --&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
-  <img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven11.png" class>
-
-
-
-<p>**maven依赖仓库：<a href="https://mvnrepository.com/">https://mvnrepository.com/</a> **</p>
-]]></content>
-      <categories>
-        <category>项目工具</category>
-      </categories>
-      <tags>
-        <tag>Maven</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>MongoDB数据库</title>
     <url>/2021/02/25/MongoDB%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
     <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>Mybatis入门案例知识补充</title>
-    <url>/2021/03/07/Mybatis%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E8%A1%A5%E5%85%85/</url>
-    <content><![CDATA[<h2 id="不使用XML构建SqlSessionFactory"><a href="#不使用XML构建SqlSessionFactory" class="headerlink" title="不使用XML构建SqlSessionFactory"></a>不使用XML构建SqlSessionFactory</h2><p>如果你更愿意直接从 Java 代码而不是 XML 文件中创建配置，或者想要创建你自己的配置建造器，MyBatis 也<strong>提供了完整的配置类</strong>，提供了所有与 XML 文件等价的配置项。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">DataSource dataSource = BlogDataSourceFactory.getBlogDataSource();</span><br><span class="line"><span class="comment">//指定事务类型</span></span><br><span class="line">TransactionFactory transactionFactory = <span class="keyword">new</span> JdbcTransactionFactory();</span><br><span class="line">Environment environment = <span class="keyword">new</span> Environment(<span class="string">&quot;development&quot;</span>, transactionFactory, dataSource);</span><br><span class="line">Configuration configuration = <span class="keyword">new</span> Configuration(environment);</span><br><span class="line"><span class="comment">//添加一个映射器类,相较于XML文件构建存在一定的局限性</span></span><br><span class="line">configuration.addMapper(BlogMapper.class);</span><br><span class="line"><span class="comment">//构造SqlSessionFactory</span></span><br><span class="line">SqlSessionFactory sqlSessionFactory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(configuration);</span><br></pre></td></tr></table></figure>
-<p>注意该例中，configuration 添加了一个映射器类（mapper class）。映射器类是 Java 类，它们**<u>包含 SQL 映射注解从而避免依赖 XML 文件</u>**。不过，由于 Java 注解的一些限制以及某些 MyBatis 映射的复杂性，要使用大多数高级映射（比如：嵌套联合映射），仍然需要使用 XML 配置。有鉴于此，如果存在一个同名 XML 配置文件，MyBatis 会自动查找并加载它（在这个例子中，基于类路径和 BlogMapper.class 的类名，会加载 BlogMapper.xml）。</p>
-<h2 id="从SqlSessionFactory中获取SqlSession"><a href="#从SqlSessionFactory中获取SqlSession" class="headerlink" title="从SqlSessionFactory中获取SqlSession"></a>从SqlSessionFactory中获取SqlSession</h2><p> 既然有了 SqlSessionFactory，顾名思义，我们可以从中获得 SqlSession 的实例。SqlSession 提供了在数据库执行 SQL 命令所需的所有方法。你可以通过 SqlSession 实例来直接执行已映射的 SQL 语句。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span>(SqlSession session = SqlSessionFactory.opensession())&#123;</span><br><span class="line">	 Blog blog = (Blog) session.selectOne(<span class="string">&quot;org.mybatis.example.BlogMapper.selectBlog&quot;</span>, <span class="number">101</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>另一种更加简洁的方式</p>
-</blockquote>
-<p>使用和指定语句的参数和返回值**<u>相匹配的接口</u>**（比如 BlogMapper.class），现在你的代码不仅更清晰，更加类型安全，还不用担心可能出错的字符串字面值以及强制类型转换。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">    <span class="comment">//传参的时候传了一个接口</span></span><br><span class="line">  BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">  Blog blog = mapper.selectBlog(<span class="number">101</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="探究已经映射的SQL语句"><a href="#探究已经映射的SQL语句" class="headerlink" title="探究已经映射的SQL语句"></a>探究已经映射的SQL语句</h2><p>粗略的讨论一下SqlSession和Mapper到底执行了什么操作</p>
-<p>一个语句既可以通过 XML 定义，也可以通过注解定义。我们先看看 XML 定义语句的方式，事实上 MyBatis 提供的所有特性都可以利用基于 XML 的映射语言来实现，这使得 MyBatis 在过去的数年间得以流行。下面是一个XML文件示例</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span> ?&gt;</span><br><span class="line">&lt;!DOCTYPE mapper</span><br><span class="line">  PUBLIC <span class="string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span><br><span class="line">  <span class="string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span><br><span class="line">&lt;mapper namespace=<span class="string">&quot;org.mybatis.example.BlogMapper&quot;</span>&gt;</span><br><span class="line">  &lt;select id=<span class="string">&quot;selectBlog&quot;</span> resultType=<span class="string">&quot;Blog&quot;</span>&gt;</span><br><span class="line">    select * from Blog where id = #&#123;id&#125;</span><br><span class="line">  &lt;/select&gt;</span><br><span class="line">&lt;/mapper&gt;</span><br></pre></td></tr></table></figure>
-<p>为了这个简单的例子，我们似乎写了不少配置，但其实并不多。在一个 XML 映射文件中，可以定义无数个映射语句，这样一来，XML 头部和文档类型声明部分就显得微不足道了。文档的其它部分很直白，容易理解。 它在命名空间 “org.mybatis.example.BlogMapper” 中定义了一个名为 “selectBlog” 的映射语句，这样你就可以用全限定名 “org.mybatis.example.BlogMapper.selectBlog” 来调用映射语句了，就像上面例子中那样：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Blog blog = (Blog) session.selectOne(<span class="string">&quot;org.mybatis.example.BlogMapper.selectBlog&quot;</span>, <span class="number">101</span>);</span><br></pre></td></tr></table></figure>
-<ul>
-<li>说明：此时org.mybatis.example.BlogMapper应该是一个接口</li>
-<li>selectBlog是接口中定义的一个方法</li>
-</ul>
-<p>你可能会注意到，这种方式和用全限定名调用 Java 对象的方法类似。这样，该命名就可以<strong>直接映射到在命名空间中同名的映射器类</strong>，并将已映射的 select 语句匹配到对应名称、参数和返回类型的方法。因此你就可以像上面那样，不费吹灰之力地在对应的映射器接口调用方法，就像下面这样：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">Blog blog = mapper.selectBlog(<span class="number">101</span>);</span><br></pre></td></tr></table></figure>
-<p>第二种方法有很多优势，首先它不依赖于字符串字面值，会更安全一点；其次，如果你的 IDE 有代码补全功能，那么代码补全可以帮你快速选择到映射好的 SQL 语句。</p>
-<h2 id="命名空间"><a href="#命名空间" class="headerlink" title="命名空间"></a>命名空间</h2><p>在之前版本的 MyBatis 中，<strong>命名空间（Namespaces）</strong>的作用并不大，是可选的。 但现在，随着命名空间越发重要，你必须指定命名空间。</p>
-<p>命名空间的作用有两个，一个是利用更长的全限定名来将不同的语句隔离开来，同时也实现了你上面见到的接口绑定。就算你觉得暂时用不到接口绑定，你也应该遵循这里的规定，以防哪天你改变了主意。 长远来看，只要将命名空间置于合适的 Java 包命名空间之中，你的代码会变得更加整洁，也有利于你更方便地使用 MyBatis。</p>
-<p><strong>命名解析：</strong>为了减少输入量，MyBatis 对所有具有名称的配置元素（包括语句，结果映射，缓存等）使用了如下的命名解析规则。</p>
-<ul>
-<li>全限定名（比如 “com.mypackage.MyMapper.selectAllThings）将被直接用于查找及使用。</li>
-<li>短名称（比如 “selectAllThings”）如果全局唯一也可以作为一个单独的引用。 如果不唯一，有两个或两个以上的相同名称（比如 “com.foo.selectAllThings” 和 “com.bar.selectAllThings”），那么使用时就会产生“短名称不唯一”的错误，这种情况下就必须使用全限定名。</li>
-</ul>
-<hr>
-<p>对于像 BlogMapper 这样的映射器类来说，还有另一种方法来完成语句映射。 它们映射的语句可以不用 XML 来配置，而可以使用 Java 注解来配置。比如，上面的 XML 示例可以被替换成如下的配置：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> org.mybatis.example;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">BlogMapper</span> </span>&#123;</span><br><span class="line">  <span class="meta">@Select(&quot;SELECT * FROM blog WHERE id = #&#123;id&#125;&quot;)</span></span><br><span class="line">  <span class="function">Blog <span class="title">selectBlog</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用注解来映射简单语句会使代码显得更加简洁，但对于稍微复杂一点的语句，Java 注解不仅力不从心，还会让你本就复杂的 SQL 语句更加混乱不堪。 因此，如果你需要做一些很复杂的操作，最好用 XML 来映射语句。</p>
-<p>选择何种方式来配置映射，以及认为是否应该要统一映射语句定义的形式，完全取决于你和你的团队。 换句话说，永远不要拘泥于一种方式，你可以很轻松的在基于注解和 XML 的语句映射方式间自由移植和切换。</p>
-<h2 id="作用域和生命周期"><a href="#作用域和生命周期" class="headerlink" title="作用域和生命周期"></a>作用域和生命周期</h2><blockquote>
-<p>对象生命周期和依赖注入框架</p>
-</blockquote>
-<p>依赖注入框架可以创建线程安全的、基于事务的 SqlSession 和映射器，并将它们直接注入到你的 bean 中，因此可以直接忽略它们的生命周期。 如果对如何通过依赖注入框架使用 MyBatis 感兴趣，可以研究一下 MyBatis-Spring 或 MyBatis-Guice 两个子项目。</p>
-<h3 id="SqlSessionFactoryBuilder"><a href="#SqlSessionFactoryBuilder" class="headerlink" title="SqlSessionFactoryBuilder"></a>SqlSessionFactoryBuilder</h3><p>这个类可以被实例化、使用和丢弃，一旦创建了 SqlSessionFactory，就不再需要它了。 因此 SqlSessionFactoryBuilder 实例的最佳作用域是方法作用域（也就是局部方法变量）。 你可以重用 SqlSessionFactoryBuilder 来创建多个 SqlSessionFactory 实例，但最好还是不要一直保留着它，以保证所有的 XML 解析资源可以被释放给更重要的事情。</p>
-<h3 id="SqlSessionFactory"><a href="#SqlSessionFactory" class="headerlink" title="SqlSessionFactory"></a>SqlSessionFactory</h3><p>SqlSessionFactory 一旦被创建就应该在应用的运行期间一直存在，没有任何理由丢弃它或重新创建另一个实例。 使用 SqlSessionFactory 的最佳实践是在应用运行期间不要重复创建多次，多次重建 SqlSessionFactory 被视为一种代码“坏习惯”。因此 SqlSessionFactory 的最佳作用域是应用作用域。 有很多方法可以做到，最简单的就是使用单例模式或者静态单例模式。</p>
-<h3 id="SqlSession"><a href="#SqlSession" class="headerlink" title="SqlSession"></a>SqlSession</h3><p>每个线程都应该有它自己的 SqlSession 实例。SqlSession 的实例不是线程安全的，因此是不能被共享的，所以它的最佳的作用域是请求或方法作用域。 绝对不能将 SqlSession 实例的引用放在一个类的静态域，甚至一个类的实例变量也不行。 也绝不能将 SqlSession 实例的引用放在任何类型的托管作用域中，比如 Servlet 框架中的 HttpSession。 如果你现在正在使用一种 Web 框架，考虑将 SqlSession 放在一个和 HTTP 请求相似的作用域中。 换句话说，每次收到 HTTP 请求，就可以打开一个 SqlSession，返回一个响应后，就关闭它。 这个关闭操作很重要，为了确保每次都能执行关闭操作，你应该把这个关闭操作放到 finally 块中。 下面的示例就是一个确保 SqlSession 关闭的标准模式：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">  <span class="comment">// 你的应用逻辑代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在所有代码中都遵循这种使用模式，可以保证所有数据库资源都能被正确地关闭。</p>
-<h3 id="映射器实例"><a href="#映射器实例" class="headerlink" title="映射器实例"></a>映射器实例</h3><p>映射器是一些绑定映射语句的接口。映射器接口的实例是从 SqlSession 中获得的。虽然从技术层面上来讲，任何映射器实例的最大作用域与请求它们的 SqlSession 相同。但方法作用域才是映射器实例的最合适的作用域。 也就是说，映射器实例应该在调用它们的方法中被获取，使用完毕之后即可丢弃。 映射器实例并不需要被显式地关闭。尽管在整个请求作用域保留映射器实例不会有什么问题，但是你很快会发现，在这个作用域上管理太多像 SqlSession 的资源会让你忙不过来。 因此，最好将映射器放在方法作用域内。就像下面的例子一样：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">  BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">  <span class="comment">// 你的应用逻辑代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-]]></content>
-      <categories>
-        <category>Mybatis框架</category>
-      </categories>
-      <tags>
-        <tag>Mybatis</tag>
-      </tags>
   </entry>
   <entry>
     <title>Mybatis动态代理与传参</title>
@@ -1443,6 +1385,64 @@
       </tags>
   </entry>
   <entry>
+    <title>Mybatis入门案例知识补充</title>
+    <url>/2021/03/07/Mybatis%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E8%A1%A5%E5%85%85/</url>
+    <content><![CDATA[<h2 id="不使用XML构建SqlSessionFactory"><a href="#不使用XML构建SqlSessionFactory" class="headerlink" title="不使用XML构建SqlSessionFactory"></a>不使用XML构建SqlSessionFactory</h2><p>如果你更愿意直接从 Java 代码而不是 XML 文件中创建配置，或者想要创建你自己的配置建造器，MyBatis 也<strong>提供了完整的配置类</strong>，提供了所有与 XML 文件等价的配置项。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">DataSource dataSource = BlogDataSourceFactory.getBlogDataSource();</span><br><span class="line"><span class="comment">//指定事务类型</span></span><br><span class="line">TransactionFactory transactionFactory = <span class="keyword">new</span> JdbcTransactionFactory();</span><br><span class="line">Environment environment = <span class="keyword">new</span> Environment(<span class="string">&quot;development&quot;</span>, transactionFactory, dataSource);</span><br><span class="line">Configuration configuration = <span class="keyword">new</span> Configuration(environment);</span><br><span class="line"><span class="comment">//添加一个映射器类,相较于XML文件构建存在一定的局限性</span></span><br><span class="line">configuration.addMapper(BlogMapper.class);</span><br><span class="line"><span class="comment">//构造SqlSessionFactory</span></span><br><span class="line">SqlSessionFactory sqlSessionFactory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(configuration);</span><br></pre></td></tr></table></figure>
+<p>注意该例中，configuration 添加了一个映射器类（mapper class）。映射器类是 Java 类，它们**<u>包含 SQL 映射注解从而避免依赖 XML 文件</u>**。不过，由于 Java 注解的一些限制以及某些 MyBatis 映射的复杂性，要使用大多数高级映射（比如：嵌套联合映射），仍然需要使用 XML 配置。有鉴于此，如果存在一个同名 XML 配置文件，MyBatis 会自动查找并加载它（在这个例子中，基于类路径和 BlogMapper.class 的类名，会加载 BlogMapper.xml）。</p>
+<h2 id="从SqlSessionFactory中获取SqlSession"><a href="#从SqlSessionFactory中获取SqlSession" class="headerlink" title="从SqlSessionFactory中获取SqlSession"></a>从SqlSessionFactory中获取SqlSession</h2><p> 既然有了 SqlSessionFactory，顾名思义，我们可以从中获得 SqlSession 的实例。SqlSession 提供了在数据库执行 SQL 命令所需的所有方法。你可以通过 SqlSession 实例来直接执行已映射的 SQL 语句。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span>(SqlSession session = SqlSessionFactory.opensession())&#123;</span><br><span class="line">	 Blog blog = (Blog) session.selectOne(<span class="string">&quot;org.mybatis.example.BlogMapper.selectBlog&quot;</span>, <span class="number">101</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>另一种更加简洁的方式</p>
+</blockquote>
+<p>使用和指定语句的参数和返回值**<u>相匹配的接口</u>**（比如 BlogMapper.class），现在你的代码不仅更清晰，更加类型安全，还不用担心可能出错的字符串字面值以及强制类型转换。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">    <span class="comment">//传参的时候传了一个接口</span></span><br><span class="line">  BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">  Blog blog = mapper.selectBlog(<span class="number">101</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="探究已经映射的SQL语句"><a href="#探究已经映射的SQL语句" class="headerlink" title="探究已经映射的SQL语句"></a>探究已经映射的SQL语句</h2><p>粗略的讨论一下SqlSession和Mapper到底执行了什么操作</p>
+<p>一个语句既可以通过 XML 定义，也可以通过注解定义。我们先看看 XML 定义语句的方式，事实上 MyBatis 提供的所有特性都可以利用基于 XML 的映射语言来实现，这使得 MyBatis 在过去的数年间得以流行。下面是一个XML文件示例</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span> ?&gt;</span><br><span class="line">&lt;!DOCTYPE mapper</span><br><span class="line">  PUBLIC <span class="string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span><br><span class="line">  <span class="string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span><br><span class="line">&lt;mapper namespace=<span class="string">&quot;org.mybatis.example.BlogMapper&quot;</span>&gt;</span><br><span class="line">  &lt;select id=<span class="string">&quot;selectBlog&quot;</span> resultType=<span class="string">&quot;Blog&quot;</span>&gt;</span><br><span class="line">    select * from Blog where id = #&#123;id&#125;</span><br><span class="line">  &lt;/select&gt;</span><br><span class="line">&lt;/mapper&gt;</span><br></pre></td></tr></table></figure>
+<p>为了这个简单的例子，我们似乎写了不少配置，但其实并不多。在一个 XML 映射文件中，可以定义无数个映射语句，这样一来，XML 头部和文档类型声明部分就显得微不足道了。文档的其它部分很直白，容易理解。 它在命名空间 “org.mybatis.example.BlogMapper” 中定义了一个名为 “selectBlog” 的映射语句，这样你就可以用全限定名 “org.mybatis.example.BlogMapper.selectBlog” 来调用映射语句了，就像上面例子中那样：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Blog blog = (Blog) session.selectOne(<span class="string">&quot;org.mybatis.example.BlogMapper.selectBlog&quot;</span>, <span class="number">101</span>);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>说明：此时org.mybatis.example.BlogMapper应该是一个接口</li>
+<li>selectBlog是接口中定义的一个方法</li>
+</ul>
+<p>你可能会注意到，这种方式和用全限定名调用 Java 对象的方法类似。这样，该命名就可以<strong>直接映射到在命名空间中同名的映射器类</strong>，并将已映射的 select 语句匹配到对应名称、参数和返回类型的方法。因此你就可以像上面那样，不费吹灰之力地在对应的映射器接口调用方法，就像下面这样：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">Blog blog = mapper.selectBlog(<span class="number">101</span>);</span><br></pre></td></tr></table></figure>
+<p>第二种方法有很多优势，首先它不依赖于字符串字面值，会更安全一点；其次，如果你的 IDE 有代码补全功能，那么代码补全可以帮你快速选择到映射好的 SQL 语句。</p>
+<h2 id="命名空间"><a href="#命名空间" class="headerlink" title="命名空间"></a>命名空间</h2><p>在之前版本的 MyBatis 中，<strong>命名空间（Namespaces）</strong>的作用并不大，是可选的。 但现在，随着命名空间越发重要，你必须指定命名空间。</p>
+<p>命名空间的作用有两个，一个是利用更长的全限定名来将不同的语句隔离开来，同时也实现了你上面见到的接口绑定。就算你觉得暂时用不到接口绑定，你也应该遵循这里的规定，以防哪天你改变了主意。 长远来看，只要将命名空间置于合适的 Java 包命名空间之中，你的代码会变得更加整洁，也有利于你更方便地使用 MyBatis。</p>
+<p><strong>命名解析：</strong>为了减少输入量，MyBatis 对所有具有名称的配置元素（包括语句，结果映射，缓存等）使用了如下的命名解析规则。</p>
+<ul>
+<li>全限定名（比如 “com.mypackage.MyMapper.selectAllThings）将被直接用于查找及使用。</li>
+<li>短名称（比如 “selectAllThings”）如果全局唯一也可以作为一个单独的引用。 如果不唯一，有两个或两个以上的相同名称（比如 “com.foo.selectAllThings” 和 “com.bar.selectAllThings”），那么使用时就会产生“短名称不唯一”的错误，这种情况下就必须使用全限定名。</li>
+</ul>
+<hr>
+<p>对于像 BlogMapper 这样的映射器类来说，还有另一种方法来完成语句映射。 它们映射的语句可以不用 XML 来配置，而可以使用 Java 注解来配置。比如，上面的 XML 示例可以被替换成如下的配置：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> org.mybatis.example;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">BlogMapper</span> </span>&#123;</span><br><span class="line">  <span class="meta">@Select(&quot;SELECT * FROM blog WHERE id = #&#123;id&#125;&quot;)</span></span><br><span class="line">  <span class="function">Blog <span class="title">selectBlog</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用注解来映射简单语句会使代码显得更加简洁，但对于稍微复杂一点的语句，Java 注解不仅力不从心，还会让你本就复杂的 SQL 语句更加混乱不堪。 因此，如果你需要做一些很复杂的操作，最好用 XML 来映射语句。</p>
+<p>选择何种方式来配置映射，以及认为是否应该要统一映射语句定义的形式，完全取决于你和你的团队。 换句话说，永远不要拘泥于一种方式，你可以很轻松的在基于注解和 XML 的语句映射方式间自由移植和切换。</p>
+<h2 id="作用域和生命周期"><a href="#作用域和生命周期" class="headerlink" title="作用域和生命周期"></a>作用域和生命周期</h2><blockquote>
+<p>对象生命周期和依赖注入框架</p>
+</blockquote>
+<p>依赖注入框架可以创建线程安全的、基于事务的 SqlSession 和映射器，并将它们直接注入到你的 bean 中，因此可以直接忽略它们的生命周期。 如果对如何通过依赖注入框架使用 MyBatis 感兴趣，可以研究一下 MyBatis-Spring 或 MyBatis-Guice 两个子项目。</p>
+<h3 id="SqlSessionFactoryBuilder"><a href="#SqlSessionFactoryBuilder" class="headerlink" title="SqlSessionFactoryBuilder"></a>SqlSessionFactoryBuilder</h3><p>这个类可以被实例化、使用和丢弃，一旦创建了 SqlSessionFactory，就不再需要它了。 因此 SqlSessionFactoryBuilder 实例的最佳作用域是方法作用域（也就是局部方法变量）。 你可以重用 SqlSessionFactoryBuilder 来创建多个 SqlSessionFactory 实例，但最好还是不要一直保留着它，以保证所有的 XML 解析资源可以被释放给更重要的事情。</p>
+<h3 id="SqlSessionFactory"><a href="#SqlSessionFactory" class="headerlink" title="SqlSessionFactory"></a>SqlSessionFactory</h3><p>SqlSessionFactory 一旦被创建就应该在应用的运行期间一直存在，没有任何理由丢弃它或重新创建另一个实例。 使用 SqlSessionFactory 的最佳实践是在应用运行期间不要重复创建多次，多次重建 SqlSessionFactory 被视为一种代码“坏习惯”。因此 SqlSessionFactory 的最佳作用域是应用作用域。 有很多方法可以做到，最简单的就是使用单例模式或者静态单例模式。</p>
+<h3 id="SqlSession"><a href="#SqlSession" class="headerlink" title="SqlSession"></a>SqlSession</h3><p>每个线程都应该有它自己的 SqlSession 实例。SqlSession 的实例不是线程安全的，因此是不能被共享的，所以它的最佳的作用域是请求或方法作用域。 绝对不能将 SqlSession 实例的引用放在一个类的静态域，甚至一个类的实例变量也不行。 也绝不能将 SqlSession 实例的引用放在任何类型的托管作用域中，比如 Servlet 框架中的 HttpSession。 如果你现在正在使用一种 Web 框架，考虑将 SqlSession 放在一个和 HTTP 请求相似的作用域中。 换句话说，每次收到 HTTP 请求，就可以打开一个 SqlSession，返回一个响应后，就关闭它。 这个关闭操作很重要，为了确保每次都能执行关闭操作，你应该把这个关闭操作放到 finally 块中。 下面的示例就是一个确保 SqlSession 关闭的标准模式：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">  <span class="comment">// 你的应用逻辑代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在所有代码中都遵循这种使用模式，可以保证所有数据库资源都能被正确地关闭。</p>
+<h3 id="映射器实例"><a href="#映射器实例" class="headerlink" title="映射器实例"></a>映射器实例</h3><p>映射器是一些绑定映射语句的接口。映射器接口的实例是从 SqlSession 中获得的。虽然从技术层面上来讲，任何映射器实例的最大作用域与请求它们的 SqlSession 相同。但方法作用域才是映射器实例的最合适的作用域。 也就是说，映射器实例应该在调用它们的方法中被获取，使用完毕之后即可丢弃。 映射器实例并不需要被显式地关闭。尽管在整个请求作用域保留映射器实例不会有什么问题，但是你很快会发现，在这个作用域上管理太多像 SqlSession 的资源会让你忙不过来。 因此，最好将映射器放在方法作用域内。就像下面的例子一样：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">  BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">  <span class="comment">// 你的应用逻辑代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+]]></content>
+      <categories>
+        <category>Mybatis框架</category>
+      </categories>
+      <tags>
+        <tag>Mybatis</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Mybatis框架概述</title>
     <url>/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6/</url>
     <content><![CDATA[<h2 id="软件开发常用结构"><a href="#软件开发常用结构" class="headerlink" title="软件开发常用结构"></a>软件开发常用结构</h2><h3 id="三层架构"><a href="#三层架构" class="headerlink" title="三层架构"></a>三层架构</h3><p>三层架构包含的三层： 界面层（User Interface layer）、业务逻辑层（Business Logic Layer）、数据访问层（Data access layer）</p>
@@ -1510,83 +1510,6 @@
       </categories>
       <tags>
         <tag>Mybatis</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Mycat</title>
-    <url>/2021/03/14/Mycat/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>Nginx服务器的使用</title>
-    <url>/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/</url>
-    <content><![CDATA[<h1 id="Nginx服务器使用"><a href="#Nginx服务器使用" class="headerlink" title="Nginx服务器使用"></a>Nginx服务器使用</h1><h2 id="内容概览"><a href="#内容概览" class="headerlink" title="内容概览"></a>内容概览</h2><h3 id="1、nginx简介"><a href="#1、nginx简介" class="headerlink" title="1、nginx简介"></a>1、nginx简介</h3><p>（1）介绍nginx的应用场景和具体可以做什么事情</p>
-<p>（2）介绍什么是反向代理</p>
-<p>（3）介绍什么是负载均衡</p>
-<p>（4)介绍什么是动静分离</p>
-<h3 id="nginx的安装"><a href="#nginx的安装" class="headerlink" title="nginx的安装"></a>nginx的安装</h3><p>1、介绍nginx在linux系统中如何安装</p>
-<p>###nginx常用的命令和配置文件</p>
-<p>（1）介绍nginx启动·、关闭、重新加载命令</p>
-<p>（2）介绍nginx的配置文件</p>
-<h3 id="nginx配置实例—反向代理"><a href="#nginx配置实例—反向代理" class="headerlink" title="nginx配置实例—反向代理"></a>nginx配置实例—反向代理</h3><h3 id="nginx配置实例—负载均衡"><a href="#nginx配置实例—负载均衡" class="headerlink" title="nginx配置实例—负载均衡"></a>nginx配置实例—负载均衡</h3><p>###nginx配置实例—动静分离</p>
-<h3 id="nginx原理与优化参数配置"><a href="#nginx原理与优化参数配置" class="headerlink" title="nginx原理与优化参数配置"></a>nginx原理与优化参数配置</h3><h3 id="搭建nginx高可用集群"><a href="#搭建nginx高可用集群" class="headerlink" title="搭建nginx高可用集群"></a>搭建nginx高可用集群</h3><p>（1）搭建nginx高可用集群（主从模式）</p>
-<p>（2）搭建nginx高可用集群（双主模式）</p>
-<h2 id="PART1—Nginx简介"><a href="#PART1—Nginx简介" class="headerlink" title="PART1—Nginx简介"></a>PART1—Nginx简介</h2><h3 id="1-1-Nginx概述"><a href="#1-1-Nginx概述" class="headerlink" title="1.1  Nginx概述"></a>1.1  Nginx概述</h3><p>Nginx (“engine x”) 是一个高性能的 HTTP 和反向代理服务器,特点是占有内存少，并发能 力强，事实上 nginx 的并发能力确实在同类型的网页服务器中表现较好，中国大陆使用 nginx 网站用户有：百度、京东、新浪、网易、腾讯、淘宝等</p>
-<h3 id="1-2-Nginx作为Web服务器"><a href="#1-2-Nginx作为Web服务器" class="headerlink" title="1.2  Nginx作为Web服务器"></a>1.2  Nginx作为Web服务器</h3><p>Nginx 可以作为<strong>静态页面</strong>的 web 服务器，同时还支持 CGI 协议的动态语言，比如 perl、php 等。但是不支持 java。Java 程序只能通过与 tomcat 配合完成。Nginx 专为性能优化而开发， 性能是其最重要的考量,实现上非常注重效率 ，能经受高负载的考验,有报告表明能支持高 达 50,000 个并发连接数。</p>
-<h3 id="1-3-正向代理的概念"><a href="#1-3-正向代理的概念" class="headerlink" title="1.3 正向代理的概念"></a>1.3 正向代理的概念</h3><p>Nginx 不仅可以做反向代理，实现负载均衡。还能用作正向代理来进行上网等功能。 正向代理：如果把局域网外的 Internet 想象成一个巨大的资源库，则局域网中的客户端要访 问 Internet，则需要通过代理服务器来访问，这种代理服务就称为正向代理</p>
-<p><img data-src="/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210117084318892.png" alt="image-20210117084318892"></p>
-<h3 id="1-4-反向代理的概念"><a href="#1-4-反向代理的概念" class="headerlink" title="1.4 反向代理的概念"></a>1.4 反向代理的概念</h3><p>反向代理，其实客户端对代理是无感知的，因为客户端不需要任何配置就可以访问，我们只需要将请求发送到反向代理服务器，由反向代理服务器去选择目标服务器获取数据后，在返回给客户端，此时反向代理服务器和目标服务器对外就是一个服务器，暴露的是代理服务器地址，隐藏了真实服务器 IP 地址。</p>
-<p><img data-src="/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210117084508055.png" alt="image-20210117084508055"></p>
-<h3 id="1-5-负载均衡"><a href="#1-5-负载均衡" class="headerlink" title="1.5  负载均衡"></a>1.5  负载均衡</h3><p>客户端发送多个请求到服务器，服务器处理请求，有一些可能要与数据库进行交互，服 务器处理完毕后，再将结果返回给客户端。 这种架构模式对于早期的系统相对单一，<strong>并发请求相对较少的情况下</strong>是比较适合的，成本也低。但是随着信息数量的不断增长，访问量和数据量的飞速增长，以及系统业务的复杂 度增加，这种架构会造成服务器相应客户端的请求日益缓慢，并发量特别大的时候，还容易 造成服务器直接崩溃。很明显这是由于*<strong>服务器性能的瓶颈造成*<strong>的问题，那么如何解决这种情 况呢？ 我们首先想到的可能是升级服务器的配置，比如提高 CPU 执行频率，加大内存等提高机 器的物理性能来解决此问题，<u>但是我们知道摩尔定律的日益失效</u>，硬件的性能提升已经不能 满足日益提升的需求了。最明显的一个例子，天猫双十一当天，某个热销商品的瞬时访问量 是极其庞大的，那么类似上面的系统架构，将机器都增加到现有的顶级物理配置，都是不能 够满足需求的。那么怎么办呢？ 上面的分析我们去掉了增加服务器物理配置来解决问题的办法，也就是说纵向解决问题 的办法行不通了，那么横向增加服务器的数量呢？这时候</strong>集群*<em>的概念产生了，单个服务器解 决不了，我们增加服务器的数量，然后将请求分发到各个服务器上，将原先请求集中到单个服务器上的情况改为将请求分发到多个服务器上，将负载分发到不同的服务器，也就是我们 所说的</em></strong>负载均衡***</p>
-<p><img data-src="/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210117084802102.png" alt="image-20210117084802102"></p>
-<h3 id="1-5-动静分离"><a href="#1-5-动静分离" class="headerlink" title="1.5   动静分离"></a>1.5   动静分离</h3><p>为了加快网站的解析速度，可以把动态页面和静态页面由不同的服务器来解析，加快解析速 度。降低原来单个服务器的压力。（所谓静态页面：html    css    javascript，动态页面：PHP   JSP   serverlet）</p>
-<p><img data-src="/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210117085005870.png" alt="image-20210117085005870"></p>
-<h2 id="Nginx的安装"><a href="#Nginx的安装" class="headerlink" title="Nginx的安装"></a>Nginx的安装</h2><p>###1、Nginx官网下载</p>
-<p><img data-src="/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210117085204993.png" alt="image-20210117085204993"></p>
-<p>###2.2 安装 nginx </p>
-<p>第一步，安装 pcre wget <a href="http://downloads.sourceforge.net/project/pcre/pcre/8.37/pcre-8.37.tar.gz">http://downloads.sourceforge.net/project/pcre/pcre/8.37/pcre-8.37.tar.gz</a></p>
-<p>解压文件， ./configure 完成后，回到 pcre 目录下执行 make， 再执行 make install</p>
-<p>第二步，安装 openssl </p>
-<p>第三步，安装 zlib yum -y install make zlib zlib-devel gcc-c++ libtool openssl openssl-devel</p>
-<p>第四步，安装 nginx </p>
-<p>1、 解压缩 nginx-xx.tar.gz 包。 2、 进入解压缩目录，执行./configure。 3、 make &amp;&amp; make install</p>
-<p>查看开放的端口号 firewall-cmd –list-all </p>
-<p>设置开放的端口号 firewall-cmd –add-service=http –permanent sudo firewall-cmd –add-port=80/tcp –permanent</p>
-<p> 重启防火墙 firewall-cmd –reload</p>
-<h2 id="Nginx常用的命令和配置文件"><a href="#Nginx常用的命令和配置文件" class="headerlink" title="Nginx常用的命令和配置文件"></a>Nginx常用的命令和配置文件</h2><h3 id="3-1-Nginx常用命令"><a href="#3-1-Nginx常用命令" class="headerlink" title="3.1 Nginx常用命令"></a>3.1 Nginx常用命令</h3><p>（1）启动命令</p>
-<p>在/usr/local/nginx/sbin 目录下执行 ./nginx </p>
-<p>（2）关闭命令</p>
-<p>在/usr/local/nginx/sbin 目录下执行 ./nginx -s stop </p>
-<p>（3）重新加载命令</p>
-<p>在/usr/local/nginx/sbin/目录下执行 ./nginx -s reload</p>
-<h3 id="Nginx配置文件"><a href="#Nginx配置文件" class="headerlink" title="Nginx配置文件"></a>Nginx配置文件</h3><p>nginx 安装目录下，其默认的配置文件都放在这个目录的 conf 目录下，而主配置文件 nginx.conf 也在其中，后续对 nginx 的使用基本上都是对此配置文件进行相应的修改</p>
-<p><img data-src="/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210117085805608.png" alt="image-20210117085805608"></p>
-<p>配置文件中有很多#， 开头的表示注释内容，我们去掉所有以 # 开头的段落，精简之后的 内容如下：</p>
-<p><img data-src="/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210117085856062.png" alt="image-20210117085856062"></p>
-<p>根据上述文件，我们可以很明显的将 nginx.conf 配置文件分为三部分：</p>
-<h4 id="第一部分：全局块"><a href="#第一部分：全局块" class="headerlink" title="第一部分：全局块"></a>第一部分：全局块</h4><p> 从配置文件开始到 events 块之间的内容，主要会设置一些影响 <strong>nginx 服务器整体运行的配置指令</strong>，主要包括配 置运行 Nginx 服务器的用户（组）、允许生成的 worker process 数，进程 PID 存放路径、日志存放路径和类型以 及配置文件的引入等。 比如上面第一行配置的：</p>
-<p><img data-src="/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210117090005617.png" alt="image-20210117090005617"></p>
-<p>这是 Nginx 服务器并发处理服务的关键配置，worker_processes 值越大，可以支持的并发处理量也越多，但是 会受到硬件、软件等设备的制约。</p>
-<h3 id="第二部分：events块"><a href="#第二部分：events块" class="headerlink" title="第二部分：events块"></a>第二部分：events块</h3><p><img data-src="/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210117090054927.png" alt="image-20210117090054927"></p>
-<p>events 块涉及的指令主要影响<strong>Nginx 服务器与用户的网络连接</strong>，常用的设置包括是否开启对多 work process 下的网络连接进行序列化，是否允许同时接收多个网络连接，选取哪种事件驱动模型来处理连接请求，每个 word process 可以同时支持的最大连接数等。 上述例子就表示每个 work process 支持的最大连接数为 1024. 这部分的配置对 Nginx 的性能影响较大，在实际中应该灵活配置。</p>
-<h3 id="第三部分：HTTP块"><a href="#第三部分：HTTP块" class="headerlink" title="第三部分：HTTP块"></a>第三部分：HTTP块</h3><p><img data-src="/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210117090239168.png" alt="image-20210117090239168"></p>
-<p>这算是 Nginx 服务器配置中最频繁的部分，代理、缓存和日志定义等绝大多数功能和第三方模块的配置都在这里。 需要注意的是：http 块也可以包括 <strong>http 全局块、server 块。</strong></p>
-<p>####http 全局块 </p>
-<p>http 全局块配置的指令包括文件引入、MIME-TYPE 定义、日志自定义、连接超时时间、单链接请求数上限等。</p>
-<h4 id="server块"><a href="#server块" class="headerlink" title="server块"></a>server块</h4><p> 这块和虚拟主机有密切关系，虚拟主机从用户角度看，和一台独立的硬件主机是完全一样的，该技术的产生是为了 节省互联网服务器硬件成本。 每个 http 块可以包括多个 server 块，而<strong>每个 server 块就相当于一个虚拟主机</strong>。 而每个 server 块也分为全局 server 块，以及可以同时包含多个 locaton 块。</p>
-<h5 id="全局server块"><a href="#全局server块" class="headerlink" title="全局server块"></a>全局server块</h5><p> 最常见的配置是本虚拟机主机的监听配置和本虚拟主机的名称或 IP 配置。</p>
-<h5 id="location块"><a href="#location块" class="headerlink" title="location块"></a>location块</h5><p>这块的主要作用是基于 Nginx 服务器接收到的请求字符串（例如 server_name/uri-string），对虚拟主机名称 （也可以是 IP 别名）之外的字符串（例如 前面的 /uri-string）进行匹配，对特定的请求进行处理。地址定向、数据缓 存和应答控制等功能，还有许多第三方模块的配置也在这里进行。</p>
-<h2 id="Nginx配置实例—反向代理"><a href="#Nginx配置实例—反向代理" class="headerlink" title="Nginx配置实例—反向代理"></a>Nginx配置实例—反向代理</h2><h3 id="反向代理示例一："><a href="#反向代理示例一：" class="headerlink" title="反向代理示例一："></a>反向代理示例一：</h3><p>实现效果：使用 nginx 反向代理，访问 <a href="http://www.123.com/">www.123.com</a> 直接跳转到 127.0.0.1:8080</p>
-<h4 id="实验代码："><a href="#实验代码：" class="headerlink" title="实验代码："></a>实验代码：</h4><p> （1）启动一个 tomcat，浏览器地址栏输入 127.0.0.1:8080，出现如下界面</p>
-<p><img data-src="/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210117090834021.png" alt="image-20210117090834021"></p>
-<p>2） 通过修改本地 host 文件，将 <a href="http://www.123.com/">www.123.com</a> 映射到 127.0.0.1（<strong>不需要做DNS解析，直接通过本地host文件做解析即可</strong>）</p>
-<p><img data-src="/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210117090914344.png" alt="image-20210117090914344"></p>
-]]></content>
-      <categories>
-        <category>Java EE</category>
-      </categories>
-      <tags>
-        <tag>Nginx服务器</tag>
       </tags>
   </entry>
   <entry>
@@ -1674,6 +1597,83 @@
       </tags>
   </entry>
   <entry>
+    <title>Mycat</title>
+    <url>/2021/03/14/Mycat/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Nginx服务器的使用</title>
+    <url>/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<h1 id="Nginx服务器使用"><a href="#Nginx服务器使用" class="headerlink" title="Nginx服务器使用"></a>Nginx服务器使用</h1><h2 id="内容概览"><a href="#内容概览" class="headerlink" title="内容概览"></a>内容概览</h2><h3 id="1、nginx简介"><a href="#1、nginx简介" class="headerlink" title="1、nginx简介"></a>1、nginx简介</h3><p>（1）介绍nginx的应用场景和具体可以做什么事情</p>
+<p>（2）介绍什么是反向代理</p>
+<p>（3）介绍什么是负载均衡</p>
+<p>（4)介绍什么是动静分离</p>
+<h3 id="nginx的安装"><a href="#nginx的安装" class="headerlink" title="nginx的安装"></a>nginx的安装</h3><p>1、介绍nginx在linux系统中如何安装</p>
+<p>###nginx常用的命令和配置文件</p>
+<p>（1）介绍nginx启动·、关闭、重新加载命令</p>
+<p>（2）介绍nginx的配置文件</p>
+<h3 id="nginx配置实例—反向代理"><a href="#nginx配置实例—反向代理" class="headerlink" title="nginx配置实例—反向代理"></a>nginx配置实例—反向代理</h3><h3 id="nginx配置实例—负载均衡"><a href="#nginx配置实例—负载均衡" class="headerlink" title="nginx配置实例—负载均衡"></a>nginx配置实例—负载均衡</h3><p>###nginx配置实例—动静分离</p>
+<h3 id="nginx原理与优化参数配置"><a href="#nginx原理与优化参数配置" class="headerlink" title="nginx原理与优化参数配置"></a>nginx原理与优化参数配置</h3><h3 id="搭建nginx高可用集群"><a href="#搭建nginx高可用集群" class="headerlink" title="搭建nginx高可用集群"></a>搭建nginx高可用集群</h3><p>（1）搭建nginx高可用集群（主从模式）</p>
+<p>（2）搭建nginx高可用集群（双主模式）</p>
+<h2 id="PART1—Nginx简介"><a href="#PART1—Nginx简介" class="headerlink" title="PART1—Nginx简介"></a>PART1—Nginx简介</h2><h3 id="1-1-Nginx概述"><a href="#1-1-Nginx概述" class="headerlink" title="1.1  Nginx概述"></a>1.1  Nginx概述</h3><p>Nginx (“engine x”) 是一个高性能的 HTTP 和反向代理服务器,特点是占有内存少，并发能 力强，事实上 nginx 的并发能力确实在同类型的网页服务器中表现较好，中国大陆使用 nginx 网站用户有：百度、京东、新浪、网易、腾讯、淘宝等</p>
+<h3 id="1-2-Nginx作为Web服务器"><a href="#1-2-Nginx作为Web服务器" class="headerlink" title="1.2  Nginx作为Web服务器"></a>1.2  Nginx作为Web服务器</h3><p>Nginx 可以作为<strong>静态页面</strong>的 web 服务器，同时还支持 CGI 协议的动态语言，比如 perl、php 等。但是不支持 java。Java 程序只能通过与 tomcat 配合完成。Nginx 专为性能优化而开发， 性能是其最重要的考量,实现上非常注重效率 ，能经受高负载的考验,有报告表明能支持高 达 50,000 个并发连接数。</p>
+<h3 id="1-3-正向代理的概念"><a href="#1-3-正向代理的概念" class="headerlink" title="1.3 正向代理的概念"></a>1.3 正向代理的概念</h3><p>Nginx 不仅可以做反向代理，实现负载均衡。还能用作正向代理来进行上网等功能。 正向代理：如果把局域网外的 Internet 想象成一个巨大的资源库，则局域网中的客户端要访 问 Internet，则需要通过代理服务器来访问，这种代理服务就称为正向代理</p>
+<p><img data-src="/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210117084318892.png" alt="image-20210117084318892"></p>
+<h3 id="1-4-反向代理的概念"><a href="#1-4-反向代理的概念" class="headerlink" title="1.4 反向代理的概念"></a>1.4 反向代理的概念</h3><p>反向代理，其实客户端对代理是无感知的，因为客户端不需要任何配置就可以访问，我们只需要将请求发送到反向代理服务器，由反向代理服务器去选择目标服务器获取数据后，在返回给客户端，此时反向代理服务器和目标服务器对外就是一个服务器，暴露的是代理服务器地址，隐藏了真实服务器 IP 地址。</p>
+<p><img data-src="/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210117084508055.png" alt="image-20210117084508055"></p>
+<h3 id="1-5-负载均衡"><a href="#1-5-负载均衡" class="headerlink" title="1.5  负载均衡"></a>1.5  负载均衡</h3><p>客户端发送多个请求到服务器，服务器处理请求，有一些可能要与数据库进行交互，服 务器处理完毕后，再将结果返回给客户端。 这种架构模式对于早期的系统相对单一，<strong>并发请求相对较少的情况下</strong>是比较适合的，成本也低。但是随着信息数量的不断增长，访问量和数据量的飞速增长，以及系统业务的复杂 度增加，这种架构会造成服务器相应客户端的请求日益缓慢，并发量特别大的时候，还容易 造成服务器直接崩溃。很明显这是由于*<strong>服务器性能的瓶颈造成*<strong>的问题，那么如何解决这种情 况呢？ 我们首先想到的可能是升级服务器的配置，比如提高 CPU 执行频率，加大内存等提高机 器的物理性能来解决此问题，<u>但是我们知道摩尔定律的日益失效</u>，硬件的性能提升已经不能 满足日益提升的需求了。最明显的一个例子，天猫双十一当天，某个热销商品的瞬时访问量 是极其庞大的，那么类似上面的系统架构，将机器都增加到现有的顶级物理配置，都是不能 够满足需求的。那么怎么办呢？ 上面的分析我们去掉了增加服务器物理配置来解决问题的办法，也就是说纵向解决问题 的办法行不通了，那么横向增加服务器的数量呢？这时候</strong>集群*<em>的概念产生了，单个服务器解 决不了，我们增加服务器的数量，然后将请求分发到各个服务器上，将原先请求集中到单个服务器上的情况改为将请求分发到多个服务器上，将负载分发到不同的服务器，也就是我们 所说的</em></strong>负载均衡***</p>
+<p><img data-src="/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210117084802102.png" alt="image-20210117084802102"></p>
+<h3 id="1-5-动静分离"><a href="#1-5-动静分离" class="headerlink" title="1.5   动静分离"></a>1.5   动静分离</h3><p>为了加快网站的解析速度，可以把动态页面和静态页面由不同的服务器来解析，加快解析速 度。降低原来单个服务器的压力。（所谓静态页面：html    css    javascript，动态页面：PHP   JSP   serverlet）</p>
+<p><img data-src="/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210117085005870.png" alt="image-20210117085005870"></p>
+<h2 id="Nginx的安装"><a href="#Nginx的安装" class="headerlink" title="Nginx的安装"></a>Nginx的安装</h2><p>###1、Nginx官网下载</p>
+<p><img data-src="/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210117085204993.png" alt="image-20210117085204993"></p>
+<p>###2.2 安装 nginx </p>
+<p>第一步，安装 pcre wget <a href="http://downloads.sourceforge.net/project/pcre/pcre/8.37/pcre-8.37.tar.gz">http://downloads.sourceforge.net/project/pcre/pcre/8.37/pcre-8.37.tar.gz</a></p>
+<p>解压文件， ./configure 完成后，回到 pcre 目录下执行 make， 再执行 make install</p>
+<p>第二步，安装 openssl </p>
+<p>第三步，安装 zlib yum -y install make zlib zlib-devel gcc-c++ libtool openssl openssl-devel</p>
+<p>第四步，安装 nginx </p>
+<p>1、 解压缩 nginx-xx.tar.gz 包。 2、 进入解压缩目录，执行./configure。 3、 make &amp;&amp; make install</p>
+<p>查看开放的端口号 firewall-cmd –list-all </p>
+<p>设置开放的端口号 firewall-cmd –add-service=http –permanent sudo firewall-cmd –add-port=80/tcp –permanent</p>
+<p> 重启防火墙 firewall-cmd –reload</p>
+<h2 id="Nginx常用的命令和配置文件"><a href="#Nginx常用的命令和配置文件" class="headerlink" title="Nginx常用的命令和配置文件"></a>Nginx常用的命令和配置文件</h2><h3 id="3-1-Nginx常用命令"><a href="#3-1-Nginx常用命令" class="headerlink" title="3.1 Nginx常用命令"></a>3.1 Nginx常用命令</h3><p>（1）启动命令</p>
+<p>在/usr/local/nginx/sbin 目录下执行 ./nginx </p>
+<p>（2）关闭命令</p>
+<p>在/usr/local/nginx/sbin 目录下执行 ./nginx -s stop </p>
+<p>（3）重新加载命令</p>
+<p>在/usr/local/nginx/sbin/目录下执行 ./nginx -s reload</p>
+<h3 id="Nginx配置文件"><a href="#Nginx配置文件" class="headerlink" title="Nginx配置文件"></a>Nginx配置文件</h3><p>nginx 安装目录下，其默认的配置文件都放在这个目录的 conf 目录下，而主配置文件 nginx.conf 也在其中，后续对 nginx 的使用基本上都是对此配置文件进行相应的修改</p>
+<p><img data-src="/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210117085805608.png" alt="image-20210117085805608"></p>
+<p>配置文件中有很多#， 开头的表示注释内容，我们去掉所有以 # 开头的段落，精简之后的 内容如下：</p>
+<p><img data-src="/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210117085856062.png" alt="image-20210117085856062"></p>
+<p>根据上述文件，我们可以很明显的将 nginx.conf 配置文件分为三部分：</p>
+<h4 id="第一部分：全局块"><a href="#第一部分：全局块" class="headerlink" title="第一部分：全局块"></a>第一部分：全局块</h4><p> 从配置文件开始到 events 块之间的内容，主要会设置一些影响 <strong>nginx 服务器整体运行的配置指令</strong>，主要包括配 置运行 Nginx 服务器的用户（组）、允许生成的 worker process 数，进程 PID 存放路径、日志存放路径和类型以 及配置文件的引入等。 比如上面第一行配置的：</p>
+<p><img data-src="/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210117090005617.png" alt="image-20210117090005617"></p>
+<p>这是 Nginx 服务器并发处理服务的关键配置，worker_processes 值越大，可以支持的并发处理量也越多，但是 会受到硬件、软件等设备的制约。</p>
+<h3 id="第二部分：events块"><a href="#第二部分：events块" class="headerlink" title="第二部分：events块"></a>第二部分：events块</h3><p><img data-src="/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210117090054927.png" alt="image-20210117090054927"></p>
+<p>events 块涉及的指令主要影响<strong>Nginx 服务器与用户的网络连接</strong>，常用的设置包括是否开启对多 work process 下的网络连接进行序列化，是否允许同时接收多个网络连接，选取哪种事件驱动模型来处理连接请求，每个 word process 可以同时支持的最大连接数等。 上述例子就表示每个 work process 支持的最大连接数为 1024. 这部分的配置对 Nginx 的性能影响较大，在实际中应该灵活配置。</p>
+<h3 id="第三部分：HTTP块"><a href="#第三部分：HTTP块" class="headerlink" title="第三部分：HTTP块"></a>第三部分：HTTP块</h3><p><img data-src="/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210117090239168.png" alt="image-20210117090239168"></p>
+<p>这算是 Nginx 服务器配置中最频繁的部分，代理、缓存和日志定义等绝大多数功能和第三方模块的配置都在这里。 需要注意的是：http 块也可以包括 <strong>http 全局块、server 块。</strong></p>
+<p>####http 全局块 </p>
+<p>http 全局块配置的指令包括文件引入、MIME-TYPE 定义、日志自定义、连接超时时间、单链接请求数上限等。</p>
+<h4 id="server块"><a href="#server块" class="headerlink" title="server块"></a>server块</h4><p> 这块和虚拟主机有密切关系，虚拟主机从用户角度看，和一台独立的硬件主机是完全一样的，该技术的产生是为了 节省互联网服务器硬件成本。 每个 http 块可以包括多个 server 块，而<strong>每个 server 块就相当于一个虚拟主机</strong>。 而每个 server 块也分为全局 server 块，以及可以同时包含多个 locaton 块。</p>
+<h5 id="全局server块"><a href="#全局server块" class="headerlink" title="全局server块"></a>全局server块</h5><p> 最常见的配置是本虚拟机主机的监听配置和本虚拟主机的名称或 IP 配置。</p>
+<h5 id="location块"><a href="#location块" class="headerlink" title="location块"></a>location块</h5><p>这块的主要作用是基于 Nginx 服务器接收到的请求字符串（例如 server_name/uri-string），对虚拟主机名称 （也可以是 IP 别名）之外的字符串（例如 前面的 /uri-string）进行匹配，对特定的请求进行处理。地址定向、数据缓 存和应答控制等功能，还有许多第三方模块的配置也在这里进行。</p>
+<h2 id="Nginx配置实例—反向代理"><a href="#Nginx配置实例—反向代理" class="headerlink" title="Nginx配置实例—反向代理"></a>Nginx配置实例—反向代理</h2><h3 id="反向代理示例一："><a href="#反向代理示例一：" class="headerlink" title="反向代理示例一："></a>反向代理示例一：</h3><p>实现效果：使用 nginx 反向代理，访问 <a href="http://www.123.com/">www.123.com</a> 直接跳转到 127.0.0.1:8080</p>
+<h4 id="实验代码："><a href="#实验代码：" class="headerlink" title="实验代码："></a>实验代码：</h4><p> （1）启动一个 tomcat，浏览器地址栏输入 127.0.0.1:8080，出现如下界面</p>
+<p><img data-src="/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210117090834021.png" alt="image-20210117090834021"></p>
+<p>2） 通过修改本地 host 文件，将 <a href="http://www.123.com/">www.123.com</a> 映射到 127.0.0.1（<strong>不需要做DNS解析，直接通过本地host文件做解析即可</strong>）</p>
+<p><img data-src="/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210117090914344.png" alt="image-20210117090914344"></p>
+]]></content>
+      <categories>
+        <category>Java EE</category>
+      </categories>
+      <tags>
+        <tag>Nginx服务器</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>PC寄存器</title>
     <url>/2021/03/14/PC%E5%AF%84%E5%AD%98%E5%99%A8/</url>
     <content><![CDATA[]]></content>
@@ -1682,17 +1682,6 @@
     <title>Redis数据库</title>
     <url>/2021/02/25/Redis%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
     <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>SVN版本控制系统</title>
-    <url>/2021/02/06/SVN%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F/</url>
-    <content><![CDATA[<h3 id="主要内容"><a href="#主要内容" class="headerlink" title="主要内容"></a>主要内容</h3>]]></content>
-      <categories>
-        <category>项目工具</category>
-      </categories>
-      <tags>
-        <tag>SVN</tag>
-      </tags>
   </entry>
   <entry>
     <title>Servlet规范一</title>
@@ -1775,19 +1764,14 @@
       </tags>
   </entry>
   <entry>
-    <title>SpringBoot入门二</title>
-    <url>/2021/03/21/SpringBoot%E5%85%A5%E9%97%A8%E4%BA%8C/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>Session</title>
-    <url>/2021/02/25/Session/</url>
-    <content><![CDATA[]]></content>
+    <title>SVN版本控制系统</title>
+    <url>/2021/02/06/SVN%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F/</url>
+    <content><![CDATA[<h3 id="主要内容"><a href="#主要内容" class="headerlink" title="主要内容"></a>主要内容</h3>]]></content>
       <categories>
-        <category>Java web</category>
+        <category>项目工具</category>
       </categories>
       <tags>
-        <tag>Session</tag>
+        <tag>SVN</tag>
       </tags>
   </entry>
   <entry>
@@ -1859,37 +1843,20 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>Spring学习第一跳</title>
-    <url>/2021/02/03/Spring%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E8%B7%B3/</url>
-    <content><![CDATA[<h2 id="初识Spring"><a href="#初识Spring" class="headerlink" title="初识Spring"></a>初识Spring</h2><h3 id="Spring框架概述"><a href="#Spring框架概述" class="headerlink" title="Spring框架概述"></a>Spring框架概述</h3><p>Spring 是于 2003 年兴起的一个轻量级的 Java 开发框架，它是为了解决企业应用开发的复杂性而创建的。Spring 的核心是控制反转（IoC）和面向切面编程（AOP）。Spring 是可 以在 Java SE/EE 中使用的轻量级开源框架。</p>
-<p>Spring 的主要作用就是为代码<strong>“解耦”</strong>，降低代码间的耦合度。就是让对象和对象（模 块和模块）之间关系不是使用代码关联，而是<u>通过配置</u>来说明。即在 Spring 中说明对象（模块）的关系。 </p>
-<p>Spring 根据代码的功能特点，使用 Ioc 降低业务对象之间耦合度。IoC 使得主业务在相互 调用过程中，不用再自己维护关系了，即不用再自己创建要使用的对象了。而是由 Spring 容器统一管理，自动“注入”,注入即赋值。 而 AOP 使得系统级服务得到了最大复用，且不用再由程序员手工将系统级服务“混杂”到主业务逻辑中了，而是由 Spring 容器统一完成 “织入”。</p>
-<h3 id="Spring的优点"><a href="#Spring的优点" class="headerlink" title="Spring的优点"></a>Spring的优点</h3><p>Spring 是一个框架，是一个半成品的软件。有 20 个模块组成。它是一个容器管理对象， 容器是装东西的，Spring 容器不装文本，数字。装的是对象。Spring 是存储对象的容器。</p>
-<ul>
-<li><p>轻量</p>
-<p>Spring 框架使用的 jar 都比较小，一般在 1M 以下或者几百 kb。Spring 核心功能的所需 的 jar 总共在 3M 左右。 Spring 框架运行占用的资源少，运行效率高。不依赖其他 jar</p>
-</li>
-<li><p>针对接口编程，解耦合</p>
-<p>Spring 提供了 Ioc 控制反转，由容器管理对象，对象的依赖关系。原来在程序代码中的 对象创建方式，现在由容器完成。对象之间的依赖解耦合。</p>
-</li>
-<li><p>AOP编程的支持</p>
-<p>通过 Spring 提供的 AOP 功能，方便进行面向切面的编程，许多不容易用传统 OOP 实现 的功能可以通过 AOP 轻松应付 。</p>
-<p>在 Spring 中，开发人员可以从繁杂的事务管理代码中解脱出来，通过声明方式灵活地进行事务的管理，提高开发效率和质量。</p>
-</li>
-<li><p>方便集成各种优秀框架</p>
-<p>Spring 不排斥各种优秀的开源框架，相反 Spring 可以降低各种框架的使用难度，Spring 提供了对各种优秀框架（如 Struts,Hibernate、MyBatis）等的直接支持。简化框架的使用。 Spring 像插线板一样，其他框架是插头，可以容易的组合到一起。需要使用哪个框架，就把 这个插头放入插线板。不需要可以轻易的移除。</p>
-</li>
-</ul>
-<h3 id="Spring体系结构"><a href="#Spring体系结构" class="headerlink" title="Spring体系结构"></a>Spring体系结构</h3><img data-src="/2021/02/03/Spring%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E8%B7%B3/image.png" class>
-
-<p>Spring 由 20 多个模块组成，它们可以分为数据访问/集成（Data Access/Integration）、 Web、面向切面编程（AOP, Aspects）、提供JVM的代理（Instrumentation）、消息发送（Messaging）、 核心容器（Core Container）和测试（Test）。</p>
-]]></content>
+    <title>Session</title>
+    <url>/2021/02/25/Session/</url>
+    <content><![CDATA[]]></content>
       <categories>
-        <category>spring框架</category>
+        <category>Java web</category>
       </categories>
       <tags>
-        <tag>spring框架</tag>
+        <tag>Session</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>SpringBoot入门二</title>
+    <url>/2021/03/21/SpringBoot%E5%85%A5%E9%97%A8%E4%BA%8C/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Stack</title>
@@ -2151,6 +2118,39 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
+    <title>Spring学习第一跳</title>
+    <url>/2021/02/03/Spring%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E8%B7%B3/</url>
+    <content><![CDATA[<h2 id="初识Spring"><a href="#初识Spring" class="headerlink" title="初识Spring"></a>初识Spring</h2><h3 id="Spring框架概述"><a href="#Spring框架概述" class="headerlink" title="Spring框架概述"></a>Spring框架概述</h3><p>Spring 是于 2003 年兴起的一个轻量级的 Java 开发框架，它是为了解决企业应用开发的复杂性而创建的。Spring 的核心是控制反转（IoC）和面向切面编程（AOP）。Spring 是可 以在 Java SE/EE 中使用的轻量级开源框架。</p>
+<p>Spring 的主要作用就是为代码<strong>“解耦”</strong>，降低代码间的耦合度。就是让对象和对象（模 块和模块）之间关系不是使用代码关联，而是<u>通过配置</u>来说明。即在 Spring 中说明对象（模块）的关系。 </p>
+<p>Spring 根据代码的功能特点，使用 Ioc 降低业务对象之间耦合度。IoC 使得主业务在相互 调用过程中，不用再自己维护关系了，即不用再自己创建要使用的对象了。而是由 Spring 容器统一管理，自动“注入”,注入即赋值。 而 AOP 使得系统级服务得到了最大复用，且不用再由程序员手工将系统级服务“混杂”到主业务逻辑中了，而是由 Spring 容器统一完成 “织入”。</p>
+<h3 id="Spring的优点"><a href="#Spring的优点" class="headerlink" title="Spring的优点"></a>Spring的优点</h3><p>Spring 是一个框架，是一个半成品的软件。有 20 个模块组成。它是一个容器管理对象， 容器是装东西的，Spring 容器不装文本，数字。装的是对象。Spring 是存储对象的容器。</p>
+<ul>
+<li><p>轻量</p>
+<p>Spring 框架使用的 jar 都比较小，一般在 1M 以下或者几百 kb。Spring 核心功能的所需 的 jar 总共在 3M 左右。 Spring 框架运行占用的资源少，运行效率高。不依赖其他 jar</p>
+</li>
+<li><p>针对接口编程，解耦合</p>
+<p>Spring 提供了 Ioc 控制反转，由容器管理对象，对象的依赖关系。原来在程序代码中的 对象创建方式，现在由容器完成。对象之间的依赖解耦合。</p>
+</li>
+<li><p>AOP编程的支持</p>
+<p>通过 Spring 提供的 AOP 功能，方便进行面向切面的编程，许多不容易用传统 OOP 实现 的功能可以通过 AOP 轻松应付 。</p>
+<p>在 Spring 中，开发人员可以从繁杂的事务管理代码中解脱出来，通过声明方式灵活地进行事务的管理，提高开发效率和质量。</p>
+</li>
+<li><p>方便集成各种优秀框架</p>
+<p>Spring 不排斥各种优秀的开源框架，相反 Spring 可以降低各种框架的使用难度，Spring 提供了对各种优秀框架（如 Struts,Hibernate、MyBatis）等的直接支持。简化框架的使用。 Spring 像插线板一样，其他框架是插头，可以容易的组合到一起。需要使用哪个框架，就把 这个插头放入插线板。不需要可以轻易的移除。</p>
+</li>
+</ul>
+<h3 id="Spring体系结构"><a href="#Spring体系结构" class="headerlink" title="Spring体系结构"></a>Spring体系结构</h3><img data-src="/2021/02/03/Spring%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E8%B7%B3/image.png" class>
+
+<p>Spring 由 20 多个模块组成，它们可以分为数据访问/集成（Data Access/Integration）、 Web、面向切面编程（AOP, Aspects）、提供JVM的代理（Instrumentation）、消息发送（Messaging）、 核心容器（Core Container）和测试（Test）。</p>
+]]></content>
+      <categories>
+        <category>spring框架</category>
+      </categories>
+      <tags>
+        <tag>spring框架</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>XML映射文件详解</title>
     <url>/2021/03/14/XML%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/</url>
     <content><![CDATA[]]></content>
@@ -2271,13 +2271,13 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>coding部署</title>
-    <url>/2021/03/15/coding%E9%83%A8%E7%BD%B2/</url>
+    <title>zookeeper</title>
+    <url>/2021/03/14/zookeeper/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>zookeeper</title>
-    <url>/2021/03/14/zookeeper/</url>
+    <title>coding部署</title>
+    <url>/2021/03/15/coding%E9%83%A8%E7%BD%B2/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -2429,11 +2429,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>优秀项目</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>初识动态规划</title>
-    <url>/2021/02/03/%E5%88%9D%E8%AF%86%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>消息队列MQ</title>
@@ -2668,6 +2663,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
+    <title>初识动态规划</title>
+    <url>/2021/02/03/%E5%88%9D%E8%AF%86%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>双指针问题</title>
     <url>/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/</url>
     <content><![CDATA[<h2 id="环形列表I"><a href="#环形列表I" class="headerlink" title="环形列表I"></a>环形列表I</h2><h3 id="题目说明"><a href="#题目说明" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，判断链表中是否有环。</p>
@@ -2741,11 +2741,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
         <tag>链表</tag>
         <tag>双指针</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>垃圾收集器与内存分配策略</title>
-    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>哈希表easy篇总结</title>
@@ -2990,8 +2985,8 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>基础注解的DI</title>
-    <url>/2021/02/28/%E5%9F%BA%E7%A1%80%E6%B3%A8%E8%A7%A3%E7%9A%84DI/</url>
+    <title>垃圾收集器与内存分配策略</title>
+    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -3015,6 +3010,16 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>字符串</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>基础注解的DI</title>
+    <url>/2021/02/28/%E5%9F%BA%E7%A1%80%E6%B3%A8%E8%A7%A3%E7%9A%84DI/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>客户端识别与Cookie</title>
+    <url>/2021/03/14/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%AF%86%E5%88%AB%E4%B8%8ECookie/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>封装Mybatis输出结果与模糊查询</title>
@@ -3173,22 +3178,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>并行与并发</title>
-    <url>/2021/08/25/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%B9%B6%E5%8F%91/</url>
-    <content><![CDATA[<h1 id="并行和并发的区别"><a href="#并行和并发的区别" class="headerlink" title="并行和并发的区别"></a>并行和并发的区别</h1>]]></content>
-      <categories>
-        <category>多线程</category>
-      </categories>
-      <tags>
-        <tag>多线程开发</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>客户端识别与Cookie</title>
-    <url>/2021/03/14/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%AF%86%E5%88%AB%E4%B8%8ECookie/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>推荐系统初瞰</title>
     <url>/2021/10/29/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%88%9D%E7%9E%B0/</url>
     <content><![CDATA[<h2 id="一、走进推荐系统的世界"><a href="#一、走进推荐系统的世界" class="headerlink" title="一、走进推荐系统的世界"></a>一、走进推荐系统的世界</h2><p>“啤酒与尿布” 的故事相信很多人都听过，年轻爸爸去超市购买尿布时，经常会买点啤酒犒劳自己。因此，沃尔玛将这两种商品进行了捆绑销售，最终获得了更好的销量。</p>
@@ -3311,8 +3300,94 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
+    <title>并行与并发</title>
+    <url>/2021/08/25/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%B9%B6%E5%8F%91/</url>
+    <content><![CDATA[<h1 id="并行和并发的区别"><a href="#并行和并发的区别" class="headerlink" title="并行和并发的区别"></a>并行和并发的区别</h1>]]></content>
+      <categories>
+        <category>多线程</category>
+      </categories>
+      <tags>
+        <tag>多线程开发</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>条件渲染与列表渲染</title>
     <url>/2021/03/14/%E6%9D%A1%E4%BB%B6%E6%B8%B2%E6%9F%93%E4%B8%8E%E5%88%97%E8%A1%A8%E6%B8%B2%E6%9F%93/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Vue模板语法</title>
+    <url>/2021/03/07/%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="模板语法"><a href="#模板语法" class="headerlink" title="模板语法"></a>模板语法</h2><p>Vue.js 使用了基于 HTML 的模板语法，允许开发者声明式地将 DOM 绑定至底层 Vue 实例的数据。所有 Vue.js 的模板都是合法的 HTML，所以能被遵循规范的浏览器和 HTML 解析器解析。</p>
+<p>在底层的实现上，Vue 将模板编译成虚拟 DOM 渲染函数。结合响应系统，Vue 能够智能地计算出最少需要重新渲染多少组件，并把 DOM 操作次数减到最少。</p>
+<h3 id="插值"><a href="#插值" class="headerlink" title="插值"></a>插值</h3><h4 id="文本"><a href="#文本" class="headerlink" title="文本"></a>文本</h4><p>数据绑定最常见的形式就是使用“Mustache”语法 (双大括号) 的文本插值：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span>Message:&#123;&#123;msg&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>Mustache 标签将会被替代为对应数据对象上 <code>msg</code> property 的值。无论何时，绑定的数据对象上 <code>msg</code> property 发生了改变，插值处的内容都会更新。</p>
+<p>通过使用 **<a href="https://cn.vuejs.org/v2/api/#v-once">v-once 指令</a>**，你也能执行一次性地插值，当数据改变时，插值处的内容不会更新。但请留心这会影响到该节点上的其它数据绑定：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">v-once</span>&gt;</span>这个节点上的数据将不会改变：&#123;&#123;mag&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="双大括号下的原始HTML文本"><a href="#双大括号下的原始HTML文本" class="headerlink" title="双大括号下的原始HTML文本"></a>双大括号下的原始HTML文本</h4><p>双大括号会将数据解释为普通文本，而非 HTML 代码。为了输出真正的 HTML，你需要使用**`v-html  **</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">p</span>&gt;</span>Using mustaches: &#123;&#123; rawHtml &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>Using v-html directive: <span class="tag">&lt;<span class="name">span</span> <span class="attr">v-html</span>=<span class="string">&quot;rawHtml&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>你不能使用 <code>v-html</code> 来复合局部模板，因为 Vue 不是基于字符串的模板引擎。反之，对于用户界面 (UI)，组件更适合作为可重用和可组合的基本单位。</p>
+<blockquote>
+<p>你的站点上动态渲染的任意 HTML 可能会非常危险，因为它很容易导致 <a href="https://en.wikipedia.org/wiki/Cross-site_scripting">XSS 攻击</a>。请只对可信内容使用 HTML 插值，<strong>绝不要</strong>对用户提供的内容使用插值。</p>
+</blockquote>
+<h2 id="对Attribute进行数据绑定"><a href="#对Attribute进行数据绑定" class="headerlink" title="对Attribute进行数据绑定"></a>对Attribute进行数据绑定</h2><p>Mustache 语法不能作用在 HTML attribute 上，遇到这种情况应该使用 <a href="https://cn.vuejs.org/v2/api/#v-bind"><code>v-bind</code> 指令</a>：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;div v-bind:id&#x3D;&quot;dynamicId&quot;&gt;&lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
+<p>对于布尔 attribute (它们只要存在就意味着值为 <code>true</code>)，<code>v-bind</code> 工作起来略有不同，在这个例子中：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;button v-bind:disabled&#x3D;&quot;isButtonDisabled&quot;&gt;Button&lt;&#x2F;button&gt;</span><br></pre></td></tr></table></figure>
+<p>如果 <code>isButtonDisabled</code> 的值是 <code>null</code>、<code>undefined</code> 或 <code>false</code>，则 <code>disabled</code> attribute 甚至不会被包含在渲染出来的 <code>&lt;button&gt;</code> 元素中。</p>
+<h4 id="使用JavaScript表达式-而不是键值"><a href="#使用JavaScript表达式-而不是键值" class="headerlink" title="使用JavaScript表达式(而不是键值)"></a>使用JavaScript表达式(而不是键值)</h4><p>迄今为止，在我们的模板中，我们一直都只绑定简单的 property 键值。但实际上，对于所有的数据绑定，Vue.js 都提供了完全的 JavaScript 表达式支持。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&#123;&#123; number + <span class="number">1</span> &#125;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&#123; ok ? <span class="string">&#x27;YES&#x27;</span> : <span class="string">&#x27;NO&#x27;</span> &#125;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&#123; message.split(<span class="string">&#x27;&#x27;</span>).reverse().join(<span class="string">&#x27;&#x27;</span>) &#125;&#125;</span><br><span class="line"></span><br><span class="line">&lt;div v-bind:id=<span class="string">&quot;&#x27;list-&#x27; + id&quot;</span>&gt;&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+<p>这些表达式会在所属 Vue 实例的数据作用域下作为 JavaScript 被解析。有个限制就是，每个绑定都只能包含<strong>单个表达式</strong>，所以下面的例子都<strong>不会</strong>生效。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&lt;!-- 这是语句，不是表达式 --&gt;</span><br><span class="line">&#123;&#123; <span class="keyword">var</span> a = <span class="number">1</span> &#125;&#125;      </span><br><span class="line"></span><br><span class="line">&lt;!-- 流控制也不会生效，请使用三元表达式 --&gt;</span><br><span class="line">&#123;&#123; <span class="keyword">if</span> (ok) &#123; <span class="keyword">return</span> message &#125; &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h3><p>指令 (Directives) 是带有 <code>v-</code> 前缀的特殊 attribute。指令 attribute 的值预期是<strong>单个 JavaScript 表达式</strong> (<code>v-for</code> 是例外情况，稍后我们再讨论)。指令的职责是，当表达式的值改变时，将其产生的连带影响，响应式地作用于 DOM。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;p v-if&#x3D;&quot;seen&quot;&gt;现在你看到我了&lt;&#x2F;p&gt;</span><br></pre></td></tr></table></figure>
+<p>这里，<code>v-if</code> 指令将根据表达式 <code>seen</code> 的值的真假来插入/移除 <code>&lt;p&gt;</code> 元素</p>
+<h3 id="参数"><a href="#参数" class="headerlink" title="[参数]"></a>[参数]</h3><p>一些指令能够接收一个“参数”，在指令名称之后以冒号表示。例如，<code>v-bind</code> 指令可以用于响应式地更新 HTML attribute：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;a v-bind:href&#x3D;&quot;url&quot;&gt;...&lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<p>在这里 <code>href</code> 是参数，告知 <code>v-bind</code> 指令将该元素的 <code>href</code> attribute 与表达式 <code>url</code> 的值绑定。</p>
+<p>另一个例子是 <code>v-on</code> 指令，它用于监听 DOM 事件：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;a v-on:click&#x3D;&quot;doSomething&quot;&gt;...&lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<p>在这里参数是监听的事件名。 </p>
+<h3 id="动态参数"><a href="#动态参数" class="headerlink" title="动态参数"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#%E5%8A%A8%E6%80%81%E5%8F%82%E6%95%B0">动态参数</a></h3><blockquote>
+<p>2.6.0 新增</p>
+</blockquote>
+<p>从 2.6.0 开始，可以用方括号括起来的 JavaScript 表达式作为一个指令的参数：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!--</span><br><span class="line">注意，参数表达式的写法存在一些约束，如之后的“对动态参数表达式的约束”章节所述。</span><br><span class="line">--&gt;</span><br><span class="line">&lt;a v-bind:[attributeName]&#x3D;&quot;url&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<p>这里的 <code>attributeName</code> 会被作为一个 JavaScript 表达式进行动态求值，求得的值将会作为最终的参数来使用。例如，如果你的 Vue 实例有一个 <code>data</code> property <code>attributeName</code>，其值为 <code>&quot;href&quot;</code>，那么这个绑定将等价于 <code>v-bind:href</code>。</p>
+<p>同样地，你可以使用动态参数为一个动态的事件名绑定处理函数：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;a v-on:[eventName]&#x3D;&quot;doSomething&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<p>在这个示例中，当 <code>eventName</code> 的值为 <code>&quot;focus&quot;</code> 时，<code>v-on:[eventName]</code> 将等价于 <code>v-on:focus</code>。</p>
+<h4 id="对动态参数的值的约束"><a href="#对动态参数的值的约束" class="headerlink" title="对动态参数的值的约束"></a>对动态参数的值的约束</h4><p>动态参数预期会求出一个字符串，异常情况下值为 <code>null</code>。这个<strong>特殊的 <code>null</code> 值可以被显性地用于移除绑定</strong>。任何其它非字符串类型的值都将会触发一个警告。</p>
+<h4 id="对动态参数表达式的约束"><a href="#对动态参数表达式的约束" class="headerlink" title="对动态参数表达式的约束"></a>对动态参数表达式的约束</h4><p>动态参数表达式有一些语法约束，因为某些字符，如空格和引号，放在 HTML attribute 名里是无效的。例如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 这会触发一个编译警告 --&gt;</span><br><span class="line">&lt;a v-bind:[&#39;foo&#39; + bar]&#x3D;&quot;value&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<p>变通的办法是使用没有空格或引号的表达式，或用计算属性替代这种复杂表达式。</p>
+<p>在 DOM 中使用模板时 (直接在一个 HTML 文件里撰写模板)，还需要避免使用大写字符来命名键名，因为浏览器会把 attribute 名全部强制转为小写：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!--</span><br><span class="line">在 DOM 中使用模板时这段代码会被转换为 &#96;v-bind:[someattr]&#96;。</span><br><span class="line">除非在实例中有一个名为“someattr”的 property，否则代码不会工作。</span><br><span class="line">--&gt;</span><br><span class="line">&lt;a v-bind:[someAttr]&#x3D;&quot;value&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="修饰符"><a href="#修饰符" class="headerlink" title="修饰符"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#%E4%BF%AE%E9%A5%B0%E7%AC%A6">修饰符</a></h3><p>修饰符 (modifier) 是以半角句号 <code>.</code> 指明的特殊后缀，用于指出一个指令应该以特殊方式绑定。例如，<code>.prevent</code> 修饰符告诉 <code>v-on</code> 指令对于触发的事件调用 <code>event.preventDefault()</code>：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;form v-on:submit.prevent&#x3D;&quot;onSubmit&quot;&gt;...&lt;&#x2F;form&gt;</span><br></pre></td></tr></table></figure>
+<p>阻止某一事件的默认机制执行，此时组织了submit行为的产生</p>
+<h3 id="缩写"><a href="#缩写" class="headerlink" title="缩写"></a>缩写</h3><p><code>v-</code> 前缀作为一种视觉提示，用来识别模板中 Vue 特定的 attribute。当你在使用 Vue.js 为现有标签添加动态行为 (dynamic behavior) 时，<code>v-</code> 前缀很有帮助，然而，对于一些频繁用到的指令来说，就会感到使用繁琐。同时，在构建由 Vue 管理所有模板的<a href="https://en.wikipedia.org/wiki/Single-page_application">单页面应用程序 (SPA - single page application)</a> 时，<code>v-</code> 前缀也变得没那么重要了。因此，Vue 为 <code>v-bind</code> 和 <code>v-on</code> 这两个最常用的指令，提供了特定简写：</p>
+<h3 id="v-bind-缩写"><a href="#v-bind-缩写" class="headerlink" title="v-bind 缩写"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#v-bind-%E7%BC%A9%E5%86%99"><code>v-bind</code> 缩写</a></h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 完整语法 --&gt;</span><br><span class="line">&lt;a v-bind:href&#x3D;&quot;url&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 缩写 --&gt;</span><br><span class="line">&lt;a :href&#x3D;&quot;url&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 动态参数的缩写 (2.6.0+) --&gt;</span><br><span class="line">&lt;a :[key]&#x3D;&quot;url&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="v-on-缩写"><a href="#v-on-缩写" class="headerlink" title="v-on 缩写"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#v-on-%E7%BC%A9%E5%86%99"><code>v-on</code> 缩写</a></h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 完整语法 --&gt;</span><br><span class="line">&lt;a v-on:click&#x3D;&quot;doSomething&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 缩写 --&gt;</span><br><span class="line">&lt;a @click&#x3D;&quot;doSomething&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 动态参数的缩写 (2.6.0+) --&gt;</span><br><span class="line">&lt;a @[event]&#x3D;&quot;doSomething&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<p>它们看起来可能与普通的 HTML 略有不同，但 <code>:</code> 与 <code>@</code> 对于 attribute 名来说都是合法字符，在所有支持 Vue 的浏览器都能被正确地解析。</p>
+]]></content>
+      <categories>
+        <category>Vue框架</category>
+      </categories>
+      <tags>
+        <tag>Vue</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>机器学习入门</title>
+    <url>/2021/06/08/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -3495,105 +3570,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>Vue模板语法</title>
-    <url>/2021/03/07/%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95/</url>
-    <content><![CDATA[<h2 id="模板语法"><a href="#模板语法" class="headerlink" title="模板语法"></a>模板语法</h2><p>Vue.js 使用了基于 HTML 的模板语法，允许开发者声明式地将 DOM 绑定至底层 Vue 实例的数据。所有 Vue.js 的模板都是合法的 HTML，所以能被遵循规范的浏览器和 HTML 解析器解析。</p>
-<p>在底层的实现上，Vue 将模板编译成虚拟 DOM 渲染函数。结合响应系统，Vue 能够智能地计算出最少需要重新渲染多少组件，并把 DOM 操作次数减到最少。</p>
-<h3 id="插值"><a href="#插值" class="headerlink" title="插值"></a>插值</h3><h4 id="文本"><a href="#文本" class="headerlink" title="文本"></a>文本</h4><p>数据绑定最常见的形式就是使用“Mustache”语法 (双大括号) 的文本插值：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span>Message:&#123;&#123;msg&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>Mustache 标签将会被替代为对应数据对象上 <code>msg</code> property 的值。无论何时，绑定的数据对象上 <code>msg</code> property 发生了改变，插值处的内容都会更新。</p>
-<p>通过使用 **<a href="https://cn.vuejs.org/v2/api/#v-once">v-once 指令</a>**，你也能执行一次性地插值，当数据改变时，插值处的内容不会更新。但请留心这会影响到该节点上的其它数据绑定：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">v-once</span>&gt;</span>这个节点上的数据将不会改变：&#123;&#123;mag&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-<h4 id="双大括号下的原始HTML文本"><a href="#双大括号下的原始HTML文本" class="headerlink" title="双大括号下的原始HTML文本"></a>双大括号下的原始HTML文本</h4><p>双大括号会将数据解释为普通文本，而非 HTML 代码。为了输出真正的 HTML，你需要使用**`v-html  **</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">p</span>&gt;</span>Using mustaches: &#123;&#123; rawHtml &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>Using v-html directive: <span class="tag">&lt;<span class="name">span</span> <span class="attr">v-html</span>=<span class="string">&quot;rawHtml&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>你不能使用 <code>v-html</code> 来复合局部模板，因为 Vue 不是基于字符串的模板引擎。反之，对于用户界面 (UI)，组件更适合作为可重用和可组合的基本单位。</p>
-<blockquote>
-<p>你的站点上动态渲染的任意 HTML 可能会非常危险，因为它很容易导致 <a href="https://en.wikipedia.org/wiki/Cross-site_scripting">XSS 攻击</a>。请只对可信内容使用 HTML 插值，<strong>绝不要</strong>对用户提供的内容使用插值。</p>
-</blockquote>
-<h2 id="对Attribute进行数据绑定"><a href="#对Attribute进行数据绑定" class="headerlink" title="对Attribute进行数据绑定"></a>对Attribute进行数据绑定</h2><p>Mustache 语法不能作用在 HTML attribute 上，遇到这种情况应该使用 <a href="https://cn.vuejs.org/v2/api/#v-bind"><code>v-bind</code> 指令</a>：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;div v-bind:id&#x3D;&quot;dynamicId&quot;&gt;&lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
-<p>对于布尔 attribute (它们只要存在就意味着值为 <code>true</code>)，<code>v-bind</code> 工作起来略有不同，在这个例子中：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;button v-bind:disabled&#x3D;&quot;isButtonDisabled&quot;&gt;Button&lt;&#x2F;button&gt;</span><br></pre></td></tr></table></figure>
-<p>如果 <code>isButtonDisabled</code> 的值是 <code>null</code>、<code>undefined</code> 或 <code>false</code>，则 <code>disabled</code> attribute 甚至不会被包含在渲染出来的 <code>&lt;button&gt;</code> 元素中。</p>
-<h4 id="使用JavaScript表达式-而不是键值"><a href="#使用JavaScript表达式-而不是键值" class="headerlink" title="使用JavaScript表达式(而不是键值)"></a>使用JavaScript表达式(而不是键值)</h4><p>迄今为止，在我们的模板中，我们一直都只绑定简单的 property 键值。但实际上，对于所有的数据绑定，Vue.js 都提供了完全的 JavaScript 表达式支持。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&#123;&#123; number + <span class="number">1</span> &#125;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&#123; ok ? <span class="string">&#x27;YES&#x27;</span> : <span class="string">&#x27;NO&#x27;</span> &#125;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&#123; message.split(<span class="string">&#x27;&#x27;</span>).reverse().join(<span class="string">&#x27;&#x27;</span>) &#125;&#125;</span><br><span class="line"></span><br><span class="line">&lt;div v-bind:id=<span class="string">&quot;&#x27;list-&#x27; + id&quot;</span>&gt;&lt;/div&gt;</span><br></pre></td></tr></table></figure>
-<p>这些表达式会在所属 Vue 实例的数据作用域下作为 JavaScript 被解析。有个限制就是，每个绑定都只能包含<strong>单个表达式</strong>，所以下面的例子都<strong>不会</strong>生效。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&lt;!-- 这是语句，不是表达式 --&gt;</span><br><span class="line">&#123;&#123; <span class="keyword">var</span> a = <span class="number">1</span> &#125;&#125;      </span><br><span class="line"></span><br><span class="line">&lt;!-- 流控制也不会生效，请使用三元表达式 --&gt;</span><br><span class="line">&#123;&#123; <span class="keyword">if</span> (ok) &#123; <span class="keyword">return</span> message &#125; &#125;&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h3><p>指令 (Directives) 是带有 <code>v-</code> 前缀的特殊 attribute。指令 attribute 的值预期是<strong>单个 JavaScript 表达式</strong> (<code>v-for</code> 是例外情况，稍后我们再讨论)。指令的职责是，当表达式的值改变时，将其产生的连带影响，响应式地作用于 DOM。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;p v-if&#x3D;&quot;seen&quot;&gt;现在你看到我了&lt;&#x2F;p&gt;</span><br></pre></td></tr></table></figure>
-<p>这里，<code>v-if</code> 指令将根据表达式 <code>seen</code> 的值的真假来插入/移除 <code>&lt;p&gt;</code> 元素</p>
-<h3 id="参数"><a href="#参数" class="headerlink" title="[参数]"></a>[参数]</h3><p>一些指令能够接收一个“参数”，在指令名称之后以冒号表示。例如，<code>v-bind</code> 指令可以用于响应式地更新 HTML attribute：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;a v-bind:href&#x3D;&quot;url&quot;&gt;...&lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<p>在这里 <code>href</code> 是参数，告知 <code>v-bind</code> 指令将该元素的 <code>href</code> attribute 与表达式 <code>url</code> 的值绑定。</p>
-<p>另一个例子是 <code>v-on</code> 指令，它用于监听 DOM 事件：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;a v-on:click&#x3D;&quot;doSomething&quot;&gt;...&lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<p>在这里参数是监听的事件名。 </p>
-<h3 id="动态参数"><a href="#动态参数" class="headerlink" title="动态参数"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#%E5%8A%A8%E6%80%81%E5%8F%82%E6%95%B0">动态参数</a></h3><blockquote>
-<p>2.6.0 新增</p>
-</blockquote>
-<p>从 2.6.0 开始，可以用方括号括起来的 JavaScript 表达式作为一个指令的参数：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!--</span><br><span class="line">注意，参数表达式的写法存在一些约束，如之后的“对动态参数表达式的约束”章节所述。</span><br><span class="line">--&gt;</span><br><span class="line">&lt;a v-bind:[attributeName]&#x3D;&quot;url&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<p>这里的 <code>attributeName</code> 会被作为一个 JavaScript 表达式进行动态求值，求得的值将会作为最终的参数来使用。例如，如果你的 Vue 实例有一个 <code>data</code> property <code>attributeName</code>，其值为 <code>&quot;href&quot;</code>，那么这个绑定将等价于 <code>v-bind:href</code>。</p>
-<p>同样地，你可以使用动态参数为一个动态的事件名绑定处理函数：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;a v-on:[eventName]&#x3D;&quot;doSomething&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<p>在这个示例中，当 <code>eventName</code> 的值为 <code>&quot;focus&quot;</code> 时，<code>v-on:[eventName]</code> 将等价于 <code>v-on:focus</code>。</p>
-<h4 id="对动态参数的值的约束"><a href="#对动态参数的值的约束" class="headerlink" title="对动态参数的值的约束"></a>对动态参数的值的约束</h4><p>动态参数预期会求出一个字符串，异常情况下值为 <code>null</code>。这个<strong>特殊的 <code>null</code> 值可以被显性地用于移除绑定</strong>。任何其它非字符串类型的值都将会触发一个警告。</p>
-<h4 id="对动态参数表达式的约束"><a href="#对动态参数表达式的约束" class="headerlink" title="对动态参数表达式的约束"></a>对动态参数表达式的约束</h4><p>动态参数表达式有一些语法约束，因为某些字符，如空格和引号，放在 HTML attribute 名里是无效的。例如：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 这会触发一个编译警告 --&gt;</span><br><span class="line">&lt;a v-bind:[&#39;foo&#39; + bar]&#x3D;&quot;value&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<p>变通的办法是使用没有空格或引号的表达式，或用计算属性替代这种复杂表达式。</p>
-<p>在 DOM 中使用模板时 (直接在一个 HTML 文件里撰写模板)，还需要避免使用大写字符来命名键名，因为浏览器会把 attribute 名全部强制转为小写：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!--</span><br><span class="line">在 DOM 中使用模板时这段代码会被转换为 &#96;v-bind:[someattr]&#96;。</span><br><span class="line">除非在实例中有一个名为“someattr”的 property，否则代码不会工作。</span><br><span class="line">--&gt;</span><br><span class="line">&lt;a v-bind:[someAttr]&#x3D;&quot;value&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="修饰符"><a href="#修饰符" class="headerlink" title="修饰符"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#%E4%BF%AE%E9%A5%B0%E7%AC%A6">修饰符</a></h3><p>修饰符 (modifier) 是以半角句号 <code>.</code> 指明的特殊后缀，用于指出一个指令应该以特殊方式绑定。例如，<code>.prevent</code> 修饰符告诉 <code>v-on</code> 指令对于触发的事件调用 <code>event.preventDefault()</code>：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;form v-on:submit.prevent&#x3D;&quot;onSubmit&quot;&gt;...&lt;&#x2F;form&gt;</span><br></pre></td></tr></table></figure>
-<p>阻止某一事件的默认机制执行，此时组织了submit行为的产生</p>
-<h3 id="缩写"><a href="#缩写" class="headerlink" title="缩写"></a>缩写</h3><p><code>v-</code> 前缀作为一种视觉提示，用来识别模板中 Vue 特定的 attribute。当你在使用 Vue.js 为现有标签添加动态行为 (dynamic behavior) 时，<code>v-</code> 前缀很有帮助，然而，对于一些频繁用到的指令来说，就会感到使用繁琐。同时，在构建由 Vue 管理所有模板的<a href="https://en.wikipedia.org/wiki/Single-page_application">单页面应用程序 (SPA - single page application)</a> 时，<code>v-</code> 前缀也变得没那么重要了。因此，Vue 为 <code>v-bind</code> 和 <code>v-on</code> 这两个最常用的指令，提供了特定简写：</p>
-<h3 id="v-bind-缩写"><a href="#v-bind-缩写" class="headerlink" title="v-bind 缩写"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#v-bind-%E7%BC%A9%E5%86%99"><code>v-bind</code> 缩写</a></h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 完整语法 --&gt;</span><br><span class="line">&lt;a v-bind:href&#x3D;&quot;url&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 缩写 --&gt;</span><br><span class="line">&lt;a :href&#x3D;&quot;url&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 动态参数的缩写 (2.6.0+) --&gt;</span><br><span class="line">&lt;a :[key]&#x3D;&quot;url&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<h3 id="v-on-缩写"><a href="#v-on-缩写" class="headerlink" title="v-on 缩写"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#v-on-%E7%BC%A9%E5%86%99"><code>v-on</code> 缩写</a></h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 完整语法 --&gt;</span><br><span class="line">&lt;a v-on:click&#x3D;&quot;doSomething&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 缩写 --&gt;</span><br><span class="line">&lt;a @click&#x3D;&quot;doSomething&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 动态参数的缩写 (2.6.0+) --&gt;</span><br><span class="line">&lt;a @[event]&#x3D;&quot;doSomething&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<p>它们看起来可能与普通的 HTML 略有不同，但 <code>:</code> 与 <code>@</code> 对于 attribute 名来说都是合法字符，在所有支持 Vue 的浏览器都能被正确地解析。</p>
-]]></content>
-      <categories>
-        <category>Vue框架</category>
-      </categories>
-      <tags>
-        <tag>Vue</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>类文件结构</title>
-    <url>/2021/01/16/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</url>
-    <content><![CDATA[<p>#类文件结构</p>
-<h2 id="虚拟机的无关性"><a href="#虚拟机的无关性" class="headerlink" title="虚拟机的无关性"></a>虚拟机的无关性</h2><p>Java的宣传口号是: <strong><em>WRITE ONCE , RUN ANYWHREE</em></strong></p>
-<p>java虚拟机力求实现的两种无关性：</p>
-<ol>
-<li><p>平台无关性</p>
-<p>各种不同平台的虚拟机与所有平台都统一使用的程序存储格式——–字节码（ByteCode）是构成平台无关性的基础，虚拟机可以载入同一种平台无关的字节码。</p>
-</li>
-<li><p>语言无关性：</p>
-<p><strong>举例</strong>：除了Java之外，Clojure、Groovy、JRuby、Jython、Scala都可以在Java虚拟机上运行</p>
-<p>实现语言无关性的基础是Java虚拟机不与任何语言绑定，只与**<em>“Class文件”这种特殊的二进制文件格式**</em>相关联，Class文件包含了Java虚拟机指令集和符号表以及若干其他辅助信息，在Class文件中使用了许多强制性的语法和结构化约束，任何一门语言都可以表示为被JAVA虚拟机锁接受的有效的Class文件。虚拟机只关心Class文件本身，而不关心Class文件的来源是哪种语言。</p>
-<p>在Class文件中，各种关键字、变量、和运算符号的语义都是有多条字节码命令组合而成的，字节码命令所能提供的语义描述能力必然要比java语言本身更为强大，所以Java虚拟机提供的支持远比java语言本身强大。</p>
-</li>
-</ol>
-<h2 id="Class类文件的结构"><a href="#Class类文件的结构" class="headerlink" title="Class类文件的结构"></a>Class类文件的结构</h2><p>Class文件是一组以8位字节为基础单位的二进制流，各个数据项目严格的按照顺序紧凑的排列在Class文件中，中间没有任何的分隔符，这使得整个Class文件中存储的内容几乎全是程序运行的必要数据，没有空隙存在。</p>
-<p>Class文件格式采用一种类似于C语言中struct的伪结构来进行存储数据：包括<strong>无符号数+表</strong></p>
-<p>1、无符号数：基本数据类型</p>
-<p>2、表：有多个无符号数或者其他表作为数据项构成的复合数据类型，习惯性的以__info结尾。表用于描述有层次关系的复合结构的数据。整个class文件本质上就是一张表。</p>
-<h3 id="magic-numer与class文件版本"><a href="#magic-numer与class文件版本" class="headerlink" title="magic numer与class文件版本"></a>magic numer与class文件版本</h3><h3 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h3><h3 id="访问标志"><a href="#访问标志" class="headerlink" title="访问标志"></a>访问标志</h3><h3 id="类索引、父类索引、接口索引集合"><a href="#类索引、父类索引、接口索引集合" class="headerlink" title="类索引、父类索引、接口索引集合"></a>类索引、父类索引、接口索引集合</h3><h3 id="字段表集合"><a href="#字段表集合" class="headerlink" title="字段表集合"></a>字段表集合</h3><h3 id="方法表集合"><a href="#方法表集合" class="headerlink" title="方法表集合"></a>方法表集合</h3><p>###属性表集合</p>
-]]></content>
-      <categories>
-        <category>JVM虚拟机</category>
-      </categories>
-      <tags>
-        <tag>JAVA</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>系统调用</title>
     <url>/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/</url>
     <content><![CDATA[<h2 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h2><h3 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h3><p>系统调用是内核与用户进程进行交互的一组接口，这些接口让应用程序受限制的访问硬件设备，提供了创建新进程并与已有进程进行交互通信的机制，也提供了申请操作系统其他资源的能力。</p>
@@ -3677,6 +3653,35 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </categories>
       <tags>
         <tag>Linux系统内核设计</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>类文件结构</title>
+    <url>/2021/01/16/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</url>
+    <content><![CDATA[<p>#类文件结构</p>
+<h2 id="虚拟机的无关性"><a href="#虚拟机的无关性" class="headerlink" title="虚拟机的无关性"></a>虚拟机的无关性</h2><p>Java的宣传口号是: <strong><em>WRITE ONCE , RUN ANYWHREE</em></strong></p>
+<p>java虚拟机力求实现的两种无关性：</p>
+<ol>
+<li><p>平台无关性</p>
+<p>各种不同平台的虚拟机与所有平台都统一使用的程序存储格式——–字节码（ByteCode）是构成平台无关性的基础，虚拟机可以载入同一种平台无关的字节码。</p>
+</li>
+<li><p>语言无关性：</p>
+<p><strong>举例</strong>：除了Java之外，Clojure、Groovy、JRuby、Jython、Scala都可以在Java虚拟机上运行</p>
+<p>实现语言无关性的基础是Java虚拟机不与任何语言绑定，只与**<em>“Class文件”这种特殊的二进制文件格式**</em>相关联，Class文件包含了Java虚拟机指令集和符号表以及若干其他辅助信息，在Class文件中使用了许多强制性的语法和结构化约束，任何一门语言都可以表示为被JAVA虚拟机锁接受的有效的Class文件。虚拟机只关心Class文件本身，而不关心Class文件的来源是哪种语言。</p>
+<p>在Class文件中，各种关键字、变量、和运算符号的语义都是有多条字节码命令组合而成的，字节码命令所能提供的语义描述能力必然要比java语言本身更为强大，所以Java虚拟机提供的支持远比java语言本身强大。</p>
+</li>
+</ol>
+<h2 id="Class类文件的结构"><a href="#Class类文件的结构" class="headerlink" title="Class类文件的结构"></a>Class类文件的结构</h2><p>Class文件是一组以8位字节为基础单位的二进制流，各个数据项目严格的按照顺序紧凑的排列在Class文件中，中间没有任何的分隔符，这使得整个Class文件中存储的内容几乎全是程序运行的必要数据，没有空隙存在。</p>
+<p>Class文件格式采用一种类似于C语言中struct的伪结构来进行存储数据：包括<strong>无符号数+表</strong></p>
+<p>1、无符号数：基本数据类型</p>
+<p>2、表：有多个无符号数或者其他表作为数据项构成的复合数据类型，习惯性的以__info结尾。表用于描述有层次关系的复合结构的数据。整个class文件本质上就是一张表。</p>
+<h3 id="magic-numer与class文件版本"><a href="#magic-numer与class文件版本" class="headerlink" title="magic numer与class文件版本"></a>magic numer与class文件版本</h3><h3 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h3><h3 id="访问标志"><a href="#访问标志" class="headerlink" title="访问标志"></a>访问标志</h3><h3 id="类索引、父类索引、接口索引集合"><a href="#类索引、父类索引、接口索引集合" class="headerlink" title="类索引、父类索引、接口索引集合"></a>类索引、父类索引、接口索引集合</h3><h3 id="字段表集合"><a href="#字段表集合" class="headerlink" title="字段表集合"></a>字段表集合</h3><h3 id="方法表集合"><a href="#方法表集合" class="headerlink" title="方法表集合"></a>方法表集合</h3><p>###属性表集合</p>
+]]></content>
+      <categories>
+        <category>JVM虚拟机</category>
+      </categories>
+      <tags>
+        <tag>JAVA</tag>
       </tags>
   </entry>
   <entry>
@@ -3809,6 +3814,16 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
+    <title>组件基础</title>
+    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>组件进阶篇--深入了解组件</title>
+    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E8%BF%9B%E9%98%B6%E7%AF%87-%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E7%BB%84%E4%BB%B6/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>红队攻防入门1</title>
     <url>/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/</url>
     <content><![CDATA[<h2 id="红队攻防入门1–初识红队"><a href="#红队攻防入门1–初识红队" class="headerlink" title="红队攻防入门1–初识红队"></a>红队攻防入门1–初识红队</h2><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F1.png" class>
@@ -3900,48 +3915,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </categories>
       <tags>
         <tag>红队攻防</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>组件基础</title>
-    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E5%9F%BA%E7%A1%80/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>网络服务性能指标</title>
-    <url>/2021/09/25/%E7%BD%91%E7%BB%9C%E6%9C%8D%E5%8A%A1%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87/</url>
-    <content><![CDATA[<h1 id="一、QPS，每秒查询"><a href="#一、QPS，每秒查询" class="headerlink" title="一、QPS，每秒查询"></a>一、QPS，每秒查询</h1><p>QPS：Queries Per Second意思是“每秒查询率”，是一台服务器每秒能够相应的查询次数，是对一个特定的查询服务器在规定时间内所处理流量多少的衡量标准。</p>
-<p>互联网中，作为域名系统服务器的机器的性能经常用每秒查询率来衡量。</p>
-<h1 id="二、TPS，每秒事务"><a href="#二、TPS，每秒事务" class="headerlink" title="二、TPS，每秒事务"></a>二、TPS，每秒事务</h1><p>TPS：是TransactionsPerSecond的缩写，也就是事务数/秒。它是软件测试结果的测量单位。一个事务是指一个客户机向服务器发送请求然后服务器做出反应的过程。客户机在发送请求时开始计时，收到服务器响应后结束计时，以此来计算使用的时间和完成的事务个数。</p>
-<p>QPS vs TPS：QPS基本类似于TPS，但是不同的是，对于一个页面的一次访问，形成一个TPS；但一次页面请求，可能产生多次对服务器的请求，服务器对这些请求，就可计入“QPS”之中。如，访问一个页面会请求服务器2次，一次访问，产生一个“T”，产生2个“Q”。</p>
-<h1 id="三、RT，响应时间"><a href="#三、RT，响应时间" class="headerlink" title="三、RT，响应时间"></a>三、RT，响应时间</h1><p>响应时间：执行一个请求从开始到最后收到响应数据所花费的总体时间,即从客户端发起请求到收到服务器响应结果的时间。</p>
-<p>响应时间RT(Response-time)，是一个系统最重要的指标之一，它的数值大小直接反应了系统的快慢。</p>
-<h1 id="四、并发数"><a href="#四、并发数" class="headerlink" title="四、并发数"></a>四、并发数</h1><p>并发数是指系统同时能处理的请求数量，这个也是反应了系统的负载能力。</p>
-<h1 id="五、吞吐量"><a href="#五、吞吐量" class="headerlink" title="五、吞吐量"></a>五、吞吐量</h1><p>系统的吞吐量（承压能力）与request对CPU的消耗、外部接口、IO等等紧密关联。单个request 对CPU消耗越高，外部系统接口、IO速度越慢，系统吞吐能力越低，反之越高。</p>
-<p>系统吞吐量几个重要参数：QPS（TPS）、并发数、响应时间。</p>
-<ol>
-<li>QPS（TPS）：（Query Per Second）每秒钟request/事务 数量</li>
-<li>并发数： 系统同时处理的request/事务数</li>
-<li>响应时间： 一般取平均响应时间</li>
-</ol>
-<p>理解了上面三个要素的意义之后，就能推算出它们之间的关系：</p>
-<ul>
-<li><strong>QPS（TPS）= 并发数/平均响应时间</strong></li>
-<li><strong>并发数 = QPS*平均响应时间</strong></li>
-</ul>
-<h1 id="六、实际举例"><a href="#六、实际举例" class="headerlink" title="六、实际举例"></a>六、实际举例</h1><p>我们通过一个实例来把上面几个概念串起来理解。按二八定律来看，如果每天 80% 的访问集中在 20% 的时间里，这 20% 时间就叫做峰值时间。</p>
-<ul>
-<li>公式：( 总PV数 * 80% ) / ( 每天秒数 * 20% ) = 峰值时间每秒请求数(QPS)</li>
-<li>机器：峰值时间每秒QPS / 单台机器的QPS = 需要的机器</li>
-</ul>
-<p><strong>1、每天300w PV 的在单台机器上，这台机器需要多少QPS？</strong><br>( 3000000 * 0.8 ) / (86400 * 0.2 ) = 139 (QPS)</p>
-<p><strong>2、如果一台机器的QPS是58，需要几台机器来支持？</strong><br>139 / 58 = 3</p>
-]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>高并发网络性能指标</tag>
       </tags>
   </entry>
   <entry>
@@ -4037,23 +4010,50 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>表单输入绑定</title>
-    <url>/2021/03/14/%E8%A1%A8%E5%8D%95%E8%BE%93%E5%85%A5%E7%BB%91%E5%AE%9A/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>虚拟机种类</title>
     <url>/2021/03/14/%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%A7%8D%E7%B1%BB/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>组件进阶篇--深入了解组件</title>
-    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E8%BF%9B%E9%98%B6%E7%AF%87-%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E7%BB%84%E4%BB%B6/</url>
-    <content><![CDATA[]]></content>
+    <title>网络服务性能指标</title>
+    <url>/2021/09/25/%E7%BD%91%E7%BB%9C%E6%9C%8D%E5%8A%A1%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87/</url>
+    <content><![CDATA[<h1 id="一、QPS，每秒查询"><a href="#一、QPS，每秒查询" class="headerlink" title="一、QPS，每秒查询"></a>一、QPS，每秒查询</h1><p>QPS：Queries Per Second意思是“每秒查询率”，是一台服务器每秒能够相应的查询次数，是对一个特定的查询服务器在规定时间内所处理流量多少的衡量标准。</p>
+<p>互联网中，作为域名系统服务器的机器的性能经常用每秒查询率来衡量。</p>
+<h1 id="二、TPS，每秒事务"><a href="#二、TPS，每秒事务" class="headerlink" title="二、TPS，每秒事务"></a>二、TPS，每秒事务</h1><p>TPS：是TransactionsPerSecond的缩写，也就是事务数/秒。它是软件测试结果的测量单位。一个事务是指一个客户机向服务器发送请求然后服务器做出反应的过程。客户机在发送请求时开始计时，收到服务器响应后结束计时，以此来计算使用的时间和完成的事务个数。</p>
+<p>QPS vs TPS：QPS基本类似于TPS，但是不同的是，对于一个页面的一次访问，形成一个TPS；但一次页面请求，可能产生多次对服务器的请求，服务器对这些请求，就可计入“QPS”之中。如，访问一个页面会请求服务器2次，一次访问，产生一个“T”，产生2个“Q”。</p>
+<h1 id="三、RT，响应时间"><a href="#三、RT，响应时间" class="headerlink" title="三、RT，响应时间"></a>三、RT，响应时间</h1><p>响应时间：执行一个请求从开始到最后收到响应数据所花费的总体时间,即从客户端发起请求到收到服务器响应结果的时间。</p>
+<p>响应时间RT(Response-time)，是一个系统最重要的指标之一，它的数值大小直接反应了系统的快慢。</p>
+<h1 id="四、并发数"><a href="#四、并发数" class="headerlink" title="四、并发数"></a>四、并发数</h1><p>并发数是指系统同时能处理的请求数量，这个也是反应了系统的负载能力。</p>
+<h1 id="五、吞吐量"><a href="#五、吞吐量" class="headerlink" title="五、吞吐量"></a>五、吞吐量</h1><p>系统的吞吐量（承压能力）与request对CPU的消耗、外部接口、IO等等紧密关联。单个request 对CPU消耗越高，外部系统接口、IO速度越慢，系统吞吐能力越低，反之越高。</p>
+<p>系统吞吐量几个重要参数：QPS（TPS）、并发数、响应时间。</p>
+<ol>
+<li>QPS（TPS）：（Query Per Second）每秒钟request/事务 数量</li>
+<li>并发数： 系统同时处理的request/事务数</li>
+<li>响应时间： 一般取平均响应时间</li>
+</ol>
+<p>理解了上面三个要素的意义之后，就能推算出它们之间的关系：</p>
+<ul>
+<li><strong>QPS（TPS）= 并发数/平均响应时间</strong></li>
+<li><strong>并发数 = QPS*平均响应时间</strong></li>
+</ul>
+<h1 id="六、实际举例"><a href="#六、实际举例" class="headerlink" title="六、实际举例"></a>六、实际举例</h1><p>我们通过一个实例来把上面几个概念串起来理解。按二八定律来看，如果每天 80% 的访问集中在 20% 的时间里，这 20% 时间就叫做峰值时间。</p>
+<ul>
+<li>公式：( 总PV数 * 80% ) / ( 每天秒数 * 20% ) = 峰值时间每秒请求数(QPS)</li>
+<li>机器：峰值时间每秒QPS / 单台机器的QPS = 需要的机器</li>
+</ul>
+<p><strong>1、每天300w PV 的在单台机器上，这台机器需要多少QPS？</strong><br>( 3000000 * 0.8 ) / (86400 * 0.2 ) = 139 (QPS)</p>
+<p><strong>2、如果一台机器的QPS是58，需要几台机器来支持？</strong><br>139 / 58 = 3</p>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>高并发网络性能指标</tag>
+      </tags>
   </entry>
   <entry>
-    <title>计算属性与监听器setter</title>
-    <url>/2021/03/14/%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7%E4%B8%8E%E7%9B%91%E5%90%AC%E5%99%A8setter/</url>
+    <title>表单输入绑定</title>
+    <url>/2021/03/14/%E8%A1%A8%E5%8D%95%E8%BE%93%E5%85%A5%E7%BB%91%E5%AE%9A/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -4208,6 +4208,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>RabbitMQ</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>计算属性与监听器setter</title>
+    <url>/2021/03/14/%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7%E4%B8%8E%E7%9B%91%E5%90%AC%E5%99%A8setter/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>过度与动画</title>
@@ -4379,70 +4384,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </categories>
       <tags>
         <tag>链表</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>阿里云ECS部署服务器</title>
-    <url>/2021/01/22/%E9%98%BF%E9%87%8C%E4%BA%91ECS%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
-    <content><![CDATA[<h2 id="阿里云ECS部署Tomcat、Nginx服务器"><a href="#阿里云ECS部署Tomcat、Nginx服务器" class="headerlink" title="阿里云ECS部署Tomcat、Nginx服务器"></a>阿里云ECS部署Tomcat、Nginx服务器</h2><h3 id="Nginx服务器"><a href="#Nginx服务器" class="headerlink" title="Nginx服务器"></a>Nginx服务器</h3><p>####一、简介</p>
-<p>Nginx是一款轻量级的网页服务器、反向代理服务器。相较于Apache、lighttpd具有占有内存少，稳定性高等优势。它最常的用途是提供反向代理服务。</p>
-<h4 id="二、安装"><a href="#二、安装" class="headerlink" title="二、安装"></a>二、安装</h4><h2 id="1、准备工作"><a href="#1、准备工作" class="headerlink" title="1、准备工作"></a>1、准备工作</h2><p>Nginx的安装依赖于以下三个包，意思就是在安装Nginx之前首先必须安装一下的三个包，注意安装顺序如下：</p>
-<p>　　1 SSL功能需要openssl库，直接通过yum安装: #yum install openssl</p>
-<p>　　2 gzip模块需要zlib库，直接通过yum安装: #yum install zlib</p>
-<p>　　3 rewrite模块需要pcre库，直接通过yum安装: #yum install pcre</p>
-<h2 id="2、安装Nginx依赖项和Nginx"><a href="#2、安装Nginx依赖项和Nginx" class="headerlink" title="2、安装Nginx依赖项和Nginx"></a>2、安装Nginx依赖项和Nginx</h2><p>1 、使用yum安装nginx需要包括Nginx的库，安装Nginx的库</p>
-<p>rpm -Uvh <a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm">http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm</a></p>
-<p>2 、使用下面命令安装nginx</p>
-<p> yum install nginx</p>
-<p>3、 启动Nginx</p>
-<p>service nginx start（Centos 6.0）,如果是Centos7.0以上，使用systemctl start nginx启动。</p>
-<p>4、直接浏览器访问localhost就会出现Nginx的欢迎界面表示你安装成功了，否则就是安装失败了</p>
-<p>　　默认80端口加入防火墙访问白名单中：firewall-cmd –permanent –zone=public –add-port=80/tcp</p>
-<p>　　使用firewall-cmd –reload命令使其生效</p>
-<p>5、配置Nginx</p>
-<p>CentOS安装Nginx后，安装在了 /etc/nginx/目录下，你可以打开/etc/nginx/conf.d/default/conf查看里面的配置，包括监听端口，域名和nginx访问的根目录</p>
-<p><strong>如果出现nginx启动之后，通过自己服务器的公网IP地址无法访问，是服务器端口没有开放访问权限的缘故，可以参考博客：<a href="https://blog.csdn.net/inite/article/details/73658214">https://blog.csdn.net/inite/article/details/73658214</a></strong></p>
-<p>####三、配置</p>
-<p>以上安装方法nginx的配置文件位于</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;usr&#x2F;local&#x2F;nginx&#x2F;conf&#x2F;nginx.conf</span><br></pre></td></tr></table></figure>
-<p>Nginx配置文件常见结构的从外到内依次是「http」「server」「location」等等，缺省的继承关系是从外到内，也就是说内层块会自动获取外层块的值作为缺省值。</p>
-<h5 id="Server"><a href="#Server" class="headerlink" title="Server"></a>Server</h5><p>接收请求的服务器需要将不同的请求按规则转发到不同的后端服务器上，在 nginx 中我们可以通过构建虚拟主机（server）的概念来将这些不同的服务配置隔离。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  localhost;</span><br><span class="line">root   html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>例如我们笔戈玩下的两个子项目 passport 和 wan 就可以通过在 nginx 的配置文件中配置两个 server，servername 分别为 passport.bigertech.com 和 wan.bigertech.com。这样的话不同的 url 请求就会对应到 nginx 相应的设置，转发到不同的后端服务器上。</p>
-<p>这里的 listen 指监听端口，server_name 用来指定IP或域名，多个域名对应统一规则可以空格分开，index 用于设定访问的默认首页地址，root 指令用于指定虚拟主机的网页跟目录，这个地方可以是相对地址也可以是绝对地址。</p>
-<p>通常情况下我们可以在 nginx.conf 中配置多个server，对不同的请求进行设置。就像这样：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  host1;</span><br><span class="line">root   html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  host2;</span><br><span class="line">root   &#x2F;data&#x2F;www&#x2F;html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>但是当 server 超过2个时，建议将不同对虚拟主机的配置放在另一个文件中，然后通过在主配置文件 nginx.conf 加上 include 指令包含进来。更便于管理。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">include vhosts&#x2F;*.conf;</span><br></pre></td></tr></table></figure>
-<p>就可以把vhosts的文件都包含进去啦。</p>
-<p>#####Localtion</p>
-<p>每个 url 请求都会对应的一个服务，nginx 进行处理转发或者是本地的一个文件路径，或者是其他服务器的一个服务路径。而这个路径的匹配是通过 location 来进行的。我们可以将 server 当做对应一个域名进行的配置，而 location 是在一个域名下对更精细的路径进行配置。</p>
-<p>以上面的例子，可以将root和index指令放到一个location中，那么只有在匹配到这个location时才会访问root后的内容：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> location &#x2F; &#123;</span><br><span class="line">      root   &#x2F;data&#x2F;www&#x2F;host2;</span><br><span class="line">      index  index.html index.htm;</span><br><span class="line">  &#125;</span><br><span class="line">location 匹配规则</span><br><span class="line"></span><br><span class="line">~      波浪线表示执行一个正则匹配，区分大小写</span><br><span class="line">~*    表示执行一个正则匹配，不区分大小写</span><br><span class="line">^~    ^~表示普通字符匹配，如果该选项匹配，只匹配该选项，不匹配别的选项，一般用来匹配目录</span><br><span class="line">&#x3D;      进行普通字符精确匹配</span><br><span class="line">匹配例子：</span><br><span class="line"></span><br><span class="line">  location  &#x3D; &#x2F; &#123;</span><br><span class="line"># 只匹配&quot;&#x2F;&quot;.</span><br><span class="line">[ configuration A ] </span><br><span class="line">  &#125;</span><br><span class="line">location  &#x2F; &#123;</span><br><span class="line"># 匹配任何请求，因为所有请求都是以&quot;&#x2F;&quot;开始</span><br><span class="line"># 但是更长字符匹配或者正则表达式匹配会优先匹配</span><br><span class="line">[ configuration B ] </span><br><span class="line">&#125;</span><br><span class="line">location ^~ &#x2F;images&#x2F; &#123;</span><br><span class="line"> #匹配任何以 &#x2F;images&#x2F; 开始的请求，并停止匹配 其它location</span><br><span class="line">[ configuration C ] </span><br><span class="line">&#125;</span><br><span class="line">location ~* \.(gif|jpg|jpeg)$ &#123;</span><br><span class="line"># 匹配以 gif, jpg, or jpeg结尾的请求. </span><br><span class="line"># 但是所有 &#x2F;images&#x2F; 目录的请求将由 [Configuration C]处理.   </span><br><span class="line">[ configuration D ] </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">请求:</span><br><span class="line">&#x2F; -&gt; 符合configuration A</span><br><span class="line">&#x2F;documents&#x2F;document.html -&gt; 符合configuration B</span><br><span class="line">&#x2F;images&#x2F;1.gif -&gt; 符合configuration C</span><br><span class="line">&#x2F;documents&#x2F;1.jpg -&gt;符合 configuration D</span><br></pre></td></tr></table></figure>
-<p>#####静态文件映射</p>
-<p>访问文件的配置主要有 root 和 aliasp’s 两个指令。这两个指令的区别容易弄混：</p>
-<p>alias<br>alias后跟的指定目录是准确的，并且末尾必须加 /。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F;c&#x2F; &#123;</span><br><span class="line">    alias &#x2F;a&#x2F;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果访问站点<a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://location/c">http://location/c</a>访问的就是/a/目录下的站点信息。</p>
-<p>#####root</p>
-<p>root后跟的指定目录是上级目录，并且该上级目录下要含有和location后指定名称的同名目录才行。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F;c&#x2F; &#123;</span><br><span class="line">    root &#x2F;a&#x2F;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这时访问站点<a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://location/c">http://location/c</a>访问的就是/a/c目录下的站点信息。</p>
-<p>如果你需要将这个目录展开，在这个location的末尾加上「autoindex on; 」就可以了</p>
-<p>#####转发</p>
-<p>配置起来很简单比如我要将所有的请求到转移到真正提供服务的一台机器的 8001 端口，只要这样：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">proxy_pass 172.16.1.1:8001;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这样访问host时，就都被转发到 172.16.1.1的8001端口去了。</p>
-<p>#####负载均衡</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">upstream myserver; &#123;</span><br><span class="line">ip_hash;    </span><br><span class="line">server 172.16.1.1:8001;</span><br><span class="line">server 172.16.1.2:8002;</span><br><span class="line">server 172.16.1.3;</span><br><span class="line">server 172.16.1.4;</span><br><span class="line">&#125;</span><br><span class="line">location &#x2F; &#123;</span><br><span class="line">proxy_pass http:&#x2F;&#x2F;myserver;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们在 upstream 中指定了一组机器，并将这个组命名为 myserver，这样在 proxypass 中只要将请求转移到 myserver 这个 upstream 中我们就实现了在四台机器的反向代理加负载均衡。其中的 ip_hash 指明了我们均衡的方式是按照用户的 ip 地址进行分配。另外还有轮询、指定权重轮询、fair、url_hash几种调度算法。</p>
-<p>###Tomcat服务器</p>
-<h4 id="一、下载Tomcat"><a href="#一、下载Tomcat" class="headerlink" title="一、下载Tomcat"></a>一、下载Tomcat</h4>]]></content>
-      <categories>
-        <category>阿里云ECS</category>
-      </categories>
-      <tags>
-        <tag>阿里云ECS部署</tag>
       </tags>
   </entry>
   <entry>
@@ -4820,11 +4761,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>机器学习入门</title>
-    <url>/2021/06/08/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Tomcat服务器</title>
     <url>/2021/02/25/Tomcat%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
     <content><![CDATA[<h2 id="CATALINA-HOME-与CATALINA-BASE的区别"><a href="#CATALINA-HOME-与CATALINA-BASE的区别" class="headerlink" title="CATALINA_HOME 与CATALINA_BASE的区别"></a>CATALINA_HOME 与CATALINA_BASE的区别</h2><p><strong>如何创建多个Tomcat服务器实例</strong></p>
@@ -5171,6 +5107,70 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </categories>
       <tags>
         <tag>环境配置</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>阿里云ECS部署服务器</title>
+    <url>/2021/01/22/%E9%98%BF%E9%87%8C%E4%BA%91ECS%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
+    <content><![CDATA[<h2 id="阿里云ECS部署Tomcat、Nginx服务器"><a href="#阿里云ECS部署Tomcat、Nginx服务器" class="headerlink" title="阿里云ECS部署Tomcat、Nginx服务器"></a>阿里云ECS部署Tomcat、Nginx服务器</h2><h3 id="Nginx服务器"><a href="#Nginx服务器" class="headerlink" title="Nginx服务器"></a>Nginx服务器</h3><p>####一、简介</p>
+<p>Nginx是一款轻量级的网页服务器、反向代理服务器。相较于Apache、lighttpd具有占有内存少，稳定性高等优势。它最常的用途是提供反向代理服务。</p>
+<h4 id="二、安装"><a href="#二、安装" class="headerlink" title="二、安装"></a>二、安装</h4><h2 id="1、准备工作"><a href="#1、准备工作" class="headerlink" title="1、准备工作"></a>1、准备工作</h2><p>Nginx的安装依赖于以下三个包，意思就是在安装Nginx之前首先必须安装一下的三个包，注意安装顺序如下：</p>
+<p>　　1 SSL功能需要openssl库，直接通过yum安装: #yum install openssl</p>
+<p>　　2 gzip模块需要zlib库，直接通过yum安装: #yum install zlib</p>
+<p>　　3 rewrite模块需要pcre库，直接通过yum安装: #yum install pcre</p>
+<h2 id="2、安装Nginx依赖项和Nginx"><a href="#2、安装Nginx依赖项和Nginx" class="headerlink" title="2、安装Nginx依赖项和Nginx"></a>2、安装Nginx依赖项和Nginx</h2><p>1 、使用yum安装nginx需要包括Nginx的库，安装Nginx的库</p>
+<p>rpm -Uvh <a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm">http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm</a></p>
+<p>2 、使用下面命令安装nginx</p>
+<p> yum install nginx</p>
+<p>3、 启动Nginx</p>
+<p>service nginx start（Centos 6.0）,如果是Centos7.0以上，使用systemctl start nginx启动。</p>
+<p>4、直接浏览器访问localhost就会出现Nginx的欢迎界面表示你安装成功了，否则就是安装失败了</p>
+<p>　　默认80端口加入防火墙访问白名单中：firewall-cmd –permanent –zone=public –add-port=80/tcp</p>
+<p>　　使用firewall-cmd –reload命令使其生效</p>
+<p>5、配置Nginx</p>
+<p>CentOS安装Nginx后，安装在了 /etc/nginx/目录下，你可以打开/etc/nginx/conf.d/default/conf查看里面的配置，包括监听端口，域名和nginx访问的根目录</p>
+<p><strong>如果出现nginx启动之后，通过自己服务器的公网IP地址无法访问，是服务器端口没有开放访问权限的缘故，可以参考博客：<a href="https://blog.csdn.net/inite/article/details/73658214">https://blog.csdn.net/inite/article/details/73658214</a></strong></p>
+<p>####三、配置</p>
+<p>以上安装方法nginx的配置文件位于</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;usr&#x2F;local&#x2F;nginx&#x2F;conf&#x2F;nginx.conf</span><br></pre></td></tr></table></figure>
+<p>Nginx配置文件常见结构的从外到内依次是「http」「server」「location」等等，缺省的继承关系是从外到内，也就是说内层块会自动获取外层块的值作为缺省值。</p>
+<h5 id="Server"><a href="#Server" class="headerlink" title="Server"></a>Server</h5><p>接收请求的服务器需要将不同的请求按规则转发到不同的后端服务器上，在 nginx 中我们可以通过构建虚拟主机（server）的概念来将这些不同的服务配置隔离。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  localhost;</span><br><span class="line">root   html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>例如我们笔戈玩下的两个子项目 passport 和 wan 就可以通过在 nginx 的配置文件中配置两个 server，servername 分别为 passport.bigertech.com 和 wan.bigertech.com。这样的话不同的 url 请求就会对应到 nginx 相应的设置，转发到不同的后端服务器上。</p>
+<p>这里的 listen 指监听端口，server_name 用来指定IP或域名，多个域名对应统一规则可以空格分开，index 用于设定访问的默认首页地址，root 指令用于指定虚拟主机的网页跟目录，这个地方可以是相对地址也可以是绝对地址。</p>
+<p>通常情况下我们可以在 nginx.conf 中配置多个server，对不同的请求进行设置。就像这样：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  host1;</span><br><span class="line">root   html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  host2;</span><br><span class="line">root   &#x2F;data&#x2F;www&#x2F;html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是当 server 超过2个时，建议将不同对虚拟主机的配置放在另一个文件中，然后通过在主配置文件 nginx.conf 加上 include 指令包含进来。更便于管理。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">include vhosts&#x2F;*.conf;</span><br></pre></td></tr></table></figure>
+<p>就可以把vhosts的文件都包含进去啦。</p>
+<p>#####Localtion</p>
+<p>每个 url 请求都会对应的一个服务，nginx 进行处理转发或者是本地的一个文件路径，或者是其他服务器的一个服务路径。而这个路径的匹配是通过 location 来进行的。我们可以将 server 当做对应一个域名进行的配置，而 location 是在一个域名下对更精细的路径进行配置。</p>
+<p>以上面的例子，可以将root和index指令放到一个location中，那么只有在匹配到这个location时才会访问root后的内容：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> location &#x2F; &#123;</span><br><span class="line">      root   &#x2F;data&#x2F;www&#x2F;host2;</span><br><span class="line">      index  index.html index.htm;</span><br><span class="line">  &#125;</span><br><span class="line">location 匹配规则</span><br><span class="line"></span><br><span class="line">~      波浪线表示执行一个正则匹配，区分大小写</span><br><span class="line">~*    表示执行一个正则匹配，不区分大小写</span><br><span class="line">^~    ^~表示普通字符匹配，如果该选项匹配，只匹配该选项，不匹配别的选项，一般用来匹配目录</span><br><span class="line">&#x3D;      进行普通字符精确匹配</span><br><span class="line">匹配例子：</span><br><span class="line"></span><br><span class="line">  location  &#x3D; &#x2F; &#123;</span><br><span class="line"># 只匹配&quot;&#x2F;&quot;.</span><br><span class="line">[ configuration A ] </span><br><span class="line">  &#125;</span><br><span class="line">location  &#x2F; &#123;</span><br><span class="line"># 匹配任何请求，因为所有请求都是以&quot;&#x2F;&quot;开始</span><br><span class="line"># 但是更长字符匹配或者正则表达式匹配会优先匹配</span><br><span class="line">[ configuration B ] </span><br><span class="line">&#125;</span><br><span class="line">location ^~ &#x2F;images&#x2F; &#123;</span><br><span class="line"> #匹配任何以 &#x2F;images&#x2F; 开始的请求，并停止匹配 其它location</span><br><span class="line">[ configuration C ] </span><br><span class="line">&#125;</span><br><span class="line">location ~* \.(gif|jpg|jpeg)$ &#123;</span><br><span class="line"># 匹配以 gif, jpg, or jpeg结尾的请求. </span><br><span class="line"># 但是所有 &#x2F;images&#x2F; 目录的请求将由 [Configuration C]处理.   </span><br><span class="line">[ configuration D ] </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">请求:</span><br><span class="line">&#x2F; -&gt; 符合configuration A</span><br><span class="line">&#x2F;documents&#x2F;document.html -&gt; 符合configuration B</span><br><span class="line">&#x2F;images&#x2F;1.gif -&gt; 符合configuration C</span><br><span class="line">&#x2F;documents&#x2F;1.jpg -&gt;符合 configuration D</span><br></pre></td></tr></table></figure>
+<p>#####静态文件映射</p>
+<p>访问文件的配置主要有 root 和 aliasp’s 两个指令。这两个指令的区别容易弄混：</p>
+<p>alias<br>alias后跟的指定目录是准确的，并且末尾必须加 /。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F;c&#x2F; &#123;</span><br><span class="line">    alias &#x2F;a&#x2F;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果访问站点<a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://location/c">http://location/c</a>访问的就是/a/目录下的站点信息。</p>
+<p>#####root</p>
+<p>root后跟的指定目录是上级目录，并且该上级目录下要含有和location后指定名称的同名目录才行。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F;c&#x2F; &#123;</span><br><span class="line">    root &#x2F;a&#x2F;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这时访问站点<a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://location/c">http://location/c</a>访问的就是/a/c目录下的站点信息。</p>
+<p>如果你需要将这个目录展开，在这个location的末尾加上「autoindex on; 」就可以了</p>
+<p>#####转发</p>
+<p>配置起来很简单比如我要将所有的请求到转移到真正提供服务的一台机器的 8001 端口，只要这样：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">proxy_pass 172.16.1.1:8001;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样访问host时，就都被转发到 172.16.1.1的8001端口去了。</p>
+<p>#####负载均衡</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">upstream myserver; &#123;</span><br><span class="line">ip_hash;    </span><br><span class="line">server 172.16.1.1:8001;</span><br><span class="line">server 172.16.1.2:8002;</span><br><span class="line">server 172.16.1.3;</span><br><span class="line">server 172.16.1.4;</span><br><span class="line">&#125;</span><br><span class="line">location &#x2F; &#123;</span><br><span class="line">proxy_pass http:&#x2F;&#x2F;myserver;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们在 upstream 中指定了一组机器，并将这个组命名为 myserver，这样在 proxypass 中只要将请求转移到 myserver 这个 upstream 中我们就实现了在四台机器的反向代理加负载均衡。其中的 ip_hash 指明了我们均衡的方式是按照用户的 ip 地址进行分配。另外还有轮询、指定权重轮询、fair、url_hash几种调度算法。</p>
+<p>###Tomcat服务器</p>
+<h4 id="一、下载Tomcat"><a href="#一、下载Tomcat" class="headerlink" title="一、下载Tomcat"></a>一、下载Tomcat</h4>]]></content>
+      <categories>
+        <category>阿里云ECS</category>
+      </categories>
+      <tags>
+        <tag>阿里云ECS部署</tag>
       </tags>
   </entry>
   <entry>
