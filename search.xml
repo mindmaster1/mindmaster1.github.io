@@ -86,11 +86,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Druid数据库连接池</title>
-    <url>/2021/03/14/Druid%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Filter</title>
     <url>/2021/02/25/Filter/</url>
     <content><![CDATA[]]></content>
@@ -102,13 +97,18 @@
       </tags>
   </entry>
   <entry>
-    <title>HTTP代理</title>
-    <url>/2021/02/03/HTTP%E4%BB%A3%E7%90%86/</url>
+    <title>Druid数据库连接池</title>
+    <url>/2021/03/14/Druid%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>HTTP报文</title>
     <url>/2021/03/14/HTTP%E6%8A%A5%E6%96%87/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>HTTP代理</title>
+    <url>/2021/02/03/HTTP%E4%BB%A3%E7%90%86/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -351,25 +351,14 @@
       </tags>
   </entry>
   <entry>
-    <title>InnoDB表</title>
-    <url>/2021/03/14/InnoDB%E8%A1%A8/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>InnoDB文件</title>
     <url>/2021/03/14/InnoDB%E6%96%87%E4%BB%B6/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>JVM系列之堆</title>
-    <url>/2021/04/14/JVM%E7%B3%BB%E5%88%97%E4%B9%8B%E5%A0%86/</url>
+    <title>InnoDB表</title>
+    <url>/2021/03/14/InnoDB%E8%A1%A8/</url>
     <content><![CDATA[]]></content>
-      <categories>
-        <category>JVM虚拟机</category>
-      </categories>
-      <tags>
-        <tag>JVM堆</tag>
-      </tags>
   </entry>
   <entry>
     <title>JVM虚拟机栈</title>
@@ -446,9 +435,20 @@
       </tags>
   </entry>
   <entry>
-    <title>Jenkins自动化部署工具</title>
-    <url>/2021/03/14/Jenkins%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E5%B7%A5%E5%85%B7/</url>
+    <title>Java高并发JUC</title>
+    <url>/2021/02/25/Java%E9%AB%98%E5%B9%B6%E5%8F%91JUC/</url>
     <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>JVM系列之堆</title>
+    <url>/2021/04/14/JVM%E7%B3%BB%E5%88%97%E4%B9%8B%E5%A0%86/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>JVM虚拟机</category>
+      </categories>
+      <tags>
+        <tag>JVM堆</tag>
+      </tags>
   </entry>
   <entry>
     <title>LVS负载均衡</title>
@@ -579,18 +579,13 @@
       </tags>
   </entry>
   <entry>
-    <title>Java高并发JUC</title>
-    <url>/2021/02/25/Java%E9%AB%98%E5%B9%B6%E5%8F%91JUC/</url>
+    <title>Jenkins自动化部署工具</title>
+    <url>/2021/03/14/Jenkins%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E5%B7%A5%E5%85%B7/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Linux进程管理</title>
     <url>/2021/03/14/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>Linux进程调度</title>
-    <url>/2021/03/14/Linux%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -603,6 +598,11 @@
       <tags>
         <tag>Listener</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Linux进程调度</title>
+    <url>/2021/03/14/Linux%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>MVC框架</title>
@@ -1455,64 +1455,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Mybatis入门案例知识补充</title>
-    <url>/2021/03/07/Mybatis%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E8%A1%A5%E5%85%85/</url>
-    <content><![CDATA[<h2 id="不使用XML构建SqlSessionFactory"><a href="#不使用XML构建SqlSessionFactory" class="headerlink" title="不使用XML构建SqlSessionFactory"></a>不使用XML构建SqlSessionFactory</h2><p>如果你更愿意直接从 Java 代码而不是 XML 文件中创建配置，或者想要创建你自己的配置建造器，MyBatis 也<strong>提供了完整的配置类</strong>，提供了所有与 XML 文件等价的配置项。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">DataSource dataSource = BlogDataSourceFactory.getBlogDataSource();</span><br><span class="line"><span class="comment">//指定事务类型</span></span><br><span class="line">TransactionFactory transactionFactory = <span class="keyword">new</span> JdbcTransactionFactory();</span><br><span class="line">Environment environment = <span class="keyword">new</span> Environment(<span class="string">&quot;development&quot;</span>, transactionFactory, dataSource);</span><br><span class="line">Configuration configuration = <span class="keyword">new</span> Configuration(environment);</span><br><span class="line"><span class="comment">//添加一个映射器类,相较于XML文件构建存在一定的局限性</span></span><br><span class="line">configuration.addMapper(BlogMapper.class);</span><br><span class="line"><span class="comment">//构造SqlSessionFactory</span></span><br><span class="line">SqlSessionFactory sqlSessionFactory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(configuration);</span><br></pre></td></tr></table></figure>
-<p>注意该例中，configuration 添加了一个映射器类（mapper class）。映射器类是 Java 类，它们**<u>包含 SQL 映射注解从而避免依赖 XML 文件</u>**。不过，由于 Java 注解的一些限制以及某些 MyBatis 映射的复杂性，要使用大多数高级映射（比如：嵌套联合映射），仍然需要使用 XML 配置。有鉴于此，如果存在一个同名 XML 配置文件，MyBatis 会自动查找并加载它（在这个例子中，基于类路径和 BlogMapper.class 的类名，会加载 BlogMapper.xml）。</p>
-<h2 id="从SqlSessionFactory中获取SqlSession"><a href="#从SqlSessionFactory中获取SqlSession" class="headerlink" title="从SqlSessionFactory中获取SqlSession"></a>从SqlSessionFactory中获取SqlSession</h2><p> 既然有了 SqlSessionFactory，顾名思义，我们可以从中获得 SqlSession 的实例。SqlSession 提供了在数据库执行 SQL 命令所需的所有方法。你可以通过 SqlSession 实例来直接执行已映射的 SQL 语句。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span>(SqlSession session = SqlSessionFactory.opensession())&#123;</span><br><span class="line">	 Blog blog = (Blog) session.selectOne(<span class="string">&quot;org.mybatis.example.BlogMapper.selectBlog&quot;</span>, <span class="number">101</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>另一种更加简洁的方式</p>
-</blockquote>
-<p>使用和指定语句的参数和返回值**<u>相匹配的接口</u>**（比如 BlogMapper.class），现在你的代码不仅更清晰，更加类型安全，还不用担心可能出错的字符串字面值以及强制类型转换。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">    <span class="comment">//传参的时候传了一个接口</span></span><br><span class="line">  BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">  Blog blog = mapper.selectBlog(<span class="number">101</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="探究已经映射的SQL语句"><a href="#探究已经映射的SQL语句" class="headerlink" title="探究已经映射的SQL语句"></a>探究已经映射的SQL语句</h2><p>粗略的讨论一下SqlSession和Mapper到底执行了什么操作</p>
-<p>一个语句既可以通过 XML 定义，也可以通过注解定义。我们先看看 XML 定义语句的方式，事实上 MyBatis 提供的所有特性都可以利用基于 XML 的映射语言来实现，这使得 MyBatis 在过去的数年间得以流行。下面是一个XML文件示例</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span> ?&gt;</span><br><span class="line">&lt;!DOCTYPE mapper</span><br><span class="line">  PUBLIC <span class="string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span><br><span class="line">  <span class="string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span><br><span class="line">&lt;mapper namespace=<span class="string">&quot;org.mybatis.example.BlogMapper&quot;</span>&gt;</span><br><span class="line">  &lt;select id=<span class="string">&quot;selectBlog&quot;</span> resultType=<span class="string">&quot;Blog&quot;</span>&gt;</span><br><span class="line">    select * from Blog where id = #&#123;id&#125;</span><br><span class="line">  &lt;/select&gt;</span><br><span class="line">&lt;/mapper&gt;</span><br></pre></td></tr></table></figure>
-<p>为了这个简单的例子，我们似乎写了不少配置，但其实并不多。在一个 XML 映射文件中，可以定义无数个映射语句，这样一来，XML 头部和文档类型声明部分就显得微不足道了。文档的其它部分很直白，容易理解。 它在命名空间 “org.mybatis.example.BlogMapper” 中定义了一个名为 “selectBlog” 的映射语句，这样你就可以用全限定名 “org.mybatis.example.BlogMapper.selectBlog” 来调用映射语句了，就像上面例子中那样：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Blog blog = (Blog) session.selectOne(<span class="string">&quot;org.mybatis.example.BlogMapper.selectBlog&quot;</span>, <span class="number">101</span>);</span><br></pre></td></tr></table></figure>
-<ul>
-<li>说明：此时org.mybatis.example.BlogMapper应该是一个接口</li>
-<li>selectBlog是接口中定义的一个方法</li>
-</ul>
-<p>你可能会注意到，这种方式和用全限定名调用 Java 对象的方法类似。这样，该命名就可以<strong>直接映射到在命名空间中同名的映射器类</strong>，并将已映射的 select 语句匹配到对应名称、参数和返回类型的方法。因此你就可以像上面那样，不费吹灰之力地在对应的映射器接口调用方法，就像下面这样：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">Blog blog = mapper.selectBlog(<span class="number">101</span>);</span><br></pre></td></tr></table></figure>
-<p>第二种方法有很多优势，首先它不依赖于字符串字面值，会更安全一点；其次，如果你的 IDE 有代码补全功能，那么代码补全可以帮你快速选择到映射好的 SQL 语句。</p>
-<h2 id="命名空间"><a href="#命名空间" class="headerlink" title="命名空间"></a>命名空间</h2><p>在之前版本的 MyBatis 中，<strong>命名空间（Namespaces）</strong>的作用并不大，是可选的。 但现在，随着命名空间越发重要，你必须指定命名空间。</p>
-<p>命名空间的作用有两个，一个是利用更长的全限定名来将不同的语句隔离开来，同时也实现了你上面见到的接口绑定。就算你觉得暂时用不到接口绑定，你也应该遵循这里的规定，以防哪天你改变了主意。 长远来看，只要将命名空间置于合适的 Java 包命名空间之中，你的代码会变得更加整洁，也有利于你更方便地使用 MyBatis。</p>
-<p><strong>命名解析：</strong>为了减少输入量，MyBatis 对所有具有名称的配置元素（包括语句，结果映射，缓存等）使用了如下的命名解析规则。</p>
-<ul>
-<li>全限定名（比如 “com.mypackage.MyMapper.selectAllThings）将被直接用于查找及使用。</li>
-<li>短名称（比如 “selectAllThings”）如果全局唯一也可以作为一个单独的引用。 如果不唯一，有两个或两个以上的相同名称（比如 “com.foo.selectAllThings” 和 “com.bar.selectAllThings”），那么使用时就会产生“短名称不唯一”的错误，这种情况下就必须使用全限定名。</li>
-</ul>
-<hr>
-<p>对于像 BlogMapper 这样的映射器类来说，还有另一种方法来完成语句映射。 它们映射的语句可以不用 XML 来配置，而可以使用 Java 注解来配置。比如，上面的 XML 示例可以被替换成如下的配置：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> org.mybatis.example;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">BlogMapper</span> </span>&#123;</span><br><span class="line">  <span class="meta">@Select(&quot;SELECT * FROM blog WHERE id = #&#123;id&#125;&quot;)</span></span><br><span class="line">  <span class="function">Blog <span class="title">selectBlog</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用注解来映射简单语句会使代码显得更加简洁，但对于稍微复杂一点的语句，Java 注解不仅力不从心，还会让你本就复杂的 SQL 语句更加混乱不堪。 因此，如果你需要做一些很复杂的操作，最好用 XML 来映射语句。</p>
-<p>选择何种方式来配置映射，以及认为是否应该要统一映射语句定义的形式，完全取决于你和你的团队。 换句话说，永远不要拘泥于一种方式，你可以很轻松的在基于注解和 XML 的语句映射方式间自由移植和切换。</p>
-<h2 id="作用域和生命周期"><a href="#作用域和生命周期" class="headerlink" title="作用域和生命周期"></a>作用域和生命周期</h2><blockquote>
-<p>对象生命周期和依赖注入框架</p>
-</blockquote>
-<p>依赖注入框架可以创建线程安全的、基于事务的 SqlSession 和映射器，并将它们直接注入到你的 bean 中，因此可以直接忽略它们的生命周期。 如果对如何通过依赖注入框架使用 MyBatis 感兴趣，可以研究一下 MyBatis-Spring 或 MyBatis-Guice 两个子项目。</p>
-<h3 id="SqlSessionFactoryBuilder"><a href="#SqlSessionFactoryBuilder" class="headerlink" title="SqlSessionFactoryBuilder"></a>SqlSessionFactoryBuilder</h3><p>这个类可以被实例化、使用和丢弃，一旦创建了 SqlSessionFactory，就不再需要它了。 因此 SqlSessionFactoryBuilder 实例的最佳作用域是方法作用域（也就是局部方法变量）。 你可以重用 SqlSessionFactoryBuilder 来创建多个 SqlSessionFactory 实例，但最好还是不要一直保留着它，以保证所有的 XML 解析资源可以被释放给更重要的事情。</p>
-<h3 id="SqlSessionFactory"><a href="#SqlSessionFactory" class="headerlink" title="SqlSessionFactory"></a>SqlSessionFactory</h3><p>SqlSessionFactory 一旦被创建就应该在应用的运行期间一直存在，没有任何理由丢弃它或重新创建另一个实例。 使用 SqlSessionFactory 的最佳实践是在应用运行期间不要重复创建多次，多次重建 SqlSessionFactory 被视为一种代码“坏习惯”。因此 SqlSessionFactory 的最佳作用域是应用作用域。 有很多方法可以做到，最简单的就是使用单例模式或者静态单例模式。</p>
-<h3 id="SqlSession"><a href="#SqlSession" class="headerlink" title="SqlSession"></a>SqlSession</h3><p>每个线程都应该有它自己的 SqlSession 实例。SqlSession 的实例不是线程安全的，因此是不能被共享的，所以它的最佳的作用域是请求或方法作用域。 绝对不能将 SqlSession 实例的引用放在一个类的静态域，甚至一个类的实例变量也不行。 也绝不能将 SqlSession 实例的引用放在任何类型的托管作用域中，比如 Servlet 框架中的 HttpSession。 如果你现在正在使用一种 Web 框架，考虑将 SqlSession 放在一个和 HTTP 请求相似的作用域中。 换句话说，每次收到 HTTP 请求，就可以打开一个 SqlSession，返回一个响应后，就关闭它。 这个关闭操作很重要，为了确保每次都能执行关闭操作，你应该把这个关闭操作放到 finally 块中。 下面的示例就是一个确保 SqlSession 关闭的标准模式：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">  <span class="comment">// 你的应用逻辑代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在所有代码中都遵循这种使用模式，可以保证所有数据库资源都能被正确地关闭。</p>
-<h3 id="映射器实例"><a href="#映射器实例" class="headerlink" title="映射器实例"></a>映射器实例</h3><p>映射器是一些绑定映射语句的接口。映射器接口的实例是从 SqlSession 中获得的。虽然从技术层面上来讲，任何映射器实例的最大作用域与请求它们的 SqlSession 相同。但方法作用域才是映射器实例的最合适的作用域。 也就是说，映射器实例应该在调用它们的方法中被获取，使用完毕之后即可丢弃。 映射器实例并不需要被显式地关闭。尽管在整个请求作用域保留映射器实例不会有什么问题，但是你很快会发现，在这个作用域上管理太多像 SqlSession 的资源会让你忙不过来。 因此，最好将映射器放在方法作用域内。就像下面的例子一样：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">  BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">  <span class="comment">// 你的应用逻辑代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-]]></content>
-      <categories>
-        <category>Mybatis框架</category>
-      </categories>
-      <tags>
-        <tag>Mybatis</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Mycat</title>
     <url>/2021/03/14/Mycat/</url>
     <content><![CDATA[]]></content>
@@ -1602,16 +1544,6 @@
       </tags>
   </entry>
   <entry>
-    <title>PC寄存器</title>
-    <url>/2021/03/14/PC%E5%AF%84%E5%AD%98%E5%99%A8/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>Redis数据库</title>
-    <url>/2021/02/25/Redis%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Nginx服务器的使用</title>
     <url>/2021/01/17/Nginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<h1 id="Nginx服务器使用"><a href="#Nginx服务器使用" class="headerlink" title="Nginx服务器使用"></a>Nginx服务器使用</h1><h2 id="内容概览"><a href="#内容概览" class="headerlink" title="内容概览"></a>内容概览</h2><h3 id="1、nginx简介"><a href="#1、nginx简介" class="headerlink" title="1、nginx简介"></a>1、nginx简介</h3><p>（1）介绍nginx的应用场景和具体可以做什么事情</p>
@@ -1682,6 +1614,74 @@
       <tags>
         <tag>Nginx服务器</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>PC寄存器</title>
+    <url>/2021/03/14/PC%E5%AF%84%E5%AD%98%E5%99%A8/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Mybatis入门案例知识补充</title>
+    <url>/2021/03/07/Mybatis%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E8%A1%A5%E5%85%85/</url>
+    <content><![CDATA[<h2 id="不使用XML构建SqlSessionFactory"><a href="#不使用XML构建SqlSessionFactory" class="headerlink" title="不使用XML构建SqlSessionFactory"></a>不使用XML构建SqlSessionFactory</h2><p>如果你更愿意直接从 Java 代码而不是 XML 文件中创建配置，或者想要创建你自己的配置建造器，MyBatis 也<strong>提供了完整的配置类</strong>，提供了所有与 XML 文件等价的配置项。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">DataSource dataSource = BlogDataSourceFactory.getBlogDataSource();</span><br><span class="line"><span class="comment">//指定事务类型</span></span><br><span class="line">TransactionFactory transactionFactory = <span class="keyword">new</span> JdbcTransactionFactory();</span><br><span class="line">Environment environment = <span class="keyword">new</span> Environment(<span class="string">&quot;development&quot;</span>, transactionFactory, dataSource);</span><br><span class="line">Configuration configuration = <span class="keyword">new</span> Configuration(environment);</span><br><span class="line"><span class="comment">//添加一个映射器类,相较于XML文件构建存在一定的局限性</span></span><br><span class="line">configuration.addMapper(BlogMapper.class);</span><br><span class="line"><span class="comment">//构造SqlSessionFactory</span></span><br><span class="line">SqlSessionFactory sqlSessionFactory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(configuration);</span><br></pre></td></tr></table></figure>
+<p>注意该例中，configuration 添加了一个映射器类（mapper class）。映射器类是 Java 类，它们**<u>包含 SQL 映射注解从而避免依赖 XML 文件</u>**。不过，由于 Java 注解的一些限制以及某些 MyBatis 映射的复杂性，要使用大多数高级映射（比如：嵌套联合映射），仍然需要使用 XML 配置。有鉴于此，如果存在一个同名 XML 配置文件，MyBatis 会自动查找并加载它（在这个例子中，基于类路径和 BlogMapper.class 的类名，会加载 BlogMapper.xml）。</p>
+<h2 id="从SqlSessionFactory中获取SqlSession"><a href="#从SqlSessionFactory中获取SqlSession" class="headerlink" title="从SqlSessionFactory中获取SqlSession"></a>从SqlSessionFactory中获取SqlSession</h2><p> 既然有了 SqlSessionFactory，顾名思义，我们可以从中获得 SqlSession 的实例。SqlSession 提供了在数据库执行 SQL 命令所需的所有方法。你可以通过 SqlSession 实例来直接执行已映射的 SQL 语句。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span>(SqlSession session = SqlSessionFactory.opensession())&#123;</span><br><span class="line">	 Blog blog = (Blog) session.selectOne(<span class="string">&quot;org.mybatis.example.BlogMapper.selectBlog&quot;</span>, <span class="number">101</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>另一种更加简洁的方式</p>
+</blockquote>
+<p>使用和指定语句的参数和返回值**<u>相匹配的接口</u>**（比如 BlogMapper.class），现在你的代码不仅更清晰，更加类型安全，还不用担心可能出错的字符串字面值以及强制类型转换。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">    <span class="comment">//传参的时候传了一个接口</span></span><br><span class="line">  BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">  Blog blog = mapper.selectBlog(<span class="number">101</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="探究已经映射的SQL语句"><a href="#探究已经映射的SQL语句" class="headerlink" title="探究已经映射的SQL语句"></a>探究已经映射的SQL语句</h2><p>粗略的讨论一下SqlSession和Mapper到底执行了什么操作</p>
+<p>一个语句既可以通过 XML 定义，也可以通过注解定义。我们先看看 XML 定义语句的方式，事实上 MyBatis 提供的所有特性都可以利用基于 XML 的映射语言来实现，这使得 MyBatis 在过去的数年间得以流行。下面是一个XML文件示例</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span> ?&gt;</span><br><span class="line">&lt;!DOCTYPE mapper</span><br><span class="line">  PUBLIC <span class="string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span><br><span class="line">  <span class="string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span><br><span class="line">&lt;mapper namespace=<span class="string">&quot;org.mybatis.example.BlogMapper&quot;</span>&gt;</span><br><span class="line">  &lt;select id=<span class="string">&quot;selectBlog&quot;</span> resultType=<span class="string">&quot;Blog&quot;</span>&gt;</span><br><span class="line">    select * from Blog where id = #&#123;id&#125;</span><br><span class="line">  &lt;/select&gt;</span><br><span class="line">&lt;/mapper&gt;</span><br></pre></td></tr></table></figure>
+<p>为了这个简单的例子，我们似乎写了不少配置，但其实并不多。在一个 XML 映射文件中，可以定义无数个映射语句，这样一来，XML 头部和文档类型声明部分就显得微不足道了。文档的其它部分很直白，容易理解。 它在命名空间 “org.mybatis.example.BlogMapper” 中定义了一个名为 “selectBlog” 的映射语句，这样你就可以用全限定名 “org.mybatis.example.BlogMapper.selectBlog” 来调用映射语句了，就像上面例子中那样：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Blog blog = (Blog) session.selectOne(<span class="string">&quot;org.mybatis.example.BlogMapper.selectBlog&quot;</span>, <span class="number">101</span>);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>说明：此时org.mybatis.example.BlogMapper应该是一个接口</li>
+<li>selectBlog是接口中定义的一个方法</li>
+</ul>
+<p>你可能会注意到，这种方式和用全限定名调用 Java 对象的方法类似。这样，该命名就可以<strong>直接映射到在命名空间中同名的映射器类</strong>，并将已映射的 select 语句匹配到对应名称、参数和返回类型的方法。因此你就可以像上面那样，不费吹灰之力地在对应的映射器接口调用方法，就像下面这样：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">Blog blog = mapper.selectBlog(<span class="number">101</span>);</span><br></pre></td></tr></table></figure>
+<p>第二种方法有很多优势，首先它不依赖于字符串字面值，会更安全一点；其次，如果你的 IDE 有代码补全功能，那么代码补全可以帮你快速选择到映射好的 SQL 语句。</p>
+<h2 id="命名空间"><a href="#命名空间" class="headerlink" title="命名空间"></a>命名空间</h2><p>在之前版本的 MyBatis 中，<strong>命名空间（Namespaces）</strong>的作用并不大，是可选的。 但现在，随着命名空间越发重要，你必须指定命名空间。</p>
+<p>命名空间的作用有两个，一个是利用更长的全限定名来将不同的语句隔离开来，同时也实现了你上面见到的接口绑定。就算你觉得暂时用不到接口绑定，你也应该遵循这里的规定，以防哪天你改变了主意。 长远来看，只要将命名空间置于合适的 Java 包命名空间之中，你的代码会变得更加整洁，也有利于你更方便地使用 MyBatis。</p>
+<p><strong>命名解析：</strong>为了减少输入量，MyBatis 对所有具有名称的配置元素（包括语句，结果映射，缓存等）使用了如下的命名解析规则。</p>
+<ul>
+<li>全限定名（比如 “com.mypackage.MyMapper.selectAllThings）将被直接用于查找及使用。</li>
+<li>短名称（比如 “selectAllThings”）如果全局唯一也可以作为一个单独的引用。 如果不唯一，有两个或两个以上的相同名称（比如 “com.foo.selectAllThings” 和 “com.bar.selectAllThings”），那么使用时就会产生“短名称不唯一”的错误，这种情况下就必须使用全限定名。</li>
+</ul>
+<hr>
+<p>对于像 BlogMapper 这样的映射器类来说，还有另一种方法来完成语句映射。 它们映射的语句可以不用 XML 来配置，而可以使用 Java 注解来配置。比如，上面的 XML 示例可以被替换成如下的配置：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> org.mybatis.example;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">BlogMapper</span> </span>&#123;</span><br><span class="line">  <span class="meta">@Select(&quot;SELECT * FROM blog WHERE id = #&#123;id&#125;&quot;)</span></span><br><span class="line">  <span class="function">Blog <span class="title">selectBlog</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用注解来映射简单语句会使代码显得更加简洁，但对于稍微复杂一点的语句，Java 注解不仅力不从心，还会让你本就复杂的 SQL 语句更加混乱不堪。 因此，如果你需要做一些很复杂的操作，最好用 XML 来映射语句。</p>
+<p>选择何种方式来配置映射，以及认为是否应该要统一映射语句定义的形式，完全取决于你和你的团队。 换句话说，永远不要拘泥于一种方式，你可以很轻松的在基于注解和 XML 的语句映射方式间自由移植和切换。</p>
+<h2 id="作用域和生命周期"><a href="#作用域和生命周期" class="headerlink" title="作用域和生命周期"></a>作用域和生命周期</h2><blockquote>
+<p>对象生命周期和依赖注入框架</p>
+</blockquote>
+<p>依赖注入框架可以创建线程安全的、基于事务的 SqlSession 和映射器，并将它们直接注入到你的 bean 中，因此可以直接忽略它们的生命周期。 如果对如何通过依赖注入框架使用 MyBatis 感兴趣，可以研究一下 MyBatis-Spring 或 MyBatis-Guice 两个子项目。</p>
+<h3 id="SqlSessionFactoryBuilder"><a href="#SqlSessionFactoryBuilder" class="headerlink" title="SqlSessionFactoryBuilder"></a>SqlSessionFactoryBuilder</h3><p>这个类可以被实例化、使用和丢弃，一旦创建了 SqlSessionFactory，就不再需要它了。 因此 SqlSessionFactoryBuilder 实例的最佳作用域是方法作用域（也就是局部方法变量）。 你可以重用 SqlSessionFactoryBuilder 来创建多个 SqlSessionFactory 实例，但最好还是不要一直保留着它，以保证所有的 XML 解析资源可以被释放给更重要的事情。</p>
+<h3 id="SqlSessionFactory"><a href="#SqlSessionFactory" class="headerlink" title="SqlSessionFactory"></a>SqlSessionFactory</h3><p>SqlSessionFactory 一旦被创建就应该在应用的运行期间一直存在，没有任何理由丢弃它或重新创建另一个实例。 使用 SqlSessionFactory 的最佳实践是在应用运行期间不要重复创建多次，多次重建 SqlSessionFactory 被视为一种代码“坏习惯”。因此 SqlSessionFactory 的最佳作用域是应用作用域。 有很多方法可以做到，最简单的就是使用单例模式或者静态单例模式。</p>
+<h3 id="SqlSession"><a href="#SqlSession" class="headerlink" title="SqlSession"></a>SqlSession</h3><p>每个线程都应该有它自己的 SqlSession 实例。SqlSession 的实例不是线程安全的，因此是不能被共享的，所以它的最佳的作用域是请求或方法作用域。 绝对不能将 SqlSession 实例的引用放在一个类的静态域，甚至一个类的实例变量也不行。 也绝不能将 SqlSession 实例的引用放在任何类型的托管作用域中，比如 Servlet 框架中的 HttpSession。 如果你现在正在使用一种 Web 框架，考虑将 SqlSession 放在一个和 HTTP 请求相似的作用域中。 换句话说，每次收到 HTTP 请求，就可以打开一个 SqlSession，返回一个响应后，就关闭它。 这个关闭操作很重要，为了确保每次都能执行关闭操作，你应该把这个关闭操作放到 finally 块中。 下面的示例就是一个确保 SqlSession 关闭的标准模式：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">  <span class="comment">// 你的应用逻辑代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在所有代码中都遵循这种使用模式，可以保证所有数据库资源都能被正确地关闭。</p>
+<h3 id="映射器实例"><a href="#映射器实例" class="headerlink" title="映射器实例"></a>映射器实例</h3><p>映射器是一些绑定映射语句的接口。映射器接口的实例是从 SqlSession 中获得的。虽然从技术层面上来讲，任何映射器实例的最大作用域与请求它们的 SqlSession 相同。但方法作用域才是映射器实例的最合适的作用域。 也就是说，映射器实例应该在调用它们的方法中被获取，使用完毕之后即可丢弃。 映射器实例并不需要被显式地关闭。尽管在整个请求作用域保留映射器实例不会有什么问题，但是你很快会发现，在这个作用域上管理太多像 SqlSession 的资源会让你忙不过来。 因此，最好将映射器放在方法作用域内。就像下面的例子一样：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">  BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">  <span class="comment">// 你的应用逻辑代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+]]></content>
+      <categories>
+        <category>Mybatis框架</category>
+      </categories>
+      <tags>
+        <tag>Mybatis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Redis数据库</title>
+    <url>/2021/02/25/Redis%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>SVN版本控制系统</title>
@@ -2151,11 +2151,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>XML映射文件详解</title>
-    <url>/2021/03/14/XML%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>XML配置文件详解</title>
     <url>/2021/03/13/XML%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/</url>
     <content><![CDATA[<h2 id="配置文档顶层结构"><a href="#配置文档顶层结构" class="headerlink" title="配置文档顶层结构"></a>配置文档顶层结构</h2><img data-src="/2021/03/13/XML%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/01.png" class>
@@ -2273,6 +2268,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
   <entry>
     <title>coding部署</title>
     <url>/2021/03/15/coding%E9%83%A8%E7%BD%B2/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>XML映射文件详解</title>
+    <url>/2021/03/14/XML%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -2559,81 +2559,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>双指针问题</title>
-    <url>/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<h2 id="环形列表I"><a href="#环形列表I" class="headerlink" title="环形列表I"></a>环形列表I</h2><h3 id="题目说明"><a href="#题目说明" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，判断链表中是否有环。</p>
-<p>如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。</p>
-<p>如果链表中存在环，则返回 true 。 否则，返回 false 。</p>
-<p> 进阶：</p>
-<p>你能用 O(1)（即，常量）内存解决此问题吗？</p>
-<p> 示例 1：</p>
-<p> <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100453506.png" alt="image-20210114100453506"></p>
-<p>输入：head = [3,2,0,-4], pos = 1<br>输出：true<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100714252.png" alt="image-20210114100714252"></p>
-<p>输入：head = [1,2], pos = 0<br>输出：true<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
-<img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100749569.png" alt="image-20210114100749569" style="zoom:150%;">
-
-<p>输入：head = [1], pos = -1<br>输出：false<br>解释：链表中没有环。</p>
-<p>提示：</p>
-<p>链表中节点的数目范围是 [0, 104]<br>-105 &lt;= Node.val &lt;= 105<br>pos 为 -1 或者链表中的一个 有效索引 </p>
-<h3 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h3><p>####方法一：哈希表<br>思路及算法</p>
-<p>最容易想到的方法是遍历所有节点，每次遍历到一个节点时，判断该节点此前是否被访问过。</p>
-<p>具体地，我们可以使用哈希表来存储所有已经访问过的节点。每次我们到达一个节点，如果该节点已经存在于哈希表中，则说明该链表是环形链表，否则就将该节点加入哈希表中。重复这一过程，直到我们遍历完整个链表即可。</p>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">pulic <span class="class"><span class="keyword">class</span> <span class="title">solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascirle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        Set&lt;ListNOde&gt; seen = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span>( head !=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!seen.add(head))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>#####复杂度分析</p>
-<p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。最坏情况下我们需要遍历每个节点一次。</p>
-<p>空间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。主要为哈希表的开销，最坏情况下我们需要将每个节点插入到哈希表中一次。</p>
-<h4 id="方式二；双指针–快慢指针"><a href="#方式二；双指针–快慢指针" class="headerlink" title="方式二；双指针–快慢指针"></a>方式二；双指针–快慢指针</h4><p>方法需要读者对「Floyd 判圈算法」（又称龟兔赛跑算法）有所了解。</p>
-<p>假想「乌龟」和「兔子」在链表上移动，「兔子」跑得快，「乌龟」跑得慢。当「乌龟」和「兔子」从链表上的同一个节点开始移动时，如果该链表中没有环，那么「兔子」将一直处于「乌龟」的前方；如果该链表中有环，那么「兔子」会先于「乌龟」进入环，并且一直在环内移动。等到「乌龟」进入环时，由于「兔子」的速度快，它一定会在某个时刻与乌龟相遇，即套了「乌龟」若干圈。</p>
-<p>我们可以根据上述思路来解决本题。具体地，我们定义两个指针，一快一满。慢指针每次只移动一步，而快指针每次移动两步。初始时，慢指针在位置 head，而快指针在位置 head.next。这样一来，如果在移动的过程中，快指针反过来追上慢指针，就说明该链表为环形链表。否则快指针将到达链表尾部，该链表不为环形链表。</p>
-<p> 为什么我们要规定初始时慢指针在位置 head，快指针在位置 head.next，而不是两个指针都在位置 head（即与「乌龟」和「兔子」中的叙述相同）？</p>
-<p>观察下面的代码，我们使用的是 while 循环，循环条件先于循环体。由于循环条件一定是判断快慢指针是否重合，如果我们将两个指针初始都置于 head，那么 while 循环就不会执行。因此，我们可以假想一个在 head 之前的虚拟节点，慢指针从虚拟节点移动一步到达 head，快指针从虚拟节点移动两步到达 head.next，这样我们就可以使用 while 循环了。</p>
-<p>当然，我们也可以使用 do-while 循环。此时，我们就可以把快慢指针的初始值都置为 head。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">puclic <span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascycle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head;</span><br><span class="line">        ListNode fast = head.next;</span><br><span class="line">        <span class="keyword">while</span>(slow!=fast)&#123;</span><br><span class="line">            <span class="keyword">if</span>(fast==<span class="keyword">null</span>||fast.next==<span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            fast = fast.next.next</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。</p>
-<p>当链表中不存在环时，快指针将先于慢指针到达链表尾部，链表中每个节点至多被访问两次。</p>
-<p>当链表中存在环时，每一轮移动后，快慢指针的距离将减小一。而初始距离为环的长度，因此至多移动 NN 轮。</p>
-<p>空间复杂度：O(1)O(1)。我们只使用了两个指针的额外空间</p>
-<h2 id="环形列表II"><a href="#环形列表II" class="headerlink" title="环形列表II"></a>环形列表II</h2><h3 id="题目说明-1"><a href="#题目说明-1" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。</p>
-<p>为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意，pos 仅仅是用于标识环的情况，并不会作为参数传递到函数中。</p>
-<p>说明：不允许修改给定的链表。</p>
-<p>进阶：</p>
-<p>你是否可以使用 O(1) 空间解决此题？</p>
-<p> 示例 1：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102706369.png" alt="image-20210114102706369"></p>
-<p>输入：head = [3,2,0,-4], pos = 1<br>输出：返回索引为 1 的链表节点<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102721841.png" alt="image-20210114102721841"></p>
-<p>输入：head = [1,2], pos = 0<br>输出：返回索引为 0 的链表节点<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102737481.png" alt="image-20210114102737481"></p>
-<p>输入：head = [1], pos = -1<br>输出：返回 null<br>解释：链表中没有环。</p>
-<p>提示：</p>
-<p>链表中节点的数目范围在范围 [0, 104] 内<br>-105 &lt;= Node.val &lt;= 105<br>pos 的值为 -1 或者链表中的一个有效索引</p>
-<h3 id="题解-1"><a href="#题解-1" class="headerlink" title="题解"></a>题解</h3><h4 id="方法一：哈希表"><a href="#方法一：哈希表" class="headerlink" title="方法一：哈希表"></a>方法一：哈希表</h4><p>一个非常直观的思路是：我们遍历链表中的每个节点，并将它记录下来；一旦遇到了此前遍历过的节点，就可以判定链表中存在环。借助哈希表可以很方便地实现。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        ListNode pos = head;</span><br><span class="line">        Set&lt;ListNode&gt; visited = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span> (pos != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (visited.contains(pos)) &#123;</span><br><span class="line">                <span class="keyword">return</span> pos;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                visited.add(pos);</span><br><span class="line">            &#125;</span><br><span class="line">            pos = pos.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析-1"><a href="#复杂度分析-1" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们恰好需要访问链表中的每一个节点。</p>
-<p>空间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们需要将链表中的每个节点都保存在哈希表当中。</p>
-<h4 id="方法二：双指针–快慢指针"><a href="#方法二：双指针–快慢指针" class="headerlink" title="方法二：双指针–快慢指针"></a>方法二：双指针–快慢指针</h4><p>我们使用两个指针，\textit{fast}fast 与 \textit{slow}slow。它们起始都位于链表的头部。随后，\textit{slow}slow 指针每次向后移动一个位置，而 \textit{fast}fast 指针向后移动两个位置。如果链表中存在环，则 \textit{fast}fast 指针最终将再次与 \textit{slow}slow 指针在环中相遇。</p>
-<p>如下图所示，设链表中环外部分的长度为 aa。\textit{slow}slow 指针进入环后，又走了 bb 的距离与 \textit{fast}fast 相遇。此时，\textit{fast}fast 指针已经走完了环的 nn 圈，因此它走过的总距离为 a+n(b+c)+b=a+(n+1)b+nca+n(b+c)+b=a+(n+1)b+nc</p>
- <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114103031586.png" alt="image-20210114103031586" style="zoom:50%;">
-
-<p>根据题意，任意时刻，\textit{fast}fast 指针走过的距离都为 \textit{slow}slow 指针的 22 倍。因此，我们有</p>
-<p>a+(n+1)b+nc=2(a+b) \implies a=c+(n-1)(b+c)<br>a+(n+1)b+nc=2(a+b)⟹a=c+(n−1)(b+c)</p>
-<p>有了 a=c+(n-1)(b+c)a=c+(n−1)(b+c) 的等量关系，我们会发现：从相遇点到入环点的距离加上 n-1n−1 圈的环长，恰好等于从链表头部到入环点的距离。</p>
-<p>因此，当发现 \textit{slow}slow 与 \textit{fast}fast 相遇时，我们再额外使用一个指针 \textit{ptr}ptr。起始，它指向链表头部；随后，它和 \textit{slow}slow 每次向后移动一个位置。最终，它们会在入环点相遇。 </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head, fast = head;</span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="keyword">null</span>) &#123;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            <span class="keyword">if</span> (fast.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">                fast = fast.next.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (fast == slow) &#123;</span><br><span class="line">                ListNode ptr = head;</span><br><span class="line">                <span class="keyword">while</span> (ptr != slow) &#123;</span><br><span class="line">                    ptr = ptr.next;</span><br><span class="line">                    slow = slow.next;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> ptr;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>#####复杂度分析</p>
-<p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。在最初判断快慢指针是否相遇时，\textit{slow}slow 指针走过的距离不会超过链表的总长度；随后寻找入环点时，走过的距离也不会超过链表的总长度。因此，总的执行时间为 O(N)+O(N)=O(N)O(N)+O(N)=O(N)。</p>
-<p>空间复杂度：O(1)O(1)。我们只使用了 \textit{slow}, \textit{fast}, \textit{ptr}slow,fast,ptr 三个指针。</p>
-]]></content>
-      <categories>
-        <category>数据结构</category>
-      </categories>
-      <tags>
-        <tag>链表</tag>
-        <tag>双指针</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>初识递归</title>
     <url>/2021/02/03/%E5%88%9D%E8%AF%86%E9%80%92%E5%BD%92/</url>
     <content><![CDATA[<h2 id="二叉搜索树的范围和"><a href="#二叉搜索树的范围和" class="headerlink" title="二叉搜索树的范围和"></a>二叉搜索树的范围和</h2><h3 id="DFS深度优先搜索"><a href="#DFS深度优先搜索" class="headerlink" title="DFS深度优先搜索"></a>DFS深度优先搜索</h3><h4 id="1-递归"><a href="#1-递归" class="headerlink" title="1.递归"></a>1.递归</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * public class TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode left;</span></span><br><span class="line"><span class="comment"> *     TreeNode right;</span></span><br><span class="line"><span class="comment"> *     TreeNode() &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val) &#123; this.val = val; &#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val, TreeNode left, TreeNode right) &#123;</span></span><br><span class="line"><span class="comment"> *         this.val = val;</span></span><br><span class="line"><span class="comment"> *         this.left = left;</span></span><br><span class="line"><span class="comment"> *         this.right = right;</span></span><br><span class="line"><span class="comment"> *     &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> ans;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">rangeSumBST</span><span class="params">(TreeNode root, <span class="keyword">int</span> low, <span class="keyword">int</span> high)</span> </span>&#123;</span><br><span class="line">       ans = <span class="number">0</span> ;</span><br><span class="line">        dfs(root,low,high);</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dfs</span><span class="params">(TreeNode node,<span class="keyword">int</span> L,<span class="keyword">int</span> R)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(node!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(L&lt;=node.val&amp;&amp;node.val&lt;=R)&#123;</span><br><span class="line">                ans+=node.val;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(node.val&gt;L)&#123;</span><br><span class="line">                dfs(node.left,L,R);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(node.val&lt;R)&#123;</span><br><span class="line">                dfs(node.right,L,R);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -2743,6 +2668,81 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <content><![CDATA[]]></content>
   </entry>
   <entry>
+    <title>双指针问题</title>
+    <url>/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h2 id="环形列表I"><a href="#环形列表I" class="headerlink" title="环形列表I"></a>环形列表I</h2><h3 id="题目说明"><a href="#题目说明" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，判断链表中是否有环。</p>
+<p>如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。</p>
+<p>如果链表中存在环，则返回 true 。 否则，返回 false 。</p>
+<p> 进阶：</p>
+<p>你能用 O(1)（即，常量）内存解决此问题吗？</p>
+<p> 示例 1：</p>
+<p> <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100453506.png" alt="image-20210114100453506"></p>
+<p>输入：head = [3,2,0,-4], pos = 1<br>输出：true<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100714252.png" alt="image-20210114100714252"></p>
+<p>输入：head = [1,2], pos = 0<br>输出：true<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
+<img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100749569.png" alt="image-20210114100749569" style="zoom:150%;">
+
+<p>输入：head = [1], pos = -1<br>输出：false<br>解释：链表中没有环。</p>
+<p>提示：</p>
+<p>链表中节点的数目范围是 [0, 104]<br>-105 &lt;= Node.val &lt;= 105<br>pos 为 -1 或者链表中的一个 有效索引 </p>
+<h3 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h3><p>####方法一：哈希表<br>思路及算法</p>
+<p>最容易想到的方法是遍历所有节点，每次遍历到一个节点时，判断该节点此前是否被访问过。</p>
+<p>具体地，我们可以使用哈希表来存储所有已经访问过的节点。每次我们到达一个节点，如果该节点已经存在于哈希表中，则说明该链表是环形链表，否则就将该节点加入哈希表中。重复这一过程，直到我们遍历完整个链表即可。</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">pulic <span class="class"><span class="keyword">class</span> <span class="title">solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascirle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        Set&lt;ListNOde&gt; seen = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span>( head !=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!seen.add(head))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>#####复杂度分析</p>
+<p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。最坏情况下我们需要遍历每个节点一次。</p>
+<p>空间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。主要为哈希表的开销，最坏情况下我们需要将每个节点插入到哈希表中一次。</p>
+<h4 id="方式二；双指针–快慢指针"><a href="#方式二；双指针–快慢指针" class="headerlink" title="方式二；双指针–快慢指针"></a>方式二；双指针–快慢指针</h4><p>方法需要读者对「Floyd 判圈算法」（又称龟兔赛跑算法）有所了解。</p>
+<p>假想「乌龟」和「兔子」在链表上移动，「兔子」跑得快，「乌龟」跑得慢。当「乌龟」和「兔子」从链表上的同一个节点开始移动时，如果该链表中没有环，那么「兔子」将一直处于「乌龟」的前方；如果该链表中有环，那么「兔子」会先于「乌龟」进入环，并且一直在环内移动。等到「乌龟」进入环时，由于「兔子」的速度快，它一定会在某个时刻与乌龟相遇，即套了「乌龟」若干圈。</p>
+<p>我们可以根据上述思路来解决本题。具体地，我们定义两个指针，一快一满。慢指针每次只移动一步，而快指针每次移动两步。初始时，慢指针在位置 head，而快指针在位置 head.next。这样一来，如果在移动的过程中，快指针反过来追上慢指针，就说明该链表为环形链表。否则快指针将到达链表尾部，该链表不为环形链表。</p>
+<p> 为什么我们要规定初始时慢指针在位置 head，快指针在位置 head.next，而不是两个指针都在位置 head（即与「乌龟」和「兔子」中的叙述相同）？</p>
+<p>观察下面的代码，我们使用的是 while 循环，循环条件先于循环体。由于循环条件一定是判断快慢指针是否重合，如果我们将两个指针初始都置于 head，那么 while 循环就不会执行。因此，我们可以假想一个在 head 之前的虚拟节点，慢指针从虚拟节点移动一步到达 head，快指针从虚拟节点移动两步到达 head.next，这样我们就可以使用 while 循环了。</p>
+<p>当然，我们也可以使用 do-while 循环。此时，我们就可以把快慢指针的初始值都置为 head。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">puclic <span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascycle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head;</span><br><span class="line">        ListNode fast = head.next;</span><br><span class="line">        <span class="keyword">while</span>(slow!=fast)&#123;</span><br><span class="line">            <span class="keyword">if</span>(fast==<span class="keyword">null</span>||fast.next==<span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            fast = fast.next.next</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。</p>
+<p>当链表中不存在环时，快指针将先于慢指针到达链表尾部，链表中每个节点至多被访问两次。</p>
+<p>当链表中存在环时，每一轮移动后，快慢指针的距离将减小一。而初始距离为环的长度，因此至多移动 NN 轮。</p>
+<p>空间复杂度：O(1)O(1)。我们只使用了两个指针的额外空间</p>
+<h2 id="环形列表II"><a href="#环形列表II" class="headerlink" title="环形列表II"></a>环形列表II</h2><h3 id="题目说明-1"><a href="#题目说明-1" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。</p>
+<p>为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意，pos 仅仅是用于标识环的情况，并不会作为参数传递到函数中。</p>
+<p>说明：不允许修改给定的链表。</p>
+<p>进阶：</p>
+<p>你是否可以使用 O(1) 空间解决此题？</p>
+<p> 示例 1：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102706369.png" alt="image-20210114102706369"></p>
+<p>输入：head = [3,2,0,-4], pos = 1<br>输出：返回索引为 1 的链表节点<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102721841.png" alt="image-20210114102721841"></p>
+<p>输入：head = [1,2], pos = 0<br>输出：返回索引为 0 的链表节点<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102737481.png" alt="image-20210114102737481"></p>
+<p>输入：head = [1], pos = -1<br>输出：返回 null<br>解释：链表中没有环。</p>
+<p>提示：</p>
+<p>链表中节点的数目范围在范围 [0, 104] 内<br>-105 &lt;= Node.val &lt;= 105<br>pos 的值为 -1 或者链表中的一个有效索引</p>
+<h3 id="题解-1"><a href="#题解-1" class="headerlink" title="题解"></a>题解</h3><h4 id="方法一：哈希表"><a href="#方法一：哈希表" class="headerlink" title="方法一：哈希表"></a>方法一：哈希表</h4><p>一个非常直观的思路是：我们遍历链表中的每个节点，并将它记录下来；一旦遇到了此前遍历过的节点，就可以判定链表中存在环。借助哈希表可以很方便地实现。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        ListNode pos = head;</span><br><span class="line">        Set&lt;ListNode&gt; visited = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span> (pos != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (visited.contains(pos)) &#123;</span><br><span class="line">                <span class="keyword">return</span> pos;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                visited.add(pos);</span><br><span class="line">            &#125;</span><br><span class="line">            pos = pos.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析-1"><a href="#复杂度分析-1" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们恰好需要访问链表中的每一个节点。</p>
+<p>空间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们需要将链表中的每个节点都保存在哈希表当中。</p>
+<h4 id="方法二：双指针–快慢指针"><a href="#方法二：双指针–快慢指针" class="headerlink" title="方法二：双指针–快慢指针"></a>方法二：双指针–快慢指针</h4><p>我们使用两个指针，\textit{fast}fast 与 \textit{slow}slow。它们起始都位于链表的头部。随后，\textit{slow}slow 指针每次向后移动一个位置，而 \textit{fast}fast 指针向后移动两个位置。如果链表中存在环，则 \textit{fast}fast 指针最终将再次与 \textit{slow}slow 指针在环中相遇。</p>
+<p>如下图所示，设链表中环外部分的长度为 aa。\textit{slow}slow 指针进入环后，又走了 bb 的距离与 \textit{fast}fast 相遇。此时，\textit{fast}fast 指针已经走完了环的 nn 圈，因此它走过的总距离为 a+n(b+c)+b=a+(n+1)b+nca+n(b+c)+b=a+(n+1)b+nc</p>
+ <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114103031586.png" alt="image-20210114103031586" style="zoom:50%;">
+
+<p>根据题意，任意时刻，\textit{fast}fast 指针走过的距离都为 \textit{slow}slow 指针的 22 倍。因此，我们有</p>
+<p>a+(n+1)b+nc=2(a+b) \implies a=c+(n-1)(b+c)<br>a+(n+1)b+nc=2(a+b)⟹a=c+(n−1)(b+c)</p>
+<p>有了 a=c+(n-1)(b+c)a=c+(n−1)(b+c) 的等量关系，我们会发现：从相遇点到入环点的距离加上 n-1n−1 圈的环长，恰好等于从链表头部到入环点的距离。</p>
+<p>因此，当发现 \textit{slow}slow 与 \textit{fast}fast 相遇时，我们再额外使用一个指针 \textit{ptr}ptr。起始，它指向链表头部；随后，它和 \textit{slow}slow 每次向后移动一个位置。最终，它们会在入环点相遇。 </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head, fast = head;</span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="keyword">null</span>) &#123;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            <span class="keyword">if</span> (fast.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">                fast = fast.next.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (fast == slow) &#123;</span><br><span class="line">                ListNode ptr = head;</span><br><span class="line">                <span class="keyword">while</span> (ptr != slow) &#123;</span><br><span class="line">                    ptr = ptr.next;</span><br><span class="line">                    slow = slow.next;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> ptr;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>#####复杂度分析</p>
+<p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。在最初判断快慢指针是否相遇时，\textit{slow}slow 指针走过的距离不会超过链表的总长度；随后寻找入环点时，走过的距离也不会超过链表的总长度。因此，总的执行时间为 O(N)+O(N)=O(N)O(N)+O(N)=O(N)。</p>
+<p>空间复杂度：O(1)O(1)。我们只使用了 \textit{slow}, \textit{fast}, \textit{ptr}slow,fast,ptr 三个指针。</p>
+]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>链表</tag>
+        <tag>双指针</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>哈希表easy篇总结</title>
     <url>/2021/03/11/%E5%93%88%E5%B8%8C%E8%A1%A8easy%E7%AF%87%E6%80%BB%E7%BB%93/</url>
     <content><![CDATA[<p>##哈希表刷题总结</p>
@@ -2817,11 +2817,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>哈希表</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>垃圾收集器与内存分配策略</title>
-    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>在Linux环境安装redis</title>
@@ -2995,6 +2990,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <content><![CDATA[]]></content>
   </entry>
   <entry>
+    <title>垃圾收集器与内存分配策略</title>
+    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>字符串刷题总结</title>
     <url>/2021/04/26/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/</url>
     <content><![CDATA[<h2 id="罗马数字转整数"><a href="#罗马数字转整数" class="headerlink" title="罗马数字转整数"></a>罗马数字转整数</h2><h3 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h3><p><img data-src="/2021/04/26/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210426150257067.png" alt="image-20210426150257067"></p>
@@ -3020,51 +3020,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <title>客户端识别与Cookie</title>
     <url>/2021/03/14/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%AF%86%E5%88%AB%E4%B8%8ECookie/</url>
     <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>小程序开发文档</title>
-    <url>/2021/03/31/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/</url>
-    <content><![CDATA[<h2 id="微信小程序开发文档"><a href="#微信小程序开发文档" class="headerlink" title="微信小程序开发文档"></a>微信小程序开发文档</h2><h3 id="项目开发周期"><a href="#项目开发周期" class="headerlink" title="项目开发周期:"></a>项目开发周期:</h3><ul>
-<li><p> 项目提交日期： 5.21~5.30</p>
-</li>
-<li><p> 相当于50天的开发周期  </p>
-</li>
-<li><p> 先写小程序的前端页面，后期再写后台处理相关                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               </p>
-</li>
-</ul>
-<h3 id="项目实现功能："><a href="#项目实现功能：" class="headerlink" title="项目实现功能："></a>项目实现功能：</h3><blockquote>
-<p>表白墙+树洞（一个发布消息界面）</p>
-<pre><code>----消息的发布、收藏、聊天、评论、点赞、图片上传</code></pre>
-<p>二手交易</p>
-<p>​      —-交易物品相关信息的发布收藏、聊天、购买（需要调用微信支付接口）</p>
-<p>教务：</p>
-<p>​     —– 后台教务成绩、课表、一卡通消费使用情况</p>
-<p>辅助教学：</p>
-<p>​     —-班级管理、教学直播</p>
-<p>线上通知：</p>
-<p>​    —– 篮球赛、大创、开会等校内相关事宜的通知发布</p>
-<p>社团集合：</p>
-<p>​    —–综合学校的社团，介绍等</p>
-</blockquote>
-<h3 id="项目功能实现-技术选型-："><a href="#项目功能实现-技术选型-：" class="headerlink" title="项目功能实现(技术选型)："></a>项目功能实现(技术选型)：</h3><blockquote>
-<p>前端</p>
-<p>​    —- 使用mpVue框架，将原生vue通过编译之后转换为小程序格式。</p>
-<p>​    —–UI库：ElementUI+QueasrUI</p>
-<p>后端：</p>
-<p>​    —–借助小程序的云上开发能力，包括其云存储、数据库、函数调用，后期需要根据用户流量情况确定需要使用的云开发等级</p>
-<p>相关API文档（涉及教务）：</p>
-<p>​    —–在写完前端之后，向老师咨询一下</p>
-</blockquote>
-<h4 id="界面UI设计（墨刀）"><a href="#界面UI设计（墨刀）" class="headerlink" title="界面UI设计（墨刀）"></a>界面UI设计（墨刀）</h4><ul>
-<li>原则：简约大气，不失逼格</li>
-</ul>
-]]></content>
-      <categories>
-        <category>项目</category>
-      </categories>
-      <tags>
-        <tag>项目</tag>
-      </tags>
   </entry>
   <entry>
     <title>封装Mybatis输出结果与模糊查询</title>
@@ -3189,84 +3144,181 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
+    <title>小程序开发文档</title>
+    <url>/2021/03/31/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3/</url>
+    <content><![CDATA[<h2 id="微信小程序开发文档"><a href="#微信小程序开发文档" class="headerlink" title="微信小程序开发文档"></a>微信小程序开发文档</h2><h3 id="项目开发周期"><a href="#项目开发周期" class="headerlink" title="项目开发周期:"></a>项目开发周期:</h3><ul>
+<li><p> 项目提交日期： 5.21~5.30</p>
+</li>
+<li><p> 相当于50天的开发周期  </p>
+</li>
+<li><p> 先写小程序的前端页面，后期再写后台处理相关                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               </p>
+</li>
+</ul>
+<h3 id="项目实现功能："><a href="#项目实现功能：" class="headerlink" title="项目实现功能："></a>项目实现功能：</h3><blockquote>
+<p>表白墙+树洞（一个发布消息界面）</p>
+<pre><code>----消息的发布、收藏、聊天、评论、点赞、图片上传</code></pre>
+<p>二手交易</p>
+<p>​      —-交易物品相关信息的发布收藏、聊天、购买（需要调用微信支付接口）</p>
+<p>教务：</p>
+<p>​     —– 后台教务成绩、课表、一卡通消费使用情况</p>
+<p>辅助教学：</p>
+<p>​     —-班级管理、教学直播</p>
+<p>线上通知：</p>
+<p>​    —– 篮球赛、大创、开会等校内相关事宜的通知发布</p>
+<p>社团集合：</p>
+<p>​    —–综合学校的社团，介绍等</p>
+</blockquote>
+<h3 id="项目功能实现-技术选型-："><a href="#项目功能实现-技术选型-：" class="headerlink" title="项目功能实现(技术选型)："></a>项目功能实现(技术选型)：</h3><blockquote>
+<p>前端</p>
+<p>​    —- 使用mpVue框架，将原生vue通过编译之后转换为小程序格式。</p>
+<p>​    —–UI库：ElementUI+QueasrUI</p>
+<p>后端：</p>
+<p>​    —–借助小程序的云上开发能力，包括其云存储、数据库、函数调用，后期需要根据用户流量情况确定需要使用的云开发等级</p>
+<p>相关API文档（涉及教务）：</p>
+<p>​    —–在写完前端之后，向老师咨询一下</p>
+</blockquote>
+<h4 id="界面UI设计（墨刀）"><a href="#界面UI设计（墨刀）" class="headerlink" title="界面UI设计（墨刀）"></a>界面UI设计（墨刀）</h4><ul>
+<li>原则：简约大气，不失逼格</li>
+</ul>
+]]></content>
+      <categories>
+        <category>项目</category>
+      </categories>
+      <tags>
+        <tag>项目</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>机器学习入门</title>
     <url>/2021/06/08/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
+    <title>推荐系统初瞰</title>
+    <url>/2021/10/29/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%88%9D%E7%9E%B0/</url>
+    <content><![CDATA[<h2 id="一、走进推荐系统的世界"><a href="#一、走进推荐系统的世界" class="headerlink" title="一、走进推荐系统的世界"></a>一、走进推荐系统的世界</h2><p>“啤酒与尿布” 的故事相信很多人都听过，年轻爸爸去超市购买尿布时，经常会买点啤酒犒劳自己。因此，沃尔玛将这两种商品进行了捆绑销售，最终获得了更好的销量。</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/tdJ56hy73JzRx6F1Fdac.jpeg" alt="23张图，带你入门推荐系统"></p>
+<p>“啤酒与尿布”的故事</p>
+<p>这个故事背后的理论依据就是 “推荐算法”，因为尿布和啤酒经常出现在同一个购物车中，那么向购买尿布的年轻爸爸推荐啤酒确实有一定道理。</p>
+<h3 id="1-推荐系统到底解决的是什么问题？"><a href="#1-推荐系统到底解决的是什么问题？" class="headerlink" title="1. 推荐系统到底解决的是什么问题？"></a>1. 推荐系统到底解决的是什么问题？</h3><p>推荐系统从20世纪90年代就被提出来了，但是真正进入大众视野以及在各大互联网公司中流行起来，还是最近几年的事情。</p>
+<p>随着移动互联网的发展，越来越多的信息开始在互联网上传播，产生了严重的信息过载。因此，如何从众多信息中找到用户感兴趣的信息，这个便是推荐系统的价值。精准推荐解决了用户痛点，提升了用户体验，最终便能留住用户。</p>
+<p>推荐系统本质上就是一个信息过滤系统，通常分为：召回、排序、重排序这3个环节，每个环节逐层过滤，最终从海量的物料库中筛选出几十个用户可能感兴趣的物品推荐给用户。</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/l3M22Y9Gl96kIA9wSO0P.png" alt="23张图，带你入门推荐系统"></p>
+<p>推荐系统的分阶段过滤流程</p>
+<h3 id="2-推荐系统的应用场景"><a href="#2-推荐系统的应用场景" class="headerlink" title="2. 推荐系统的应用场景"></a>2. 推荐系统的应用场景</h3><p>哪里有海量信息，哪里就有推荐系统，我们每天最常用的APP都涉及到推荐功能：</p>
+<ul>
+<li>资讯类：今日头条、腾讯新闻等</li>
+<li>电商类：淘宝、京东、拼多多、亚马逊等</li>
+<li>娱乐类：抖音、快手、爱奇艺等</li>
+<li>生活服务类：美团、大众点评、携程等</li>
+<li>社交类：微信、陌陌、脉脉等</li>
+</ul>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/DJTxPLhs3b2CkIQ2KjlQ.png" alt="23张图，带你入门推荐系统"></p>
+<p>头条、京东、网易云音乐中的推荐功能</p>
+<p>推荐系统的应用场景通常分为以下两类：</p>
+<ul>
+<li>基于用户维度的推荐：根据用户的历史行为和兴趣进行推荐，比如淘宝首页的猜你喜欢、抖音的首页推荐等。</li>
+<li>基于物品维度的推荐：根据用户当前浏览的标的物进行推荐，比如打开京东APP的商品详情页，会推荐和主商品相关的商品给你。</li>
+</ul>
+<h3 id="3-搜索、推荐、广告三者的异同"><a href="#3-搜索、推荐、广告三者的异同" class="headerlink" title="3. 搜索、推荐、广告三者的异同"></a>3. 搜索、推荐、广告三者的异同</h3><p>搜索和推荐是AI算法最常见的两个应用场景，在技术上有相通的地方。这里提到广告，主要考虑很多没做过广告业务的同学不清楚为什么广告和搜索、推荐会有关系，所以做下解释。</p>
+<ul>
+<li>搜索：有明确的搜索意图，搜索出来的结果和用户的搜索词相关。</li>
+<li>推荐：不具有目的性，依赖用户的历史行为和画像数据进行个性化推荐。</li>
+<li>广告：借助搜索和推荐技术实现广告的精准投放，可以将广告理解成搜索推荐的一种应用场景，技术方案更复杂，涉及到智能预算控制、广告竞价等。</li>
+</ul>
+<h2 id="二、推荐系统的整体架构"><a href="#二、推荐系统的整体架构" class="headerlink" title="二、推荐系统的整体架构"></a>二、推荐系统的整体架构</h2><p><img data-src="http://image.woshipm.com/wp-files/2020/10/PA8qx7X5tW3yPM7jKQ7D.png" alt="23张图，带你入门推荐系统"></p>
+<p>推荐系统的整体架构</p>
+<p>上面是推荐系统的整体架构图，自下而上分成了多层，各层的主要作用如下：</p>
+<ul>
+<li>数据源：推荐算法所依赖的各种数据源，包括物品数据、用户数据、行为日志、其他可利用的业务数据、甚至公司外部的数据；</li>
+<li>计算平台：负责对底层的各种异构数据进行清洗、加工，离线计算和实时计算；</li>
+<li>数据存储层：存储计算平台处理后的数据，根据需要可落地到不同的存储系统中，比如Redis中可以存储用户特征和用户画像数据，ES中可以用来索引物品数据，Faiss中可以存储用户或者物品的embedding向量等；</li>
+<li>召回层：包括各种推荐策略或者算法，比如经典的协同过滤，基于内容的召回，基于向量的召回，用于托底的热门推荐等。为了应对线上高并发的流量，召回结果通常会预计算好，建立好倒排索引后存入缓存中；</li>
+<li>融合过滤层：触发多路召回，由于召回层的每个召回源都会返回一个候选集，因此这一层需要进行融合和过滤；</li>
+<li>排序层：利用机器学习或者深度学习模型，以及更丰富的特征进行重排序，筛选出更小、更精准的推荐集合返回给上层业务。</li>
+</ul>
+<p>从数据存储层到召回层、再到融合过滤层和排序层，候选集逐层减少，但是精准性要求越来越高，因此也带来了计算复杂度的逐层增加，这个便是推荐系统的最大挑战。</p>
+<p>其实对于推荐引擎来说，最核心的部分主要是两块：特征和算法。</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/7BwaFaznNDQVbRJn6i6y.png" alt="23张图，带你入门推荐系统"></p>
+<p>推荐引擎的核心功能和技术方案</p>
+<p>特征计算由于数据量大，通常采用大数据的离线和实时处理技术，像Spark、Flink等。然后将计算结果保存在Redis或者其他存储系统中（比如HBase、MongoDB或者ES），供召回和排序模块使用。</p>
+<p>召回算法的作用是：从海量数据中快速获取一批候选数据，要求是快和尽可能的准。这一层通常有丰富的策略和算法，用来确保多样性，为了更好的推荐效果，某些算法也会做成近实时的。</p>
+<p>排序算法的作用是：对多路召回的候选集进行精细化排序。它会利用物品、用户以及它们之间的交叉特征，然后通过复杂的机器学习或者深度学习模型进行打分排序，这一层的特点是计算复杂但是结果更精准。</p>
+<h2 id="三、图解经典的协同过滤算法"><a href="#三、图解经典的协同过滤算法" class="headerlink" title="三、图解经典的协同过滤算法"></a>三、图解经典的协同过滤算法</h2><p>了解了推荐系统的整体架构和技术方案后，下面带大家深入一下算法细节，这里选择图解的是推荐系统中的明星算法：协同过滤（Collaborative Filtering，CF）。</p>
+<p>对于工程同学来说，可能觉得 AI 算法晦涩难懂，门槛太高，确实很多深度学习算法的确是这样，但是协同过滤却是一个简单同时效果很好的算法，只要你有初中数学的基础就能看懂。</p>
+<h3 id="1-协同过滤是什么？"><a href="#1-协同过滤是什么？" class="headerlink" title="1. 协同过滤是什么？"></a>1. 协同过滤是什么？</h3><p>协同过滤算法的核心就是「找相似」，它基于用户的历史行为（浏览、收藏、评论等），去发现用户对物品的喜好，并对喜好进行度量和打分，最终筛选出推荐集合，它又包括两个分支：</p>
+<p><strong>1）基于用户的协同过滤</strong></p>
+<p>User-CF，核心是找相似的人。</p>
+<p>比如下图中，用户 A 和用户 C 都购买过物品 a 和物品 b，那么可以认为 A 和 C 是相似的，因为他们共同喜欢的物品多。这样，就可以将用户 A 购买过的物品 d 推荐给用户 C。</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/fR4FCKovZM14CyUN5SUp.png" alt="23张图，带你入门推荐系统"></p>
+<p>基于用户的协同过滤示例</p>
+<p><strong>2）基于物品的协同过滤</strong></p>
+<p>Item-CF，核心是找相似的物品。比如下图中，物品 a 和物品 b 同时被用户 A，B，C 购买了，那么物品 a 和 物品 b 被认为是相似的，因为它们的共现次数很高。</p>
+<p>这样，如果用户 D 购买了物品 a，则可以将和物品 a 最相似的物品 b 推荐给用户 D。</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/lTBoS62bdkl7UABH1j69.png" alt="23张图，带你入门推荐系统"></p>
+<p>基于物品的协同过滤示例</p>
+<h3 id="2-如何找相似？"><a href="#2-如何找相似？" class="headerlink" title="2. 如何找相似？"></a>2. 如何找相似？</h3><p>前面讲到，协同过滤的核心就是找相似，User-CF是找用户之间的相似，Item-CF是找物品之间的相似，那到底如何衡量两个用户或者物品之间的相似性呢？</p>
+<p>我们都知道，对于坐标中的两个点，如果它们之间的夹角越小，这两个点越相似，这就是初中学过的余弦距离，它的计算公式如下：</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/cRZVdbR9aBSUd50iDrx1.png" alt="23张图，带你入门推荐系统"></p>
+<p>举个例子，A坐标是（0，3，1），B坐标是（4，3，0），那么这两个点的余弦距离是0.569，余弦距离越接近1，表示它们越相似。</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/GgBtexz9xXrWVVd6l0Uv.png" alt="23张图，带你入门推荐系统"></p>
+<p>除了余弦距离，衡量相似性的方法还有很多种，比如：欧式距离、皮尔逊相关系数、Jaccard 相似系数等等，这里不做展开，只是计算公式上的差异而已。</p>
+<h3 id="3-Item-CF的算法流程"><a href="#3-Item-CF的算法流程" class="headerlink" title="3. Item-CF的算法流程"></a>3. Item-CF的算法流程</h3><p>清楚了相似性的定义后，下面以Item-CF为例，详细说下这个算法到底是如何选出推荐物品的？</p>
+<p>第一步：整理物品的共现矩阵</p>
+<p>假设有 A、B、C、D、E 5个用户，其中用户 A 喜欢物品 a、b、c，用户 B 喜欢物品 a、b等等。</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/GS77wKUXFNn8rP4IqqIF.png" alt="23张图，带你入门推荐系统"></p>
+<p>所谓共现，即：两个物品被同一个用户喜欢了。比如物品 a 和 b，由于他们同时被用户 A、B、C 喜欢，所以 a 和 b 的共现次数是3，采用这种统计方法就可以快速构建出共现矩阵。</p>
+<p>第二步：计算物品的相似度矩阵</p>
+<p>对于 Item-CF 算法来说，一般不采用前面提到的余弦距离来衡量物品的相似度，而是采用下面的公式：</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/ZGWFevvkP2qbNy9mjZUn.png" alt="23张图，带你入门推荐系统"></p>
+<p>其中，N(u) 表示喜欢物品 u 的用户数，N(v) 表示喜欢物品 v 的用户数，两者的交集表示同时喜欢物品 u 和物品 v 的用户数。很显然，如果两个物品同时被很多人喜欢，那么这两个物品越相似。</p>
+<p>基于第1步计算出来的共现矩阵以及每个物品的喜欢人数，便可以构造出物品的相似度矩阵：</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/SEUFaXvTrlIZ4NwMMUHG.png" alt="23张图，带你入门推荐系统"></p>
+<p>第三步：推荐物品</p>
+<p>最后一步，便可以基于相似度矩阵推荐物品了，公式如下：</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/sehIXEYg91OlQ4oGwwBf.png" alt="23张图，带你入门推荐系统"></p>
+<p>其中，Puj 表示用户 u 对物品 j 的感兴趣程度，值越大，越值得被推荐。N(u) 表示用户 u 感兴趣的物品集合，S(j,N) 表示和物品 j 最相似的前 N 个物品，Wij 表示物品 i 和物品 j 的相似度，Rui表示用户 u 对物品 i 的兴趣度。</p>
+<p>上面的公式有点抽象，直接看例子更容易理解，假设我要给用户 E 推荐物品，前面我们已经知道用户 E 喜欢物品 b 和物品 c，喜欢程度假设分别为 0.6 和 0.4。那么，利用上面的公式计算出来的推荐结果如下：</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/cHWgi8xs5QeilawOcyIc.png" alt="23张图，带你入门推荐系统"></p>
+<p>因为物品 b 和物品 c 已经被用户 E 喜欢过了，所以不再重复推荐。最终对比用户 E 对物品 a 和物品 d 的感兴趣程度，因为 0.682 &gt; 0.3，因此选择推荐物品 a。</p>
+<h2 id="四、从0到1搭建一个推荐系统"><a href="#四、从0到1搭建一个推荐系统" class="headerlink" title="四、从0到1搭建一个推荐系统"></a>四、从0到1搭建一个推荐系统</h2><p>有了上面的理论基础后，我们就可以用 Python 快速实现出一个推荐系统。</p>
+<h3 id="1-选择数据集"><a href="#1-选择数据集" class="headerlink" title="1. 选择数据集"></a>1. 选择数据集</h3><p>这里采用的是推荐领域非常经典的 MovieLens 数据集，它是一个关于电影评分的数据集，官网上提供了多个不同大小的版本，下面以 ml-1m 数据集（大约100万条用户评分记录）为例。</p>
+<p>下载解压后，文件夹中包含：ratings.dat、movies.dat、users.dat 3个文件，共6040个用户，3900部电影，1000209条评分记录。各个文件的格式都是一样的，每行表示一条记录，字段之间采用 :: 进行分割。</p>
+<p>以ratings.dat为例，每一行包括4个属性：UserID, MovieID, Rating, Timestamp。通过脚本可以统计出不同评分的人数分布：</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/8cEVSn9SRtllHfsN7XHl.jpeg" alt="23张图，带你入门推荐系统"></p>
+<h3 id="2-读取原始数据"><a href="#2-读取原始数据" class="headerlink" title="2. 读取原始数据"></a>2. 读取原始数据</h3><p>程序主要使用数据集中的 ratings.dat 这个文件，通过解析该文件，抽取出 user_id、movie_id、rating 3个字段，最终构造出算法依赖的数据，并保存在变量 dataset 中，它的格式为：dict[user_id][movie_id] = rate</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/qgkENiWG0sCSUce0DQhX.jpeg" alt="23张图，带你入门推荐系统"></p>
+<h3 id="3-构造物品的相似度矩阵"><a href="#3-构造物品的相似度矩阵" class="headerlink" title="3. 构造物品的相似度矩阵"></a>3. 构造物品的相似度矩阵</h3><p>基于第 2 步的 dataset，可以进一步统计出每部电影的评分次数以及电影的共生矩阵，然后再生成相似度矩阵。</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/8vL2jjyfSgiCb8PTJi8k.png" alt="23张图，带你入门推荐系统"></p>
+<h3 id="4-基于相似度矩阵推荐物品"><a href="#4-基于相似度矩阵推荐物品" class="headerlink" title="4. 基于相似度矩阵推荐物品"></a>4. 基于相似度矩阵推荐物品</h3><p>最后，可以基于相似度矩阵进行推荐了，输入一个用户id，先针对该用户评分过的电影，依次选出 top 10 最相似的电影，然后加权求和后计算出每个候选电影的最终评分，最后再选择得分前 5 的电影进行推荐。</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/g85iBVfEtMFaHFbYtpG2.png" alt="23张图，带你入门推荐系统"></p>
+<h3 id="5-调用推荐系统"><a href="#5-调用推荐系统" class="headerlink" title="5. 调用推荐系统"></a>5. 调用推荐系统</h3><p>下面选择UserId=1 这个用户，看下程序的执行结果。由于推荐程序输出的是 movieId 列表，为了更直观的了解推荐结果，这里转换成电影的标题进行输出。</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/WJcKchOscTClEcmu3p5f.png" alt="23张图，带你入门推荐系统"></p>
+<p>最终推荐的前5个电影为：</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/t4Q0R80zxGFFk2ekQvF1.png" alt="23张图，带你入门推荐系统"></p>
+<h2 id="五、线上推荐系统的挑战"><a href="#五、线上推荐系统的挑战" class="headerlink" title="五、线上推荐系统的挑战"></a>五、线上推荐系统的挑战</h2><p>通过上面的介绍，大家对推荐系统的基本构成应该有了一个初步认识，但是真正运用到线上真实环境时，还会遇到很多算法和工程上的挑战，绝对不是几十行 Python 代码可以搞定的。</p>
+<blockquote>
+<ol>
+<li>上面的示例使用了标准化的数据集，而线上环境的数据是非标准化的，因此涉及到海量数据的收集、清洗和加工，最终构造出模型可使用的数据集。</li>
+<li>复杂且繁琐的特征工程，都说算法模型的上限由数据和特征决定。对于线上环境，需要从业务角度选择出可用的特征，然后对数据进行清洗、标准化、归一化、离散化，并通过实验效果进一步验证特征的有效性。</li>
+<li>算法复杂度如何降低？比如上面介绍的Item-CF算法，时间和空间复杂度都是O(N×N)，而线上环境的数据都是千万甚至上亿级别的，如果不做算法优化，可能几天都跑不出数据，或者内存中根本放不下如此大的矩阵数据。</li>
+<li>实时性如何满足？因为用户的兴趣随着他们最新的行为在实时变化的，如果模型只是基于历史数据进行推荐，可能结果不够精准。因此，如何满足实时性要求，以及对于新加入的物品或者用户该如何推荐，都是要解决的问题。</li>
+<li>算法效果和性能的权衡。从算法角度追求多样性和准确性，从工程角度追求性能，这两者之间必须找到一个平衡点。</li>
+<li>推荐系统的稳定性和效果追踪。需要有一套完善的数据监控和应用监控体系，同时有 ABTest 平台进行灰度实验，进行效果对比。</li>
+</ol>
+</blockquote>
+]]></content>
+      <categories>
+        <category>推荐系统</category>
+      </categories>
+      <tags>
+        <tag>推荐系统入门</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>条件渲染与列表渲染</title>
     <url>/2021/03/14/%E6%9D%A1%E4%BB%B6%E6%B8%B2%E6%9F%93%E4%B8%8E%E5%88%97%E8%A1%A8%E6%B8%B2%E6%9F%93/</url>
     <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>Vue模板语法</title>
-    <url>/2021/03/07/%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95/</url>
-    <content><![CDATA[<h2 id="模板语法"><a href="#模板语法" class="headerlink" title="模板语法"></a>模板语法</h2><p>Vue.js 使用了基于 HTML 的模板语法，允许开发者声明式地将 DOM 绑定至底层 Vue 实例的数据。所有 Vue.js 的模板都是合法的 HTML，所以能被遵循规范的浏览器和 HTML 解析器解析。</p>
-<p>在底层的实现上，Vue 将模板编译成虚拟 DOM 渲染函数。结合响应系统，Vue 能够智能地计算出最少需要重新渲染多少组件，并把 DOM 操作次数减到最少。</p>
-<h3 id="插值"><a href="#插值" class="headerlink" title="插值"></a>插值</h3><h4 id="文本"><a href="#文本" class="headerlink" title="文本"></a>文本</h4><p>数据绑定最常见的形式就是使用“Mustache”语法 (双大括号) 的文本插值：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span>Message:&#123;&#123;msg&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>Mustache 标签将会被替代为对应数据对象上 <code>msg</code> property 的值。无论何时，绑定的数据对象上 <code>msg</code> property 发生了改变，插值处的内容都会更新。</p>
-<p>通过使用 **<a href="https://cn.vuejs.org/v2/api/#v-once">v-once 指令</a>**，你也能执行一次性地插值，当数据改变时，插值处的内容不会更新。但请留心这会影响到该节点上的其它数据绑定：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">v-once</span>&gt;</span>这个节点上的数据将不会改变：&#123;&#123;mag&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-<h4 id="双大括号下的原始HTML文本"><a href="#双大括号下的原始HTML文本" class="headerlink" title="双大括号下的原始HTML文本"></a>双大括号下的原始HTML文本</h4><p>双大括号会将数据解释为普通文本，而非 HTML 代码。为了输出真正的 HTML，你需要使用**`v-html  **</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">p</span>&gt;</span>Using mustaches: &#123;&#123; rawHtml &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>Using v-html directive: <span class="tag">&lt;<span class="name">span</span> <span class="attr">v-html</span>=<span class="string">&quot;rawHtml&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>你不能使用 <code>v-html</code> 来复合局部模板，因为 Vue 不是基于字符串的模板引擎。反之，对于用户界面 (UI)，组件更适合作为可重用和可组合的基本单位。</p>
-<blockquote>
-<p>你的站点上动态渲染的任意 HTML 可能会非常危险，因为它很容易导致 <a href="https://en.wikipedia.org/wiki/Cross-site_scripting">XSS 攻击</a>。请只对可信内容使用 HTML 插值，<strong>绝不要</strong>对用户提供的内容使用插值。</p>
-</blockquote>
-<h2 id="对Attribute进行数据绑定"><a href="#对Attribute进行数据绑定" class="headerlink" title="对Attribute进行数据绑定"></a>对Attribute进行数据绑定</h2><p>Mustache 语法不能作用在 HTML attribute 上，遇到这种情况应该使用 <a href="https://cn.vuejs.org/v2/api/#v-bind"><code>v-bind</code> 指令</a>：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;div v-bind:id&#x3D;&quot;dynamicId&quot;&gt;&lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
-<p>对于布尔 attribute (它们只要存在就意味着值为 <code>true</code>)，<code>v-bind</code> 工作起来略有不同，在这个例子中：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;button v-bind:disabled&#x3D;&quot;isButtonDisabled&quot;&gt;Button&lt;&#x2F;button&gt;</span><br></pre></td></tr></table></figure>
-<p>如果 <code>isButtonDisabled</code> 的值是 <code>null</code>、<code>undefined</code> 或 <code>false</code>，则 <code>disabled</code> attribute 甚至不会被包含在渲染出来的 <code>&lt;button&gt;</code> 元素中。</p>
-<h4 id="使用JavaScript表达式-而不是键值"><a href="#使用JavaScript表达式-而不是键值" class="headerlink" title="使用JavaScript表达式(而不是键值)"></a>使用JavaScript表达式(而不是键值)</h4><p>迄今为止，在我们的模板中，我们一直都只绑定简单的 property 键值。但实际上，对于所有的数据绑定，Vue.js 都提供了完全的 JavaScript 表达式支持。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&#123;&#123; number + <span class="number">1</span> &#125;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&#123; ok ? <span class="string">&#x27;YES&#x27;</span> : <span class="string">&#x27;NO&#x27;</span> &#125;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&#123; message.split(<span class="string">&#x27;&#x27;</span>).reverse().join(<span class="string">&#x27;&#x27;</span>) &#125;&#125;</span><br><span class="line"></span><br><span class="line">&lt;div v-bind:id=<span class="string">&quot;&#x27;list-&#x27; + id&quot;</span>&gt;&lt;/div&gt;</span><br></pre></td></tr></table></figure>
-<p>这些表达式会在所属 Vue 实例的数据作用域下作为 JavaScript 被解析。有个限制就是，每个绑定都只能包含<strong>单个表达式</strong>，所以下面的例子都<strong>不会</strong>生效。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&lt;!-- 这是语句，不是表达式 --&gt;</span><br><span class="line">&#123;&#123; <span class="keyword">var</span> a = <span class="number">1</span> &#125;&#125;      </span><br><span class="line"></span><br><span class="line">&lt;!-- 流控制也不会生效，请使用三元表达式 --&gt;</span><br><span class="line">&#123;&#123; <span class="keyword">if</span> (ok) &#123; <span class="keyword">return</span> message &#125; &#125;&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h3><p>指令 (Directives) 是带有 <code>v-</code> 前缀的特殊 attribute。指令 attribute 的值预期是<strong>单个 JavaScript 表达式</strong> (<code>v-for</code> 是例外情况，稍后我们再讨论)。指令的职责是，当表达式的值改变时，将其产生的连带影响，响应式地作用于 DOM。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;p v-if&#x3D;&quot;seen&quot;&gt;现在你看到我了&lt;&#x2F;p&gt;</span><br></pre></td></tr></table></figure>
-<p>这里，<code>v-if</code> 指令将根据表达式 <code>seen</code> 的值的真假来插入/移除 <code>&lt;p&gt;</code> 元素</p>
-<h3 id="参数"><a href="#参数" class="headerlink" title="[参数]"></a>[参数]</h3><p>一些指令能够接收一个“参数”，在指令名称之后以冒号表示。例如，<code>v-bind</code> 指令可以用于响应式地更新 HTML attribute：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;a v-bind:href&#x3D;&quot;url&quot;&gt;...&lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<p>在这里 <code>href</code> 是参数，告知 <code>v-bind</code> 指令将该元素的 <code>href</code> attribute 与表达式 <code>url</code> 的值绑定。</p>
-<p>另一个例子是 <code>v-on</code> 指令，它用于监听 DOM 事件：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;a v-on:click&#x3D;&quot;doSomething&quot;&gt;...&lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<p>在这里参数是监听的事件名。 </p>
-<h3 id="动态参数"><a href="#动态参数" class="headerlink" title="动态参数"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#%E5%8A%A8%E6%80%81%E5%8F%82%E6%95%B0">动态参数</a></h3><blockquote>
-<p>2.6.0 新增</p>
-</blockquote>
-<p>从 2.6.0 开始，可以用方括号括起来的 JavaScript 表达式作为一个指令的参数：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!--</span><br><span class="line">注意，参数表达式的写法存在一些约束，如之后的“对动态参数表达式的约束”章节所述。</span><br><span class="line">--&gt;</span><br><span class="line">&lt;a v-bind:[attributeName]&#x3D;&quot;url&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<p>这里的 <code>attributeName</code> 会被作为一个 JavaScript 表达式进行动态求值，求得的值将会作为最终的参数来使用。例如，如果你的 Vue 实例有一个 <code>data</code> property <code>attributeName</code>，其值为 <code>&quot;href&quot;</code>，那么这个绑定将等价于 <code>v-bind:href</code>。</p>
-<p>同样地，你可以使用动态参数为一个动态的事件名绑定处理函数：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;a v-on:[eventName]&#x3D;&quot;doSomething&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<p>在这个示例中，当 <code>eventName</code> 的值为 <code>&quot;focus&quot;</code> 时，<code>v-on:[eventName]</code> 将等价于 <code>v-on:focus</code>。</p>
-<h4 id="对动态参数的值的约束"><a href="#对动态参数的值的约束" class="headerlink" title="对动态参数的值的约束"></a>对动态参数的值的约束</h4><p>动态参数预期会求出一个字符串，异常情况下值为 <code>null</code>。这个<strong>特殊的 <code>null</code> 值可以被显性地用于移除绑定</strong>。任何其它非字符串类型的值都将会触发一个警告。</p>
-<h4 id="对动态参数表达式的约束"><a href="#对动态参数表达式的约束" class="headerlink" title="对动态参数表达式的约束"></a>对动态参数表达式的约束</h4><p>动态参数表达式有一些语法约束，因为某些字符，如空格和引号，放在 HTML attribute 名里是无效的。例如：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 这会触发一个编译警告 --&gt;</span><br><span class="line">&lt;a v-bind:[&#39;foo&#39; + bar]&#x3D;&quot;value&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<p>变通的办法是使用没有空格或引号的表达式，或用计算属性替代这种复杂表达式。</p>
-<p>在 DOM 中使用模板时 (直接在一个 HTML 文件里撰写模板)，还需要避免使用大写字符来命名键名，因为浏览器会把 attribute 名全部强制转为小写：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!--</span><br><span class="line">在 DOM 中使用模板时这段代码会被转换为 &#96;v-bind:[someattr]&#96;。</span><br><span class="line">除非在实例中有一个名为“someattr”的 property，否则代码不会工作。</span><br><span class="line">--&gt;</span><br><span class="line">&lt;a v-bind:[someAttr]&#x3D;&quot;value&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="修饰符"><a href="#修饰符" class="headerlink" title="修饰符"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#%E4%BF%AE%E9%A5%B0%E7%AC%A6">修饰符</a></h3><p>修饰符 (modifier) 是以半角句号 <code>.</code> 指明的特殊后缀，用于指出一个指令应该以特殊方式绑定。例如，<code>.prevent</code> 修饰符告诉 <code>v-on</code> 指令对于触发的事件调用 <code>event.preventDefault()</code>：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;form v-on:submit.prevent&#x3D;&quot;onSubmit&quot;&gt;...&lt;&#x2F;form&gt;</span><br></pre></td></tr></table></figure>
-<p>阻止某一事件的默认机制执行，此时组织了submit行为的产生</p>
-<h3 id="缩写"><a href="#缩写" class="headerlink" title="缩写"></a>缩写</h3><p><code>v-</code> 前缀作为一种视觉提示，用来识别模板中 Vue 特定的 attribute。当你在使用 Vue.js 为现有标签添加动态行为 (dynamic behavior) 时，<code>v-</code> 前缀很有帮助，然而，对于一些频繁用到的指令来说，就会感到使用繁琐。同时，在构建由 Vue 管理所有模板的<a href="https://en.wikipedia.org/wiki/Single-page_application">单页面应用程序 (SPA - single page application)</a> 时，<code>v-</code> 前缀也变得没那么重要了。因此，Vue 为 <code>v-bind</code> 和 <code>v-on</code> 这两个最常用的指令，提供了特定简写：</p>
-<h3 id="v-bind-缩写"><a href="#v-bind-缩写" class="headerlink" title="v-bind 缩写"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#v-bind-%E7%BC%A9%E5%86%99"><code>v-bind</code> 缩写</a></h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 完整语法 --&gt;</span><br><span class="line">&lt;a v-bind:href&#x3D;&quot;url&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 缩写 --&gt;</span><br><span class="line">&lt;a :href&#x3D;&quot;url&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 动态参数的缩写 (2.6.0+) --&gt;</span><br><span class="line">&lt;a :[key]&#x3D;&quot;url&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<h3 id="v-on-缩写"><a href="#v-on-缩写" class="headerlink" title="v-on 缩写"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#v-on-%E7%BC%A9%E5%86%99"><code>v-on</code> 缩写</a></h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 完整语法 --&gt;</span><br><span class="line">&lt;a v-on:click&#x3D;&quot;doSomething&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 缩写 --&gt;</span><br><span class="line">&lt;a @click&#x3D;&quot;doSomething&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 动态参数的缩写 (2.6.0+) --&gt;</span><br><span class="line">&lt;a @[event]&#x3D;&quot;doSomething&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
-<p>它们看起来可能与普通的 HTML 略有不同，但 <code>:</code> 与 <code>@</code> 对于 attribute 名来说都是合法字符，在所有支持 Vue 的浏览器都能被正确地解析。</p>
-]]></content>
-      <categories>
-        <category>Vue框架</category>
-      </categories>
-      <tags>
-        <tag>Vue</tag>
-      </tags>
   </entry>
   <entry>
     <title>类文件结构</title>
@@ -3296,469 +3348,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>JAVA</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>系统调用</title>
-    <url>/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/</url>
-    <content><![CDATA[<h2 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h2><h3 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h3><p>系统调用是内核与用户进程进行交互的一组接口，这些接口让应用程序受限制的访问硬件设备，提供了创建新进程并与已有进程进行交互通信的机制，也提供了申请操作系统其他资源的能力。</p>
-<p>系统调用在Linux系统中的地位如下图所示：</p>
-<img data-src="/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/OIP1.jpg" class>
-
-<h3 id="2-与内核通信"><a href="#2-与内核通信" class="headerlink" title="2.与内核通信"></a>2.与内核通信</h3><p>系统调用在用户空间进程和硬件设备之间添加了一个中间层。这样的中间层有如下作用：</p>
-<blockquote>
-<p>1.为用户空间提供了一种硬件的抽象接口。</p>
-</blockquote>
-<blockquote>
-<p>2.系统调用确保了系统的稳定与安全。内核可以作为硬件设备与用户空间之间的中间人，基于权限、用户类型和一些其他的规则对需要进行的访问做出裁决。</p>
-</blockquote>
-<blockquote>
-<p>3.避免用户空间的应用程序对硬件资源随意访问而内核一无所知，这样既无法实现多任务和虚拟内存，也不能确保良好的稳定性和安全性。</p>
-</blockquote>
-<p><strong>Linux中：系统调用是用户空间访问内核的唯一手段—-除了异常和陷入外，它们是内核唯一的合法入口</strong></p>
-<h3 id="3-API、POSIX、C库"><a href="#3-API、POSIX、C库" class="headerlink" title="3.API、POSIX、C库"></a>3.API、POSIX、C库</h3><p>应用程序通过在用户空间实现的应用编程接口（API）而不是直接通过系统调用。</p>
-<blockquote>
-<p>1.API实际上并不需要与内核提供的系统调用一一对应，程序员只跟API打交道。</p>
-<p>2.内核只跟系统调用打交道，库函数以及应用程序如何使用系统调用不是内核所关心的。</p>
-<p>3.API可以实现成一个系统调用，也可以实现多个系统调用，甚至也可以不实现系统调用。</p>
-</blockquote>
-<p>在UNIX中，最流行的应用编程接口是基于POSIX标准的。</p>
-<p>Linux系统调用作为C库的一部分提供。C库实现了Unix系统的主要API，包括标准C库函数和系统调用接口，此外，C库提供了POSIX的绝大部分API。</p>
-<h3 id="4-系统调用-syscall"><a href="#4-系统调用-syscall" class="headerlink" title="4.系统调用(syscall)"></a>4.系统调用(syscall)</h3><p><strong>通过在C库中定义的函数调用来执行</strong></p>
-<p>系统调用在出现错误的时候C库会将错误码写入errno全局变量。通过调用perror()库函数，可以把该变量翻译成用户可以理解的错误字符串。</p>
-<p>为了保证32为操作系统和64位操作系统的兼容，系统调用在用户空间和内核空间有着不同的返回值类型。用户空间为int，内核空间为long。系统调用在内核中前面会加上sys_。例如：返回当前进程PID的系统调用get_pid（）在内核中被定义为sys_getpid()。</p>
-<h4 id="4-1系统调用号"><a href="#4-1系统调用号" class="headerlink" title="4.1系统调用号"></a>4.1系统调用号</h4><p>在Linux中，每个系统调用都会被赋予一个系统调用号（独一无二的）。进程在执行系统调用时，不需要提及系统调用的名称，只需要使用系统调用号即可。</p>
-<p><strong>系统调用号相当重要，一旦分配好就不能再更改，因为会导致之前编译好的应用程序崩溃。</strong>即使这个系统调用被删除，它所占用的系统调用号也不允许被回收利用。</p>
-<p>内核记录了系统调用表中的所有已经注册过的系统调用的列表，存储在sys_call_table中，这个表为每一个有效的</p>
-<p>系统调用指定了唯一的系统调用号。</p>
-<h4 id="4-2系统调用的性能"><a href="#4-2系统调用的性能" class="headerlink" title="4.2系统调用的性能"></a>4.2系统调用的性能</h4><p>Linux系统调用比其他许多的操作系统执行要快。原因如下：</p>
-<blockquote>
-<p>1.Linux很短的上下文切换时间，进出内核都被优化的极为高效。</p>
-<p>2.系统调用处理程序和每个系统调用本身非常简洁。</p>
-</blockquote>
-<h3 id="5-系统调用处理程序"><a href="#5-系统调用处理程序" class="headerlink" title="5.系统调用处理程序"></a>5.系统调用处理程序</h3><p>应用程序通过<strong>软中断</strong>的方式来告诉内核自己期望执行一个系统调用，希望系统当前可以从用户态切换到内核态，这样内核就可以代表应用程序在内核空间中执行系统调用。</p>
-<p><strong>软中断</strong>：通过引起一个异常来促使系统切换到内核态前去执行异常处理程序。此时的异常处理程序其实就是<strong>系统调用处理程序</strong>。</p>
-<p>在X86系统中预定义的软中断是中断号128，通过int $0x80来触发中断。这条指令会触发一个异常导致系统切换到内核态并执行128号异常处理程序（系统调用处理程序）。</p>
-<h4 id="5-1指定恰当的系统调用"><a href="#5-1指定恰当的系统调用" class="headerlink" title="5.1指定恰当的系统调用"></a>5.1指定恰当的系统调用</h4><p>在陷入内核空间时，要将系统调用号传给内核空间。X86系统，系统调用号是通过eax寄存器传递给内核的。system_call()函数通过将给定的系统调用号与NR_syscalls做比较来检查其有效性。大于或者等于NR_syscalls，函数就返回-ENOSYS,否则，执行相应的系统调用。</p>
-<p>系统调用表中的表项是以64位类型存放的，所以内核需要将给定的系统调用号乘4，然后用所得结果在表中查询位置。</p>
-<h4 id="5-2参数传递"><a href="#5-2参数传递" class="headerlink" title="5.2参数传递"></a>5.2参数传递</h4><p>部分系统调用除了系统调用号之外，还需要传入一些外部参数，在发生陷入的时候，一并传给内核，同样是放在寄存器中。<strong>给用户空间的返回值同样是通过寄存器来传递的</strong></p>
-<h3 id="6-系统调用的实现"><a href="#6-系统调用的实现" class="headerlink" title="6.系统调用的实现"></a>6.系统调用的实现</h3><h4 id="6-1实现系统调用"><a href="#6-1实现系统调用" class="headerlink" title="6.1实现系统调用"></a>6.1实现系统调用</h4><p>要求：</p>
-<ul>
-<li>Linux中不提倡采用多用途的系统调用（一个系统调用通过传递不同的参数值来完成选择的工作）</li>
-<li>系统调用的接口应该力求简洁，参数尽量少。提供标志参数以确保向前兼容。</li>
-<li>系统调用的设计越通用越好。</li>
-</ul>
-<h4 id="6-2参数验证"><a href="#6-2参数验证" class="headerlink" title="6.2参数验证"></a>6.2参数验证</h4><p>系统调用必须检查参数是否合法有效。系统调用在内核空间中执行，任由用户将不合法的输入传递给内核，系统大的安全和稳定性将面临考验。进程不能让内核访问那些他没有权限访问的数据。</p>
-<ul>
-<li>与文件IO有关的系统调用需要检查文件描述符是否有效，与进程有关的函数必须检查提供的PID是否有效。</li>
-<li>检查用户提供的指针是否有效<ul>
-<li>指针指向的内存区域只能属于用户空间，进程不能告诉内核去读内核空间中的数据。</li>
-<li>指针指向的内存区域在自己的进程中，不能让内核去读其他进程中的数据。</li>
-<li>进程不能越过内存访问限制（可读、可写、可执行）</li>
-</ul>
-</li>
-<li>检查是否有合法权限</li>
-</ul>
-<p>内核提供了两个方法来完成必须的检查和内核空间与用户空间之间的数据来回拷贝</p>
-<ul>
-<li>写入：copy_to_user()</li>
-<li>读取：copy_from_user()</li>
-</ul>
-<p>这两个方法可能会引起阻塞。当包含用户数据的页被换出到硬盘上而不是在物理内存上的时候，进程会休眠，直到缺页处理程序将该页从硬盘从新换回物理内存。</p>
-<h3 id="7-系统调用上下文"><a href="#7-系统调用上下文" class="headerlink" title="7.系统调用上下文"></a>7.系统调用上下文</h3><p>在进程调用系统调用时，会有进程上下文。既可以被抢占也可以休眠。</p>
-<p>可以休眠说明系统调用可以利用内核提供的绝大部分功能。可以被抢占说明该系统调用时可重入的（新的进程同样可以使用相同的系统调用）。</p>
-<p>系统调用返回时，控制权仍然在system_call()中，它最终会负责切换到内核工作空间，并让用户进程继续执行下去。</p>
-<h4 id="7-1绑定一个系统调用的最后步骤"><a href="#7-1绑定一个系统调用的最后步骤" class="headerlink" title="7.1绑定一个系统调用的最后步骤"></a>7.1绑定一个系统调用的最后步骤</h4><blockquote>
-<p>1.在系统调用表中的最后加入一个表项。从0开始算起，系统调用在表中的位置就是他的系统调用号。</p>
-</blockquote>
-<blockquote>
-<p>2.系统调用必须被编译进内核映像（不能被编译成模块）</p>
-</blockquote>
-<h4 id="7-2从用户空间访问系统调用"><a href="#7-2从用户空间访问系统调用" class="headerlink" title="7.2从用户空间访问系统调用"></a>7.2从用户空间访问系统调用</h4><p>系统调用靠的时C库的支持，用户程序通过包含标准头文件并和C库链接，就可以使用系统调用。</p>
-<p><strong>Linux新系统调用增添频率很低，说明Linux系统是一个相对较为稳定并且功能已经较为完善的操作系统</strong></p>
-]]></content>
-      <categories>
-        <category>Linux系统内核相关</category>
-      </categories>
-      <tags>
-        <tag>Linux系统内核设计</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>红队攻防入门1</title>
-    <url>/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/</url>
-    <content><![CDATA[<h2 id="红队攻防入门1–初识红队"><a href="#红队攻防入门1–初识红队" class="headerlink" title="红队攻防入门1–初识红队"></a>红队攻防入门1–初识红队</h2><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F1.png" class>
-
-<p>###红队概念</p>
-<p><strong>红队（Red Team）即安全团队最大化模拟真实世界里面的入侵事件，采用入侵者的战术、技术、流程，以此来检验蓝队（Blue Team）的威胁检测和应急响应的机制和效率，最终帮助企业真正提高整个安全建设、安全运营、安全管理等能力。</strong></p>
-<p>####1.1红队VS渗透测试</p>
-<p>在企业内部的一般的渗透测试，很多就是点到为止，并不会被授予很多的权限。而红队整体来看，在合法合规的前提下，在充分沟通的前提下，授权范围会更加广泛，真实程度更加贴合实战。</p>
-<img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F2.jpg" class>
-
-<h4 id="1-2红队VS蓝队"><a href="#1-2红队VS蓝队" class="headerlink" title="1.2红队VS蓝队"></a>1.2红队VS蓝队</h4><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F3.jpg" class>
-
-<p>无论是Red Team 还是Blue Team,这些概念都来自真实的战争领域。</p>
-<blockquote>
-<p>作为红队，是以攻击方的方式做安全工作的，常见的技术概念有APT攻击、渗透测试、零日漏洞、武器开发。</p>
-</blockquote>
-<blockquote>
-<p>作为蓝队，则以防御方的方式做安全工作，是安全合规、安全运营、应急响应、态势感知、威胁情报等等。</p>
-</blockquote>
-<p>####1.3 红队常用模型框架</p>
- <img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F4.jpg" class>
-
-
-
-<p>#####1.3.1渗透测试执行标准PTES</p>
-
-
-<p>PTES中文全名【渗透测试执行标准】，他是有2010年由业界网络安全专家共同发起并定义的规范，目标是希望为企业和安全服务商，指定整个渗透测试的标准流程，方便大家工作和沟通。</p>
-<p>PTES 包括 7 个标准步骤，即前期交互、情报收集、威胁建模、漏洞分析、渗透利用、报告输出等，一般的渗透测试工作，基本都绕不开这些步骤，可以看成一个标准的工作流。</p>
-<p><strong>① 前期交互</strong></p>
-<p>前期交互阶段，我们得先拿到客户的授权，并且了解授权范围多少？渗透目标是谁？期望目标是什么？</p>
-<p>这些都是前期交互阶段要沟通好的。</p>
-<p><strong>② 情报搜集</strong></p>
-<p>情报搜集阶段，即根据上面的授权、范围、目标等信息，开始进行一些情报搜集工作。</p>
-<p>无论是主动搜集还是被动搜集，我们得知道对方开了哪个端口、提供了什么服务、这些服务的软件版本是什么、这些软件是否曾经出现过漏洞？</p>
-<p><strong>③ 威胁建模</strong></p>
-<p>哪些信息是真正有价值的？哪个口子用什么攻击方法？哪条攻击路径是最大可能的？</p>
-<p>根据情报搜集的汇总，我们得制定出接下来的「作战计划」。</p>
-<p>这些就是在威胁建模阶段要分析出来的。</p>
-<p><strong>④ 漏洞分析</strong></p>
-<p>结合以上情报搜集和威胁建模阶段，此阶段我们要判断出哪些漏洞是最有可能拿到对方权限，打通攻击路径的。</p>
-<p>哪些漏洞的攻击效果最佳？</p>
-<p>哪些漏洞有最新的工具？</p>
-<p>哪些漏洞需要自研渗透代码？</p>
-<p><strong>⑤ 渗透利用</strong></p>
-<p>前面 4 个阶段都不算真正 Hack 进目标系统，而这个阶段则是真正对目标进行渗透攻击，通过漏洞对应的利用工具等，获取目标控制权。</p>
-<p><strong>⑥ 后渗透</strong></p>
-<p>在拿到控制权限之后，为了避免对方发现，还需要进行后渗透，实现更持久地控制，更深层次地执行任务。</p>
-<p>比如进程迁移、隧道建立、数据获取、擦除痕迹等。</p>
-<p><strong>⑦ 报告输出</strong></p>
-<p>最后阶段就是输出一份安全报告，即写明渗透测试工作中，企业 IT 基础系统所存在的漏洞和风险点。</p>
-<p>以上便是 PTES 渗透测试执行标准。</p>
-<h5 id="1-3-2网络杀伤链Cyber-Kill-Chain"><a href="#1-3-2网络杀伤链Cyber-Kill-Chain" class="headerlink" title="1.3.2网络杀伤链Cyber Kill Chain"></a>1.3.2网络杀伤链Cyber Kill Chain</h5><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F6.jpg" class>
-
-<p>网络杀伤链的英文全名是 Cyber Kill Chain，这是 2011 年洛克希德马丁公司提出的网络攻击模型。</p>
-<p>跟真实世界的入侵者，对一个目标系统进行攻击的每个阶段都是一一映射的。</p>
-<p>这里也分为 7 个步骤 =&gt;</p>
-<p><strong>第 1 步，目标侦察，</strong>跟前面 PTES 情报收集阶段是差不多的；</p>
-<p><strong>第 2 步，武器研制，</strong>编写各种工具/后门/病毒 Exp / Weapon / Malware；</p>
-<p><strong>第 3 步，载荷投递，</strong>通过水坑鱼叉等攻击方式将武器散播出去（<strong>投毒</strong>）；</p>
-<p><strong>第 4 步，渗透利用，</strong>通过<strong>漏洞利用</strong>获取对方控制器；</p>
-<p><strong>第 5 步，安装执行</strong>，在目标系统将<strong>后门木马</strong>跑起来；</p>
-<p><strong>第 6 步，命令控制，</strong>对目标来进行<strong>持久化控制</strong>；</p>
-<p><strong>第 7 步，任务执行，</strong>即开始执行<strong>窃取数据、破坏系统</strong>等。</p>
-<p>以上便是网络杀伤链，相比 PTES 更加贴合实战阶段。</p>
-<h5 id="1-3-3MITRE-ATT-amp-CK框架"><a href="#1-3-3MITRE-ATT-amp-CK框架" class="headerlink" title="1.3.3MITRE ATT&amp;CK框架"></a>1.3.3MITRE ATT&amp;CK框架</h5><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F7.jpg" class>
-
-<p>「<strong>ATT&amp;CK 框架</strong>」，由 MITRE 公司于 2013 年提出来的一个通用知识框架，中文名叫做「<strong>对抗战术、技术、常识</strong> 」 。</p>
-<p>ATT&amp;CK 框架是基于真实网络空间攻防案例及数据，采用军事战争中的 <strong>TTPs （Tactics, Techniques &amp; Procedures）</strong>方法论，重新编排的网络安全知识体系，目的是建立一套网络安全的通用语言。</p>
-<p>举例，大家经常听到的什么 APT 攻击、威胁情报、态势感知等等，无论个人还是企业，理解上不尽相同，总会有一些偏差的。</p>
-<p>有了 ATT&amp;CK 框架，大家不会存在太大的偏差，红队具体怎么去攻击的，蓝队具体到怎么去防御的，使用 ATT&amp;CK 矩阵可以将每个细节标记出来，攻击路线和防御过程都可以图形展现出来，攻防双方就有了一套通用语言了。</p>
-<p>网络安全行业的组织、机构、厂家，每年都会造各种 ”新词“，但 MITRE 这个组织推的这套框架，兼具实战和学术价值，具备广泛的应用场景，对安全行业的发展推动是实实在在的。</p>
-<p>我认为，在未来 5 年也好 10 年也好 ，它可能会成为一个事实上的标准。</p>
-<p>这里看一下左上角图片，它整体有三个部分，一个是 PRE ATT&amp;CK，一个是 ATT&amp;CK for Enterprise，一个是 ATT&amp;CK for Mobile，我们学习和研究时，核心放在 ATT&amp;CK forEnterprise 即可。</p>
-<p>大家可以看到，其实左边这里面，也有侦查、武器化、载荷传递、利用、控制、执行、维持等等阶段，是不是跟前面介绍的网络杀伤链是一样的呢？</p>
-<p>是的，你可以这么简单理解，其实 ATT&amp;CK 这个框架，刚开始就是在杀伤链的基础上，提供了更加具体的、更细颗粒度的战术、技术、文档、工具、描述等等。</p>
-<p>因此，如果要深入学习红队，平常可以多逛逛去 ATT&amp;CK 框架官网。</p>
-<img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F8.jpg" class>
-
-<p>接下来，我们来重点看一下 ATT&amp;CK for Enterprise。</p>
-<p>这张图里面，横轴代表是战术（Tactics），最新版本里横轴包括的战术有 12 个（原来是 10 个），纵轴代表的是技术（Techniques）有 156 个技术 272 个子技术。</p>
-<p>前面我们提到了，它是基于 TTPs 方法来描述的，所以非常标准和通用。</p>
-<p>在实际的红蓝对抗、威胁情报分析、安全差距评估等工作场景中，都可以用得上。</p>
-<p>另外补充一点，这 12 个战术从左到右，也是按照网络杀伤链的路径来编排的，包括初始访问、执行、持久化、权限提升、防御绕过、凭证访问、发现、横向移动、收集、命令控制、数据获取、影响。</p>
-<p>每一个战术下面包括很多技术，每个技术有详细的过程，包括独立的编号、描述、工具等。</p>
-]]></content>
-      <categories>
-        <category>网络安全</category>
-      </categories>
-      <tags>
-        <tag>红队攻防</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>组件进阶篇--深入了解组件</title>
-    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E8%BF%9B%E9%98%B6%E7%AF%87-%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E7%BB%84%E4%BB%B6/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>组件基础</title>
-    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E5%9F%BA%E7%A1%80/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>红队常用行话总结一</title>
-    <url>/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/</url>
-    <content><![CDATA[<h2 id="漏洞利用术语解读"><a href="#漏洞利用术语解读" class="headerlink" title="漏洞利用术语解读"></a>漏洞利用术语解读</h2><blockquote>
-<p>Vulnerability:即漏洞，</p>
-</blockquote>
-<p>是指计算机软件、硬件、系统、应用、协议等方面的缺陷，使得其保密性、完整性、可用性、访问控制等方面面临威胁。</p>
-<ul>
-<li><p>基于技术分类，有命令执行、权限绕过、缓存区溢出、注入、解析、弱口令、信息泄露等漏洞</p>
-</li>
-<li><p>基于时间分类，有0day、1day、Nday等漏洞</p>
- <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/01.png" class>
-
-<img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/02.png" class>
-
-</li>
-</ul>
-<blockquote>
-<p>Poc (Proof of Content)概念验证</p>
-</blockquote>
-<p>泛指对某些想法的一个较短而不完整的实现；在网络安全领域，通常指的是一段漏洞验证程序或者说是攻击样例，仅能验证漏洞存在，但并不能对漏洞造成实质性利用。在[计算机安全]术语中，<strong>概念验证</strong>经常被用来作为<a href="https://zh.wikipedia.org/wiki/0day">0day</a>、<a href="https://zh.wikipedia.org/wiki/Exploit">exploit</a>的别名。（通常指并没有充分利用这个漏洞的exploit）</p>
- <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/03.png" class>
-
-<blockquote>
-<p>Exploit 漏洞利用</p>
-</blockquote>
-  <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/04.png" class>
-
-
-
-<p>代表一段有漏洞价值的攻击代码或者漏洞利用过程，目的是获取未经授权的访问或者执行意外操作。常见的漏洞利用手段包括SQL注入、缓存区溢出、远程代码执行等。</p>
- <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/05.png" class>
-
- <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/06.png" class>
-
-
-
-<blockquote>
-<p>Payload 攻击载荷</p>
-</blockquote>
-<p>通常是指Exploit在拿下目标之后，攻击者在目标机器上执行的定制代码或者程序，包括但不限于系统命令、会话建立、Shellcode等。</p>
-  <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/07.png" class>
-
-
-
-<blockquote>
-<p>Shellcode</p>
-</blockquote>
-<ul>
-<li><p>shell：泛指系统控制权或者操作界面（CLI/GUI），通常在Exploit漏洞利用之后，首先要做的就是拿shell，以此进行进一步操作。</p>
-</li>
-<li><p>shellcode：用于获取控制权或者操作界面的攻击载荷代码，通常采用二进制机器代码，shellcode也是payload的一种类型</p>
-</li>
-<li><p>正反shell：shell需要绑定至指定IP地址后端口号上面，这个动作就是bindshell；有攻击方主动连接至受害者，则为正向shell；反之，由受害者主动连接至攻击方，则为反向shell。</p>
- <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/08.png" class>
-
-</li>
-</ul>
-<p>shellcode常常使用机器语言编写。 可在暂存器eip溢出后，塞入一段可让CPU执行的shellcode机械码，让电脑可以执行攻击者的任意指令。</p>
-<ul>
-<li>本地shellcode：本地运行的shellcode经常用于利用软件<a href="https://zh.wikipedia.org/wiki/%E6%BC%8F%E6%B4%9E">漏洞</a>提升权限。比如在Linux下由普通权限提升至<a href="https://zh.wikipedia.org/wiki/Root%E6%9D%83%E9%99%90">root权限</a>。</li>
-<li>远程shellcode：借由抓软件漏洞获得特定的shellcode，再经由C或Python撰写远端攻击程式，进而取得对方电脑之root权限。</li>
-</ul>
-<h2 id="恶意程序术语解读"><a href="#恶意程序术语解读" class="headerlink" title="恶意程序术语解读"></a>恶意程序术语解读</h2><blockquote>
-<p>Malware(Malicious Software) </p>
-</blockquote>
-<p>即恶意程序或软件，泛指病毒、蠕虫、木马、勒索软件、间谍软件，用于对目标系统进行入侵、控制、窃取、破坏等。</p>
-  <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/09.png" class>
-
-<blockquote>
-<p>Worm</p>
-</blockquote>
-<p>Worm即蠕虫病毒，能够独立于其他文件或者程序运行，能够给予网络进行自我复制或者传播，能实现从点到面的超大规模的破坏行为（例如占用CPU或带宽资源、修改删除文件）。</p>
-<p>计算机病毒不同的是，计算机蠕虫不需要附在别的程序内，可能不用用户介入操作也能自我复制或运行。计算机蠕虫未必会直接破坏被感染的系统，却几乎都对网络有害。计算机蠕虫可能会执行垃圾代码以发动分布式拒绝服务攻击，令计算机的执行效率极大程度降低，从而影响计算机的正常使用；可能会损毁或修改目标计算机的文件；亦可能只是浪费<a href="https://zh.wikipedia.org/wiki/%E9%A0%BB%E5%AF%AC">带宽</a>。（恶意的）计算机蠕虫可根据其目的分成2类：</p>
-<ul>
-<li>一种是面对大规模计算机使用网络发动拒绝服务的计算机蠕虫，虽说会绑架计算机，但用户可能还可以正常使用，只是会被占用一部分运算、连网能力。</li>
-<li>另一种是针对个人用户的以执行大量垃圾代码的计算机蠕虫。计算机蠕虫多不具有跨平台性，但是在其他平台下，可能会出现其平台特有的非跨平台性的平台版本。</li>
-</ul>
-<p>计算机蠕虫的传播过程：蠕虫程序常驻于一台或多台机器中，通常它会扫描其他机器是否有感染同种计算机蠕虫，如果没有，就会通过其内置的传播手段进行感染，以达到使计算机瘫痪的目的。其通常会以宿主机器作为扫描源。通常采用：<a href="https://zh.wikipedia.org/wiki/%E5%9E%83%E5%9C%BE%E9%82%AE%E4%BB%B6">垃圾邮件</a>、漏洞传播这2种方法来传播</p>
-<p>例子：2006年的熊猫烧香，通过网站投毒、局域网共享等方式植入系统并进行传播，Windows用户中毒后，后缀名为.exe的文件无法执行，文件图标会变成熊猫烧香的图案。</p>
-  <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/10.png" class>
-
-
-
-
-
-<blockquote>
-<p>Virus病毒</p>
-</blockquote>
-<p>通常依附于其他文件或者程序上，不进行自我复制获知或者传播，当受害者运行其它程序时则病毒启动，对目标系统造成破坏（例如修改删除文件）。</p>
-<p>例子：1998年的<strong>CIH病毒</strong>，能够破坏BIOS和硬盘，是电脑可以完全瘫痪，被公认为有史以来最为危险、破坏力最强的病毒之一。</p>
- <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/11.png" class>
-
-<p>! <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/12.png" class></p>
-<p>由于<a href="https://zh.wikipedia.org/wiki/%E4%B8%96%E7%95%8C">世界</a><a href="https://zh.wikipedia.org/wiki/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F">操作系统</a>[桌面环境]90%的市场都是使用<a href="https://zh.wikipedia.org/wiki/%E5%BE%AE%E8%BD%AF">微软</a>[Windows] 系列产品 ， 所以病毒作者纷纷把病毒攻击对象选为Windows。制作病毒者首先应该确定要攻击的操作系统版本有何<a href="https://zh.wikipedia.org/wiki/%E6%BC%8F%E6%B4%9E">漏洞</a>，这才是他所写的病毒能够利用的关键。Windows当时并没有有效的安全与防御功能，且用户常以管理员权限运行未经安全检查的软件，这也为Windows下病毒的泛滥提供了温床。<a href="https://zh.wikipedia.org/wiki/Linux">Linux</a>、<a href="https://zh.wikipedia.org/wiki/Mac_OS">Mac OS</a>等<a href="https://zh.wikipedia.org/wiki/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F">操作系统</a>，因使用的人群比较少，病毒一般不容易扩散。大多病毒发布作者的目的有多种，包括恶作剧、想搞破坏、报复及想出名与对研究病毒有特殊嗜好。 病毒主要通过<a href="https://zh.wikipedia.org/wiki/%E7%B6%B2%E8%B7%AF">网路</a>浏览以及<a href="https://zh.wikipedia.org/wiki/%E4%B8%8B%E8%BD%BD">下载</a>，<a href="https://zh.wikipedia.org/wiki/%E9%9B%BB%E5%AD%90%E9%83%B5%E4%BB%B6">电子邮件</a>以及可移动<a href="https://zh.wikipedia.org/wiki/%E7%A3%81%E7%A2%9F">磁盘</a>等途径迅速传播。[<a href="https://zh.wikipedia.org/wiki/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%97%85%E6%AF%92#cite_note-mc-4">4</a></p>
-<p>Trojan Horse(特洛伊木马)</p>
-<p>通常潜伏于“合法”软件中运行（也可以独立运行），不复制传播且高度隐蔽。木马运行时可以创建“后门”或者“隧道”，攻击者通过后门实现对目标系统的远程控制、监听、破坏行为。RAT（Remote Access Trojan）远控木马属于木马的一种，例如灰鸽子、冰河、Gh0st、ZXShell。</p>
- <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/13.png" class>
-
-
-
-
-
-<blockquote>
-<p>Ransomware(勒索软件)</p>
-</blockquote>
-<p>能够独立于其他文件运行，能够基于网络进行自我复制或者传播，通过对目标系统进行加密劫持，实现对受害者的钱财勒索。在所有的恶意程序类别中，勒索软件时面向个人和机构的最直接、最有效、最野蛮的“敛财方式”。</p>
- <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/14.png" class>
-
-<blockquote>
-<p>Spyware(间谍软件)</p>
-</blockquote>
-<p>流氓软件或者恶意软件，指未经用户许可搜集用户个人信息的恶意程序。通过搜集网站的浏览记录、键盘记录、账号密码等隐私信息，再以网站劫持、网址导航、弹框广告等方式变现盈利。</p>
-  <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/15.png" class>
-
-
-
-<blockquote>
-<p>Rootkits</p>
-</blockquote>
-<p>可看作升级型的木马病毒，泛指可以获取到<strong>root</strong>权限的恶意程序，以管理员权限运行、修改系统核心文件、绕过杀毒软件，包括系统内核rootkit、硬件固件rootkit、内存rootkit等类型。相比木马，Rootkits通常具备更高权限、更加隐蔽、更难查杀、更大危害等特征。、</p>
-]]></content>
-      <categories>
-        <category>网络安全</category>
-      </categories>
-      <tags>
-        <tag>红队攻防</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>编程范式</title>
-    <url>/2021/03/02/%E7%BC%96%E7%A8%8B%E8%8C%83%E5%BC%8F/</url>
-    <content><![CDATA[<p>相信绝大部分开发人员、DBA都听过范式这个词，在MySQL中有第一范式、第二范式、第三范式、BCNF范式等，在开发中也有相应的范式，专业词汇叫编程范式(ProgrammingParadigm)。由于笔者能力、精力都有限，本篇主要通过针对同一业务场景，基于编程范式的概念，核心原理以及用例实现来对比不同范式及其实现业务功能的差异。</p>
-<p>范式分类</p>
-<p>如图1所示，范式可以简单分为三类:</p>
-<p>图1: 范式的简单分类</p>
- <img data-src="/2021/03/02/%E7%BC%96%E7%A8%8B%E8%8C%83%E5%BC%8F/01.jpg" class>
-
-<p>范式和语言的关系</p>
-<p>图2: 范式和语言的关系</p>
- <img data-src="/2021/03/02/%E7%BC%96%E7%A8%8B%E8%8C%83%E5%BC%8F/02.jpg" class>
-
-<p>与成百种编程语言相比，编程范式要少得多，如图2所示，共有27种范式。多数范式之间仅相差一个或几个概念，比如图中的函数编程范式，在加入了状态（state）之后就变成了面向对象编程范式。</p>
-<p>| 编程范式</p>
-<p>图3: 华山派剑气之争</p>
- <img data-src="/2021/03/02/%E7%BC%96%E7%A8%8B%E8%8C%83%E5%BC%8F/03.jpg" class>
-
-<blockquote>
-<p>过程式编程的核心在于模块化，在实现过程中使用了状态，依赖了外部变量，导致很容易影响附近的代码，可读性较少，后期的维护成本也较高。</p>
-</blockquote>
-<blockquote>
-<p>函数式编程的核心在于“避免副作用”，不改变也不依赖当前函数外的数据。结合不可变数据、函数是第一等公民等特性，使函数带有自描述性，可读性较高。</p>
-</blockquote>
-<blockquote>
-<p>面向对象编程的核心在于抽象，提供清晰的对象边界。结合封装、集成、多态特性，降低了代码的耦合度，提升了系统的可维护性。</p>
-</blockquote>
-<p>不同的范式的出现，目的就是为了应对不同的场景，但最终的目标都是提高生产力。就如华山派的剑宗、气宗之别，剑宗认为“剑为主，气为辅”，而气宗则反之。每个范式都会有自己的”心法”，但最终殊途同归，达到至高境界后则是剑气双修。</p>
-<p>| 小结</p>
-<p>阅读完之前内容后，相信各位读者对编程范式有了初步的理解，那么接下来就和笔者一起来实现业务的真实需求。</p>
-<p>| 需求</p>
-<pre><code> 1.解析并收集shannon, fio 两种 flash卡的温度、寿命等信息。
-
- 2.对实现代码进行单元测试</code></pre>
-<p>在用过程式实现之前，笔者先给大家介绍下什么叫过程式编程。</p>
-<p>| 过程式编程(Procedural)</p>
-<p>过程式编程和面向对象编程的区别并不在于是否使用函数或者类，也就是说用到类或对象的可能是过程式编程，只用函数而没有类的也可能是面向对象编程。那么他们的区别又在哪儿呢？</p>
-<p>面向过程其实是最为实际的一种思考方式，可以说面向过程是一种基础的方法，它考虑的是实际地实现。一般的面向过程是从上往下步步求精，所以面向过程最重要的是模块化的思想方法。当程序规模不是很大时，面向过程的方法还会体现出一种优势。因为程序的流程很清楚，按着模块与函数的方法可以很好的组织。</p>
-<p>关键部分实现代码</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_shannon_info</span>(<span class="params">output</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;获取shannon类型flash卡信息</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">check_health</span>():</span></span><br><span class="line">        time_left = <span class="built_in">float</span>(sub_info[<span class="string">&quot;life_left&quot;</span>])</span><br><span class="line">        <span class="keyword">if</span> time_left &lt; DISK_ALARM_LIFETIME:</span><br><span class="line">            message = <span class="string">&quot;time left is less than &#123;&#125;%&quot;</span>.<span class="built_in">format</span>(DISK_ALARM_LIFETIME)</span><br><span class="line">            <span class="keyword">return</span> message</span><br><span class="line">        temperature = <span class="built_in">float</span>(sub_info[<span class="string">&quot;temperature&quot;</span>].split()[<span class="number">0</span>])</span><br><span class="line">        <span class="keyword">if</span> temperature &gt; DISK_ALARM_TEMPERATURE:</span><br><span class="line">            message = <span class="string">&quot;temperature is over than &#123;&#125; C&quot;</span>.<span class="built_in">format</span>(DISK_ALARM_TEMPERATURE)</span><br><span class="line">            <span class="keyword">return</span> message</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;healthy&quot;</span></span><br><span class="line"> </span><br><span class="line">    result = &#123;&#125;</span><br><span class="line">    all_info = _get_shannon_info(output)</span><br><span class="line">    <span class="keyword">for</span> info <span class="keyword">in</span> all_info:</span><br><span class="line">        sub_info = &#123;&#125;</span><br><span class="line">        sub_info[<span class="string">&quot;available_capacity&quot;</span>] = info.get(<span class="string">&quot;disk_capacity&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">        sub_info[<span class="string">&quot;device_name&quot;</span>] = info.get(<span class="string">&quot;block_device_node&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">        sub_info[<span class="string">&quot;firmware_version&quot;</span>] = info.get(<span class="string">&quot;firmware_version&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">        sub_info[<span class="string">&quot;interface&quot;</span>] = <span class="string">&quot;PCIe&quot;</span></span><br><span class="line">        sub_info[<span class="string">&quot;life_left&quot;</span>] = <span class="built_in">str</span>(info.get(<span class="string">&quot;estimated_life_left&quot;</span>, <span class="string">&quot;&quot;</span>).replace(<span class="string">&quot;%&quot;</span>, <span class="string">&quot;&quot;</span>))</span><br><span class="line">        sub_info[<span class="string">&quot;pcie_id&quot;</span>] = info.get(<span class="string">&quot;pci_deviceid&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">        sub_info[<span class="string">&quot;pcie_length&quot;</span>] = <span class="string">&quot;&quot;</span></span><br><span class="line">        sub_info[<span class="string">&quot;pcie_type&quot;</span>] = <span class="string">&quot;&quot;</span></span><br><span class="line">        sub_info[<span class="string">&quot;physical_read&quot;</span>] = info.get(<span class="string">&quot;host_read_data&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">        sub_info[<span class="string">&quot;physical_write&quot;</span>] = info.get(<span class="string">&quot;total_write_data&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">        sub_info[<span class="string">&quot;serial_number&quot;</span>] = info.get(<span class="string">&quot;serial_number&quot;</span>)</span><br><span class="line">        sub_info[<span class="string">&quot;temperature&quot;</span>] = info.get(<span class="string">&quot;controller_temperature&quot;</span>)</span><br><span class="line">        sub_info[<span class="string">&quot;type&quot;</span>] = info[<span class="string">&quot;type&quot;</span>]</span><br><span class="line">        sub_info[<span class="string">&quot;error_msg&quot;</span>] = check_health()</span><br><span class="line">        sub_info[<span class="string">&quot;status&quot;</span>] = <span class="string">&quot;ok&quot;</span> <span class="keyword">if</span> sub_info[<span class="string">&quot;error_msg&quot;</span>] == <span class="string">&quot;healthy&quot;</span> <span class="keyword">else</span> <span class="string">&quot;error&quot;</span></span><br><span class="line">        <span class="keyword">if</span> sub_info[<span class="string">&quot;serial_number&quot;</span>]:</span><br><span class="line">            result[sub_info[<span class="string">&quot;serial_number&quot;</span>]] = sub_info</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            result[sub_info[<span class="string">&quot;device_name&quot;</span>]] = sub_info</span><br><span class="line">    <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
-<p>代码问题</p>
-<pre><code>1.逻辑冗长，局部修改必须阅读整段代码
-
-2.对外部变量有依赖
-
-3.内部存在共享变量
-
-4.函数内部存在临时变量</code></pre>
-<p>测试代码</p>
-<p>过程式的测试代码效果远不如函数式有效，过程式的实现逻辑过于冗长，导致测试效果并不够好。</p>
-<p>| 函数式编程(Functional)</p>
-<p>当谈论函数式编程，会提到非常多的“函数式”特性。提到不可变数据，第一类对象以及尾调用优化，这些是帮助函数式编程的语言特征。提到mapping（映射），reducing（归纳），piplining（管道），recursing（递归），currying（科里化），以及高阶函数的使用，这些是用来写函数式代码的编程技术。提到并行，惰性计算以及确定性，这些是有利于函数式编程的属性。</p>
-<p>最主要的原则是避免副作用，它不会依赖也不会改变当前函数以外的数据。</p>
-<p>声明式的函数，让开发者只需要表达 “想要做什么”，而不需要表达 “怎么去做”，这样就极大地简化了开发者的工作。至于具体 “怎么去做”，让专门的任务协调框架去实现，这个框架可以灵活地分配工作给不同的核、不同的计算机，而开发者不必关心框架背后发生了什么。</p>
-<p>关键部分实现代码</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_shannon_info</span>(<span class="params">output</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;查询shannon类型flash卡信息</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    lines = checks_string_split_by_function(output, is_shannon_flash_device)</span><br><span class="line">    info = <span class="built_in">map</span>(parser_shannon_info, lines)</span><br><span class="line"> </span><br><span class="line">    <span class="comment"># map(lambda x: x.setdefault(&quot;type&quot;, &quot;shannon&quot;), info)</span></span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> info:</span><br><span class="line">        item[<span class="string">&quot;type&quot;</span>] = <span class="string">&quot;shannon&quot;</span></span><br><span class="line"> </span><br><span class="line">    data = <span class="built_in">map</span>(modify_the_properties, info)</span><br><span class="line">    <span class="keyword">return</span> reduce(combining_data, <span class="built_in">map</span>(convert_data_format, data))</span><br></pre></td></tr></table></figure>
-<p>以上代码带有自描述性，通过函数名就可知在做什么，这也是函数式的一个特性: 代码是在描述要干什么，而不是怎么干。</p>
-<p>测试代码</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@pytest.mark.parametrize(<span class="params"><span class="string">&quot;line, result&quot;</span>, [</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;Found Shannon PCIE&quot;</span>, <span class="literal">False</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;Found Shannon PCIE Flash car&quot;</span>, <span class="literal">False</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;Found Shannon PCIE Flash card a&quot;</span>, <span class="literal">True</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;Found Shannon PCIE Flash card&quot;</span>, <span class="literal">True</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;Found Shannon PCIE Flash card.&quot;</span>, <span class="literal">True</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">]</span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_is_shannon_flash_device</span>(<span class="params">line, result</span>):</span></span><br><span class="line">    <span class="keyword">assert</span> functional.is_shannon_flash_device(line) == result</span><br></pre></td></tr></table></figure>
-
-<p>​     </p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@pytest.mark.parametrize(<span class="params"><span class="string">&quot;line, result&quot;</span>, [</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;a=1&quot;</span>, <span class="literal">True</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;b=2&quot;</span>, <span class="literal">True</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;c=2333&quot;</span>, <span class="literal">True</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;d x=abcde&quot;</span>, <span class="literal">True</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;Found Shannon PCIE=1&quot;</span>, <span class="literal">True</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;abcdedfew=&quot;</span>, <span class="literal">False</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;Found Shannon PCIE&quot;</span>, <span class="literal">False</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot; =Found Shannon PCIE&quot;</span>, <span class="literal">False</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;=Found Shannon PCIE&quot;</span>, <span class="literal">False</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;Found Shannon PCIE=&quot;</span>, <span class="literal">False</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;Found Shannon PCIE= &quot;</span>, <span class="literal">False</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">]</span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_is_effective_value</span>(<span class="params">line, result</span>):</span></span><br><span class="line">    <span class="keyword">assert</span> functional.is_effective_value(line) == result</span><br></pre></td></tr></table></figure>
-
-<p>​     </p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@pytest.mark.parametrize(<span class="params"><span class="string">&quot;line, result&quot;</span>, [</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;a=1&quot;</span>, &#123;<span class="string">&quot;a&quot;</span>: <span class="string">&quot;1&quot;</span>&#125;</span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;b=2&quot;</span>, &#123;<span class="string">&quot;b&quot;</span>: <span class="string">&quot;2&quot;</span>&#125;</span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;a=a&quot;</span>, &#123;<span class="string">&quot;a&quot;</span>: <span class="string">&quot;a&quot;</span>&#125;</span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;abc=a&quot;</span>, &#123;<span class="string">&quot;abc&quot;</span>: <span class="string">&quot;a&quot;</span>&#125;</span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;abc=abcde&quot;</span>, &#123;<span class="string">&quot;abc&quot;</span>: <span class="string">&quot;abcde&quot;</span>&#125;</span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">]</span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_gets_the_index_name_and_value</span>(<span class="params">line, result</span>):</span></span><br><span class="line">    <span class="keyword">assert</span> functional.gets_the_index_name_and_value(line) == result</span><br></pre></td></tr></table></figure>
-
-<p>​     </p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@pytest.mark.parametrize(<span class="params"><span class="string">&quot;output, filter_func, result&quot;</span>, [</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;abcd\nbcd\nabcd\nbcd\naa\naa&quot;</span>, <span class="keyword">lambda</span> x: <span class="string">&quot;a&quot;</span> <span class="keyword">in</span> x, [<span class="string">&quot;abcd\nbcd&quot;</span>, <span class="string">&quot;abcd\nbcd&quot;</span>, <span class="string">&quot;aa&quot;</span>, <span class="string">&quot;aa&quot;</span>]</span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="built_in">open</span>(<span class="params">os.path.join(<span class="params">project_path, <span class="string">&quot;fixtures&quot;</span>, <span class="string">&quot;shannon-status.txt&quot;</span></span>)</span>).read(<span class="params"></span>), functional.is_shannon_flash_device, [</span></span></span></span><br><span class="line"><span class="meta"><span class="params"><span class="params">    <span class="built_in">open</span>(<span class="params">os.path.join(<span class="params">project_path, <span class="string">&quot;fixtures&quot;</span>, <span class="string">&quot;shannon-sctb.txt&quot;</span></span>)</span>).read(<span class="params"></span>),</span></span></span></span><br><span class="line"><span class="meta"><span class="params"><span class="params">    <span class="built_in">open</span>(<span class="params">os.path.join(<span class="params">project_path, <span class="string">&quot;fixtures&quot;</span>, <span class="string">&quot;shannon-scta.txt&quot;</span></span>)</span>).read(<span class="params"></span>)</span></span></span></span><br><span class="line"><span class="meta"><span class="params"><span class="params">]</span>)</span></span></span><br><span class="line"><span class="meta"><span class="params">]</span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_checks_string_split_by_function</span>(<span class="params">output, filter_func, result</span>):</span></span><br><span class="line">    <span class="keyword">assert</span> functional.checks_string_split_by_function(output, filter_func) == result</span><br></pre></td></tr></table></figure>
-<p>| 面向对象编程(Object-Oriented)</p>
-<p>并不是使用类才是面向对象编程。如果你专注于状态改变和密封抽象，你就是在用面向对象编程。类只是帮助简化面向对象编程的工具，并不是面向对象编程的要求或指示器。封装是一个过程，它分隔构成抽象的结构和行为的元素。封装的作用是分离抽象的概念接口及其实现。类只是帮助简化面向对象编程的工具，并不是面向对象编程的要求或指示器。</p>
-<p>随着系统越来越复杂，系统就会变得越来越容易崩溃，分而治之，解决复杂性的技巧。面对对象思想的产生是为了让你能更方便的理解代码。有了那些封装，多态，继承，能让你专注于部分功能，而不需要了解全局。</p>
-<p>关键部分实现代码</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IFlash</span>(<span class="params">six.with_metaclass(<span class="params">abc.ABCMeta</span>)</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"> </span><br><span class="line"><span class="meta">    @abc.abstractmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">collect</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;收集flash卡物理信息</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
-
-<p>​     </p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FlashShannon</span>(<span class="params">IFlash</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;宝存的Flash卡</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, txt_path, command, printer</span>):</span></span><br><span class="line">        <span class="built_in">super</span>(FlashShannon, self).__init__()</span><br><span class="line">        self.txt_path = txt_path</span><br><span class="line"> </span><br><span class="line">        self.command = command</span><br><span class="line">        self.printer = printer</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">collect</span>(<span class="params">self</span>):</span></span><br><span class="line">        result = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> info <span class="keyword">in</span> self._get_shannon_info():</span><br><span class="line">            life_left = <span class="built_in">str</span>(info.get(<span class="string">&quot;estimated_life_left&quot;</span>, <span class="string">&quot;&quot;</span>)).replace(<span class="string">&quot;%&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">            temperature = info.get(<span class="string">&quot;controller_temperature&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">            error_msg = self._get_health_message(life_left, temperature)</span><br><span class="line">            sub_info = &#123;</span><br><span class="line">                <span class="string">&quot;available_capacity&quot;</span>: info.get(<span class="string">&quot;disk_capacity&quot;</span>, <span class="string">&quot;&quot;</span>),</span><br><span class="line">                <span class="string">&quot;device_name&quot;</span>: info.get(<span class="string">&quot;block_device_node&quot;</span>, <span class="string">&quot;&quot;</span>),</span><br><span class="line">                <span class="string">&quot;firmware_version&quot;</span>: info.get(<span class="string">&quot;firmware_version&quot;</span>, <span class="string">&quot;&quot;</span>),</span><br><span class="line">                <span class="string">&quot;interface&quot;</span>: <span class="string">&quot;PCIe&quot;</span>,</span><br><span class="line">                <span class="string">&quot;life_left&quot;</span>: life_left,</span><br><span class="line">                <span class="string">&quot;pcie_id&quot;</span>: info.get(<span class="string">&quot;pci_deviceid&quot;</span>, <span class="string">&quot;&quot;</span>),</span><br><span class="line">                <span class="string">&quot;pcie_length&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">                <span class="string">&quot;pcie_type&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">                <span class="string">&quot;physical_read&quot;</span>: info.get(<span class="string">&quot;host_read_data&quot;</span>, <span class="string">&quot;&quot;</span>),</span><br><span class="line">                <span class="string">&quot;physical_write&quot;</span>: info.get(<span class="string">&quot;total_write_data&quot;</span>, <span class="string">&quot;&quot;</span>),</span><br><span class="line">                <span class="string">&quot;serial_number&quot;</span>: info.get(<span class="string">&quot;serial_number&quot;</span>, <span class="string">&quot;&quot;</span>),</span><br><span class="line">                <span class="string">&quot;temperature&quot;</span>: temperature,</span><br><span class="line">                <span class="string">&quot;type&quot;</span>: info[<span class="string">&quot;type&quot;</span>],</span><br><span class="line">                <span class="string">&quot;error_msg&quot;</span>: error_msg,</span><br><span class="line">                <span class="string">&quot;status&quot;</span>: <span class="string">&quot;ok&quot;</span> <span class="keyword">if</span> error_msg == <span class="string">&quot;healthy&quot;</span> <span class="keyword">else</span> <span class="string">&quot;error&quot;</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> sub_info[<span class="string">&quot;serial_number&quot;</span>]:</span><br><span class="line">                result[sub_info[<span class="string">&quot;serial_number&quot;</span>]] = sub_info</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                result[sub_info[<span class="string">&quot;device_name&quot;</span>]] = sub_info</span><br><span class="line">        <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
-
-<p>​     </p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FlashFio</span>(<span class="params">IFlash</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;fio的Flash卡</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, txt_path</span>):</span></span><br><span class="line">        <span class="built_in">super</span>(FlashFio, self).__init__()</span><br><span class="line">        self.txt_path = txt_path</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">collect</span>(<span class="params">self</span>):</span></span><br><span class="line">        disk_info = &#123;&#125;</span><br><span class="line">        adapter_info = self._get_adapter_info()</span><br><span class="line">        <span class="keyword">for</span> info <span class="keyword">in</span> adapter_info:</span><br><span class="line">            serial_number = info[<span class="string">&quot;fio_serial_number&quot;</span>]</span><br><span class="line">            <span class="keyword">for</span> io <span class="keyword">in</span> info[<span class="string">&quot;iomemory&quot;</span>]:</span><br><span class="line">                data = self._combining_io_memory(io)</span><br><span class="line">                data[<span class="string">&quot;serial_number&quot;</span>] = serial_number</span><br><span class="line">                disk_info[serial_number] = data</span><br><span class="line">        <span class="keyword">return</span> disk_info</span><br></pre></td></tr></table></figure>
-<p>| 编程范式带来的好处</p>
-<p>范式就像武功心法，可以更快的练成绝世神功，但还是离不开基础功。代码也一样，通过遵循相关范式和良好的设计后，会带来可读性、扩展性和可维护性更好的代码，进而提升软件的质量。</p>
-<p>| 总结</p>
-<p>命令式编程、面向对象编程、函数式编程，虽然受人追捧的时间点各不相同，但是本质上并没有优劣之分。 面向对象和函数式、过程式编程也不是完成独立和有严格的界限，在抽象出各个独立的对象后，每个对象的具体行为实现还是有函数式和过程式完成。</p>
-<p>现代的程序员应该很少有门派之见了，应该集百家之所长，学习其它范式(语言)的优秀设计理念，集成到自己的代码(产品、语言)中，提升工作效率。</p>
-]]></content>
-      <categories>
-        <category>计算机常识</category>
-      </categories>
-      <tags>
-        <tag>编程范式</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>网络服务性能指标</title>
-    <url>/2021/09/25/%E7%BD%91%E7%BB%9C%E6%9C%8D%E5%8A%A1%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87/</url>
-    <content><![CDATA[<h1 id="一、QPS，每秒查询"><a href="#一、QPS，每秒查询" class="headerlink" title="一、QPS，每秒查询"></a>一、QPS，每秒查询</h1><p>QPS：Queries Per Second意思是“每秒查询率”，是一台服务器每秒能够相应的查询次数，是对一个特定的查询服务器在规定时间内所处理流量多少的衡量标准。</p>
-<p>互联网中，作为域名系统服务器的机器的性能经常用每秒查询率来衡量。</p>
-<h1 id="二、TPS，每秒事务"><a href="#二、TPS，每秒事务" class="headerlink" title="二、TPS，每秒事务"></a>二、TPS，每秒事务</h1><p>TPS：是TransactionsPerSecond的缩写，也就是事务数/秒。它是软件测试结果的测量单位。一个事务是指一个客户机向服务器发送请求然后服务器做出反应的过程。客户机在发送请求时开始计时，收到服务器响应后结束计时，以此来计算使用的时间和完成的事务个数。</p>
-<p>QPS vs TPS：QPS基本类似于TPS，但是不同的是，对于一个页面的一次访问，形成一个TPS；但一次页面请求，可能产生多次对服务器的请求，服务器对这些请求，就可计入“QPS”之中。如，访问一个页面会请求服务器2次，一次访问，产生一个“T”，产生2个“Q”。</p>
-<h1 id="三、RT，响应时间"><a href="#三、RT，响应时间" class="headerlink" title="三、RT，响应时间"></a>三、RT，响应时间</h1><p>响应时间：执行一个请求从开始到最后收到响应数据所花费的总体时间,即从客户端发起请求到收到服务器响应结果的时间。</p>
-<p>响应时间RT(Response-time)，是一个系统最重要的指标之一，它的数值大小直接反应了系统的快慢。</p>
-<h1 id="四、并发数"><a href="#四、并发数" class="headerlink" title="四、并发数"></a>四、并发数</h1><p>并发数是指系统同时能处理的请求数量，这个也是反应了系统的负载能力。</p>
-<h1 id="五、吞吐量"><a href="#五、吞吐量" class="headerlink" title="五、吞吐量"></a>五、吞吐量</h1><p>系统的吞吐量（承压能力）与request对CPU的消耗、外部接口、IO等等紧密关联。单个request 对CPU消耗越高，外部系统接口、IO速度越慢，系统吞吐能力越低，反之越高。</p>
-<p>系统吞吐量几个重要参数：QPS（TPS）、并发数、响应时间。</p>
-<ol>
-<li>QPS（TPS）：（Query Per Second）每秒钟request/事务 数量</li>
-<li>并发数： 系统同时处理的request/事务数</li>
-<li>响应时间： 一般取平均响应时间</li>
-</ol>
-<p>理解了上面三个要素的意义之后，就能推算出它们之间的关系：</p>
-<ul>
-<li><strong>QPS（TPS）= 并发数/平均响应时间</strong></li>
-<li><strong>并发数 = QPS*平均响应时间</strong></li>
-</ul>
-<h1 id="六、实际举例"><a href="#六、实际举例" class="headerlink" title="六、实际举例"></a>六、实际举例</h1><p>我们通过一个实例来把上面几个概念串起来理解。按二八定律来看，如果每天 80% 的访问集中在 20% 的时间里，这 20% 时间就叫做峰值时间。</p>
-<ul>
-<li>公式：( 总PV数 * 80% ) / ( 每天秒数 * 20% ) = 峰值时间每秒请求数(QPS)</li>
-<li>机器：峰值时间每秒QPS / 单台机器的QPS = 需要的机器</li>
-</ul>
-<p><strong>1、每天300w PV 的在单台机器上，这台机器需要多少QPS？</strong><br>( 3000000 * 0.8 ) / (86400 * 0.2 ) = 139 (QPS)</p>
-<p><strong>2、如果一台机器的QPS是58，需要几台机器来支持？</strong><br>139 / 58 = 3</p>
-]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>高并发网络性能指标</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>虚拟机种类</title>
-    <url>/2021/03/14/%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%A7%8D%E7%B1%BB/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>表单输入绑定</title>
-    <url>/2021/03/14/%E8%A1%A8%E5%8D%95%E8%BE%93%E5%85%A5%E7%BB%91%E5%AE%9A/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>计算属性与监听器setter</title>
-    <url>/2021/03/14/%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7%E4%B8%8E%E7%9B%91%E5%90%AC%E5%99%A8setter/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>消息队列产品与RabbitMQ的简介</title>
@@ -3938,6 +3527,539 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>RabbitMQ</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Vue模板语法</title>
+    <url>/2021/03/07/%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="模板语法"><a href="#模板语法" class="headerlink" title="模板语法"></a>模板语法</h2><p>Vue.js 使用了基于 HTML 的模板语法，允许开发者声明式地将 DOM 绑定至底层 Vue 实例的数据。所有 Vue.js 的模板都是合法的 HTML，所以能被遵循规范的浏览器和 HTML 解析器解析。</p>
+<p>在底层的实现上，Vue 将模板编译成虚拟 DOM 渲染函数。结合响应系统，Vue 能够智能地计算出最少需要重新渲染多少组件，并把 DOM 操作次数减到最少。</p>
+<h3 id="插值"><a href="#插值" class="headerlink" title="插值"></a>插值</h3><h4 id="文本"><a href="#文本" class="headerlink" title="文本"></a>文本</h4><p>数据绑定最常见的形式就是使用“Mustache”语法 (双大括号) 的文本插值：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span>Message:&#123;&#123;msg&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>Mustache 标签将会被替代为对应数据对象上 <code>msg</code> property 的值。无论何时，绑定的数据对象上 <code>msg</code> property 发生了改变，插值处的内容都会更新。</p>
+<p>通过使用 **<a href="https://cn.vuejs.org/v2/api/#v-once">v-once 指令</a>**，你也能执行一次性地插值，当数据改变时，插值处的内容不会更新。但请留心这会影响到该节点上的其它数据绑定：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">v-once</span>&gt;</span>这个节点上的数据将不会改变：&#123;&#123;mag&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="双大括号下的原始HTML文本"><a href="#双大括号下的原始HTML文本" class="headerlink" title="双大括号下的原始HTML文本"></a>双大括号下的原始HTML文本</h4><p>双大括号会将数据解释为普通文本，而非 HTML 代码。为了输出真正的 HTML，你需要使用**`v-html  **</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">p</span>&gt;</span>Using mustaches: &#123;&#123; rawHtml &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>Using v-html directive: <span class="tag">&lt;<span class="name">span</span> <span class="attr">v-html</span>=<span class="string">&quot;rawHtml&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>你不能使用 <code>v-html</code> 来复合局部模板，因为 Vue 不是基于字符串的模板引擎。反之，对于用户界面 (UI)，组件更适合作为可重用和可组合的基本单位。</p>
+<blockquote>
+<p>你的站点上动态渲染的任意 HTML 可能会非常危险，因为它很容易导致 <a href="https://en.wikipedia.org/wiki/Cross-site_scripting">XSS 攻击</a>。请只对可信内容使用 HTML 插值，<strong>绝不要</strong>对用户提供的内容使用插值。</p>
+</blockquote>
+<h2 id="对Attribute进行数据绑定"><a href="#对Attribute进行数据绑定" class="headerlink" title="对Attribute进行数据绑定"></a>对Attribute进行数据绑定</h2><p>Mustache 语法不能作用在 HTML attribute 上，遇到这种情况应该使用 <a href="https://cn.vuejs.org/v2/api/#v-bind"><code>v-bind</code> 指令</a>：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;div v-bind:id&#x3D;&quot;dynamicId&quot;&gt;&lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
+<p>对于布尔 attribute (它们只要存在就意味着值为 <code>true</code>)，<code>v-bind</code> 工作起来略有不同，在这个例子中：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;button v-bind:disabled&#x3D;&quot;isButtonDisabled&quot;&gt;Button&lt;&#x2F;button&gt;</span><br></pre></td></tr></table></figure>
+<p>如果 <code>isButtonDisabled</code> 的值是 <code>null</code>、<code>undefined</code> 或 <code>false</code>，则 <code>disabled</code> attribute 甚至不会被包含在渲染出来的 <code>&lt;button&gt;</code> 元素中。</p>
+<h4 id="使用JavaScript表达式-而不是键值"><a href="#使用JavaScript表达式-而不是键值" class="headerlink" title="使用JavaScript表达式(而不是键值)"></a>使用JavaScript表达式(而不是键值)</h4><p>迄今为止，在我们的模板中，我们一直都只绑定简单的 property 键值。但实际上，对于所有的数据绑定，Vue.js 都提供了完全的 JavaScript 表达式支持。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&#123;&#123; number + <span class="number">1</span> &#125;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&#123; ok ? <span class="string">&#x27;YES&#x27;</span> : <span class="string">&#x27;NO&#x27;</span> &#125;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&#123; message.split(<span class="string">&#x27;&#x27;</span>).reverse().join(<span class="string">&#x27;&#x27;</span>) &#125;&#125;</span><br><span class="line"></span><br><span class="line">&lt;div v-bind:id=<span class="string">&quot;&#x27;list-&#x27; + id&quot;</span>&gt;&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+<p>这些表达式会在所属 Vue 实例的数据作用域下作为 JavaScript 被解析。有个限制就是，每个绑定都只能包含<strong>单个表达式</strong>，所以下面的例子都<strong>不会</strong>生效。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&lt;!-- 这是语句，不是表达式 --&gt;</span><br><span class="line">&#123;&#123; <span class="keyword">var</span> a = <span class="number">1</span> &#125;&#125;      </span><br><span class="line"></span><br><span class="line">&lt;!-- 流控制也不会生效，请使用三元表达式 --&gt;</span><br><span class="line">&#123;&#123; <span class="keyword">if</span> (ok) &#123; <span class="keyword">return</span> message &#125; &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h3><p>指令 (Directives) 是带有 <code>v-</code> 前缀的特殊 attribute。指令 attribute 的值预期是<strong>单个 JavaScript 表达式</strong> (<code>v-for</code> 是例外情况，稍后我们再讨论)。指令的职责是，当表达式的值改变时，将其产生的连带影响，响应式地作用于 DOM。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;p v-if&#x3D;&quot;seen&quot;&gt;现在你看到我了&lt;&#x2F;p&gt;</span><br></pre></td></tr></table></figure>
+<p>这里，<code>v-if</code> 指令将根据表达式 <code>seen</code> 的值的真假来插入/移除 <code>&lt;p&gt;</code> 元素</p>
+<h3 id="参数"><a href="#参数" class="headerlink" title="[参数]"></a>[参数]</h3><p>一些指令能够接收一个“参数”，在指令名称之后以冒号表示。例如，<code>v-bind</code> 指令可以用于响应式地更新 HTML attribute：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;a v-bind:href&#x3D;&quot;url&quot;&gt;...&lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<p>在这里 <code>href</code> 是参数，告知 <code>v-bind</code> 指令将该元素的 <code>href</code> attribute 与表达式 <code>url</code> 的值绑定。</p>
+<p>另一个例子是 <code>v-on</code> 指令，它用于监听 DOM 事件：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;a v-on:click&#x3D;&quot;doSomething&quot;&gt;...&lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<p>在这里参数是监听的事件名。 </p>
+<h3 id="动态参数"><a href="#动态参数" class="headerlink" title="动态参数"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#%E5%8A%A8%E6%80%81%E5%8F%82%E6%95%B0">动态参数</a></h3><blockquote>
+<p>2.6.0 新增</p>
+</blockquote>
+<p>从 2.6.0 开始，可以用方括号括起来的 JavaScript 表达式作为一个指令的参数：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!--</span><br><span class="line">注意，参数表达式的写法存在一些约束，如之后的“对动态参数表达式的约束”章节所述。</span><br><span class="line">--&gt;</span><br><span class="line">&lt;a v-bind:[attributeName]&#x3D;&quot;url&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<p>这里的 <code>attributeName</code> 会被作为一个 JavaScript 表达式进行动态求值，求得的值将会作为最终的参数来使用。例如，如果你的 Vue 实例有一个 <code>data</code> property <code>attributeName</code>，其值为 <code>&quot;href&quot;</code>，那么这个绑定将等价于 <code>v-bind:href</code>。</p>
+<p>同样地，你可以使用动态参数为一个动态的事件名绑定处理函数：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;a v-on:[eventName]&#x3D;&quot;doSomething&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<p>在这个示例中，当 <code>eventName</code> 的值为 <code>&quot;focus&quot;</code> 时，<code>v-on:[eventName]</code> 将等价于 <code>v-on:focus</code>。</p>
+<h4 id="对动态参数的值的约束"><a href="#对动态参数的值的约束" class="headerlink" title="对动态参数的值的约束"></a>对动态参数的值的约束</h4><p>动态参数预期会求出一个字符串，异常情况下值为 <code>null</code>。这个<strong>特殊的 <code>null</code> 值可以被显性地用于移除绑定</strong>。任何其它非字符串类型的值都将会触发一个警告。</p>
+<h4 id="对动态参数表达式的约束"><a href="#对动态参数表达式的约束" class="headerlink" title="对动态参数表达式的约束"></a>对动态参数表达式的约束</h4><p>动态参数表达式有一些语法约束，因为某些字符，如空格和引号，放在 HTML attribute 名里是无效的。例如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 这会触发一个编译警告 --&gt;</span><br><span class="line">&lt;a v-bind:[&#39;foo&#39; + bar]&#x3D;&quot;value&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<p>变通的办法是使用没有空格或引号的表达式，或用计算属性替代这种复杂表达式。</p>
+<p>在 DOM 中使用模板时 (直接在一个 HTML 文件里撰写模板)，还需要避免使用大写字符来命名键名，因为浏览器会把 attribute 名全部强制转为小写：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!--</span><br><span class="line">在 DOM 中使用模板时这段代码会被转换为 &#96;v-bind:[someattr]&#96;。</span><br><span class="line">除非在实例中有一个名为“someattr”的 property，否则代码不会工作。</span><br><span class="line">--&gt;</span><br><span class="line">&lt;a v-bind:[someAttr]&#x3D;&quot;value&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="修饰符"><a href="#修饰符" class="headerlink" title="修饰符"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#%E4%BF%AE%E9%A5%B0%E7%AC%A6">修饰符</a></h3><p>修饰符 (modifier) 是以半角句号 <code>.</code> 指明的特殊后缀，用于指出一个指令应该以特殊方式绑定。例如，<code>.prevent</code> 修饰符告诉 <code>v-on</code> 指令对于触发的事件调用 <code>event.preventDefault()</code>：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;form v-on:submit.prevent&#x3D;&quot;onSubmit&quot;&gt;...&lt;&#x2F;form&gt;</span><br></pre></td></tr></table></figure>
+<p>阻止某一事件的默认机制执行，此时组织了submit行为的产生</p>
+<h3 id="缩写"><a href="#缩写" class="headerlink" title="缩写"></a>缩写</h3><p><code>v-</code> 前缀作为一种视觉提示，用来识别模板中 Vue 特定的 attribute。当你在使用 Vue.js 为现有标签添加动态行为 (dynamic behavior) 时，<code>v-</code> 前缀很有帮助，然而，对于一些频繁用到的指令来说，就会感到使用繁琐。同时，在构建由 Vue 管理所有模板的<a href="https://en.wikipedia.org/wiki/Single-page_application">单页面应用程序 (SPA - single page application)</a> 时，<code>v-</code> 前缀也变得没那么重要了。因此，Vue 为 <code>v-bind</code> 和 <code>v-on</code> 这两个最常用的指令，提供了特定简写：</p>
+<h3 id="v-bind-缩写"><a href="#v-bind-缩写" class="headerlink" title="v-bind 缩写"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#v-bind-%E7%BC%A9%E5%86%99"><code>v-bind</code> 缩写</a></h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 完整语法 --&gt;</span><br><span class="line">&lt;a v-bind:href&#x3D;&quot;url&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 缩写 --&gt;</span><br><span class="line">&lt;a :href&#x3D;&quot;url&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 动态参数的缩写 (2.6.0+) --&gt;</span><br><span class="line">&lt;a :[key]&#x3D;&quot;url&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="v-on-缩写"><a href="#v-on-缩写" class="headerlink" title="v-on 缩写"></a><a href="https://cn.vuejs.org/v2/guide/syntax.html#v-on-%E7%BC%A9%E5%86%99"><code>v-on</code> 缩写</a></h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- 完整语法 --&gt;</span><br><span class="line">&lt;a v-on:click&#x3D;&quot;doSomething&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 缩写 --&gt;</span><br><span class="line">&lt;a @click&#x3D;&quot;doSomething&quot;&gt;...&lt;&#x2F;a&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 动态参数的缩写 (2.6.0+) --&gt;</span><br><span class="line">&lt;a @[event]&#x3D;&quot;doSomething&quot;&gt; ... &lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+<p>它们看起来可能与普通的 HTML 略有不同，但 <code>:</code> 与 <code>@</code> 对于 attribute 名来说都是合法字符，在所有支持 Vue 的浏览器都能被正确地解析。</p>
+]]></content>
+      <categories>
+        <category>Vue框架</category>
+      </categories>
+      <tags>
+        <tag>Vue</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>系统调用</title>
+    <url>/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/</url>
+    <content><![CDATA[<h2 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h2><h3 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h3><p>系统调用是内核与用户进程进行交互的一组接口，这些接口让应用程序受限制的访问硬件设备，提供了创建新进程并与已有进程进行交互通信的机制，也提供了申请操作系统其他资源的能力。</p>
+<p>系统调用在Linux系统中的地位如下图所示：</p>
+<img data-src="/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/OIP1.jpg" class>
+
+<h3 id="2-与内核通信"><a href="#2-与内核通信" class="headerlink" title="2.与内核通信"></a>2.与内核通信</h3><p>系统调用在用户空间进程和硬件设备之间添加了一个中间层。这样的中间层有如下作用：</p>
+<blockquote>
+<p>1.为用户空间提供了一种硬件的抽象接口。</p>
+</blockquote>
+<blockquote>
+<p>2.系统调用确保了系统的稳定与安全。内核可以作为硬件设备与用户空间之间的中间人，基于权限、用户类型和一些其他的规则对需要进行的访问做出裁决。</p>
+</blockquote>
+<blockquote>
+<p>3.避免用户空间的应用程序对硬件资源随意访问而内核一无所知，这样既无法实现多任务和虚拟内存，也不能确保良好的稳定性和安全性。</p>
+</blockquote>
+<p><strong>Linux中：系统调用是用户空间访问内核的唯一手段—-除了异常和陷入外，它们是内核唯一的合法入口</strong></p>
+<h3 id="3-API、POSIX、C库"><a href="#3-API、POSIX、C库" class="headerlink" title="3.API、POSIX、C库"></a>3.API、POSIX、C库</h3><p>应用程序通过在用户空间实现的应用编程接口（API）而不是直接通过系统调用。</p>
+<blockquote>
+<p>1.API实际上并不需要与内核提供的系统调用一一对应，程序员只跟API打交道。</p>
+<p>2.内核只跟系统调用打交道，库函数以及应用程序如何使用系统调用不是内核所关心的。</p>
+<p>3.API可以实现成一个系统调用，也可以实现多个系统调用，甚至也可以不实现系统调用。</p>
+</blockquote>
+<p>在UNIX中，最流行的应用编程接口是基于POSIX标准的。</p>
+<p>Linux系统调用作为C库的一部分提供。C库实现了Unix系统的主要API，包括标准C库函数和系统调用接口，此外，C库提供了POSIX的绝大部分API。</p>
+<h3 id="4-系统调用-syscall"><a href="#4-系统调用-syscall" class="headerlink" title="4.系统调用(syscall)"></a>4.系统调用(syscall)</h3><p><strong>通过在C库中定义的函数调用来执行</strong></p>
+<p>系统调用在出现错误的时候C库会将错误码写入errno全局变量。通过调用perror()库函数，可以把该变量翻译成用户可以理解的错误字符串。</p>
+<p>为了保证32为操作系统和64位操作系统的兼容，系统调用在用户空间和内核空间有着不同的返回值类型。用户空间为int，内核空间为long。系统调用在内核中前面会加上sys_。例如：返回当前进程PID的系统调用get_pid（）在内核中被定义为sys_getpid()。</p>
+<h4 id="4-1系统调用号"><a href="#4-1系统调用号" class="headerlink" title="4.1系统调用号"></a>4.1系统调用号</h4><p>在Linux中，每个系统调用都会被赋予一个系统调用号（独一无二的）。进程在执行系统调用时，不需要提及系统调用的名称，只需要使用系统调用号即可。</p>
+<p><strong>系统调用号相当重要，一旦分配好就不能再更改，因为会导致之前编译好的应用程序崩溃。</strong>即使这个系统调用被删除，它所占用的系统调用号也不允许被回收利用。</p>
+<p>内核记录了系统调用表中的所有已经注册过的系统调用的列表，存储在sys_call_table中，这个表为每一个有效的</p>
+<p>系统调用指定了唯一的系统调用号。</p>
+<h4 id="4-2系统调用的性能"><a href="#4-2系统调用的性能" class="headerlink" title="4.2系统调用的性能"></a>4.2系统调用的性能</h4><p>Linux系统调用比其他许多的操作系统执行要快。原因如下：</p>
+<blockquote>
+<p>1.Linux很短的上下文切换时间，进出内核都被优化的极为高效。</p>
+<p>2.系统调用处理程序和每个系统调用本身非常简洁。</p>
+</blockquote>
+<h3 id="5-系统调用处理程序"><a href="#5-系统调用处理程序" class="headerlink" title="5.系统调用处理程序"></a>5.系统调用处理程序</h3><p>应用程序通过<strong>软中断</strong>的方式来告诉内核自己期望执行一个系统调用，希望系统当前可以从用户态切换到内核态，这样内核就可以代表应用程序在内核空间中执行系统调用。</p>
+<p><strong>软中断</strong>：通过引起一个异常来促使系统切换到内核态前去执行异常处理程序。此时的异常处理程序其实就是<strong>系统调用处理程序</strong>。</p>
+<p>在X86系统中预定义的软中断是中断号128，通过int $0x80来触发中断。这条指令会触发一个异常导致系统切换到内核态并执行128号异常处理程序（系统调用处理程序）。</p>
+<h4 id="5-1指定恰当的系统调用"><a href="#5-1指定恰当的系统调用" class="headerlink" title="5.1指定恰当的系统调用"></a>5.1指定恰当的系统调用</h4><p>在陷入内核空间时，要将系统调用号传给内核空间。X86系统，系统调用号是通过eax寄存器传递给内核的。system_call()函数通过将给定的系统调用号与NR_syscalls做比较来检查其有效性。大于或者等于NR_syscalls，函数就返回-ENOSYS,否则，执行相应的系统调用。</p>
+<p>系统调用表中的表项是以64位类型存放的，所以内核需要将给定的系统调用号乘4，然后用所得结果在表中查询位置。</p>
+<h4 id="5-2参数传递"><a href="#5-2参数传递" class="headerlink" title="5.2参数传递"></a>5.2参数传递</h4><p>部分系统调用除了系统调用号之外，还需要传入一些外部参数，在发生陷入的时候，一并传给内核，同样是放在寄存器中。<strong>给用户空间的返回值同样是通过寄存器来传递的</strong></p>
+<h3 id="6-系统调用的实现"><a href="#6-系统调用的实现" class="headerlink" title="6.系统调用的实现"></a>6.系统调用的实现</h3><h4 id="6-1实现系统调用"><a href="#6-1实现系统调用" class="headerlink" title="6.1实现系统调用"></a>6.1实现系统调用</h4><p>要求：</p>
+<ul>
+<li>Linux中不提倡采用多用途的系统调用（一个系统调用通过传递不同的参数值来完成选择的工作）</li>
+<li>系统调用的接口应该力求简洁，参数尽量少。提供标志参数以确保向前兼容。</li>
+<li>系统调用的设计越通用越好。</li>
+</ul>
+<h4 id="6-2参数验证"><a href="#6-2参数验证" class="headerlink" title="6.2参数验证"></a>6.2参数验证</h4><p>系统调用必须检查参数是否合法有效。系统调用在内核空间中执行，任由用户将不合法的输入传递给内核，系统大的安全和稳定性将面临考验。进程不能让内核访问那些他没有权限访问的数据。</p>
+<ul>
+<li>与文件IO有关的系统调用需要检查文件描述符是否有效，与进程有关的函数必须检查提供的PID是否有效。</li>
+<li>检查用户提供的指针是否有效<ul>
+<li>指针指向的内存区域只能属于用户空间，进程不能告诉内核去读内核空间中的数据。</li>
+<li>指针指向的内存区域在自己的进程中，不能让内核去读其他进程中的数据。</li>
+<li>进程不能越过内存访问限制（可读、可写、可执行）</li>
+</ul>
+</li>
+<li>检查是否有合法权限</li>
+</ul>
+<p>内核提供了两个方法来完成必须的检查和内核空间与用户空间之间的数据来回拷贝</p>
+<ul>
+<li>写入：copy_to_user()</li>
+<li>读取：copy_from_user()</li>
+</ul>
+<p>这两个方法可能会引起阻塞。当包含用户数据的页被换出到硬盘上而不是在物理内存上的时候，进程会休眠，直到缺页处理程序将该页从硬盘从新换回物理内存。</p>
+<h3 id="7-系统调用上下文"><a href="#7-系统调用上下文" class="headerlink" title="7.系统调用上下文"></a>7.系统调用上下文</h3><p>在进程调用系统调用时，会有进程上下文。既可以被抢占也可以休眠。</p>
+<p>可以休眠说明系统调用可以利用内核提供的绝大部分功能。可以被抢占说明该系统调用时可重入的（新的进程同样可以使用相同的系统调用）。</p>
+<p>系统调用返回时，控制权仍然在system_call()中，它最终会负责切换到内核工作空间，并让用户进程继续执行下去。</p>
+<h4 id="7-1绑定一个系统调用的最后步骤"><a href="#7-1绑定一个系统调用的最后步骤" class="headerlink" title="7.1绑定一个系统调用的最后步骤"></a>7.1绑定一个系统调用的最后步骤</h4><blockquote>
+<p>1.在系统调用表中的最后加入一个表项。从0开始算起，系统调用在表中的位置就是他的系统调用号。</p>
+</blockquote>
+<blockquote>
+<p>2.系统调用必须被编译进内核映像（不能被编译成模块）</p>
+</blockquote>
+<h4 id="7-2从用户空间访问系统调用"><a href="#7-2从用户空间访问系统调用" class="headerlink" title="7.2从用户空间访问系统调用"></a>7.2从用户空间访问系统调用</h4><p>系统调用靠的时C库的支持，用户程序通过包含标准头文件并和C库链接，就可以使用系统调用。</p>
+<p><strong>Linux新系统调用增添频率很低，说明Linux系统是一个相对较为稳定并且功能已经较为完善的操作系统</strong></p>
+]]></content>
+      <categories>
+        <category>Linux系统内核相关</category>
+      </categories>
+      <tags>
+        <tag>Linux系统内核设计</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>红队常用行话总结一</title>
+    <url>/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/</url>
+    <content><![CDATA[<h2 id="漏洞利用术语解读"><a href="#漏洞利用术语解读" class="headerlink" title="漏洞利用术语解读"></a>漏洞利用术语解读</h2><blockquote>
+<p>Vulnerability:即漏洞，</p>
+</blockquote>
+<p>是指计算机软件、硬件、系统、应用、协议等方面的缺陷，使得其保密性、完整性、可用性、访问控制等方面面临威胁。</p>
+<ul>
+<li><p>基于技术分类，有命令执行、权限绕过、缓存区溢出、注入、解析、弱口令、信息泄露等漏洞</p>
+</li>
+<li><p>基于时间分类，有0day、1day、Nday等漏洞</p>
+ <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/01.png" class>
+
+<img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/02.png" class>
+
+</li>
+</ul>
+<blockquote>
+<p>Poc (Proof of Content)概念验证</p>
+</blockquote>
+<p>泛指对某些想法的一个较短而不完整的实现；在网络安全领域，通常指的是一段漏洞验证程序或者说是攻击样例，仅能验证漏洞存在，但并不能对漏洞造成实质性利用。在[计算机安全]术语中，<strong>概念验证</strong>经常被用来作为<a href="https://zh.wikipedia.org/wiki/0day">0day</a>、<a href="https://zh.wikipedia.org/wiki/Exploit">exploit</a>的别名。（通常指并没有充分利用这个漏洞的exploit）</p>
+ <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/03.png" class>
+
+<blockquote>
+<p>Exploit 漏洞利用</p>
+</blockquote>
+  <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/04.png" class>
+
+
+
+<p>代表一段有漏洞价值的攻击代码或者漏洞利用过程，目的是获取未经授权的访问或者执行意外操作。常见的漏洞利用手段包括SQL注入、缓存区溢出、远程代码执行等。</p>
+ <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/05.png" class>
+
+ <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/06.png" class>
+
+
+
+<blockquote>
+<p>Payload 攻击载荷</p>
+</blockquote>
+<p>通常是指Exploit在拿下目标之后，攻击者在目标机器上执行的定制代码或者程序，包括但不限于系统命令、会话建立、Shellcode等。</p>
+  <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/07.png" class>
+
+
+
+<blockquote>
+<p>Shellcode</p>
+</blockquote>
+<ul>
+<li><p>shell：泛指系统控制权或者操作界面（CLI/GUI），通常在Exploit漏洞利用之后，首先要做的就是拿shell，以此进行进一步操作。</p>
+</li>
+<li><p>shellcode：用于获取控制权或者操作界面的攻击载荷代码，通常采用二进制机器代码，shellcode也是payload的一种类型</p>
+</li>
+<li><p>正反shell：shell需要绑定至指定IP地址后端口号上面，这个动作就是bindshell；有攻击方主动连接至受害者，则为正向shell；反之，由受害者主动连接至攻击方，则为反向shell。</p>
+ <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/08.png" class>
+
+</li>
+</ul>
+<p>shellcode常常使用机器语言编写。 可在暂存器eip溢出后，塞入一段可让CPU执行的shellcode机械码，让电脑可以执行攻击者的任意指令。</p>
+<ul>
+<li>本地shellcode：本地运行的shellcode经常用于利用软件<a href="https://zh.wikipedia.org/wiki/%E6%BC%8F%E6%B4%9E">漏洞</a>提升权限。比如在Linux下由普通权限提升至<a href="https://zh.wikipedia.org/wiki/Root%E6%9D%83%E9%99%90">root权限</a>。</li>
+<li>远程shellcode：借由抓软件漏洞获得特定的shellcode，再经由C或Python撰写远端攻击程式，进而取得对方电脑之root权限。</li>
+</ul>
+<h2 id="恶意程序术语解读"><a href="#恶意程序术语解读" class="headerlink" title="恶意程序术语解读"></a>恶意程序术语解读</h2><blockquote>
+<p>Malware(Malicious Software) </p>
+</blockquote>
+<p>即恶意程序或软件，泛指病毒、蠕虫、木马、勒索软件、间谍软件，用于对目标系统进行入侵、控制、窃取、破坏等。</p>
+  <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/09.png" class>
+
+<blockquote>
+<p>Worm</p>
+</blockquote>
+<p>Worm即蠕虫病毒，能够独立于其他文件或者程序运行，能够给予网络进行自我复制或者传播，能实现从点到面的超大规模的破坏行为（例如占用CPU或带宽资源、修改删除文件）。</p>
+<p>计算机病毒不同的是，计算机蠕虫不需要附在别的程序内，可能不用用户介入操作也能自我复制或运行。计算机蠕虫未必会直接破坏被感染的系统，却几乎都对网络有害。计算机蠕虫可能会执行垃圾代码以发动分布式拒绝服务攻击，令计算机的执行效率极大程度降低，从而影响计算机的正常使用；可能会损毁或修改目标计算机的文件；亦可能只是浪费<a href="https://zh.wikipedia.org/wiki/%E9%A0%BB%E5%AF%AC">带宽</a>。（恶意的）计算机蠕虫可根据其目的分成2类：</p>
+<ul>
+<li>一种是面对大规模计算机使用网络发动拒绝服务的计算机蠕虫，虽说会绑架计算机，但用户可能还可以正常使用，只是会被占用一部分运算、连网能力。</li>
+<li>另一种是针对个人用户的以执行大量垃圾代码的计算机蠕虫。计算机蠕虫多不具有跨平台性，但是在其他平台下，可能会出现其平台特有的非跨平台性的平台版本。</li>
+</ul>
+<p>计算机蠕虫的传播过程：蠕虫程序常驻于一台或多台机器中，通常它会扫描其他机器是否有感染同种计算机蠕虫，如果没有，就会通过其内置的传播手段进行感染，以达到使计算机瘫痪的目的。其通常会以宿主机器作为扫描源。通常采用：<a href="https://zh.wikipedia.org/wiki/%E5%9E%83%E5%9C%BE%E9%82%AE%E4%BB%B6">垃圾邮件</a>、漏洞传播这2种方法来传播</p>
+<p>例子：2006年的熊猫烧香，通过网站投毒、局域网共享等方式植入系统并进行传播，Windows用户中毒后，后缀名为.exe的文件无法执行，文件图标会变成熊猫烧香的图案。</p>
+  <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/10.png" class>
+
+
+
+
+
+<blockquote>
+<p>Virus病毒</p>
+</blockquote>
+<p>通常依附于其他文件或者程序上，不进行自我复制获知或者传播，当受害者运行其它程序时则病毒启动，对目标系统造成破坏（例如修改删除文件）。</p>
+<p>例子：1998年的<strong>CIH病毒</strong>，能够破坏BIOS和硬盘，是电脑可以完全瘫痪，被公认为有史以来最为危险、破坏力最强的病毒之一。</p>
+ <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/11.png" class>
+
+<p>! <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/12.png" class></p>
+<p>由于<a href="https://zh.wikipedia.org/wiki/%E4%B8%96%E7%95%8C">世界</a><a href="https://zh.wikipedia.org/wiki/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F">操作系统</a>[桌面环境]90%的市场都是使用<a href="https://zh.wikipedia.org/wiki/%E5%BE%AE%E8%BD%AF">微软</a>[Windows] 系列产品 ， 所以病毒作者纷纷把病毒攻击对象选为Windows。制作病毒者首先应该确定要攻击的操作系统版本有何<a href="https://zh.wikipedia.org/wiki/%E6%BC%8F%E6%B4%9E">漏洞</a>，这才是他所写的病毒能够利用的关键。Windows当时并没有有效的安全与防御功能，且用户常以管理员权限运行未经安全检查的软件，这也为Windows下病毒的泛滥提供了温床。<a href="https://zh.wikipedia.org/wiki/Linux">Linux</a>、<a href="https://zh.wikipedia.org/wiki/Mac_OS">Mac OS</a>等<a href="https://zh.wikipedia.org/wiki/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F">操作系统</a>，因使用的人群比较少，病毒一般不容易扩散。大多病毒发布作者的目的有多种，包括恶作剧、想搞破坏、报复及想出名与对研究病毒有特殊嗜好。 病毒主要通过<a href="https://zh.wikipedia.org/wiki/%E7%B6%B2%E8%B7%AF">网路</a>浏览以及<a href="https://zh.wikipedia.org/wiki/%E4%B8%8B%E8%BD%BD">下载</a>，<a href="https://zh.wikipedia.org/wiki/%E9%9B%BB%E5%AD%90%E9%83%B5%E4%BB%B6">电子邮件</a>以及可移动<a href="https://zh.wikipedia.org/wiki/%E7%A3%81%E7%A2%9F">磁盘</a>等途径迅速传播。[<a href="https://zh.wikipedia.org/wiki/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%97%85%E6%AF%92#cite_note-mc-4">4</a></p>
+<p>Trojan Horse(特洛伊木马)</p>
+<p>通常潜伏于“合法”软件中运行（也可以独立运行），不复制传播且高度隐蔽。木马运行时可以创建“后门”或者“隧道”，攻击者通过后门实现对目标系统的远程控制、监听、破坏行为。RAT（Remote Access Trojan）远控木马属于木马的一种，例如灰鸽子、冰河、Gh0st、ZXShell。</p>
+ <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/13.png" class>
+
+
+
+
+
+<blockquote>
+<p>Ransomware(勒索软件)</p>
+</blockquote>
+<p>能够独立于其他文件运行，能够基于网络进行自我复制或者传播，通过对目标系统进行加密劫持，实现对受害者的钱财勒索。在所有的恶意程序类别中，勒索软件时面向个人和机构的最直接、最有效、最野蛮的“敛财方式”。</p>
+ <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/14.png" class>
+
+<blockquote>
+<p>Spyware(间谍软件)</p>
+</blockquote>
+<p>流氓软件或者恶意软件，指未经用户许可搜集用户个人信息的恶意程序。通过搜集网站的浏览记录、键盘记录、账号密码等隐私信息，再以网站劫持、网址导航、弹框广告等方式变现盈利。</p>
+  <img data-src="/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/15.png" class>
+
+
+
+<blockquote>
+<p>Rootkits</p>
+</blockquote>
+<p>可看作升级型的木马病毒，泛指可以获取到<strong>root</strong>权限的恶意程序，以管理员权限运行、修改系统核心文件、绕过杀毒软件，包括系统内核rootkit、硬件固件rootkit、内存rootkit等类型。相比木马，Rootkits通常具备更高权限、更加隐蔽、更难查杀、更大危害等特征。、</p>
+]]></content>
+      <categories>
+        <category>网络安全</category>
+      </categories>
+      <tags>
+        <tag>红队攻防</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>红队攻防入门1</title>
+    <url>/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/</url>
+    <content><![CDATA[<h2 id="红队攻防入门1–初识红队"><a href="#红队攻防入门1–初识红队" class="headerlink" title="红队攻防入门1–初识红队"></a>红队攻防入门1–初识红队</h2><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F1.png" class>
+
+<p>###红队概念</p>
+<p><strong>红队（Red Team）即安全团队最大化模拟真实世界里面的入侵事件，采用入侵者的战术、技术、流程，以此来检验蓝队（Blue Team）的威胁检测和应急响应的机制和效率，最终帮助企业真正提高整个安全建设、安全运营、安全管理等能力。</strong></p>
+<p>####1.1红队VS渗透测试</p>
+<p>在企业内部的一般的渗透测试，很多就是点到为止，并不会被授予很多的权限。而红队整体来看，在合法合规的前提下，在充分沟通的前提下，授权范围会更加广泛，真实程度更加贴合实战。</p>
+<img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F2.jpg" class>
+
+<h4 id="1-2红队VS蓝队"><a href="#1-2红队VS蓝队" class="headerlink" title="1.2红队VS蓝队"></a>1.2红队VS蓝队</h4><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F3.jpg" class>
+
+<p>无论是Red Team 还是Blue Team,这些概念都来自真实的战争领域。</p>
+<blockquote>
+<p>作为红队，是以攻击方的方式做安全工作的，常见的技术概念有APT攻击、渗透测试、零日漏洞、武器开发。</p>
+</blockquote>
+<blockquote>
+<p>作为蓝队，则以防御方的方式做安全工作，是安全合规、安全运营、应急响应、态势感知、威胁情报等等。</p>
+</blockquote>
+<p>####1.3 红队常用模型框架</p>
+ <img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F4.jpg" class>
+
+
+
+<p>#####1.3.1渗透测试执行标准PTES</p>
+
+
+<p>PTES中文全名【渗透测试执行标准】，他是有2010年由业界网络安全专家共同发起并定义的规范，目标是希望为企业和安全服务商，指定整个渗透测试的标准流程，方便大家工作和沟通。</p>
+<p>PTES 包括 7 个标准步骤，即前期交互、情报收集、威胁建模、漏洞分析、渗透利用、报告输出等，一般的渗透测试工作，基本都绕不开这些步骤，可以看成一个标准的工作流。</p>
+<p><strong>① 前期交互</strong></p>
+<p>前期交互阶段，我们得先拿到客户的授权，并且了解授权范围多少？渗透目标是谁？期望目标是什么？</p>
+<p>这些都是前期交互阶段要沟通好的。</p>
+<p><strong>② 情报搜集</strong></p>
+<p>情报搜集阶段，即根据上面的授权、范围、目标等信息，开始进行一些情报搜集工作。</p>
+<p>无论是主动搜集还是被动搜集，我们得知道对方开了哪个端口、提供了什么服务、这些服务的软件版本是什么、这些软件是否曾经出现过漏洞？</p>
+<p><strong>③ 威胁建模</strong></p>
+<p>哪些信息是真正有价值的？哪个口子用什么攻击方法？哪条攻击路径是最大可能的？</p>
+<p>根据情报搜集的汇总，我们得制定出接下来的「作战计划」。</p>
+<p>这些就是在威胁建模阶段要分析出来的。</p>
+<p><strong>④ 漏洞分析</strong></p>
+<p>结合以上情报搜集和威胁建模阶段，此阶段我们要判断出哪些漏洞是最有可能拿到对方权限，打通攻击路径的。</p>
+<p>哪些漏洞的攻击效果最佳？</p>
+<p>哪些漏洞有最新的工具？</p>
+<p>哪些漏洞需要自研渗透代码？</p>
+<p><strong>⑤ 渗透利用</strong></p>
+<p>前面 4 个阶段都不算真正 Hack 进目标系统，而这个阶段则是真正对目标进行渗透攻击，通过漏洞对应的利用工具等，获取目标控制权。</p>
+<p><strong>⑥ 后渗透</strong></p>
+<p>在拿到控制权限之后，为了避免对方发现，还需要进行后渗透，实现更持久地控制，更深层次地执行任务。</p>
+<p>比如进程迁移、隧道建立、数据获取、擦除痕迹等。</p>
+<p><strong>⑦ 报告输出</strong></p>
+<p>最后阶段就是输出一份安全报告，即写明渗透测试工作中，企业 IT 基础系统所存在的漏洞和风险点。</p>
+<p>以上便是 PTES 渗透测试执行标准。</p>
+<h5 id="1-3-2网络杀伤链Cyber-Kill-Chain"><a href="#1-3-2网络杀伤链Cyber-Kill-Chain" class="headerlink" title="1.3.2网络杀伤链Cyber Kill Chain"></a>1.3.2网络杀伤链Cyber Kill Chain</h5><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F6.jpg" class>
+
+<p>网络杀伤链的英文全名是 Cyber Kill Chain，这是 2011 年洛克希德马丁公司提出的网络攻击模型。</p>
+<p>跟真实世界的入侵者，对一个目标系统进行攻击的每个阶段都是一一映射的。</p>
+<p>这里也分为 7 个步骤 =&gt;</p>
+<p><strong>第 1 步，目标侦察，</strong>跟前面 PTES 情报收集阶段是差不多的；</p>
+<p><strong>第 2 步，武器研制，</strong>编写各种工具/后门/病毒 Exp / Weapon / Malware；</p>
+<p><strong>第 3 步，载荷投递，</strong>通过水坑鱼叉等攻击方式将武器散播出去（<strong>投毒</strong>）；</p>
+<p><strong>第 4 步，渗透利用，</strong>通过<strong>漏洞利用</strong>获取对方控制器；</p>
+<p><strong>第 5 步，安装执行</strong>，在目标系统将<strong>后门木马</strong>跑起来；</p>
+<p><strong>第 6 步，命令控制，</strong>对目标来进行<strong>持久化控制</strong>；</p>
+<p><strong>第 7 步，任务执行，</strong>即开始执行<strong>窃取数据、破坏系统</strong>等。</p>
+<p>以上便是网络杀伤链，相比 PTES 更加贴合实战阶段。</p>
+<h5 id="1-3-3MITRE-ATT-amp-CK框架"><a href="#1-3-3MITRE-ATT-amp-CK框架" class="headerlink" title="1.3.3MITRE ATT&amp;CK框架"></a>1.3.3MITRE ATT&amp;CK框架</h5><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F7.jpg" class>
+
+<p>「<strong>ATT&amp;CK 框架</strong>」，由 MITRE 公司于 2013 年提出来的一个通用知识框架，中文名叫做「<strong>对抗战术、技术、常识</strong> 」 。</p>
+<p>ATT&amp;CK 框架是基于真实网络空间攻防案例及数据，采用军事战争中的 <strong>TTPs （Tactics, Techniques &amp; Procedures）</strong>方法论，重新编排的网络安全知识体系，目的是建立一套网络安全的通用语言。</p>
+<p>举例，大家经常听到的什么 APT 攻击、威胁情报、态势感知等等，无论个人还是企业，理解上不尽相同，总会有一些偏差的。</p>
+<p>有了 ATT&amp;CK 框架，大家不会存在太大的偏差，红队具体怎么去攻击的，蓝队具体到怎么去防御的，使用 ATT&amp;CK 矩阵可以将每个细节标记出来，攻击路线和防御过程都可以图形展现出来，攻防双方就有了一套通用语言了。</p>
+<p>网络安全行业的组织、机构、厂家，每年都会造各种 ”新词“，但 MITRE 这个组织推的这套框架，兼具实战和学术价值，具备广泛的应用场景，对安全行业的发展推动是实实在在的。</p>
+<p>我认为，在未来 5 年也好 10 年也好 ，它可能会成为一个事实上的标准。</p>
+<p>这里看一下左上角图片，它整体有三个部分，一个是 PRE ATT&amp;CK，一个是 ATT&amp;CK for Enterprise，一个是 ATT&amp;CK for Mobile，我们学习和研究时，核心放在 ATT&amp;CK forEnterprise 即可。</p>
+<p>大家可以看到，其实左边这里面，也有侦查、武器化、载荷传递、利用、控制、执行、维持等等阶段，是不是跟前面介绍的网络杀伤链是一样的呢？</p>
+<p>是的，你可以这么简单理解，其实 ATT&amp;CK 这个框架，刚开始就是在杀伤链的基础上，提供了更加具体的、更细颗粒度的战术、技术、文档、工具、描述等等。</p>
+<p>因此，如果要深入学习红队，平常可以多逛逛去 ATT&amp;CK 框架官网。</p>
+<img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F8.jpg" class>
+
+<p>接下来，我们来重点看一下 ATT&amp;CK for Enterprise。</p>
+<p>这张图里面，横轴代表是战术（Tactics），最新版本里横轴包括的战术有 12 个（原来是 10 个），纵轴代表的是技术（Techniques）有 156 个技术 272 个子技术。</p>
+<p>前面我们提到了，它是基于 TTPs 方法来描述的，所以非常标准和通用。</p>
+<p>在实际的红蓝对抗、威胁情报分析、安全差距评估等工作场景中，都可以用得上。</p>
+<p>另外补充一点，这 12 个战术从左到右，也是按照网络杀伤链的路径来编排的，包括初始访问、执行、持久化、权限提升、防御绕过、凭证访问、发现、横向移动、收集、命令控制、数据获取、影响。</p>
+<p>每一个战术下面包括很多技术，每个技术有详细的过程，包括独立的编号、描述、工具等。</p>
+]]></content>
+      <categories>
+        <category>网络安全</category>
+      </categories>
+      <tags>
+        <tag>红队攻防</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>组件基础</title>
+    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>组件进阶篇--深入了解组件</title>
+    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E8%BF%9B%E9%98%B6%E7%AF%87-%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E7%BB%84%E4%BB%B6/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>编程范式</title>
+    <url>/2021/03/02/%E7%BC%96%E7%A8%8B%E8%8C%83%E5%BC%8F/</url>
+    <content><![CDATA[<p>相信绝大部分开发人员、DBA都听过范式这个词，在MySQL中有第一范式、第二范式、第三范式、BCNF范式等，在开发中也有相应的范式，专业词汇叫编程范式(ProgrammingParadigm)。由于笔者能力、精力都有限，本篇主要通过针对同一业务场景，基于编程范式的概念，核心原理以及用例实现来对比不同范式及其实现业务功能的差异。</p>
+<p>范式分类</p>
+<p>如图1所示，范式可以简单分为三类:</p>
+<p>图1: 范式的简单分类</p>
+ <img data-src="/2021/03/02/%E7%BC%96%E7%A8%8B%E8%8C%83%E5%BC%8F/01.jpg" class>
+
+<p>范式和语言的关系</p>
+<p>图2: 范式和语言的关系</p>
+ <img data-src="/2021/03/02/%E7%BC%96%E7%A8%8B%E8%8C%83%E5%BC%8F/02.jpg" class>
+
+<p>与成百种编程语言相比，编程范式要少得多，如图2所示，共有27种范式。多数范式之间仅相差一个或几个概念，比如图中的函数编程范式，在加入了状态（state）之后就变成了面向对象编程范式。</p>
+<p>| 编程范式</p>
+<p>图3: 华山派剑气之争</p>
+ <img data-src="/2021/03/02/%E7%BC%96%E7%A8%8B%E8%8C%83%E5%BC%8F/03.jpg" class>
+
+<blockquote>
+<p>过程式编程的核心在于模块化，在实现过程中使用了状态，依赖了外部变量，导致很容易影响附近的代码，可读性较少，后期的维护成本也较高。</p>
+</blockquote>
+<blockquote>
+<p>函数式编程的核心在于“避免副作用”，不改变也不依赖当前函数外的数据。结合不可变数据、函数是第一等公民等特性，使函数带有自描述性，可读性较高。</p>
+</blockquote>
+<blockquote>
+<p>面向对象编程的核心在于抽象，提供清晰的对象边界。结合封装、集成、多态特性，降低了代码的耦合度，提升了系统的可维护性。</p>
+</blockquote>
+<p>不同的范式的出现，目的就是为了应对不同的场景，但最终的目标都是提高生产力。就如华山派的剑宗、气宗之别，剑宗认为“剑为主，气为辅”，而气宗则反之。每个范式都会有自己的”心法”，但最终殊途同归，达到至高境界后则是剑气双修。</p>
+<p>| 小结</p>
+<p>阅读完之前内容后，相信各位读者对编程范式有了初步的理解，那么接下来就和笔者一起来实现业务的真实需求。</p>
+<p>| 需求</p>
+<pre><code> 1.解析并收集shannon, fio 两种 flash卡的温度、寿命等信息。
+
+ 2.对实现代码进行单元测试</code></pre>
+<p>在用过程式实现之前，笔者先给大家介绍下什么叫过程式编程。</p>
+<p>| 过程式编程(Procedural)</p>
+<p>过程式编程和面向对象编程的区别并不在于是否使用函数或者类，也就是说用到类或对象的可能是过程式编程，只用函数而没有类的也可能是面向对象编程。那么他们的区别又在哪儿呢？</p>
+<p>面向过程其实是最为实际的一种思考方式，可以说面向过程是一种基础的方法，它考虑的是实际地实现。一般的面向过程是从上往下步步求精，所以面向过程最重要的是模块化的思想方法。当程序规模不是很大时，面向过程的方法还会体现出一种优势。因为程序的流程很清楚，按着模块与函数的方法可以很好的组织。</p>
+<p>关键部分实现代码</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_shannon_info</span>(<span class="params">output</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;获取shannon类型flash卡信息</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">check_health</span>():</span></span><br><span class="line">        time_left = <span class="built_in">float</span>(sub_info[<span class="string">&quot;life_left&quot;</span>])</span><br><span class="line">        <span class="keyword">if</span> time_left &lt; DISK_ALARM_LIFETIME:</span><br><span class="line">            message = <span class="string">&quot;time left is less than &#123;&#125;%&quot;</span>.<span class="built_in">format</span>(DISK_ALARM_LIFETIME)</span><br><span class="line">            <span class="keyword">return</span> message</span><br><span class="line">        temperature = <span class="built_in">float</span>(sub_info[<span class="string">&quot;temperature&quot;</span>].split()[<span class="number">0</span>])</span><br><span class="line">        <span class="keyword">if</span> temperature &gt; DISK_ALARM_TEMPERATURE:</span><br><span class="line">            message = <span class="string">&quot;temperature is over than &#123;&#125; C&quot;</span>.<span class="built_in">format</span>(DISK_ALARM_TEMPERATURE)</span><br><span class="line">            <span class="keyword">return</span> message</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;healthy&quot;</span></span><br><span class="line"> </span><br><span class="line">    result = &#123;&#125;</span><br><span class="line">    all_info = _get_shannon_info(output)</span><br><span class="line">    <span class="keyword">for</span> info <span class="keyword">in</span> all_info:</span><br><span class="line">        sub_info = &#123;&#125;</span><br><span class="line">        sub_info[<span class="string">&quot;available_capacity&quot;</span>] = info.get(<span class="string">&quot;disk_capacity&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">        sub_info[<span class="string">&quot;device_name&quot;</span>] = info.get(<span class="string">&quot;block_device_node&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">        sub_info[<span class="string">&quot;firmware_version&quot;</span>] = info.get(<span class="string">&quot;firmware_version&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">        sub_info[<span class="string">&quot;interface&quot;</span>] = <span class="string">&quot;PCIe&quot;</span></span><br><span class="line">        sub_info[<span class="string">&quot;life_left&quot;</span>] = <span class="built_in">str</span>(info.get(<span class="string">&quot;estimated_life_left&quot;</span>, <span class="string">&quot;&quot;</span>).replace(<span class="string">&quot;%&quot;</span>, <span class="string">&quot;&quot;</span>))</span><br><span class="line">        sub_info[<span class="string">&quot;pcie_id&quot;</span>] = info.get(<span class="string">&quot;pci_deviceid&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">        sub_info[<span class="string">&quot;pcie_length&quot;</span>] = <span class="string">&quot;&quot;</span></span><br><span class="line">        sub_info[<span class="string">&quot;pcie_type&quot;</span>] = <span class="string">&quot;&quot;</span></span><br><span class="line">        sub_info[<span class="string">&quot;physical_read&quot;</span>] = info.get(<span class="string">&quot;host_read_data&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">        sub_info[<span class="string">&quot;physical_write&quot;</span>] = info.get(<span class="string">&quot;total_write_data&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">        sub_info[<span class="string">&quot;serial_number&quot;</span>] = info.get(<span class="string">&quot;serial_number&quot;</span>)</span><br><span class="line">        sub_info[<span class="string">&quot;temperature&quot;</span>] = info.get(<span class="string">&quot;controller_temperature&quot;</span>)</span><br><span class="line">        sub_info[<span class="string">&quot;type&quot;</span>] = info[<span class="string">&quot;type&quot;</span>]</span><br><span class="line">        sub_info[<span class="string">&quot;error_msg&quot;</span>] = check_health()</span><br><span class="line">        sub_info[<span class="string">&quot;status&quot;</span>] = <span class="string">&quot;ok&quot;</span> <span class="keyword">if</span> sub_info[<span class="string">&quot;error_msg&quot;</span>] == <span class="string">&quot;healthy&quot;</span> <span class="keyword">else</span> <span class="string">&quot;error&quot;</span></span><br><span class="line">        <span class="keyword">if</span> sub_info[<span class="string">&quot;serial_number&quot;</span>]:</span><br><span class="line">            result[sub_info[<span class="string">&quot;serial_number&quot;</span>]] = sub_info</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            result[sub_info[<span class="string">&quot;device_name&quot;</span>]] = sub_info</span><br><span class="line">    <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+<p>代码问题</p>
+<pre><code>1.逻辑冗长，局部修改必须阅读整段代码
+
+2.对外部变量有依赖
+
+3.内部存在共享变量
+
+4.函数内部存在临时变量</code></pre>
+<p>测试代码</p>
+<p>过程式的测试代码效果远不如函数式有效，过程式的实现逻辑过于冗长，导致测试效果并不够好。</p>
+<p>| 函数式编程(Functional)</p>
+<p>当谈论函数式编程，会提到非常多的“函数式”特性。提到不可变数据，第一类对象以及尾调用优化，这些是帮助函数式编程的语言特征。提到mapping（映射），reducing（归纳），piplining（管道），recursing（递归），currying（科里化），以及高阶函数的使用，这些是用来写函数式代码的编程技术。提到并行，惰性计算以及确定性，这些是有利于函数式编程的属性。</p>
+<p>最主要的原则是避免副作用，它不会依赖也不会改变当前函数以外的数据。</p>
+<p>声明式的函数，让开发者只需要表达 “想要做什么”，而不需要表达 “怎么去做”，这样就极大地简化了开发者的工作。至于具体 “怎么去做”，让专门的任务协调框架去实现，这个框架可以灵活地分配工作给不同的核、不同的计算机，而开发者不必关心框架背后发生了什么。</p>
+<p>关键部分实现代码</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_shannon_info</span>(<span class="params">output</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;查询shannon类型flash卡信息</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    lines = checks_string_split_by_function(output, is_shannon_flash_device)</span><br><span class="line">    info = <span class="built_in">map</span>(parser_shannon_info, lines)</span><br><span class="line"> </span><br><span class="line">    <span class="comment"># map(lambda x: x.setdefault(&quot;type&quot;, &quot;shannon&quot;), info)</span></span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> info:</span><br><span class="line">        item[<span class="string">&quot;type&quot;</span>] = <span class="string">&quot;shannon&quot;</span></span><br><span class="line"> </span><br><span class="line">    data = <span class="built_in">map</span>(modify_the_properties, info)</span><br><span class="line">    <span class="keyword">return</span> reduce(combining_data, <span class="built_in">map</span>(convert_data_format, data))</span><br></pre></td></tr></table></figure>
+<p>以上代码带有自描述性，通过函数名就可知在做什么，这也是函数式的一个特性: 代码是在描述要干什么，而不是怎么干。</p>
+<p>测试代码</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@pytest.mark.parametrize(<span class="params"><span class="string">&quot;line, result&quot;</span>, [</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;Found Shannon PCIE&quot;</span>, <span class="literal">False</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;Found Shannon PCIE Flash car&quot;</span>, <span class="literal">False</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;Found Shannon PCIE Flash card a&quot;</span>, <span class="literal">True</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;Found Shannon PCIE Flash card&quot;</span>, <span class="literal">True</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;Found Shannon PCIE Flash card.&quot;</span>, <span class="literal">True</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">]</span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_is_shannon_flash_device</span>(<span class="params">line, result</span>):</span></span><br><span class="line">    <span class="keyword">assert</span> functional.is_shannon_flash_device(line) == result</span><br></pre></td></tr></table></figure>
+
+<p>​     </p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@pytest.mark.parametrize(<span class="params"><span class="string">&quot;line, result&quot;</span>, [</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;a=1&quot;</span>, <span class="literal">True</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;b=2&quot;</span>, <span class="literal">True</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;c=2333&quot;</span>, <span class="literal">True</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;d x=abcde&quot;</span>, <span class="literal">True</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;Found Shannon PCIE=1&quot;</span>, <span class="literal">True</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;abcdedfew=&quot;</span>, <span class="literal">False</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;Found Shannon PCIE&quot;</span>, <span class="literal">False</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot; =Found Shannon PCIE&quot;</span>, <span class="literal">False</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;=Found Shannon PCIE&quot;</span>, <span class="literal">False</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;Found Shannon PCIE=&quot;</span>, <span class="literal">False</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;Found Shannon PCIE= &quot;</span>, <span class="literal">False</span></span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">]</span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_is_effective_value</span>(<span class="params">line, result</span>):</span></span><br><span class="line">    <span class="keyword">assert</span> functional.is_effective_value(line) == result</span><br></pre></td></tr></table></figure>
+
+<p>​     </p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@pytest.mark.parametrize(<span class="params"><span class="string">&quot;line, result&quot;</span>, [</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;a=1&quot;</span>, &#123;<span class="string">&quot;a&quot;</span>: <span class="string">&quot;1&quot;</span>&#125;</span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;b=2&quot;</span>, &#123;<span class="string">&quot;b&quot;</span>: <span class="string">&quot;2&quot;</span>&#125;</span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;a=a&quot;</span>, &#123;<span class="string">&quot;a&quot;</span>: <span class="string">&quot;a&quot;</span>&#125;</span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;abc=a&quot;</span>, &#123;<span class="string">&quot;abc&quot;</span>: <span class="string">&quot;a&quot;</span>&#125;</span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;abc=abcde&quot;</span>, &#123;<span class="string">&quot;abc&quot;</span>: <span class="string">&quot;abcde&quot;</span>&#125;</span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">]</span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_gets_the_index_name_and_value</span>(<span class="params">line, result</span>):</span></span><br><span class="line">    <span class="keyword">assert</span> functional.gets_the_index_name_and_value(line) == result</span><br></pre></td></tr></table></figure>
+
+<p>​     </p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@pytest.mark.parametrize(<span class="params"><span class="string">&quot;output, filter_func, result&quot;</span>, [</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="string">&quot;abcd\nbcd\nabcd\nbcd\naa\naa&quot;</span>, <span class="keyword">lambda</span> x: <span class="string">&quot;a&quot;</span> <span class="keyword">in</span> x, [<span class="string">&quot;abcd\nbcd&quot;</span>, <span class="string">&quot;abcd\nbcd&quot;</span>, <span class="string">&quot;aa&quot;</span>, <span class="string">&quot;aa&quot;</span>]</span>),</span></span></span><br><span class="line"><span class="meta"><span class="params">(<span class="params"><span class="built_in">open</span>(<span class="params">os.path.join(<span class="params">project_path, <span class="string">&quot;fixtures&quot;</span>, <span class="string">&quot;shannon-status.txt&quot;</span></span>)</span>).read(<span class="params"></span>), functional.is_shannon_flash_device, [</span></span></span></span><br><span class="line"><span class="meta"><span class="params"><span class="params">    <span class="built_in">open</span>(<span class="params">os.path.join(<span class="params">project_path, <span class="string">&quot;fixtures&quot;</span>, <span class="string">&quot;shannon-sctb.txt&quot;</span></span>)</span>).read(<span class="params"></span>),</span></span></span></span><br><span class="line"><span class="meta"><span class="params"><span class="params">    <span class="built_in">open</span>(<span class="params">os.path.join(<span class="params">project_path, <span class="string">&quot;fixtures&quot;</span>, <span class="string">&quot;shannon-scta.txt&quot;</span></span>)</span>).read(<span class="params"></span>)</span></span></span></span><br><span class="line"><span class="meta"><span class="params"><span class="params">]</span>)</span></span></span><br><span class="line"><span class="meta"><span class="params">]</span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_checks_string_split_by_function</span>(<span class="params">output, filter_func, result</span>):</span></span><br><span class="line">    <span class="keyword">assert</span> functional.checks_string_split_by_function(output, filter_func) == result</span><br></pre></td></tr></table></figure>
+<p>| 面向对象编程(Object-Oriented)</p>
+<p>并不是使用类才是面向对象编程。如果你专注于状态改变和密封抽象，你就是在用面向对象编程。类只是帮助简化面向对象编程的工具，并不是面向对象编程的要求或指示器。封装是一个过程，它分隔构成抽象的结构和行为的元素。封装的作用是分离抽象的概念接口及其实现。类只是帮助简化面向对象编程的工具，并不是面向对象编程的要求或指示器。</p>
+<p>随着系统越来越复杂，系统就会变得越来越容易崩溃，分而治之，解决复杂性的技巧。面对对象思想的产生是为了让你能更方便的理解代码。有了那些封装，多态，继承，能让你专注于部分功能，而不需要了解全局。</p>
+<p>关键部分实现代码</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IFlash</span>(<span class="params">six.with_metaclass(<span class="params">abc.ABCMeta</span>)</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"> </span><br><span class="line"><span class="meta">    @abc.abstractmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">collect</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;收集flash卡物理信息</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+
+<p>​     </p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FlashShannon</span>(<span class="params">IFlash</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;宝存的Flash卡</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, txt_path, command, printer</span>):</span></span><br><span class="line">        <span class="built_in">super</span>(FlashShannon, self).__init__()</span><br><span class="line">        self.txt_path = txt_path</span><br><span class="line"> </span><br><span class="line">        self.command = command</span><br><span class="line">        self.printer = printer</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">collect</span>(<span class="params">self</span>):</span></span><br><span class="line">        result = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> info <span class="keyword">in</span> self._get_shannon_info():</span><br><span class="line">            life_left = <span class="built_in">str</span>(info.get(<span class="string">&quot;estimated_life_left&quot;</span>, <span class="string">&quot;&quot;</span>)).replace(<span class="string">&quot;%&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">            temperature = info.get(<span class="string">&quot;controller_temperature&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">            error_msg = self._get_health_message(life_left, temperature)</span><br><span class="line">            sub_info = &#123;</span><br><span class="line">                <span class="string">&quot;available_capacity&quot;</span>: info.get(<span class="string">&quot;disk_capacity&quot;</span>, <span class="string">&quot;&quot;</span>),</span><br><span class="line">                <span class="string">&quot;device_name&quot;</span>: info.get(<span class="string">&quot;block_device_node&quot;</span>, <span class="string">&quot;&quot;</span>),</span><br><span class="line">                <span class="string">&quot;firmware_version&quot;</span>: info.get(<span class="string">&quot;firmware_version&quot;</span>, <span class="string">&quot;&quot;</span>),</span><br><span class="line">                <span class="string">&quot;interface&quot;</span>: <span class="string">&quot;PCIe&quot;</span>,</span><br><span class="line">                <span class="string">&quot;life_left&quot;</span>: life_left,</span><br><span class="line">                <span class="string">&quot;pcie_id&quot;</span>: info.get(<span class="string">&quot;pci_deviceid&quot;</span>, <span class="string">&quot;&quot;</span>),</span><br><span class="line">                <span class="string">&quot;pcie_length&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">                <span class="string">&quot;pcie_type&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">                <span class="string">&quot;physical_read&quot;</span>: info.get(<span class="string">&quot;host_read_data&quot;</span>, <span class="string">&quot;&quot;</span>),</span><br><span class="line">                <span class="string">&quot;physical_write&quot;</span>: info.get(<span class="string">&quot;total_write_data&quot;</span>, <span class="string">&quot;&quot;</span>),</span><br><span class="line">                <span class="string">&quot;serial_number&quot;</span>: info.get(<span class="string">&quot;serial_number&quot;</span>, <span class="string">&quot;&quot;</span>),</span><br><span class="line">                <span class="string">&quot;temperature&quot;</span>: temperature,</span><br><span class="line">                <span class="string">&quot;type&quot;</span>: info[<span class="string">&quot;type&quot;</span>],</span><br><span class="line">                <span class="string">&quot;error_msg&quot;</span>: error_msg,</span><br><span class="line">                <span class="string">&quot;status&quot;</span>: <span class="string">&quot;ok&quot;</span> <span class="keyword">if</span> error_msg == <span class="string">&quot;healthy&quot;</span> <span class="keyword">else</span> <span class="string">&quot;error&quot;</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> sub_info[<span class="string">&quot;serial_number&quot;</span>]:</span><br><span class="line">                result[sub_info[<span class="string">&quot;serial_number&quot;</span>]] = sub_info</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                result[sub_info[<span class="string">&quot;device_name&quot;</span>]] = sub_info</span><br><span class="line">        <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+
+<p>​     </p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FlashFio</span>(<span class="params">IFlash</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;fio的Flash卡</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, txt_path</span>):</span></span><br><span class="line">        <span class="built_in">super</span>(FlashFio, self).__init__()</span><br><span class="line">        self.txt_path = txt_path</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">collect</span>(<span class="params">self</span>):</span></span><br><span class="line">        disk_info = &#123;&#125;</span><br><span class="line">        adapter_info = self._get_adapter_info()</span><br><span class="line">        <span class="keyword">for</span> info <span class="keyword">in</span> adapter_info:</span><br><span class="line">            serial_number = info[<span class="string">&quot;fio_serial_number&quot;</span>]</span><br><span class="line">            <span class="keyword">for</span> io <span class="keyword">in</span> info[<span class="string">&quot;iomemory&quot;</span>]:</span><br><span class="line">                data = self._combining_io_memory(io)</span><br><span class="line">                data[<span class="string">&quot;serial_number&quot;</span>] = serial_number</span><br><span class="line">                disk_info[serial_number] = data</span><br><span class="line">        <span class="keyword">return</span> disk_info</span><br></pre></td></tr></table></figure>
+<p>| 编程范式带来的好处</p>
+<p>范式就像武功心法，可以更快的练成绝世神功，但还是离不开基础功。代码也一样，通过遵循相关范式和良好的设计后，会带来可读性、扩展性和可维护性更好的代码，进而提升软件的质量。</p>
+<p>| 总结</p>
+<p>命令式编程、面向对象编程、函数式编程，虽然受人追捧的时间点各不相同，但是本质上并没有优劣之分。 面向对象和函数式、过程式编程也不是完成独立和有严格的界限，在抽象出各个独立的对象后，每个对象的具体行为实现还是有函数式和过程式完成。</p>
+<p>现代的程序员应该很少有门派之见了，应该集百家之所长，学习其它范式(语言)的优秀设计理念，集成到自己的代码(产品、语言)中，提升工作效率。</p>
+]]></content>
+      <categories>
+        <category>计算机常识</category>
+      </categories>
+      <tags>
+        <tag>编程范式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>网络服务性能指标</title>
+    <url>/2021/09/25/%E7%BD%91%E7%BB%9C%E6%9C%8D%E5%8A%A1%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87/</url>
+    <content><![CDATA[<h1 id="一、QPS，每秒查询"><a href="#一、QPS，每秒查询" class="headerlink" title="一、QPS，每秒查询"></a>一、QPS，每秒查询</h1><p>QPS：Queries Per Second意思是“每秒查询率”，是一台服务器每秒能够相应的查询次数，是对一个特定的查询服务器在规定时间内所处理流量多少的衡量标准。</p>
+<p>互联网中，作为域名系统服务器的机器的性能经常用每秒查询率来衡量。</p>
+<h1 id="二、TPS，每秒事务"><a href="#二、TPS，每秒事务" class="headerlink" title="二、TPS，每秒事务"></a>二、TPS，每秒事务</h1><p>TPS：是TransactionsPerSecond的缩写，也就是事务数/秒。它是软件测试结果的测量单位。一个事务是指一个客户机向服务器发送请求然后服务器做出反应的过程。客户机在发送请求时开始计时，收到服务器响应后结束计时，以此来计算使用的时间和完成的事务个数。</p>
+<p>QPS vs TPS：QPS基本类似于TPS，但是不同的是，对于一个页面的一次访问，形成一个TPS；但一次页面请求，可能产生多次对服务器的请求，服务器对这些请求，就可计入“QPS”之中。如，访问一个页面会请求服务器2次，一次访问，产生一个“T”，产生2个“Q”。</p>
+<h1 id="三、RT，响应时间"><a href="#三、RT，响应时间" class="headerlink" title="三、RT，响应时间"></a>三、RT，响应时间</h1><p>响应时间：执行一个请求从开始到最后收到响应数据所花费的总体时间,即从客户端发起请求到收到服务器响应结果的时间。</p>
+<p>响应时间RT(Response-time)，是一个系统最重要的指标之一，它的数值大小直接反应了系统的快慢。</p>
+<h1 id="四、并发数"><a href="#四、并发数" class="headerlink" title="四、并发数"></a>四、并发数</h1><p>并发数是指系统同时能处理的请求数量，这个也是反应了系统的负载能力。</p>
+<h1 id="五、吞吐量"><a href="#五、吞吐量" class="headerlink" title="五、吞吐量"></a>五、吞吐量</h1><p>系统的吞吐量（承压能力）与request对CPU的消耗、外部接口、IO等等紧密关联。单个request 对CPU消耗越高，外部系统接口、IO速度越慢，系统吞吐能力越低，反之越高。</p>
+<p>系统吞吐量几个重要参数：QPS（TPS）、并发数、响应时间。</p>
+<ol>
+<li>QPS（TPS）：（Query Per Second）每秒钟request/事务 数量</li>
+<li>并发数： 系统同时处理的request/事务数</li>
+<li>响应时间： 一般取平均响应时间</li>
+</ol>
+<p>理解了上面三个要素的意义之后，就能推算出它们之间的关系：</p>
+<ul>
+<li><strong>QPS（TPS）= 并发数/平均响应时间</strong></li>
+<li><strong>并发数 = QPS*平均响应时间</strong></li>
+</ul>
+<h1 id="六、实际举例"><a href="#六、实际举例" class="headerlink" title="六、实际举例"></a>六、实际举例</h1><p>我们通过一个实例来把上面几个概念串起来理解。按二八定律来看，如果每天 80% 的访问集中在 20% 的时间里，这 20% 时间就叫做峰值时间。</p>
+<ul>
+<li>公式：( 总PV数 * 80% ) / ( 每天秒数 * 20% ) = 峰值时间每秒请求数(QPS)</li>
+<li>机器：峰值时间每秒QPS / 单台机器的QPS = 需要的机器</li>
+</ul>
+<p><strong>1、每天300w PV 的在单台机器上，这台机器需要多少QPS？</strong><br>( 3000000 * 0.8 ) / (86400 * 0.2 ) = 139 (QPS)</p>
+<p><strong>2、如果一台机器的QPS是58，需要几台机器来支持？</strong><br>139 / 58 = 3</p>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>高并发网络性能指标</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>虚拟机种类</title>
+    <url>/2021/03/14/%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%A7%8D%E7%B1%BB/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>表单输入绑定</title>
+    <url>/2021/03/14/%E8%A1%A8%E5%8D%95%E8%BE%93%E5%85%A5%E7%BB%91%E5%AE%9A/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>计算属性与监听器setter</title>
+    <url>/2021/03/14/%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7%E4%B8%8E%E7%9B%91%E5%90%AC%E5%99%A8setter/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>设计模式--之六大原则</title>
@@ -4128,6 +4250,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
+    <title>过度与动画</title>
+    <url>/2021/03/14/%E8%BF%87%E5%BA%A6%E4%B8%8E%E5%8A%A8%E7%94%BB/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>链表</title>
     <url>/2021/01/13/%E9%93%BE%E8%A1%A8/</url>
     <content><![CDATA[<h2 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h2><h3 id="单链表"><a href="#单链表" class="headerlink" title="单链表"></a>单链表</h3><p>单链表中的每个结点不仅包含值，还包含链接到下一个结点的引用字段。通过这种方式，单链表将所有结点按顺序组织起来。习惯于用头节点来代表整个单链表。</p>
@@ -4205,11 +4332,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>过度与动画</title>
-    <url>/2021/03/14/%E8%BF%87%E5%BA%A6%E4%B8%8E%E5%8A%A8%E7%94%BB/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>链表刷题总结（easy篇）</title>
     <url>/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/</url>
     <content><![CDATA[<h1 id="链表知识刷题总结（easy篇）"><a href="#链表知识刷题总结（easy篇）" class="headerlink" title="链表知识刷题总结（easy篇）"></a>链表知识刷题总结（easy篇）</h1><p>###1.返回链表的倒数第k个结点</p>
@@ -4263,6 +4385,12 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>链表</tag>
       </tags>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/2021/03/02/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/JVM%E5%90%AC%E8%AF%BE%E7%AC%94%E8%AE%B0%E8%A1%A5%E5%85%85/</url>
+    <content><![CDATA[<p>java的指令是根据栈来设计的，不适用基于寄存器的，是因为基于寄存器与CPU耦合度太高，不太好实现跨平台运行</p>
+<img data-src="https://tse1-mm.cn.bing.net/th/id/OIP.f3N7J7-cCRt2cBZM2z-XlQHaGV?w=223&h=191&c=7&o=5&dpr=1.5&pid=1.7" alt=" JVM内存结构 的图像结果" style="zoom: 200%;">]]></content>
   </entry>
   <entry>
     <title>阿里云ECS部署服务器</title>
@@ -4327,12 +4455,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>阿里云ECS部署</tag>
       </tags>
-  </entry>
-  <entry>
-    <title></title>
-    <url>/2021/03/02/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/JVM%E5%90%AC%E8%AF%BE%E7%AC%94%E8%AE%B0%E8%A1%A5%E5%85%85/</url>
-    <content><![CDATA[<p>java的指令是根据栈来设计的，不适用基于寄存器的，是因为基于寄存器与CPU耦合度太高，不太好实现跨平台运行</p>
-<img data-src="https://tse1-mm.cn.bing.net/th/id/OIP.f3N7J7-cCRt2cBZM2z-XlQHaGV?w=223&h=191&c=7&o=5&dpr=1.5&pid=1.7" alt=" JVM内存结构 的图像结果" style="zoom: 200%;">]]></content>
   </entry>
   <entry>
     <title>CDN</title>
