@@ -830,13 +830,6 @@
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/tags/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</loc>
-    <lastmod>2022-01-30</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://www.mindmaster.top/tags/spring/</loc>
     <lastmod>2022-01-30</lastmod>
     <changefreq>daily</changefreq>
@@ -845,6 +838,13 @@
   
   <url>
     <loc>https://www.mindmaster.top/tags/IPVS/</loc>
+    <lastmod>2022-01-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.mindmaster.top/tags/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</loc>
     <lastmod>2022-01-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -921,6 +921,13 @@
   </url>
   
   <url>
+    <loc>https://www.mindmaster.top/tags/SVN/</loc>
+    <lastmod>2022-01-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.mindmaster.top/tags/Servlet%E8%A7%84%E8%8C%83/</loc>
     <lastmod>2022-01-30</lastmod>
     <changefreq>daily</changefreq>
@@ -929,13 +936,6 @@
   
   <url>
     <loc>https://www.mindmaster.top/tags/Session/</loc>
-    <lastmod>2022-01-30</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.mindmaster.top/tags/SVN/</loc>
     <lastmod>2022-01-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -991,7 +991,7 @@
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/tags/%E9%80%92%E5%BD%92/</loc>
+    <loc>https://www.mindmaster.top/tags/RabbitMQ/</loc>
     <lastmod>2022-01-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1012,14 +1012,7 @@
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/tags/RabbitMQ/</loc>
-    <lastmod>2022-01-30</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.mindmaster.top/tags/%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2/</loc>
+    <loc>https://www.mindmaster.top/tags/%E9%80%92%E5%BD%92/</loc>
     <lastmod>2022-01-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1027,6 +1020,13 @@
   
   <url>
     <loc>https://www.mindmaster.top/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/</loc>
+    <lastmod>2022-01-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.mindmaster.top/tags/%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2/</loc>
     <lastmod>2022-01-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1175,13 +1175,6 @@
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/categories/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
-    <lastmod>2022-01-30</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://www.mindmaster.top/categories/spring%E6%A1%86%E6%9E%B6/</loc>
     <lastmod>2022-01-30</lastmod>
     <changefreq>daily</changefreq>
@@ -1190,6 +1183,13 @@
   
   <url>
     <loc>https://www.mindmaster.top/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</loc>
+    <lastmod>2022-01-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.mindmaster.top/categories/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
     <lastmod>2022-01-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>

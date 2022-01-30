@@ -6,11 +6,6 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>AOP</title>
-    <url>/2021/03/14/AOP/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Ajax异步传输</title>
     <url>/2021/02/25/Ajax%E5%BC%82%E6%AD%A5%E4%BC%A0%E8%BE%93/</url>
     <content><![CDATA[]]></content>
@@ -20,6 +15,11 @@
       <tags>
         <tag>Ajax</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>AOP</title>
+    <url>/2021/03/14/AOP/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Cookie</title>
@@ -91,16 +91,6 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>HTTP代理</title>
-    <url>/2021/02/03/HTTP%E4%BB%A3%E7%90%86/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>HTTP报文</title>
-    <url>/2021/03/14/HTTP%E6%8A%A5%E6%96%87/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Filter</title>
     <url>/2021/02/25/Filter/</url>
     <content><![CDATA[]]></content>
@@ -112,8 +102,8 @@
       </tags>
   </entry>
   <entry>
-    <title>HTTP缓存</title>
-    <url>/2021/02/03/HTTP%E7%BC%93%E5%AD%98/</url>
+    <title>HTTP代理</title>
+    <url>/2021/02/03/HTTP%E4%BB%A3%E7%90%86/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -138,51 +128,14 @@
       </tags>
   </entry>
   <entry>
-    <title>InnoDB存储引擎</title>
-    <url>/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
-    <content><![CDATA[<h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
-<p>InnoDB存储引擎有多个内存块，这些内存块组成了一个大的内存池</p>
-<p>后台线程的主要作用就是负责刷新内存池中的数据，保证缓存池中的内存缓存的是最近的数据。此外，还将已经修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下，InnoDB可以恢复运行到最佳状态。</p>
-<h4 id="后台线程（InnDB是一个多线程模型"><a href="#后台线程（InnDB是一个多线程模型" class="headerlink" title="后台线程（InnDB是一个多线程模型)"></a>后台线程（InnDB是一个多线程模型)</h4><p>#####Master Thread</p>
-<p><strong>作用：</strong></p>
-<p>​    一个非常核心的后台进程，负责将缓存池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓存、UNDO页的回收等。</p>
-<h5 id="IO-Therad"><a href="#IO-Therad" class="headerlink" title="IO Therad"></a>IO Therad</h5><p>  在InnoDB存储引擎中大量使用了AIO（Async IO）—异步时间非阻塞IO，这样可以极大程度上提高数据库的性能。IO Thread的主要工作就是负责这些IO请求的回调</p>
-<p>共有四个IO Thread:write 、read、insert buffer、log IO thread</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114130216.png" alt="image-20210114114130216"></p>
-<p>通过命令SHOW ENGINE INNODB STASTUS\G来观察IO Thread</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114405936.png" alt="image-20210114114405936"></p>
-<p>有四个write和read IO Thread</p>
-<p>通过innodb_read_io_threads和innodb_write_io_threads参数来进行设置</p>
-<h5 id="Purge-Thread"><a href="#Purge-Thread" class="headerlink" title="Purge Thread"></a>Purge Thread</h5><p><strong>作用</strong>：</p>
-<p>​    Purge Thread回收已经使用并且已经分配的undo页（事务提交之后，其所使用的Undolog可能就不再需要）</p>
-<p>用户需要在<strong>MySQL数据库的配置文件</strong>中添加如下命令来启用独立的Purge Thread: </p>
-<p>​        innodb_purge_threads=1</p>
-<h5 id="Page-Cleaner-Thread"><a href="#Page-Cleaner-Thread" class="headerlink" title="Page Cleaner Thread"></a>Page Cleaner Thread</h5><p><strong>作用</strong>：</p>
-<p>​    将脏页的刷新操作放在单独的线程中完成。减轻Master Thread的工作以及对于用户查询线程的阻塞</p>
-<h4 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h4><h5 id="缓存池"><a href="#缓存池" class="headerlink" title="缓存池"></a>缓存池</h5><p>Innodb存储引擎是基于磁盘存储的（Disk-base Database），将其中的记录按照页来管理。</p>
-<p>缓存池的出现，就是为了解决CPU速度和磁盘速度之间的差异，通过内存的速度来弥补磁盘速度较慢对数据库性能的影响。读取文件时，首先判断给文件是否在缓存池中（没有就去磁盘上找）。</p>
-<p>在修改缓存池中的页时，先以一定频率刷新到缓存池上，然后通过Checkpoint刷新回磁盘。</p>
-<p>数据库服务器最好采用64位操作系统，可以使用更多的内存（512GB），32位（只有64GB）。</p>
-<p>缓存池的配置通过参数innodb_buffer_pool_size来设置。</p>
-<h6 id="缓存池中缓存的数据页类型："><a href="#缓存池中缓存的数据页类型：" class="headerlink" title="缓存池中缓存的数据页类型："></a>缓存池中缓存的数据页类型：</h6><p>​    索引页、数据页、Undo页、插入缓存页、自适应哈希索引页（adaptive hash index）、InnoDB存储的锁信息、数据字典信息等。</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114131120313.png" alt="image-20210114131120313"></p>
-<p><strong>允许有多个缓存池实例</strong>：每个页根据hashcode平均分配到不同的缓存池实例中，减少数据库内部资源的竞争，增加数据库的并发能力。可以通过inodb_buffer_pool_instances来进行配置，通过命令SHOW ENGINE INNODB STATUS可以观察到每个缓存池实例对象运行的状态，还可以通过查看表InnoDB_BUFFER_POOL_STATS来观察缓存的状态(要求在information_schema架构下)</p>
-<h5 id="LRU-LIST-、FREE-LIST-、FLUSH-LIST"><a href="#LRU-LIST-、FREE-LIST-、FLUSH-LIST" class="headerlink" title="LRU LIST 、FREE LIST 、FLUSH LIST"></a>LRU LIST 、FREE LIST 、FLUSH LIST</h5><p><strong>LRU</strong>算法用来管理已经读取的页</p>
-<p>数据库中的缓存池是通过LRU（Latest Recent Used,最近最少使用）算法来管理内部的各种类型的页。</p>
-<p><strong>LRU解释</strong>：将最频繁使用的页放在LRU列表的前端，最少使用的页放在LRU列表的尾端。当缓存池不能存放新读取到的页时，将优先删除列表尾端的页（默认大小为16KB）。</p>
-<p><strong>改进</strong>：</p>
-<p>1、（midpoint insertion strategy）：InnoDB中在LRU中加入了midpoint位置，将新读取到的页放在midpoint，而不是直接放在LRU列表首部。<strong>默认位置在LRU列表长度63%处</strong>（可以通过innodb_old_blocks_pct来控制）</p>
-<p>2、设置了参数innodb_old_blocks_time,用于表示页读取到mid位置后需要等待多久才会加入到LRU列表的热端</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133522544.png" alt="image-20210114133522544"></p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133412580.png" alt="image-20210114133412580"></p>
-<p><strong>为什么要对朴素的LRU算法进行改良</strong>？</p>
-<h5 id="重做日志缓存"><a href="#重做日志缓存" class="headerlink" title="重做日志缓存"></a>重做日志缓存</h5><h5 id="额外的内存池"><a href="#额外的内存池" class="headerlink" title="额外的内存池"></a>额外的内存池</h5>]]></content>
-      <categories>
-        <category>MySQL数据库</category>
-      </categories>
-      <tags>
-        <tag>InnoDB存储引擎</tag>
-      </tags>
+    <title>HTTP报文</title>
+    <url>/2021/03/14/HTTP%E6%8A%A5%E6%96%87/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>HTTP缓存</title>
+    <url>/2021/02/03/HTTP%E7%BC%93%E5%AD%98/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>IOC创建对象</title>
@@ -351,13 +304,60 @@
       </tags>
   </entry>
   <entry>
-    <title>InnoDB表</title>
-    <url>/2021/03/14/InnoDB%E8%A1%A8/</url>
-    <content><![CDATA[]]></content>
+    <title>InnoDB存储引擎</title>
+    <url>/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
+    <content><![CDATA[<h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
+<p>InnoDB存储引擎有多个内存块，这些内存块组成了一个大的内存池</p>
+<p>后台线程的主要作用就是负责刷新内存池中的数据，保证缓存池中的内存缓存的是最近的数据。此外，还将已经修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下，InnoDB可以恢复运行到最佳状态。</p>
+<h4 id="后台线程（InnDB是一个多线程模型"><a href="#后台线程（InnDB是一个多线程模型" class="headerlink" title="后台线程（InnDB是一个多线程模型)"></a>后台线程（InnDB是一个多线程模型)</h4><p>#####Master Thread</p>
+<p><strong>作用：</strong></p>
+<p>​    一个非常核心的后台进程，负责将缓存池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓存、UNDO页的回收等。</p>
+<h5 id="IO-Therad"><a href="#IO-Therad" class="headerlink" title="IO Therad"></a>IO Therad</h5><p>  在InnoDB存储引擎中大量使用了AIO（Async IO）—异步时间非阻塞IO，这样可以极大程度上提高数据库的性能。IO Thread的主要工作就是负责这些IO请求的回调</p>
+<p>共有四个IO Thread:write 、read、insert buffer、log IO thread</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114130216.png" alt="image-20210114114130216"></p>
+<p>通过命令SHOW ENGINE INNODB STASTUS\G来观察IO Thread</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114405936.png" alt="image-20210114114405936"></p>
+<p>有四个write和read IO Thread</p>
+<p>通过innodb_read_io_threads和innodb_write_io_threads参数来进行设置</p>
+<h5 id="Purge-Thread"><a href="#Purge-Thread" class="headerlink" title="Purge Thread"></a>Purge Thread</h5><p><strong>作用</strong>：</p>
+<p>​    Purge Thread回收已经使用并且已经分配的undo页（事务提交之后，其所使用的Undolog可能就不再需要）</p>
+<p>用户需要在<strong>MySQL数据库的配置文件</strong>中添加如下命令来启用独立的Purge Thread: </p>
+<p>​        innodb_purge_threads=1</p>
+<h5 id="Page-Cleaner-Thread"><a href="#Page-Cleaner-Thread" class="headerlink" title="Page Cleaner Thread"></a>Page Cleaner Thread</h5><p><strong>作用</strong>：</p>
+<p>​    将脏页的刷新操作放在单独的线程中完成。减轻Master Thread的工作以及对于用户查询线程的阻塞</p>
+<h4 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h4><h5 id="缓存池"><a href="#缓存池" class="headerlink" title="缓存池"></a>缓存池</h5><p>Innodb存储引擎是基于磁盘存储的（Disk-base Database），将其中的记录按照页来管理。</p>
+<p>缓存池的出现，就是为了解决CPU速度和磁盘速度之间的差异，通过内存的速度来弥补磁盘速度较慢对数据库性能的影响。读取文件时，首先判断给文件是否在缓存池中（没有就去磁盘上找）。</p>
+<p>在修改缓存池中的页时，先以一定频率刷新到缓存池上，然后通过Checkpoint刷新回磁盘。</p>
+<p>数据库服务器最好采用64位操作系统，可以使用更多的内存（512GB），32位（只有64GB）。</p>
+<p>缓存池的配置通过参数innodb_buffer_pool_size来设置。</p>
+<h6 id="缓存池中缓存的数据页类型："><a href="#缓存池中缓存的数据页类型：" class="headerlink" title="缓存池中缓存的数据页类型："></a>缓存池中缓存的数据页类型：</h6><p>​    索引页、数据页、Undo页、插入缓存页、自适应哈希索引页（adaptive hash index）、InnoDB存储的锁信息、数据字典信息等。</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114131120313.png" alt="image-20210114131120313"></p>
+<p><strong>允许有多个缓存池实例</strong>：每个页根据hashcode平均分配到不同的缓存池实例中，减少数据库内部资源的竞争，增加数据库的并发能力。可以通过inodb_buffer_pool_instances来进行配置，通过命令SHOW ENGINE INNODB STATUS可以观察到每个缓存池实例对象运行的状态，还可以通过查看表InnoDB_BUFFER_POOL_STATS来观察缓存的状态(要求在information_schema架构下)</p>
+<h5 id="LRU-LIST-、FREE-LIST-、FLUSH-LIST"><a href="#LRU-LIST-、FREE-LIST-、FLUSH-LIST" class="headerlink" title="LRU LIST 、FREE LIST 、FLUSH LIST"></a>LRU LIST 、FREE LIST 、FLUSH LIST</h5><p><strong>LRU</strong>算法用来管理已经读取的页</p>
+<p>数据库中的缓存池是通过LRU（Latest Recent Used,最近最少使用）算法来管理内部的各种类型的页。</p>
+<p><strong>LRU解释</strong>：将最频繁使用的页放在LRU列表的前端，最少使用的页放在LRU列表的尾端。当缓存池不能存放新读取到的页时，将优先删除列表尾端的页（默认大小为16KB）。</p>
+<p><strong>改进</strong>：</p>
+<p>1、（midpoint insertion strategy）：InnoDB中在LRU中加入了midpoint位置，将新读取到的页放在midpoint，而不是直接放在LRU列表首部。<strong>默认位置在LRU列表长度63%处</strong>（可以通过innodb_old_blocks_pct来控制）</p>
+<p>2、设置了参数innodb_old_blocks_time,用于表示页读取到mid位置后需要等待多久才会加入到LRU列表的热端</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133522544.png" alt="image-20210114133522544"></p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133412580.png" alt="image-20210114133412580"></p>
+<p><strong>为什么要对朴素的LRU算法进行改良</strong>？</p>
+<h5 id="重做日志缓存"><a href="#重做日志缓存" class="headerlink" title="重做日志缓存"></a>重做日志缓存</h5><h5 id="额外的内存池"><a href="#额外的内存池" class="headerlink" title="额外的内存池"></a>额外的内存池</h5>]]></content>
+      <categories>
+        <category>MySQL数据库</category>
+      </categories>
+      <tags>
+        <tag>InnoDB存储引擎</tag>
+      </tags>
   </entry>
   <entry>
     <title>InnoDB文件</title>
     <url>/2021/03/14/InnoDB%E6%96%87%E4%BB%B6/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>InnoDB表</title>
+    <url>/2021/03/14/InnoDB%E8%A1%A8/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -441,13 +441,13 @@
       </tags>
   </entry>
   <entry>
-    <title>JVM虚拟机栈</title>
-    <url>/2021/03/14/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88/</url>
+    <title>Java高并发JUC</title>
+    <url>/2021/02/25/Java%E9%AB%98%E5%B9%B6%E5%8F%91JUC/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>Java高并发JUC</title>
-    <url>/2021/02/25/Java%E9%AB%98%E5%B9%B6%E5%8F%91JUC/</url>
+    <title>JVM虚拟机栈</title>
+    <url>/2021/03/14/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -796,68 +796,6 @@
       </tags>
   </entry>
   <entry>
-    <title>MVVM框架</title>
-    <url>/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/</url>
-    <content><![CDATA[<p>一个软件或者 APP都是服务于某种需求，这称之为“业务需求”。随着业务需求的增多、软件会变得越来越庞大，越来越复杂。所以就会设计一套完整的架构设计、研发流程以及质量管理体系来保证整个研发过程。“架构设计”是一个非常大的话题，它涉及到各方面，近年来前端一个明显的开发趋势就是架构从传统的 MVC 模式向 MVVM 模式迁移，这里来谈谈——MVVM模式。</p>
-<h2 id="什么是MVVM"><a href="#什么是MVVM" class="headerlink" title="什么是MVVM"></a>什么是MVVM</h2><blockquote>
-<p>MVVM（Model–View–Viewmodel）是一种软件架构模式。<br>MVVM有助于将图形用户界面的开发与业务逻辑或后端逻辑（数据模型）的开发分离开，这是通过标记语言或GUI代码实现的。MVVM的视图模型是一个值转换器， 这意味着视图模型负责从模型中暴露（转换）数据对象，以便轻松管理和呈现对象。在这方面，视图模型比视图做得更多，并且处理大部分视图的显示逻辑。 视图模型可以实现中介者模式，组织对视图所支持的用例集的后端逻辑的访问</p>
-</blockquote>
-<p><a href="https://zh.wikipedia.org/wiki/MVVM">想要了解更多关于MVVM的定义，点击访问维基百科</a></p>
-<h2 id="MVVM涉及到的概念"><a href="#MVVM涉及到的概念" class="headerlink" title="MVVM涉及到的概念"></a>MVVM涉及到的概念</h2><ul>
-<li>M(odel)层：模型，定义数据结构。</li>
-<li>C(ontroller)层：实现业务逻辑，数据的增删改查。在MVVM模式中一般把C层算在M层中，（只有在理想的双向绑定模式下，Controller 才会完全的消失。这种理想状态一般不存在）</li>
-<li>ViewModel层：顾名思义是视图View的模型、映射和显示逻辑（如if for等，非业务逻辑），另外绑定器也在此层。ViewModel是基于视图开发的一套模型，如果你的应用是给盲人用的，那么也可以开发一套基于Audio的模型AudioModel。</li>
-<li>V(iew)层：将ViewModel通过特定的GUI展示出来，并在GUI控件上绑定视图交互事件，V(iew)一般由MVVM框架自动生成在浏览器中。</li>
-</ul>
-<h2 id="MVVM的工作机制"><a href="#MVVM的工作机制" class="headerlink" title="MVVM的工作机制"></a>MVVM的工作机制</h2><p>在MVVM架构下，View 和 Model 之间其实并没有直接的联系，而是通<strong>过ViewModel进行交互</strong>，Model 和 ViewModel 之间的交互是*<u>双向</u>*的， 因此View 数据的变化会同步到Model中，而Model 数据的变化也会立即反应到View 上。</p>
-<p>ViewModel 通过双向数据绑定把 View 层和 Model 层连接了起来。ViewModel里面包含DOM Listeners(数据监听)和Data Bindings(数据绑定)，DOM Listeners和Data Bindings是实现双向绑定的关键。</p>
-<blockquote>
-<p>DOM Listeners监听页面所有View层DOM元素的变化，当发生变化，Model层的数据随之变化；</p>
-</blockquote>
-<blockquote>
-<p>Data Bindings监听Model层的数据，当数据发生变化，View层的DOM元素随之变化。</p>
-</blockquote>
-<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/01.png" class>
-
-
-
-<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/02.png" class>
-
-
-
-<h2 id="MVVM模式的优缺点"><a href="#MVVM模式的优缺点" class="headerlink" title="MVVM模式的优缺点"></a>MVVM模式的优缺点</h2><p>MVVM模式相较于原先的MVP模式至少省下30%编码量，甚至能省下70%DOM操作，因为用MVP模式的话主要是在进行DOM操作</p>
-<blockquote>
-<p>优点</p>
-</blockquote>
-<ul>
-<li><strong>低耦合</strong>。View可以独立于Model变化和修改，一个ViewModel可以绑定到不同的View上，当View变化的时候Model可以不变，当Model变化的时候View也可以不变。</li>
-<li><strong>可重用性</strong>。可以把一些视图的逻辑放在ViewModel里面，让很多View重用这段视图逻辑。</li>
-<li>独立开发。开发人员可以专注与业务逻辑和数据的开发(ViewModel)。设计人员可以专注于界面(View)的设计。</li>
-<li><strong>可测试性</strong>。可以针对ViewModel来对界面(View)进行测试</li>
-</ul>
-<blockquote>
-<p>缺点</p>
-</blockquote>
-<ul>
-<li>学习成本高。</li>
-<li>DEBUG困难</li>
-<li>实现MVVM的开销对于简单的UI操作是过度的。而对于更大的应用来说，推广ViewModel将变得更加困难，非常大的应用程序中的数据绑定会导致相当大的内存消耗。</li>
-</ul>
-<h2 id="MVVM应用场景"><a href="#MVVM应用场景" class="headerlink" title="MVVM应用场景"></a>MVVM应用场景</h2><ul>
-<li>针对具有复杂交互逻辑的前端应用</li>
-<li>提供基础的架构抽象</li>
-<li>通过Ajax数据持久化，保证前端用户体验</li>
-</ul>
-<h2 id="常见的MVVM框架"><a href="#常见的MVVM框架" class="headerlink" title="常见的MVVM框架"></a>常见的MVVM框架</h2><p>Vue.js   AngularJs，ReactJs</p>
-]]></content>
-      <categories>
-        <category>项目架构</category>
-      </categories>
-      <tags>
-        <tag>架构模式</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Maven学习笔记</title>
     <url>/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/</url>
     <content><![CDATA[<h2 id="IDEA编辑器集成maven环境"><a href="#IDEA编辑器集成maven环境" class="headerlink" title="IDEA编辑器集成maven环境"></a>IDEA编辑器集成maven环境</h2><p>###设置Maven版本</p>
@@ -1098,6 +1036,68 @@
       </tags>
   </entry>
   <entry>
+    <title>MVVM框架</title>
+    <url>/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/</url>
+    <content><![CDATA[<p>一个软件或者 APP都是服务于某种需求，这称之为“业务需求”。随着业务需求的增多、软件会变得越来越庞大，越来越复杂。所以就会设计一套完整的架构设计、研发流程以及质量管理体系来保证整个研发过程。“架构设计”是一个非常大的话题，它涉及到各方面，近年来前端一个明显的开发趋势就是架构从传统的 MVC 模式向 MVVM 模式迁移，这里来谈谈——MVVM模式。</p>
+<h2 id="什么是MVVM"><a href="#什么是MVVM" class="headerlink" title="什么是MVVM"></a>什么是MVVM</h2><blockquote>
+<p>MVVM（Model–View–Viewmodel）是一种软件架构模式。<br>MVVM有助于将图形用户界面的开发与业务逻辑或后端逻辑（数据模型）的开发分离开，这是通过标记语言或GUI代码实现的。MVVM的视图模型是一个值转换器， 这意味着视图模型负责从模型中暴露（转换）数据对象，以便轻松管理和呈现对象。在这方面，视图模型比视图做得更多，并且处理大部分视图的显示逻辑。 视图模型可以实现中介者模式，组织对视图所支持的用例集的后端逻辑的访问</p>
+</blockquote>
+<p><a href="https://zh.wikipedia.org/wiki/MVVM">想要了解更多关于MVVM的定义，点击访问维基百科</a></p>
+<h2 id="MVVM涉及到的概念"><a href="#MVVM涉及到的概念" class="headerlink" title="MVVM涉及到的概念"></a>MVVM涉及到的概念</h2><ul>
+<li>M(odel)层：模型，定义数据结构。</li>
+<li>C(ontroller)层：实现业务逻辑，数据的增删改查。在MVVM模式中一般把C层算在M层中，（只有在理想的双向绑定模式下，Controller 才会完全的消失。这种理想状态一般不存在）</li>
+<li>ViewModel层：顾名思义是视图View的模型、映射和显示逻辑（如if for等，非业务逻辑），另外绑定器也在此层。ViewModel是基于视图开发的一套模型，如果你的应用是给盲人用的，那么也可以开发一套基于Audio的模型AudioModel。</li>
+<li>V(iew)层：将ViewModel通过特定的GUI展示出来，并在GUI控件上绑定视图交互事件，V(iew)一般由MVVM框架自动生成在浏览器中。</li>
+</ul>
+<h2 id="MVVM的工作机制"><a href="#MVVM的工作机制" class="headerlink" title="MVVM的工作机制"></a>MVVM的工作机制</h2><p>在MVVM架构下，View 和 Model 之间其实并没有直接的联系，而是通<strong>过ViewModel进行交互</strong>，Model 和 ViewModel 之间的交互是*<u>双向</u>*的， 因此View 数据的变化会同步到Model中，而Model 数据的变化也会立即反应到View 上。</p>
+<p>ViewModel 通过双向数据绑定把 View 层和 Model 层连接了起来。ViewModel里面包含DOM Listeners(数据监听)和Data Bindings(数据绑定)，DOM Listeners和Data Bindings是实现双向绑定的关键。</p>
+<blockquote>
+<p>DOM Listeners监听页面所有View层DOM元素的变化，当发生变化，Model层的数据随之变化；</p>
+</blockquote>
+<blockquote>
+<p>Data Bindings监听Model层的数据，当数据发生变化，View层的DOM元素随之变化。</p>
+</blockquote>
+<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/01.png" class>
+
+
+
+<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/02.png" class>
+
+
+
+<h2 id="MVVM模式的优缺点"><a href="#MVVM模式的优缺点" class="headerlink" title="MVVM模式的优缺点"></a>MVVM模式的优缺点</h2><p>MVVM模式相较于原先的MVP模式至少省下30%编码量，甚至能省下70%DOM操作，因为用MVP模式的话主要是在进行DOM操作</p>
+<blockquote>
+<p>优点</p>
+</blockquote>
+<ul>
+<li><strong>低耦合</strong>。View可以独立于Model变化和修改，一个ViewModel可以绑定到不同的View上，当View变化的时候Model可以不变，当Model变化的时候View也可以不变。</li>
+<li><strong>可重用性</strong>。可以把一些视图的逻辑放在ViewModel里面，让很多View重用这段视图逻辑。</li>
+<li>独立开发。开发人员可以专注与业务逻辑和数据的开发(ViewModel)。设计人员可以专注于界面(View)的设计。</li>
+<li><strong>可测试性</strong>。可以针对ViewModel来对界面(View)进行测试</li>
+</ul>
+<blockquote>
+<p>缺点</p>
+</blockquote>
+<ul>
+<li>学习成本高。</li>
+<li>DEBUG困难</li>
+<li>实现MVVM的开销对于简单的UI操作是过度的。而对于更大的应用来说，推广ViewModel将变得更加困难，非常大的应用程序中的数据绑定会导致相当大的内存消耗。</li>
+</ul>
+<h2 id="MVVM应用场景"><a href="#MVVM应用场景" class="headerlink" title="MVVM应用场景"></a>MVVM应用场景</h2><ul>
+<li>针对具有复杂交互逻辑的前端应用</li>
+<li>提供基础的架构抽象</li>
+<li>通过Ajax数据持久化，保证前端用户体验</li>
+</ul>
+<h2 id="常见的MVVM框架"><a href="#常见的MVVM框架" class="headerlink" title="常见的MVVM框架"></a>常见的MVVM框架</h2><p>Vue.js   AngularJs，ReactJs</p>
+]]></content>
+      <categories>
+        <category>项目架构</category>
+      </categories>
+      <tags>
+        <tag>架构模式</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MongoDB数据库</title>
     <url>/2021/02/25/MongoDB%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
     <content><![CDATA[]]></content>
@@ -1281,76 +1281,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Mybatis框架概述</title>
-    <url>/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6/</url>
-    <content><![CDATA[<h2 id="软件开发常用结构"><a href="#软件开发常用结构" class="headerlink" title="软件开发常用结构"></a>软件开发常用结构</h2><h3 id="三层架构"><a href="#三层架构" class="headerlink" title="三层架构"></a>三层架构</h3><p>三层架构包含的三层： 界面层（User Interface layer）、业务逻辑层（Business Logic Layer）、数据访问层（Data access layer）</p>
-<blockquote>
-<p>三层的职责</p>
-</blockquote>
-<ul>
-<li><p>1、界面层（表示层\视图层）：主要功能是接受用户的数据，显示请求的处理结果。使用 web 页面和 用户交互，手机 app 也就是表示层的，用户在 app 中操作，业务逻辑在服务器端处理。</p>
-</li>
-<li><p>2、业务逻辑层：接收表示传递过来的数据，检查数据，计算业务逻辑，调用数据访问层获取数据。</p>
-</li>
-<li><p>3、数据访问层（持久层）：与数据库打交道。主要实现对数据的增、删、改、查。将存储在数据库中的数据提交 给业务层，同时将业务层处理的数据保存到数据库。</p>
-</li>
-</ul>
-<p>三层的处理请求的交互：</p>
-<p>用户—&gt;界面层—&gt;业务逻辑层—&gt;数据访问层—&gt;DB数据库</p>
- <img data-src="/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6/01.png" class>
-
-
-
-<blockquote>
-<p>为什么使用三层？</p>
-</blockquote>
-<p>1，结构清晰、耦合度低, 各层分工明确 </p>
-<p>2，可维护性高，可扩展性高</p>
-<p> 3，有利于标准化 </p>
-<p>4，开发人员可以只关注整个结构中的其中某一层的功能实现 </p>
-<p>5，有利于各层逻辑的复用</p>
-<h3 id="常用框架"><a href="#常用框架" class="headerlink" title="常用框架"></a>常用框架</h3><ul>
-<li><p>Mybatis框架</p>
-<p>MyBatis 是一个优秀的基于 java 的持久层框架，内部封装了 jdbc，开发者只需要关注 sql 语句本身，而不需要处理加载驱动、创建连接、创建 statement、关闭连接，资源等繁杂的过程。 MyBatis 通过 xml 或注解两种方式将要执行的各种 sql 语句配置起来，并通过 java 对象和 sql 的 动态参数进行映射生成最终执行的 sql 语句，最后由 mybatis 框架执行 sql 并将结果映射为 java 对象并返回。</p>
-</li>
-<li><p>Spring框架</p>
-<p>Spring 框架为了解决软件开发的复杂性而创建的。Spring 使用的是基本的 JavaBean 来完成以前 非常复杂的企业级开发。Spring 解决了业务对象，功能模块之间的耦合，不仅在 javase,web 中使用， 大部分 Java 应用都可以从 Spring 中受益。 Spring 是一个轻量级控制反转(IoC)和面向切面(AOP)的容器。</p>
-</li>
-<li><p>SpringMVC框架</p>
-<p>SpringMVC 框架 Spring MVC 属于 SpringFrameWork 3.0 版本加入的一个模块，为 Spring 框架提供了构建 Web 应用程序的能力。现在可以 Spring 框架提供的 SpringMVC 模块实现 web 应用开发，在 web 项目中 可以无缝使用 Spring 和 Spring MVC 框架。</p>
-</li>
-</ul>
-<h2 id="框架的定义"><a href="#框架的定义" class="headerlink" title="框架的定义"></a>框架的定义</h2><h3 id="框架定义"><a href="#框架定义" class="headerlink" title="框架定义"></a>框架定义</h3><p>框架（Framework）是整个或部分系统的可重用设计，表现为一组抽象构件及构件实例间交互的方法;另一种认为，框架是可被应用开发者定制的应用骨架、模板。 简单的说，框架其实是半成品软件，就是一组组件，供你使用完成你自己的系统。从另一个角度来 说框架一个舞台，你在舞台上做表演。在框架基础上加入你要完成的功能。 框架安全的，可复用的，不断升级的软件。 </p>
-<h3 id="框架解决的问题"><a href="#框架解决的问题" class="headerlink" title="框架解决的问题"></a>框架解决的问题</h3><p>框架要解决的最重要的一个问题是技术整合，在 J2EE 的 框架中，有着各种各样的技术，不同的应用，系统使用不同的技术解决问题。需要从 J2EE 中选择不同的技术，而技术自身的复杂性，有导致更大的风险。企业在开发软件项目时，主要目的是解决业务问题。 即要求企业负责技术本身，又要求解决业务问题。这是大多数企业不能完成的。框架把相关的技术融合在一起，企业开发可以集中在业务领域方面。 另一个方面可以提供开发的效率。</p>
-<h2 id="JDBC编程"><a href="#JDBC编程" class="headerlink" title="JDBC编程"></a>JDBC编程</h2><h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">findStudent</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> 	Connection conn = <span class="keyword">null</span>;</span><br><span class="line"> 	Statement stmt = <span class="keyword">null</span>;</span><br><span class="line">    ResultSet rs = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line"> 		<span class="comment">//注册 mysql 驱动</span></span><br><span class="line">		 Class.forName(<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>);</span><br><span class="line">		 <span class="comment">//连接数据的基本信息 url ，username，password</span></span><br><span class="line">		 String url = <span class="string">&quot;jdbc:mysql://localhost:3306/springdb&quot;</span>;</span><br><span class="line">		 String username = <span class="string">&quot;root&quot;</span>;</span><br><span class="line">		 String password = <span class="string">&quot;123456&quot;</span>;</span><br><span class="line"> 		<span class="comment">//创建连接对象</span></span><br><span class="line">		 conn = DriverManager.getConnection(url, username, password);</span><br><span class="line">		 <span class="comment">//保存查询结果</span></span><br><span class="line">		 List&lt;Student&gt; stuList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"> 		<span class="comment">//创建 Statement, 用来执行 sql 语句</span></span><br><span class="line"> 		stmt = conn.createStatement();</span><br><span class="line"> 		<span class="comment">//执行查询，创建记录集，</span></span><br><span class="line"> 		rs = stmt.executeQuery(<span class="string">&quot;select * from student&quot;</span>);</span><br><span class="line">		 <span class="keyword">while</span> (rs.next()) &#123;</span><br><span class="line">			 Student stu = <span class="keyword">new</span> Student();</span><br><span class="line">			 stu.setId(rs.getInt(<span class="string">&quot;id&quot;</span>));</span><br><span class="line">			 stu.setName(rs.getString(<span class="string">&quot;name&quot;</span>));</span><br><span class="line">			 stu.setAge(rs.getInt(<span class="string">&quot;age&quot;</span>));</span><br><span class="line">			 <span class="comment">//从数据库取出数据转为 Student 对象，封装到 List 集合</span></span><br><span class="line">			 stuList.add(stu);</span><br><span class="line">			 &#125;</span><br><span class="line"> 		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			 e.printStackTrace();</span><br><span class="line">	    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line"> 			<span class="keyword">try</span> &#123;</span><br><span class="line">				 <span class="comment">//关闭资源</span></span><br><span class="line">                 <span class="keyword">if</span> (rs != <span class="keyword">null</span>) ;</span><br><span class="line"> 				&#123;</span><br><span class="line">					 rs.close();</span><br><span class="line">				 &#125;</span><br><span class="line"> 				<span class="keyword">if</span> (stmt != <span class="keyword">null</span>) &#123;</span><br><span class="line"> 					stmt.close();</span><br><span class="line"> 				&#125;</span><br><span class="line"> 				<span class="keyword">if</span> (conn != <span class="keyword">null</span>) &#123;</span><br><span class="line"> 					conn.close();</span><br><span class="line"> 				&#125;</span><br><span class="line"> 				&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">				 e.printStackTrace();</span><br><span class="line"> 				&#125;</span><br><span class="line"> 			&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="使用JDBC的缺陷"><a href="#使用JDBC的缺陷" class="headerlink" title="使用JDBC的缺陷"></a>使用JDBC的缺陷</h3><ol>
-<li>代码比较多，开发效率低 </li>
-<li> 需要关注 Connection ,Statement, ResultSet 对象创建和销毁 </li>
-<li> 对 ResultSet 查询的结果，需要自己封装为 List </li>
-<li> 重复的代码比较多些 </li>
-<li> 业务代码和数据库的操作混在一起</li>
-</ol>
-<h2 id="Mybatis框架"><a href="#Mybatis框架" class="headerlink" title="Mybatis框架"></a>Mybatis框架</h2><p>MyBatis 框架：</p>
-<p> MyBatis 本是 apache 的一个开源项目 iBatis, 2010 年这个项目由 apache software foundation 迁 移到了 google code，并且改名为 MyBatis 。2013 年 11 月迁移到 Github。 iBATIS 一词来源于“internet”和“abatis”的组合，是一个基于 Java 的持久层框架。iBATIS 提供的 持久层框架包括 SQL Maps 和 Data Access Objects（DAOs） 当前，最新版本是 MyBatis 3.5.1 ，其发布时间是 2019 年 4 月 8 日。</p>
-<h3 id="Mybatis框架解决的主要问题"><a href="#Mybatis框架解决的主要问题" class="headerlink" title="Mybatis框架解决的主要问题"></a>Mybatis框架解决的主要问题</h3><p>减轻使用 JDBC 的复杂性，不用编写重复的创建 Connetion , Statement ; 不用编写关闭资源代码。 直接使用 java 对象，表示结果数据。让开发者专注 SQL 的处理。 其他分心的工作MyBatis 代劳。</p>
-<p> MyBatis 可以完成：  </p>
-<ul>
-<li>注册数据库的驱动，例如 Class.forName(“com.mysql.jdbc.Driver”))</li>
-<li>创建 JDBC 中必须使用的 Connection ， Statement， ResultSet 对象</li>
-<li>从 xml 中获取 sql，并执行 sql 语句，把 ResultSet 结果转换 java 对象</li>
-<li>关闭资源 ResultSet.close() , Statement.close() , Conenection.close()</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Mybatis框架</category>
-      </categories>
-      <tags>
-        <tag>Mybatis</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Mybatis框架</title>
     <url>/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6-1/</url>
     <content><![CDATA[<h2 id="Mybatis入门案例"><a href="#Mybatis入门案例" class="headerlink" title="Mybatis入门案例"></a>Mybatis入门案例</h2><h3 id="搭建Mybatis开发环境–基础CRUD操作实例"><a href="#搭建Mybatis开发环境–基础CRUD操作实例" class="headerlink" title="搭建Mybatis开发环境–基础CRUD操作实例"></a>搭建Mybatis开发环境–基础CRUD操作实例</h3><h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><blockquote>
@@ -1455,6 +1385,76 @@
       </tags>
   </entry>
   <entry>
+    <title>Mybatis框架概述</title>
+    <url>/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6/</url>
+    <content><![CDATA[<h2 id="软件开发常用结构"><a href="#软件开发常用结构" class="headerlink" title="软件开发常用结构"></a>软件开发常用结构</h2><h3 id="三层架构"><a href="#三层架构" class="headerlink" title="三层架构"></a>三层架构</h3><p>三层架构包含的三层： 界面层（User Interface layer）、业务逻辑层（Business Logic Layer）、数据访问层（Data access layer）</p>
+<blockquote>
+<p>三层的职责</p>
+</blockquote>
+<ul>
+<li><p>1、界面层（表示层\视图层）：主要功能是接受用户的数据，显示请求的处理结果。使用 web 页面和 用户交互，手机 app 也就是表示层的，用户在 app 中操作，业务逻辑在服务器端处理。</p>
+</li>
+<li><p>2、业务逻辑层：接收表示传递过来的数据，检查数据，计算业务逻辑，调用数据访问层获取数据。</p>
+</li>
+<li><p>3、数据访问层（持久层）：与数据库打交道。主要实现对数据的增、删、改、查。将存储在数据库中的数据提交 给业务层，同时将业务层处理的数据保存到数据库。</p>
+</li>
+</ul>
+<p>三层的处理请求的交互：</p>
+<p>用户—&gt;界面层—&gt;业务逻辑层—&gt;数据访问层—&gt;DB数据库</p>
+ <img data-src="/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6/01.png" class>
+
+
+
+<blockquote>
+<p>为什么使用三层？</p>
+</blockquote>
+<p>1，结构清晰、耦合度低, 各层分工明确 </p>
+<p>2，可维护性高，可扩展性高</p>
+<p> 3，有利于标准化 </p>
+<p>4，开发人员可以只关注整个结构中的其中某一层的功能实现 </p>
+<p>5，有利于各层逻辑的复用</p>
+<h3 id="常用框架"><a href="#常用框架" class="headerlink" title="常用框架"></a>常用框架</h3><ul>
+<li><p>Mybatis框架</p>
+<p>MyBatis 是一个优秀的基于 java 的持久层框架，内部封装了 jdbc，开发者只需要关注 sql 语句本身，而不需要处理加载驱动、创建连接、创建 statement、关闭连接，资源等繁杂的过程。 MyBatis 通过 xml 或注解两种方式将要执行的各种 sql 语句配置起来，并通过 java 对象和 sql 的 动态参数进行映射生成最终执行的 sql 语句，最后由 mybatis 框架执行 sql 并将结果映射为 java 对象并返回。</p>
+</li>
+<li><p>Spring框架</p>
+<p>Spring 框架为了解决软件开发的复杂性而创建的。Spring 使用的是基本的 JavaBean 来完成以前 非常复杂的企业级开发。Spring 解决了业务对象，功能模块之间的耦合，不仅在 javase,web 中使用， 大部分 Java 应用都可以从 Spring 中受益。 Spring 是一个轻量级控制反转(IoC)和面向切面(AOP)的容器。</p>
+</li>
+<li><p>SpringMVC框架</p>
+<p>SpringMVC 框架 Spring MVC 属于 SpringFrameWork 3.0 版本加入的一个模块，为 Spring 框架提供了构建 Web 应用程序的能力。现在可以 Spring 框架提供的 SpringMVC 模块实现 web 应用开发，在 web 项目中 可以无缝使用 Spring 和 Spring MVC 框架。</p>
+</li>
+</ul>
+<h2 id="框架的定义"><a href="#框架的定义" class="headerlink" title="框架的定义"></a>框架的定义</h2><h3 id="框架定义"><a href="#框架定义" class="headerlink" title="框架定义"></a>框架定义</h3><p>框架（Framework）是整个或部分系统的可重用设计，表现为一组抽象构件及构件实例间交互的方法;另一种认为，框架是可被应用开发者定制的应用骨架、模板。 简单的说，框架其实是半成品软件，就是一组组件，供你使用完成你自己的系统。从另一个角度来 说框架一个舞台，你在舞台上做表演。在框架基础上加入你要完成的功能。 框架安全的，可复用的，不断升级的软件。 </p>
+<h3 id="框架解决的问题"><a href="#框架解决的问题" class="headerlink" title="框架解决的问题"></a>框架解决的问题</h3><p>框架要解决的最重要的一个问题是技术整合，在 J2EE 的 框架中，有着各种各样的技术，不同的应用，系统使用不同的技术解决问题。需要从 J2EE 中选择不同的技术，而技术自身的复杂性，有导致更大的风险。企业在开发软件项目时，主要目的是解决业务问题。 即要求企业负责技术本身，又要求解决业务问题。这是大多数企业不能完成的。框架把相关的技术融合在一起，企业开发可以集中在业务领域方面。 另一个方面可以提供开发的效率。</p>
+<h2 id="JDBC编程"><a href="#JDBC编程" class="headerlink" title="JDBC编程"></a>JDBC编程</h2><h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">findStudent</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> 	Connection conn = <span class="keyword">null</span>;</span><br><span class="line"> 	Statement stmt = <span class="keyword">null</span>;</span><br><span class="line">    ResultSet rs = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line"> 		<span class="comment">//注册 mysql 驱动</span></span><br><span class="line">		 Class.forName(<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>);</span><br><span class="line">		 <span class="comment">//连接数据的基本信息 url ，username，password</span></span><br><span class="line">		 String url = <span class="string">&quot;jdbc:mysql://localhost:3306/springdb&quot;</span>;</span><br><span class="line">		 String username = <span class="string">&quot;root&quot;</span>;</span><br><span class="line">		 String password = <span class="string">&quot;123456&quot;</span>;</span><br><span class="line"> 		<span class="comment">//创建连接对象</span></span><br><span class="line">		 conn = DriverManager.getConnection(url, username, password);</span><br><span class="line">		 <span class="comment">//保存查询结果</span></span><br><span class="line">		 List&lt;Student&gt; stuList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"> 		<span class="comment">//创建 Statement, 用来执行 sql 语句</span></span><br><span class="line"> 		stmt = conn.createStatement();</span><br><span class="line"> 		<span class="comment">//执行查询，创建记录集，</span></span><br><span class="line"> 		rs = stmt.executeQuery(<span class="string">&quot;select * from student&quot;</span>);</span><br><span class="line">		 <span class="keyword">while</span> (rs.next()) &#123;</span><br><span class="line">			 Student stu = <span class="keyword">new</span> Student();</span><br><span class="line">			 stu.setId(rs.getInt(<span class="string">&quot;id&quot;</span>));</span><br><span class="line">			 stu.setName(rs.getString(<span class="string">&quot;name&quot;</span>));</span><br><span class="line">			 stu.setAge(rs.getInt(<span class="string">&quot;age&quot;</span>));</span><br><span class="line">			 <span class="comment">//从数据库取出数据转为 Student 对象，封装到 List 集合</span></span><br><span class="line">			 stuList.add(stu);</span><br><span class="line">			 &#125;</span><br><span class="line"> 		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			 e.printStackTrace();</span><br><span class="line">	    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line"> 			<span class="keyword">try</span> &#123;</span><br><span class="line">				 <span class="comment">//关闭资源</span></span><br><span class="line">                 <span class="keyword">if</span> (rs != <span class="keyword">null</span>) ;</span><br><span class="line"> 				&#123;</span><br><span class="line">					 rs.close();</span><br><span class="line">				 &#125;</span><br><span class="line"> 				<span class="keyword">if</span> (stmt != <span class="keyword">null</span>) &#123;</span><br><span class="line"> 					stmt.close();</span><br><span class="line"> 				&#125;</span><br><span class="line"> 				<span class="keyword">if</span> (conn != <span class="keyword">null</span>) &#123;</span><br><span class="line"> 					conn.close();</span><br><span class="line"> 				&#125;</span><br><span class="line"> 				&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">				 e.printStackTrace();</span><br><span class="line"> 				&#125;</span><br><span class="line"> 			&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="使用JDBC的缺陷"><a href="#使用JDBC的缺陷" class="headerlink" title="使用JDBC的缺陷"></a>使用JDBC的缺陷</h3><ol>
+<li>代码比较多，开发效率低 </li>
+<li> 需要关注 Connection ,Statement, ResultSet 对象创建和销毁 </li>
+<li> 对 ResultSet 查询的结果，需要自己封装为 List </li>
+<li> 重复的代码比较多些 </li>
+<li> 业务代码和数据库的操作混在一起</li>
+</ol>
+<h2 id="Mybatis框架"><a href="#Mybatis框架" class="headerlink" title="Mybatis框架"></a>Mybatis框架</h2><p>MyBatis 框架：</p>
+<p> MyBatis 本是 apache 的一个开源项目 iBatis, 2010 年这个项目由 apache software foundation 迁 移到了 google code，并且改名为 MyBatis 。2013 年 11 月迁移到 Github。 iBATIS 一词来源于“internet”和“abatis”的组合，是一个基于 Java 的持久层框架。iBATIS 提供的 持久层框架包括 SQL Maps 和 Data Access Objects（DAOs） 当前，最新版本是 MyBatis 3.5.1 ，其发布时间是 2019 年 4 月 8 日。</p>
+<h3 id="Mybatis框架解决的主要问题"><a href="#Mybatis框架解决的主要问题" class="headerlink" title="Mybatis框架解决的主要问题"></a>Mybatis框架解决的主要问题</h3><p>减轻使用 JDBC 的复杂性，不用编写重复的创建 Connetion , Statement ; 不用编写关闭资源代码。 直接使用 java 对象，表示结果数据。让开发者专注 SQL 的处理。 其他分心的工作MyBatis 代劳。</p>
+<p> MyBatis 可以完成：  </p>
+<ul>
+<li>注册数据库的驱动，例如 Class.forName(“com.mysql.jdbc.Driver”))</li>
+<li>创建 JDBC 中必须使用的 Connection ， Statement， ResultSet 对象</li>
+<li>从 xml 中获取 sql，并执行 sql 语句，把 ResultSet 结果转换 java 对象</li>
+<li>关闭资源 ResultSet.close() , Statement.close() , Conenection.close()</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Mybatis框架</category>
+      </categories>
+      <tags>
+        <tag>Mybatis</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Mybatis入门案例知识补充</title>
     <url>/2021/03/07/Mybatis%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E8%A1%A5%E5%85%85/</url>
     <content><![CDATA[<h2 id="不使用XML构建SqlSessionFactory"><a href="#不使用XML构建SqlSessionFactory" class="headerlink" title="不使用XML构建SqlSessionFactory"></a>不使用XML构建SqlSessionFactory</h2><p>如果你更愿意直接从 Java 代码而不是 XML 文件中创建配置，或者想要创建你自己的配置建造器，MyBatis 也<strong>提供了完整的配置类</strong>，提供了所有与 XML 文件等价的配置项。</p>
@@ -1511,11 +1511,6 @@
       <tags>
         <tag>Mybatis</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Mycat</title>
-    <url>/2021/03/14/Mycat/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>NetFilter and IPTable</title>
@@ -1602,8 +1597,8 @@
       </tags>
   </entry>
   <entry>
-    <title>PC寄存器</title>
-    <url>/2021/03/14/PC%E5%AF%84%E5%AD%98%E5%99%A8/</url>
+    <title>Mycat</title>
+    <url>/2021/03/14/Mycat/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -1679,6 +1674,62 @@
       </tags>
   </entry>
   <entry>
+    <title>PC寄存器</title>
+    <url>/2021/03/14/PC%E5%AF%84%E5%AD%98%E5%99%A8/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Python自动化办公--Word</title>
+    <url>/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/</url>
+    <content><![CDATA[<h1 id><a href="#" class="headerlink" title></a></h1><h1 id="Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）"><a href="#Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）" class="headerlink" title="Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）"></a>Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）</h1><p>在Word文件中，不但有文字内容，还有加粗、红色等格式，而且这些特殊的格式和文字内容是混合在一起的，但如果用Python来读取Word文件，这段文字会被分为纯文字、段落、字体、字号以及表格 等更具体的部分，而且每一个部分都对应着<strong>Python的变量和函数。</strong></p>
+<p>用Python读取文件时，你需要记住很多个Python变量和函数。当然了，针对这一点， 你也不用担心，这些变量和函数在Python的Word扩展库<a href="https://python-docx.readthedocs.io/en/latest/#"><strong><em>官方文档</em></strong></a>可以查看。所以如果你需 要某个功能，但是不知道应该用什么变量和函数名称时，可以在官方文档中找到它的名字和 描述信息。</p>
+<h3 id="用Python自动合并两个Word文件"><a href="#用Python自动合并两个Word文件" class="headerlink" title="用Python自动合并两个Word文件"></a>用Python自动合并两个Word文件</h3><ul>
+<li><p>文件一（内容包含字体、字号、颜色等额外信息）：</p>
+<p><img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220130145215504.png" alt="image-20220130145215504"></p>
+</li>
+<li><p>文件二（内容文字出现在表格中）:</p>
+<p><img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220130145227690.png" alt="image-20220130145227690"></p>
+</li>
+</ul>
+<blockquote>
+<p>第一个文件中，字体使用了黑体和宋体字，此外还有红色字体和加粗等格式。现在我需要 只提取其中的文字内容，不带任何格式。 </p>
+<p>第二个文件中，文字被放在了一张表格里。现在我需要用Python把表格中的文字提取出 来，合并成一个新的文件。</p>
+</blockquote>
+<h4 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"> <span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mrge_without_format</span>(<span class="params">docfiles:<span class="built_in">list</span></span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    只获取内容进行合并</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment">#遍历文件</span></span><br><span class="line">    <span class="keyword">for</span> docx_file <span class="keyword">in</span> <span class="built_in">sorted</span>(docfiles):</span><br><span class="line">        another_doc = Document(docx_file)</span><br><span class="line">        <span class="comment"># 获取每个文件的的所有段落</span></span><br><span class="line">        paras = another_doc.paragraphs</span><br><span class="line">        <span class="keyword">for</span> para <span class="keyword">in</span> paras:</span><br><span class="line">            <span class="comment"># 为新的word文件创建一个新段落</span></span><br><span class="line">            newpar = doc.add_paragraph(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">            <span class="comment">#将提取的内容写入新的文本段落中</span></span><br><span class="line">            newpar.add_run(para.text)</span><br><span class="line"></span><br><span class="line">        <span class="comment">#所有文件合并完成后在指定路径中保存</span></span><br><span class="line">        doc.save(Path(word_files_path,<span class="string">&#x27;new.docx&#x27;</span>))</span><br><span class="line"></span><br><span class="line">    <span class="comment">#调用函数</span></span><br><span class="line">    merge-mrge_without_format(files)</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="用Python合并Word和其他类型的文件"><a href="#用Python合并Word和其他类型的文件" class="headerlink" title="用Python合并Word和其他类型的文件"></a>用Python合并Word和其他类型的文件</h3><p>相较于其他文件，Word文件支持的格式丰富程度远远高于Txt文件等，所以当这两种格式丰富程度不一致的文件进行合并时，要么向下兼容，去掉Txt不支持的格式；要 么向上兼容，对Txt进行格式再调整。否则容易出现合并之后仍需要手动调整格式的问题，影 响工作效率。</p>
+<h4 id="将纯文本和Word文件合并"><a href="#将纯文本和Word文件合并" class="headerlink" title="将纯文本和Word文件合并"></a>将纯文本和Word文件合并</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx.shared <span class="keyword">import</span> RGBColor</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># word文件所在路径</span></span><br><span class="line">word_files_path = <span class="string">&#x27;D:/Python自动化办公/Day02/word样例文件&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># # 取得该目录下所有的docx格式文件</span></span><br><span class="line"><span class="comment"># p = Path(word_files_path)</span></span><br><span class="line"></span><br><span class="line">my_content = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">野老篱边江岸回，柴门不正逐江开。</span></span><br><span class="line"><span class="string">渔人网集澄潭下，贾客船随返照来。</span></span><br><span class="line"><span class="string">长路关心悲剑阁，片云何意傍琴台？</span></span><br><span class="line"><span class="string">王师未报收东郡，城阙秋生画角哀。</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add_content_mode1</span>(<span class="params">content</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    增加内容</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    print(doc)</span><br><span class="line">    para = doc.add_paragraph().add_run(content)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 设置字体格式</span></span><br><span class="line">    para.font.name = <span class="string">&#x27;仿宋&#x27;</span></span><br><span class="line">    <span class="comment"># 设置下划线</span></span><br><span class="line">    para.font.underline = <span class="literal">True</span></span><br><span class="line">    <span class="comment"># 设置颜色</span></span><br><span class="line">    para.font.color.rgb = RGBColor(<span class="number">255</span>, <span class="number">128</span>, <span class="number">128</span>)</span><br><span class="line">    <span class="comment"># 其他设置参考官方文档</span></span><br><span class="line">    <span class="comment"># https://python-docx.readthedocs.io/en/latest/api/text.html#run-objects</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">doc = Document()</span><br><span class="line">add_content_mode1(my_content)</span><br><span class="line">doc.save(Path(word_files_path, <span class="string">&#x27;new2.docx&#x27;</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="将图片和Word文件合并"><a href="#将图片和Word文件合并" class="headerlink" title="将图片和Word文件合并"></a>将图片和Word文件合并</h4><p>我们经常见到的图片格式就有.jpg、.png、.gif等，由于这些格式应用范围广，格式 没有被商业软件加密，所以python-docx库的add_picture函数就能实现把图片插入Word的 功能。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> shared</span><br><span class="line"></span><br><span class="line">doc = Document()</span><br><span class="line"><span class="comment"># 按英寸设置宽度，添加图片</span></span><br><span class="line">doc_add_picture(<span class="string">&#x27;test.jpg&#x27;</span>,width=shared.Inches(<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="将Execl和Word文件合并"><a href="#将Execl和Word文件合并" class="headerlink" title="将Execl和Word文件合并"></a>将Execl和Word文件合并</h4><ul>
+<li><p>使用Python制作邀请函</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line">today=datetime.date.today().strftime(<span class="string">&#x27;%Y-%m-%d&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户信息文件</span></span><br><span class="line">customer = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/客户信息.xlsx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 邀请函模版</span></span><br><span class="line">invitation = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/邀请函模版.docx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 邀请函路径</span></span><br><span class="line">invitation_path = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 替换内容</span></span><br><span class="line">replace_content = &#123;</span><br><span class="line">    <span class="string">&#x27;&lt;姓名&gt;&#x27;</span> : <span class="string">&#x27;no_name&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&lt;性别&gt;&#x27;</span> : <span class="string">&#x27;m_f&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&lt;今天日期&gt;&#x27;</span> : today</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generat_invitation</span>():</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    生成邀请函文件</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    doc = Document(invitation)</span><br><span class="line">    <span class="comment"># 取出每一段</span></span><br><span class="line">    <span class="keyword">for</span> para <span class="keyword">in</span> doc.paragraphs:</span><br><span class="line">        <span class="keyword">for</span> key, value <span class="keyword">in</span> replace_content.items():</span><br><span class="line">            <span class="keyword">if</span> key <span class="keyword">in</span> para.text:</span><br><span class="line">                <span class="comment"># 逐个关键字进行替换</span></span><br><span class="line">                para.text = para.text.replace(key, value)</span><br><span class="line"></span><br><span class="line">    file_name = PurePath(invitation_path).with_name(replace_content[<span class="string">&#x27;&lt;姓名&gt;&#x27;</span>]).with_suffix(<span class="string">&#x27;.docx&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    doc.save(file_name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_customer</span>(<span class="params">customer_file: Path</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    获取邀请函信息</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment"># 从第一个sheet中取出客户信息</span></span><br><span class="line">    data = xlrd.open_workbook(customer_file)</span><br><span class="line">    table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 取得客户数量</span></span><br><span class="line">    customer_number = table.nrows</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, customer_number):</span><br><span class="line">        content = table.row_values(rowx=line, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>)</span><br><span class="line">        replace_content[<span class="string">&#x27;&lt;姓名&gt;&#x27;</span>] = content[<span class="number">0</span>]</span><br><span class="line">        replace_content[<span class="string">&#x27;&lt;性别&gt;&#x27;</span>] = content[<span class="number">1</span>]</span><br><span class="line">        <span class="comment"># print(replace_content)</span></span><br><span class="line">        <span class="comment"># &#123;&#x27;&lt;姓名&gt;&#x27;: &#x27;韩梅梅&#x27;, &#x27;&lt;性别&gt;&#x27;: &#x27;女士&#x27;, &#x27;&lt;今天日期&gt;&#x27;: &#x27;2021-01-01&#x27;&#125;</span></span><br><span class="line">        <span class="comment"># &#123;&#x27;&lt;姓名&gt;&#x27;: &#x27;李雷&#x27;, &#x27;&lt;性别&gt;&#x27;: &#x27;先生&#x27;, &#x27;&lt;今天日期&gt;&#x27;: &#x27;2021-01-01&#x27;&#125;</span></span><br><span class="line">        generat_invitation()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    get_customer(customer)</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在对不同类型文件进行合并时，要考虑不同的问题</p>
+<blockquote>
+<ol>
+<li>对于支持格式丰富不同的文件时要考虑格式的兼容性；</li>
+<li>  对于图片、音乐、视频和Word合并时要考虑是否是受到word支持的通用格式；</li>
+<li>  对于像Excel格式于Word合并时能实现更复杂的功能，代码的复杂程度也会随之提高，一 般需要先分析功能，再进行代码编写。</li>
+</ol>
+</blockquote>
+]]></content>
+      <categories>
+        <category>Python开发</category>
+      </categories>
+      <tags>
+        <tag>Python自动化</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Python自动化办公</title>
     <url>/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC/</url>
     <content><![CDATA[<h1 id="任务场景一：拆分与合并–快速的批量处理内容相似的Excel"><a href="#任务场景一：拆分与合并–快速的批量处理内容相似的Excel" class="headerlink" title="任务场景一：拆分与合并–快速的批量处理内容相似的Excel"></a>任务场景一：拆分与合并–快速的批量处理内容相似的Excel</h1><blockquote>
@@ -1714,20 +1765,15 @@
       </tags>
   </entry>
   <entry>
-    <title>Python自动化办公--Word</title>
-    <url>/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/</url>
-    <content><![CDATA[<h1 id><a href="#" class="headerlink" title></a></h1>]]></content>
+    <title>SVN版本控制系统</title>
+    <url>/2021/02/06/SVN%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F/</url>
+    <content><![CDATA[<h3 id="主要内容"><a href="#主要内容" class="headerlink" title="主要内容"></a>主要内容</h3>]]></content>
       <categories>
-        <category>Python开发</category>
+        <category>项目工具</category>
       </categories>
       <tags>
-        <tag>Python自动化</tag>
+        <tag>SVN</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Redis数据库</title>
-    <url>/2021/02/25/Redis%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Servlet规范一</title>
@@ -1810,6 +1856,11 @@
       </tags>
   </entry>
   <entry>
+    <title>Redis数据库</title>
+    <url>/2021/02/25/Redis%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Session</title>
     <url>/2021/02/25/Session/</url>
     <content><![CDATA[]]></content>
@@ -1818,17 +1869,6 @@
       </categories>
       <tags>
         <tag>Session</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>SVN版本控制系统</title>
-    <url>/2021/02/06/SVN%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F/</url>
-    <content><![CDATA[<h3 id="主要内容"><a href="#主要内容" class="headerlink" title="主要内容"></a>主要内容</h3>]]></content>
-      <categories>
-        <category>项目工具</category>
-      </categories>
-      <tags>
-        <tag>SVN</tag>
       </tags>
   </entry>
   <entry>
@@ -2327,16 +2367,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>事件处理</title>
-    <url>/2021/03/14/%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>云计算</title>
-    <url>/2021/10/07/%E4%BA%91%E8%AE%A1%E7%AE%97/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>中断</title>
     <url>/2021/02/03/%E4%B8%AD%E6%96%AD/</url>
     <content><![CDATA[<h3 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h3><p>中断使得硬件得以发出通知给处理器，是一种变内核主动为硬件主动的方式。中断本质上是一种特殊的电信号。硬件在生成中断的时候并不需要考虑与处理器的时钟同步，即中断可以随时产生，<strong>内核随时可能因为新到来的中断而被打断</strong>。</p>
@@ -2381,6 +2411,16 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>中断</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>事件处理</title>
+    <url>/2021/03/14/%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>云计算</title>
+    <url>/2021/10/07/%E4%BA%91%E8%AE%A1%E7%AE%97/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>优秀项目</title>
@@ -2515,9 +2555,174 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
+    <title>消息队列MQ</title>
+    <url>/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/</url>
+    <content><![CDATA[<h2 id="MQ的基本概念"><a href="#MQ的基本概念" class="headerlink" title="MQ的基本概念"></a>MQ的基本概念</h2><p>MQ全称 Message Queue（消息队列），是在消息的传输过程中保存消息的容器。多用于分布式系统之间进行通信。消息队列已经逐渐成为企业IT系统内部通信的核心手段。它具有低耦合、可靠投递、广播、流量控制、最终一致性等一系列功能，成为异步RPC的主要手段之一。 当今市面上有很多主流的消息中间件，如老牌的ActiveMQ、RabbitMQ，炙手可热的Kafka，阿里巴巴自主开发的Notify、MetaQ、RocketMQ等。</p>
+<p>当你需要使用消息队列时，首先需要考虑它的必要性。可以使用mq的场景有很多，最常用的几种，是做业务解耦/最终一致性/广播/错峰流控等。反之，如果需要强一致性，关注业务逻辑的处理结果，则RPC显得更为合适</p>
+<p>如果没有消息队列，分布式系统之间可能互相通过远程调用来实现不同系统之间的访问。</p>
+ <img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/01.png" class>
+
+<p>MQ，消息队列，存储消息的<strong>中间件</strong>,分布式系统通信两种方式：直接远程调用 和 借助第三方 完成间接通信,发送方称为生产者，接收方称为消费者。</p>
+<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/02.png" class>
+
+<h2 id="MQ的优势与劣势"><a href="#MQ的优势与劣势" class="headerlink" title="MQ的优势与劣势"></a>MQ的优势与劣势</h2><h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><blockquote>
+<p>应用解耦</p>
+</blockquote>
+<p>解耦是消息队列要解决的最本质问题。所谓解耦，简单点讲就是一个事务，只关心核心的流程。而需要依赖其他系统但不那么重要的事情，**==有通知即可，无需等待结果==**。换句话说，基于消息的模型，关心的是“通知”，而非“处理”。 </p>
+<p>比如在美团旅游，我们有一个产品中心，产品中心上游对接的是主站、移动后台、旅游供应链等各个数据源；下游对接的是筛选系统、API系统等展示系统。当上游的数据发生变更的时候，如果不使用消息系统，势必要调用我们的接口来更新数据，就特别依赖产品中心接口的稳定性和处理能力。但其实，作为旅游的产品中心，也许只有对于旅游自建供应链，产品中心更新成功才是他们关心的事情。而对于团购等外部系统，产品中心更新成功也好、失败也罢，并不是他们的职责所在。他们只需要保证在信息变更的时候通知到我们就好了。 而我们的下游，可能有更新索引、刷新缓存等一系列需求。对于产品中心来说，这也不是我们的职责所在。说白了，如果他们定时来拉取数据，也能保证数据的更新，只是实时性没有那么强。但使用接口方式去更新他们的数据，显然对于产品中心来说太过于“重量级”了，只需要发布一个产品ID变更的通知，由下游系统来处理，可能更为合理。 再举一个例子，对于我们的订单系统，订单最终支付成功之后可能需要给用户发送短信积分什么的，但其实这已经不是我们系统的核心流程了。如果外部系统速度偏慢（比如短信网关速度不好），那么主流程的时间会加长很多，用户肯定不希望点击支付过好几分钟才看到结果。那么我们只需要通知短信系统“我们支付成功了”，不一定非要等待它处理完成。</p>
+ <img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/03.png" class>
+
+<p>例如，在上面的例子中，订单系统过分依赖剩余四个系统。用户向订单系统发送消息，订单系统分别向下层的四个系统传递用户消息。这样一来，不仅时间上效率很低，而且，一旦下层的某个系统挂掉，订单系统以及上层用户迟迟得不到反馈，这对于“争分夺秒”的电商行业是不能承受的。而添加了MQ之后，订单系统只需要将消息发给MQ，并且MQ可以先行通知用户操作成功，而不一定非要等到下层子系统操作完成之后在进行反馈。同时，如果下层系统挂掉(通常很快就可以修复，只有几分钟，但是对业务的影响是巨大的），订单系统因为由消息队列的存在，仍旧可以给予用户反馈，提升了客户的访问体验。</p>
+<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/04.png" class>
+
+<blockquote>
+<p>异步提速，削峰填谷</p>
+</blockquote>
+<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/05.png" class>
+
+<p><strong>在不使用消息队列服务器的时候，用户的请求数据直接写入数据库，在高并发的情况下数据库压力剧增，使得响应速度变慢。但是在使用消息队列之后，用户的请求数据发送给消息队列之后立即 返回，再由消息队列的消费者进程从消息队列中获取数据，异步写入数据库。由于消息队列服务器处理速度快于数据库（消息队列也比数据库有更好的伸缩性），因此响应速度得到大幅改善。</strong></p>
+<p>通过以上分析我们可以得出<strong>消息队列具有很好的削峰作用的功能</strong>——即<strong>通过异步处理，将短时间高并发产生的事务消息存储在消息队列中，从而削平高峰期的并发事务。</strong> 举例：在电子商务一些秒杀、促销活动中，合理使用消息队列可以有效抵御促销活动刚开始大量订单涌入对系统的冲击。如下图所示：</p>
+<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/06.png" class>
+
+<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/07.png" class>
+
+<p>因为<strong>用户请求数据写入消息队列之后就立即返回给用户了，但是请求数据在后续的业务校验、写数据库等操作中可能失败</strong>。因此使用消息队列进行异步处理之后，需要<strong>适当修改业务流程进行配合</strong>，比如<strong>用户在提交订单之后，订单数据写入消息队列，不能立即返回用户订单提交成功，需要在消息队列的订单消费者进程真正处理完该订单之后，甚至出库后，再通过电子邮件或短信通知用户订单成功</strong>，以免交易纠纷。这就类似我们平时手机订火车票和电影票。</p>
+<blockquote>
+<p>利用消息队列实现事件驱动结构</p>
+</blockquote>
+<p>最常见的<strong>事件驱动架构</strong>类似生产者消费者模式，在大型网站中通常用利用消息队列实现事件驱动结构。</p>
+<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/08.png" class>
+
+<p><strong>消息队列利用发布-订阅模式工作，消息发送者（生产者）发布消息，一个或多个消息接受者（消费者）订阅消息。</strong> 从上图可以看到<strong>消息发送者（生产者）和消息接受者（消费者）之间没有直接耦合</strong>，消息发送者将消息发送至分布式消息队列即结束对消息的处理，消息接受者从分布式消息队列获取该消息后进行后续处理，并不需要知道该消息从何而来。<strong>对新增业务，只要对该类消息感兴趣，即可订阅该消息，对原有系统和业务没有任何影响，从而实现网站业务的可扩展性设计</strong>。</p>
+<p>消息接受者对消息进行过滤、处理、包装后，构造成一个新的消息类型，将消息继续发送出去，等待其他消息接受者订阅该消息。因此基于事件（消息对象）驱动的业务架构可以是一系列流程。</p>
+<p><strong>另外为了避免消息队列服务器宕机造成消息丢失，会将成功发送到消息队列的消息存储在消息生产者服务器上，等消息真正被消费者服务器处理后才删除消息。在消息队列服务器宕机后，生产者服务器会选择分布式消息队列服务器集群中的其他服务器发布消息。</strong></p>
+<p><strong>备注：</strong> 不要认为消息队列只能利用发布-订阅模式工作，只不过在解耦这个特定业务环境下是使用发布-订阅模式的。<strong>除了发布-订阅模式，还有点对点订阅模式（一个消息只有一个消费者），我们比较常用的是发布-订阅模式。</strong> 另外，这两种消息模型是 JMS 提供的，AMQP 协议还提供了 5 种消息模型。</p>
+<blockquote>
+<p>广播</p>
+</blockquote>
+<p>消息队列的基本功能之一是进行广播。如果没有消息队列，每当一个新的业务方接入，我们都要联调一次新接口。有了消息队列，我们只需要关心消息是否送达了队列，至于谁希望订阅，是下游的事情，无疑极大地减少了开发和联调的工作量。 比如本文开始提到的产品中心发布产品变更的消息，以及景点库很多去重更新的消息，可能“关心”方有很多个，但产品中心和景点库只需要发布变更消息即可，谁关心谁接入。</p>
+<blockquote>
+<p>错峰与流控</p>
+</blockquote>
+<p>试想上下游对于事情的处理能力是不同的。比如，Web前端每秒承受上千万的请求，并不是什么神奇的事情，只需要加多一点机器，再搭建一些LVS负载均衡设备和Nginx等即可。但<strong>数据库的处理能力却十分有限</strong>，即使使用SSD加分库分表，单机的处理能力仍然在万级。由于成本的考虑，我们不能奢求数据库的机器数量追上前端。 这种问题同样存在于系统和系统之间，如短信系统可能由于短板效应，速度卡在网关上（每秒几百次请求），跟前端的并发量不是一个数量级。但用户晚上个半分钟左右收到短信，一般是不会有太大问题的。如果没有消息队列，两个系统之间通过协商、滑动窗口等复杂的方案也不是说不能实现。但系统复杂性指数级增长，势必在上游或者下游做存储，并且要处理定时、拥塞等一系列问题。而且每当有处理能力有差距的时候，都需要单独开发一套逻辑来维护这套逻辑。所以，利用中间系统转储两个系统的通信内容，并在下游系统有能力处理这些消息的时候，再处理这些消息，是一套相对较通用的方式。</p>
+<p>总而言之，消息队列不是万能的。<strong>对于需要强事务保证而且延迟敏感的，RPC是优于消息队列</strong>的。 <strong>对于一些无关痛痒，或者对于别人非常重要但是对于自己不是那么关心的事情，可以利用消息队列去做。</strong> 支持最终一致性的消息队列，能够用来处理<strong>延迟不那么敏感</strong>的“分布式事务”场景，而且相对于笨重的分布式事务，可能是更优的处理方式。 当上下游系统处理能力存在差距的时候，利用消息队列做一个通用的“漏斗”。在下游有能力处理的时候，再进行分发。 如果下游有很多系统关心你的系统发出的通知的时候，果断地使用消息队列吧</p>
+<h3 id="MQ的劣势"><a href="#MQ的劣势" class="headerlink" title="MQ的劣势"></a>MQ的劣势</h3><blockquote>
+<p>一致性问题</p>
+</blockquote>
+<p>A 系统处理完业务，通过 MQ 给B、C、D三个系统发消息数据，如果 B 系统、C 系统处理成功，D 系统处理失败。如何保证消息数据处理的一致性？</p>
+<p>最终一致性指的是两个系统的状态保持一致，要么都成功，要么都失败。当然有个时间限制，理论上越快越好，但实际上在各种异常的情况下，可能会有一定延迟达到最终一致状态，但最后两个系统的状态是一样的。 </p>
+<p>业界有一些为“最终一致性”而生的消息队列，如Notify（阿里）、QMQ（去哪儿）等，其设计初衷，就是为了交易系统中的高可靠通知。 </p>
+<p>以一个银行的转账过程来理解最终一致性，转账的需求很简单，如果A系统扣钱成功，则B系统加钱一定成功。反之则一起回滚，像什么都没发生一样。 然而，这个过程中存在很多可能的意外： 1. A扣钱成功，调用B加钱接口失败。 2. A扣钱成功，调用B加钱接口虽然成功，但获取最终结果时网络异常引起超时。 3. A扣钱成功，B加钱失败，A想回滚扣的钱，但A机器down机。</p>
+<p>可见，想把这件看似简单的事真正做成，真的不那么容易。所有跨VM的一致性问题，从技术的角度讲通用的解决方案是：</p>
+<ul>
+<li><p>强一致性，分布式事务，但落地太难且成本太高。</p>
+</li>
+<li><p>最终一致性，主要是用“记录”和“补偿”的方式。在做所有的不确定的事情之前，先把事情记录下来，然后去做不确定的事情，结果可能是：成功、失败或是不确定，“不确定”（例如超时等）可以等价为失败。成功就可以把记录的东西清理掉了，对于失败和不确定，可以依靠定时任务等方式把所有失败的事情重新搞一遍，直到成功为止。</p>
+<p> 回到刚才的例子，系统在A扣钱成功的情况下，把要给B“通知”这件事记录在库里（为了保证最高的可靠性可以把通知B系统加钱和扣钱成功这两件事维护在一个本地事务里），通知成功则删除这条记录，通知失败或不确定则依靠定时任务补偿性地通知我们，直到我们把状态更新成正确的为止。 整个这个模型依然可以基于RPC来做，但可以抽象成一个统一的模型，基于消息队列来做一个“企业总线”。 具体来说，本地事务维护业务变化和通知消息，一起落地（失败则一起回滚），然后RPC到达broker，在broker成功落地后，RPC返回成功，本地消息可以删除。否则本地消息一直靠定时任务轮询不断重发，这样就保证了消息可靠落地broker。 broker往consumer发送消息的过程类似，一直发送消息，直到consumer发送消费成功确认。 我们先不理会重复消息的问题，通过两次消息落地加补偿，下游是一定可以收到消息的。然后依赖状态机版本号等方式做判重，更新自己的业务，就实现了最终一致性。</p>
+</li>
+</ul>
+<blockquote>
+<p>系统可用性降低</p>
+</blockquote>
+<p>系统引入的外部依赖越多，系统稳定性越差。一旦 MQ 宕机，就会对业务造成影响。如何保证MQ的高可用？</p>
+<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/09.png" class>
+
+
+
+<blockquote>
+<p>系统复杂度提高</p>
+</blockquote>
+<p>MQ 的加入大大增加了系统的复杂度，以前系统间是同步的远程调用，现在是通过 MQ 进行异步调用。如何保证消息没有被重复消费？怎么处理消息丢失情况？那么保证消息传递的顺序性？</p>
+<h2 id="MQ的应用场景"><a href="#MQ的应用场景" class="headerlink" title="MQ的应用场景"></a>MQ的应用场景</h2><p>①生产者不需要从消费者处获得反馈。引入消息队列之前的直接调用，其接口的返回值应该为空，这才让明明下层的动作还没做，上层却当成动作做完了继续往后走，即所谓异步成为了可能。</p>
+<p>②容许短暂的不一致性。</p>
+<p>③确实是用了有效果。即解耦、提速、削峰这些方面的收益，超过加入MQ，管理MQ这些成本。</p>
+]]></content>
+      <categories>
+        <category>MQ</category>
+      </categories>
+      <tags>
+        <tag>RabbitMQ</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>初识动态规划</title>
     <url>/2021/02/03/%E5%88%9D%E8%AF%86%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/</url>
     <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>双指针问题</title>
+    <url>/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h2 id="环形列表I"><a href="#环形列表I" class="headerlink" title="环形列表I"></a>环形列表I</h2><h3 id="题目说明"><a href="#题目说明" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，判断链表中是否有环。</p>
+<p>如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。</p>
+<p>如果链表中存在环，则返回 true 。 否则，返回 false 。</p>
+<p> 进阶：</p>
+<p>你能用 O(1)（即，常量）内存解决此问题吗？</p>
+<p> 示例 1：</p>
+<p> <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100453506.png" alt="image-20210114100453506"></p>
+<p>输入：head = [3,2,0,-4], pos = 1<br>输出：true<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100714252.png" alt="image-20210114100714252"></p>
+<p>输入：head = [1,2], pos = 0<br>输出：true<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
+<img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100749569.png" alt="image-20210114100749569" style="zoom:150%;">
+
+<p>输入：head = [1], pos = -1<br>输出：false<br>解释：链表中没有环。</p>
+<p>提示：</p>
+<p>链表中节点的数目范围是 [0, 104]<br>-105 &lt;= Node.val &lt;= 105<br>pos 为 -1 或者链表中的一个 有效索引 </p>
+<h3 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h3><p>####方法一：哈希表<br>思路及算法</p>
+<p>最容易想到的方法是遍历所有节点，每次遍历到一个节点时，判断该节点此前是否被访问过。</p>
+<p>具体地，我们可以使用哈希表来存储所有已经访问过的节点。每次我们到达一个节点，如果该节点已经存在于哈希表中，则说明该链表是环形链表，否则就将该节点加入哈希表中。重复这一过程，直到我们遍历完整个链表即可。</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">pulic <span class="class"><span class="keyword">class</span> <span class="title">solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascirle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        Set&lt;ListNOde&gt; seen = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span>( head !=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!seen.add(head))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>#####复杂度分析</p>
+<p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。最坏情况下我们需要遍历每个节点一次。</p>
+<p>空间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。主要为哈希表的开销，最坏情况下我们需要将每个节点插入到哈希表中一次。</p>
+<h4 id="方式二；双指针–快慢指针"><a href="#方式二；双指针–快慢指针" class="headerlink" title="方式二；双指针–快慢指针"></a>方式二；双指针–快慢指针</h4><p>方法需要读者对「Floyd 判圈算法」（又称龟兔赛跑算法）有所了解。</p>
+<p>假想「乌龟」和「兔子」在链表上移动，「兔子」跑得快，「乌龟」跑得慢。当「乌龟」和「兔子」从链表上的同一个节点开始移动时，如果该链表中没有环，那么「兔子」将一直处于「乌龟」的前方；如果该链表中有环，那么「兔子」会先于「乌龟」进入环，并且一直在环内移动。等到「乌龟」进入环时，由于「兔子」的速度快，它一定会在某个时刻与乌龟相遇，即套了「乌龟」若干圈。</p>
+<p>我们可以根据上述思路来解决本题。具体地，我们定义两个指针，一快一满。慢指针每次只移动一步，而快指针每次移动两步。初始时，慢指针在位置 head，而快指针在位置 head.next。这样一来，如果在移动的过程中，快指针反过来追上慢指针，就说明该链表为环形链表。否则快指针将到达链表尾部，该链表不为环形链表。</p>
+<p> 为什么我们要规定初始时慢指针在位置 head，快指针在位置 head.next，而不是两个指针都在位置 head（即与「乌龟」和「兔子」中的叙述相同）？</p>
+<p>观察下面的代码，我们使用的是 while 循环，循环条件先于循环体。由于循环条件一定是判断快慢指针是否重合，如果我们将两个指针初始都置于 head，那么 while 循环就不会执行。因此，我们可以假想一个在 head 之前的虚拟节点，慢指针从虚拟节点移动一步到达 head，快指针从虚拟节点移动两步到达 head.next，这样我们就可以使用 while 循环了。</p>
+<p>当然，我们也可以使用 do-while 循环。此时，我们就可以把快慢指针的初始值都置为 head。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">puclic <span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascycle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head;</span><br><span class="line">        ListNode fast = head.next;</span><br><span class="line">        <span class="keyword">while</span>(slow!=fast)&#123;</span><br><span class="line">            <span class="keyword">if</span>(fast==<span class="keyword">null</span>||fast.next==<span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            fast = fast.next.next</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。</p>
+<p>当链表中不存在环时，快指针将先于慢指针到达链表尾部，链表中每个节点至多被访问两次。</p>
+<p>当链表中存在环时，每一轮移动后，快慢指针的距离将减小一。而初始距离为环的长度，因此至多移动 NN 轮。</p>
+<p>空间复杂度：O(1)O(1)。我们只使用了两个指针的额外空间</p>
+<h2 id="环形列表II"><a href="#环形列表II" class="headerlink" title="环形列表II"></a>环形列表II</h2><h3 id="题目说明-1"><a href="#题目说明-1" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。</p>
+<p>为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意，pos 仅仅是用于标识环的情况，并不会作为参数传递到函数中。</p>
+<p>说明：不允许修改给定的链表。</p>
+<p>进阶：</p>
+<p>你是否可以使用 O(1) 空间解决此题？</p>
+<p> 示例 1：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102706369.png" alt="image-20210114102706369"></p>
+<p>输入：head = [3,2,0,-4], pos = 1<br>输出：返回索引为 1 的链表节点<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102721841.png" alt="image-20210114102721841"></p>
+<p>输入：head = [1,2], pos = 0<br>输出：返回索引为 0 的链表节点<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102737481.png" alt="image-20210114102737481"></p>
+<p>输入：head = [1], pos = -1<br>输出：返回 null<br>解释：链表中没有环。</p>
+<p>提示：</p>
+<p>链表中节点的数目范围在范围 [0, 104] 内<br>-105 &lt;= Node.val &lt;= 105<br>pos 的值为 -1 或者链表中的一个有效索引</p>
+<h3 id="题解-1"><a href="#题解-1" class="headerlink" title="题解"></a>题解</h3><h4 id="方法一：哈希表"><a href="#方法一：哈希表" class="headerlink" title="方法一：哈希表"></a>方法一：哈希表</h4><p>一个非常直观的思路是：我们遍历链表中的每个节点，并将它记录下来；一旦遇到了此前遍历过的节点，就可以判定链表中存在环。借助哈希表可以很方便地实现。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        ListNode pos = head;</span><br><span class="line">        Set&lt;ListNode&gt; visited = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span> (pos != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (visited.contains(pos)) &#123;</span><br><span class="line">                <span class="keyword">return</span> pos;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                visited.add(pos);</span><br><span class="line">            &#125;</span><br><span class="line">            pos = pos.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析-1"><a href="#复杂度分析-1" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们恰好需要访问链表中的每一个节点。</p>
+<p>空间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们需要将链表中的每个节点都保存在哈希表当中。</p>
+<h4 id="方法二：双指针–快慢指针"><a href="#方法二：双指针–快慢指针" class="headerlink" title="方法二：双指针–快慢指针"></a>方法二：双指针–快慢指针</h4><p>我们使用两个指针，\textit{fast}fast 与 \textit{slow}slow。它们起始都位于链表的头部。随后，\textit{slow}slow 指针每次向后移动一个位置，而 \textit{fast}fast 指针向后移动两个位置。如果链表中存在环，则 \textit{fast}fast 指针最终将再次与 \textit{slow}slow 指针在环中相遇。</p>
+<p>如下图所示，设链表中环外部分的长度为 aa。\textit{slow}slow 指针进入环后，又走了 bb 的距离与 \textit{fast}fast 相遇。此时，\textit{fast}fast 指针已经走完了环的 nn 圈，因此它走过的总距离为 a+n(b+c)+b=a+(n+1)b+nca+n(b+c)+b=a+(n+1)b+nc</p>
+ <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114103031586.png" alt="image-20210114103031586" style="zoom:50%;">
+
+<p>根据题意，任意时刻，\textit{fast}fast 指针走过的距离都为 \textit{slow}slow 指针的 22 倍。因此，我们有</p>
+<p>a+(n+1)b+nc=2(a+b) \implies a=c+(n-1)(b+c)<br>a+(n+1)b+nc=2(a+b)⟹a=c+(n−1)(b+c)</p>
+<p>有了 a=c+(n-1)(b+c)a=c+(n−1)(b+c) 的等量关系，我们会发现：从相遇点到入环点的距离加上 n-1n−1 圈的环长，恰好等于从链表头部到入环点的距离。</p>
+<p>因此，当发现 \textit{slow}slow 与 \textit{fast}fast 相遇时，我们再额外使用一个指针 \textit{ptr}ptr。起始，它指向链表头部；随后，它和 \textit{slow}slow 每次向后移动一个位置。最终，它们会在入环点相遇。 </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head, fast = head;</span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="keyword">null</span>) &#123;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            <span class="keyword">if</span> (fast.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">                fast = fast.next.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (fast == slow) &#123;</span><br><span class="line">                ListNode ptr = head;</span><br><span class="line">                <span class="keyword">while</span> (ptr != slow) &#123;</span><br><span class="line">                    ptr = ptr.next;</span><br><span class="line">                    slow = slow.next;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> ptr;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>#####复杂度分析</p>
+<p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。在最初判断快慢指针是否相遇时，\textit{slow}slow 指针走过的距离不会超过链表的总长度；随后寻找入环点时，走过的距离也不会超过链表的总长度。因此，总的执行时间为 O(N)+O(N)=O(N)O(N)+O(N)=O(N)。</p>
+<p>空间复杂度：O(1)O(1)。我们只使用了 \textit{slow}, \textit{fast}, \textit{ptr}slow,fast,ptr 三个指针。</p>
+]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>链表</tag>
+        <tag>双指针</tag>
+      </tags>
   </entry>
   <entry>
     <title>初识递归</title>
@@ -2624,168 +2829,79 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>双指针问题</title>
-    <url>/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<h2 id="环形列表I"><a href="#环形列表I" class="headerlink" title="环形列表I"></a>环形列表I</h2><h3 id="题目说明"><a href="#题目说明" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，判断链表中是否有环。</p>
-<p>如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。</p>
-<p>如果链表中存在环，则返回 true 。 否则，返回 false 。</p>
-<p> 进阶：</p>
-<p>你能用 O(1)（即，常量）内存解决此问题吗？</p>
-<p> 示例 1：</p>
-<p> <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100453506.png" alt="image-20210114100453506"></p>
-<p>输入：head = [3,2,0,-4], pos = 1<br>输出：true<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100714252.png" alt="image-20210114100714252"></p>
-<p>输入：head = [1,2], pos = 0<br>输出：true<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
-<img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100749569.png" alt="image-20210114100749569" style="zoom:150%;">
+    <title>哈希表easy篇总结</title>
+    <url>/2021/03/11/%E5%93%88%E5%B8%8C%E8%A1%A8easy%E7%AF%87%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<p>##哈希表刷题总结</p>
+<h3 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h3><p>哈希表（Hash Table，也叫散列表），是根据键（Key）而直接访问在内存存储位置的数据结构。也就是说，它通过计算一个关于键值的函数，将所需查询的数据映射到表中一个位置来访问记录，这加快了查找速度。这个映射函数称做哈希函数，存放记录的数组称做哈希表。</p>
+<p>一个通俗的例子是，为了查找电话簿中某人的号码，可以创建一个按照人名首字母顺序排列的表（即建立人名 xx 到首字母 F(x)F(x) 的一个函数关系），在首字母为 WW 的表中查找 “王” 姓的电话号码，显然比直接查找就要快得多。这里使用人名作为关键字，“取首字母” 是这个例子中哈希函数的函数法则 F()F()，存放首字母的表对应哈希表。关键字和函数法则理论上可以任意确定。</p>
+<p>哈希表是使用 O(1)O(1) 时间进行数据的插入删除和查找，但是哈希表不保证表中数据的有序性，<del>这样在哈希表中查找最大数据或者最小数据的时间是 O(N)O(N) 实现。</del>哈希表不支持需要元素间任何排序信息的操作，例如findMin、findMax或者打印输出排序号的整张表。</p>
+<h3 id="设计哈希映射"><a href="#设计哈希映射" class="headerlink" title="设计哈希映射"></a>设计哈希映射</h3><p>哈希表是一个在不同语言中都有的通用数据结构。例如，Python 中的 dict 和 Java 中的 Hashmap。哈希表的特性是可以根据给出的 key 快速访问 value。</p>
+<p>设计哈希表有两个问题需要去解决： 1). 如何设计哈希方法？ 和 2).如何避免哈希碰撞？ 。</p>
+<p>1). 如何设计哈希方法？：哈希方法会将键值映射到某块存储空间，一个好的哈希方法应该将不同的键值 均匀 地分布在存储空间中。</p>
+<p>2). 如何避免哈希碰撞？：哈希方法要将大量的键值映射到一个有限的空间里,这样就有可能会将不同的键值映射到同一个存储空间，这种情况称为 ‘哈希碰撞’ 。哈希碰撞是不可避免的，但可以用策略来解决哈希碰撞。</p>
+<h3 id="1-有多少小于当前数字的数字"><a href="#1-有多少小于当前数字的数字" class="headerlink" title="1.有多少小于当前数字的数字"></a>1.有多少小于当前数字的数字</h3><p>####一、暴力求解法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>[] smallerNumbersThanCurrent(<span class="keyword">int</span>[] nums) &#123;</span><br><span class="line">        <span class="comment">//第一种方法1：暴力求解法，逐一遍历除当前元素之外的所有元素</span></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">        复杂度分析：</span></span><br><span class="line"><span class="comment">        空间复杂度为O(n)，需要存储新的答案数组</span></span><br><span class="line"><span class="comment">        时间复杂度为O(n^2)</span></span><br><span class="line"><span class="comment">        **/</span></span><br><span class="line">        <span class="keyword">int</span> length = nums.length;</span><br><span class="line">        <span class="keyword">int</span> newtime[] = <span class="keyword">new</span> <span class="keyword">int</span>[length];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;length;i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> time = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> h=<span class="number">0</span>;h&lt;length;h++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(nums[i]&gt;nums[h])&#123;</span><br><span class="line">                    time++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            newtime[i] = time;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> newtime;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="二、计数排序"><a href="#二、计数排序" class="headerlink" title="二、计数排序"></a>二、计数排序</h4><h4 id="三、快速排序"><a href="#三、快速排序" class="headerlink" title="三、快速排序"></a>三、快速排序</h4><h4 id="四、排序与映射结合"><a href="#四、排序与映射结合" class="headerlink" title="四、排序与映射结合"></a>四、排序与映射结合</h4><h3 id="2-第一个只出现一次的字符"><a href="#2-第一个只出现一次的字符" class="headerlink" title="2.第一个只出现一次的字符"></a>2.第一个只出现一次的字符</h3><h4 id="3-1哈希表的遍历"><a href="#3-1哈希表的遍历" class="headerlink" title="3.1哈希表的遍历"></a>3.1哈希表的遍历</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">char</span> <span class="title">firstUniqChar</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        HashMap&lt;Character,Boolean&gt; dic = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">char</span>[] string = s.toCharArray();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">char</span> c:string)&#123;</span><br><span class="line">            dic.put(c,!dic.containsKey(c));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">char</span> c:string)&#123;</span><br><span class="line">            <span class="keyword">if</span>(dic.get(c))</span><br><span class="line">                <span class="keyword">return</span> c;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">复杂度分析：</span></span><br><span class="line"><span class="comment">时间复杂度：O(n)</span></span><br><span class="line"><span class="comment">空间复杂度：O(1)</span></span><br><span class="line"><span class="comment">**/</span></span><br></pre></td></tr></table></figure>
 
-<p>输入：head = [1], pos = -1<br>输出：false<br>解释：链表中没有环。</p>
-<p>提示：</p>
-<p>链表中节点的数目范围是 [0, 104]<br>-105 &lt;= Node.val &lt;= 105<br>pos 为 -1 或者链表中的一个 有效索引 </p>
-<h3 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h3><p>####方法一：哈希表<br>思路及算法</p>
-<p>最容易想到的方法是遍历所有节点，每次遍历到一个节点时，判断该节点此前是否被访问过。</p>
-<p>具体地，我们可以使用哈希表来存储所有已经访问过的节点。每次我们到达一个节点，如果该节点已经存在于哈希表中，则说明该链表是环形链表，否则就将该节点加入哈希表中。重复这一过程，直到我们遍历完整个链表即可。</p>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">pulic <span class="class"><span class="keyword">class</span> <span class="title">solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascirle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        Set&lt;ListNOde&gt; seen = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span>( head !=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!seen.add(head))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>#####复杂度分析</p>
-<p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。最坏情况下我们需要遍历每个节点一次。</p>
-<p>空间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。主要为哈希表的开销，最坏情况下我们需要将每个节点插入到哈希表中一次。</p>
-<h4 id="方式二；双指针–快慢指针"><a href="#方式二；双指针–快慢指针" class="headerlink" title="方式二；双指针–快慢指针"></a>方式二；双指针–快慢指针</h4><p>方法需要读者对「Floyd 判圈算法」（又称龟兔赛跑算法）有所了解。</p>
-<p>假想「乌龟」和「兔子」在链表上移动，「兔子」跑得快，「乌龟」跑得慢。当「乌龟」和「兔子」从链表上的同一个节点开始移动时，如果该链表中没有环，那么「兔子」将一直处于「乌龟」的前方；如果该链表中有环，那么「兔子」会先于「乌龟」进入环，并且一直在环内移动。等到「乌龟」进入环时，由于「兔子」的速度快，它一定会在某个时刻与乌龟相遇，即套了「乌龟」若干圈。</p>
-<p>我们可以根据上述思路来解决本题。具体地，我们定义两个指针，一快一满。慢指针每次只移动一步，而快指针每次移动两步。初始时，慢指针在位置 head，而快指针在位置 head.next。这样一来，如果在移动的过程中，快指针反过来追上慢指针，就说明该链表为环形链表。否则快指针将到达链表尾部，该链表不为环形链表。</p>
-<p> 为什么我们要规定初始时慢指针在位置 head，快指针在位置 head.next，而不是两个指针都在位置 head（即与「乌龟」和「兔子」中的叙述相同）？</p>
-<p>观察下面的代码，我们使用的是 while 循环，循环条件先于循环体。由于循环条件一定是判断快慢指针是否重合，如果我们将两个指针初始都置于 head，那么 while 循环就不会执行。因此，我们可以假想一个在 head 之前的虚拟节点，慢指针从虚拟节点移动一步到达 head，快指针从虚拟节点移动两步到达 head.next，这样我们就可以使用 while 循环了。</p>
-<p>当然，我们也可以使用 do-while 循环。此时，我们就可以把快慢指针的初始值都置为 head。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">puclic <span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascycle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head;</span><br><span class="line">        ListNode fast = head.next;</span><br><span class="line">        <span class="keyword">while</span>(slow!=fast)&#123;</span><br><span class="line">            <span class="keyword">if</span>(fast==<span class="keyword">null</span>||fast.next==<span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            fast = fast.next.next</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。</p>
-<p>当链表中不存在环时，快指针将先于慢指针到达链表尾部，链表中每个节点至多被访问两次。</p>
-<p>当链表中存在环时，每一轮移动后，快慢指针的距离将减小一。而初始距离为环的长度，因此至多移动 NN 轮。</p>
-<p>空间复杂度：O(1)O(1)。我们只使用了两个指针的额外空间</p>
-<h2 id="环形列表II"><a href="#环形列表II" class="headerlink" title="环形列表II"></a>环形列表II</h2><h3 id="题目说明-1"><a href="#题目说明-1" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。</p>
-<p>为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意，pos 仅仅是用于标识环的情况，并不会作为参数传递到函数中。</p>
-<p>说明：不允许修改给定的链表。</p>
-<p>进阶：</p>
-<p>你是否可以使用 O(1) 空间解决此题？</p>
-<p> 示例 1：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102706369.png" alt="image-20210114102706369"></p>
-<p>输入：head = [3,2,0,-4], pos = 1<br>输出：返回索引为 1 的链表节点<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102721841.png" alt="image-20210114102721841"></p>
-<p>输入：head = [1,2], pos = 0<br>输出：返回索引为 0 的链表节点<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102737481.png" alt="image-20210114102737481"></p>
-<p>输入：head = [1], pos = -1<br>输出：返回 null<br>解释：链表中没有环。</p>
-<p>提示：</p>
-<p>链表中节点的数目范围在范围 [0, 104] 内<br>-105 &lt;= Node.val &lt;= 105<br>pos 的值为 -1 或者链表中的一个有效索引</p>
-<h3 id="题解-1"><a href="#题解-1" class="headerlink" title="题解"></a>题解</h3><h4 id="方法一：哈希表"><a href="#方法一：哈希表" class="headerlink" title="方法一：哈希表"></a>方法一：哈希表</h4><p>一个非常直观的思路是：我们遍历链表中的每个节点，并将它记录下来；一旦遇到了此前遍历过的节点，就可以判定链表中存在环。借助哈希表可以很方便地实现。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        ListNode pos = head;</span><br><span class="line">        Set&lt;ListNode&gt; visited = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span> (pos != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (visited.contains(pos)) &#123;</span><br><span class="line">                <span class="keyword">return</span> pos;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                visited.add(pos);</span><br><span class="line">            &#125;</span><br><span class="line">            pos = pos.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析-1"><a href="#复杂度分析-1" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们恰好需要访问链表中的每一个节点。</p>
-<p>空间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们需要将链表中的每个节点都保存在哈希表当中。</p>
-<h4 id="方法二：双指针–快慢指针"><a href="#方法二：双指针–快慢指针" class="headerlink" title="方法二：双指针–快慢指针"></a>方法二：双指针–快慢指针</h4><p>我们使用两个指针，\textit{fast}fast 与 \textit{slow}slow。它们起始都位于链表的头部。随后，\textit{slow}slow 指针每次向后移动一个位置，而 \textit{fast}fast 指针向后移动两个位置。如果链表中存在环，则 \textit{fast}fast 指针最终将再次与 \textit{slow}slow 指针在环中相遇。</p>
-<p>如下图所示，设链表中环外部分的长度为 aa。\textit{slow}slow 指针进入环后，又走了 bb 的距离与 \textit{fast}fast 相遇。此时，\textit{fast}fast 指针已经走完了环的 nn 圈，因此它走过的总距离为 a+n(b+c)+b=a+(n+1)b+nca+n(b+c)+b=a+(n+1)b+nc</p>
- <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114103031586.png" alt="image-20210114103031586" style="zoom:50%;">
 
-<p>根据题意，任意时刻，\textit{fast}fast 指针走过的距离都为 \textit{slow}slow 指针的 22 倍。因此，我们有</p>
-<p>a+(n+1)b+nc=2(a+b) \implies a=c+(n-1)(b+c)<br>a+(n+1)b+nc=2(a+b)⟹a=c+(n−1)(b+c)</p>
-<p>有了 a=c+(n-1)(b+c)a=c+(n−1)(b+c) 的等量关系，我们会发现：从相遇点到入环点的距离加上 n-1n−1 圈的环长，恰好等于从链表头部到入环点的距离。</p>
-<p>因此，当发现 \textit{slow}slow 与 \textit{fast}fast 相遇时，我们再额外使用一个指针 \textit{ptr}ptr。起始，它指向链表头部；随后，它和 \textit{slow}slow 每次向后移动一个位置。最终，它们会在入环点相遇。 </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head, fast = head;</span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="keyword">null</span>) &#123;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            <span class="keyword">if</span> (fast.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">                fast = fast.next.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (fast == slow) &#123;</span><br><span class="line">                ListNode ptr = head;</span><br><span class="line">                <span class="keyword">while</span> (ptr != slow) &#123;</span><br><span class="line">                    ptr = ptr.next;</span><br><span class="line">                    slow = slow.next;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> ptr;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>#####复杂度分析</p>
-<p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。在最初判断快慢指针是否相遇时，\textit{slow}slow 指针走过的距离不会超过链表的总长度；随后寻找入环点时，走过的距离也不会超过链表的总长度。因此，总的执行时间为 O(N)+O(N)=O(N)O(N)+O(N)=O(N)。</p>
-<p>空间复杂度：O(1)O(1)。我们只使用了 \textit{slow}, \textit{fast}, \textit{ptr}slow,fast,ptr 三个指针。</p>
+<h4 id="3-2有序hash表的遍历"><a href="#3-2有序hash表的遍历" class="headerlink" title="3.2有序hash表的遍历"></a>3.2有序hash表的遍历</h4><p>哈希表是 去重 的，即哈希表中键值对数量 ≤ 字符串 s 的长度。因此，相比于方法一，方法二减少了第二轮遍历的循环次数。当字符串很长（重复字符很多）时，方法二则效率更高。</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">char</span> <span class="title">firstUniqChar</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        Map&lt;Character,Boolean&gt; dic = <span class="keyword">new</span> LinkedHashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">char</span>[] string = s.toCharArray();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">char</span> c:string)&#123;</span><br><span class="line">            dic.put(c,!dic.containsKey(c));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(Map.Entry&lt;Character,Boolean&gt; d : dic.entrySet())&#123;</span><br><span class="line">            <span class="keyword">if</span>(d.getValue())</span><br><span class="line">                <span class="keyword">return</span> d.getKey();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="3-3补充知识：Java中的Character类"><a href="#3-3补充知识：Java中的Character类" class="headerlink" title="3.3补充知识：Java中的Character类"></a>3.3补充知识：Java中的Character类</h4><p>Character 类用于对单个字符进行操作。</p>
+<p>Character 类在对象中包装一个基本类型 <strong>char</strong> 的值(类似于Integer与int的关系)</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">char</span> ch = <span class="string">&#x27;a&#x27;</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// Unicode 字符表示形式</span></span><br><span class="line"><span class="keyword">char</span> uniChar = <span class="string">&#x27;\u039A&#x27;</span>; </span><br><span class="line"> </span><br><span class="line"><span class="comment">// 字符数组</span></span><br><span class="line"><span class="keyword">char</span>[] charArray =&#123; <span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;c&#x27;</span>, <span class="string">&#x27;d&#x27;</span>, <span class="string">&#x27;e&#x27;</span> &#125;;</span><br></pre></td></tr></table></figure>
+<p>然而，在实际开发过程中，我们经常会遇到需要使用对象，而不是内置数据类型的情况。为了解决这个问题，Java语言为内置数据类型char提供了<strong>包装类Character类</strong>。</p>
+<p>Character类提供了一系列方法来操纵字符。你可以使用Character的构造方法创建一个Character类对象，例如：</p>
+<p>在某些情况下，Java编译器会自动创建一个Character对象。</p>
+<p>例如，将一个char类型的参数传递给需要一个Character类型参数的方法时，那么编译器会自动地将char类型参数转换为Character对象。 这种特征称为装箱，反过来称为拆箱。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 原始字符 &#x27;a&#x27; 装箱到 Character 对象 ch 中</span></span><br><span class="line">Character ch = <span class="string">&#x27;a&#x27;</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 原始字符 &#x27;x&#x27; 用 test 方法装箱</span></span><br><span class="line"><span class="comment">// 返回拆箱的值到 &#x27;c&#x27;</span></span><br><span class="line"><span class="keyword">char</span> c = test(<span class="string">&#x27;x&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+
+<p><img data-src="/2021/03/11/%E5%93%88%E5%B8%8C%E8%A1%A8easy%E7%AF%87%E6%80%BB%E7%BB%93/Users\xinghaodong\AppData\Roaming\Typora\typora-user-images\image-20210202160601128.png" alt="image-20210202160601128"></p>
+<p>###3.只出现一次的字符</p>
+<p>####3.1哈希表两次遍历</p>
+<p>使用哈希表存储每个数字和该数字出现的次数。遍历数组即可得到每个数字出现的次数，并更新哈希表，最后遍历哈希表，得到只出现一次的数字。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">singleNumber</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//使用Hash表的第一次遍历</span></span><br><span class="line">        HashMap&lt;Integer,Boolean&gt; dic = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            dic.put(i,!dic.containsKey(i));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            <span class="keyword">if</span>(dic.get(i))</span><br><span class="line">                <span class="keyword">return</span> i;   <span class="comment">//不能返回nums[i],这里的增强for循环中的i代表的是nums[]中的某一个元素</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;   <span class="comment">//当表示如不存在所求值时，，不能返回null,要返回-1.    </span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-2位运算"><a href="#3-2位运算" class="headerlink" title="3.2位运算"></a>3.2位运算</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">singleNumber</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> single = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> num : nums) &#123;</span><br><span class="line">            single ^= num;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> single;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="3-3集合运算"><a href="#3-3集合运算" class="headerlink" title="3.3集合运算"></a>3.3集合运算</h4><p>使用集合存储数组中出现的所有数字，并计算数组中的元素之和。由于集合保证元素无重复，因此计算集合中的所有元素之和的两倍，即为每个元素出现两次的情况下的元素之和。由于数组中只有一个元素出现一次，其余元素都出现两次，因此用集合中的元素之和的两倍减去数组中的元素之和，剩下的数就是数组中只出现一次的数字。</p>
+<h4 id="3-4集合放入与删除"><a href="#3-4集合放入与删除" class="headerlink" title="3.4集合放入与删除"></a>3.4集合放入与删除</h4><p>使用集合存储数字。遍历数组中的每个数字，如果集合中没有该数字，则将该数字加入集合，如果集合中已经有该数字，则将该数字从集合中删除，最后剩下的数字就是只出现一次的数字。</p>
+<h3 id="4-岛屿的周长"><a href="#4-岛屿的周长" class="headerlink" title="4.岛屿的周长"></a>4.岛屿的周长</h3><p>####方法一：迭代</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">islandPerimeter</span><span class="params">(<span class="keyword">int</span>[][] grid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> land=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> border=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> j = grid.length;</span><br><span class="line">        <span class="keyword">int</span> k = grid[<span class="number">0</span>].length;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;j;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> h=<span class="number">0</span>;h&lt;k;h++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(grid[i][h]==<span class="number">1</span>)&#123;</span><br><span class="line">                    land++;</span><br><span class="line">                    <span class="keyword">if</span>(i&lt;grid.length-<span class="number">1</span>&amp;&amp;grid[i+<span class="number">1</span>][h]==<span class="number">1</span>)&#123;</span><br><span class="line">                    border++;</span><br><span class="line">                    &#125;</span><br><span class="line">                     <span class="keyword">if</span>(h&lt;grid[<span class="number">0</span>].length-<span class="number">1</span>&amp;&amp;grid[i][h+<span class="number">1</span>]==<span class="number">1</span>)&#123;</span><br><span class="line">                    border++;</span><br><span class="line">                     &#125;</span><br><span class="line">                &#125;</span><br><span class="line">             &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">4</span>*land-<span class="number">2</span>*border;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">找规律，凡是两个陆地相接，必然在最后的周长计算里面损失两个边长值</span></span><br><span class="line"><span class="comment">**/</span></span><br></pre></td></tr></table></figure>
+<h4 id="方法二：DFS深度优先搜索"><a href="#方法二：DFS深度优先搜索" class="headerlink" title="方法二：DFS深度优先搜索"></a>方法二：DFS深度优先搜索</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">从土地到土地，之间不会产生周长，但从土地迈入海洋，之间会产生 1 个周长，从土地迈出矩阵边界，也会产生 1 个周长。</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">dfsfunction</span><span class="params">(<span class="keyword">int</span> i,<span class="keyword">int</span> j,<span class="keyword">int</span>[][]grid)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(i&lt;<span class="number">0</span>||i&gt;=grid.length||j&lt;<span class="number">0</span>||j&gt;=grid[<span class="number">0</span>].length)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;   <span class="comment">//当前正好要越界，周长值+1</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(grid[i][j]==<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;  <span class="comment">//说明从陆地来到了海上，周长值+1</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(grid[i][j]==<span class="number">2</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;   <span class="comment">//DFS需要记录状态，避免重复访问</span></span><br><span class="line">        &#125;</span><br><span class="line">        grid[i][j]=<span class="number">2</span>; <span class="comment">//到此，该节点已经访问完毕，状态变更</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">//从当前模块开始，向上下左右进行遍历，其实有递归的思想，最后的结果随着递归的出栈，子问题的解自上而下的返回，最终得出大问题的解</span></span><br><span class="line">        <span class="keyword">return</span> dfsfunction(i-<span class="number">1</span>,j,grid)+dfsfunction(i,j-<span class="number">1</span>,grid)+dfsfunction(i+<span class="number">1</span>,j,grid)+dfsfunction(i,j+<span class="number">1</span>,grid);       </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">islandPerimeter</span><span class="params">(<span class="keyword">int</span>[][] grid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> row = grid.length;</span><br><span class="line">        <span class="keyword">int</span> col = grid[<span class="number">0</span>].length;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;row;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;col;j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(grid[i][j]==<span class="number">1</span>)&#123;</span><br><span class="line">                       <span class="keyword">return</span> dfsfunction(i,j,grid); </span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="官方题解1-迭代—-利用算子"><a href="#官方题解1-迭代—-利用算子" class="headerlink" title="官方题解1:迭代—-利用算子"></a>官方题解1:迭代—-利用算子</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span>[] dx = &#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span>[] dy = &#123;<span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>, <span class="number">0</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">islandPerimeter</span><span class="params">(<span class="keyword">int</span>[][] grid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = grid.length, m = grid[<span class="number">0</span>].length;</span><br><span class="line">        <span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; m; ++j) &#123;</span><br><span class="line">                <span class="keyword">if</span> (grid[i][j] == <span class="number">1</span>) &#123;</span><br><span class="line">                    <span class="keyword">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">                    <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; <span class="number">4</span>; ++k) &#123;</span><br><span class="line">                        <span class="keyword">int</span> tx = i + dx[k];</span><br><span class="line">                        <span class="keyword">int</span> ty = j + dy[k];</span><br><span class="line">                        <span class="keyword">if</span> (tx &lt; <span class="number">0</span> || tx &gt;= n || ty &lt; <span class="number">0</span> || ty &gt;= m || grid[tx][ty] == <span class="number">0</span>) &#123;</span><br><span class="line">                            cnt += <span class="number">1</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    ans += cnt;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+<p>####官方题解2:DFS—-利用算子</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    constexpr <span class="keyword">static</span> <span class="keyword">int</span> dx[<span class="number">4</span>] = &#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>&#125;;</span><br><span class="line">    constexpr <span class="keyword">static</span> <span class="keyword">int</span> dy[<span class="number">4</span>] = &#123;<span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>, <span class="number">0</span>&#125;;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y, vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt; &amp;grid, <span class="keyword">int</span> n, <span class="keyword">int</span> m)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (x &lt; <span class="number">0</span> || x &gt;= n || y &lt; <span class="number">0</span> || y &gt;= m || grid[x][y] == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (grid[x][y] == <span class="number">2</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        grid[x][y] = <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; ++i) &#123;</span><br><span class="line">            <span class="keyword">int</span> tx = x + dx[i];</span><br><span class="line">            <span class="keyword">int</span> ty = y + dy[i];</span><br><span class="line">            res += dfs(tx, ty, grid, n, m);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">islandPerimeter</span><span class="params">(vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt; &amp;grid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = grid.size(), m = grid[<span class="number">0</span>].size();</span><br><span class="line">        <span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; m; ++j) &#123;</span><br><span class="line">                <span class="keyword">if</span> (grid[i][j] == <span class="number">1</span>) &#123;</span><br><span class="line">                    ans += dfs(i, j, grid, n, m);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+<p>这个题放在散列表题目下，个人觉得是因为可以使用散列表去记录方格的访问状态</p>
+<p>key用来放方格点，value用true或者false来代表方格是否被访问过。</p>
+<h3 id="5-岛屿的数量"><a href="#5-岛屿的数量" class="headerlink" title="5.岛屿的数量"></a>5.岛屿的数量</h3><p>###6.岛屿的最大面积</p>
+<h3 id="7-查找常用字符"><a href="#7-查找常用字符" class="headerlink" title="7.查找常用字符"></a>7.查找常用字符</h3><p>总体来说，还是hash表的思路，重点在于用一个数组创建索引，用另外一个数组更新值。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//遍历、计数、更新</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">用数组实现一个哈希表，以字符为数组下标索引：字符-&#x27;a&#x27;=索引---即：0-&#x27;a&#x27;,2-&#x27;b&#x27;,3-&#x27;c&#x27;,25-&#x27;z&#x27;.</span></span><br><span class="line"><span class="comment">用freq数组存储当前遍历字符串中各字符的数量,在遍历完成后，</span></span><br><span class="line"><span class="comment">以各字符数量的最小值更新minfreq数组，遍历完成后即可得到公共字符的数量集合hash，</span></span><br><span class="line"><span class="comment">将minfreq数组中的非0值还原成字符串加入到列表中，即可得到答案。</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">commonChars</span><span class="params">(String[] A)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] minfreq = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">26</span>];   <span class="comment">//建立minfreq[c]来存储各字符串中c出现的最小次数</span></span><br><span class="line">        Arrays.fill(minfreq,Integer.MAX_VALUE);<span class="comment">//将指定的int值分配给指定的int数组的每个元素，即此时minfreq中的每个元素值均为Integer.MAX_VALUE。</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(String word:A)&#123;</span><br><span class="line">            <span class="keyword">int</span>[] freq = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">26</span>];</span><br><span class="line">            <span class="keyword">int</span> length = word.length();</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;length;i++)&#123;</span><br><span class="line">                <span class="keyword">char</span> ch =word.charAt(i);</span><br><span class="line">                ++freq[ch-<span class="string">&#x27;a&#x27;</span>];             <span class="comment">//ch-&#x27;a&#x27;创建索引</span></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">26</span>;i++)&#123;</span><br><span class="line">                minfreq[i] = Math.min(minfreq[i],freq[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        List&lt;String&gt; ans = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">26</span>;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;minfreq[i];j++)&#123;</span><br><span class="line">                ans.add(String.valueOf((<span class="keyword">char</span>)(i+<span class="string">&#x27;a&#x27;</span>)));  <span class="comment">//i+&#x27;a&#x27;是在将还原minfreq中的字符还原成字符串</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="8-唯一元素的和"><a href="#8-唯一元素的和" class="headerlink" title="8.唯一元素的和"></a>8.唯一元素的和</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">sumOfUnique</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        HashMap&lt;Integer,Boolean&gt; dic = <span class="keyword">new</span> HashMap&lt;Integer,Boolean&gt;();</span><br><span class="line">        <span class="keyword">int</span> length = nums.length;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            dic.put(i,!dic.containsKey(i));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> sum=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            <span class="keyword">if</span>(dic.get(i))&#123;</span><br><span class="line">                sum+=i;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> sum;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//字符串调用length，调用的是方法，因而要加()；数组调用length，调用的是属性，不需要加()。</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ]]></content>
       <categories>
         <category>数据结构</category>
       </categories>
       <tags>
-        <tag>链表</tag>
-        <tag>双指针</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>消息队列MQ</title>
-    <url>/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/</url>
-    <content><![CDATA[<h2 id="MQ的基本概念"><a href="#MQ的基本概念" class="headerlink" title="MQ的基本概念"></a>MQ的基本概念</h2><p>MQ全称 Message Queue（消息队列），是在消息的传输过程中保存消息的容器。多用于分布式系统之间进行通信。消息队列已经逐渐成为企业IT系统内部通信的核心手段。它具有低耦合、可靠投递、广播、流量控制、最终一致性等一系列功能，成为异步RPC的主要手段之一。 当今市面上有很多主流的消息中间件，如老牌的ActiveMQ、RabbitMQ，炙手可热的Kafka，阿里巴巴自主开发的Notify、MetaQ、RocketMQ等。</p>
-<p>当你需要使用消息队列时，首先需要考虑它的必要性。可以使用mq的场景有很多，最常用的几种，是做业务解耦/最终一致性/广播/错峰流控等。反之，如果需要强一致性，关注业务逻辑的处理结果，则RPC显得更为合适</p>
-<p>如果没有消息队列，分布式系统之间可能互相通过远程调用来实现不同系统之间的访问。</p>
- <img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/01.png" class>
-
-<p>MQ，消息队列，存储消息的<strong>中间件</strong>,分布式系统通信两种方式：直接远程调用 和 借助第三方 完成间接通信,发送方称为生产者，接收方称为消费者。</p>
-<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/02.png" class>
-
-<h2 id="MQ的优势与劣势"><a href="#MQ的优势与劣势" class="headerlink" title="MQ的优势与劣势"></a>MQ的优势与劣势</h2><h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><blockquote>
-<p>应用解耦</p>
-</blockquote>
-<p>解耦是消息队列要解决的最本质问题。所谓解耦，简单点讲就是一个事务，只关心核心的流程。而需要依赖其他系统但不那么重要的事情，**==有通知即可，无需等待结果==**。换句话说，基于消息的模型，关心的是“通知”，而非“处理”。 </p>
-<p>比如在美团旅游，我们有一个产品中心，产品中心上游对接的是主站、移动后台、旅游供应链等各个数据源；下游对接的是筛选系统、API系统等展示系统。当上游的数据发生变更的时候，如果不使用消息系统，势必要调用我们的接口来更新数据，就特别依赖产品中心接口的稳定性和处理能力。但其实，作为旅游的产品中心，也许只有对于旅游自建供应链，产品中心更新成功才是他们关心的事情。而对于团购等外部系统，产品中心更新成功也好、失败也罢，并不是他们的职责所在。他们只需要保证在信息变更的时候通知到我们就好了。 而我们的下游，可能有更新索引、刷新缓存等一系列需求。对于产品中心来说，这也不是我们的职责所在。说白了，如果他们定时来拉取数据，也能保证数据的更新，只是实时性没有那么强。但使用接口方式去更新他们的数据，显然对于产品中心来说太过于“重量级”了，只需要发布一个产品ID变更的通知，由下游系统来处理，可能更为合理。 再举一个例子，对于我们的订单系统，订单最终支付成功之后可能需要给用户发送短信积分什么的，但其实这已经不是我们系统的核心流程了。如果外部系统速度偏慢（比如短信网关速度不好），那么主流程的时间会加长很多，用户肯定不希望点击支付过好几分钟才看到结果。那么我们只需要通知短信系统“我们支付成功了”，不一定非要等待它处理完成。</p>
- <img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/03.png" class>
-
-<p>例如，在上面的例子中，订单系统过分依赖剩余四个系统。用户向订单系统发送消息，订单系统分别向下层的四个系统传递用户消息。这样一来，不仅时间上效率很低，而且，一旦下层的某个系统挂掉，订单系统以及上层用户迟迟得不到反馈，这对于“争分夺秒”的电商行业是不能承受的。而添加了MQ之后，订单系统只需要将消息发给MQ，并且MQ可以先行通知用户操作成功，而不一定非要等到下层子系统操作完成之后在进行反馈。同时，如果下层系统挂掉(通常很快就可以修复，只有几分钟，但是对业务的影响是巨大的），订单系统因为由消息队列的存在，仍旧可以给予用户反馈，提升了客户的访问体验。</p>
-<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/04.png" class>
-
-<blockquote>
-<p>异步提速，削峰填谷</p>
-</blockquote>
-<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/05.png" class>
-
-<p><strong>在不使用消息队列服务器的时候，用户的请求数据直接写入数据库，在高并发的情况下数据库压力剧增，使得响应速度变慢。但是在使用消息队列之后，用户的请求数据发送给消息队列之后立即 返回，再由消息队列的消费者进程从消息队列中获取数据，异步写入数据库。由于消息队列服务器处理速度快于数据库（消息队列也比数据库有更好的伸缩性），因此响应速度得到大幅改善。</strong></p>
-<p>通过以上分析我们可以得出<strong>消息队列具有很好的削峰作用的功能</strong>——即<strong>通过异步处理，将短时间高并发产生的事务消息存储在消息队列中，从而削平高峰期的并发事务。</strong> 举例：在电子商务一些秒杀、促销活动中，合理使用消息队列可以有效抵御促销活动刚开始大量订单涌入对系统的冲击。如下图所示：</p>
-<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/06.png" class>
-
-<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/07.png" class>
-
-<p>因为<strong>用户请求数据写入消息队列之后就立即返回给用户了，但是请求数据在后续的业务校验、写数据库等操作中可能失败</strong>。因此使用消息队列进行异步处理之后，需要<strong>适当修改业务流程进行配合</strong>，比如<strong>用户在提交订单之后，订单数据写入消息队列，不能立即返回用户订单提交成功，需要在消息队列的订单消费者进程真正处理完该订单之后，甚至出库后，再通过电子邮件或短信通知用户订单成功</strong>，以免交易纠纷。这就类似我们平时手机订火车票和电影票。</p>
-<blockquote>
-<p>利用消息队列实现事件驱动结构</p>
-</blockquote>
-<p>最常见的<strong>事件驱动架构</strong>类似生产者消费者模式，在大型网站中通常用利用消息队列实现事件驱动结构。</p>
-<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/08.png" class>
-
-<p><strong>消息队列利用发布-订阅模式工作，消息发送者（生产者）发布消息，一个或多个消息接受者（消费者）订阅消息。</strong> 从上图可以看到<strong>消息发送者（生产者）和消息接受者（消费者）之间没有直接耦合</strong>，消息发送者将消息发送至分布式消息队列即结束对消息的处理，消息接受者从分布式消息队列获取该消息后进行后续处理，并不需要知道该消息从何而来。<strong>对新增业务，只要对该类消息感兴趣，即可订阅该消息，对原有系统和业务没有任何影响，从而实现网站业务的可扩展性设计</strong>。</p>
-<p>消息接受者对消息进行过滤、处理、包装后，构造成一个新的消息类型，将消息继续发送出去，等待其他消息接受者订阅该消息。因此基于事件（消息对象）驱动的业务架构可以是一系列流程。</p>
-<p><strong>另外为了避免消息队列服务器宕机造成消息丢失，会将成功发送到消息队列的消息存储在消息生产者服务器上，等消息真正被消费者服务器处理后才删除消息。在消息队列服务器宕机后，生产者服务器会选择分布式消息队列服务器集群中的其他服务器发布消息。</strong></p>
-<p><strong>备注：</strong> 不要认为消息队列只能利用发布-订阅模式工作，只不过在解耦这个特定业务环境下是使用发布-订阅模式的。<strong>除了发布-订阅模式，还有点对点订阅模式（一个消息只有一个消费者），我们比较常用的是发布-订阅模式。</strong> 另外，这两种消息模型是 JMS 提供的，AMQP 协议还提供了 5 种消息模型。</p>
-<blockquote>
-<p>广播</p>
-</blockquote>
-<p>消息队列的基本功能之一是进行广播。如果没有消息队列，每当一个新的业务方接入，我们都要联调一次新接口。有了消息队列，我们只需要关心消息是否送达了队列，至于谁希望订阅，是下游的事情，无疑极大地减少了开发和联调的工作量。 比如本文开始提到的产品中心发布产品变更的消息，以及景点库很多去重更新的消息，可能“关心”方有很多个，但产品中心和景点库只需要发布变更消息即可，谁关心谁接入。</p>
-<blockquote>
-<p>错峰与流控</p>
-</blockquote>
-<p>试想上下游对于事情的处理能力是不同的。比如，Web前端每秒承受上千万的请求，并不是什么神奇的事情，只需要加多一点机器，再搭建一些LVS负载均衡设备和Nginx等即可。但<strong>数据库的处理能力却十分有限</strong>，即使使用SSD加分库分表，单机的处理能力仍然在万级。由于成本的考虑，我们不能奢求数据库的机器数量追上前端。 这种问题同样存在于系统和系统之间，如短信系统可能由于短板效应，速度卡在网关上（每秒几百次请求），跟前端的并发量不是一个数量级。但用户晚上个半分钟左右收到短信，一般是不会有太大问题的。如果没有消息队列，两个系统之间通过协商、滑动窗口等复杂的方案也不是说不能实现。但系统复杂性指数级增长，势必在上游或者下游做存储，并且要处理定时、拥塞等一系列问题。而且每当有处理能力有差距的时候，都需要单独开发一套逻辑来维护这套逻辑。所以，利用中间系统转储两个系统的通信内容，并在下游系统有能力处理这些消息的时候，再处理这些消息，是一套相对较通用的方式。</p>
-<p>总而言之，消息队列不是万能的。<strong>对于需要强事务保证而且延迟敏感的，RPC是优于消息队列</strong>的。 <strong>对于一些无关痛痒，或者对于别人非常重要但是对于自己不是那么关心的事情，可以利用消息队列去做。</strong> 支持最终一致性的消息队列，能够用来处理<strong>延迟不那么敏感</strong>的“分布式事务”场景，而且相对于笨重的分布式事务，可能是更优的处理方式。 当上下游系统处理能力存在差距的时候，利用消息队列做一个通用的“漏斗”。在下游有能力处理的时候，再进行分发。 如果下游有很多系统关心你的系统发出的通知的时候，果断地使用消息队列吧</p>
-<h3 id="MQ的劣势"><a href="#MQ的劣势" class="headerlink" title="MQ的劣势"></a>MQ的劣势</h3><blockquote>
-<p>一致性问题</p>
-</blockquote>
-<p>A 系统处理完业务，通过 MQ 给B、C、D三个系统发消息数据，如果 B 系统、C 系统处理成功，D 系统处理失败。如何保证消息数据处理的一致性？</p>
-<p>最终一致性指的是两个系统的状态保持一致，要么都成功，要么都失败。当然有个时间限制，理论上越快越好，但实际上在各种异常的情况下，可能会有一定延迟达到最终一致状态，但最后两个系统的状态是一样的。 </p>
-<p>业界有一些为“最终一致性”而生的消息队列，如Notify（阿里）、QMQ（去哪儿）等，其设计初衷，就是为了交易系统中的高可靠通知。 </p>
-<p>以一个银行的转账过程来理解最终一致性，转账的需求很简单，如果A系统扣钱成功，则B系统加钱一定成功。反之则一起回滚，像什么都没发生一样。 然而，这个过程中存在很多可能的意外： 1. A扣钱成功，调用B加钱接口失败。 2. A扣钱成功，调用B加钱接口虽然成功，但获取最终结果时网络异常引起超时。 3. A扣钱成功，B加钱失败，A想回滚扣的钱，但A机器down机。</p>
-<p>可见，想把这件看似简单的事真正做成，真的不那么容易。所有跨VM的一致性问题，从技术的角度讲通用的解决方案是：</p>
-<ul>
-<li><p>强一致性，分布式事务，但落地太难且成本太高。</p>
-</li>
-<li><p>最终一致性，主要是用“记录”和“补偿”的方式。在做所有的不确定的事情之前，先把事情记录下来，然后去做不确定的事情，结果可能是：成功、失败或是不确定，“不确定”（例如超时等）可以等价为失败。成功就可以把记录的东西清理掉了，对于失败和不确定，可以依靠定时任务等方式把所有失败的事情重新搞一遍，直到成功为止。</p>
-<p> 回到刚才的例子，系统在A扣钱成功的情况下，把要给B“通知”这件事记录在库里（为了保证最高的可靠性可以把通知B系统加钱和扣钱成功这两件事维护在一个本地事务里），通知成功则删除这条记录，通知失败或不确定则依靠定时任务补偿性地通知我们，直到我们把状态更新成正确的为止。 整个这个模型依然可以基于RPC来做，但可以抽象成一个统一的模型，基于消息队列来做一个“企业总线”。 具体来说，本地事务维护业务变化和通知消息，一起落地（失败则一起回滚），然后RPC到达broker，在broker成功落地后，RPC返回成功，本地消息可以删除。否则本地消息一直靠定时任务轮询不断重发，这样就保证了消息可靠落地broker。 broker往consumer发送消息的过程类似，一直发送消息，直到consumer发送消费成功确认。 我们先不理会重复消息的问题，通过两次消息落地加补偿，下游是一定可以收到消息的。然后依赖状态机版本号等方式做判重，更新自己的业务，就实现了最终一致性。</p>
-</li>
-</ul>
-<blockquote>
-<p>系统可用性降低</p>
-</blockquote>
-<p>系统引入的外部依赖越多，系统稳定性越差。一旦 MQ 宕机，就会对业务造成影响。如何保证MQ的高可用？</p>
-<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/09.png" class>
-
-
-
-<blockquote>
-<p>系统复杂度提高</p>
-</blockquote>
-<p>MQ 的加入大大增加了系统的复杂度，以前系统间是同步的远程调用，现在是通过 MQ 进行异步调用。如何保证消息没有被重复消费？怎么处理消息丢失情况？那么保证消息传递的顺序性？</p>
-<h2 id="MQ的应用场景"><a href="#MQ的应用场景" class="headerlink" title="MQ的应用场景"></a>MQ的应用场景</h2><p>①生产者不需要从消费者处获得反馈。引入消息队列之前的直接调用，其接口的返回值应该为空，这才让明明下层的动作还没做，上层却当成动作做完了继续往后走，即所谓异步成为了可能。</p>
-<p>②容许短暂的不一致性。</p>
-<p>③确实是用了有效果。即解耦、提速、削峰这些方面的收益，超过加入MQ，管理MQ这些成本。</p>
-]]></content>
-      <categories>
-        <category>MQ</category>
-      </categories>
-      <tags>
-        <tag>RabbitMQ</tag>
+        <tag>哈希表</tag>
       </tags>
   </entry>
   <entry>
@@ -2871,82 +2987,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </categories>
       <tags>
         <tag>环境部署</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>哈希表easy篇总结</title>
-    <url>/2021/03/11/%E5%93%88%E5%B8%8C%E8%A1%A8easy%E7%AF%87%E6%80%BB%E7%BB%93/</url>
-    <content><![CDATA[<p>##哈希表刷题总结</p>
-<h3 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h3><p>哈希表（Hash Table，也叫散列表），是根据键（Key）而直接访问在内存存储位置的数据结构。也就是说，它通过计算一个关于键值的函数，将所需查询的数据映射到表中一个位置来访问记录，这加快了查找速度。这个映射函数称做哈希函数，存放记录的数组称做哈希表。</p>
-<p>一个通俗的例子是，为了查找电话簿中某人的号码，可以创建一个按照人名首字母顺序排列的表（即建立人名 xx 到首字母 F(x)F(x) 的一个函数关系），在首字母为 WW 的表中查找 “王” 姓的电话号码，显然比直接查找就要快得多。这里使用人名作为关键字，“取首字母” 是这个例子中哈希函数的函数法则 F()F()，存放首字母的表对应哈希表。关键字和函数法则理论上可以任意确定。</p>
-<p>哈希表是使用 O(1)O(1) 时间进行数据的插入删除和查找，但是哈希表不保证表中数据的有序性，<del>这样在哈希表中查找最大数据或者最小数据的时间是 O(N)O(N) 实现。</del>哈希表不支持需要元素间任何排序信息的操作，例如findMin、findMax或者打印输出排序号的整张表。</p>
-<h3 id="设计哈希映射"><a href="#设计哈希映射" class="headerlink" title="设计哈希映射"></a>设计哈希映射</h3><p>哈希表是一个在不同语言中都有的通用数据结构。例如，Python 中的 dict 和 Java 中的 Hashmap。哈希表的特性是可以根据给出的 key 快速访问 value。</p>
-<p>设计哈希表有两个问题需要去解决： 1). 如何设计哈希方法？ 和 2).如何避免哈希碰撞？ 。</p>
-<p>1). 如何设计哈希方法？：哈希方法会将键值映射到某块存储空间，一个好的哈希方法应该将不同的键值 均匀 地分布在存储空间中。</p>
-<p>2). 如何避免哈希碰撞？：哈希方法要将大量的键值映射到一个有限的空间里,这样就有可能会将不同的键值映射到同一个存储空间，这种情况称为 ‘哈希碰撞’ 。哈希碰撞是不可避免的，但可以用策略来解决哈希碰撞。</p>
-<h3 id="1-有多少小于当前数字的数字"><a href="#1-有多少小于当前数字的数字" class="headerlink" title="1.有多少小于当前数字的数字"></a>1.有多少小于当前数字的数字</h3><p>####一、暴力求解法</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>[] smallerNumbersThanCurrent(<span class="keyword">int</span>[] nums) &#123;</span><br><span class="line">        <span class="comment">//第一种方法1：暴力求解法，逐一遍历除当前元素之外的所有元素</span></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">        复杂度分析：</span></span><br><span class="line"><span class="comment">        空间复杂度为O(n)，需要存储新的答案数组</span></span><br><span class="line"><span class="comment">        时间复杂度为O(n^2)</span></span><br><span class="line"><span class="comment">        **/</span></span><br><span class="line">        <span class="keyword">int</span> length = nums.length;</span><br><span class="line">        <span class="keyword">int</span> newtime[] = <span class="keyword">new</span> <span class="keyword">int</span>[length];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;length;i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> time = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> h=<span class="number">0</span>;h&lt;length;h++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(nums[i]&gt;nums[h])&#123;</span><br><span class="line">                    time++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            newtime[i] = time;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> newtime;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="二、计数排序"><a href="#二、计数排序" class="headerlink" title="二、计数排序"></a>二、计数排序</h4><h4 id="三、快速排序"><a href="#三、快速排序" class="headerlink" title="三、快速排序"></a>三、快速排序</h4><h4 id="四、排序与映射结合"><a href="#四、排序与映射结合" class="headerlink" title="四、排序与映射结合"></a>四、排序与映射结合</h4><h3 id="2-第一个只出现一次的字符"><a href="#2-第一个只出现一次的字符" class="headerlink" title="2.第一个只出现一次的字符"></a>2.第一个只出现一次的字符</h3><h4 id="3-1哈希表的遍历"><a href="#3-1哈希表的遍历" class="headerlink" title="3.1哈希表的遍历"></a>3.1哈希表的遍历</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">char</span> <span class="title">firstUniqChar</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        HashMap&lt;Character,Boolean&gt; dic = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">char</span>[] string = s.toCharArray();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">char</span> c:string)&#123;</span><br><span class="line">            dic.put(c,!dic.containsKey(c));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">char</span> c:string)&#123;</span><br><span class="line">            <span class="keyword">if</span>(dic.get(c))</span><br><span class="line">                <span class="keyword">return</span> c;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">复杂度分析：</span></span><br><span class="line"><span class="comment">时间复杂度：O(n)</span></span><br><span class="line"><span class="comment">空间复杂度：O(1)</span></span><br><span class="line"><span class="comment">**/</span></span><br></pre></td></tr></table></figure>
-
-
-<h4 id="3-2有序hash表的遍历"><a href="#3-2有序hash表的遍历" class="headerlink" title="3.2有序hash表的遍历"></a>3.2有序hash表的遍历</h4><p>哈希表是 去重 的，即哈希表中键值对数量 ≤ 字符串 s 的长度。因此，相比于方法一，方法二减少了第二轮遍历的循环次数。当字符串很长（重复字符很多）时，方法二则效率更高。</p>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">char</span> <span class="title">firstUniqChar</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        Map&lt;Character,Boolean&gt; dic = <span class="keyword">new</span> LinkedHashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">char</span>[] string = s.toCharArray();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">char</span> c:string)&#123;</span><br><span class="line">            dic.put(c,!dic.containsKey(c));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(Map.Entry&lt;Character,Boolean&gt; d : dic.entrySet())&#123;</span><br><span class="line">            <span class="keyword">if</span>(d.getValue())</span><br><span class="line">                <span class="keyword">return</span> d.getKey();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="3-3补充知识：Java中的Character类"><a href="#3-3补充知识：Java中的Character类" class="headerlink" title="3.3补充知识：Java中的Character类"></a>3.3补充知识：Java中的Character类</h4><p>Character 类用于对单个字符进行操作。</p>
-<p>Character 类在对象中包装一个基本类型 <strong>char</strong> 的值(类似于Integer与int的关系)</p>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">char</span> ch = <span class="string">&#x27;a&#x27;</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// Unicode 字符表示形式</span></span><br><span class="line"><span class="keyword">char</span> uniChar = <span class="string">&#x27;\u039A&#x27;</span>; </span><br><span class="line"> </span><br><span class="line"><span class="comment">// 字符数组</span></span><br><span class="line"><span class="keyword">char</span>[] charArray =&#123; <span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;c&#x27;</span>, <span class="string">&#x27;d&#x27;</span>, <span class="string">&#x27;e&#x27;</span> &#125;;</span><br></pre></td></tr></table></figure>
-<p>然而，在实际开发过程中，我们经常会遇到需要使用对象，而不是内置数据类型的情况。为了解决这个问题，Java语言为内置数据类型char提供了<strong>包装类Character类</strong>。</p>
-<p>Character类提供了一系列方法来操纵字符。你可以使用Character的构造方法创建一个Character类对象，例如：</p>
-<p>在某些情况下，Java编译器会自动创建一个Character对象。</p>
-<p>例如，将一个char类型的参数传递给需要一个Character类型参数的方法时，那么编译器会自动地将char类型参数转换为Character对象。 这种特征称为装箱，反过来称为拆箱。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 原始字符 &#x27;a&#x27; 装箱到 Character 对象 ch 中</span></span><br><span class="line">Character ch = <span class="string">&#x27;a&#x27;</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 原始字符 &#x27;x&#x27; 用 test 方法装箱</span></span><br><span class="line"><span class="comment">// 返回拆箱的值到 &#x27;c&#x27;</span></span><br><span class="line"><span class="keyword">char</span> c = test(<span class="string">&#x27;x&#x27;</span>);</span><br></pre></td></tr></table></figure>
-
-
-<p><img data-src="/2021/03/11/%E5%93%88%E5%B8%8C%E8%A1%A8easy%E7%AF%87%E6%80%BB%E7%BB%93/Users\xinghaodong\AppData\Roaming\Typora\typora-user-images\image-20210202160601128.png" alt="image-20210202160601128"></p>
-<p>###3.只出现一次的字符</p>
-<p>####3.1哈希表两次遍历</p>
-<p>使用哈希表存储每个数字和该数字出现的次数。遍历数组即可得到每个数字出现的次数，并更新哈希表，最后遍历哈希表，得到只出现一次的数字。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">singleNumber</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//使用Hash表的第一次遍历</span></span><br><span class="line">        HashMap&lt;Integer,Boolean&gt; dic = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            dic.put(i,!dic.containsKey(i));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            <span class="keyword">if</span>(dic.get(i))</span><br><span class="line">                <span class="keyword">return</span> i;   <span class="comment">//不能返回nums[i],这里的增强for循环中的i代表的是nums[]中的某一个元素</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;   <span class="comment">//当表示如不存在所求值时，，不能返回null,要返回-1.    </span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="3-2位运算"><a href="#3-2位运算" class="headerlink" title="3.2位运算"></a>3.2位运算</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">singleNumber</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> single = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> num : nums) &#123;</span><br><span class="line">            single ^= num;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> single;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="3-3集合运算"><a href="#3-3集合运算" class="headerlink" title="3.3集合运算"></a>3.3集合运算</h4><p>使用集合存储数组中出现的所有数字，并计算数组中的元素之和。由于集合保证元素无重复，因此计算集合中的所有元素之和的两倍，即为每个元素出现两次的情况下的元素之和。由于数组中只有一个元素出现一次，其余元素都出现两次，因此用集合中的元素之和的两倍减去数组中的元素之和，剩下的数就是数组中只出现一次的数字。</p>
-<h4 id="3-4集合放入与删除"><a href="#3-4集合放入与删除" class="headerlink" title="3.4集合放入与删除"></a>3.4集合放入与删除</h4><p>使用集合存储数字。遍历数组中的每个数字，如果集合中没有该数字，则将该数字加入集合，如果集合中已经有该数字，则将该数字从集合中删除，最后剩下的数字就是只出现一次的数字。</p>
-<h3 id="4-岛屿的周长"><a href="#4-岛屿的周长" class="headerlink" title="4.岛屿的周长"></a>4.岛屿的周长</h3><p>####方法一：迭代</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">islandPerimeter</span><span class="params">(<span class="keyword">int</span>[][] grid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> land=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> border=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> j = grid.length;</span><br><span class="line">        <span class="keyword">int</span> k = grid[<span class="number">0</span>].length;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;j;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> h=<span class="number">0</span>;h&lt;k;h++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(grid[i][h]==<span class="number">1</span>)&#123;</span><br><span class="line">                    land++;</span><br><span class="line">                    <span class="keyword">if</span>(i&lt;grid.length-<span class="number">1</span>&amp;&amp;grid[i+<span class="number">1</span>][h]==<span class="number">1</span>)&#123;</span><br><span class="line">                    border++;</span><br><span class="line">                    &#125;</span><br><span class="line">                     <span class="keyword">if</span>(h&lt;grid[<span class="number">0</span>].length-<span class="number">1</span>&amp;&amp;grid[i][h+<span class="number">1</span>]==<span class="number">1</span>)&#123;</span><br><span class="line">                    border++;</span><br><span class="line">                     &#125;</span><br><span class="line">                &#125;</span><br><span class="line">             &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">4</span>*land-<span class="number">2</span>*border;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">找规律，凡是两个陆地相接，必然在最后的周长计算里面损失两个边长值</span></span><br><span class="line"><span class="comment">**/</span></span><br></pre></td></tr></table></figure>
-<h4 id="方法二：DFS深度优先搜索"><a href="#方法二：DFS深度优先搜索" class="headerlink" title="方法二：DFS深度优先搜索"></a>方法二：DFS深度优先搜索</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">从土地到土地，之间不会产生周长，但从土地迈入海洋，之间会产生 1 个周长，从土地迈出矩阵边界，也会产生 1 个周长。</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">dfsfunction</span><span class="params">(<span class="keyword">int</span> i,<span class="keyword">int</span> j,<span class="keyword">int</span>[][]grid)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(i&lt;<span class="number">0</span>||i&gt;=grid.length||j&lt;<span class="number">0</span>||j&gt;=grid[<span class="number">0</span>].length)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;   <span class="comment">//当前正好要越界，周长值+1</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(grid[i][j]==<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;  <span class="comment">//说明从陆地来到了海上，周长值+1</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(grid[i][j]==<span class="number">2</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;   <span class="comment">//DFS需要记录状态，避免重复访问</span></span><br><span class="line">        &#125;</span><br><span class="line">        grid[i][j]=<span class="number">2</span>; <span class="comment">//到此，该节点已经访问完毕，状态变更</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">//从当前模块开始，向上下左右进行遍历，其实有递归的思想，最后的结果随着递归的出栈，子问题的解自上而下的返回，最终得出大问题的解</span></span><br><span class="line">        <span class="keyword">return</span> dfsfunction(i-<span class="number">1</span>,j,grid)+dfsfunction(i,j-<span class="number">1</span>,grid)+dfsfunction(i+<span class="number">1</span>,j,grid)+dfsfunction(i,j+<span class="number">1</span>,grid);       </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">islandPerimeter</span><span class="params">(<span class="keyword">int</span>[][] grid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> row = grid.length;</span><br><span class="line">        <span class="keyword">int</span> col = grid[<span class="number">0</span>].length;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;row;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;col;j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(grid[i][j]==<span class="number">1</span>)&#123;</span><br><span class="line">                       <span class="keyword">return</span> dfsfunction(i,j,grid); </span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="官方题解1-迭代—-利用算子"><a href="#官方题解1-迭代—-利用算子" class="headerlink" title="官方题解1:迭代—-利用算子"></a>官方题解1:迭代—-利用算子</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span>[] dx = &#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span>[] dy = &#123;<span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>, <span class="number">0</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">islandPerimeter</span><span class="params">(<span class="keyword">int</span>[][] grid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = grid.length, m = grid[<span class="number">0</span>].length;</span><br><span class="line">        <span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; m; ++j) &#123;</span><br><span class="line">                <span class="keyword">if</span> (grid[i][j] == <span class="number">1</span>) &#123;</span><br><span class="line">                    <span class="keyword">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">                    <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; <span class="number">4</span>; ++k) &#123;</span><br><span class="line">                        <span class="keyword">int</span> tx = i + dx[k];</span><br><span class="line">                        <span class="keyword">int</span> ty = j + dy[k];</span><br><span class="line">                        <span class="keyword">if</span> (tx &lt; <span class="number">0</span> || tx &gt;= n || ty &lt; <span class="number">0</span> || ty &gt;= m || grid[tx][ty] == <span class="number">0</span>) &#123;</span><br><span class="line">                            cnt += <span class="number">1</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    ans += cnt;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
-<p>####官方题解2:DFS—-利用算子</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    constexpr <span class="keyword">static</span> <span class="keyword">int</span> dx[<span class="number">4</span>] = &#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>&#125;;</span><br><span class="line">    constexpr <span class="keyword">static</span> <span class="keyword">int</span> dy[<span class="number">4</span>] = &#123;<span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>, <span class="number">0</span>&#125;;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y, vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt; &amp;grid, <span class="keyword">int</span> n, <span class="keyword">int</span> m)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (x &lt; <span class="number">0</span> || x &gt;= n || y &lt; <span class="number">0</span> || y &gt;= m || grid[x][y] == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (grid[x][y] == <span class="number">2</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        grid[x][y] = <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; ++i) &#123;</span><br><span class="line">            <span class="keyword">int</span> tx = x + dx[i];</span><br><span class="line">            <span class="keyword">int</span> ty = y + dy[i];</span><br><span class="line">            res += dfs(tx, ty, grid, n, m);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">islandPerimeter</span><span class="params">(vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt; &amp;grid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = grid.size(), m = grid[<span class="number">0</span>].size();</span><br><span class="line">        <span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; m; ++j) &#123;</span><br><span class="line">                <span class="keyword">if</span> (grid[i][j] == <span class="number">1</span>) &#123;</span><br><span class="line">                    ans += dfs(i, j, grid, n, m);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
-<p>这个题放在散列表题目下，个人觉得是因为可以使用散列表去记录方格的访问状态</p>
-<p>key用来放方格点，value用true或者false来代表方格是否被访问过。</p>
-<h3 id="5-岛屿的数量"><a href="#5-岛屿的数量" class="headerlink" title="5.岛屿的数量"></a>5.岛屿的数量</h3><p>###6.岛屿的最大面积</p>
-<h3 id="7-查找常用字符"><a href="#7-查找常用字符" class="headerlink" title="7.查找常用字符"></a>7.查找常用字符</h3><p>总体来说，还是hash表的思路，重点在于用一个数组创建索引，用另外一个数组更新值。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//遍历、计数、更新</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">用数组实现一个哈希表，以字符为数组下标索引：字符-&#x27;a&#x27;=索引---即：0-&#x27;a&#x27;,2-&#x27;b&#x27;,3-&#x27;c&#x27;,25-&#x27;z&#x27;.</span></span><br><span class="line"><span class="comment">用freq数组存储当前遍历字符串中各字符的数量,在遍历完成后，</span></span><br><span class="line"><span class="comment">以各字符数量的最小值更新minfreq数组，遍历完成后即可得到公共字符的数量集合hash，</span></span><br><span class="line"><span class="comment">将minfreq数组中的非0值还原成字符串加入到列表中，即可得到答案。</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">commonChars</span><span class="params">(String[] A)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] minfreq = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">26</span>];   <span class="comment">//建立minfreq[c]来存储各字符串中c出现的最小次数</span></span><br><span class="line">        Arrays.fill(minfreq,Integer.MAX_VALUE);<span class="comment">//将指定的int值分配给指定的int数组的每个元素，即此时minfreq中的每个元素值均为Integer.MAX_VALUE。</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(String word:A)&#123;</span><br><span class="line">            <span class="keyword">int</span>[] freq = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">26</span>];</span><br><span class="line">            <span class="keyword">int</span> length = word.length();</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;length;i++)&#123;</span><br><span class="line">                <span class="keyword">char</span> ch =word.charAt(i);</span><br><span class="line">                ++freq[ch-<span class="string">&#x27;a&#x27;</span>];             <span class="comment">//ch-&#x27;a&#x27;创建索引</span></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">26</span>;i++)&#123;</span><br><span class="line">                minfreq[i] = Math.min(minfreq[i],freq[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        List&lt;String&gt; ans = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">26</span>;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;minfreq[i];j++)&#123;</span><br><span class="line">                ans.add(String.valueOf((<span class="keyword">char</span>)(i+<span class="string">&#x27;a&#x27;</span>)));  <span class="comment">//i+&#x27;a&#x27;是在将还原minfreq中的字符还原成字符串</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="8-唯一元素的和"><a href="#8-唯一元素的和" class="headerlink" title="8.唯一元素的和"></a>8.唯一元素的和</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">sumOfUnique</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        HashMap&lt;Integer,Boolean&gt; dic = <span class="keyword">new</span> HashMap&lt;Integer,Boolean&gt;();</span><br><span class="line">        <span class="keyword">int</span> length = nums.length;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            dic.put(i,!dic.containsKey(i));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> sum=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            <span class="keyword">if</span>(dic.get(i))&#123;</span><br><span class="line">                sum+=i;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> sum;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//字符串调用length，调用的是方法，因而要加()；数组调用length，调用的是属性，不需要加()。</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>数据结构</category>
-      </categories>
-      <tags>
-        <tag>哈希表</tag>
       </tags>
   </entry>
   <entry>
@@ -3113,6 +3153,117 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
+    <title>封装Mybatis输出结果与模糊查询</title>
+    <url>/2021/03/14/%E5%B0%81%E8%A3%85Mybatis%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C/</url>
+    <content><![CDATA[<h3 id="resultType"><a href="#resultType" class="headerlink" title="resultType"></a>resultType</h3><p>resultType: 执行 sql 得到 ResultSet 转换的类型，使用类型的完全限定名或别名。 注意如果返回的是集合，那应该设置为集合包含的类型，而不是集合本身。resultType 和 resultMap，不能同时使用。</p>
+<h4 id="resultType-1"><a href="#resultType-1" class="headerlink" title="resultType"></a>resultType</h4><img data-src="/2021/03/14/%E5%B0%81%E8%A3%85Mybatis%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C/01.png" class>
+
+
+
+<blockquote>
+<p>简单类型</p>
+</blockquote>
+<p>接口方法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">countStudent</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+<p>mapper文件：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">&lt;select id=<span class="string">&quot;countStudent&quot;</span> resultType=<span class="string">&quot;int&quot;</span>&gt;</span><br><span class="line">	 <span class="function">select <span class="title">count</span><span class="params">(*)</span> from student</span></span><br><span class="line"><span class="function">&lt;/select&gt;</span></span><br></pre></td></tr></table></figure>
+<p>测试方法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testRetunInt</span><span class="params">()</span></span>&#123;</span><br><span class="line">     <span class="keyword">int</span> count = studentDao.countStudent();</span><br><span class="line">     System.out.println(<span class="string">&quot;学生总人数：&quot;</span>+ count);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>对象类型</p>
+</blockquote>
+<p>接口方法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">Student <span class="title">selectById</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>mapper文件：</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;select id=<span class="string">&quot;selectById&quot;</span> resultType=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span><br><span class="line">     select id,name,email,age from student where id=#&#123;studentId&#125;</span><br><span class="line">&lt;/select&gt;</span><br></pre></td></tr></table></figure>
+ <img data-src="/2021/03/14/%E5%B0%81%E8%A3%85Mybatis%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C/02.png" class>
+
+ <img data-src="/2021/03/14/%E5%B0%81%E8%A3%85Mybatis%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C/03.png" class>
+
+
+
+<blockquote>
+<p>Map</p>
+</blockquote>
+<p>sql 的查询结果作为 Map 的 key 和 value。推荐使用 Map。 注意：Map 作为接口返回值，sql 语句的查询结果最多只能有一条记录。大于一条记录是错误。</p>
+<p>接口方法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">Map&lt;Object,Object&gt; <span class="title">selectReturnMap</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>mapper文件：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectReturnMap&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;java.util.HashMap&quot;</span>&gt;</span></span><br><span class="line">	 select name,email from student where id = #&#123;studentId&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>测试方法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testReturnMap</span><span class="params">()</span></span>&#123;</span><br><span class="line">     Map&lt;Object,Object&gt; retMap = studentDao.selectReturnMap(<span class="number">1002</span>);</span><br><span class="line">     System.out.println(<span class="string">&quot;查询结果是 Map:&quot;</span>+retMap);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="resultMap"><a href="#resultMap" class="headerlink" title="resultMap"></a>resultMap</h4><p>resultMap 可以自定义 sql 的结果和 java 对象属性的映射关系。更灵活的把列值赋值给指定属性。 常用在列名和 java 对象属性名不一样的情况。</p>
+<p> 使用方式： </p>
+<p>1.先定义 resultMap,指定列名和属性的对应关系。</p>
+<p> 2.在<select>中把 resultType 替换为 resultMap。</select></p>
+<blockquote>
+<p>接口方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">List&lt;Student&gt; <span class="title">selectUseResultMap</span><span class="params">(QueryParam param)</span></span>;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>mapper文件</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 创建 resultMap</span></span><br><span class="line"><span class="comment">     id:自定义的唯一名称，在&lt;select&gt;使用</span></span><br><span class="line"><span class="comment">     type:期望转为的 java 对象的全限定名称或别名</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;studentMap&quot;</span> <span class="attr">type</span>=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span></span><br><span class="line">     <span class="comment">&lt;!-- 主键字段使用 id --&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">id</span> <span class="attr">column</span>=<span class="string">&quot;id&quot;</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> /&gt;</span></span><br><span class="line">     <span class="comment">&lt;!--非主键字段使用 result--&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;name&quot;</span> <span class="attr">property</span>=<span class="string">&quot;name&quot;</span>/&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;email&quot;</span> <span class="attr">property</span>=<span class="string">&quot;email&quot;</span> /&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;age&quot;</span> <span class="attr">property</span>=<span class="string">&quot;age&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--resultMap: resultMap 标签中的 id 属性值--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectUseResultMap&quot;</span> <span class="attr">resultMap</span>=<span class="string">&quot;studentMap&quot;</span>&gt;</span></span><br><span class="line">     select id,name,email,age from student where name=#&#123;queryName&#125; or</span><br><span class="line">    age=#&#123;queryAge&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>测试方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectUseResultMap</span><span class="params">()</span></span>&#123;</span><br><span class="line">     QueryParam param = <span class="keyword">new</span> QueryParam();</span><br><span class="line">     param.setQueryName(<span class="string">&quot;李力&quot;</span>);</span><br><span class="line">     param.setQueryAge(<span class="number">20</span>);</span><br><span class="line">     List&lt;Student&gt; stuList = studentDao.selectUseResultMap(param);</span><br><span class="line">     stuList.forEach( stu -&gt; System.out.println(stu));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="实体类属性名和列名不同的处理方式"><a href="#实体类属性名和列名不同的处理方式" class="headerlink" title="实体类属性名和列名不同的处理方式"></a>实体类属性名和列名不同的处理方式</h3><h4 id="使用列别名和"><a href="#使用列别名和" class="headerlink" title="使用列别名和"></a>使用列别名和<resultType></resultType></h4><ul>
+<li> 创建新的实体类 PrimaryStudent</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.bjpowernode.domain;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Description: 实体类 &lt;/p&gt;</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Company: http://www.bjpowernode.com</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrimaryStudent</span> </span>&#123;</span><br><span class="line">     <span class="keyword">private</span> Integer stuId;</span><br><span class="line">     <span class="keyword">private</span> String stuName;</span><br><span class="line">     <span class="keyword">private</span> Integer stuAge;</span><br><span class="line">     <span class="comment">// set , get 方法</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>接口方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">List&lt;PrimaryStudent&gt; <span class="title">selectUseFieldAlias</span><span class="params">(QueryParam param)</span></span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p>Mapper文件</p>
+</li>
+</ul>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;select id=<span class="string">&quot;selectUseFieldAlias&quot;</span></span><br><span class="line">resultType=<span class="string">&quot;com.bjpowernode.domain.PrimaryStudent&quot;</span>&gt;</span><br><span class="line">     select id as stuId, name as stuName,age as stuAge</span><br><span class="line">     from student where name=#&#123;queryName&#125; or age=#&#123;queryAge&#125;</span><br><span class="line">&lt;/select&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>测试方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectUseFieldAlias</span><span class="params">()</span></span>&#123;</span><br><span class="line">     QueryParam param = <span class="keyword">new</span> QueryParam();</span><br><span class="line">     param.setQueryName(<span class="string">&quot;李力&quot;</span>);</span><br><span class="line">     param.setQueryAge(<span class="number">20</span>);</span><br><span class="line">     List&lt;PrimaryStudent&gt; stuList;</span><br><span class="line">     stuList = studentDao.selectUseFieldAlias(param);</span><br><span class="line">     stuList.forEach( stu -&gt; System.out.println(stu));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<h4 id="使用"><a href="#使用" class="headerlink" title="使用 "></a>使用 <resultMap></resultMap></h4><ul>
+<li><p>接口方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">List&lt;PrimaryStudent&gt; <span class="title">selectUseDiffResultMap</span><span class="params">(QueryParam param)</span></span>;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<ul>
+<li>mapper文件</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 创建 resultMap</span></span><br><span class="line"><span class="comment"> id:自定义的唯一名称，在&lt;select&gt;使用</span></span><br><span class="line"><span class="comment"> type:期望转为的 java 对象的全限定名称或别名</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;primaryStudentMap&quot;</span></span></span><br><span class="line"><span class="tag"><span class="attr">type</span>=<span class="string">&quot;com.bjpowernode.domain.PrimaryStudent&quot;</span>&gt;</span></span><br><span class="line">     <span class="comment">&lt;!-- 主键字段使用 id --&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">id</span> <span class="attr">column</span>=<span class="string">&quot;id&quot;</span> <span class="attr">property</span>=<span class="string">&quot;stuId&quot;</span> /&gt;</span></span><br><span class="line">     <span class="comment">&lt;!--非主键字段使用 result--&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;name&quot;</span> <span class="attr">property</span>=<span class="string">&quot;stuName&quot;</span>/&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;age&quot;</span> <span class="attr">property</span>=<span class="string">&quot;stuAge&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--resultMap: resultMap 标签中的 id 属性值--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectUseDiffResultMap&quot;</span> <span class="attr">resultMap</span>=<span class="string">&quot;primaryStudentMap&quot;</span>&gt;</span></span><br><span class="line">     select id,name,email,age from student</span><br><span class="line">     where name=#&#123;queryName&#125; or age=#&#123;queryAge&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<ul>
+<li><p>测试方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectUseDiffResultMap</span><span class="params">()</span></span>&#123;</span><br><span class="line">     QueryParam param = <span class="keyword">new</span> QueryParam();</span><br><span class="line">     param.setQueryName(<span class="string">&quot;李力&quot;</span>);</span><br><span class="line">     param.setQueryAge(<span class="number">20</span>);</span><br><span class="line">     List&lt;PrimaryStudent&gt; stuList;</span><br><span class="line">     stuList = studentDao.selectUseDiffResultMap(param);</span><br><span class="line">     stuList.forEach( stu -&gt; System.out.println(stu));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<h3 id="模糊like"><a href="#模糊like" class="headerlink" title="模糊like"></a>模糊like</h3><p>模糊查询的实现有两种方式， 一是 java 代码中给查询数据加上“%” ; 二是在 mapper 文件 sql 语句的条件位置加上“%”。</p>
+<img data-src="/2021/03/14/%E5%B0%81%E8%A3%85Mybatis%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C/04.png" class>
+
+ <img data-src="/2021/03/14/%E5%B0%81%E8%A3%85Mybatis%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C/05.png" class>
+
+]]></content>
+      <categories>
+        <category>Mybatis框架</category>
+      </categories>
+      <tags>
+        <tag>Mybatis</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>并行与并发</title>
     <url>/2021/08/25/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%B9%B6%E5%8F%91/</url>
     <content><![CDATA[<h1 id="并行和并发的区别"><a href="#并行和并发的区别" class="headerlink" title="并行和并发的区别"></a>并行和并发的区别</h1>]]></content>
@@ -3243,117 +3394,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </categories>
       <tags>
         <tag>推荐系统入门</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>封装Mybatis输出结果与模糊查询</title>
-    <url>/2021/03/14/%E5%B0%81%E8%A3%85Mybatis%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C/</url>
-    <content><![CDATA[<h3 id="resultType"><a href="#resultType" class="headerlink" title="resultType"></a>resultType</h3><p>resultType: 执行 sql 得到 ResultSet 转换的类型，使用类型的完全限定名或别名。 注意如果返回的是集合，那应该设置为集合包含的类型，而不是集合本身。resultType 和 resultMap，不能同时使用。</p>
-<h4 id="resultType-1"><a href="#resultType-1" class="headerlink" title="resultType"></a>resultType</h4><img data-src="/2021/03/14/%E5%B0%81%E8%A3%85Mybatis%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C/01.png" class>
-
-
-
-<blockquote>
-<p>简单类型</p>
-</blockquote>
-<p>接口方法：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">countStudent</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
-<p>mapper文件：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">&lt;select id=<span class="string">&quot;countStudent&quot;</span> resultType=<span class="string">&quot;int&quot;</span>&gt;</span><br><span class="line">	 <span class="function">select <span class="title">count</span><span class="params">(*)</span> from student</span></span><br><span class="line"><span class="function">&lt;/select&gt;</span></span><br></pre></td></tr></table></figure>
-<p>测试方法：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testRetunInt</span><span class="params">()</span></span>&#123;</span><br><span class="line">     <span class="keyword">int</span> count = studentDao.countStudent();</span><br><span class="line">     System.out.println(<span class="string">&quot;学生总人数：&quot;</span>+ count);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<blockquote>
-<p>对象类型</p>
-</blockquote>
-<p>接口方法：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">Student <span class="title">selectById</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br></pre></td></tr></table></figure>
-<p>mapper文件：</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;select id=<span class="string">&quot;selectById&quot;</span> resultType=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span><br><span class="line">     select id,name,email,age from student where id=#&#123;studentId&#125;</span><br><span class="line">&lt;/select&gt;</span><br></pre></td></tr></table></figure>
- <img data-src="/2021/03/14/%E5%B0%81%E8%A3%85Mybatis%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C/02.png" class>
-
- <img data-src="/2021/03/14/%E5%B0%81%E8%A3%85Mybatis%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C/03.png" class>
-
-
-
-<blockquote>
-<p>Map</p>
-</blockquote>
-<p>sql 的查询结果作为 Map 的 key 和 value。推荐使用 Map。 注意：Map 作为接口返回值，sql 语句的查询结果最多只能有一条记录。大于一条记录是错误。</p>
-<p>接口方法：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">Map&lt;Object,Object&gt; <span class="title">selectReturnMap</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br></pre></td></tr></table></figure>
-<p>mapper文件：</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectReturnMap&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;java.util.HashMap&quot;</span>&gt;</span></span><br><span class="line">	 select name,email from student where id = #&#123;studentId&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>测试方法：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testReturnMap</span><span class="params">()</span></span>&#123;</span><br><span class="line">     Map&lt;Object,Object&gt; retMap = studentDao.selectReturnMap(<span class="number">1002</span>);</span><br><span class="line">     System.out.println(<span class="string">&quot;查询结果是 Map:&quot;</span>+retMap);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="resultMap"><a href="#resultMap" class="headerlink" title="resultMap"></a>resultMap</h4><p>resultMap 可以自定义 sql 的结果和 java 对象属性的映射关系。更灵活的把列值赋值给指定属性。 常用在列名和 java 对象属性名不一样的情况。</p>
-<p> 使用方式： </p>
-<p>1.先定义 resultMap,指定列名和属性的对应关系。</p>
-<p> 2.在<select>中把 resultType 替换为 resultMap。</select></p>
-<blockquote>
-<p>接口方法</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">List&lt;Student&gt; <span class="title">selectUseResultMap</span><span class="params">(QueryParam param)</span></span>;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>mapper文件</p>
-</blockquote>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 创建 resultMap</span></span><br><span class="line"><span class="comment">     id:自定义的唯一名称，在&lt;select&gt;使用</span></span><br><span class="line"><span class="comment">     type:期望转为的 java 对象的全限定名称或别名</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;studentMap&quot;</span> <span class="attr">type</span>=<span class="string">&quot;com.bjpowernode.domain.Student&quot;</span>&gt;</span></span><br><span class="line">     <span class="comment">&lt;!-- 主键字段使用 id --&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">id</span> <span class="attr">column</span>=<span class="string">&quot;id&quot;</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> /&gt;</span></span><br><span class="line">     <span class="comment">&lt;!--非主键字段使用 result--&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;name&quot;</span> <span class="attr">property</span>=<span class="string">&quot;name&quot;</span>/&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;email&quot;</span> <span class="attr">property</span>=<span class="string">&quot;email&quot;</span> /&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;age&quot;</span> <span class="attr">property</span>=<span class="string">&quot;age&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--resultMap: resultMap 标签中的 id 属性值--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectUseResultMap&quot;</span> <span class="attr">resultMap</span>=<span class="string">&quot;studentMap&quot;</span>&gt;</span></span><br><span class="line">     select id,name,email,age from student where name=#&#123;queryName&#125; or</span><br><span class="line">    age=#&#123;queryAge&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>测试方法</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectUseResultMap</span><span class="params">()</span></span>&#123;</span><br><span class="line">     QueryParam param = <span class="keyword">new</span> QueryParam();</span><br><span class="line">     param.setQueryName(<span class="string">&quot;李力&quot;</span>);</span><br><span class="line">     param.setQueryAge(<span class="number">20</span>);</span><br><span class="line">     List&lt;Student&gt; stuList = studentDao.selectUseResultMap(param);</span><br><span class="line">     stuList.forEach( stu -&gt; System.out.println(stu));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="实体类属性名和列名不同的处理方式"><a href="#实体类属性名和列名不同的处理方式" class="headerlink" title="实体类属性名和列名不同的处理方式"></a>实体类属性名和列名不同的处理方式</h3><h4 id="使用列别名和"><a href="#使用列别名和" class="headerlink" title="使用列别名和"></a>使用列别名和<resultType></resultType></h4><ul>
-<li> 创建新的实体类 PrimaryStudent</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.bjpowernode.domain;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Description: 实体类 &lt;/p&gt;</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Company: http://www.bjpowernode.com</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrimaryStudent</span> </span>&#123;</span><br><span class="line">     <span class="keyword">private</span> Integer stuId;</span><br><span class="line">     <span class="keyword">private</span> String stuName;</span><br><span class="line">     <span class="keyword">private</span> Integer stuAge;</span><br><span class="line">     <span class="comment">// set , get 方法</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>接口方法</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">List&lt;PrimaryStudent&gt; <span class="title">selectUseFieldAlias</span><span class="params">(QueryParam param)</span></span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li><p>Mapper文件</p>
-</li>
-</ul>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;select id=<span class="string">&quot;selectUseFieldAlias&quot;</span></span><br><span class="line">resultType=<span class="string">&quot;com.bjpowernode.domain.PrimaryStudent&quot;</span>&gt;</span><br><span class="line">     select id as stuId, name as stuName,age as stuAge</span><br><span class="line">     from student where name=#&#123;queryName&#125; or age=#&#123;queryAge&#125;</span><br><span class="line">&lt;/select&gt;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>测试方法</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectUseFieldAlias</span><span class="params">()</span></span>&#123;</span><br><span class="line">     QueryParam param = <span class="keyword">new</span> QueryParam();</span><br><span class="line">     param.setQueryName(<span class="string">&quot;李力&quot;</span>);</span><br><span class="line">     param.setQueryAge(<span class="number">20</span>);</span><br><span class="line">     List&lt;PrimaryStudent&gt; stuList;</span><br><span class="line">     stuList = studentDao.selectUseFieldAlias(param);</span><br><span class="line">     stuList.forEach( stu -&gt; System.out.println(stu));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<h4 id="使用"><a href="#使用" class="headerlink" title="使用 "></a>使用 <resultMap></resultMap></h4><ul>
-<li><p>接口方法</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">List&lt;PrimaryStudent&gt; <span class="title">selectUseDiffResultMap</span><span class="params">(QueryParam param)</span></span>;</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<ul>
-<li>mapper文件</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 创建 resultMap</span></span><br><span class="line"><span class="comment"> id:自定义的唯一名称，在&lt;select&gt;使用</span></span><br><span class="line"><span class="comment"> type:期望转为的 java 对象的全限定名称或别名</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;primaryStudentMap&quot;</span></span></span><br><span class="line"><span class="tag"><span class="attr">type</span>=<span class="string">&quot;com.bjpowernode.domain.PrimaryStudent&quot;</span>&gt;</span></span><br><span class="line">     <span class="comment">&lt;!-- 主键字段使用 id --&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">id</span> <span class="attr">column</span>=<span class="string">&quot;id&quot;</span> <span class="attr">property</span>=<span class="string">&quot;stuId&quot;</span> /&gt;</span></span><br><span class="line">     <span class="comment">&lt;!--非主键字段使用 result--&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;name&quot;</span> <span class="attr">property</span>=<span class="string">&quot;stuName&quot;</span>/&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;age&quot;</span> <span class="attr">property</span>=<span class="string">&quot;stuAge&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--resultMap: resultMap 标签中的 id 属性值--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectUseDiffResultMap&quot;</span> <span class="attr">resultMap</span>=<span class="string">&quot;primaryStudentMap&quot;</span>&gt;</span></span><br><span class="line">     select id,name,email,age from student</span><br><span class="line">     where name=#&#123;queryName&#125; or age=#&#123;queryAge&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<ul>
-<li><p>测试方法</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectUseDiffResultMap</span><span class="params">()</span></span>&#123;</span><br><span class="line">     QueryParam param = <span class="keyword">new</span> QueryParam();</span><br><span class="line">     param.setQueryName(<span class="string">&quot;李力&quot;</span>);</span><br><span class="line">     param.setQueryAge(<span class="number">20</span>);</span><br><span class="line">     List&lt;PrimaryStudent&gt; stuList;</span><br><span class="line">     stuList = studentDao.selectUseDiffResultMap(param);</span><br><span class="line">     stuList.forEach( stu -&gt; System.out.println(stu));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<h3 id="模糊like"><a href="#模糊like" class="headerlink" title="模糊like"></a>模糊like</h3><p>模糊查询的实现有两种方式， 一是 java 代码中给查询数据加上“%” ; 二是在 mapper 文件 sql 语句的条件位置加上“%”。</p>
-<img data-src="/2021/03/14/%E5%B0%81%E8%A3%85Mybatis%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C/04.png" class>
-
- <img data-src="/2021/03/14/%E5%B0%81%E8%A3%85Mybatis%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C/05.png" class>
-
-]]></content>
-      <categories>
-        <category>Mybatis框架</category>
-      </categories>
-      <tags>
-        <tag>Mybatis</tag>
       </tags>
   </entry>
   <entry>
@@ -3860,16 +3900,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>组件进阶篇--深入了解组件</title>
-    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E8%BF%9B%E9%98%B6%E7%AF%87-%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E7%BB%84%E4%BB%B6/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>组件基础</title>
-    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E5%9F%BA%E7%A1%80/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>红队攻防入门1</title>
     <url>/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/</url>
     <content><![CDATA[<h2 id="红队攻防入门1–初识红队"><a href="#红队攻防入门1–初识红队" class="headerlink" title="红队攻防入门1–初识红队"></a>红队攻防入门1–初识红队</h2><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F1.png" class>
@@ -3962,6 +3992,16 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>红队攻防</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>组件基础</title>
+    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>组件进阶篇--深入了解组件</title>
+    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E8%BF%9B%E9%98%B6%E7%AF%87-%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E7%BB%84%E4%BB%B6/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>编程范式</title>
@@ -4098,13 +4138,13 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>计算属性与监听器setter</title>
-    <url>/2021/03/14/%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7%E4%B8%8E%E7%9B%91%E5%90%AC%E5%99%A8setter/</url>
+    <title>表单输入绑定</title>
+    <url>/2021/03/14/%E8%A1%A8%E5%8D%95%E8%BE%93%E5%85%A5%E7%BB%91%E5%AE%9A/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>表单输入绑定</title>
-    <url>/2021/03/14/%E8%A1%A8%E5%8D%95%E8%BE%93%E5%85%A5%E7%BB%91%E5%AE%9A/</url>
+    <title>计算属性与监听器setter</title>
+    <url>/2021/03/14/%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7%E4%B8%8E%E7%9B%91%E5%90%AC%E5%99%A8setter/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -4261,11 +4301,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>过度与动画</title>
-    <url>/2021/03/14/%E8%BF%87%E5%BA%A6%E4%B8%8E%E5%8A%A8%E7%94%BB/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>边缘计算与云网融合</title>
     <url>/2021/10/07/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E4%B8%8E%E4%BA%91%E7%BD%91%E8%9E%8D%E5%90%88/</url>
     <content><![CDATA[<h1 id="边缘计算基础概念"><a href="#边缘计算基础概念" class="headerlink" title="边缘计算基础概念"></a>边缘计算基础概念</h1><blockquote>
@@ -4299,6 +4334,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>Intel边缘与云计算网融合专题峰会参会记录与扩展</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>过度与动画</title>
+    <url>/2021/03/14/%E8%BF%87%E5%BA%A6%E4%B8%8E%E5%8A%A8%E7%94%BB/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>链表</title>
