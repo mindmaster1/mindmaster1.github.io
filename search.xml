@@ -86,11 +86,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Druid数据库连接池</title>
-    <url>/2021/03/14/Druid%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Filter</title>
     <url>/2021/02/25/Filter/</url>
     <content><![CDATA[]]></content>
@@ -102,13 +97,13 @@
       </tags>
   </entry>
   <entry>
-    <title>HTTP代理</title>
-    <url>/2021/02/03/HTTP%E4%BB%A3%E7%90%86/</url>
+    <title>Druid数据库连接池</title>
+    <url>/2021/03/14/Druid%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>HTTP报文</title>
-    <url>/2021/03/14/HTTP%E6%8A%A5%E6%96%87/</url>
+    <title>HTTP代理</title>
+    <url>/2021/02/03/HTTP%E4%BB%A3%E7%90%86/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -239,6 +234,11 @@
       <tags>
         <tag>spring</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>HTTP报文</title>
+    <url>/2021/03/14/HTTP%E6%8A%A5%E6%96%87/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>IPVS</title>
@@ -1455,6 +1455,11 @@
       </tags>
   </entry>
   <entry>
+    <title>Mycat</title>
+    <url>/2021/03/14/Mycat/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Mybatis入门案例知识补充</title>
     <url>/2021/03/07/Mybatis%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E8%A1%A5%E5%85%85/</url>
     <content><![CDATA[<h2 id="不使用XML构建SqlSessionFactory"><a href="#不使用XML构建SqlSessionFactory" class="headerlink" title="不使用XML构建SqlSessionFactory"></a>不使用XML构建SqlSessionFactory</h2><p>如果你更愿意直接从 Java 代码而不是 XML 文件中创建配置，或者想要创建你自己的配置建造器，MyBatis 也<strong>提供了完整的配置类</strong>，提供了所有与 XML 文件等价的配置项。</p>
@@ -1511,11 +1516,6 @@
       <tags>
         <tag>Mybatis</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Mycat</title>
-    <url>/2021/03/14/Mycat/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>NetFilter and IPTable</title>
@@ -1810,6 +1810,90 @@
       </tags>
   </entry>
   <entry>
+    <title>Python自动化办公-长图拼接</title>
+    <url>/2022/02/01/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E9%95%BF%E5%9B%BE%E6%8B%BC%E6%8E%A5/</url>
+    <content><![CDATA[<h1 id="Python自动化办公–长图拼接"><a href="#Python自动化办公–长图拼接" class="headerlink" title="Python自动化办公–长图拼接"></a>Python自动化办公–长图拼接</h1><h2 id="Python调用外部程序的原理"><a href="#Python调用外部程序的原理" class="headerlink" title="Python调用外部程序的原理"></a>Python调用外部程序的原理</h2><blockquote>
+<p>导入函数库[对应的Python外部功能已经开发为库]</p>
+</blockquote>
+<p>例如：Python语言默认是不支持Excel的。那么通过导入函数库xlrd，Python就可以获得对Excel的操作能力。</p>
+<blockquote>
+<p>需要操作Python语言之外的功能，但这个功能没有人将它开发成函数库， 那如果我们想要使用这些功能，使用的途径就是调用外部命令了，而调用外部命令就需要 Python内部函数库的subprocess模块来实现。</p>
+</blockquote>
+<ul>
+<li><p>实现机制</p>
+<p>它的run()函数的参数可以指定一个可以运行的程序的路径，而 Python会根据这个路径来运行可执行文件，然后再根据运行结果，以及Python的逻辑判断去进行后续的自动化处理工作。</p>
+</li>
+<li><p>举例</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> subprocess <span class="keyword">import</span> run,Popen,PIPE</span><br><span class="line"></span><br><span class="line">cmd = [<span class="string">&quot;dir&quot;</span>]</span><br><span class="line">returncode = run(cmd)</span><br><span class="line"><span class="comment"># returncode是dir命令的退出状态码，通常来说, 一个为 0 的退出码表示进程运行正常</span></span><br><span class="line">print(returncode)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Popen(cmd,shell=<span class="literal">True</span>,stdout=PIPE,stderr=PIPE,encoding=<span class="string">&quot;utf-8&quot;</span>) <span class="keyword">as</span> fs:</span><br><span class="line">    fs.wait(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    files = fs.communicate()[<span class="number">0</span>]</span><br><span class="line">print(files)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>这段代码中最核心的函数是run()函数和Popen类。subprocess模块就是通过这两个函数实现 的外部程序调用。</p>
+</li>
+</ul>
+<img data-src="/2022/02/01/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E9%95%BF%E5%9B%BE%E6%8B%BC%E6%8E%A5/image01.png" class>
+
+<p>和import方式导入函数库的区别是，这种形式可以让你直接使用模块中的类和方法。 如果你使用 “import subprocess”方式导入subprocess库的话，在调用run()函数的时候， 就需要用 “库.函数”的形式在Python中使用库当中的函数，即“subprocess.run()”。在你 多次调用run()函数时，代码会较长，那么使用“from import”方式导入，就可以在当前代 码文件中直接使用run()函数，为代码的阅读带来更好的体验。</p>
+ <img data-src="/2022/02/01/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E9%95%BF%E5%9B%BE%E6%8B%BC%E6%8E%A5/image02.png" class>
+
+ <img data-src="/2022/02/01/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E9%95%BF%E5%9B%BE%E6%8B%BC%E6%8E%A5/image03.png" class>
+
+<p>以上就是用subprocess库实现Python调用可执行程序的方法。Python之所以被我们称作最佳的“<strong>胶水语言</strong>”，就是因为它能轻易“粘合”可执行程序。利用Python灵活的逻辑判 断、循环语法可以实现程序的批量执行和流程管理。</p>
+<h2 id="长图拼接"><a href="#长图拼接" class="headerlink" title="长图拼接"></a>长图拼接</h2><p>拼接图片的功能Python本身是不具备的，因此就需要引入外部命令来实现图片拼接功能。</p>
+<p>以MacOS平台图像处理软件ImageMagick，它能对图片进行编辑、合并、切割、旋转等90多种操作， ImageMagick软件实现图片拼接的命令格式是这样的：</p>
+ <img data-src="/2022/02/01/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E9%95%BF%E5%9B%BE%E6%8B%BC%E6%8E%A5/image04.png" class>
+
+<p>在这段命令格式中，composite命令的参数包含了多个图片文件，每个图片需要对照着文件 将图片的路径和文件名写在参数中。如果手工输入图片名称，不仅效率低，而且容易遗漏。 另外，如果需要大量重复使用composite，还需要精细调整合并结果，给composite程序增加很多参数。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">p = Path(jpg_path)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 增加图片命令</span></span><br><span class="line">cmd = [<span class="string">&quot;composite&quot;</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">#增加参数</span></span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> p.iterdir() <span class="keyword">if</span> PurePath.match(<span class="string">&#x27;*.jpg&#x27;</span>):</span><br><span class="line">    cmd.append(x)</span><br><span class="line">  </span><br><span class="line"><span class="comment"># 增加结果</span></span><br><span class="line">cmd.append(result_path)</span><br><span class="line"></span><br><span class="line">run(cmd)</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="视频的拆分与合并"><a href="#视频的拆分与合并" class="headerlink" title="视频的拆分与合并"></a>视频的拆分与合并</h2><p>如何使用 subprocess库调用可执行程序，来进行视频的拆分与合并。</p>
+<p><strong>视频拆分的原理</strong></p>
+<p>你在电脑本地经常见到的视频格式是MP4，但如果要把视频放在互联网上，为了减少首次播放的加载时间，你就必须把一个MP4切分成多个文件，而且切分之后还需要把格式转换为.TS 格式的视频文件。 </p>
+<p>为什么不直接使用MP4格式，而是要把MP4格式改成.TS格式呢？这是因为.TS格式可以保证 多个文件之间的视频无缝播放，而且还会保证视频不会在播放下一个文件的时候，出现破音 或画面中断等影响用户体验的情况。 </p>
+<p>当我们将一个视频切分成多个文件的时候，就要考虑文件的播放顺序问题了。为了记录顺序，我们需要在切分之后引入一个索引文件，这个索引文件不用手动编写，我们直接使 <strong>FFmpeg命令</strong>就行了，它可以实现视频格式的转换、合并和拆分。FFmpeg命令会在切分之 后，自动产生一个以.M3U8结尾的索引文件。 </p>
+<p>我来解释一下这个索引文件。M3U8文件是指UDF-8编码格式下的M3U视频索引，播放器通 过这个索引文件就可以找到视频下所有的分段，并依次播放视频。</p>
+<p>所以，想要使用Python进行视频拆分，我们首先需要FFmpeg命令， 然后通过Python设置FFmpeg的参数，最后再指定MP4文件和.TS文件的路径，这样就能实现拆分视频的功能了。</p>
+<p>首先需要下载ffmpeg命令，用于把MP4切分成多段TS文件。</p>
+<p>为了实现MP4文件格式的分割，需要使用ffmpeg非常多的参数。不过使用Python进行调用 的好处，就是你不用记住复杂的参数。我们把输入文件路径、切分大小、输出的M3U8和TS 文件指定为四个变量，这样只修改这四个变量，就可以实现拆分功能了。</p>
+<blockquote>
+<p>相比直接使用FFmpeg，subprocess调用FFmpeg的优势就在于两点，一是不用 记住复杂参数，二是对批量转换视频非常有利</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> subprocess <span class="keyword">import</span> run</span><br><span class="line"><span class="comment"># 拆分文件的路径</span></span><br><span class="line">input_video = <span class="string">&quot;/Users/edz/Desktop/05/xxx.mp4&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 10秒分为一个文件</span></span><br><span class="line">segment_time = <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># m3u8文件保存位置</span></span><br><span class="line"><span class="comment"># m3u8_list = &quot;/Users/edz/Desktop/05/xxx.m3u8&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ts文件保存位置</span></span><br><span class="line">output_video = <span class="string">&quot;/Users/edz/Desktop/05/video-%04d.ts&quot;</span></span><br><span class="line"></span><br><span class="line">cmd1 = [<span class="string">&quot;ffmpeg&quot;</span>, <span class="string">&quot;-i&quot;</span>, input_video, <span class="string">&quot;-f&quot;</span>, <span class="string">&quot;segment&quot;</span>, <span class="string">&quot;-segment_time&quot;</span>, <span class="built_in">str</span>(segment_time), <span class="string">&quot;-segment_format&quot;</span>,</span><br><span class="line">    <span class="string">&quot;mpegts&quot;</span>, <span class="string">&quot;-segment_list&quot;</span>, m3u8_list, <span class="string">&quot;-c&quot;</span>, <span class="string">&quot;copy&quot;</span>, <span class="string">&quot;-bsf:v&quot;</span>, <span class="string">&quot;h264_mp4toannexb&quot;</span>, <span class="string">&quot;-map&quot;</span>, <span class="string">&quot;0&quot;</span>, output_video]</span><br><span class="line"></span><br><span class="line">run(cmd1)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 合并</span></span><br><span class="line"><span class="comment"># ffmpeg -allowed_extensions ALL -protocol_whitelist &quot;file,http,crypto,tcp,https&quot; -i index.m3u8 -c copy out.mp4</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>Python开发</category>
+      </categories>
+      <tags>
+        <tag>Python自动化</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Python自动化办公</title>
     <url>/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC/</url>
     <content><![CDATA[<h1 id="任务场景一：拆分与合并–快速的批量处理内容相似的Excel"><a href="#任务场景一：拆分与合并–快速的批量处理内容相似的Excel" class="headerlink" title="任务场景一：拆分与合并–快速的批量处理内容相似的Excel"></a>任务场景一：拆分与合并–快速的批量处理内容相似的Excel</h1><blockquote>
@@ -2024,11 +2108,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>SpringBoot入门二</title>
-    <url>/2021/03/21/SpringBoot%E5%85%A5%E9%97%A8%E4%BA%8C/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Spring学习第一跳</title>
     <url>/2021/02/03/Spring%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E8%B7%B3/</url>
     <content><![CDATA[<h2 id="初识Spring"><a href="#初识Spring" class="headerlink" title="初识Spring"></a>初识Spring</h2><h3 id="Spring框架概述"><a href="#Spring框架概述" class="headerlink" title="Spring框架概述"></a>Spring框架概述</h3><p>Spring 是于 2003 年兴起的一个轻量级的 Java 开发框架，它是为了解决企业应用开发的复杂性而创建的。Spring 的核心是控制反转（IoC）和面向切面编程（AOP）。Spring 是可 以在 Java SE/EE 中使用的轻量级开源框架。</p>
@@ -2060,6 +2139,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>spring框架</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>SpringBoot入门二</title>
+    <url>/2021/03/21/SpringBoot%E5%85%A5%E9%97%A8%E4%BA%8C/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Stack</title>
@@ -2497,13 +2581,13 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>事件处理</title>
-    <url>/2021/03/14/%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86/</url>
+    <title>云计算</title>
+    <url>/2021/10/07/%E4%BA%91%E8%AE%A1%E7%AE%97/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>云计算</title>
-    <url>/2021/10/07/%E4%BA%91%E8%AE%A1%E7%AE%97/</url>
+    <title>事件处理</title>
+    <url>/2021/03/14/%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -3481,13 +3565,13 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>机器学习入门</title>
-    <url>/2021/06/08/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8/</url>
+    <title>条件渲染与列表渲染</title>
+    <url>/2021/03/14/%E6%9D%A1%E4%BB%B6%E6%B8%B2%E6%9F%93%E4%B8%8E%E5%88%97%E8%A1%A8%E6%B8%B2%E6%9F%93/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>条件渲染与列表渲染</title>
-    <url>/2021/03/14/%E6%9D%A1%E4%BB%B6%E6%B8%B2%E6%9F%93%E4%B8%8E%E5%88%97%E8%A1%A8%E6%B8%B2%E6%9F%93/</url>
+    <title>机器学习入门</title>
+    <url>/2021/06/08/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -4083,11 +4167,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>组件进阶篇--深入了解组件</title>
-    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E8%BF%9B%E9%98%B6%E7%AF%87-%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E7%BB%84%E4%BB%B6/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>编程范式</title>
     <url>/2021/03/02/%E7%BC%96%E7%A8%8B%E8%8C%83%E5%BC%8F/</url>
     <content><![CDATA[<p>相信绝大部分开发人员、DBA都听过范式这个词，在MySQL中有第一范式、第二范式、第三范式、BCNF范式等，在开发中也有相应的范式，专业词汇叫编程范式(ProgrammingParadigm)。由于笔者能力、精力都有限，本篇主要通过针对同一业务场景，基于编程范式的概念，核心原理以及用例实现来对比不同范式及其实现业务功能的差异。</p>
@@ -4219,6 +4298,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
   <entry>
     <title>虚拟机种类</title>
     <url>/2021/03/14/%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%A7%8D%E7%B1%BB/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>组件进阶篇--深入了解组件</title>
+    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E8%BF%9B%E9%98%B6%E7%AF%87-%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E7%BB%84%E4%BB%B6/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
