@@ -86,6 +86,11 @@
       </tags>
   </entry>
   <entry>
+    <title>Druid数据库连接池</title>
+    <url>/2021/03/14/Druid%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Filter</title>
     <url>/2021/02/25/Filter/</url>
     <content><![CDATA[]]></content>
@@ -97,13 +102,13 @@
       </tags>
   </entry>
   <entry>
-    <title>Druid数据库连接池</title>
-    <url>/2021/03/14/Druid%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/</url>
+    <title>HTTP代理</title>
+    <url>/2021/02/03/HTTP%E4%BB%A3%E7%90%86/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>HTTP代理</title>
-    <url>/2021/02/03/HTTP%E4%BB%A3%E7%90%86/</url>
+    <title>HTTP报文</title>
+    <url>/2021/03/14/HTTP%E6%8A%A5%E6%96%87/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -234,11 +239,6 @@
       <tags>
         <tag>spring</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>HTTP报文</title>
-    <url>/2021/03/14/HTTP%E6%8A%A5%E6%96%87/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>IPVS</title>
@@ -1455,11 +1455,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Mycat</title>
-    <url>/2021/03/14/Mycat/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Mybatis入门案例知识补充</title>
     <url>/2021/03/07/Mybatis%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E8%A1%A5%E5%85%85/</url>
     <content><![CDATA[<h2 id="不使用XML构建SqlSessionFactory"><a href="#不使用XML构建SqlSessionFactory" class="headerlink" title="不使用XML构建SqlSessionFactory"></a>不使用XML构建SqlSessionFactory</h2><p>如果你更愿意直接从 Java 代码而不是 XML 文件中创建配置，或者想要创建你自己的配置建造器，MyBatis 也<strong>提供了完整的配置类</strong>，提供了所有与 XML 文件等价的配置项。</p>
@@ -1516,6 +1511,11 @@
       <tags>
         <tag>Mybatis</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Mycat</title>
+    <url>/2021/03/14/Mycat/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>NetFilter and IPTable</title>
@@ -2108,6 +2108,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
+    <title>SpringBoot入门二</title>
+    <url>/2021/03/21/SpringBoot%E5%85%A5%E9%97%A8%E4%BA%8C/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Spring学习第一跳</title>
     <url>/2021/02/03/Spring%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E8%B7%B3/</url>
     <content><![CDATA[<h2 id="初识Spring"><a href="#初识Spring" class="headerlink" title="初识Spring"></a>初识Spring</h2><h3 id="Spring框架概述"><a href="#Spring框架概述" class="headerlink" title="Spring框架概述"></a>Spring框架概述</h3><p>Spring 是于 2003 年兴起的一个轻量级的 Java 开发框架，它是为了解决企业应用开发的复杂性而创建的。Spring 的核心是控制反转（IoC）和面向切面编程（AOP）。Spring 是可 以在 Java SE/EE 中使用的轻量级开源框架。</p>
@@ -2139,11 +2144,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>spring框架</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>SpringBoot入门二</title>
-    <url>/2021/03/21/SpringBoot%E5%85%A5%E9%97%A8%E4%BA%8C/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Stack</title>
@@ -2581,13 +2581,13 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>云计算</title>
-    <url>/2021/10/07/%E4%BA%91%E8%AE%A1%E7%AE%97/</url>
+    <title>事件处理</title>
+    <url>/2021/03/14/%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>事件处理</title>
-    <url>/2021/03/14/%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86/</url>
+    <title>云计算</title>
+    <url>/2021/10/07/%E4%BA%91%E8%AE%A1%E7%AE%97/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -2818,6 +2818,81 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <content><![CDATA[]]></content>
   </entry>
   <entry>
+    <title>双指针问题</title>
+    <url>/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h2 id="环形列表I"><a href="#环形列表I" class="headerlink" title="环形列表I"></a>环形列表I</h2><h3 id="题目说明"><a href="#题目说明" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，判断链表中是否有环。</p>
+<p>如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。</p>
+<p>如果链表中存在环，则返回 true 。 否则，返回 false 。</p>
+<p> 进阶：</p>
+<p>你能用 O(1)（即，常量）内存解决此问题吗？</p>
+<p> 示例 1：</p>
+<p> <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100453506.png" alt="image-20210114100453506"></p>
+<p>输入：head = [3,2,0,-4], pos = 1<br>输出：true<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100714252.png" alt="image-20210114100714252"></p>
+<p>输入：head = [1,2], pos = 0<br>输出：true<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
+<img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100749569.png" alt="image-20210114100749569" style="zoom:150%;">
+
+<p>输入：head = [1], pos = -1<br>输出：false<br>解释：链表中没有环。</p>
+<p>提示：</p>
+<p>链表中节点的数目范围是 [0, 104]<br>-105 &lt;= Node.val &lt;= 105<br>pos 为 -1 或者链表中的一个 有效索引 </p>
+<h3 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h3><p>####方法一：哈希表<br>思路及算法</p>
+<p>最容易想到的方法是遍历所有节点，每次遍历到一个节点时，判断该节点此前是否被访问过。</p>
+<p>具体地，我们可以使用哈希表来存储所有已经访问过的节点。每次我们到达一个节点，如果该节点已经存在于哈希表中，则说明该链表是环形链表，否则就将该节点加入哈希表中。重复这一过程，直到我们遍历完整个链表即可。</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">pulic <span class="class"><span class="keyword">class</span> <span class="title">solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascirle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        Set&lt;ListNOde&gt; seen = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span>( head !=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!seen.add(head))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>#####复杂度分析</p>
+<p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。最坏情况下我们需要遍历每个节点一次。</p>
+<p>空间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。主要为哈希表的开销，最坏情况下我们需要将每个节点插入到哈希表中一次。</p>
+<h4 id="方式二；双指针–快慢指针"><a href="#方式二；双指针–快慢指针" class="headerlink" title="方式二；双指针–快慢指针"></a>方式二；双指针–快慢指针</h4><p>方法需要读者对「Floyd 判圈算法」（又称龟兔赛跑算法）有所了解。</p>
+<p>假想「乌龟」和「兔子」在链表上移动，「兔子」跑得快，「乌龟」跑得慢。当「乌龟」和「兔子」从链表上的同一个节点开始移动时，如果该链表中没有环，那么「兔子」将一直处于「乌龟」的前方；如果该链表中有环，那么「兔子」会先于「乌龟」进入环，并且一直在环内移动。等到「乌龟」进入环时，由于「兔子」的速度快，它一定会在某个时刻与乌龟相遇，即套了「乌龟」若干圈。</p>
+<p>我们可以根据上述思路来解决本题。具体地，我们定义两个指针，一快一满。慢指针每次只移动一步，而快指针每次移动两步。初始时，慢指针在位置 head，而快指针在位置 head.next。这样一来，如果在移动的过程中，快指针反过来追上慢指针，就说明该链表为环形链表。否则快指针将到达链表尾部，该链表不为环形链表。</p>
+<p> 为什么我们要规定初始时慢指针在位置 head，快指针在位置 head.next，而不是两个指针都在位置 head（即与「乌龟」和「兔子」中的叙述相同）？</p>
+<p>观察下面的代码，我们使用的是 while 循环，循环条件先于循环体。由于循环条件一定是判断快慢指针是否重合，如果我们将两个指针初始都置于 head，那么 while 循环就不会执行。因此，我们可以假想一个在 head 之前的虚拟节点，慢指针从虚拟节点移动一步到达 head，快指针从虚拟节点移动两步到达 head.next，这样我们就可以使用 while 循环了。</p>
+<p>当然，我们也可以使用 do-while 循环。此时，我们就可以把快慢指针的初始值都置为 head。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">puclic <span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascycle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head;</span><br><span class="line">        ListNode fast = head.next;</span><br><span class="line">        <span class="keyword">while</span>(slow!=fast)&#123;</span><br><span class="line">            <span class="keyword">if</span>(fast==<span class="keyword">null</span>||fast.next==<span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            fast = fast.next.next</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。</p>
+<p>当链表中不存在环时，快指针将先于慢指针到达链表尾部，链表中每个节点至多被访问两次。</p>
+<p>当链表中存在环时，每一轮移动后，快慢指针的距离将减小一。而初始距离为环的长度，因此至多移动 NN 轮。</p>
+<p>空间复杂度：O(1)O(1)。我们只使用了两个指针的额外空间</p>
+<h2 id="环形列表II"><a href="#环形列表II" class="headerlink" title="环形列表II"></a>环形列表II</h2><h3 id="题目说明-1"><a href="#题目说明-1" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。</p>
+<p>为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意，pos 仅仅是用于标识环的情况，并不会作为参数传递到函数中。</p>
+<p>说明：不允许修改给定的链表。</p>
+<p>进阶：</p>
+<p>你是否可以使用 O(1) 空间解决此题？</p>
+<p> 示例 1：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102706369.png" alt="image-20210114102706369"></p>
+<p>输入：head = [3,2,0,-4], pos = 1<br>输出：返回索引为 1 的链表节点<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102721841.png" alt="image-20210114102721841"></p>
+<p>输入：head = [1,2], pos = 0<br>输出：返回索引为 0 的链表节点<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102737481.png" alt="image-20210114102737481"></p>
+<p>输入：head = [1], pos = -1<br>输出：返回 null<br>解释：链表中没有环。</p>
+<p>提示：</p>
+<p>链表中节点的数目范围在范围 [0, 104] 内<br>-105 &lt;= Node.val &lt;= 105<br>pos 的值为 -1 或者链表中的一个有效索引</p>
+<h3 id="题解-1"><a href="#题解-1" class="headerlink" title="题解"></a>题解</h3><h4 id="方法一：哈希表"><a href="#方法一：哈希表" class="headerlink" title="方法一：哈希表"></a>方法一：哈希表</h4><p>一个非常直观的思路是：我们遍历链表中的每个节点，并将它记录下来；一旦遇到了此前遍历过的节点，就可以判定链表中存在环。借助哈希表可以很方便地实现。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        ListNode pos = head;</span><br><span class="line">        Set&lt;ListNode&gt; visited = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span> (pos != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (visited.contains(pos)) &#123;</span><br><span class="line">                <span class="keyword">return</span> pos;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                visited.add(pos);</span><br><span class="line">            &#125;</span><br><span class="line">            pos = pos.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析-1"><a href="#复杂度分析-1" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们恰好需要访问链表中的每一个节点。</p>
+<p>空间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们需要将链表中的每个节点都保存在哈希表当中。</p>
+<h4 id="方法二：双指针–快慢指针"><a href="#方法二：双指针–快慢指针" class="headerlink" title="方法二：双指针–快慢指针"></a>方法二：双指针–快慢指针</h4><p>我们使用两个指针，\textit{fast}fast 与 \textit{slow}slow。它们起始都位于链表的头部。随后，\textit{slow}slow 指针每次向后移动一个位置，而 \textit{fast}fast 指针向后移动两个位置。如果链表中存在环，则 \textit{fast}fast 指针最终将再次与 \textit{slow}slow 指针在环中相遇。</p>
+<p>如下图所示，设链表中环外部分的长度为 aa。\textit{slow}slow 指针进入环后，又走了 bb 的距离与 \textit{fast}fast 相遇。此时，\textit{fast}fast 指针已经走完了环的 nn 圈，因此它走过的总距离为 a+n(b+c)+b=a+(n+1)b+nca+n(b+c)+b=a+(n+1)b+nc</p>
+ <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114103031586.png" alt="image-20210114103031586" style="zoom:50%;">
+
+<p>根据题意，任意时刻，\textit{fast}fast 指针走过的距离都为 \textit{slow}slow 指针的 22 倍。因此，我们有</p>
+<p>a+(n+1)b+nc=2(a+b) \implies a=c+(n-1)(b+c)<br>a+(n+1)b+nc=2(a+b)⟹a=c+(n−1)(b+c)</p>
+<p>有了 a=c+(n-1)(b+c)a=c+(n−1)(b+c) 的等量关系，我们会发现：从相遇点到入环点的距离加上 n-1n−1 圈的环长，恰好等于从链表头部到入环点的距离。</p>
+<p>因此，当发现 \textit{slow}slow 与 \textit{fast}fast 相遇时，我们再额外使用一个指针 \textit{ptr}ptr。起始，它指向链表头部；随后，它和 \textit{slow}slow 每次向后移动一个位置。最终，它们会在入环点相遇。 </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head, fast = head;</span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="keyword">null</span>) &#123;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            <span class="keyword">if</span> (fast.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">                fast = fast.next.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (fast == slow) &#123;</span><br><span class="line">                ListNode ptr = head;</span><br><span class="line">                <span class="keyword">while</span> (ptr != slow) &#123;</span><br><span class="line">                    ptr = ptr.next;</span><br><span class="line">                    slow = slow.next;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> ptr;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>#####复杂度分析</p>
+<p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。在最初判断快慢指针是否相遇时，\textit{slow}slow 指针走过的距离不会超过链表的总长度；随后寻找入环点时，走过的距离也不会超过链表的总长度。因此，总的执行时间为 O(N)+O(N)=O(N)O(N)+O(N)=O(N)。</p>
+<p>空间复杂度：O(1)O(1)。我们只使用了 \textit{slow}, \textit{fast}, \textit{ptr}slow,fast,ptr 三个指针。</p>
+]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>链表</tag>
+        <tag>双指针</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>初识递归</title>
     <url>/2021/02/03/%E5%88%9D%E8%AF%86%E9%80%92%E5%BD%92/</url>
     <content><![CDATA[<h2 id="二叉搜索树的范围和"><a href="#二叉搜索树的范围和" class="headerlink" title="二叉搜索树的范围和"></a>二叉搜索树的范围和</h2><h3 id="DFS深度优先搜索"><a href="#DFS深度优先搜索" class="headerlink" title="DFS深度优先搜索"></a>DFS深度优先搜索</h3><h4 id="1-递归"><a href="#1-递归" class="headerlink" title="1.递归"></a>1.递归</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * public class TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode left;</span></span><br><span class="line"><span class="comment"> *     TreeNode right;</span></span><br><span class="line"><span class="comment"> *     TreeNode() &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val) &#123; this.val = val; &#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val, TreeNode left, TreeNode right) &#123;</span></span><br><span class="line"><span class="comment"> *         this.val = val;</span></span><br><span class="line"><span class="comment"> *         this.left = left;</span></span><br><span class="line"><span class="comment"> *         this.right = right;</span></span><br><span class="line"><span class="comment"> *     &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> ans;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">rangeSumBST</span><span class="params">(TreeNode root, <span class="keyword">int</span> low, <span class="keyword">int</span> high)</span> </span>&#123;</span><br><span class="line">       ans = <span class="number">0</span> ;</span><br><span class="line">        dfs(root,low,high);</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dfs</span><span class="params">(TreeNode node,<span class="keyword">int</span> L,<span class="keyword">int</span> R)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(node!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(L&lt;=node.val&amp;&amp;node.val&lt;=R)&#123;</span><br><span class="line">                ans+=node.val;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(node.val&gt;L)&#123;</span><br><span class="line">                dfs(node.left,L,R);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(node.val&lt;R)&#123;</span><br><span class="line">                dfs(node.right,L,R);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -2919,81 +2994,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </categories>
       <tags>
         <tag>递归</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>双指针问题</title>
-    <url>/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<h2 id="环形列表I"><a href="#环形列表I" class="headerlink" title="环形列表I"></a>环形列表I</h2><h3 id="题目说明"><a href="#题目说明" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，判断链表中是否有环。</p>
-<p>如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。</p>
-<p>如果链表中存在环，则返回 true 。 否则，返回 false 。</p>
-<p> 进阶：</p>
-<p>你能用 O(1)（即，常量）内存解决此问题吗？</p>
-<p> 示例 1：</p>
-<p> <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100453506.png" alt="image-20210114100453506"></p>
-<p>输入：head = [3,2,0,-4], pos = 1<br>输出：true<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100714252.png" alt="image-20210114100714252"></p>
-<p>输入：head = [1,2], pos = 0<br>输出：true<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
-<img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100749569.png" alt="image-20210114100749569" style="zoom:150%;">
-
-<p>输入：head = [1], pos = -1<br>输出：false<br>解释：链表中没有环。</p>
-<p>提示：</p>
-<p>链表中节点的数目范围是 [0, 104]<br>-105 &lt;= Node.val &lt;= 105<br>pos 为 -1 或者链表中的一个 有效索引 </p>
-<h3 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h3><p>####方法一：哈希表<br>思路及算法</p>
-<p>最容易想到的方法是遍历所有节点，每次遍历到一个节点时，判断该节点此前是否被访问过。</p>
-<p>具体地，我们可以使用哈希表来存储所有已经访问过的节点。每次我们到达一个节点，如果该节点已经存在于哈希表中，则说明该链表是环形链表，否则就将该节点加入哈希表中。重复这一过程，直到我们遍历完整个链表即可。</p>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">pulic <span class="class"><span class="keyword">class</span> <span class="title">solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascirle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        Set&lt;ListNOde&gt; seen = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span>( head !=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!seen.add(head))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>#####复杂度分析</p>
-<p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。最坏情况下我们需要遍历每个节点一次。</p>
-<p>空间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。主要为哈希表的开销，最坏情况下我们需要将每个节点插入到哈希表中一次。</p>
-<h4 id="方式二；双指针–快慢指针"><a href="#方式二；双指针–快慢指针" class="headerlink" title="方式二；双指针–快慢指针"></a>方式二；双指针–快慢指针</h4><p>方法需要读者对「Floyd 判圈算法」（又称龟兔赛跑算法）有所了解。</p>
-<p>假想「乌龟」和「兔子」在链表上移动，「兔子」跑得快，「乌龟」跑得慢。当「乌龟」和「兔子」从链表上的同一个节点开始移动时，如果该链表中没有环，那么「兔子」将一直处于「乌龟」的前方；如果该链表中有环，那么「兔子」会先于「乌龟」进入环，并且一直在环内移动。等到「乌龟」进入环时，由于「兔子」的速度快，它一定会在某个时刻与乌龟相遇，即套了「乌龟」若干圈。</p>
-<p>我们可以根据上述思路来解决本题。具体地，我们定义两个指针，一快一满。慢指针每次只移动一步，而快指针每次移动两步。初始时，慢指针在位置 head，而快指针在位置 head.next。这样一来，如果在移动的过程中，快指针反过来追上慢指针，就说明该链表为环形链表。否则快指针将到达链表尾部，该链表不为环形链表。</p>
-<p> 为什么我们要规定初始时慢指针在位置 head，快指针在位置 head.next，而不是两个指针都在位置 head（即与「乌龟」和「兔子」中的叙述相同）？</p>
-<p>观察下面的代码，我们使用的是 while 循环，循环条件先于循环体。由于循环条件一定是判断快慢指针是否重合，如果我们将两个指针初始都置于 head，那么 while 循环就不会执行。因此，我们可以假想一个在 head 之前的虚拟节点，慢指针从虚拟节点移动一步到达 head，快指针从虚拟节点移动两步到达 head.next，这样我们就可以使用 while 循环了。</p>
-<p>当然，我们也可以使用 do-while 循环。此时，我们就可以把快慢指针的初始值都置为 head。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">puclic <span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascycle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head;</span><br><span class="line">        ListNode fast = head.next;</span><br><span class="line">        <span class="keyword">while</span>(slow!=fast)&#123;</span><br><span class="line">            <span class="keyword">if</span>(fast==<span class="keyword">null</span>||fast.next==<span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            fast = fast.next.next</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。</p>
-<p>当链表中不存在环时，快指针将先于慢指针到达链表尾部，链表中每个节点至多被访问两次。</p>
-<p>当链表中存在环时，每一轮移动后，快慢指针的距离将减小一。而初始距离为环的长度，因此至多移动 NN 轮。</p>
-<p>空间复杂度：O(1)O(1)。我们只使用了两个指针的额外空间</p>
-<h2 id="环形列表II"><a href="#环形列表II" class="headerlink" title="环形列表II"></a>环形列表II</h2><h3 id="题目说明-1"><a href="#题目说明-1" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。</p>
-<p>为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意，pos 仅仅是用于标识环的情况，并不会作为参数传递到函数中。</p>
-<p>说明：不允许修改给定的链表。</p>
-<p>进阶：</p>
-<p>你是否可以使用 O(1) 空间解决此题？</p>
-<p> 示例 1：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102706369.png" alt="image-20210114102706369"></p>
-<p>输入：head = [3,2,0,-4], pos = 1<br>输出：返回索引为 1 的链表节点<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102721841.png" alt="image-20210114102721841"></p>
-<p>输入：head = [1,2], pos = 0<br>输出：返回索引为 0 的链表节点<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102737481.png" alt="image-20210114102737481"></p>
-<p>输入：head = [1], pos = -1<br>输出：返回 null<br>解释：链表中没有环。</p>
-<p>提示：</p>
-<p>链表中节点的数目范围在范围 [0, 104] 内<br>-105 &lt;= Node.val &lt;= 105<br>pos 的值为 -1 或者链表中的一个有效索引</p>
-<h3 id="题解-1"><a href="#题解-1" class="headerlink" title="题解"></a>题解</h3><h4 id="方法一：哈希表"><a href="#方法一：哈希表" class="headerlink" title="方法一：哈希表"></a>方法一：哈希表</h4><p>一个非常直观的思路是：我们遍历链表中的每个节点，并将它记录下来；一旦遇到了此前遍历过的节点，就可以判定链表中存在环。借助哈希表可以很方便地实现。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        ListNode pos = head;</span><br><span class="line">        Set&lt;ListNode&gt; visited = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span> (pos != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (visited.contains(pos)) &#123;</span><br><span class="line">                <span class="keyword">return</span> pos;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                visited.add(pos);</span><br><span class="line">            &#125;</span><br><span class="line">            pos = pos.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析-1"><a href="#复杂度分析-1" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们恰好需要访问链表中的每一个节点。</p>
-<p>空间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们需要将链表中的每个节点都保存在哈希表当中。</p>
-<h4 id="方法二：双指针–快慢指针"><a href="#方法二：双指针–快慢指针" class="headerlink" title="方法二：双指针–快慢指针"></a>方法二：双指针–快慢指针</h4><p>我们使用两个指针，\textit{fast}fast 与 \textit{slow}slow。它们起始都位于链表的头部。随后，\textit{slow}slow 指针每次向后移动一个位置，而 \textit{fast}fast 指针向后移动两个位置。如果链表中存在环，则 \textit{fast}fast 指针最终将再次与 \textit{slow}slow 指针在环中相遇。</p>
-<p>如下图所示，设链表中环外部分的长度为 aa。\textit{slow}slow 指针进入环后，又走了 bb 的距离与 \textit{fast}fast 相遇。此时，\textit{fast}fast 指针已经走完了环的 nn 圈，因此它走过的总距离为 a+n(b+c)+b=a+(n+1)b+nca+n(b+c)+b=a+(n+1)b+nc</p>
- <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114103031586.png" alt="image-20210114103031586" style="zoom:50%;">
-
-<p>根据题意，任意时刻，\textit{fast}fast 指针走过的距离都为 \textit{slow}slow 指针的 22 倍。因此，我们有</p>
-<p>a+(n+1)b+nc=2(a+b) \implies a=c+(n-1)(b+c)<br>a+(n+1)b+nc=2(a+b)⟹a=c+(n−1)(b+c)</p>
-<p>有了 a=c+(n-1)(b+c)a=c+(n−1)(b+c) 的等量关系，我们会发现：从相遇点到入环点的距离加上 n-1n−1 圈的环长，恰好等于从链表头部到入环点的距离。</p>
-<p>因此，当发现 \textit{slow}slow 与 \textit{fast}fast 相遇时，我们再额外使用一个指针 \textit{ptr}ptr。起始，它指向链表头部；随后，它和 \textit{slow}slow 每次向后移动一个位置。最终，它们会在入环点相遇。 </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head, fast = head;</span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="keyword">null</span>) &#123;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            <span class="keyword">if</span> (fast.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">                fast = fast.next.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (fast == slow) &#123;</span><br><span class="line">                ListNode ptr = head;</span><br><span class="line">                <span class="keyword">while</span> (ptr != slow) &#123;</span><br><span class="line">                    ptr = ptr.next;</span><br><span class="line">                    slow = slow.next;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> ptr;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>#####复杂度分析</p>
-<p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。在最初判断快慢指针是否相遇时，\textit{slow}slow 指针走过的距离不会超过链表的总长度；随后寻找入环点时，走过的距离也不会超过链表的总长度。因此，总的执行时间为 O(N)+O(N)=O(N)O(N)+O(N)=O(N)。</p>
-<p>空间复杂度：O(1)O(1)。我们只使用了 \textit{slow}, \textit{fast}, \textit{ptr}slow,fast,ptr 三个指针。</p>
-]]></content>
-      <categories>
-        <category>数据结构</category>
-      </categories>
-      <tags>
-        <tag>链表</tag>
-        <tag>双指针</tag>
       </tags>
   </entry>
   <entry>
@@ -3565,13 +3565,13 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>条件渲染与列表渲染</title>
-    <url>/2021/03/14/%E6%9D%A1%E4%BB%B6%E6%B8%B2%E6%9F%93%E4%B8%8E%E5%88%97%E8%A1%A8%E6%B8%B2%E6%9F%93/</url>
+    <title>机器学习入门</title>
+    <url>/2021/06/08/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>机器学习入门</title>
-    <url>/2021/06/08/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8/</url>
+    <title>条件渲染与列表渲染</title>
+    <url>/2021/03/14/%E6%9D%A1%E4%BB%B6%E6%B8%B2%E6%9F%93%E4%B8%8E%E5%88%97%E8%A1%A8%E6%B8%B2%E6%9F%93/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -4167,6 +4167,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <content><![CDATA[]]></content>
   </entry>
   <entry>
+    <title>组件进阶篇--深入了解组件</title>
+    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E8%BF%9B%E9%98%B6%E7%AF%87-%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E7%BB%84%E4%BB%B6/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>编程范式</title>
     <url>/2021/03/02/%E7%BC%96%E7%A8%8B%E8%8C%83%E5%BC%8F/</url>
     <content><![CDATA[<p>相信绝大部分开发人员、DBA都听过范式这个词，在MySQL中有第一范式、第二范式、第三范式、BCNF范式等，在开发中也有相应的范式，专业词汇叫编程范式(ProgrammingParadigm)。由于笔者能力、精力都有限，本篇主要通过针对同一业务场景，基于编程范式的概念，核心原理以及用例实现来对比不同范式及其实现业务功能的差异。</p>
@@ -4298,11 +4303,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
   <entry>
     <title>虚拟机种类</title>
     <url>/2021/03/14/%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%A7%8D%E7%B1%BB/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>组件进阶篇--深入了解组件</title>
-    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E8%BF%9B%E9%98%B6%E7%AF%87-%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E7%BB%84%E4%BB%B6/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -4641,6 +4641,12 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
+    <title></title>
+    <url>/2021/03/02/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/JVM%E5%90%AC%E8%AF%BE%E7%AC%94%E8%AE%B0%E8%A1%A5%E5%85%85/</url>
+    <content><![CDATA[<p>java的指令是根据栈来设计的，不适用基于寄存器的，是因为基于寄存器与CPU耦合度太高，不太好实现跨平台运行</p>
+<img data-src="https://tse1-mm.cn.bing.net/th/id/OIP.f3N7J7-cCRt2cBZM2z-XlQHaGV?w=223&h=191&c=7&o=5&dpr=1.5&pid=1.7" alt=" JVM内存结构 的图像结果" style="zoom: 200%;">]]></content>
+  </entry>
+  <entry>
     <title>阿里云ECS部署服务器</title>
     <url>/2021/01/22/%E9%98%BF%E9%87%8C%E4%BA%91ECS%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
     <content><![CDATA[<h2 id="阿里云ECS部署Tomcat、Nginx服务器"><a href="#阿里云ECS部署Tomcat、Nginx服务器" class="headerlink" title="阿里云ECS部署Tomcat、Nginx服务器"></a>阿里云ECS部署Tomcat、Nginx服务器</h2><h3 id="Nginx服务器"><a href="#Nginx服务器" class="headerlink" title="Nginx服务器"></a>Nginx服务器</h3><p>####一、简介</p>
@@ -4703,12 +4709,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>阿里云ECS部署</tag>
       </tags>
-  </entry>
-  <entry>
-    <title></title>
-    <url>/2021/03/02/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/JVM%E5%90%AC%E8%AF%BE%E7%AC%94%E8%AE%B0%E8%A1%A5%E5%85%85/</url>
-    <content><![CDATA[<p>java的指令是根据栈来设计的，不适用基于寄存器的，是因为基于寄存器与CPU耦合度太高，不太好实现跨平台运行</p>
-<img data-src="https://tse1-mm.cn.bing.net/th/id/OIP.f3N7J7-cCRt2cBZM2z-XlQHaGV?w=223&h=191&c=7&o=5&dpr=1.5&pid=1.7" alt=" JVM内存结构 的图像结果" style="zoom: 200%;">]]></content>
   </entry>
   <entry>
     <title>CDN</title>
