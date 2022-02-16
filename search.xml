@@ -6,11 +6,6 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>AOP</title>
-    <url>/2021/03/14/AOP/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Ajax异步传输</title>
     <url>/2021/02/25/Ajax%E5%BC%82%E6%AD%A5%E4%BC%A0%E8%BE%93/</url>
     <content><![CDATA[]]></content>
@@ -20,6 +15,11 @@
       <tags>
         <tag>Ajax</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>AOP</title>
+    <url>/2021/03/14/AOP/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Cookie</title>
@@ -86,26 +86,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Druid数据库连接池</title>
-    <url>/2021/03/14/Druid%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>HTTP报文</title>
-    <url>/2021/03/14/HTTP%E6%8A%A5%E6%96%87/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>HTTP代理</title>
-    <url>/2021/02/03/HTTP%E4%BB%A3%E7%90%86/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>HTTP缓存</title>
-    <url>/2021/02/03/HTTP%E7%BC%93%E5%AD%98/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Filter</title>
     <url>/2021/02/25/Filter/</url>
     <content><![CDATA[]]></content>
@@ -115,6 +95,26 @@
       <tags>
         <tag>Filter</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Druid数据库连接池</title>
+    <url>/2021/03/14/Druid%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>HTTP代理</title>
+    <url>/2021/02/03/HTTP%E4%BB%A3%E7%90%86/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>HTTP报文</title>
+    <url>/2021/03/14/HTTP%E6%8A%A5%E6%96%87/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>HTTP缓存</title>
+    <url>/2021/02/03/HTTP%E7%BC%93%E5%AD%98/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>HTTP认证机制</title>
@@ -135,69 +135,6 @@
       </categories>
       <tags>
         <tag>HTTP</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>IPVS</title>
-    <url>/2021/03/25/IPVS/</url>
-    <content><![CDATA[<h1 id="一、LVS简介"><a href="#一、LVS简介" class="headerlink" title="一、LVS简介"></a>一、LVS简介</h1><p>LVS是Linux Virtual Server的简称，也就是Linux虚拟服务器, 是一个由章文嵩博士发起的自由软件项目，现在已经是 Linux标准内核的一部分。LVS是一种叫基于TCP/IP的负载均衡技术，转发效率极高，具有处理百万计并发连接请求的能力。</p>
-<p>LVS的IP负载均衡技术是通过IPVS模块实现的。IPVS模块是LVS集群的核心软件模块，它安装在LVS集群作为负载均衡的主节点上，虚拟出一个IP地址和端口对外提供服务。用户通过访问这个虚拟服务（VS），然后访问请求由负载均衡器（LB）调度到后端真实服务器（RS）中，由RS实际处理用户的请求给返回响应。</p>
- <img data-src="/2021/03/25/IPVS/01.png" class>
-
-<h1 id="二、IPVS的三种转发模式"><a href="#二、IPVS的三种转发模式" class="headerlink" title="二、IPVS的三种转发模式"></a>二、IPVS的三种转发模式</h1><p>根据负载均衡器转发客户端请求以及RS返回响应机制的不同，将IPVS的转发模式分为三种：NAT，DR，FULLNAT。（还有一种IP TUNNEL模式，IP通道技术，接触比较少）</p>
-<h2 id="1-DR模式（Direct-Routing）"><a href="#1-DR模式（Direct-Routing）" class="headerlink" title="1. DR模式（Direct Routing）"></a>1. DR模式（Direct Routing）</h2><p>DR模式下，客户端的请求包到达负载均衡器的虚拟服务IP端口后，负载均衡器不会改写请求包的IP和端口，但是会改写请求包的MAC地址为后端RS的MAC地址，然后将数据包转发；真实服务器处理请求后，响应包直接回给客户端，不再经过负载均衡器。所以DR模式的转发效率是最高的，特别适合下行流量较大的业务场景，比如请求视频等大文件。</p>
-<h3 id="DR模式的特点："><a href="#DR模式的特点：" class="headerlink" title="DR模式的特点："></a>DR模式的特点：</h3><p><strong>数据包在LB转发过程中，源/目的IP端口都不会变化</strong></p>
-<p>LB只是将数据包的MAC地址改写为RS的MAC地址，然后转发给相应的RS。</p>
-<p><strong>每台RS上都必须在环回网卡上绑定LB的虚拟服务IP</strong></p>
-<p>因为LB转发时并不会改写数据包的目的IP，所以RS收到的数据包的目的IP仍是LB的虚拟服务IP。为了保证RS能够正确处理该数据包，而不是丢弃，必须在RS的环回网卡上绑定LB的虚拟服务IP。这样RS会认为这个虚拟服务IP是自己的IP，自己是能够处理这个数据包的。否则RS会直接丢弃该数据包！</p>
-<p><strong>RS上的业务进程必须监听在环回网卡的虚拟服务IP上，且端口必须和LB上的虚拟服务端口一致</strong></p>
-<p>因为LB不会改写数据包的目的端口，所以RS服务的监听端口必须和虚拟服务端口一致，否则RS会直接拒绝该数据包。</p>
-<p><strong>RS处理完请求后，响应直接回给客户端，不再经过LB</strong></p>
-<p>因为RS收到的请求数据包的源IP是客户端的IP，所以理所当然RS的响应会直接回给客户端，而不会再经过LB。这时候要求RS和客户端之间的网络是可达的。</p>
-<p><strong>LB和RS须位于同一个子网</strong></p>
-<p>因为LB在转发过程中需要改写数据包的MAC为RS的MAC地址，所以要能够查询到RS的MAC。而要获取到RS的MAC，则需要保证二者位于一个子网，否则LB只能获取到RS网关的MAC地址。</p>
-  <img data-src="/2021/03/25/IPVS/02.png" class>
-
-<h2 id="2-NAT模式（Network-Address-Translation）"><a href="#2-NAT模式（Network-Address-Translation）" class="headerlink" title="2. NAT模式（Network Address Translation）"></a>2. NAT模式（Network Address Translation）</h2><p>NAT模式下，请求包和响应包都需要经过LB处理。当客户端的请求到达虚拟服务后，LB会对请求包做目的地址转换（DNAT），将请求包的目的IP改写为RS的IP。当收到RS的响应后，LB会对响应包做源地址转换（SNAT），将响应包的源IP改写为LB的IP。</p>
-<h3 id="NAT模式的特点："><a href="#NAT模式的特点：" class="headerlink" title="NAT模式的特点："></a>NAT模式的特点：</h3><p><strong>LB会修改数据包的地址</strong></p>
-<p>对于请求包，会进行DNAT；对于响应包，会进行SNAT。</p>
-<p><strong>LB会透传客户端IP到RS（DR模式也会透传）</strong></p>
-<p>虽然LB在转发过程中做了NAT转换，但是因为只是做了部分地址转发，所以RS收到的请求包里是能看到客户端IP的。</p>
-<p><strong>需要将RS的默认网关地址配置为LB的浮动IP地址</strong></p>
-<p>因为RS收到的请求包源IP是客户端的IP，为了保证响应包在返回时能走到LB上面，所以需要将RS的默认网关地址配置为LB的虚拟服务IP地址。当然，如果客户端的IP是固定的，也可以在RS上添加明细路由指向LB的虚拟服务IP，不用改默认网关。</p>
-<p><strong>LB和RS须位于同一个子网，并且客户端不能和LB/RS位于同一子网</strong></p>
-<p>因为需要将RS的默认网关配置为LB的虚拟服务IP地址，所以需要保证LB和RS位于同一子网。</p>
-<p>又因为需要保证RS的响应包能走回到LB上，则客户端不能和RS位于同一子网。否则RS直接就能获取到客户端的MAC，响应包就直接回给客户端了，不会走网关，也就走不到LB上面了。这时候由于没有LB做SNAT，客户端收到的响应包源IP是RS的IP，而客户端的请求包目的IP是LB的虚拟服务IP，这时候客户端无法识别响应包，会直接丢弃。</p>
-  <img data-src="/2021/03/25/IPVS/03.png" class>
-
-<h2 id="3-FULLNAT模式"><a href="#3-FULLNAT模式" class="headerlink" title="3. FULLNAT模式"></a>3. FULLNAT模式</h2><p>FULLNAT模式下，LB会对请求包和响应包都做SNAT+DNAT。</p>
-<h3 id="FULLNAT模式的特点："><a href="#FULLNAT模式的特点：" class="headerlink" title="FULLNAT模式的特点："></a>FULLNAT模式的特点：</h3><p><strong>LB完全作为一个代理服务器</strong></p>
-<p>FULLNAT下，客户端感知不到RS，RS也感知不到客户端，它们都只能看到LB。此种模式和七层负载均衡有点相似，只不过不会去解析应用层协议，而是在TCP层将消息转发</p>
-<p><strong>LB和RS对于组网结构没有要求</strong></p>
-<p>不同于NAT和DR要求LB和RS位于一个子网，FULLNAT对于组网结构没有要求。只需要保证客户端和LB、LB和RS之间网络互通即可。</p>
-  <img data-src="/2021/03/25/IPVS/04.png" class>
-
-<p>三种转发模式性能从高到低：DR &gt; NAT &gt;FULLNAT。</p>
-<p>虽然FULLNAT模式的性能比不上DR和NAT，但是FULLNAT模式没有组网要求，允许LB和RS部署在不同的子网中，这给运维带来了便利。并且 FULLNAT模式具有更好的可拓展性，可以通过增加更多的LB节点，提升系统整体的负载均衡能力。</p>
-<img data-src="/2021/03/25/IPVS/05.png" class>
-
-<h1 id="三、IPVS支持的调度算法"><a href="#三、IPVS支持的调度算法" class="headerlink" title="三、IPVS支持的调度算法"></a>三、IPVS支持的调度算法</h1><p>对于后端的RS集群，LB是如何决策应该把消息调度到哪个RS节点呢？这是由负载均衡调度算法决定的。IPVS常用的调度算法有：</p>
-<p>轮询（Round Robin）</p>
-<p>LB认为集群内每台RS都是相同的，会轮流进行调度分发。从数据统计上看，RR模式是调度最均衡的。</p>
-<p>加权轮询（Weighted Round Robin）</p>
-<p>LB会根据RS上配置的权重，将消息按权重比分发到不同的RS上。可以给性能更好的RS节点配置更高的权重，提升集群整体的性能。</p>
-<p>最小连接数（Least Connections）</p>
-<p>LB会根据和集群内每台RS的连接数统计情况，将消息调度到连接数最少的RS节点上。在长连接业务场景下，LC算法对于系统整体负载均衡的情况较好；但是在短连接业务场景下，由于连接会迅速释放，可能会导致消息每次都调度到同一个RS节点，造成严重的负载不均衡。</p>
-<p>加权最小连接数（Weighted Least Connections）</p>
-<p>最小连接数算法的加权版~</p>
-<p>地址哈希（Address Hash）</p>
-<p>LB上会保存一张哈希表，通过哈希映射将客户端和RS节点关联起来</p>
-]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>IPVS</tag>
       </tags>
   </entry>
   <entry>
@@ -304,6 +241,69 @@
       </tags>
   </entry>
   <entry>
+    <title>IPVS</title>
+    <url>/2021/03/25/IPVS/</url>
+    <content><![CDATA[<h1 id="一、LVS简介"><a href="#一、LVS简介" class="headerlink" title="一、LVS简介"></a>一、LVS简介</h1><p>LVS是Linux Virtual Server的简称，也就是Linux虚拟服务器, 是一个由章文嵩博士发起的自由软件项目，现在已经是 Linux标准内核的一部分。LVS是一种叫基于TCP/IP的负载均衡技术，转发效率极高，具有处理百万计并发连接请求的能力。</p>
+<p>LVS的IP负载均衡技术是通过IPVS模块实现的。IPVS模块是LVS集群的核心软件模块，它安装在LVS集群作为负载均衡的主节点上，虚拟出一个IP地址和端口对外提供服务。用户通过访问这个虚拟服务（VS），然后访问请求由负载均衡器（LB）调度到后端真实服务器（RS）中，由RS实际处理用户的请求给返回响应。</p>
+ <img data-src="/2021/03/25/IPVS/01.png" class>
+
+<h1 id="二、IPVS的三种转发模式"><a href="#二、IPVS的三种转发模式" class="headerlink" title="二、IPVS的三种转发模式"></a>二、IPVS的三种转发模式</h1><p>根据负载均衡器转发客户端请求以及RS返回响应机制的不同，将IPVS的转发模式分为三种：NAT，DR，FULLNAT。（还有一种IP TUNNEL模式，IP通道技术，接触比较少）</p>
+<h2 id="1-DR模式（Direct-Routing）"><a href="#1-DR模式（Direct-Routing）" class="headerlink" title="1. DR模式（Direct Routing）"></a>1. DR模式（Direct Routing）</h2><p>DR模式下，客户端的请求包到达负载均衡器的虚拟服务IP端口后，负载均衡器不会改写请求包的IP和端口，但是会改写请求包的MAC地址为后端RS的MAC地址，然后将数据包转发；真实服务器处理请求后，响应包直接回给客户端，不再经过负载均衡器。所以DR模式的转发效率是最高的，特别适合下行流量较大的业务场景，比如请求视频等大文件。</p>
+<h3 id="DR模式的特点："><a href="#DR模式的特点：" class="headerlink" title="DR模式的特点："></a>DR模式的特点：</h3><p><strong>数据包在LB转发过程中，源/目的IP端口都不会变化</strong></p>
+<p>LB只是将数据包的MAC地址改写为RS的MAC地址，然后转发给相应的RS。</p>
+<p><strong>每台RS上都必须在环回网卡上绑定LB的虚拟服务IP</strong></p>
+<p>因为LB转发时并不会改写数据包的目的IP，所以RS收到的数据包的目的IP仍是LB的虚拟服务IP。为了保证RS能够正确处理该数据包，而不是丢弃，必须在RS的环回网卡上绑定LB的虚拟服务IP。这样RS会认为这个虚拟服务IP是自己的IP，自己是能够处理这个数据包的。否则RS会直接丢弃该数据包！</p>
+<p><strong>RS上的业务进程必须监听在环回网卡的虚拟服务IP上，且端口必须和LB上的虚拟服务端口一致</strong></p>
+<p>因为LB不会改写数据包的目的端口，所以RS服务的监听端口必须和虚拟服务端口一致，否则RS会直接拒绝该数据包。</p>
+<p><strong>RS处理完请求后，响应直接回给客户端，不再经过LB</strong></p>
+<p>因为RS收到的请求数据包的源IP是客户端的IP，所以理所当然RS的响应会直接回给客户端，而不会再经过LB。这时候要求RS和客户端之间的网络是可达的。</p>
+<p><strong>LB和RS须位于同一个子网</strong></p>
+<p>因为LB在转发过程中需要改写数据包的MAC为RS的MAC地址，所以要能够查询到RS的MAC。而要获取到RS的MAC，则需要保证二者位于一个子网，否则LB只能获取到RS网关的MAC地址。</p>
+  <img data-src="/2021/03/25/IPVS/02.png" class>
+
+<h2 id="2-NAT模式（Network-Address-Translation）"><a href="#2-NAT模式（Network-Address-Translation）" class="headerlink" title="2. NAT模式（Network Address Translation）"></a>2. NAT模式（Network Address Translation）</h2><p>NAT模式下，请求包和响应包都需要经过LB处理。当客户端的请求到达虚拟服务后，LB会对请求包做目的地址转换（DNAT），将请求包的目的IP改写为RS的IP。当收到RS的响应后，LB会对响应包做源地址转换（SNAT），将响应包的源IP改写为LB的IP。</p>
+<h3 id="NAT模式的特点："><a href="#NAT模式的特点：" class="headerlink" title="NAT模式的特点："></a>NAT模式的特点：</h3><p><strong>LB会修改数据包的地址</strong></p>
+<p>对于请求包，会进行DNAT；对于响应包，会进行SNAT。</p>
+<p><strong>LB会透传客户端IP到RS（DR模式也会透传）</strong></p>
+<p>虽然LB在转发过程中做了NAT转换，但是因为只是做了部分地址转发，所以RS收到的请求包里是能看到客户端IP的。</p>
+<p><strong>需要将RS的默认网关地址配置为LB的浮动IP地址</strong></p>
+<p>因为RS收到的请求包源IP是客户端的IP，为了保证响应包在返回时能走到LB上面，所以需要将RS的默认网关地址配置为LB的虚拟服务IP地址。当然，如果客户端的IP是固定的，也可以在RS上添加明细路由指向LB的虚拟服务IP，不用改默认网关。</p>
+<p><strong>LB和RS须位于同一个子网，并且客户端不能和LB/RS位于同一子网</strong></p>
+<p>因为需要将RS的默认网关配置为LB的虚拟服务IP地址，所以需要保证LB和RS位于同一子网。</p>
+<p>又因为需要保证RS的响应包能走回到LB上，则客户端不能和RS位于同一子网。否则RS直接就能获取到客户端的MAC，响应包就直接回给客户端了，不会走网关，也就走不到LB上面了。这时候由于没有LB做SNAT，客户端收到的响应包源IP是RS的IP，而客户端的请求包目的IP是LB的虚拟服务IP，这时候客户端无法识别响应包，会直接丢弃。</p>
+  <img data-src="/2021/03/25/IPVS/03.png" class>
+
+<h2 id="3-FULLNAT模式"><a href="#3-FULLNAT模式" class="headerlink" title="3. FULLNAT模式"></a>3. FULLNAT模式</h2><p>FULLNAT模式下，LB会对请求包和响应包都做SNAT+DNAT。</p>
+<h3 id="FULLNAT模式的特点："><a href="#FULLNAT模式的特点：" class="headerlink" title="FULLNAT模式的特点："></a>FULLNAT模式的特点：</h3><p><strong>LB完全作为一个代理服务器</strong></p>
+<p>FULLNAT下，客户端感知不到RS，RS也感知不到客户端，它们都只能看到LB。此种模式和七层负载均衡有点相似，只不过不会去解析应用层协议，而是在TCP层将消息转发</p>
+<p><strong>LB和RS对于组网结构没有要求</strong></p>
+<p>不同于NAT和DR要求LB和RS位于一个子网，FULLNAT对于组网结构没有要求。只需要保证客户端和LB、LB和RS之间网络互通即可。</p>
+  <img data-src="/2021/03/25/IPVS/04.png" class>
+
+<p>三种转发模式性能从高到低：DR &gt; NAT &gt;FULLNAT。</p>
+<p>虽然FULLNAT模式的性能比不上DR和NAT，但是FULLNAT模式没有组网要求，允许LB和RS部署在不同的子网中，这给运维带来了便利。并且 FULLNAT模式具有更好的可拓展性，可以通过增加更多的LB节点，提升系统整体的负载均衡能力。</p>
+<img data-src="/2021/03/25/IPVS/05.png" class>
+
+<h1 id="三、IPVS支持的调度算法"><a href="#三、IPVS支持的调度算法" class="headerlink" title="三、IPVS支持的调度算法"></a>三、IPVS支持的调度算法</h1><p>对于后端的RS集群，LB是如何决策应该把消息调度到哪个RS节点呢？这是由负载均衡调度算法决定的。IPVS常用的调度算法有：</p>
+<p>轮询（Round Robin）</p>
+<p>LB认为集群内每台RS都是相同的，会轮流进行调度分发。从数据统计上看，RR模式是调度最均衡的。</p>
+<p>加权轮询（Weighted Round Robin）</p>
+<p>LB会根据RS上配置的权重，将消息按权重比分发到不同的RS上。可以给性能更好的RS节点配置更高的权重，提升集群整体的性能。</p>
+<p>最小连接数（Least Connections）</p>
+<p>LB会根据和集群内每台RS的连接数统计情况，将消息调度到连接数最少的RS节点上。在长连接业务场景下，LC算法对于系统整体负载均衡的情况较好；但是在短连接业务场景下，由于连接会迅速释放，可能会导致消息每次都调度到同一个RS节点，造成严重的负载不均衡。</p>
+<p>加权最小连接数（Weighted Least Connections）</p>
+<p>最小连接数算法的加权版~</p>
+<p>地址哈希（Address Hash）</p>
+<p>LB上会保存一张哈希表，通过哈希映射将客户端和RS节点关联起来</p>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>IPVS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>InnoDB存储引擎</title>
     <url>/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
     <content><![CDATA[<h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
@@ -361,11 +361,6 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>JVM虚拟机栈</title>
-    <url>/2021/03/14/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>JVM系列之堆</title>
     <url>/2021/04/14/JVM%E7%B3%BB%E5%88%97%E4%B9%8B%E5%A0%86/</url>
     <content><![CDATA[]]></content>
@@ -375,6 +370,11 @@
       <tags>
         <tag>JVM堆</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>JVM虚拟机栈</title>
+    <url>/2021/03/14/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Java内存区域与内存溢出异常</title>
@@ -448,6 +448,11 @@
   <entry>
     <title>Java高并发JUC</title>
     <url>/2021/02/25/Java%E9%AB%98%E5%B9%B6%E5%8F%91JUC/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Jenkins自动化部署工具</title>
+    <url>/2021/03/14/Jenkins%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E5%B7%A5%E5%85%B7/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -579,13 +584,13 @@
       </tags>
   </entry>
   <entry>
-    <title>Jenkins自动化部署工具</title>
-    <url>/2021/03/14/Jenkins%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E5%B7%A5%E5%85%B7/</url>
+    <title>Linux进程管理</title>
+    <url>/2021/03/14/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>Linux进程管理</title>
-    <url>/2021/03/14/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/</url>
+    <title>Linux进程调度</title>
+    <url>/2021/03/14/Linux%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -597,73 +602,6 @@
       </categories>
       <tags>
         <tag>Listener</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Linux进程调度</title>
-    <url>/2021/03/14/Linux%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>MVVM框架</title>
-    <url>/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/</url>
-    <content><![CDATA[<p>一个软件或者 APP都是服务于某种需求，这称之为“业务需求”。随着业务需求的增多、软件会变得越来越庞大，越来越复杂。所以就会设计一套完整的架构设计、研发流程以及质量管理体系来保证整个研发过程。“架构设计”是一个非常大的话题，它涉及到各方面，近年来前端一个明显的开发趋势就是架构从传统的 MVC 模式向 MVVM 模式迁移，这里来谈谈——MVVM模式。</p>
-<h2 id="什么是MVVM"><a href="#什么是MVVM" class="headerlink" title="什么是MVVM"></a>什么是MVVM</h2><blockquote>
-<p>MVVM（Model–View–Viewmodel）是一种软件架构模式。<br>MVVM有助于将图形用户界面的开发与业务逻辑或后端逻辑（数据模型）的开发分离开，这是通过标记语言或GUI代码实现的。MVVM的视图模型是一个值转换器， 这意味着视图模型负责从模型中暴露（转换）数据对象，以便轻松管理和呈现对象。在这方面，视图模型比视图做得更多，并且处理大部分视图的显示逻辑。 视图模型可以实现中介者模式，组织对视图所支持的用例集的后端逻辑的访问</p>
-</blockquote>
-<p><a href="https://zh.wikipedia.org/wiki/MVVM">想要了解更多关于MVVM的定义，点击访问维基百科</a></p>
-<h2 id="MVVM涉及到的概念"><a href="#MVVM涉及到的概念" class="headerlink" title="MVVM涉及到的概念"></a>MVVM涉及到的概念</h2><ul>
-<li>M(odel)层：模型，定义数据结构。</li>
-<li>C(ontroller)层：实现业务逻辑，数据的增删改查。在MVVM模式中一般把C层算在M层中，（只有在理想的双向绑定模式下，Controller 才会完全的消失。这种理想状态一般不存在）</li>
-<li>ViewModel层：顾名思义是视图View的模型、映射和显示逻辑（如if for等，非业务逻辑），另外绑定器也在此层。ViewModel是基于视图开发的一套模型，如果你的应用是给盲人用的，那么也可以开发一套基于Audio的模型AudioModel。</li>
-<li>V(iew)层：将ViewModel通过特定的GUI展示出来，并在GUI控件上绑定视图交互事件，V(iew)一般由MVVM框架自动生成在浏览器中。</li>
-</ul>
-<h2 id="MVVM的工作机制"><a href="#MVVM的工作机制" class="headerlink" title="MVVM的工作机制"></a>MVVM的工作机制</h2><p>在MVVM架构下，View 和 Model 之间其实并没有直接的联系，而是通<strong>过ViewModel进行交互</strong>，Model 和 ViewModel 之间的交互是*<u>双向</u>*的， 因此View 数据的变化会同步到Model中，而Model 数据的变化也会立即反应到View 上。</p>
-<p>ViewModel 通过双向数据绑定把 View 层和 Model 层连接了起来。ViewModel里面包含DOM Listeners(数据监听)和Data Bindings(数据绑定)，DOM Listeners和Data Bindings是实现双向绑定的关键。</p>
-<blockquote>
-<p>DOM Listeners监听页面所有View层DOM元素的变化，当发生变化，Model层的数据随之变化；</p>
-</blockquote>
-<blockquote>
-<p>Data Bindings监听Model层的数据，当数据发生变化，View层的DOM元素随之变化。</p>
-</blockquote>
-<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/01.png" class>
-
-
-
-<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/02.png" class>
-
-
-
-<h2 id="MVVM模式的优缺点"><a href="#MVVM模式的优缺点" class="headerlink" title="MVVM模式的优缺点"></a>MVVM模式的优缺点</h2><p>MVVM模式相较于原先的MVP模式至少省下30%编码量，甚至能省下70%DOM操作，因为用MVP模式的话主要是在进行DOM操作</p>
-<blockquote>
-<p>优点</p>
-</blockquote>
-<ul>
-<li><strong>低耦合</strong>。View可以独立于Model变化和修改，一个ViewModel可以绑定到不同的View上，当View变化的时候Model可以不变，当Model变化的时候View也可以不变。</li>
-<li><strong>可重用性</strong>。可以把一些视图的逻辑放在ViewModel里面，让很多View重用这段视图逻辑。</li>
-<li>独立开发。开发人员可以专注与业务逻辑和数据的开发(ViewModel)。设计人员可以专注于界面(View)的设计。</li>
-<li><strong>可测试性</strong>。可以针对ViewModel来对界面(View)进行测试</li>
-</ul>
-<blockquote>
-<p>缺点</p>
-</blockquote>
-<ul>
-<li>学习成本高。</li>
-<li>DEBUG困难</li>
-<li>实现MVVM的开销对于简单的UI操作是过度的。而对于更大的应用来说，推广ViewModel将变得更加困难，非常大的应用程序中的数据绑定会导致相当大的内存消耗。</li>
-</ul>
-<h2 id="MVVM应用场景"><a href="#MVVM应用场景" class="headerlink" title="MVVM应用场景"></a>MVVM应用场景</h2><ul>
-<li>针对具有复杂交互逻辑的前端应用</li>
-<li>提供基础的架构抽象</li>
-<li>通过Ajax数据持久化，保证前端用户体验</li>
-</ul>
-<h2 id="常见的MVVM框架"><a href="#常见的MVVM框架" class="headerlink" title="常见的MVVM框架"></a>常见的MVVM框架</h2><p>Vue.js   AngularJs，ReactJs</p>
-]]></content>
-      <categories>
-        <category>项目架构</category>
-      </categories>
-      <tags>
-        <tag>架构模式</tag>
       </tags>
   </entry>
   <entry>
@@ -754,6 +692,68 @@
 <p>MVP的缺点</p>
 </blockquote>
 <p>视图和Presenter的交互会过于频繁，使得他们的联系过于紧密。也就是说，一旦视图变更了，presenter也要变更。</p>
+]]></content>
+      <categories>
+        <category>项目架构</category>
+      </categories>
+      <tags>
+        <tag>架构模式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MVVM框架</title>
+    <url>/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/</url>
+    <content><![CDATA[<p>一个软件或者 APP都是服务于某种需求，这称之为“业务需求”。随着业务需求的增多、软件会变得越来越庞大，越来越复杂。所以就会设计一套完整的架构设计、研发流程以及质量管理体系来保证整个研发过程。“架构设计”是一个非常大的话题，它涉及到各方面，近年来前端一个明显的开发趋势就是架构从传统的 MVC 模式向 MVVM 模式迁移，这里来谈谈——MVVM模式。</p>
+<h2 id="什么是MVVM"><a href="#什么是MVVM" class="headerlink" title="什么是MVVM"></a>什么是MVVM</h2><blockquote>
+<p>MVVM（Model–View–Viewmodel）是一种软件架构模式。<br>MVVM有助于将图形用户界面的开发与业务逻辑或后端逻辑（数据模型）的开发分离开，这是通过标记语言或GUI代码实现的。MVVM的视图模型是一个值转换器， 这意味着视图模型负责从模型中暴露（转换）数据对象，以便轻松管理和呈现对象。在这方面，视图模型比视图做得更多，并且处理大部分视图的显示逻辑。 视图模型可以实现中介者模式，组织对视图所支持的用例集的后端逻辑的访问</p>
+</blockquote>
+<p><a href="https://zh.wikipedia.org/wiki/MVVM">想要了解更多关于MVVM的定义，点击访问维基百科</a></p>
+<h2 id="MVVM涉及到的概念"><a href="#MVVM涉及到的概念" class="headerlink" title="MVVM涉及到的概念"></a>MVVM涉及到的概念</h2><ul>
+<li>M(odel)层：模型，定义数据结构。</li>
+<li>C(ontroller)层：实现业务逻辑，数据的增删改查。在MVVM模式中一般把C层算在M层中，（只有在理想的双向绑定模式下，Controller 才会完全的消失。这种理想状态一般不存在）</li>
+<li>ViewModel层：顾名思义是视图View的模型、映射和显示逻辑（如if for等，非业务逻辑），另外绑定器也在此层。ViewModel是基于视图开发的一套模型，如果你的应用是给盲人用的，那么也可以开发一套基于Audio的模型AudioModel。</li>
+<li>V(iew)层：将ViewModel通过特定的GUI展示出来，并在GUI控件上绑定视图交互事件，V(iew)一般由MVVM框架自动生成在浏览器中。</li>
+</ul>
+<h2 id="MVVM的工作机制"><a href="#MVVM的工作机制" class="headerlink" title="MVVM的工作机制"></a>MVVM的工作机制</h2><p>在MVVM架构下，View 和 Model 之间其实并没有直接的联系，而是通<strong>过ViewModel进行交互</strong>，Model 和 ViewModel 之间的交互是*<u>双向</u>*的， 因此View 数据的变化会同步到Model中，而Model 数据的变化也会立即反应到View 上。</p>
+<p>ViewModel 通过双向数据绑定把 View 层和 Model 层连接了起来。ViewModel里面包含DOM Listeners(数据监听)和Data Bindings(数据绑定)，DOM Listeners和Data Bindings是实现双向绑定的关键。</p>
+<blockquote>
+<p>DOM Listeners监听页面所有View层DOM元素的变化，当发生变化，Model层的数据随之变化；</p>
+</blockquote>
+<blockquote>
+<p>Data Bindings监听Model层的数据，当数据发生变化，View层的DOM元素随之变化。</p>
+</blockquote>
+<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/01.png" class>
+
+
+
+<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/02.png" class>
+
+
+
+<h2 id="MVVM模式的优缺点"><a href="#MVVM模式的优缺点" class="headerlink" title="MVVM模式的优缺点"></a>MVVM模式的优缺点</h2><p>MVVM模式相较于原先的MVP模式至少省下30%编码量，甚至能省下70%DOM操作，因为用MVP模式的话主要是在进行DOM操作</p>
+<blockquote>
+<p>优点</p>
+</blockquote>
+<ul>
+<li><strong>低耦合</strong>。View可以独立于Model变化和修改，一个ViewModel可以绑定到不同的View上，当View变化的时候Model可以不变，当Model变化的时候View也可以不变。</li>
+<li><strong>可重用性</strong>。可以把一些视图的逻辑放在ViewModel里面，让很多View重用这段视图逻辑。</li>
+<li>独立开发。开发人员可以专注与业务逻辑和数据的开发(ViewModel)。设计人员可以专注于界面(View)的设计。</li>
+<li><strong>可测试性</strong>。可以针对ViewModel来对界面(View)进行测试</li>
+</ul>
+<blockquote>
+<p>缺点</p>
+</blockquote>
+<ul>
+<li>学习成本高。</li>
+<li>DEBUG困难</li>
+<li>实现MVVM的开销对于简单的UI操作是过度的。而对于更大的应用来说，推广ViewModel将变得更加困难，非常大的应用程序中的数据绑定会导致相当大的内存消耗。</li>
+</ul>
+<h2 id="MVVM应用场景"><a href="#MVVM应用场景" class="headerlink" title="MVVM应用场景"></a>MVVM应用场景</h2><ul>
+<li>针对具有复杂交互逻辑的前端应用</li>
+<li>提供基础的架构抽象</li>
+<li>通过Ajax数据持久化，保证前端用户体验</li>
+</ul>
+<h2 id="常见的MVVM框架"><a href="#常见的MVVM框架" class="headerlink" title="常见的MVVM框架"></a>常见的MVVM框架</h2><p>Vue.js   AngularJs，ReactJs</p>
 ]]></content>
       <categories>
         <category>项目架构</category>
@@ -1991,6 +1991,17 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
+    <title>SVN版本控制系统</title>
+    <url>/2021/02/06/SVN%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F/</url>
+    <content><![CDATA[<h3 id="主要内容"><a href="#主要内容" class="headerlink" title="主要内容"></a>主要内容</h3>]]></content>
+      <categories>
+        <category>项目工具</category>
+      </categories>
+      <tags>
+        <tag>SVN</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Servlet规范一</title>
     <url>/2021/02/02/Servlet%E8%A7%84%E8%8C%83%E4%B8%80/</url>
     <content><![CDATA[<h2 id="Servlet规范（一）"><a href="#Servlet规范（一）" class="headerlink" title="Servlet规范（一）"></a>Servlet规范（一）</h2><h3 id="一、Servlet基础"><a href="#一、Servlet基础" class="headerlink" title="一、Servlet基础"></a>一、Servlet基础</h3><p>宏观地讲，Servlet 是连接 Web 服务器与服务端 Java 程序的协议，是一种通信规范。这个规范是以一套接口的形式体现的。 通常来说，Servlet 是宏观上 Servlet 规范中的一个具体的接口，Servlet 规范中包含一套接口。而 Servlet 接口仅仅是其中之一。 微观地讲，Servlet 是 Servlet 接口实现类的一个实例对象，是运行在服务器上的一段 Java 小程序，即 Server Applet，也就是 Servlet 这个单词的来历。Servlet 的主要功能是根据客户 端提交的请求，调用服务器端相关 Java 代码，完成对请求的处理与运算。</p>
@@ -2412,17 +2423,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>SVN版本控制系统</title>
-    <url>/2021/02/06/SVN%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F/</url>
-    <content><![CDATA[<h3 id="主要内容"><a href="#主要内容" class="headerlink" title="主要内容"></a>主要内容</h3>]]></content>
-      <categories>
-        <category>项目工具</category>
-      </categories>
-      <tags>
-        <tag>SVN</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Thread</title>
     <url>/2022/02/16/Thread/</url>
     <content><![CDATA[]]></content>
@@ -2644,6 +2644,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <content><![CDATA[]]></content>
   </entry>
   <entry>
+    <title>云计算</title>
+    <url>/2021/10/07/%E4%BA%91%E8%AE%A1%E7%AE%97/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>优秀项目</title>
     <url>/2021/03/11/%E4%BC%98%E7%A7%80%E9%A1%B9%E7%9B%AE/</url>
     <content><![CDATA[<blockquote>
@@ -2736,11 +2741,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>优秀项目</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>云计算</title>
-    <url>/2021/10/07/%E4%BA%91%E8%AE%A1%E7%AE%97/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>创建一个Vue实例</title>
@@ -3131,6 +3131,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
+    <title>垃圾收集器与内存分配策略</title>
+    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>在Linux环境安装redis</title>
     <url>/2021/03/18/%E5%9C%A8Linux%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85redis/</url>
     <content><![CDATA[<h2 id="开发环境搭建"><a href="#开发环境搭建" class="headerlink" title="开发环境搭建"></a>开发环境搭建</h2><h3 id="云服务器部署redis"><a href="#云服务器部署redis" class="headerlink" title="云服务器部署redis"></a>云服务器部署redis</h3><h4 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h4><blockquote>
@@ -3214,11 +3219,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>环境部署</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>垃圾收集器与内存分配策略</title>
-    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>基于XML的DI</title>
@@ -4230,6 +4230,43 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <content><![CDATA[]]></content>
   </entry>
   <entry>
+    <title>网络服务性能指标</title>
+    <url>/2021/09/25/%E7%BD%91%E7%BB%9C%E6%9C%8D%E5%8A%A1%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87/</url>
+    <content><![CDATA[<h1 id="一、QPS，每秒查询"><a href="#一、QPS，每秒查询" class="headerlink" title="一、QPS，每秒查询"></a>一、QPS，每秒查询</h1><p>QPS：Queries Per Second意思是“每秒查询率”，是一台服务器每秒能够相应的查询次数，是对一个特定的查询服务器在规定时间内所处理流量多少的衡量标准。</p>
+<p>互联网中，作为域名系统服务器的机器的性能经常用每秒查询率来衡量。</p>
+<h1 id="二、TPS，每秒事务"><a href="#二、TPS，每秒事务" class="headerlink" title="二、TPS，每秒事务"></a>二、TPS，每秒事务</h1><p>TPS：是TransactionsPerSecond的缩写，也就是事务数/秒。它是软件测试结果的测量单位。一个事务是指一个客户机向服务器发送请求然后服务器做出反应的过程。客户机在发送请求时开始计时，收到服务器响应后结束计时，以此来计算使用的时间和完成的事务个数。</p>
+<p>QPS vs TPS：QPS基本类似于TPS，但是不同的是，对于一个页面的一次访问，形成一个TPS；但一次页面请求，可能产生多次对服务器的请求，服务器对这些请求，就可计入“QPS”之中。如，访问一个页面会请求服务器2次，一次访问，产生一个“T”，产生2个“Q”。</p>
+<h1 id="三、RT，响应时间"><a href="#三、RT，响应时间" class="headerlink" title="三、RT，响应时间"></a>三、RT，响应时间</h1><p>响应时间：执行一个请求从开始到最后收到响应数据所花费的总体时间,即从客户端发起请求到收到服务器响应结果的时间。</p>
+<p>响应时间RT(Response-time)，是一个系统最重要的指标之一，它的数值大小直接反应了系统的快慢。</p>
+<h1 id="四、并发数"><a href="#四、并发数" class="headerlink" title="四、并发数"></a>四、并发数</h1><p>并发数是指系统同时能处理的请求数量，这个也是反应了系统的负载能力。</p>
+<h1 id="五、吞吐量"><a href="#五、吞吐量" class="headerlink" title="五、吞吐量"></a>五、吞吐量</h1><p>系统的吞吐量（承压能力）与request对CPU的消耗、外部接口、IO等等紧密关联。单个request 对CPU消耗越高，外部系统接口、IO速度越慢，系统吞吐能力越低，反之越高。</p>
+<p>系统吞吐量几个重要参数：QPS（TPS）、并发数、响应时间。</p>
+<ol>
+<li>QPS（TPS）：（Query Per Second）每秒钟request/事务 数量</li>
+<li>并发数： 系统同时处理的request/事务数</li>
+<li>响应时间： 一般取平均响应时间</li>
+</ol>
+<p>理解了上面三个要素的意义之后，就能推算出它们之间的关系：</p>
+<ul>
+<li><strong>QPS（TPS）= 并发数/平均响应时间</strong></li>
+<li><strong>并发数 = QPS*平均响应时间</strong></li>
+</ul>
+<h1 id="六、实际举例"><a href="#六、实际举例" class="headerlink" title="六、实际举例"></a>六、实际举例</h1><p>我们通过一个实例来把上面几个概念串起来理解。按二八定律来看，如果每天 80% 的访问集中在 20% 的时间里，这 20% 时间就叫做峰值时间。</p>
+<ul>
+<li>公式：( 总PV数 * 80% ) / ( 每天秒数 * 20% ) = 峰值时间每秒请求数(QPS)</li>
+<li>机器：峰值时间每秒QPS / 单台机器的QPS = 需要的机器</li>
+</ul>
+<p><strong>1、每天300w PV 的在单台机器上，这台机器需要多少QPS？</strong><br>( 3000000 * 0.8 ) / (86400 * 0.2 ) = 139 (QPS)</p>
+<p><strong>2、如果一台机器的QPS是58，需要几台机器来支持？</strong><br>139 / 58 = 3</p>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>高并发网络性能指标</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>编程范式</title>
     <url>/2021/03/02/%E7%BC%96%E7%A8%8B%E8%8C%83%E5%BC%8F/</url>
     <content><![CDATA[<p>相信绝大部分开发人员、DBA都听过范式这个词，在MySQL中有第一范式、第二范式、第三范式、BCNF范式等，在开发中也有相应的范式，专业词汇叫编程范式(ProgrammingParadigm)。由于笔者能力、精力都有限，本篇主要通过针对同一业务场景，基于编程范式的概念，核心原理以及用例实现来对比不同范式及其实现业务功能的差异。</p>
@@ -4335,43 +4372,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <title>计算属性与监听器setter</title>
     <url>/2021/03/14/%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7%E4%B8%8E%E7%9B%91%E5%90%AC%E5%99%A8setter/</url>
     <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>网络服务性能指标</title>
-    <url>/2021/09/25/%E7%BD%91%E7%BB%9C%E6%9C%8D%E5%8A%A1%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87/</url>
-    <content><![CDATA[<h1 id="一、QPS，每秒查询"><a href="#一、QPS，每秒查询" class="headerlink" title="一、QPS，每秒查询"></a>一、QPS，每秒查询</h1><p>QPS：Queries Per Second意思是“每秒查询率”，是一台服务器每秒能够相应的查询次数，是对一个特定的查询服务器在规定时间内所处理流量多少的衡量标准。</p>
-<p>互联网中，作为域名系统服务器的机器的性能经常用每秒查询率来衡量。</p>
-<h1 id="二、TPS，每秒事务"><a href="#二、TPS，每秒事务" class="headerlink" title="二、TPS，每秒事务"></a>二、TPS，每秒事务</h1><p>TPS：是TransactionsPerSecond的缩写，也就是事务数/秒。它是软件测试结果的测量单位。一个事务是指一个客户机向服务器发送请求然后服务器做出反应的过程。客户机在发送请求时开始计时，收到服务器响应后结束计时，以此来计算使用的时间和完成的事务个数。</p>
-<p>QPS vs TPS：QPS基本类似于TPS，但是不同的是，对于一个页面的一次访问，形成一个TPS；但一次页面请求，可能产生多次对服务器的请求，服务器对这些请求，就可计入“QPS”之中。如，访问一个页面会请求服务器2次，一次访问，产生一个“T”，产生2个“Q”。</p>
-<h1 id="三、RT，响应时间"><a href="#三、RT，响应时间" class="headerlink" title="三、RT，响应时间"></a>三、RT，响应时间</h1><p>响应时间：执行一个请求从开始到最后收到响应数据所花费的总体时间,即从客户端发起请求到收到服务器响应结果的时间。</p>
-<p>响应时间RT(Response-time)，是一个系统最重要的指标之一，它的数值大小直接反应了系统的快慢。</p>
-<h1 id="四、并发数"><a href="#四、并发数" class="headerlink" title="四、并发数"></a>四、并发数</h1><p>并发数是指系统同时能处理的请求数量，这个也是反应了系统的负载能力。</p>
-<h1 id="五、吞吐量"><a href="#五、吞吐量" class="headerlink" title="五、吞吐量"></a>五、吞吐量</h1><p>系统的吞吐量（承压能力）与request对CPU的消耗、外部接口、IO等等紧密关联。单个request 对CPU消耗越高，外部系统接口、IO速度越慢，系统吞吐能力越低，反之越高。</p>
-<p>系统吞吐量几个重要参数：QPS（TPS）、并发数、响应时间。</p>
-<ol>
-<li>QPS（TPS）：（Query Per Second）每秒钟request/事务 数量</li>
-<li>并发数： 系统同时处理的request/事务数</li>
-<li>响应时间： 一般取平均响应时间</li>
-</ol>
-<p>理解了上面三个要素的意义之后，就能推算出它们之间的关系：</p>
-<ul>
-<li><strong>QPS（TPS）= 并发数/平均响应时间</strong></li>
-<li><strong>并发数 = QPS*平均响应时间</strong></li>
-</ul>
-<h1 id="六、实际举例"><a href="#六、实际举例" class="headerlink" title="六、实际举例"></a>六、实际举例</h1><p>我们通过一个实例来把上面几个概念串起来理解。按二八定律来看，如果每天 80% 的访问集中在 20% 的时间里，这 20% 时间就叫做峰值时间。</p>
-<ul>
-<li>公式：( 总PV数 * 80% ) / ( 每天秒数 * 20% ) = 峰值时间每秒请求数(QPS)</li>
-<li>机器：峰值时间每秒QPS / 单台机器的QPS = 需要的机器</li>
-</ul>
-<p><strong>1、每天300w PV 的在单台机器上，这台机器需要多少QPS？</strong><br>( 3000000 * 0.8 ) / (86400 * 0.2 ) = 139 (QPS)</p>
-<p><strong>2、如果一台机器的QPS是58，需要几台机器来支持？</strong><br>139 / 58 = 3</p>
-]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>高并发网络性能指标</tag>
-      </tags>
   </entry>
   <entry>
     <title>设计模式--之六大原则</title>
@@ -5139,7 +5139,9 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
   <entry>
     <title>Process</title>
     <url>/2022/02/16/Process/</url>
-    <content><![CDATA[<h1 id="Unix-Process"><a href="#Unix-Process" class="headerlink" title="Unix Process"></a>Unix Process</h1><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>进程就是处于执行期的程序(目标码存放在某种存储介质上)。但进程并不仅仅局限于一段可执行程序代码(Unix称其为代码段，text section)，通常<strong>进程还要包含其他资源</strong>，像打开的文件，挂起的信号，内核内部数据，处理器状态，一个或多个具有内存映射的内存地址空间及一个或多个执行线程(thread of execution),当然还包括用来存放全局变量的数据段等。实际上，进程就是正在执行的程序代码的实时结果。内核需要有效而又透明地管理所有细节。</p>
+    <content><![CDATA[<h1 id="Unix-Process"><a href="#Unix-Process" class="headerlink" title="Unix Process"></a>Unix Process</h1>
+
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>进程就是处于执行期的程序(目标码存放在某种存储介质上)。但进程并不仅仅局限于一段可执行程序代码(Unix称其为代码段，text section)，通常<strong>进程还要包含其他资源</strong>，像打开的文件，挂起的信号，内核内部数据，处理器状态，一个或多个具有内存映射的内存地址空间及一个或多个执行线程(thread of execution),当然还包括用来存放全局变量的数据段等。实际上，进程就是正在执行的程序代码的实时结果。内核需要有效而又透明地管理所有细节。</p>
 <blockquote>
 <p>所以说，程序本身并不是进程，<strong>进程是处于执行期的程序以及相关资源的总称</strong></p>
 </blockquote>
