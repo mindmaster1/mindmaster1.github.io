@@ -28,11 +28,27 @@
 <meta property="og:site_name" content="一只小码农">
 <meta property="og:description" content="Unix系统下进程与线程相关">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/Process/image01.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/Process/image02.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/Process/image03.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/Process/image04.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/Process/image05.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/Process/image06.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/Process/image07.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/Process/image08.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/Process/image09.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/Process/image10.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/Process/image11.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/Process/image12.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/Process/image13.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/Process/image14.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/Process/image15.png">
 <meta property="article:published_time" content="2022-02-15T17:46:34.000Z">
-<meta property="article:modified_time" content="2022-02-15T12:21:15.106Z">
+<meta property="article:modified_time" content="2022-02-16T03:27:26.277Z">
 <meta property="article:author" content="邢浩东">
 <meta property="article:tag" content="Linux内核">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.mindmaster.top/2022/02/16/Process/image01.png">
 
 <link rel="canonical" href="https://www.mindmaster.top/2022/02/16/Process/">
 
@@ -247,10 +263,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-02-15 17:46:34 / 修改时间：12:21:15" itemprop="dateCreated datePublished" datetime="2022-02-15T17:46:34Z">2022-02-15</time>
+              <time title="创建时间：2022-02-15 17:46:34" itemprop="dateCreated datePublished" datetime="2022-02-15T17:46:34Z">2022-02-15</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-16 03:27:26" itemprop="dateModified" datetime="2022-02-16T03:27:26Z">2022-02-16</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -288,14 +310,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1</span>
+              <span>6.3k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>6 分钟</span>
             </span>
             <div class="post-description">Unix系统下进程与线程相关</div>
 
@@ -308,7 +330,147 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>·</p>
+        <h1 id="Unix-Process"><a href="#Unix-Process" class="headerlink" title="Unix Process"></a>Unix Process</h1><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>进程就是处于执行期的程序(目标码存放在某种存储介质上)。但进程并不仅仅局限于一段可执行程序代码(Unix称其为代码段，text section)，通常<strong>进程还要包含其他资源</strong>，像打开的文件，挂起的信号，内核内部数据，处理器状态，一个或多个具有内存映射的内存地址空间及一个或多个执行线程(thread of execution),当然还包括用来存放全局变量的数据段等。实际上，进程就是正在执行的程序代码的实时结果。内核需要有效而又透明地管理所有细节。</p>
+<blockquote>
+<p>所以说，程序本身并不是进程，<strong>进程是处于执行期的程序以及相关资源的总称</strong></p>
+</blockquote>
+<h3 id="进程的两种虚拟机制"><a href="#进程的两种虚拟机制" class="headerlink" title="进程的两种虚拟机制"></a>进程的两种虚拟机制</h3><ul>
+<li><p>虚拟处理器</p>
+<p>虽然实际上可能是 许多进程正在分享一个处理器，但虚拟处理器给进程一种假象，让这些进程觉得自己在独享处理器</p>
+</li>
+<li><p>虚拟内存</p>
+<p>虚拟内存让进程在分配和管理内存时觉得自己拥有整个 系统的所有内存资源。</p>
+</li>
+</ul>
+<h2 id="进程描述符"><a href="#进程描述符" class="headerlink" title="进程描述符"></a>进程描述符</h2><p>内核把<strong>进程的列表</strong>存放在叫做<strong>任务队列(task list©)的双向循环链表</strong>中。链表中的每一 项都是类型为task_struct、称为<strong>进程描述符</strong>(process descriptor)的结构，该结构定义在＜linux/ sched.h＞文件中。<strong>进程描述符中包含一个具体进程的所有信息</strong>。</p>
+<p>进程描述符中包含的数据能完整 地描述一个正在执行的程序：它打开的文件，进程的地址空间，挂起的信号，进程的状态，还有其他更多信息</p>
+ <img data-src="/2022/02/16/Process/image01.png" class>
+
+<h3 id="分配进程描述符-slab-thread-info"><a href="#分配进程描述符-slab-thread-info" class="headerlink" title="分配进程描述符(slab+thread_info)"></a>分配进程描述符(slab+thread_info)</h3><p>Linux通过<strong>slab分配器</strong>分配task_struct结构，这样能达到<strong>对象复用</strong>和<strong>缓存着色</strong>（cache coloring）</p>
+<p>在2.6以前的内核中，各个进程的task_struct存放在它们 内核栈的尾端。这样做是为了让那些像x86那样寄存器较少的硬件体系结构只要通过栈指针就能计算出它的位置，而避免使用额外的寄存器专门记录。由于现在用slab分配器动态生成task_ struct,所以只需在栈底（对于向下增长的栈来说）或栈顶（对于向上增长的栈来说）创建一个 新的结构 struct thread_info 。</p>
+  <img data-src="/2022/02/16/Process/image02.png" class>
+
+
+
+ <img data-src="/2022/02/16/Process/image03.png" class>
+
+<p>每个任务的thread_info结构在它的内核栈的尾端分配。结构中task域中存放的是指向该任 务实际task_struct的指针。</p>
+<h3 id="进程描述符的存放"><a href="#进程描述符的存放" class="headerlink" title="进程描述符的存放"></a>进程描述符的存放</h3><p>内核通过一个唯一的进程标识值（process identification value）或<strong>PID</strong>来标识每个进程。PID是 一个数，表示为pid_t隐含类型,实际上就是一个int类型。为了与老版本的Unix和Linux兼容， PID的最大值默认设置为32768 （short int短整型的最大值,），这个最大值很重要，因为它实际上就是系统中允许同时存在的进程的最大数目。尽管这个值也可以增加到高达400万 （这受&lt;linux/threads.h＞中所定义PID最大值的限制）。内核把每个进程的PID存放在它们各自的进程描述符中。 </p>
+<p>在内核中，<strong>访问任务通常需要获得指向其task_struct的指针</strong>。实际上，内核中大部分处理进程的代码都是直接通过task_struct进行的。因此，通过<strong>current宏査找到当前正在运行进程</strong>的进程描述符的速度就显得尤为重要。硬件体系结构不同，该宏的实现也不同，它必须针对专门的硬件体系结构做处理。</p>
+<ul>
+<li>有的硬件体系结构可以拿出一个专门寄存器来存放指向当前进程task_struct 的指针，用于加快访问速度。</li>
+<li>像x86这样的体系结构（其寄存器并不富余），就只能在内 核栈的尾端创建thread_info结构，通过计算偏移间接地查找task_struct结构。 </li>
+</ul>
+<h3 id="进程状态"><a href="#进程状态" class="headerlink" title="进程状态"></a>进程状态</h3><p>进程描述符中的state域描述了进程的当前状态，系统中的每个进程都必然处于五种进程状态中的一种。该域的值也必为下列五种状态标志之一:</p>
+<ul>
+<li><p><strong>TASK_RUNNING</strong> （运行）— 进程是可执行的；它或者正在执行，或者在运行队列中等待执行。这是进程在用户空间中执行的唯一可能的状态； 这种状态也可以应用到内核空间中正在执行的进程。</p>
+</li>
+<li><p>**TASK_INTERRUPTIBLE **（可中断）— 进程正在睡眠（也就是说它被阻塞），等待某些条 件的达成。一旦这些条件达成，内核就会把进程状态设置为运行。处于此状态的进程也会 因为接收到信号而提前被唤醒并随时准备投入运行</p>
+</li>
+<li><p>**TASK_UNINTERRUPTIBLE **（不可中断）— 除了就算是接收到信号也不会被唤醒或准备 投入运行外，这个状态与可打断状态相同。这个状态通常在进程必须在等待时不受干扰或 等待事件很快就会发生时出现。由于处于此状态的任务对信号不做响应，所以较之可中断 状态e,使用得较少。</p>
+</li>
+<li><p><strong>_TASK_TRACED</strong>—被其他进程跟踪的进程，例如通过ptrace对调试程序进行跟踪。</p>
+</li>
+<li><p>**_TASK_STOPPED **（停止）— 进程停止执行；进程没有投入运行也不能投入运行。通常这种状态发生在接收到SIGSTOP、SIGTSTP, SIGTTIN, SIGTTOU等信号的时候。此外, 在调试期间接收到任何信号，都会使进程进入这种状态。</p>
+<img data-src="/2022/02/16/Process/image04.png" class>
+
+</li>
+</ul>
+<h3 id="设置当前进程状态"><a href="#设置当前进程状态" class="headerlink" title="设置当前进程状态"></a>设置当前进程状态</h3> <img data-src="/2022/02/16/Process/image05.png" class>
+
+
+
+<h3 id="进程上下文"><a href="#进程上下文" class="headerlink" title="进程上下文"></a>进程上下文</h3><p>可执行程序代码是进程的重要组成部分。这些代码从一个可执行文件载入到进程的地址空间 执行。一般程序在用户空间执行。当一个程序调执行了系统调用或者触发了某个 异常，它就<strong>陷入了内核空间</strong>。此时，我们称内核“代表进程执行”并<strong>处于进程上下文</strong>中。在此上下文中current宏是有效的°。除非在此间隙有更高优先级的进程需要执行并由调度器做出了相应调整，否则在内核退出的时候，程序恢复在用户空间会继续执行。 系统调用和异常处理程序是对内核明确定义的接口。进程只有通过这些接口才能陷入内核 执行— 对内核的所有访问都必须通过这些接口。</p>
+<p>​    </p>
+<h3 id="进程家族树"><a href="#进程家族树" class="headerlink" title="进程家族树"></a>进程家族树</h3><p>Unix系统的进程之间存在一个明显的继承关系，在Linux系统中也是如此。所有的进程都 是PID为1的init进程的后代。内核在系统启动的最后阶段启动init进程。该进程读取系统的初 始化脚本(initscript)并执行其他的相关程序，最终完成系统启动的整个过程</p>
+<p>系统中的每个进程必有一个父进程，相应的，每个进程也可以拥有零个或多个子进程。拥 有同一个父进程的所有进程被称为兄弟。<strong>进程间的关系存放在进程描述符中</strong>。每个task_struct都 包含一个指向其<strong>父进程tast_struct</strong>、叫做<strong>parent</strong>的指针，还包含一个称为<strong>children的子进程链表</strong>。 所以。</p>
+<ul>
+<li>对于当前进程，通过下面的代码获得其父进程的进程描述符：</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span> *<span class="title">my_parent</span> =</span>  current-&gt;parent;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>通过以下方式访问子进程</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span> *<span class="title">task</span>;</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> *<span class="title">list</span>;</span></span><br><span class="line"></span><br><span class="line">list_for_each(<span class="built_in">list</span>,&amp;current-&gt;children)&#123;</span><br><span class="line">    task = list_entry(<span class="built_in">list</span>,struct task_struct,sibling); <span class="comment">//task指向当前的某个子进程</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+ <img data-src="/2022/02/16/Process/image06.png" class>
+
+<h2 id="进程创建（fork-exec）"><a href="#进程创建（fork-exec）" class="headerlink" title="进程创建（fork+exec）"></a>进程创建（fork+exec）</h2><p>在新的地址空间创建线程，读入可执行文件，最后开始执行。</p>
+<blockquote>
+<p>fork</p>
+</blockquote>
+<p><strong>拷贝当前进程创建一个子进程</strong>。子进程与父进程的区别仅仅在于PID (每个进程唯一)、PPID (父进程的进程号，子进程将其设置为被拷贝进程的PID)和某些资源和统计量(例如，挂起的信号，它没有必要被继承)。</p>
+<blockquote>
+<p>exec</p>
+</blockquote>
+<p><strong>exec()函数负责读取可执行文件并将其载入地址空间开始运行</strong>。把这两个函数组合起来使用的效果跟其他系统使用的单一函数的效果相似。</p>
+<h3 id="写时拷贝"><a href="#写时拷贝" class="headerlink" title="写时拷贝"></a>写时拷贝</h3><p>传统的fork()系统调用<strong>直接把所有的资源复制给新创建的进程</strong></p>
+<p>Linux的fbrk()使用写时拷贝(copy-on-write)页实现。写时拷贝是一种可以推迟甚至免除拷贝数据的技术。内核此时并不复制整个进程地址空间，而是让父进程和子进程共享同一个拷贝。</p>
+<p><strong>只有在需要写入的时候</strong>，数据才会被复制，从而使各个进程拥有各自的拷贝。也就是说，资 源的复制只有在需要写入的时候才进行，在此之前，<strong>只是以只读方式共享</strong>。这种技术使地址空间 上的页的拷贝被推迟到实际发生写入的时候才进行。在页根本不会被写入的情况下(举例来说， fork。后立即调用exec())它们就无须复制了</p>
+<p><strong>fork()的实际开销就是复制父进程的页表以及给子进程创建唯一的进程描述符</strong>。在一般情况 下，进程创建后都会马上运行一个可执行的文件，这种优化可以避免拷贝大量根本就不会被使用的数据(地址空间里常常包含数十兆的数据)。由于Unix强调进程快速执行的能力，所以这个优化是很重要的。</p>
+<h3 id="frok-函数"><a href="#frok-函数" class="headerlink" title="frok()函数"></a>frok()函数</h3><p>Linux通过<strong>clone()系统调用</strong>实现fork()。这个调用通过一系列的参数标志来指明父、子进程需要共享的资源</p>
+<blockquote>
+<p>fbrk()、▼fork和_clone () 库函数都<strong>根据各自需要的参数</strong>标志去调用clone(),然后由clone()去调用do_fork().</p>
+</blockquote>
+<p>do_fork完成了创建中的大部分工作，它的定义在kernel/fork.c文件中。该函数调用copy_ process()函数，然后让进程开始运行。</p>
+<p>**copy_process()**函数流程如下：</p>
+ <img data-src="/2022/02/16/Process/image07.png" class>
+
+ <img data-src="/2022/02/16/Process/image08.png" class>
+
+<p>再回到do_fork()函数，如果copy_process()函数成功返回，新创建的子进程被唤醒并让其 投入运行。<strong>内核有意选择子进程首先执行</strong>°。因为一般子进程都会马上调用exec()函数，这样可 以避免写时拷贝的额外开销，如果父进程首先执行的话，有可能会开始向地址空间写入。</p>
+<h3 id="vfork-函数"><a href="#vfork-函数" class="headerlink" title="vfork()函数"></a>vfork()函数</h3> <img data-src="/2022/02/16/Process/image09.png" class>
+
+<h2 id="线程在Linux中的实现"><a href="#线程在Linux中的实现" class="headerlink" title="线程在Linux中的实现"></a>线程在Linux中的实现</h2><p>线程机制是现代编程技术中常用的一种抽象概念。该机制提供了在同一程序内共享内存地址 空间运行的一组线程。这些线程还可以共享打开的文件和其他资源。线程机制<strong>支持并发</strong>程序设计 技术(concurrentprogramming),在多处理器系统上，它也能<strong>保证真正的并行处理</strong>(parallelism)。</p>
+<p>Linux实现线程的机制非常独特。从内核的角度来说，它并没有线程这个概念。<strong>Linux把所有的线程都当做进程来实现</strong>。<strong>内核并没有准备特别的调度算法或是定义特别的数据结构来表征线程</strong>。相反，线程仅仅被视为一个与其他进程共享某些资源的进程。每个线程都拥有唯一隶属于自 己的task_struct,所以在内核中，它看起来就像是一个普通的进程(只是线程和其他一些进程共 享某些资源，如地址空间)。</p>
+<p>上述线程机制的实现与Microsoft Windows或是Sun Solaris等操作系统的实现差异非常 大。这些系统都在内核中提供了专门支持线程的机制(这些系统常常把线程称作轻量级进程 (lightweight processes))o “轻量级进程”这种叫法本身就概括了 Linux在此处与其他系统的差 异。在其他的系统中，相较于重量级的进程，线程被抽象成一种耗费较少资源，运行迅速的执行单元。而对于**<em>Linux来说，它只是一种进程间共享资源的手段(**</em>Linux的进程本身就够轻量级了)°。 举个例子来说，假如我们有一个包含四个线程的进程，在提供专门线程支持的系统中，通常会有 一个包含指向四个不同线程的指针的进程描述符。该描述符负责描述像地址空间、打开的文件这 样的共享资源。线程本身再去描述它独占的资源。相反，Linux仅仅<strong>创建四个进程并分配四个普通的task_sturct结构</strong>。建立这四个进程时指定他们共享某些资源，这是相当高雅的做法。</p>
+<h3 id="创建线程"><a href="#创建线程" class="headerlink" title="创建线程"></a>创建线程</h3><p>线程的创建和普通进程的创建类似，只不过在调用clone()的时候需要传递一些参数标志来指明需要共享的资源：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clone(CLONE_VM | CLONE_FS |CLONE_FILES |CLONE_SIGHAND,<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<p>传递给clone()的参数标志决定了新创建进程的行为方式和父子进程之间共享的资源种类。</p>
+ <img data-src="/2022/02/16/Process/image10.png" class>
+
+ <img data-src="/2022/02/16/Process/image11.png" class>
+
+
+
+<h3 id="内核线程"><a href="#内核线程" class="headerlink" title="内核线程"></a>内核线程</h3><p>内核经常需要在后台执行一些操作。这种任务可以通过内核线程(kernel thread)完成— 独立运行在内核空间的标准进程。内核线程和普通的进程间的区别在于内核线程**<em>没有独立的地址空间**</em>(实际上指向地址空间的mm指针被设置为NULL).它们<strong>只在内核空间运行</strong>，<strong>从来不切到用户空间</strong>去。内核进程和普通进程一样，可以被调度，也可以被抢占。</p>
+<p>在装有Linux系统的机子上运行<strong>ps -ef</strong>命令，你可以看到内核线程，有很多！这些线程在系统启 动时由另外一些内核线程创建。实际上，内核线程也只能由其他内核线程创建。<strong>内核是通过从 kthreadd内核进程中衍生出所有新的内核线程来自动处理这一点的</strong>。创建的进程处于不可运行状态，如果不通过调用<strong>wake_up_process()</strong> 明确地唤醒它，它不会主动运行。创建一个进程并让它运行起来，可以通过调用<strong>kthread_run()</strong> 来达到</p>
+ <img data-src="/2022/02/16/Process/image12.png" class>
+
+<p><strong>kthread_run()</strong> 宏实现</p>
+ <img data-src="/2022/02/16/Process/image13.png" class>
+
+<p>内核线程启动后就一直运行直到调用do_exit()退出，或者内核的其他部分调用kthread_ stop()退出，传递给kthread_stop()的参数为kthread_create()函数返回的task struct结构的地址：</p>
+<blockquote>
+<p>int kthread_stop(struct task_struct *k)</p>
+</blockquote>
+<h2 id="进程的终结"><a href="#进程的终结" class="headerlink" title="进程的终结"></a>进程的终结</h2><blockquote>
+<p>当一个进程终结时，内核必须释放它所占有的资源 并把这一不幸告知其父进程。</p>
+</blockquote>
+<p>进程的析构是自身引起的。它发生在进程<strong>调用exit()系统调用</strong>时，</p>
+<ul>
+<li><p>既可能显式地调用这个系统调用</p>
+</li>
+<li><p>也可能隐式地从某个程序的主函数返回(其实C语言编译器会在main() 函数的返回点后面放置调用exit()的代码)。</p>
+</li>
+<li><p>当进程接受到它既不能处理也不能忽略的信号或异 常时，它还可能被动地终结。</p>
+<p>不管进程是怎么终结的，该任务大部分都要靠<strong>do_exit()</strong>(定义于 kemel/exitx)来完成，</p>
+</li>
+</ul>
+<p>do_exit完成的工作</p>
+ <img data-src="/2022/02/16/Process/image14.png" class>
+
+<p>的进程不会再被调度，所以这是进程所执行的最后一段代码。do_exit()永不返回。</p>
+<p>与进程相关联的<strong>所有资源都被释放掉了</strong>(假设该进程是这些资源的唯一使用者)。进程<strong>不可运行</strong>(实际上也没有地址空间让它运行)并处于<strong>EXIT_ZOMBIE</strong>退出状态。它占用的所 有内存就是内核栈、thread_infb结构和tast_struct结构。此时<strong>进程存在的唯一目的就是向它的父进程提供信息</strong>。父进程检索到信息后，或者通知内核那是无关的信息后，由进程所持有的剩余内 存被释放，归还给系统使用。</p>
+<h3 id="删除进程描述符"><a href="#删除进程描述符" class="headerlink" title="删除进程描述符"></a>删除进程描述符</h3><p>在调用了 do_exit()之后，尽管线程已经僵死不能再运行了，但是系统还<strong>保留了它的进程描述符</strong>。这样做可以让系统有办法在子进程终结后仍能获得它的信息。因此，**<em>进程终结时所需的清理工作和进程描述符的删除被分开执行**</em>。在父进程获得已终结的子进程的信息后，或者通知内核它并不关注那些信息后，子进程的task_struct结构才被释放。 </p>
+ <img data-src="/2022/02/16/Process/image15.png" class>
+
+<h3 id="孤儿进程（父进程在子进程之前推出）"><a href="#孤儿进程（父进程在子进程之前推出）" class="headerlink" title="孤儿进程（父进程在子进程之前推出）"></a>孤儿进程（父进程在子进程之前推出）</h3><p>如果<strong>父进程在子进程之前退出</strong>，必须有机制来保证子进程能找到一个新的父亲，否则这些成为孤儿的进程就会在退出时永远处于僵死状态，白白地耗费内存。</p>
+<p><strong>解决方法</strong>给子进程在当前线程组内找一个线程作为父亲，如果不行，就让init做它们的父进程。在do_exit()中会调用exit_notify(),该函数会调用fbrget_original_parent(),而后者会调用find_new_reaper()来执行寻父过程：</p>
+<p>一旦系统为进程成功地找到和设置了新的父进程，就不会再有出现驻留僵死进程的危险了。 init进程会例行调用wait()来检查其子进程，清除所有与其相关的僵死进程。</p>
+<p>父进程通过wait()系统调用族来收集其后代信息</p>
 
     </div>
 
@@ -429,6 +591,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Unix-Process"><span class="nav-number">1.</span> <span class="nav-text">Unix Process</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.</span> <span class="nav-text">基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E4%B8%A4%E7%A7%8D%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%88%B6"><span class="nav-number">1.1.1.</span> <span class="nav-text">进程的两种虚拟机制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E6%8F%8F%E8%BF%B0%E7%AC%A6"><span class="nav-number">1.2.</span> <span class="nav-text">进程描述符</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E9%85%8D%E8%BF%9B%E7%A8%8B%E6%8F%8F%E8%BF%B0%E7%AC%A6-slab-thread-info"><span class="nav-number">1.2.1.</span> <span class="nav-text">分配进程描述符(slab+thread_info)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E6%8F%8F%E8%BF%B0%E7%AC%A6%E7%9A%84%E5%AD%98%E6%94%BE"><span class="nav-number">1.2.2.</span> <span class="nav-text">进程描述符的存放</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%8A%B6%E6%80%81"><span class="nav-number">1.2.3.</span> <span class="nav-text">进程状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E5%BD%93%E5%89%8D%E8%BF%9B%E7%A8%8B%E7%8A%B6%E6%80%81"><span class="nav-number">1.2.4.</span> <span class="nav-text">设置当前进程状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="nav-number">1.2.5.</span> <span class="nav-text">进程上下文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E5%AE%B6%E6%97%8F%E6%A0%91"><span class="nav-number">1.2.6.</span> <span class="nav-text">进程家族树</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%EF%BC%88fork-exec%EF%BC%89"><span class="nav-number">1.3.</span> <span class="nav-text">进程创建（fork+exec）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%99%E6%97%B6%E6%8B%B7%E8%B4%9D"><span class="nav-number">1.3.1.</span> <span class="nav-text">写时拷贝</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#frok-%E5%87%BD%E6%95%B0"><span class="nav-number">1.3.2.</span> <span class="nav-text">frok()函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vfork-%E5%87%BD%E6%95%B0"><span class="nav-number">1.3.3.</span> <span class="nav-text">vfork()函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E5%9C%A8Linux%E4%B8%AD%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.4.</span> <span class="nav-text">线程在Linux中的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%BA%BF%E7%A8%8B"><span class="nav-number">1.4.1.</span> <span class="nav-text">创建线程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B"><span class="nav-number">1.4.2.</span> <span class="nav-text">内核线程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E7%BB%88%E7%BB%93"><span class="nav-number">1.5.</span> <span class="nav-text">进程的终结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E8%BF%9B%E7%A8%8B%E6%8F%8F%E8%BF%B0%E7%AC%A6"><span class="nav-number">1.5.1.</span> <span class="nav-text">删除进程描述符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%A4%E5%84%BF%E8%BF%9B%E7%A8%8B%EF%BC%88%E7%88%B6%E8%BF%9B%E7%A8%8B%E5%9C%A8%E5%AD%90%E8%BF%9B%E7%A8%8B%E4%B9%8B%E5%89%8D%E6%8E%A8%E5%87%BA%EF%BC%89"><span class="nav-number">1.5.2.</span> <span class="nav-text">孤儿进程（父进程在子进程之前推出）</span></a></li></ol></li></ol></li></ol></div>
 
       </div>
       <!--/noindex-->
@@ -563,13 +726,13 @@ setInterval(function(){
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">291k</span>
+    <span title="站点总字数">297k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">4:25</span>
+    <span title="站点阅读时长">4:30</span>
 </div>
 
 
