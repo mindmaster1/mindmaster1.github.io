@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>AOP</title>
+    <url>/2021/03/14/AOP/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>5G下的云网融合</title>
     <url>/2021/10/07/5G%E4%B8%8B%E7%9A%84%E4%BA%91%E7%BD%91%E8%9E%8D%E5%90%88/</url>
     <content><![CDATA[]]></content>
@@ -15,11 +20,6 @@
       <tags>
         <tag>Ajax</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>AOP</title>
-    <url>/2021/03/14/AOP/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Cookie</title>
@@ -86,6 +86,11 @@
       </tags>
   </entry>
   <entry>
+    <title>Druid数据库连接池</title>
+    <url>/2021/03/14/Druid%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Filter</title>
     <url>/2021/02/25/Filter/</url>
     <content><![CDATA[]]></content>
@@ -95,11 +100,6 @@
       <tags>
         <tag>Filter</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Druid数据库连接池</title>
-    <url>/2021/03/14/Druid%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>HTTP代理</title>
@@ -3131,11 +3131,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>垃圾收集器与内存分配策略</title>
-    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>在Linux环境安装redis</title>
     <url>/2021/03/18/%E5%9C%A8Linux%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85redis/</url>
     <content><![CDATA[<h2 id="开发环境搭建"><a href="#开发环境搭建" class="headerlink" title="开发环境搭建"></a>开发环境搭建</h2><h3 id="云服务器部署redis"><a href="#云服务器部署redis" class="headerlink" title="云服务器部署redis"></a>云服务器部署redis</h3><h4 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h4><blockquote>
@@ -3221,89 +3216,13 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>基于XML的DI</title>
-    <url>/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/</url>
-    <content><![CDATA[<h2 id="基于XML的DI"><a href="#基于XML的DI" class="headerlink" title="基于XML的DI"></a>基于XML的DI</h2> <img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/01.png" class>
-
-<p>bean 实例在调用无参构造器创建对象后，就要对 bean 对象的属性进行初始化。初始化 是由容器自动完成的，称为注入。</p>
-<p>根据注入方式的不同，常用的有两类：set注入、构造注入</p>
-<h3 id="set注入"><a href="#set注入" class="headerlink" title="set注入"></a>set注入</h3><blockquote>
-<p>set注入</p>
-</blockquote>
-<p>set注入，又叫设值注入，通过<strong>setter 方法</strong>传入被调用者的实例。这种注入方式简单、 直观，因而在 Spring 的依赖注入中大量使用。</p>
-<ul>
-<li><h4 id="简单类型"><a href="#简单类型" class="headerlink" title="简单类型"></a>简单类型</h4></li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">student</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setEmail</span><span class="params">(String email)</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;myemail:&quot;</span> + email);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;studenet&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, age=&quot;</span> + age +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>配置文件</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"> <span class="comment">&lt;!--声明student对象--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;mystudent&quot;</span>  <span class="attr">class</span>=<span class="string">&quot;com.bytedance.ba01.student&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;张三&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;age&quot;</span> <span class="attr">value</span>=<span class="string">&quot;12&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;email&quot;</span> <span class="attr">value</span>=<span class="string">&quot;xinghaodong123@163.com&quot;</span>/&gt;</span></span><br><span class="line"><span class="comment">&lt;!--说明不一定是属性才可以注入，spring关心的只是name对应的有没有set方法，有即可设置--&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>创建java.util.Date，并设置初始的日期时间</p>
-</blockquote>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;bean id=<span class="string">&quot;mydate&quot;</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">&quot;java.util.Date&quot;</span>&gt;</span><br><span class="line">        &lt;property name=<span class="string">&quot;time&quot;</span> value=<span class="string">&quot;123&quot;</span>/&gt;</span><br><span class="line">&lt;!--Date类里面有setTime方法--&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br></pre></td></tr></table></figure>
-
-
-<ul>
-<li><h4 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h4></li>
-</ul>
-<p>当指定 bean 的某属性值为另一 bean 的实例时，通过 ref 指定它们间的引用关系。ref 的值必须为某 bean 的 id 值。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line">    <span class="keyword">private</span> School school;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//setter</span></span><br><span class="line">    <span class="comment">//toString()</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;mystudent&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.bytedance.ba02.student&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;lisi&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;age&quot;</span> <span class="attr">value</span>=<span class="string">&quot;12&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;email&quot;</span> <span class="attr">value</span>=<span class="string">&quot;22&quot;</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;myschool&quot;</span> <span class="attr">ref</span>=<span class="string">&quot;myschool&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 声明school对象--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;myschool&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.bytedance.ba02.school&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;北京大学&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;address&quot;</span> <span class="attr">value</span>=<span class="string">&quot;北京市海淀区&quot;</span>/&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="构造注入"><a href="#构造注入" class="headerlink" title="构造注入"></a>构造注入</h3><p>构造注入是指，在构造调用者实例的同时，完成被调用者的实例化。即使用构造器设置依赖关系。</p>
- <img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/02.png" class>
-
-
-
-<p>标签中用于指定参数的属性有：</p>
-<p> ➢ name：指定参数名称。 </p>
-<p>➢ index：指明该参数对应着构造器的第几个参数，从 0 开始。不过，该属性不要也行， 但要注意，若参数类型相同，或之间有包含关系，则需要保证赋值顺序要与构造器中的参数 顺序一致。</p>
- <img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/03.png" class>
-
-
-
-<h3 id="引用类型属性自动注入"><a href="#引用类型属性自动注入" class="headerlink" title="引用类型属性自动注入"></a>引用类型属性自动注入</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">引用类型的自动注入</span><br><span class="line">spring框架根据某些规则可以给“引用类型”赋值，自动注入，不需要程序员再给引用类型赋值了</span><br><span class="line">使用的规则常用的是byName,byType</span><br><span class="line">1.byName(按名称注入)：Java类中引用类型的属性名称和spring容器中（配置文件）&lt;bean&gt;的id的名称一样，数据类型一样，这样的容器中的bean，spring能够赋值给引用类型</span><br><span class="line">    语法规则：</span><br><span class="line">    &lt;bean id&#x3D;&quot;xx&quot;,class&#x3D;&quot;yy&quot; autowire&#x3D;&quot;byname&quot;&gt;</span><br><span class="line">        简单类型属性赋值</span><br><span class="line">     &lt;&#x2F;bean&gt;</span><br><span class="line"></span><br><span class="line">2.byType(按照类型注入)：Java类中引用类型的数据类型和spring容器中（配置文件）&lt;bean&gt;的class属性是同源关系，这样的bean,spring能够赋值给引用类型</span><br><span class="line">    同源就是一类的意思：</span><br><span class="line">    1.java类中引用类型的数据类型和bean的class的值是一样的</span><br><span class="line">    2.Java类中的引用类型的数据类型和bean的class的值是父子类关系</span><br><span class="line">    3.java类中的引用类型的数据类型和bean的class的值是接口与实现类的关系</span><br></pre></td></tr></table></figure>
- <img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/04.png" class>
-
-
-
-<p>具体说明：</p>
-<ul>
-<li><h4 id="byName方式自动注入"><a href="#byName方式自动注入" class="headerlink" title="byName方式自动注入"></a>byName方式自动注入</h4><p>当配置文件中被调用者 bean 的 id 值与代码中调用者 bean 类的属性名相同时，可使用 byName 方式，让容器自动将被调用者 bean 注入给调用者 bean。容器是通过调用者的 bean 类的引用类型属性名与配置文件的被调用者 bean 的 id 进行比较而实现自动注入的。</p>
-<img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/05.png" class>
-
-
-
-</li>
-</ul>
-<ul>
-<li><h4 id="byType自动注入"><a href="#byType自动注入" class="headerlink" title="byType自动注入"></a>byType自动注入</h4><p>使用 byType 方式自动注入，要求：配置文件中被调用者 bean 的 class 属性指定的类， 要与代码中调用者 bean 类的某引用类型属性类型同源。即要么相同，要么有 is-a 关系（子 类，或是实现类）。但这样的同源的被调用 bean 只能有一个。多于一个，容器就不知该匹配哪一个了。</p>
-<img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/06.png" class>
-
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">如果出现同源类在XML文件中出现两个类，只能保留一个，否则会出现BeanDefinitionParsingException异常</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="为应用指定多个Spring配置文件"><a href="#为应用指定多个Spring配置文件" class="headerlink" title="为应用指定多个Spring配置文件"></a>为应用指定多个Spring配置文件</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> spring-total表示主配置文件：用以包含其他的配置文件，主配置文件一般是不定义对象的。</span><br><span class="line">       语法：&lt;import resource&#x3D;&quot;其他配置文件的路径&quot;&#x2F;&gt;</span><br><span class="line">       关键字：“classpath”：表示类路径（class文件所在的目录的target路径下;）</span><br><span class="line">       在spring的配置文件中要指定其他文件的位置，需要使用classpath，告诉spring到哪里去加载读取文件</span><br><span class="line">        </span><br><span class="line">在具有包含关系的配置文件中，可以使用通配符（*：表示任意字符） 且这些文件必须在resources下面的一级目录下 。 </span><br><span class="line">使用多配置文件时，不能将主文件自身包括进自生主文件</span><br></pre></td></tr></table></figure>
- <img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/07.png" class>
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>spring框架</category>
-      </categories>
-      <tags>
-        <tag>IOC</tag>
-      </tags>
+    <title>垃圾收集器与内存分配策略</title>
+    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>基础注解的DI</title>
-    <url>/2021/02/28/%E5%9F%BA%E7%A1%80%E6%B3%A8%E8%A7%A3%E7%9A%84DI/</url>
+    <title>客户端识别与Cookie</title>
+    <url>/2021/03/14/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%AF%86%E5%88%AB%E4%B8%8ECookie/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -3327,11 +3246,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>字符串</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>客户端识别与Cookie</title>
-    <url>/2021/03/14/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%AF%86%E5%88%AB%E4%B8%8ECookie/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>封装Mybatis输出结果与模糊查询</title>
@@ -3633,6 +3547,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <content><![CDATA[]]></content>
   </entry>
   <entry>
+    <title>基础注解的DI</title>
+    <url>/2021/02/28/%E5%9F%BA%E7%A1%80%E6%B3%A8%E8%A7%A3%E7%9A%84DI/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Vue模板语法</title>
     <url>/2021/03/07/%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95/</url>
     <content><![CDATA[<h2 id="模板语法"><a href="#模板语法" class="headerlink" title="模板语法"></a>模板语法</h2><p>Vue.js 使用了基于 HTML 的模板语法，允许开发者声明式地将 DOM 绑定至底层 Vue 实例的数据。所有 Vue.js 的模板都是合法的 HTML，所以能被遵循规范的浏览器和 HTML 解析器解析。</p>
@@ -3908,6 +3827,87 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </categories>
       <tags>
         <tag>JAVA</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>基于XML的DI</title>
+    <url>/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/</url>
+    <content><![CDATA[<h2 id="基于XML的DI"><a href="#基于XML的DI" class="headerlink" title="基于XML的DI"></a>基于XML的DI</h2> <img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/01.png" class>
+
+<p>bean 实例在调用无参构造器创建对象后，就要对 bean 对象的属性进行初始化。初始化 是由容器自动完成的，称为注入。</p>
+<p>根据注入方式的不同，常用的有两类：set注入、构造注入</p>
+<h3 id="set注入"><a href="#set注入" class="headerlink" title="set注入"></a>set注入</h3><blockquote>
+<p>set注入</p>
+</blockquote>
+<p>set注入，又叫设值注入，通过<strong>setter 方法</strong>传入被调用者的实例。这种注入方式简单、 直观，因而在 Spring 的依赖注入中大量使用。</p>
+<ul>
+<li><h4 id="简单类型"><a href="#简单类型" class="headerlink" title="简单类型"></a>简单类型</h4></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">student</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setEmail</span><span class="params">(String email)</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;myemail:&quot;</span> + email);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;studenet&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, age=&quot;</span> + age +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>配置文件</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"> <span class="comment">&lt;!--声明student对象--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;mystudent&quot;</span>  <span class="attr">class</span>=<span class="string">&quot;com.bytedance.ba01.student&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;张三&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;age&quot;</span> <span class="attr">value</span>=<span class="string">&quot;12&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;email&quot;</span> <span class="attr">value</span>=<span class="string">&quot;xinghaodong123@163.com&quot;</span>/&gt;</span></span><br><span class="line"><span class="comment">&lt;!--说明不一定是属性才可以注入，spring关心的只是name对应的有没有set方法，有即可设置--&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>创建java.util.Date，并设置初始的日期时间</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;bean id=<span class="string">&quot;mydate&quot;</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">&quot;java.util.Date&quot;</span>&gt;</span><br><span class="line">        &lt;property name=<span class="string">&quot;time&quot;</span> value=<span class="string">&quot;123&quot;</span>/&gt;</span><br><span class="line">&lt;!--Date类里面有setTime方法--&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+
+
+<ul>
+<li><h4 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h4></li>
+</ul>
+<p>当指定 bean 的某属性值为另一 bean 的实例时，通过 ref 指定它们间的引用关系。ref 的值必须为某 bean 的 id 值。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line">    <span class="keyword">private</span> School school;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//setter</span></span><br><span class="line">    <span class="comment">//toString()</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;mystudent&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.bytedance.ba02.student&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;lisi&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;age&quot;</span> <span class="attr">value</span>=<span class="string">&quot;12&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;email&quot;</span> <span class="attr">value</span>=<span class="string">&quot;22&quot;</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;myschool&quot;</span> <span class="attr">ref</span>=<span class="string">&quot;myschool&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 声明school对象--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;myschool&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.bytedance.ba02.school&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;北京大学&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;address&quot;</span> <span class="attr">value</span>=<span class="string">&quot;北京市海淀区&quot;</span>/&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="构造注入"><a href="#构造注入" class="headerlink" title="构造注入"></a>构造注入</h3><p>构造注入是指，在构造调用者实例的同时，完成被调用者的实例化。即使用构造器设置依赖关系。</p>
+ <img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/02.png" class>
+
+
+
+<p>标签中用于指定参数的属性有：</p>
+<p> ➢ name：指定参数名称。 </p>
+<p>➢ index：指明该参数对应着构造器的第几个参数，从 0 开始。不过，该属性不要也行， 但要注意，若参数类型相同，或之间有包含关系，则需要保证赋值顺序要与构造器中的参数 顺序一致。</p>
+ <img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/03.png" class>
+
+
+
+<h3 id="引用类型属性自动注入"><a href="#引用类型属性自动注入" class="headerlink" title="引用类型属性自动注入"></a>引用类型属性自动注入</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">引用类型的自动注入</span><br><span class="line">spring框架根据某些规则可以给“引用类型”赋值，自动注入，不需要程序员再给引用类型赋值了</span><br><span class="line">使用的规则常用的是byName,byType</span><br><span class="line">1.byName(按名称注入)：Java类中引用类型的属性名称和spring容器中（配置文件）&lt;bean&gt;的id的名称一样，数据类型一样，这样的容器中的bean，spring能够赋值给引用类型</span><br><span class="line">    语法规则：</span><br><span class="line">    &lt;bean id&#x3D;&quot;xx&quot;,class&#x3D;&quot;yy&quot; autowire&#x3D;&quot;byname&quot;&gt;</span><br><span class="line">        简单类型属性赋值</span><br><span class="line">     &lt;&#x2F;bean&gt;</span><br><span class="line"></span><br><span class="line">2.byType(按照类型注入)：Java类中引用类型的数据类型和spring容器中（配置文件）&lt;bean&gt;的class属性是同源关系，这样的bean,spring能够赋值给引用类型</span><br><span class="line">    同源就是一类的意思：</span><br><span class="line">    1.java类中引用类型的数据类型和bean的class的值是一样的</span><br><span class="line">    2.Java类中的引用类型的数据类型和bean的class的值是父子类关系</span><br><span class="line">    3.java类中的引用类型的数据类型和bean的class的值是接口与实现类的关系</span><br></pre></td></tr></table></figure>
+ <img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/04.png" class>
+
+
+
+<p>具体说明：</p>
+<ul>
+<li><h4 id="byName方式自动注入"><a href="#byName方式自动注入" class="headerlink" title="byName方式自动注入"></a>byName方式自动注入</h4><p>当配置文件中被调用者 bean 的 id 值与代码中调用者 bean 类的属性名相同时，可使用 byName 方式，让容器自动将被调用者 bean 注入给调用者 bean。容器是通过调用者的 bean 类的引用类型属性名与配置文件的被调用者 bean 的 id 进行比较而实现自动注入的。</p>
+<img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/05.png" class>
+
+
+
+</li>
+</ul>
+<ul>
+<li><h4 id="byType自动注入"><a href="#byType自动注入" class="headerlink" title="byType自动注入"></a>byType自动注入</h4><p>使用 byType 方式自动注入，要求：配置文件中被调用者 bean 的 class 属性指定的类， 要与代码中调用者 bean 类的某引用类型属性类型同源。即要么相同，要么有 is-a 关系（子 类，或是实现类）。但这样的同源的被调用 bean 只能有一个。多于一个，容器就不知该匹配哪一个了。</p>
+<img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/06.png" class>
+
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">如果出现同源类在XML文件中出现两个类，只能保留一个，否则会出现BeanDefinitionParsingException异常</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="为应用指定多个Spring配置文件"><a href="#为应用指定多个Spring配置文件" class="headerlink" title="为应用指定多个Spring配置文件"></a>为应用指定多个Spring配置文件</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> spring-total表示主配置文件：用以包含其他的配置文件，主配置文件一般是不定义对象的。</span><br><span class="line">       语法：&lt;import resource&#x3D;&quot;其他配置文件的路径&quot;&#x2F;&gt;</span><br><span class="line">       关键字：“classpath”：表示类路径（class文件所在的目录的target路径下;）</span><br><span class="line">       在spring的配置文件中要指定其他文件的位置，需要使用classpath，告诉spring到哪里去加载读取文件</span><br><span class="line">        </span><br><span class="line">在具有包含关系的配置文件中，可以使用通配符（*：表示任意字符） 且这些文件必须在resources下面的一级目录下 。 </span><br><span class="line">使用多配置文件时，不能将主文件自身包括进自生主文件</span><br></pre></td></tr></table></figure>
+ <img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/07.png" class>
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>spring框架</category>
+      </categories>
+      <tags>
+        <tag>IOC</tag>
       </tags>
   </entry>
   <entry>
@@ -4220,51 +4220,14 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>组件基础</title>
-    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E5%9F%BA%E7%A1%80/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>组件进阶篇--深入了解组件</title>
     <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E8%BF%9B%E9%98%B6%E7%AF%87-%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E7%BB%84%E4%BB%B6/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>网络服务性能指标</title>
-    <url>/2021/09/25/%E7%BD%91%E7%BB%9C%E6%9C%8D%E5%8A%A1%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87/</url>
-    <content><![CDATA[<h1 id="一、QPS，每秒查询"><a href="#一、QPS，每秒查询" class="headerlink" title="一、QPS，每秒查询"></a>一、QPS，每秒查询</h1><p>QPS：Queries Per Second意思是“每秒查询率”，是一台服务器每秒能够相应的查询次数，是对一个特定的查询服务器在规定时间内所处理流量多少的衡量标准。</p>
-<p>互联网中，作为域名系统服务器的机器的性能经常用每秒查询率来衡量。</p>
-<h1 id="二、TPS，每秒事务"><a href="#二、TPS，每秒事务" class="headerlink" title="二、TPS，每秒事务"></a>二、TPS，每秒事务</h1><p>TPS：是TransactionsPerSecond的缩写，也就是事务数/秒。它是软件测试结果的测量单位。一个事务是指一个客户机向服务器发送请求然后服务器做出反应的过程。客户机在发送请求时开始计时，收到服务器响应后结束计时，以此来计算使用的时间和完成的事务个数。</p>
-<p>QPS vs TPS：QPS基本类似于TPS，但是不同的是，对于一个页面的一次访问，形成一个TPS；但一次页面请求，可能产生多次对服务器的请求，服务器对这些请求，就可计入“QPS”之中。如，访问一个页面会请求服务器2次，一次访问，产生一个“T”，产生2个“Q”。</p>
-<h1 id="三、RT，响应时间"><a href="#三、RT，响应时间" class="headerlink" title="三、RT，响应时间"></a>三、RT，响应时间</h1><p>响应时间：执行一个请求从开始到最后收到响应数据所花费的总体时间,即从客户端发起请求到收到服务器响应结果的时间。</p>
-<p>响应时间RT(Response-time)，是一个系统最重要的指标之一，它的数值大小直接反应了系统的快慢。</p>
-<h1 id="四、并发数"><a href="#四、并发数" class="headerlink" title="四、并发数"></a>四、并发数</h1><p>并发数是指系统同时能处理的请求数量，这个也是反应了系统的负载能力。</p>
-<h1 id="五、吞吐量"><a href="#五、吞吐量" class="headerlink" title="五、吞吐量"></a>五、吞吐量</h1><p>系统的吞吐量（承压能力）与request对CPU的消耗、外部接口、IO等等紧密关联。单个request 对CPU消耗越高，外部系统接口、IO速度越慢，系统吞吐能力越低，反之越高。</p>
-<p>系统吞吐量几个重要参数：QPS（TPS）、并发数、响应时间。</p>
-<ol>
-<li>QPS（TPS）：（Query Per Second）每秒钟request/事务 数量</li>
-<li>并发数： 系统同时处理的request/事务数</li>
-<li>响应时间： 一般取平均响应时间</li>
-</ol>
-<p>理解了上面三个要素的意义之后，就能推算出它们之间的关系：</p>
-<ul>
-<li><strong>QPS（TPS）= 并发数/平均响应时间</strong></li>
-<li><strong>并发数 = QPS*平均响应时间</strong></li>
-</ul>
-<h1 id="六、实际举例"><a href="#六、实际举例" class="headerlink" title="六、实际举例"></a>六、实际举例</h1><p>我们通过一个实例来把上面几个概念串起来理解。按二八定律来看，如果每天 80% 的访问集中在 20% 的时间里，这 20% 时间就叫做峰值时间。</p>
-<ul>
-<li>公式：( 总PV数 * 80% ) / ( 每天秒数 * 20% ) = 峰值时间每秒请求数(QPS)</li>
-<li>机器：峰值时间每秒QPS / 单台机器的QPS = 需要的机器</li>
-</ul>
-<p><strong>1、每天300w PV 的在单台机器上，这台机器需要多少QPS？</strong><br>( 3000000 * 0.8 ) / (86400 * 0.2 ) = 139 (QPS)</p>
-<p><strong>2、如果一台机器的QPS是58，需要几台机器来支持？</strong><br>139 / 58 = 3</p>
-]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>高并发网络性能指标</tag>
-      </tags>
+    <title>组件基础</title>
+    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>编程范式</title>
@@ -4356,6 +4319,43 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </categories>
       <tags>
         <tag>编程范式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>网络服务性能指标</title>
+    <url>/2021/09/25/%E7%BD%91%E7%BB%9C%E6%9C%8D%E5%8A%A1%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87/</url>
+    <content><![CDATA[<h1 id="一、QPS，每秒查询"><a href="#一、QPS，每秒查询" class="headerlink" title="一、QPS，每秒查询"></a>一、QPS，每秒查询</h1><p>QPS：Queries Per Second意思是“每秒查询率”，是一台服务器每秒能够相应的查询次数，是对一个特定的查询服务器在规定时间内所处理流量多少的衡量标准。</p>
+<p>互联网中，作为域名系统服务器的机器的性能经常用每秒查询率来衡量。</p>
+<h1 id="二、TPS，每秒事务"><a href="#二、TPS，每秒事务" class="headerlink" title="二、TPS，每秒事务"></a>二、TPS，每秒事务</h1><p>TPS：是TransactionsPerSecond的缩写，也就是事务数/秒。它是软件测试结果的测量单位。一个事务是指一个客户机向服务器发送请求然后服务器做出反应的过程。客户机在发送请求时开始计时，收到服务器响应后结束计时，以此来计算使用的时间和完成的事务个数。</p>
+<p>QPS vs TPS：QPS基本类似于TPS，但是不同的是，对于一个页面的一次访问，形成一个TPS；但一次页面请求，可能产生多次对服务器的请求，服务器对这些请求，就可计入“QPS”之中。如，访问一个页面会请求服务器2次，一次访问，产生一个“T”，产生2个“Q”。</p>
+<h1 id="三、RT，响应时间"><a href="#三、RT，响应时间" class="headerlink" title="三、RT，响应时间"></a>三、RT，响应时间</h1><p>响应时间：执行一个请求从开始到最后收到响应数据所花费的总体时间,即从客户端发起请求到收到服务器响应结果的时间。</p>
+<p>响应时间RT(Response-time)，是一个系统最重要的指标之一，它的数值大小直接反应了系统的快慢。</p>
+<h1 id="四、并发数"><a href="#四、并发数" class="headerlink" title="四、并发数"></a>四、并发数</h1><p>并发数是指系统同时能处理的请求数量，这个也是反应了系统的负载能力。</p>
+<h1 id="五、吞吐量"><a href="#五、吞吐量" class="headerlink" title="五、吞吐量"></a>五、吞吐量</h1><p>系统的吞吐量（承压能力）与request对CPU的消耗、外部接口、IO等等紧密关联。单个request 对CPU消耗越高，外部系统接口、IO速度越慢，系统吞吐能力越低，反之越高。</p>
+<p>系统吞吐量几个重要参数：QPS（TPS）、并发数、响应时间。</p>
+<ol>
+<li>QPS（TPS）：（Query Per Second）每秒钟request/事务 数量</li>
+<li>并发数： 系统同时处理的request/事务数</li>
+<li>响应时间： 一般取平均响应时间</li>
+</ol>
+<p>理解了上面三个要素的意义之后，就能推算出它们之间的关系：</p>
+<ul>
+<li><strong>QPS（TPS）= 并发数/平均响应时间</strong></li>
+<li><strong>并发数 = QPS*平均响应时间</strong></li>
+</ul>
+<h1 id="六、实际举例"><a href="#六、实际举例" class="headerlink" title="六、实际举例"></a>六、实际举例</h1><p>我们通过一个实例来把上面几个概念串起来理解。按二八定律来看，如果每天 80% 的访问集中在 20% 的时间里，这 20% 时间就叫做峰值时间。</p>
+<ul>
+<li>公式：( 总PV数 * 80% ) / ( 每天秒数 * 20% ) = 峰值时间每秒请求数(QPS)</li>
+<li>机器：峰值时间每秒QPS / 单台机器的QPS = 需要的机器</li>
+</ul>
+<p><strong>1、每天300w PV 的在单台机器上，这台机器需要多少QPS？</strong><br>( 3000000 * 0.8 ) / (86400 * 0.2 ) = 139 (QPS)</p>
+<p><strong>2、如果一台机器的QPS是58，需要几台机器来支持？</strong><br>139 / 58 = 3</p>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>高并发网络性能指标</tag>
       </tags>
   </entry>
   <entry>
