@@ -21,18 +21,49 @@
     var CONFIG = {"hostname":"www.mindmaster.top","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="The world favors the underdog,and I would be the bad guy">
+  <meta name="description" content="HTTP&#x2F;1.1详解">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HTTP&#x2F;1.1深入学习">
+<meta property="og:title" content="HTTP&#x2F;1.1深入学习（一）">
 <meta property="og:url" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/index.html">
 <meta property="og:site_name" content="一只小码农">
-<meta property="og:description" content="The world favors the underdog,and I would be the bad guy">
+<meta property="og:description" content="HTTP&#x2F;1.1详解">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG/source_posts/HTTP-1-1深入学习/image01.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG/source_posts/HTTP-1-1深入学习/image02.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG/source/_posts/HTTP-1-1深入学习/image03.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216143059824.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216143217688.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216143444135.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216143600821.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216143608965.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216143758587.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216143824981.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216144746312.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216144826027.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216144956500.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216154311688.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216154333582.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216154407111.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216154624220.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216154806375.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216154827521.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155000320.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155007623.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155144846.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155211840.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155244132.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155251415.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155401997.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155440972.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155509897.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155556884.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155625246.png">
 <meta property="article:published_time" content="2022-02-16T14:19:25.000Z">
-<meta property="article:modified_time" content="2022-02-16T06:19:25.100Z">
+<meta property="article:modified_time" content="2022-02-16T08:02:53.554Z">
 <meta property="article:author" content="邢浩东">
-<meta property="article:tag" content="个人博客">
+<meta property="article:tag" content="计算机网络">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG/source_posts/HTTP-1-1深入学习/image01.png">
 
 <link rel="canonical" href="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/">
 
@@ -47,7 +78,7 @@
   };
 </script>
 
-  <title>HTTP/1.1深入学习 | 一只小码农</title>
+  <title>HTTP/1.1深入学习（一） | 一只小码农</title>
   
 
 
@@ -128,7 +159,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">52</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">53</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -238,7 +269,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          HTTP/1.1深入学习
+          HTTP/1.1深入学习（一）
         </h1>
 
         <div class="post-meta">
@@ -249,7 +280,16 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2022-02-16 14:19:25 / 修改时间：06:19:25" itemprop="dateCreated datePublished" datetime="2022-02-16T14:19:25Z">2022-02-16</time>
+              <time title="创建时间：2022-02-16 14:19:25 / 修改时间：08:02:53" itemprop="dateCreated datePublished" datetime="2022-02-16T14:19:25Z">2022-02-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
             </span>
 
           
@@ -279,7 +319,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>0</span>
+              <span>785</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -288,6 +328,7 @@
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
               <span>1 分钟</span>
             </span>
+            <div class="post-description">HTTP/1.1详解</div>
 
         </div>
       </header>
@@ -298,7 +339,77 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <h2 id="HTTP解决了什么问题"><a href="#HTTP解决了什么问题" class="headerlink" title="HTTP解决了什么问题"></a>HTTP解决了什么问题</h2><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG\source_posts\HTTP-1-1深入学习\image01.png" alt="image-20220216145214793"></p>
+<p>解决 WWW 信息交互必须面对的需求：</p>
+<ul>
+<li><p> 低门槛 </p>
+</li>
+<li><p>可扩展性：巨大的用户群体，超长的寿命 </p>
+</li>
+<li><p> 分布式系统下的 Hypermedia：大粒度数据的网络传输 </p>
+</li>
+<li><p>Internet 规模 </p>
+<ul>
+<li><p>无法控制的 scalability </p>
+<ul>
+<li><p>不可预测的负载、非法格式的数据、恶意消息 </p>
+</li>
+<li><p>客户端不能保持所有服务器信息，服务器不能保持多个请求间的状态信息</p>
+<p>独立的组件部署：新老组件并存</p>
+<p>向前兼容：自 1993 年起 HTTP0.9\1.0（1996）已经被广泛使用</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG\source_posts\HTTP-1-1深入学习\image02.png" alt="image-20220216145500667"></p>
+<h2 id="浏览器发起HTTP请求的典型场景与ABNF定义HTTP协议格式"><a href="#浏览器发起HTTP请求的典型场景与ABNF定义HTTP协议格式" class="headerlink" title="浏览器发起HTTP请求的典型场景与ABNF定义HTTP协议格式"></a>浏览器发起HTTP请求的典型场景与ABNF定义HTTP协议格式</h2><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG\source\_posts\HTTP-1-1深入学习\image03.png" alt="image-20220216143022772" style="zoom:150%;">
+
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143059824.png" alt="image-20220216143059824"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143217688.png" alt="image-20220216143217688"></p>
+<p>一种无状态的、应用层的、以<strong>请求/应答方式</strong>运行的协议，使用可扩展的语义和自描述消息格式，与基于网络的超文本信息系统灵活的互动。</p>
+<h3 id="HTTP的协议格式"><a href="#HTTP的协议格式" class="headerlink" title="HTTP的协议格式"></a>HTTP的协议格式</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143444135.png" alt="image-20220216143444135"></p>
+<h4 id="ABNF-扩充巴科斯-瑙尔范式-操作符"><a href="#ABNF-扩充巴科斯-瑙尔范式-操作符" class="headerlink" title="ABNF(扩充巴科斯-瑙尔范式)操作符"></a>ABNF(扩充巴科斯-瑙尔范式)操作符</h4><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143600821.png" alt="image-20220216143600821"></p>
+<p><strong><em>ABNF的核心规则</em></strong></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143608965.png" alt="image-20220216143608965"></p>
+<blockquote>
+<p>基于ABNF描述的HTTP协议格式 + 具体实例</p>
+</blockquote>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143758587.png" alt="image-20220216143758587"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143824981.png" alt="image-20220216143824981"></p>
+<h2 id="网络分层：OSI模型与TCP-IP模型"><a href="#网络分层：OSI模型与TCP-IP模型" class="headerlink" title="网络分层：OSI模型与TCP/IP模型"></a>网络分层：OSI模型与TCP/IP模型</h2><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216144746312.png" alt="image-20220216144746312"></p>
+<h3 id="OSI模型与TCP模型的对照"><a href="#OSI模型与TCP模型的对照" class="headerlink" title="OSI模型与TCP模型的对照"></a>OSI模型与TCP模型的对照</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216144826027.png" alt="image-20220216144826027"></p>
+<h3 id="在不同层之间的报文头部封装"><a href="#在不同层之间的报文头部封装" class="headerlink" title="在不同层之间的报文头部封装"></a>在不同层之间的报文头部封装</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216144956500.png" alt="image-20220216144956500"></p>
+<p>注意一下在图中表明的各层的报文分别叫什么名字。</p>
+<h2 id="评估Web架构的关键属性"><a href="#评估Web架构的关键属性" class="headerlink" title="评估Web架构的关键属性"></a>评估Web架构的关键属性</h2><p>HTTP 协议应当在以下属性中取得可接受的均衡：</p>
+<ul>
+<li><strong>性能</strong> Performance：影响高可用的关键因素 </li>
+<li><strong>可伸缩性</strong> Scalability：支持部署可以互相交互的大量组件 </li>
+<li><strong>简单性</strong> Simplicity：易理解、易实现、易验证 </li>
+<li><strong>可见性</strong> Visiable：对两个组件间的交互进行监视或者仲裁的能力。如缓存、分层设计等</li>
+<li><strong>可移植性</strong> Portability：在不同的环境下运行的能力 </li>
+<li><strong>可靠性</strong> Reliability：出现部分故障时，对整体影响的程度 </li>
+<li><strong>可修改性</strong> Modifiability：对系统作出修改的难易程度，由可进化性、可定制性、可扩展性、可配置性、可重用性构成</li>
+</ul>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154311688.png" alt="image-20220216154311688"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154333582.png" alt="image-20220216154333582"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154407111.png" alt="image-20220216154407111"></p>
+<h2 id="从五种架构风格推导出HTTP的REST架构"><a href="#从五种架构风格推导出HTTP的REST架构" class="headerlink" title="从五种架构风格推导出HTTP的REST架构"></a>从五种架构风格推导出HTTP的REST架构</h2><p> <img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154624220.png" alt="image-20220216154624220"></p>
+<h3 id="数据流风格-Data-flow-Styles"><a href="#数据流风格-Data-flow-Styles" class="headerlink" title="数据流风格 Data-flow Styles"></a>数据流风格 Data-flow Styles</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154806375.png" alt="image-20220216154806375"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154827521.png" alt="image-20220216154827521"></p>
+<h3 id="复制风格"><a href="#复制风格" class="headerlink" title="复制风格"></a>复制风格</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155000320.png" alt="image-20220216155000320"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155007623.png" alt="image-20220216155007623"></p>
+<h3 id="分层风格"><a href="#分层风格" class="headerlink" title="分层风格"></a>分层风格</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155144846.png" alt="image-20220216155144846"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155211840.png" alt="image-20220216155211840"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155244132.png" alt="image-20220216155244132"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155251415.png" alt="image-20220216155251415"></p>
+<h3 id="移动代码风格-Mobile-Code-Styles"><a href="#移动代码风格-Mobile-Code-Styles" class="headerlink" title="移动代码风格 Mobile Code Styles"></a>移动代码风格 Mobile Code Styles</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155401997.png" alt="image-20220216155401997"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155440972.png" alt="image-20220216155440972"></p>
+<h3 id="点对点风格"><a href="#点对点风格" class="headerlink" title="点对点风格"></a>点对点风格</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155509897.png" alt="image-20220216155509897"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155556884.png" alt="image-20220216155556884"></p>
+<h3 id="不同风格之间的演化"><a href="#不同风格之间的演化" class="headerlink" title="不同风格之间的演化"></a>不同风格之间的演化</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155625246.png" alt="image-20220216155625246"></p>
+
     </div>
 
     
@@ -335,7 +446,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/" title="HTTP&#x2F;1.1深入学习">https://www.mindmaster.top/2022/02/16/HTTP-1-1深入学习/</a>
+    <a href="https://www.mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/" title="HTTP&#x2F;1.1深入学习（一）">https://www.mindmaster.top/2022/02/16/HTTP-1-1深入学习/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-%E9%82%A2%E6%B5%A9%E4%B8%9C/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-邢浩东</a> 许可协议。转载请注明出处！
@@ -345,6 +456,9 @@
 
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag"># 计算机网络</a>
+          </div>
 
         
 
@@ -415,6 +529,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">HTTP解决了什么问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E5%8F%91%E8%B5%B7HTTP%E8%AF%B7%E6%B1%82%E7%9A%84%E5%85%B8%E5%9E%8B%E5%9C%BA%E6%99%AF%E4%B8%8EABNF%E5%AE%9A%E4%B9%89HTTP%E5%8D%8F%E8%AE%AE%E6%A0%BC%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">浏览器发起HTTP请求的典型场景与ABNF定义HTTP协议格式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP%E7%9A%84%E5%8D%8F%E8%AE%AE%E6%A0%BC%E5%BC%8F"><span class="nav-number">2.1.</span> <span class="nav-text">HTTP的协议格式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ABNF-%E6%89%A9%E5%85%85%E5%B7%B4%E7%A7%91%E6%96%AF-%E7%91%99%E5%B0%94%E8%8C%83%E5%BC%8F-%E6%93%8D%E4%BD%9C%E7%AC%A6"><span class="nav-number">2.1.1.</span> <span class="nav-text">ABNF(扩充巴科斯-瑙尔范式)操作符</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%88%86%E5%B1%82%EF%BC%9AOSI%E6%A8%A1%E5%9E%8B%E4%B8%8ETCP-IP%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.</span> <span class="nav-text">网络分层：OSI模型与TCP&#x2F;IP模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#OSI%E6%A8%A1%E5%9E%8B%E4%B8%8ETCP%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%AF%B9%E7%85%A7"><span class="nav-number">3.1.</span> <span class="nav-text">OSI模型与TCP模型的对照</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8%E4%B8%8D%E5%90%8C%E5%B1%82%E4%B9%8B%E9%97%B4%E7%9A%84%E6%8A%A5%E6%96%87%E5%A4%B4%E9%83%A8%E5%B0%81%E8%A3%85"><span class="nav-number">3.2.</span> <span class="nav-text">在不同层之间的报文头部封装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%84%E4%BC%B0Web%E6%9E%B6%E6%9E%84%E7%9A%84%E5%85%B3%E9%94%AE%E5%B1%9E%E6%80%A7"><span class="nav-number">4.</span> <span class="nav-text">评估Web架构的关键属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E%E4%BA%94%E7%A7%8D%E6%9E%B6%E6%9E%84%E9%A3%8E%E6%A0%BC%E6%8E%A8%E5%AF%BC%E5%87%BAHTTP%E7%9A%84REST%E6%9E%B6%E6%9E%84"><span class="nav-number">5.</span> <span class="nav-text">从五种架构风格推导出HTTP的REST架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%B5%81%E9%A3%8E%E6%A0%BC-Data-flow-Styles"><span class="nav-number">5.1.</span> <span class="nav-text">数据流风格 Data-flow Styles</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E9%A3%8E%E6%A0%BC"><span class="nav-number">5.2.</span> <span class="nav-text">复制风格</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B1%82%E9%A3%8E%E6%A0%BC"><span class="nav-number">5.3.</span> <span class="nav-text">分层风格</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%BB%E5%8A%A8%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC-Mobile-Code-Styles"><span class="nav-number">5.4.</span> <span class="nav-text">移动代码风格 Mobile Code Styles</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%82%B9%E5%AF%B9%E7%82%B9%E9%A3%8E%E6%A0%BC"><span class="nav-number">5.5.</span> <span class="nav-text">点对点风格</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E5%90%8C%E9%A3%8E%E6%A0%BC%E4%B9%8B%E9%97%B4%E7%9A%84%E6%BC%94%E5%8C%96"><span class="nav-number">5.6.</span> <span class="nav-text">不同风格之间的演化</span></a></li></ol></li></ol></div>
 
       </div>
       <!--/noindex-->
@@ -444,7 +559,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-count">53</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -549,13 +664,13 @@ setInterval(function(){
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">297k</span>
+    <span title="站点总字数">298k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">4:30</span>
+    <span title="站点阅读时长">4:31</span>
 </div>
 
 

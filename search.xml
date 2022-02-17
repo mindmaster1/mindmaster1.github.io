@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>AOP</title>
-    <url>/2021/03/14/AOP/</url>
+    <title>5G下的云网融合</title>
+    <url>/2021/10/07/5G%E4%B8%8B%E7%9A%84%E4%BA%91%E7%BD%91%E8%9E%8D%E5%90%88/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>5G下的云网融合</title>
-    <url>/2021/10/07/5G%E4%B8%8B%E7%9A%84%E4%BA%91%E7%BD%91%E8%9E%8D%E5%90%88/</url>
+    <title>AOP</title>
+    <url>/2021/03/14/AOP/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -102,13 +102,94 @@
       </tags>
   </entry>
   <entry>
-    <title>HTTP代理</title>
-    <url>/2021/02/03/HTTP%E4%BB%A3%E7%90%86/</url>
-    <content><![CDATA[]]></content>
+    <title>HTTP/1.1深入学习（一）</title>
+    <url>/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/</url>
+    <content><![CDATA[<h2 id="HTTP解决了什么问题"><a href="#HTTP解决了什么问题" class="headerlink" title="HTTP解决了什么问题"></a>HTTP解决了什么问题</h2><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG\source_posts\HTTP-1-1深入学习\image01.png" alt="image-20220216145214793"></p>
+<p>解决 WWW 信息交互必须面对的需求：</p>
+<ul>
+<li><p> 低门槛 </p>
+</li>
+<li><p>可扩展性：巨大的用户群体，超长的寿命 </p>
+</li>
+<li><p> 分布式系统下的 Hypermedia：大粒度数据的网络传输 </p>
+</li>
+<li><p>Internet 规模 </p>
+<ul>
+<li><p>无法控制的 scalability </p>
+<ul>
+<li><p>不可预测的负载、非法格式的数据、恶意消息 </p>
+</li>
+<li><p>客户端不能保持所有服务器信息，服务器不能保持多个请求间的状态信息</p>
+<p>独立的组件部署：新老组件并存</p>
+<p>向前兼容：自 1993 年起 HTTP0.9\1.0（1996）已经被广泛使用</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG\source_posts\HTTP-1-1深入学习\image02.png" alt="image-20220216145500667"></p>
+<h2 id="浏览器发起HTTP请求的典型场景与ABNF定义HTTP协议格式"><a href="#浏览器发起HTTP请求的典型场景与ABNF定义HTTP协议格式" class="headerlink" title="浏览器发起HTTP请求的典型场景与ABNF定义HTTP协议格式"></a>浏览器发起HTTP请求的典型场景与ABNF定义HTTP协议格式</h2><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG\source\_posts\HTTP-1-1深入学习\image03.png" alt="image-20220216143022772" style="zoom:150%;">
+
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143059824.png" alt="image-20220216143059824"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143217688.png" alt="image-20220216143217688"></p>
+<p>一种无状态的、应用层的、以<strong>请求/应答方式</strong>运行的协议，使用可扩展的语义和自描述消息格式，与基于网络的超文本信息系统灵活的互动。</p>
+<h3 id="HTTP的协议格式"><a href="#HTTP的协议格式" class="headerlink" title="HTTP的协议格式"></a>HTTP的协议格式</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143444135.png" alt="image-20220216143444135"></p>
+<h4 id="ABNF-扩充巴科斯-瑙尔范式-操作符"><a href="#ABNF-扩充巴科斯-瑙尔范式-操作符" class="headerlink" title="ABNF(扩充巴科斯-瑙尔范式)操作符"></a>ABNF(扩充巴科斯-瑙尔范式)操作符</h4><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143600821.png" alt="image-20220216143600821"></p>
+<p><strong><em>ABNF的核心规则</em></strong></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143608965.png" alt="image-20220216143608965"></p>
+<blockquote>
+<p>基于ABNF描述的HTTP协议格式 + 具体实例</p>
+</blockquote>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143758587.png" alt="image-20220216143758587"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143824981.png" alt="image-20220216143824981"></p>
+<h2 id="网络分层：OSI模型与TCP-IP模型"><a href="#网络分层：OSI模型与TCP-IP模型" class="headerlink" title="网络分层：OSI模型与TCP/IP模型"></a>网络分层：OSI模型与TCP/IP模型</h2><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216144746312.png" alt="image-20220216144746312"></p>
+<h3 id="OSI模型与TCP模型的对照"><a href="#OSI模型与TCP模型的对照" class="headerlink" title="OSI模型与TCP模型的对照"></a>OSI模型与TCP模型的对照</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216144826027.png" alt="image-20220216144826027"></p>
+<h3 id="在不同层之间的报文头部封装"><a href="#在不同层之间的报文头部封装" class="headerlink" title="在不同层之间的报文头部封装"></a>在不同层之间的报文头部封装</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216144956500.png" alt="image-20220216144956500"></p>
+<p>注意一下在图中表明的各层的报文分别叫什么名字。</p>
+<h2 id="评估Web架构的关键属性"><a href="#评估Web架构的关键属性" class="headerlink" title="评估Web架构的关键属性"></a>评估Web架构的关键属性</h2><p>HTTP 协议应当在以下属性中取得可接受的均衡：</p>
+<ul>
+<li><strong>性能</strong> Performance：影响高可用的关键因素 </li>
+<li><strong>可伸缩性</strong> Scalability：支持部署可以互相交互的大量组件 </li>
+<li><strong>简单性</strong> Simplicity：易理解、易实现、易验证 </li>
+<li><strong>可见性</strong> Visiable：对两个组件间的交互进行监视或者仲裁的能力。如缓存、分层设计等</li>
+<li><strong>可移植性</strong> Portability：在不同的环境下运行的能力 </li>
+<li><strong>可靠性</strong> Reliability：出现部分故障时，对整体影响的程度 </li>
+<li><strong>可修改性</strong> Modifiability：对系统作出修改的难易程度，由可进化性、可定制性、可扩展性、可配置性、可重用性构成</li>
+</ul>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154311688.png" alt="image-20220216154311688"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154333582.png" alt="image-20220216154333582"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154407111.png" alt="image-20220216154407111"></p>
+<h2 id="从五种架构风格推导出HTTP的REST架构"><a href="#从五种架构风格推导出HTTP的REST架构" class="headerlink" title="从五种架构风格推导出HTTP的REST架构"></a>从五种架构风格推导出HTTP的REST架构</h2><p> <img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154624220.png" alt="image-20220216154624220"></p>
+<h3 id="数据流风格-Data-flow-Styles"><a href="#数据流风格-Data-flow-Styles" class="headerlink" title="数据流风格 Data-flow Styles"></a>数据流风格 Data-flow Styles</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154806375.png" alt="image-20220216154806375"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154827521.png" alt="image-20220216154827521"></p>
+<h3 id="复制风格"><a href="#复制风格" class="headerlink" title="复制风格"></a>复制风格</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155000320.png" alt="image-20220216155000320"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155007623.png" alt="image-20220216155007623"></p>
+<h3 id="分层风格"><a href="#分层风格" class="headerlink" title="分层风格"></a>分层风格</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155144846.png" alt="image-20220216155144846"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155211840.png" alt="image-20220216155211840"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155244132.png" alt="image-20220216155244132"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155251415.png" alt="image-20220216155251415"></p>
+<h3 id="移动代码风格-Mobile-Code-Styles"><a href="#移动代码风格-Mobile-Code-Styles" class="headerlink" title="移动代码风格 Mobile Code Styles"></a>移动代码风格 Mobile Code Styles</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155401997.png" alt="image-20220216155401997"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155440972.png" alt="image-20220216155440972"></p>
+<h3 id="点对点风格"><a href="#点对点风格" class="headerlink" title="点对点风格"></a>点对点风格</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155509897.png" alt="image-20220216155509897"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155556884.png" alt="image-20220216155556884"></p>
+<h3 id="不同风格之间的演化"><a href="#不同风格之间的演化" class="headerlink" title="不同风格之间的演化"></a>不同风格之间的演化</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155625246.png" alt="image-20220216155625246"></p>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>计算机网络</tag>
+      </tags>
   </entry>
   <entry>
     <title>HTTP报文</title>
     <url>/2021/03/14/HTTP%E6%8A%A5%E6%96%87/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>HTTP代理</title>
+    <url>/2021/02/03/HTTP%E4%BB%A3%E7%90%86/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -1281,110 +1362,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Mybatis框架</title>
-    <url>/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6-1/</url>
-    <content><![CDATA[<h2 id="Mybatis入门案例"><a href="#Mybatis入门案例" class="headerlink" title="Mybatis入门案例"></a>Mybatis入门案例</h2><h3 id="搭建Mybatis开发环境–基础CRUD操作实例"><a href="#搭建Mybatis开发环境–基础CRUD操作实例" class="headerlink" title="搭建Mybatis开发环境–基础CRUD操作实例"></a>搭建Mybatis开发环境–基础CRUD操作实例</h3><h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><blockquote>
-<p>创建MySQL数据库和表</p>
-</blockquote>
-<img data-src="/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6-1/01.png" class>
-
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `student` (</span><br><span class="line"> `id` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> ,</span><br><span class="line"> `name` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line"> `email` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line"> `age` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line"> <span class="keyword">PRIMARY</span> <span class="keyword">KEY</span> (`id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>创建Maven工程，并且在pom.xml中加入maven坐标</p>
-</blockquote>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">     	<span class="tag">&lt;<span class="name">version</span>&gt;</span>4.11<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">   	 	<span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mybatis<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.5.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.1.9<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>加入maven插件</p>
-</blockquote>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">directory</span>&gt;</span>src/main/java<span class="tag">&lt;/<span class="name">directory</span>&gt;</span><span class="comment">&lt;!--所在的目录--&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">includes</span>&gt;</span><span class="comment">&lt;!--包括目录下的.properties,.xml 文件都会扫描到--&gt;</span></span><br><span class="line"> 			 <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.properties<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.xml<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;/<span class="name">includes</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">filtering</span>&gt;</span>false<span class="tag">&lt;/<span class="name">filtering</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span> </span><br><span class="line">			<span class="tag">&lt;<span class="name">source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">build</span>/&gt;</span> </span><br></pre></td></tr></table></figure>
-
-
-<blockquote>
-<p>编写Student实体类</p>
-</blockquote>
-<p>创建包com.bytedance.domain,包中创建Student类</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.bjpowernode.domain;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Description: 实体类 &lt;/p&gt;</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Company: http://www.bjpowernode.com</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123;</span><br><span class="line"> <span class="comment">//属性名和列名一样</span></span><br><span class="line">     <span class="keyword">private</span> Integer id;</span><br><span class="line">     <span class="keyword">private</span> String name;</span><br><span class="line">     <span class="keyword">private</span> String email;</span><br><span class="line">     <span class="keyword">private</span> Integer age;</span><br><span class="line">     <span class="comment">// set ,get , toString</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>编写Dao接口 StudentDao</p>
-</blockquote>
-<p>创建包com.bytedance.dao,创建StudentDao接口</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.bjpowernode.dao;</span><br><span class="line"><span class="keyword">import</span> com.bjpowernode.domain.Student;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Description: Dao 接口 &lt;/p&gt;</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Company: http://www.bjpowernode.com</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">StudentDao</span> </span>&#123;</span><br><span class="line">	 <span class="comment">/*查询所有数据*/</span></span><br><span class="line">	 <span class="function">List&lt;Student&gt; <span class="title">selectStudents</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>编写Dao接口Mapper映射文件StudentDao.xml</p>
-<p>要求：</p>
-<ul>
-<li> 在 dao 包中创建文件 StudentDao.xml </li>
-<li>要 StudentDao.xml 文件名称和接口 StudentDao 一样，区分大小写的一样</li>
-</ul>
-</blockquote>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">mapper</span></span></span><br><span class="line"><span class="meta">     <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span></span><br><span class="line"><span class="meta">     <span class="meta-string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">     namespace：必须有值，自定义的唯一字符串</span></span><br><span class="line"><span class="comment">     推荐使用：dao 接口的全限定名称</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;com.bytedance.dao.StudentDao&quot;</span>&gt;</span></span><br><span class="line"> <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment"> 		&lt;select&gt;: 查询数据， 标签中必须是 select 语句</span></span><br><span class="line"><span class="comment"> 			id: sql 语句的自定义名称，推荐使用 dao 接口中方法名称，使用名称表示要执行的 sql 语句</span></span><br><span class="line"><span class="comment"> 		resultType: 查询语句的返回结果数据类型，使用全限定类名</span></span><br><span class="line"><span class="comment"> --&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectStudents&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.bytedance.domain.Student&quot;</span>&gt;</span></span><br><span class="line">         <span class="comment">&lt;!--要执行的 sql 语句--&gt;</span></span><br><span class="line">         select id,name,email,age from student</span><br><span class="line"> <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>创建Mybatis主配置文件</p>
-</blockquote>
-<p>项目 src/main 下创建 resources 目录，设置 resources 目录为 resources root 创建主配置文件：名称为 mybatis.xml 说明：主配置文件名称是自定义的，内容如下</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">configuration</span></span></span><br><span class="line"><span class="meta">     <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//mybatis.org//DTD Config 3.0//EN&quot;</span></span></span><br><span class="line"><span class="meta">     <span class="meta-string">&quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line"> 	<span class="comment">&lt;!--配置 mybatis 环境--&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">environments</span> <span class="attr">default</span>=<span class="string">&quot;mysql&quot;</span>&gt;</span></span><br><span class="line">         <span class="comment">&lt;!--id:数据源的名称--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">environment</span> <span class="attr">id</span>=<span class="string">&quot;mysql&quot;</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--配置事务类型：使用 JDBC 事务（使用 Connection 的提交和回滚）--&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">transactionManager</span> <span class="attr">type</span>=<span class="string">&quot;JDBC&quot;</span>/&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--数据源 dataSource：创建数据库 Connection 对象</span></span><br><span class="line"><span class="comment">        type: POOLED 使用数据库的连接池</span></span><br><span class="line"><span class="comment">        --&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">dataSource</span> <span class="attr">type</span>=<span class="string">&quot;POOLED&quot;</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--连接数据库的四个要素--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;driver&quot;</span> <span class="attr">value</span>=<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;url&quot;</span> <span class="attr">value</span>=<span class="string">&quot;jdbc:mysql://localhost:3306/ssm&quot;</span>/&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> <span class="attr">value</span>=<span class="string">&quot;root&quot;</span>/&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span> <span class="attr">value</span>=<span class="string">&quot;123456&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dataSource</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">environment</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">environments</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">mappers</span>&gt;</span></span><br><span class="line">	 <span class="comment">&lt;!--告诉 mybatis 要执行的 sql 语句的位置--&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">mapper</span> <span class="attr">resource</span>=<span class="string">&quot;com/bytedance/dao/StudentDao.xml&quot;</span>/&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">mappers</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>创建测试类</p>
-</blockquote>
-<p> src/test/java/com/bytedance/ 创建 MyBatisTest.java 文件</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* mybatis 入门</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testStart</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="comment">//1.mybatis 主配置文件</span></span><br><span class="line">     String config = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">     <span class="comment">//2.读取配置文件</span></span><br><span class="line">     InputStream in = Resources.getResourceAsStream(config);</span><br><span class="line">     <span class="comment">//3.创建 SqlSessionFactory 对象,目的是获取 SqlSession</span></span><br><span class="line">     SqlSessionFactory factory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(in);</span><br><span class="line">     <span class="comment">//4.获取 SqlSession,SqlSession 能执行 sql 语句</span></span><br><span class="line">     SqlSession session = factory.openSession();</span><br><span class="line">     <span class="comment">//5.执行 SqlSession 的 selectList()</span></span><br><span class="line">     List&lt;Student&gt; studentList = 	session.selectList(<span class="string">&quot;com.bytedance.dao.StudentDao.selectStudents&quot;</span>);</span><br><span class="line">    <span class="comment">//6.循环输出查询结果</span></span><br><span class="line">	 studentList.forEach( student -&gt; System.out.println(student));</span><br><span class="line"> 	<span class="comment">//7.关闭 SqlSession，释放资源</span></span><br><span class="line">	 session.close();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>配置日志功能</p>
-</blockquote>
-<p>mybatis.xml 文件加入日志配置，可以在控制台输出执行的 sql 语句和参数</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">settings</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">&quot;logImpl&quot;</span> <span class="attr">value</span>=<span class="string">&quot;STDOUT_LOGGING&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="insert"><a href="#insert" class="headerlink" title="insert"></a>insert</h3><ul>
-<li><p>StudentDao 接口中增加方法</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">int insertStudent(Student student);</span><br></pre></td></tr></table></figure></li>
-<li><p>StudentDao.xml中加入SQL语句</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">（<span class="number">2</span>） StudentDao.xml 加入 <span class="keyword">sql</span> 语句</span><br><span class="line"><span class="operator">&lt;</span><span class="keyword">insert</span> id<span class="operator">=</span>&quot;insertStudent&quot;<span class="operator">&gt;</span></span><br><span class="line"> 	<span class="keyword">insert</span> <span class="keyword">into</span> student(id,name,email,age)</span><br><span class="line">	values(#&#123;id&#125;,#&#123;name&#125;,#&#123;email&#125;,#&#123;age&#125;)</span><br><span class="line"><span class="operator">&lt;</span><span class="operator">/</span><span class="keyword">insert</span><span class="operator">&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li><p>增加测试方法</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testInsert</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="comment">//1.mybatis 主配置文件</span></span><br><span class="line">     String config = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">     <span class="comment">//2.读取配置文件</span></span><br><span class="line">     InputStream in = Resources.getResourceAsStream(config);</span><br><span class="line">     <span class="comment">//3.创建 SqlSessionFactory 对象</span></span><br><span class="line">     SqlSessionFactory factory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(in);</span><br><span class="line">     <span class="comment">//4.获取 SqlSession</span></span><br><span class="line">     SqlSession session = factory.openSession();</span><br><span class="line">     <span class="comment">//5.创建保存数据的对象</span></span><br><span class="line">     Student student = <span class="keyword">new</span> Student();</span><br><span class="line">     student.setId(<span class="number">1005</span>);</span><br><span class="line">     student.setName(<span class="string">&quot;张丽&quot;</span>);</span><br><span class="line">     student.setEmail(<span class="string">&quot;zhangli@163.com&quot;</span>);</span><br><span class="line">     student.setAge(<span class="number">20</span>);</span><br><span class="line">     <span class="comment">//6.执行插入 insert</span></span><br><span class="line">     <span class="keyword">int</span> rows = session.insert(</span><br><span class="line">    <span class="string">&quot;com.bytedance.dao.StudentDao.insertStudent&quot;</span>,student);</span><br><span class="line">     <span class="comment">//7.提交事务</span></span><br><span class="line">     session.commit();</span><br><span class="line">     System.out.println(<span class="string">&quot;增加记录的行数:&quot;</span>+rows);</span><br><span class="line">     <span class="comment">//8.关闭 SqlSession</span></span><br><span class="line">     session.close();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<h3 id="update"><a href="#update" class="headerlink" title="update"></a>update</h3><ul>
-<li><p>StudentDao接口中增加方法</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">updateStudent</span><span class="params">(Student student)</span></span>;</span><br></pre></td></tr></table></figure></li>
-<li><p>StudentDao.xml文件中增加SQL语句</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="operator">&lt;</span><span class="keyword">update</span> id<span class="operator">=</span>&quot;updateStudent&quot;<span class="operator">&gt;</span></span><br><span class="line"> 	update student set age = #&#123;age&#125; where id=#&#123;id&#125;</span><br><span class="line"><span class="operator">&lt;</span><span class="operator">/</span><span class="keyword">update</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li><p>增加测试方法</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testUpdate</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="comment">//1.mybatis 主配置文件</span></span><br><span class="line">     String config = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">     <span class="comment">//2.读取配置文件</span></span><br><span class="line">     InputStream in = Resources.getResourceAsStream(config);</span><br><span class="line">     <span class="comment">//3.创建 SqlSessionFactory 对象</span></span><br><span class="line">     SqlSessionFactory factory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(in);</span><br><span class="line">     <span class="comment">//4.获取 SqlSession</span></span><br><span class="line">     SqlSession session = factory.openSession();</span><br><span class="line">     <span class="comment">//5.创建保存数据的对象</span></span><br><span class="line">     Student student = <span class="keyword">new</span> Student();</span><br><span class="line">     student.setId(<span class="number">1005</span>);<span class="comment">//要修改的 id</span></span><br><span class="line">     student.setAge(<span class="number">30</span>); <span class="comment">//要修改的年龄值</span></span><br><span class="line">     <span class="comment">//6.执行更新 update</span></span><br><span class="line">     <span class="keyword">int</span> rows = session.update(</span><br><span class="line">    <span class="string">&quot;com.bytedance.dao.StudentDao.updateStudent&quot;</span>,student);</span><br><span class="line">     <span class="comment">//7.提交事务</span></span><br><span class="line">     session.commit();</span><br><span class="line">     System.out.println(<span class="string">&quot;修改记录的行数:&quot;</span>+rows);</span><br><span class="line">     <span class="comment">//8.关闭 SqlSession</span></span><br><span class="line">     session.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<h3 id="delete"><a href="#delete" class="headerlink" title="delete"></a>delete</h3><ul>
-<li><p>StudentDao接口中增加方法</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">deleteStudent</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br></pre></td></tr></table></figure></li>
-<li><p>StudentDao.xml文件中增加SQL语句</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">delete</span> <span class="attr">id</span>=<span class="string">&quot;deleteStudent&quot;</span>&gt;</span></span><br><span class="line"> delete from student where id=#&#123;studentId&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">delete</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li><p>增加测试方法</p>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testDelete</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="comment">//1.mybatis 主配置文件</span></span><br><span class="line">     String config = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">     <span class="comment">//2.读取配置文件</span></span><br><span class="line">     InputStream in = Resources.getResourceAsStream(config);</span><br><span class="line">     <span class="comment">//3.创建 SqlSessionFactory 对象</span></span><br><span class="line">     SqlSessionFactory factory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(in);</span><br><span class="line">     <span class="comment">//4.获取 SqlSession</span></span><br><span class="line">     SqlSession session = factory.openSession();</span><br><span class="line">     <span class="comment">//5.删除的 id</span></span><br><span class="line">     <span class="keyword">int</span> id = <span class="number">1001</span>;</span><br><span class="line">     <span class="comment">//6.执行删除 delete</span></span><br><span class="line">     <span class="keyword">int</span> rows = session.delete(</span><br><span class="line">    <span class="string">&quot;com.bytedance.dao.StudentDao.deleteStudent&quot;</span>,id);</span><br><span class="line">     <span class="comment">//7.提交事务</span></span><br><span class="line">     session.commit();</span><br><span class="line">     System.out.println(<span class="string">&quot;修改记录的行数:&quot;</span>+rows);</span><br><span class="line">    <span class="comment">//8.关闭SqlSession</span></span><br><span class="line">    session.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>Mybatis框架</category>
-      </categories>
-      <tags>
-        <tag>Mybatis</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Mybatis框架概述</title>
     <url>/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6/</url>
     <content><![CDATA[<h2 id="软件开发常用结构"><a href="#软件开发常用结构" class="headerlink" title="软件开发常用结构"></a>软件开发常用结构</h2><h3 id="三层架构"><a href="#三层架构" class="headerlink" title="三层架构"></a>三层架构</h3><p>三层架构包含的三层： 界面层（User Interface layer）、业务逻辑层（Business Logic Layer）、数据访问层（Data access layer）</p>
@@ -1599,6 +1576,110 @@
       </categories>
       <tags>
         <tag>防火墙配置</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Mybatis框架</title>
+    <url>/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6-1/</url>
+    <content><![CDATA[<h2 id="Mybatis入门案例"><a href="#Mybatis入门案例" class="headerlink" title="Mybatis入门案例"></a>Mybatis入门案例</h2><h3 id="搭建Mybatis开发环境–基础CRUD操作实例"><a href="#搭建Mybatis开发环境–基础CRUD操作实例" class="headerlink" title="搭建Mybatis开发环境–基础CRUD操作实例"></a>搭建Mybatis开发环境–基础CRUD操作实例</h3><h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><blockquote>
+<p>创建MySQL数据库和表</p>
+</blockquote>
+<img data-src="/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6-1/01.png" class>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `student` (</span><br><span class="line"> `id` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> ,</span><br><span class="line"> `name` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line"> `email` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line"> `age` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line"> <span class="keyword">PRIMARY</span> <span class="keyword">KEY</span> (`id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>创建Maven工程，并且在pom.xml中加入maven坐标</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">     	<span class="tag">&lt;<span class="name">version</span>&gt;</span>4.11<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">   	 	<span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mybatis<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.5.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.1.9<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>加入maven插件</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">directory</span>&gt;</span>src/main/java<span class="tag">&lt;/<span class="name">directory</span>&gt;</span><span class="comment">&lt;!--所在的目录--&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">includes</span>&gt;</span><span class="comment">&lt;!--包括目录下的.properties,.xml 文件都会扫描到--&gt;</span></span><br><span class="line"> 			 <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.properties<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.xml<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;/<span class="name">includes</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">filtering</span>&gt;</span>false<span class="tag">&lt;/<span class="name">filtering</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span> </span><br><span class="line">			<span class="tag">&lt;<span class="name">source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">build</span>/&gt;</span> </span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>编写Student实体类</p>
+</blockquote>
+<p>创建包com.bytedance.domain,包中创建Student类</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.bjpowernode.domain;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Description: 实体类 &lt;/p&gt;</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Company: http://www.bjpowernode.com</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123;</span><br><span class="line"> <span class="comment">//属性名和列名一样</span></span><br><span class="line">     <span class="keyword">private</span> Integer id;</span><br><span class="line">     <span class="keyword">private</span> String name;</span><br><span class="line">     <span class="keyword">private</span> String email;</span><br><span class="line">     <span class="keyword">private</span> Integer age;</span><br><span class="line">     <span class="comment">// set ,get , toString</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>编写Dao接口 StudentDao</p>
+</blockquote>
+<p>创建包com.bytedance.dao,创建StudentDao接口</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.bjpowernode.dao;</span><br><span class="line"><span class="keyword">import</span> com.bjpowernode.domain.Student;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Description: Dao 接口 &lt;/p&gt;</span></span><br><span class="line"><span class="comment">* &lt;p&gt;Company: http://www.bjpowernode.com</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">StudentDao</span> </span>&#123;</span><br><span class="line">	 <span class="comment">/*查询所有数据*/</span></span><br><span class="line">	 <span class="function">List&lt;Student&gt; <span class="title">selectStudents</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>编写Dao接口Mapper映射文件StudentDao.xml</p>
+<p>要求：</p>
+<ul>
+<li> 在 dao 包中创建文件 StudentDao.xml </li>
+<li>要 StudentDao.xml 文件名称和接口 StudentDao 一样，区分大小写的一样</li>
+</ul>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">mapper</span></span></span><br><span class="line"><span class="meta">     <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span></span><br><span class="line"><span class="meta">     <span class="meta-string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">     namespace：必须有值，自定义的唯一字符串</span></span><br><span class="line"><span class="comment">     推荐使用：dao 接口的全限定名称</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;com.bytedance.dao.StudentDao&quot;</span>&gt;</span></span><br><span class="line"> <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment"> 		&lt;select&gt;: 查询数据， 标签中必须是 select 语句</span></span><br><span class="line"><span class="comment"> 			id: sql 语句的自定义名称，推荐使用 dao 接口中方法名称，使用名称表示要执行的 sql 语句</span></span><br><span class="line"><span class="comment"> 		resultType: 查询语句的返回结果数据类型，使用全限定类名</span></span><br><span class="line"><span class="comment"> --&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectStudents&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.bytedance.domain.Student&quot;</span>&gt;</span></span><br><span class="line">         <span class="comment">&lt;!--要执行的 sql 语句--&gt;</span></span><br><span class="line">         select id,name,email,age from student</span><br><span class="line"> <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>创建Mybatis主配置文件</p>
+</blockquote>
+<p>项目 src/main 下创建 resources 目录，设置 resources 目录为 resources root 创建主配置文件：名称为 mybatis.xml 说明：主配置文件名称是自定义的，内容如下</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">configuration</span></span></span><br><span class="line"><span class="meta">     <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//mybatis.org//DTD Config 3.0//EN&quot;</span></span></span><br><span class="line"><span class="meta">     <span class="meta-string">&quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line"> 	<span class="comment">&lt;!--配置 mybatis 环境--&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">environments</span> <span class="attr">default</span>=<span class="string">&quot;mysql&quot;</span>&gt;</span></span><br><span class="line">         <span class="comment">&lt;!--id:数据源的名称--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">environment</span> <span class="attr">id</span>=<span class="string">&quot;mysql&quot;</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--配置事务类型：使用 JDBC 事务（使用 Connection 的提交和回滚）--&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">transactionManager</span> <span class="attr">type</span>=<span class="string">&quot;JDBC&quot;</span>/&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--数据源 dataSource：创建数据库 Connection 对象</span></span><br><span class="line"><span class="comment">        type: POOLED 使用数据库的连接池</span></span><br><span class="line"><span class="comment">        --&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">dataSource</span> <span class="attr">type</span>=<span class="string">&quot;POOLED&quot;</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--连接数据库的四个要素--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;driver&quot;</span> <span class="attr">value</span>=<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;url&quot;</span> <span class="attr">value</span>=<span class="string">&quot;jdbc:mysql://localhost:3306/ssm&quot;</span>/&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> <span class="attr">value</span>=<span class="string">&quot;root&quot;</span>/&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span> <span class="attr">value</span>=<span class="string">&quot;123456&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dataSource</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">environment</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">environments</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">mappers</span>&gt;</span></span><br><span class="line">	 <span class="comment">&lt;!--告诉 mybatis 要执行的 sql 语句的位置--&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">mapper</span> <span class="attr">resource</span>=<span class="string">&quot;com/bytedance/dao/StudentDao.xml&quot;</span>/&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">mappers</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>创建测试类</p>
+</blockquote>
+<p> src/test/java/com/bytedance/ 创建 MyBatisTest.java 文件</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* mybatis 入门</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testStart</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="comment">//1.mybatis 主配置文件</span></span><br><span class="line">     String config = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">     <span class="comment">//2.读取配置文件</span></span><br><span class="line">     InputStream in = Resources.getResourceAsStream(config);</span><br><span class="line">     <span class="comment">//3.创建 SqlSessionFactory 对象,目的是获取 SqlSession</span></span><br><span class="line">     SqlSessionFactory factory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(in);</span><br><span class="line">     <span class="comment">//4.获取 SqlSession,SqlSession 能执行 sql 语句</span></span><br><span class="line">     SqlSession session = factory.openSession();</span><br><span class="line">     <span class="comment">//5.执行 SqlSession 的 selectList()</span></span><br><span class="line">     List&lt;Student&gt; studentList = 	session.selectList(<span class="string">&quot;com.bytedance.dao.StudentDao.selectStudents&quot;</span>);</span><br><span class="line">    <span class="comment">//6.循环输出查询结果</span></span><br><span class="line">	 studentList.forEach( student -&gt; System.out.println(student));</span><br><span class="line"> 	<span class="comment">//7.关闭 SqlSession，释放资源</span></span><br><span class="line">	 session.close();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>配置日志功能</p>
+</blockquote>
+<p>mybatis.xml 文件加入日志配置，可以在控制台输出执行的 sql 语句和参数</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">settings</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">&quot;logImpl&quot;</span> <span class="attr">value</span>=<span class="string">&quot;STDOUT_LOGGING&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="insert"><a href="#insert" class="headerlink" title="insert"></a>insert</h3><ul>
+<li><p>StudentDao 接口中增加方法</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">int insertStudent(Student student);</span><br></pre></td></tr></table></figure></li>
+<li><p>StudentDao.xml中加入SQL语句</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">（<span class="number">2</span>） StudentDao.xml 加入 <span class="keyword">sql</span> 语句</span><br><span class="line"><span class="operator">&lt;</span><span class="keyword">insert</span> id<span class="operator">=</span>&quot;insertStudent&quot;<span class="operator">&gt;</span></span><br><span class="line"> 	<span class="keyword">insert</span> <span class="keyword">into</span> student(id,name,email,age)</span><br><span class="line">	values(#&#123;id&#125;,#&#123;name&#125;,#&#123;email&#125;,#&#123;age&#125;)</span><br><span class="line"><span class="operator">&lt;</span><span class="operator">/</span><span class="keyword">insert</span><span class="operator">&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p>增加测试方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testInsert</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="comment">//1.mybatis 主配置文件</span></span><br><span class="line">     String config = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">     <span class="comment">//2.读取配置文件</span></span><br><span class="line">     InputStream in = Resources.getResourceAsStream(config);</span><br><span class="line">     <span class="comment">//3.创建 SqlSessionFactory 对象</span></span><br><span class="line">     SqlSessionFactory factory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(in);</span><br><span class="line">     <span class="comment">//4.获取 SqlSession</span></span><br><span class="line">     SqlSession session = factory.openSession();</span><br><span class="line">     <span class="comment">//5.创建保存数据的对象</span></span><br><span class="line">     Student student = <span class="keyword">new</span> Student();</span><br><span class="line">     student.setId(<span class="number">1005</span>);</span><br><span class="line">     student.setName(<span class="string">&quot;张丽&quot;</span>);</span><br><span class="line">     student.setEmail(<span class="string">&quot;zhangli@163.com&quot;</span>);</span><br><span class="line">     student.setAge(<span class="number">20</span>);</span><br><span class="line">     <span class="comment">//6.执行插入 insert</span></span><br><span class="line">     <span class="keyword">int</span> rows = session.insert(</span><br><span class="line">    <span class="string">&quot;com.bytedance.dao.StudentDao.insertStudent&quot;</span>,student);</span><br><span class="line">     <span class="comment">//7.提交事务</span></span><br><span class="line">     session.commit();</span><br><span class="line">     System.out.println(<span class="string">&quot;增加记录的行数:&quot;</span>+rows);</span><br><span class="line">     <span class="comment">//8.关闭 SqlSession</span></span><br><span class="line">     session.close();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<h3 id="update"><a href="#update" class="headerlink" title="update"></a>update</h3><ul>
+<li><p>StudentDao接口中增加方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">updateStudent</span><span class="params">(Student student)</span></span>;</span><br></pre></td></tr></table></figure></li>
+<li><p>StudentDao.xml文件中增加SQL语句</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="operator">&lt;</span><span class="keyword">update</span> id<span class="operator">=</span>&quot;updateStudent&quot;<span class="operator">&gt;</span></span><br><span class="line"> 	update student set age = #&#123;age&#125; where id=#&#123;id&#125;</span><br><span class="line"><span class="operator">&lt;</span><span class="operator">/</span><span class="keyword">update</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>增加测试方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testUpdate</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="comment">//1.mybatis 主配置文件</span></span><br><span class="line">     String config = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">     <span class="comment">//2.读取配置文件</span></span><br><span class="line">     InputStream in = Resources.getResourceAsStream(config);</span><br><span class="line">     <span class="comment">//3.创建 SqlSessionFactory 对象</span></span><br><span class="line">     SqlSessionFactory factory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(in);</span><br><span class="line">     <span class="comment">//4.获取 SqlSession</span></span><br><span class="line">     SqlSession session = factory.openSession();</span><br><span class="line">     <span class="comment">//5.创建保存数据的对象</span></span><br><span class="line">     Student student = <span class="keyword">new</span> Student();</span><br><span class="line">     student.setId(<span class="number">1005</span>);<span class="comment">//要修改的 id</span></span><br><span class="line">     student.setAge(<span class="number">30</span>); <span class="comment">//要修改的年龄值</span></span><br><span class="line">     <span class="comment">//6.执行更新 update</span></span><br><span class="line">     <span class="keyword">int</span> rows = session.update(</span><br><span class="line">    <span class="string">&quot;com.bytedance.dao.StudentDao.updateStudent&quot;</span>,student);</span><br><span class="line">     <span class="comment">//7.提交事务</span></span><br><span class="line">     session.commit();</span><br><span class="line">     System.out.println(<span class="string">&quot;修改记录的行数:&quot;</span>+rows);</span><br><span class="line">     <span class="comment">//8.关闭 SqlSession</span></span><br><span class="line">     session.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<h3 id="delete"><a href="#delete" class="headerlink" title="delete"></a>delete</h3><ul>
+<li><p>StudentDao接口中增加方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">deleteStudent</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br></pre></td></tr></table></figure></li>
+<li><p>StudentDao.xml文件中增加SQL语句</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">delete</span> <span class="attr">id</span>=<span class="string">&quot;deleteStudent&quot;</span>&gt;</span></span><br><span class="line"> delete from student where id=#&#123;studentId&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">delete</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>增加测试方法</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testDelete</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">     <span class="comment">//1.mybatis 主配置文件</span></span><br><span class="line">     String config = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">     <span class="comment">//2.读取配置文件</span></span><br><span class="line">     InputStream in = Resources.getResourceAsStream(config);</span><br><span class="line">     <span class="comment">//3.创建 SqlSessionFactory 对象</span></span><br><span class="line">     SqlSessionFactory factory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(in);</span><br><span class="line">     <span class="comment">//4.获取 SqlSession</span></span><br><span class="line">     SqlSession session = factory.openSession();</span><br><span class="line">     <span class="comment">//5.删除的 id</span></span><br><span class="line">     <span class="keyword">int</span> id = <span class="number">1001</span>;</span><br><span class="line">     <span class="comment">//6.执行删除 delete</span></span><br><span class="line">     <span class="keyword">int</span> rows = session.delete(</span><br><span class="line">    <span class="string">&quot;com.bytedance.dao.StudentDao.deleteStudent&quot;</span>,id);</span><br><span class="line">     <span class="comment">//7.提交事务</span></span><br><span class="line">     session.commit();</span><br><span class="line">     System.out.println(<span class="string">&quot;修改记录的行数:&quot;</span>+rows);</span><br><span class="line">    <span class="comment">//8.关闭SqlSession</span></span><br><span class="line">    session.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>Mybatis框架</category>
+      </categories>
+      <tags>
+        <tag>Mybatis</tag>
       </tags>
   </entry>
   <entry>
@@ -3131,6 +3212,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
+    <title>垃圾收集器与内存分配策略</title>
+    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>在Linux环境安装redis</title>
     <url>/2021/03/18/%E5%9C%A8Linux%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85redis/</url>
     <content><![CDATA[<h2 id="开发环境搭建"><a href="#开发环境搭建" class="headerlink" title="开发环境搭建"></a>开发环境搭建</h2><h3 id="云服务器部署redis"><a href="#云服务器部署redis" class="headerlink" title="云服务器部署redis"></a>云服务器部署redis</h3><h4 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h4><blockquote>
@@ -3216,13 +3302,89 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>垃圾收集器与内存分配策略</title>
-    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
-    <content><![CDATA[]]></content>
+    <title>基于XML的DI</title>
+    <url>/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/</url>
+    <content><![CDATA[<h2 id="基于XML的DI"><a href="#基于XML的DI" class="headerlink" title="基于XML的DI"></a>基于XML的DI</h2> <img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/01.png" class>
+
+<p>bean 实例在调用无参构造器创建对象后，就要对 bean 对象的属性进行初始化。初始化 是由容器自动完成的，称为注入。</p>
+<p>根据注入方式的不同，常用的有两类：set注入、构造注入</p>
+<h3 id="set注入"><a href="#set注入" class="headerlink" title="set注入"></a>set注入</h3><blockquote>
+<p>set注入</p>
+</blockquote>
+<p>set注入，又叫设值注入，通过<strong>setter 方法</strong>传入被调用者的实例。这种注入方式简单、 直观，因而在 Spring 的依赖注入中大量使用。</p>
+<ul>
+<li><h4 id="简单类型"><a href="#简单类型" class="headerlink" title="简单类型"></a>简单类型</h4></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">student</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setEmail</span><span class="params">(String email)</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;myemail:&quot;</span> + email);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;studenet&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, age=&quot;</span> + age +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>配置文件</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"> <span class="comment">&lt;!--声明student对象--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;mystudent&quot;</span>  <span class="attr">class</span>=<span class="string">&quot;com.bytedance.ba01.student&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;张三&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;age&quot;</span> <span class="attr">value</span>=<span class="string">&quot;12&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;email&quot;</span> <span class="attr">value</span>=<span class="string">&quot;xinghaodong123@163.com&quot;</span>/&gt;</span></span><br><span class="line"><span class="comment">&lt;!--说明不一定是属性才可以注入，spring关心的只是name对应的有没有set方法，有即可设置--&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>创建java.util.Date，并设置初始的日期时间</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;bean id=<span class="string">&quot;mydate&quot;</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">&quot;java.util.Date&quot;</span>&gt;</span><br><span class="line">        &lt;property name=<span class="string">&quot;time&quot;</span> value=<span class="string">&quot;123&quot;</span>/&gt;</span><br><span class="line">&lt;!--Date类里面有setTime方法--&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+
+
+<ul>
+<li><h4 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h4></li>
+</ul>
+<p>当指定 bean 的某属性值为另一 bean 的实例时，通过 ref 指定它们间的引用关系。ref 的值必须为某 bean 的 id 值。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line">    <span class="keyword">private</span> School school;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//setter</span></span><br><span class="line">    <span class="comment">//toString()</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;mystudent&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.bytedance.ba02.student&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;lisi&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;age&quot;</span> <span class="attr">value</span>=<span class="string">&quot;12&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;email&quot;</span> <span class="attr">value</span>=<span class="string">&quot;22&quot;</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;myschool&quot;</span> <span class="attr">ref</span>=<span class="string">&quot;myschool&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 声明school对象--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;myschool&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.bytedance.ba02.school&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;北京大学&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;address&quot;</span> <span class="attr">value</span>=<span class="string">&quot;北京市海淀区&quot;</span>/&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="构造注入"><a href="#构造注入" class="headerlink" title="构造注入"></a>构造注入</h3><p>构造注入是指，在构造调用者实例的同时，完成被调用者的实例化。即使用构造器设置依赖关系。</p>
+ <img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/02.png" class>
+
+
+
+<p>标签中用于指定参数的属性有：</p>
+<p> ➢ name：指定参数名称。 </p>
+<p>➢ index：指明该参数对应着构造器的第几个参数，从 0 开始。不过，该属性不要也行， 但要注意，若参数类型相同，或之间有包含关系，则需要保证赋值顺序要与构造器中的参数 顺序一致。</p>
+ <img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/03.png" class>
+
+
+
+<h3 id="引用类型属性自动注入"><a href="#引用类型属性自动注入" class="headerlink" title="引用类型属性自动注入"></a>引用类型属性自动注入</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">引用类型的自动注入</span><br><span class="line">spring框架根据某些规则可以给“引用类型”赋值，自动注入，不需要程序员再给引用类型赋值了</span><br><span class="line">使用的规则常用的是byName,byType</span><br><span class="line">1.byName(按名称注入)：Java类中引用类型的属性名称和spring容器中（配置文件）&lt;bean&gt;的id的名称一样，数据类型一样，这样的容器中的bean，spring能够赋值给引用类型</span><br><span class="line">    语法规则：</span><br><span class="line">    &lt;bean id&#x3D;&quot;xx&quot;,class&#x3D;&quot;yy&quot; autowire&#x3D;&quot;byname&quot;&gt;</span><br><span class="line">        简单类型属性赋值</span><br><span class="line">     &lt;&#x2F;bean&gt;</span><br><span class="line"></span><br><span class="line">2.byType(按照类型注入)：Java类中引用类型的数据类型和spring容器中（配置文件）&lt;bean&gt;的class属性是同源关系，这样的bean,spring能够赋值给引用类型</span><br><span class="line">    同源就是一类的意思：</span><br><span class="line">    1.java类中引用类型的数据类型和bean的class的值是一样的</span><br><span class="line">    2.Java类中的引用类型的数据类型和bean的class的值是父子类关系</span><br><span class="line">    3.java类中的引用类型的数据类型和bean的class的值是接口与实现类的关系</span><br></pre></td></tr></table></figure>
+ <img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/04.png" class>
+
+
+
+<p>具体说明：</p>
+<ul>
+<li><h4 id="byName方式自动注入"><a href="#byName方式自动注入" class="headerlink" title="byName方式自动注入"></a>byName方式自动注入</h4><p>当配置文件中被调用者 bean 的 id 值与代码中调用者 bean 类的属性名相同时，可使用 byName 方式，让容器自动将被调用者 bean 注入给调用者 bean。容器是通过调用者的 bean 类的引用类型属性名与配置文件的被调用者 bean 的 id 进行比较而实现自动注入的。</p>
+<img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/05.png" class>
+
+
+
+</li>
+</ul>
+<ul>
+<li><h4 id="byType自动注入"><a href="#byType自动注入" class="headerlink" title="byType自动注入"></a>byType自动注入</h4><p>使用 byType 方式自动注入，要求：配置文件中被调用者 bean 的 class 属性指定的类， 要与代码中调用者 bean 类的某引用类型属性类型同源。即要么相同，要么有 is-a 关系（子 类，或是实现类）。但这样的同源的被调用 bean 只能有一个。多于一个，容器就不知该匹配哪一个了。</p>
+<img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/06.png" class>
+
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">如果出现同源类在XML文件中出现两个类，只能保留一个，否则会出现BeanDefinitionParsingException异常</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="为应用指定多个Spring配置文件"><a href="#为应用指定多个Spring配置文件" class="headerlink" title="为应用指定多个Spring配置文件"></a>为应用指定多个Spring配置文件</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> spring-total表示主配置文件：用以包含其他的配置文件，主配置文件一般是不定义对象的。</span><br><span class="line">       语法：&lt;import resource&#x3D;&quot;其他配置文件的路径&quot;&#x2F;&gt;</span><br><span class="line">       关键字：“classpath”：表示类路径（class文件所在的目录的target路径下;）</span><br><span class="line">       在spring的配置文件中要指定其他文件的位置，需要使用classpath，告诉spring到哪里去加载读取文件</span><br><span class="line">        </span><br><span class="line">在具有包含关系的配置文件中，可以使用通配符（*：表示任意字符） 且这些文件必须在resources下面的一级目录下 。 </span><br><span class="line">使用多配置文件时，不能将主文件自身包括进自生主文件</span><br></pre></td></tr></table></figure>
+ <img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/07.png" class>
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>spring框架</category>
+      </categories>
+      <tags>
+        <tag>IOC</tag>
+      </tags>
   </entry>
   <entry>
-    <title>客户端识别与Cookie</title>
-    <url>/2021/03/14/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%AF%86%E5%88%AB%E4%B8%8ECookie/</url>
+    <title>基础注解的DI</title>
+    <url>/2021/02/28/%E5%9F%BA%E7%A1%80%E6%B3%A8%E8%A7%A3%E7%9A%84DI/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -3246,6 +3408,11 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>字符串</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>客户端识别与Cookie</title>
+    <url>/2021/03/14/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%AF%86%E5%88%AB%E4%B8%8ECookie/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>封装Mybatis输出结果与模糊查询</title>
@@ -3547,11 +3714,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>基础注解的DI</title>
-    <url>/2021/02/28/%E5%9F%BA%E7%A1%80%E6%B3%A8%E8%A7%A3%E7%9A%84DI/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Vue模板语法</title>
     <url>/2021/03/07/%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95/</url>
     <content><![CDATA[<h2 id="模板语法"><a href="#模板语法" class="headerlink" title="模板语法"></a>模板语法</h2><p>Vue.js 使用了基于 HTML 的模板语法，允许开发者声明式地将 DOM 绑定至底层 Vue 实例的数据。所有 Vue.js 的模板都是合法的 HTML，所以能被遵循规范的浏览器和 HTML 解析器解析。</p>
@@ -3827,87 +3989,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </categories>
       <tags>
         <tag>JAVA</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>基于XML的DI</title>
-    <url>/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/</url>
-    <content><![CDATA[<h2 id="基于XML的DI"><a href="#基于XML的DI" class="headerlink" title="基于XML的DI"></a>基于XML的DI</h2> <img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/01.png" class>
-
-<p>bean 实例在调用无参构造器创建对象后，就要对 bean 对象的属性进行初始化。初始化 是由容器自动完成的，称为注入。</p>
-<p>根据注入方式的不同，常用的有两类：set注入、构造注入</p>
-<h3 id="set注入"><a href="#set注入" class="headerlink" title="set注入"></a>set注入</h3><blockquote>
-<p>set注入</p>
-</blockquote>
-<p>set注入，又叫设值注入，通过<strong>setter 方法</strong>传入被调用者的实例。这种注入方式简单、 直观，因而在 Spring 的依赖注入中大量使用。</p>
-<ul>
-<li><h4 id="简单类型"><a href="#简单类型" class="headerlink" title="简单类型"></a>简单类型</h4></li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">student</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setEmail</span><span class="params">(String email)</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;myemail:&quot;</span> + email);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;studenet&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, age=&quot;</span> + age +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>配置文件</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"> <span class="comment">&lt;!--声明student对象--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;mystudent&quot;</span>  <span class="attr">class</span>=<span class="string">&quot;com.bytedance.ba01.student&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;张三&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;age&quot;</span> <span class="attr">value</span>=<span class="string">&quot;12&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;email&quot;</span> <span class="attr">value</span>=<span class="string">&quot;xinghaodong123@163.com&quot;</span>/&gt;</span></span><br><span class="line"><span class="comment">&lt;!--说明不一定是属性才可以注入，spring关心的只是name对应的有没有set方法，有即可设置--&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>创建java.util.Date，并设置初始的日期时间</p>
-</blockquote>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;bean id=<span class="string">&quot;mydate&quot;</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">&quot;java.util.Date&quot;</span>&gt;</span><br><span class="line">        &lt;property name=<span class="string">&quot;time&quot;</span> value=<span class="string">&quot;123&quot;</span>/&gt;</span><br><span class="line">&lt;!--Date类里面有setTime方法--&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br></pre></td></tr></table></figure>
-
-
-<ul>
-<li><h4 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h4></li>
-</ul>
-<p>当指定 bean 的某属性值为另一 bean 的实例时，通过 ref 指定它们间的引用关系。ref 的值必须为某 bean 的 id 值。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line">    <span class="keyword">private</span> School school;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//setter</span></span><br><span class="line">    <span class="comment">//toString()</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;mystudent&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.bytedance.ba02.student&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;lisi&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;age&quot;</span> <span class="attr">value</span>=<span class="string">&quot;12&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;email&quot;</span> <span class="attr">value</span>=<span class="string">&quot;22&quot;</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;myschool&quot;</span> <span class="attr">ref</span>=<span class="string">&quot;myschool&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 声明school对象--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;myschool&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.bytedance.ba02.school&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;北京大学&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;address&quot;</span> <span class="attr">value</span>=<span class="string">&quot;北京市海淀区&quot;</span>/&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="构造注入"><a href="#构造注入" class="headerlink" title="构造注入"></a>构造注入</h3><p>构造注入是指，在构造调用者实例的同时，完成被调用者的实例化。即使用构造器设置依赖关系。</p>
- <img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/02.png" class>
-
-
-
-<p>标签中用于指定参数的属性有：</p>
-<p> ➢ name：指定参数名称。 </p>
-<p>➢ index：指明该参数对应着构造器的第几个参数，从 0 开始。不过，该属性不要也行， 但要注意，若参数类型相同，或之间有包含关系，则需要保证赋值顺序要与构造器中的参数 顺序一致。</p>
- <img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/03.png" class>
-
-
-
-<h3 id="引用类型属性自动注入"><a href="#引用类型属性自动注入" class="headerlink" title="引用类型属性自动注入"></a>引用类型属性自动注入</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">引用类型的自动注入</span><br><span class="line">spring框架根据某些规则可以给“引用类型”赋值，自动注入，不需要程序员再给引用类型赋值了</span><br><span class="line">使用的规则常用的是byName,byType</span><br><span class="line">1.byName(按名称注入)：Java类中引用类型的属性名称和spring容器中（配置文件）&lt;bean&gt;的id的名称一样，数据类型一样，这样的容器中的bean，spring能够赋值给引用类型</span><br><span class="line">    语法规则：</span><br><span class="line">    &lt;bean id&#x3D;&quot;xx&quot;,class&#x3D;&quot;yy&quot; autowire&#x3D;&quot;byname&quot;&gt;</span><br><span class="line">        简单类型属性赋值</span><br><span class="line">     &lt;&#x2F;bean&gt;</span><br><span class="line"></span><br><span class="line">2.byType(按照类型注入)：Java类中引用类型的数据类型和spring容器中（配置文件）&lt;bean&gt;的class属性是同源关系，这样的bean,spring能够赋值给引用类型</span><br><span class="line">    同源就是一类的意思：</span><br><span class="line">    1.java类中引用类型的数据类型和bean的class的值是一样的</span><br><span class="line">    2.Java类中的引用类型的数据类型和bean的class的值是父子类关系</span><br><span class="line">    3.java类中的引用类型的数据类型和bean的class的值是接口与实现类的关系</span><br></pre></td></tr></table></figure>
- <img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/04.png" class>
-
-
-
-<p>具体说明：</p>
-<ul>
-<li><h4 id="byName方式自动注入"><a href="#byName方式自动注入" class="headerlink" title="byName方式自动注入"></a>byName方式自动注入</h4><p>当配置文件中被调用者 bean 的 id 值与代码中调用者 bean 类的属性名相同时，可使用 byName 方式，让容器自动将被调用者 bean 注入给调用者 bean。容器是通过调用者的 bean 类的引用类型属性名与配置文件的被调用者 bean 的 id 进行比较而实现自动注入的。</p>
-<img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/05.png" class>
-
-
-
-</li>
-</ul>
-<ul>
-<li><h4 id="byType自动注入"><a href="#byType自动注入" class="headerlink" title="byType自动注入"></a>byType自动注入</h4><p>使用 byType 方式自动注入，要求：配置文件中被调用者 bean 的 class 属性指定的类， 要与代码中调用者 bean 类的某引用类型属性类型同源。即要么相同，要么有 is-a 关系（子 类，或是实现类）。但这样的同源的被调用 bean 只能有一个。多于一个，容器就不知该匹配哪一个了。</p>
-<img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/06.png" class>
-
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">如果出现同源类在XML文件中出现两个类，只能保留一个，否则会出现BeanDefinitionParsingException异常</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="为应用指定多个Spring配置文件"><a href="#为应用指定多个Spring配置文件" class="headerlink" title="为应用指定多个Spring配置文件"></a>为应用指定多个Spring配置文件</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> spring-total表示主配置文件：用以包含其他的配置文件，主配置文件一般是不定义对象的。</span><br><span class="line">       语法：&lt;import resource&#x3D;&quot;其他配置文件的路径&quot;&#x2F;&gt;</span><br><span class="line">       关键字：“classpath”：表示类路径（class文件所在的目录的target路径下;）</span><br><span class="line">       在spring的配置文件中要指定其他文件的位置，需要使用classpath，告诉spring到哪里去加载读取文件</span><br><span class="line">        </span><br><span class="line">在具有包含关系的配置文件中，可以使用通配符（*：表示任意字符） 且这些文件必须在resources下面的一级目录下 。 </span><br><span class="line">使用多配置文件时，不能将主文件自身包括进自生主文件</span><br></pre></td></tr></table></figure>
- <img data-src="/2021/02/28/%E5%9F%BA%E4%BA%8EXML%E7%9A%84DI/07.png" class>
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>spring框架</category>
-      </categories>
-      <tags>
-        <tag>IOC</tag>
       </tags>
   </entry>
   <entry>
@@ -4220,13 +4301,13 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       </tags>
   </entry>
   <entry>
-    <title>组件进阶篇--深入了解组件</title>
-    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E8%BF%9B%E9%98%B6%E7%AF%87-%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E7%BB%84%E4%BB%B6/</url>
+    <title>组件基础</title>
+    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>组件基础</title>
-    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E5%9F%BA%E7%A1%80/</url>
+    <title>组件进阶篇--深入了解组件</title>
+    <url>/2021/03/14/%E7%BB%84%E4%BB%B6%E8%BF%9B%E9%98%B6%E7%AF%87-%E6%B7%B1%E5%85%A5%E4%BA%86%E8%A7%A3%E7%BB%84%E4%BB%B6/</url>
     <content><![CDATA[]]></content>
   </entry>
   <entry>
@@ -5139,7 +5220,7 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
   <entry>
     <title>Process</title>
     <url>/2022/02/16/Process/</url>
-    <content><![CDATA[<h1 id="Unix-Process"><a href="#Unix-Process" class="headerlink" title="Unix Process"></a>Unix Process</h1>
+    <content><![CDATA[<h1 id="Unix-Process"><a href="#Unix-Process" class="headerlink" title="Unix Process"></a>Unix Process</h1><img data-src="/2022/02/16/Process/image16.png" class>
 
 <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>进程就是处于执行期的程序(目标码存放在某种存储介质上)。但进程并不仅仅局限于一段可执行程序代码(Unix称其为代码段，text section)，通常<strong>进程还要包含其他资源</strong>，像打开的文件，挂起的信号，内核内部数据，处理器状态，一个或多个具有内存映射的内存地址空间及一个或多个执行线程(thread of execution),当然还包括用来存放全局变量的数据段等。实际上，进程就是正在执行的程序代码的实时结果。内核需要有效而又透明地管理所有细节。</p>
 <blockquote>
@@ -6109,10 +6190,5 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
       <tags>
         <tag>Docker</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>HTTP/1.1深入学习</title>
-    <url>/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/</url>
-    <content><![CDATA[]]></content>
   </entry>
 </search>
