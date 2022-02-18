@@ -2533,44 +2533,6 @@ IDE使用的Idea（用eclipse也可以，不过我使用的是Idea演示）</cod
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>创建一个Vue实例</title>
-    <url>/2021/03/07/%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAVue%E5%AE%9E%E4%BE%8B/</url>
-    <content><![CDATA[<h2 id="创建一个Vue实例"><a href="#创建一个Vue实例" class="headerlink" title="创建一个Vue实例"></a>创建一个Vue实例</h2><p>虽然没有完全遵循 <a href="https://zh.wikipedia.org/wiki/MVVM">MVVM 模型</a>，但是 Vue 的设计也受到了它的启发。因此在文档中经常会使用 <code>vm</code> (ViewModel 的缩写) 这个变量名表示 Vue 实例。</p>
-<p>当创建一个 Vue 实例时，你可以传入一个<strong>选项对象</strong> </p>
-<p>一个 Vue 应用由一个通过 <code>new Vue</code> 创建的<strong>根 Vue 实例</strong>，以及可选的嵌套的、可复用的组件树组成。举个例子，一个 todo 应用的组件树可以是这样的：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">根实例</span><br><span class="line">└─ TodoList</span><br><span class="line">   ├─ TodoItem</span><br><span class="line">   │  ├─ TodoButtonDelete</span><br><span class="line">   │  └─ TodoButtonEdit</span><br><span class="line">   └─ TodoListFooter</span><br><span class="line">      ├─ TodosButtonClear</span><br><span class="line">      └─ TodoListStatistics</span><br></pre></td></tr></table></figure>
-<p>当一个 Vue 实例被创建时，它将 <code>data</code> 对象中的所有的 property 加入到 Vue 的<strong>响应式系统</strong>中。当这些 property 的值发生改变时，<strong>视图</strong>将会产生“响应”，即匹配更新为新的值</p>
-<p>当这些数据改变时，视图会进行重渲染。值得注意的是只有当实例被创建时就已经存在于 <code>data</code> 中的 property 才是<strong>响应式</strong>的。也就是说如果你添加一个新的 property，</p>
-<p>你知道你会在晚些时候需要一个 property，但是一开始它为空或不存在，那么你仅需要设置一些初始值。比如：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">data: &#123;</span><br><span class="line">  newTodoText: &#39;&#39;,</span><br><span class="line">  visitCount: 0,</span><br><span class="line">  hideCompletedTodos: false,</span><br><span class="line">  todos: [],</span><br><span class="line">  error: null</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用 <code>Object.freeze()</code>，这会阻止修改现有的 property，也意味着响应系统无法再<em>追踪</em>变化。</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;app&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; foo &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 这里的 `foo` 不会更新！ --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span> <span class="attr">v-on:click</span>=<span class="string">&quot;foo = &#x27;baz&#x27;&quot;</span>&gt;</span>Change it<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">var obj = &#123;</span><br><span class="line">	foot:&#x27;bar&#x27;</span><br><span class="line">&#125;</span><br><span class="line">Object.freeze(obj)</span><br><span class="line">new Vue(&#123;</span><br><span class="line">	el:&#x27;#app&#x27;</span><br><span class="line">	data: obj</span><br><span class="line">&#125;)     //没办法对obj进行修改</span><br></pre></td></tr></table></figure>
-<p><a href="https://cn.vuejs.org/v2/api/#%E9%80%89%E9%A1%B9-%E6%95%B0%E6%8D%AE">选项对象API</a></p>
-<p>有用的property与方法，带有前缀$,以便于用户定义的property区分开</p>
-<p><a href="https://cn.vuejs.org/v2/api/#%E5%AE%9E%E4%BE%8B-property">具体API文档</a></p>
-<h2 id="实例的生命周期"><a href="#实例的生命周期" class="headerlink" title="实例的生命周期"></a>实例的生命周期</h2><p>每个 Vue 实例在被创建时都要经过一系列的初始化过程——例如，需要设置数据监听、编译模板、将实例挂载到 DOM 并在数据变化时更新 DOM 等。同时在这个过程中也会运行一些叫做<strong>生命周期钩子</strong>的函数，这给了用户在不同阶段添加自己的代码的机会。</p>
-<p>比如 <a href="https://cn.vuejs.org/v2/api/#created"><code>created</code></a> 钩子可以用来在一个实例被创建之后执行代码：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  data: &#123;</span><br><span class="line">    a: <span class="number">1</span></span><br><span class="line">  &#125;,</span><br><span class="line">  created: function () &#123;</span><br><span class="line">    <span class="comment">// `this` 指向 vm 实例</span></span><br><span class="line">    console.log(<span class="string">&#x27;a is: &#x27;</span> + <span class="keyword">this</span>.a)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// =&gt; &quot;a is: 1&quot;</span></span><br></pre></td></tr></table></figure>
-<p> 有一些其它的钩子，在实例生命周期的不同阶段被调用，如 <a href="https://cn.vuejs.org/v2/api/#mounted"><code>mounted</code></a>、<a href="https://cn.vuejs.org/v2/api/#updated"><code>updated</code></a> 和 <a href="https://cn.vuejs.org/v2/api/#destroyed"><code>destroyed</code></a>。<u>生命周</u><u>期钩子的 <code>this</code> 上下文指向调用它的 Vue 实例</u>。</p>
-<blockquote>
-<p>不要在选项 property 或回调上使用<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions">箭头函数</a>，比如 <code>created: () =&gt; console.log(this.a)</code> 或 <code>vm.$watch(&#39;a&#39;, newValue =&gt; this.myMethod())</code>。**因为箭头函数并没有 <code>this</code>**，<code>this</code> 会作为变量一直向上级词法作用域查找，直至找到为止，经常导致 <code>Uncaught TypeError: Cannot read property of undefined</code> 或 <code>Uncaught TypeError: this.myMethod is not a function</code> 之类的错误。</p>
-</blockquote>
-<p>生命周期的图示</p>
-<img data-src="/2021/03/07/%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAVue%E5%AE%9E%E4%BE%8B/lifecycle.png" class>
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>Vue框架</category>
-      </categories>
-      <tags>
-        <tag>Vue</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>消息队列MQ</title>
     <url>/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/</url>
     <content><![CDATA[<h2 id="MQ的基本概念"><a href="#MQ的基本概念" class="headerlink" title="MQ的基本概念"></a>MQ的基本概念</h2><p>MQ全称 Message Queue（消息队列），是在消息的传输过程中保存消息的容器。多用于分布式系统之间进行通信。消息队列已经逐渐成为企业IT系统内部通信的核心手段。它具有低耦合、可靠投递、广播、流量控制、最终一致性等一系列功能，成为异步RPC的主要手段之一。 当今市面上有很多主流的消息中间件，如老牌的ActiveMQ、RabbitMQ，炙手可热的Kafka，阿里巴巴自主开发的Notify、MetaQ、RocketMQ等。</p>
