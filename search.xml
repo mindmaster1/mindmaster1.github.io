@@ -350,45 +350,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Python自动化办公</title>
-    <url>/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC/</url>
-    <content><![CDATA[<h1 id="任务场景一：拆分与合并–快速的批量处理内容相似的Excel"><a href="#任务场景一：拆分与合并–快速的批量处理内容相似的Excel" class="headerlink" title="任务场景一：拆分与合并–快速的批量处理内容相似的Excel"></a>任务场景一：拆分与合并–快速的批量处理内容相似的Excel</h1><blockquote>
-<p>批量合并</p>
-<p>假设你需要对某些工作内容进行问卷调查，这时你用Excel做了调查问卷模版。 我想你会这样做：先把Excel通过工作群分发给所有员工，再把群里收集到的反馈附件汇总 成一个文件。</p>
-<p>批量拆分</p>
-<p>假设你是公司的财务人员，你需要使用Excel对员工工资进行核算，之后再打印 出来。但是公司要求员工薪水保密，所以每个员工的工资需要拆分成一个独立的文件，最 后还需要打印出来。</p>
-</blockquote>
-<ul>
-<li>解决方案：使用Python实现自动化批量处理。<ul>
-<li>安装扩展库：支持Excel读取的扩展库叫做xlrd库，支持Excel写入的扩展库叫做xlwt库</li>
-<li>找到整个工作过程当中重复操作的部分；</li>
-<li> 将重复操作的部分需要哪些手工操作找出来，使用Python编写程序代替手工操作的部分；</li>
-<li> 对重复的部分，使用循环语句进行批量处理。</li>
-<li>可以使用绘制时序图来实现手工操作到Python程序的过渡</li>
-</ul>
-</li>
-</ul>
-<img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC/image.png" class>
-
-
-
-
-
-<h2 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h2><h3 id="Merge-py"><a href="#Merge-py" class="headerlink" title="Merge.py"></a>Merge.py</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">import</span> xlwt</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导入Excel和文件操作库</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定要合并excel的路径</span></span><br><span class="line">src_path = <span class="string">&#x27;D:/Python自动化办公/Day01/调查问卷&#x27;</span></span><br><span class="line"><span class="comment"># 指定合并完成的路径</span></span><br><span class="line">dst_file = <span class="string">&#x27;D:/Python自动化办公/Day01/result/结果.xls&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取得给目录下所有的xlsx格式文件</span></span><br><span class="line">p = Path(src_path)</span><br><span class="line">files = [x <span class="keyword">for</span> x <span class="keyword">in</span> p.iterdir() <span class="keyword">if</span> PurePath(x).match(<span class="string">&#x27;*.xls&#x27;</span>)]</span><br><span class="line">print(files)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 准备列表存放读取结果</span></span><br><span class="line">content = []</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 对每一个文件进行重复处理</span></span><br><span class="line"><span class="keyword">for</span> file <span class="keyword">in</span> files:</span><br><span class="line">    <span class="comment"># 用文件作为每个用户的标识</span></span><br><span class="line">    username = file.stem</span><br><span class="line">    data = xlrd.open_workbook(file)</span><br><span class="line">    table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 取得每一项的结果</span></span><br><span class="line">    answer1 = table.cell_value(rowx=<span class="number">4</span>, colx=<span class="number">4</span>)</span><br><span class="line">    answer2 = table.cell_value(rowx=<span class="number">10</span>, colx=<span class="number">4</span>)</span><br><span class="line">    temp = <span class="string">f&#x27;<span class="subst">&#123;username&#125;</span>,<span class="subst">&#123;answer1&#125;</span>,<span class="subst">&#123;answer2&#125;</span>&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 合并为一行存储</span></span><br><span class="line">    content.append(temp.split(<span class="string">&#x27;,&#x27;</span>))</span><br><span class="line">    print(<span class="string">&quot;你好&quot;</span>)</span><br><span class="line">    print(temp)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 准备写入文件的表头</span></span><br><span class="line">table_header = [<span class="string">&#x27;员工姓名&#x27;</span>, <span class="string">&#x27;第一题&#x27;</span>, <span class="string">&#x27;第二题&#x27;</span>]</span><br><span class="line"></span><br><span class="line">workbook = xlwt.Workbook(encoding=<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">x1sheet = workbook.add_sheet(<span class="string">&quot;统计结果&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 写入表头</span></span><br><span class="line">row = <span class="number">0</span></span><br><span class="line">col = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> cell_header <span class="keyword">in</span> table_header:</span><br><span class="line">    x1sheet.write(row, col, cell_header)</span><br><span class="line">    col += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 向下移动一行</span></span><br><span class="line">row += <span class="number">1</span></span><br><span class="line"><span class="comment"># 取出每一行的内容</span></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> content:</span><br><span class="line">    col = <span class="number">0</span></span><br><span class="line">    <span class="comment"># 取出每个单元格内容</span></span><br><span class="line">    <span class="keyword">for</span> cell <span class="keyword">in</span> line:</span><br><span class="line">        <span class="comment"># 写入内容</span></span><br><span class="line">        x1sheet.write(row, col, cell)</span><br><span class="line">        <span class="comment"># 向右移动一个单元格</span></span><br><span class="line">        col += <span class="number">1</span></span><br><span class="line">    <span class="comment"># 向下移动一行</span></span><br><span class="line">    row += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存最终结果</span></span><br><span class="line">workbook.save(dst_file)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="Split-py"><a href="#Split-py" class="headerlink" title="Split.py"></a>Split.py</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">import</span> xlwt</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># 工资单文件</span></span><br><span class="line">salary_file = <span class="string">&#x27;D:/Python自动化办公/Day01/工资单/工资单.xls&#x27;</span></span><br><span class="line"><span class="comment"># 拆分文件保存路径</span></span><br><span class="line">dst_path = <span class="string">&#x27;D:/Python自动化办公/Day01/工资单&#x27;</span></span><br><span class="line"></span><br><span class="line">data = xlrd.open_workbook(salary_file)</span><br><span class="line">table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"><span class="comment"># 取得表头</span></span><br><span class="line">salary_header = table.row_values(rowx=<span class="number">0</span>, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>) </span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义写入文件的函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">write_to_file</span>(<span class="params">filename, cnt</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27; </span></span><br><span class="line"><span class="string">    filename : 写入的文件名</span></span><br><span class="line"><span class="string">    cnt      : 写入的内容</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    workbook = xlwt.Workbook(encoding=<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">    xlsheet = workbook.add_sheet(<span class="string">&quot;本月工资&quot;</span>)</span><br><span class="line"></span><br><span class="line">    row = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> cnt:</span><br><span class="line">        col = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> cell <span class="keyword">in</span> line:</span><br><span class="line">            xlsheet.write(row, col, cell)</span><br><span class="line">            col += <span class="number">1</span></span><br><span class="line">        row += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    workbook.save(PurePath(salary_file).with_name(filename).with_suffix(<span class="string">&#x27;.xls&#x27;</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取得员工数量</span></span><br><span class="line">employee_number = table.nrows</span><br><span class="line"><span class="comment"># 取得每一行,并用第二个单元格作为新的文件名</span></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,employee_number):</span><br><span class="line">    content = table.row_values(rowx=line, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>)</span><br><span class="line">    <span class="comment"># 将表头和员工数量重新组成一个新的文件 </span></span><br><span class="line">    new_content = []</span><br><span class="line">    <span class="comment"># 增加表头到要写入的内容中</span></span><br><span class="line">    new_content.append(salary_header)</span><br><span class="line">    <span class="comment"># 增加员工工资到要写入的内容中</span></span><br><span class="line">    new_content.append(content)</span><br><span class="line">    <span class="comment"># 调用自定义函数write_to_file()写入新的文件</span></span><br><span class="line">    write_to_file(filename = content[<span class="number">1</span>], cnt = new_content)</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="Python与Excel交互模块学习"><a href="#Python与Excel交互模块学习" class="headerlink" title="Python与Excel交互模块学习"></a>Python与Excel交互模块学习</h2>]]></content>
-      <categories>
-        <category>Python开发</category>
-      </categories>
-      <tags>
-        <tag>Python自动化</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>中断</title>
     <url>/2021/02/03/%E4%B8%AD%E6%96%AD/</url>
     <content><![CDATA[<h3 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h3><p>中断使得硬件得以发出通知给处理器，是一种变内核主动为硬件主动的方式。中断本质上是一种特殊的电信号。硬件在生成中断的时候并不需要考虑与处理器的时钟同步，即中断可以随时产生，<strong>内核随时可能因为新到来的中断而被打断</strong>。</p>
@@ -435,9 +396,54 @@
       </tags>
   </entry>
   <entry>
-    <title>牛客网刷题-操作系统2</title>
-    <url>/2022/02/18/%E7%89%9B%E5%AE%A2%E7%BD%91%E5%88%B7%E9%A2%98-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F2/</url>
+    <title>Python自动化办公</title>
+    <url>/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC/</url>
+    <content><![CDATA[<h1 id="任务场景一：拆分与合并–快速的批量处理内容相似的Excel"><a href="#任务场景一：拆分与合并–快速的批量处理内容相似的Excel" class="headerlink" title="任务场景一：拆分与合并–快速的批量处理内容相似的Excel"></a>任务场景一：拆分与合并–快速的批量处理内容相似的Excel</h1><blockquote>
+<p>批量合并</p>
+<p>假设你需要对某些工作内容进行问卷调查，这时你用Excel做了调查问卷模版。 我想你会这样做：先把Excel通过工作群分发给所有员工，再把群里收集到的反馈附件汇总 成一个文件。</p>
+<p>批量拆分</p>
+<p>假设你是公司的财务人员，你需要使用Excel对员工工资进行核算，之后再打印 出来。但是公司要求员工薪水保密，所以每个员工的工资需要拆分成一个独立的文件，最 后还需要打印出来。</p>
+</blockquote>
+<ul>
+<li>解决方案：使用Python实现自动化批量处理。<ul>
+<li>安装扩展库：支持Excel读取的扩展库叫做xlrd库，支持Excel写入的扩展库叫做xlwt库</li>
+<li>找到整个工作过程当中重复操作的部分；</li>
+<li> 将重复操作的部分需要哪些手工操作找出来，使用Python编写程序代替手工操作的部分；</li>
+<li> 对重复的部分，使用循环语句进行批量处理。</li>
+<li>可以使用绘制时序图来实现手工操作到Python程序的过渡</li>
+</ul>
+</li>
+</ul>
+<img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC/image.png" class>
+
+
+
+
+
+<h2 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h2><h3 id="Merge-py"><a href="#Merge-py" class="headerlink" title="Merge.py"></a>Merge.py</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">import</span> xlwt</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导入Excel和文件操作库</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定要合并excel的路径</span></span><br><span class="line">src_path = <span class="string">&#x27;D:/Python自动化办公/Day01/调查问卷&#x27;</span></span><br><span class="line"><span class="comment"># 指定合并完成的路径</span></span><br><span class="line">dst_file = <span class="string">&#x27;D:/Python自动化办公/Day01/result/结果.xls&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取得给目录下所有的xlsx格式文件</span></span><br><span class="line">p = Path(src_path)</span><br><span class="line">files = [x <span class="keyword">for</span> x <span class="keyword">in</span> p.iterdir() <span class="keyword">if</span> PurePath(x).match(<span class="string">&#x27;*.xls&#x27;</span>)]</span><br><span class="line">print(files)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 准备列表存放读取结果</span></span><br><span class="line">content = []</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 对每一个文件进行重复处理</span></span><br><span class="line"><span class="keyword">for</span> file <span class="keyword">in</span> files:</span><br><span class="line">    <span class="comment"># 用文件作为每个用户的标识</span></span><br><span class="line">    username = file.stem</span><br><span class="line">    data = xlrd.open_workbook(file)</span><br><span class="line">    table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 取得每一项的结果</span></span><br><span class="line">    answer1 = table.cell_value(rowx=<span class="number">4</span>, colx=<span class="number">4</span>)</span><br><span class="line">    answer2 = table.cell_value(rowx=<span class="number">10</span>, colx=<span class="number">4</span>)</span><br><span class="line">    temp = <span class="string">f&#x27;<span class="subst">&#123;username&#125;</span>,<span class="subst">&#123;answer1&#125;</span>,<span class="subst">&#123;answer2&#125;</span>&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 合并为一行存储</span></span><br><span class="line">    content.append(temp.split(<span class="string">&#x27;,&#x27;</span>))</span><br><span class="line">    print(<span class="string">&quot;你好&quot;</span>)</span><br><span class="line">    print(temp)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 准备写入文件的表头</span></span><br><span class="line">table_header = [<span class="string">&#x27;员工姓名&#x27;</span>, <span class="string">&#x27;第一题&#x27;</span>, <span class="string">&#x27;第二题&#x27;</span>]</span><br><span class="line"></span><br><span class="line">workbook = xlwt.Workbook(encoding=<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">x1sheet = workbook.add_sheet(<span class="string">&quot;统计结果&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 写入表头</span></span><br><span class="line">row = <span class="number">0</span></span><br><span class="line">col = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> cell_header <span class="keyword">in</span> table_header:</span><br><span class="line">    x1sheet.write(row, col, cell_header)</span><br><span class="line">    col += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 向下移动一行</span></span><br><span class="line">row += <span class="number">1</span></span><br><span class="line"><span class="comment"># 取出每一行的内容</span></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> content:</span><br><span class="line">    col = <span class="number">0</span></span><br><span class="line">    <span class="comment"># 取出每个单元格内容</span></span><br><span class="line">    <span class="keyword">for</span> cell <span class="keyword">in</span> line:</span><br><span class="line">        <span class="comment"># 写入内容</span></span><br><span class="line">        x1sheet.write(row, col, cell)</span><br><span class="line">        <span class="comment"># 向右移动一个单元格</span></span><br><span class="line">        col += <span class="number">1</span></span><br><span class="line">    <span class="comment"># 向下移动一行</span></span><br><span class="line">    row += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存最终结果</span></span><br><span class="line">workbook.save(dst_file)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="Split-py"><a href="#Split-py" class="headerlink" title="Split.py"></a>Split.py</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">import</span> xlwt</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># 工资单文件</span></span><br><span class="line">salary_file = <span class="string">&#x27;D:/Python自动化办公/Day01/工资单/工资单.xls&#x27;</span></span><br><span class="line"><span class="comment"># 拆分文件保存路径</span></span><br><span class="line">dst_path = <span class="string">&#x27;D:/Python自动化办公/Day01/工资单&#x27;</span></span><br><span class="line"></span><br><span class="line">data = xlrd.open_workbook(salary_file)</span><br><span class="line">table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"><span class="comment"># 取得表头</span></span><br><span class="line">salary_header = table.row_values(rowx=<span class="number">0</span>, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>) </span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义写入文件的函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">write_to_file</span>(<span class="params">filename, cnt</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27; </span></span><br><span class="line"><span class="string">    filename : 写入的文件名</span></span><br><span class="line"><span class="string">    cnt      : 写入的内容</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    workbook = xlwt.Workbook(encoding=<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">    xlsheet = workbook.add_sheet(<span class="string">&quot;本月工资&quot;</span>)</span><br><span class="line"></span><br><span class="line">    row = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> cnt:</span><br><span class="line">        col = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> cell <span class="keyword">in</span> line:</span><br><span class="line">            xlsheet.write(row, col, cell)</span><br><span class="line">            col += <span class="number">1</span></span><br><span class="line">        row += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    workbook.save(PurePath(salary_file).with_name(filename).with_suffix(<span class="string">&#x27;.xls&#x27;</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取得员工数量</span></span><br><span class="line">employee_number = table.nrows</span><br><span class="line"><span class="comment"># 取得每一行,并用第二个单元格作为新的文件名</span></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,employee_number):</span><br><span class="line">    content = table.row_values(rowx=line, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>)</span><br><span class="line">    <span class="comment"># 将表头和员工数量重新组成一个新的文件 </span></span><br><span class="line">    new_content = []</span><br><span class="line">    <span class="comment"># 增加表头到要写入的内容中</span></span><br><span class="line">    new_content.append(salary_header)</span><br><span class="line">    <span class="comment"># 增加员工工资到要写入的内容中</span></span><br><span class="line">    new_content.append(content)</span><br><span class="line">    <span class="comment"># 调用自定义函数write_to_file()写入新的文件</span></span><br><span class="line">    write_to_file(filename = content[<span class="number">1</span>], cnt = new_content)</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="Python与Excel交互模块学习"><a href="#Python与Excel交互模块学习" class="headerlink" title="Python与Excel交互模块学习"></a>Python与Excel交互模块学习</h2>]]></content>
+      <categories>
+        <category>Python开发</category>
+      </categories>
+      <tags>
+        <tag>Python自动化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>创建高性能索引</title>
+    <url>/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/</url>
     <content><![CDATA[]]></content>
+      <categories>
+        <category>MySQL数据库</category>
+      </categories>
+      <tags>
+        <tag>MySQL数据库索引</tag>
+      </tags>
   </entry>
   <entry>
     <title>系统调用</title>
@@ -524,6 +530,11 @@
       <tags>
         <tag>Linux系统内核设计</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>牛客网刷题-操作系统2</title>
+    <url>/2022/02/18/%E7%89%9B%E5%AE%A2%E7%BD%91%E5%88%B7%E9%A2%98-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F2/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>进程通信</title>
