@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.mindmaster.top/2022/02/21/Scrapy1/</loc>
+    
+    <lastmod>2022-02-21</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.mindmaster.top/2022/02/21/Section1/</loc>
+    
+    <lastmod>2022-02-20</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.mindmaster.top/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/</loc>
     
     <lastmod>2022-02-20</lastmod>
@@ -144,7 +158,7 @@
 
   <url>
     <loc>https://www.mindmaster.top/</loc>
-    <lastmod>2022-02-20</lastmod>
+    <lastmod>2022-02-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -152,49 +166,56 @@
   
   <url>
     <loc>https://www.mindmaster.top/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</loc>
-    <lastmod>2022-02-20</lastmod>
+    <lastmod>2022-02-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.mindmaster.top/tags/Python%E8%87%AA%E5%8A%A8%E5%8C%96/</loc>
-    <lastmod>2022-02-20</lastmod>
+    <lastmod>2022-02-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.mindmaster.top/tags/%E7%88%AC%E8%99%AB/</loc>
+    <lastmod>2022-02-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.mindmaster.top/tags/%E4%B8%AD%E6%96%AD/</loc>
-    <lastmod>2022-02-20</lastmod>
+    <lastmod>2022-02-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.mindmaster.top/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95/</loc>
-    <lastmod>2022-02-20</lastmod>
+    <lastmod>2022-02-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.mindmaster.top/tags/Linux%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1/</loc>
-    <lastmod>2022-02-20</lastmod>
+    <lastmod>2022-02-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.mindmaster.top/tags/Linux%E5%86%85%E6%A0%B8/</loc>
-    <lastmod>2022-02-20</lastmod>
+    <lastmod>2022-02-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.mindmaster.top/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</loc>
-    <lastmod>2022-02-20</lastmod>
+    <lastmod>2022-02-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -203,35 +224,42 @@
   
   <url>
     <loc>https://www.mindmaster.top/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</loc>
-    <lastmod>2022-02-20</lastmod>
+    <lastmod>2022-02-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.mindmaster.top/categories/Python%E5%BC%80%E5%8F%91/</loc>
-    <lastmod>2022-02-20</lastmod>
+    <lastmod>2022-02-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.mindmaster.top/categories/Scrapy%E7%88%AC%E8%99%AB/</loc>
+    <lastmod>2022-02-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.mindmaster.top/categories/Linux%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E7%9B%B8%E5%85%B3/</loc>
-    <lastmod>2022-02-20</lastmod>
+    <lastmod>2022-02-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.mindmaster.top/categories/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
-    <lastmod>2022-02-20</lastmod>
+    <lastmod>2022-02-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.mindmaster.top/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</loc>
-    <lastmod>2022-02-20</lastmod>
+    <lastmod>2022-02-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>

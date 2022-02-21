@@ -350,6 +350,197 @@
       </tags>
   </entry>
   <entry>
+    <title>Python自动化办公</title>
+    <url>/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC/</url>
+    <content><![CDATA[<h1 id="任务场景一：拆分与合并–快速的批量处理内容相似的Excel"><a href="#任务场景一：拆分与合并–快速的批量处理内容相似的Excel" class="headerlink" title="任务场景一：拆分与合并–快速的批量处理内容相似的Excel"></a>任务场景一：拆分与合并–快速的批量处理内容相似的Excel</h1><blockquote>
+<p>批量合并</p>
+<p>假设你需要对某些工作内容进行问卷调查，这时你用Excel做了调查问卷模版。 我想你会这样做：先把Excel通过工作群分发给所有员工，再把群里收集到的反馈附件汇总 成一个文件。</p>
+<p>批量拆分</p>
+<p>假设你是公司的财务人员，你需要使用Excel对员工工资进行核算，之后再打印 出来。但是公司要求员工薪水保密，所以每个员工的工资需要拆分成一个独立的文件，最 后还需要打印出来。</p>
+</blockquote>
+<ul>
+<li>解决方案：使用Python实现自动化批量处理。<ul>
+<li>安装扩展库：支持Excel读取的扩展库叫做xlrd库，支持Excel写入的扩展库叫做xlwt库</li>
+<li>找到整个工作过程当中重复操作的部分；</li>
+<li> 将重复操作的部分需要哪些手工操作找出来，使用Python编写程序代替手工操作的部分；</li>
+<li> 对重复的部分，使用循环语句进行批量处理。</li>
+<li>可以使用绘制时序图来实现手工操作到Python程序的过渡</li>
+</ul>
+</li>
+</ul>
+<img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC/image.png" class>
+
+
+
+
+
+<h2 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h2><h3 id="Merge-py"><a href="#Merge-py" class="headerlink" title="Merge.py"></a>Merge.py</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">import</span> xlwt</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导入Excel和文件操作库</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定要合并excel的路径</span></span><br><span class="line">src_path = <span class="string">&#x27;D:/Python自动化办公/Day01/调查问卷&#x27;</span></span><br><span class="line"><span class="comment"># 指定合并完成的路径</span></span><br><span class="line">dst_file = <span class="string">&#x27;D:/Python自动化办公/Day01/result/结果.xls&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取得给目录下所有的xlsx格式文件</span></span><br><span class="line">p = Path(src_path)</span><br><span class="line">files = [x <span class="keyword">for</span> x <span class="keyword">in</span> p.iterdir() <span class="keyword">if</span> PurePath(x).match(<span class="string">&#x27;*.xls&#x27;</span>)]</span><br><span class="line">print(files)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 准备列表存放读取结果</span></span><br><span class="line">content = []</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 对每一个文件进行重复处理</span></span><br><span class="line"><span class="keyword">for</span> file <span class="keyword">in</span> files:</span><br><span class="line">    <span class="comment"># 用文件作为每个用户的标识</span></span><br><span class="line">    username = file.stem</span><br><span class="line">    data = xlrd.open_workbook(file)</span><br><span class="line">    table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 取得每一项的结果</span></span><br><span class="line">    answer1 = table.cell_value(rowx=<span class="number">4</span>, colx=<span class="number">4</span>)</span><br><span class="line">    answer2 = table.cell_value(rowx=<span class="number">10</span>, colx=<span class="number">4</span>)</span><br><span class="line">    temp = <span class="string">f&#x27;<span class="subst">&#123;username&#125;</span>,<span class="subst">&#123;answer1&#125;</span>,<span class="subst">&#123;answer2&#125;</span>&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 合并为一行存储</span></span><br><span class="line">    content.append(temp.split(<span class="string">&#x27;,&#x27;</span>))</span><br><span class="line">    print(<span class="string">&quot;你好&quot;</span>)</span><br><span class="line">    print(temp)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 准备写入文件的表头</span></span><br><span class="line">table_header = [<span class="string">&#x27;员工姓名&#x27;</span>, <span class="string">&#x27;第一题&#x27;</span>, <span class="string">&#x27;第二题&#x27;</span>]</span><br><span class="line"></span><br><span class="line">workbook = xlwt.Workbook(encoding=<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">x1sheet = workbook.add_sheet(<span class="string">&quot;统计结果&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 写入表头</span></span><br><span class="line">row = <span class="number">0</span></span><br><span class="line">col = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> cell_header <span class="keyword">in</span> table_header:</span><br><span class="line">    x1sheet.write(row, col, cell_header)</span><br><span class="line">    col += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 向下移动一行</span></span><br><span class="line">row += <span class="number">1</span></span><br><span class="line"><span class="comment"># 取出每一行的内容</span></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> content:</span><br><span class="line">    col = <span class="number">0</span></span><br><span class="line">    <span class="comment"># 取出每个单元格内容</span></span><br><span class="line">    <span class="keyword">for</span> cell <span class="keyword">in</span> line:</span><br><span class="line">        <span class="comment"># 写入内容</span></span><br><span class="line">        x1sheet.write(row, col, cell)</span><br><span class="line">        <span class="comment"># 向右移动一个单元格</span></span><br><span class="line">        col += <span class="number">1</span></span><br><span class="line">    <span class="comment"># 向下移动一行</span></span><br><span class="line">    row += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存最终结果</span></span><br><span class="line">workbook.save(dst_file)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="Split-py"><a href="#Split-py" class="headerlink" title="Split.py"></a>Split.py</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">import</span> xlwt</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># 工资单文件</span></span><br><span class="line">salary_file = <span class="string">&#x27;D:/Python自动化办公/Day01/工资单/工资单.xls&#x27;</span></span><br><span class="line"><span class="comment"># 拆分文件保存路径</span></span><br><span class="line">dst_path = <span class="string">&#x27;D:/Python自动化办公/Day01/工资单&#x27;</span></span><br><span class="line"></span><br><span class="line">data = xlrd.open_workbook(salary_file)</span><br><span class="line">table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"><span class="comment"># 取得表头</span></span><br><span class="line">salary_header = table.row_values(rowx=<span class="number">0</span>, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>) </span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义写入文件的函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">write_to_file</span>(<span class="params">filename, cnt</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27; </span></span><br><span class="line"><span class="string">    filename : 写入的文件名</span></span><br><span class="line"><span class="string">    cnt      : 写入的内容</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    workbook = xlwt.Workbook(encoding=<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">    xlsheet = workbook.add_sheet(<span class="string">&quot;本月工资&quot;</span>)</span><br><span class="line"></span><br><span class="line">    row = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> cnt:</span><br><span class="line">        col = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> cell <span class="keyword">in</span> line:</span><br><span class="line">            xlsheet.write(row, col, cell)</span><br><span class="line">            col += <span class="number">1</span></span><br><span class="line">        row += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    workbook.save(PurePath(salary_file).with_name(filename).with_suffix(<span class="string">&#x27;.xls&#x27;</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取得员工数量</span></span><br><span class="line">employee_number = table.nrows</span><br><span class="line"><span class="comment"># 取得每一行,并用第二个单元格作为新的文件名</span></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,employee_number):</span><br><span class="line">    content = table.row_values(rowx=line, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>)</span><br><span class="line">    <span class="comment"># 将表头和员工数量重新组成一个新的文件 </span></span><br><span class="line">    new_content = []</span><br><span class="line">    <span class="comment"># 增加表头到要写入的内容中</span></span><br><span class="line">    new_content.append(salary_header)</span><br><span class="line">    <span class="comment"># 增加员工工资到要写入的内容中</span></span><br><span class="line">    new_content.append(content)</span><br><span class="line">    <span class="comment"># 调用自定义函数write_to_file()写入新的文件</span></span><br><span class="line">    write_to_file(filename = content[<span class="number">1</span>], cnt = new_content)</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="Python与Excel交互模块学习"><a href="#Python与Excel交互模块学习" class="headerlink" title="Python与Excel交互模块学习"></a>Python与Excel交互模块学习</h2>]]></content>
+      <categories>
+        <category>Python开发</category>
+      </categories>
+      <tags>
+        <tag>Python自动化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Scrapy1</title>
+    <url>/2022/02/21/Scrapy1/</url>
+    <content><![CDATA[<h1 id="Scrapy爬虫Section1"><a href="#Scrapy爬虫Section1" class="headerlink" title="Scrapy爬虫Section1"></a>Scrapy爬虫Section1</h1><h2 id="认识Scrapy爬虫"><a href="#认识Scrapy爬虫" class="headerlink" title="认识Scrapy爬虫"></a>认识Scrapy爬虫</h2> <img data-src="/2022/02/21/Scrapy1/image17.png" class>
+
+<p>网络爬虫是指在互联网上自动爬取网站内容信息的程序，也被称作网络蜘蛛或网络机器人。大型的爬虫程序被广泛应用于搜索引擎、数据挖掘等领域，个人用户或企业也可以利用爬虫收集对自身有价值的数据。</p>
+<blockquote>
+<p>网络爬虫的基本执行流程</p>
+</blockquote>
+ <img data-src="/2022/02/21/Scrapy1/image01.png" class>
+
+<ul>
+<li><p>下载页面</p>
+<p>一个网页的内容本质上就是一个HTML文本，爬取一个网页内容之前，首先要根据网页的URL下载网页。</p>
+</li>
+<li><p>提取页面数据</p>
+<p>当一个网页（HTML）下载完成后，对页面中的内容进行分析，并提取出我们感兴趣的数据，提取到的数据可以以多种形式保存起来，比如将数据以某种格式（CSV、JSON）写入文件中，或存储到数据库（MySQL、MongoDB）中。</p>
+</li>
+<li><p>提取页面链接</p>
+<p> 通常，我们想要获取的数据并不只在一个页面中，而是分布在多个页面中，这些页面彼此联系，一个页面中可能包含一个或多个到其他页面的链接，<strong>提取完当前页面中的数据</strong>后，还要**<em>把页面中的某些链接也提取出来**</em>，然后对链接页面进行爬取（循环1-3步骤）。</p>
+</li>
+</ul>
+<p>使用Python可以从头开始写一个爬虫程序，为了避免因制造轮子 而消耗大量时间，在实际应用中我们可以选择使用一些优秀的爬虫框 架，使用框架可以降低开发成本，提高程序质量。所以就有了**<em>Scrapy**</em>的出现。</p>
+<h3 id="Scrapy的安装"><a href="#Scrapy的安装" class="headerlink" title="Scrapy的安装"></a>Scrapy的安装</h3><blockquote>
+<p>pip install scrapy </p>
+</blockquote>
+<p>出现图示则代表安装成功。</p>
+ <img data-src="/2022/02/21/Scrapy1/image02.png" class>
+
+<h3 id="编写Spider（Scrapy-爬虫程序中最核心的组件）"><a href="#编写Spider（Scrapy-爬虫程序中最核心的组件）" class="headerlink" title="编写Spider（Scrapy 爬虫程序中最核心的组件）"></a>编写Spider（Scrapy 爬虫程序中最核心的组件）</h3><h4 id="Scrapy框架结构及工作原理"><a href="#Scrapy框架结构及工作原理" class="headerlink" title="Scrapy框架结构及工作原理"></a>Scrapy框架结构及工作原理</h4> <img data-src="/2022/02/21/Scrapy1/image03.png" class>
+
+<blockquote>
+<p>对**<em>各个组件**</em>的介绍如下图所示</p>
+</blockquote>
+ <img data-src="/2022/02/21/Scrapy1/image04.png" class>
+
+<blockquote>
+<p>对框架中的**<em>数据流**</em>介绍如图所示</p>
+</blockquote>
+  <img data-src="/2022/02/21/Scrapy1/image05.png" class>
+
+<p>Request和Response是HTTP协议中的术语，即HTTP请求和 HTTP响应，Scrapy框架中定义了相应的Request和Response类，这里的Item代表Spider从页面中爬取的一项数据。</p>
+<blockquote>
+<p>数据在框架中的流动过程</p>
+</blockquote>
+<ul>
+<li><p>当SPIDER要爬取某URL地址的页面时，需使用该URL构造一个Request对象，提交给ENGINE。</p>
+</li>
+<li><p>Request对象随后进入SCHEDULER按某种算法进行排队，之后的某个时刻SCHEDULER将其出队，送往DOWNLOADER。</p>
+</li>
+<li><p>DOWNLOADER根据Request对象中的URL地址发送一次HTTP请求 到网站服务器，之后用服务器返回的HTTP响应构造出一个Response对象，其中包含页面的HTML文本。</p>
+</li>
+<li><p>Response对象最终会被递送给SPIDER的页面解析函数（构造Request对象时指定）进行处理，页面解析函数从页面中提取数据，封装成Item后提交给ENGINE，Item之后被送往ITEM </p>
+<p>PIPELINES进行处理，最终可能由EXPORTER以某种数据格式写入文件（csv，json）；另一方面，页面解析函数还从页面中提取链接（URL），构造出新的 Request对象提交给ENGINE。</p>
+</li>
+</ul>
+<h4 id="Request对象"><a href="#Request对象" class="headerlink" title="Request对象"></a>Request对象</h4><p>Request对象用来描述一个HTTP请求，下面是其构造器方法的参数列表：</p>
+<blockquote>
+<p>Request(url[, callback, method=’GET’, headers, body, cookies, meta, encoding=’utf-8’, priority=0, dont_filter=False,errback,flags])</p>
+</blockquote>
+<p><strong><em>Request参数介绍：</em></strong></p>
+<ul>
+<li><p>url（必选）</p>
+<p>请求页面的url地址，bytes或str类型。</p>
+</li>
+<li><p>callback</p>
+<p>页面解析函数， Callable类型，Request对象请求的页面下载完成后，由该参数指定的页面解析函数被调用。如果未传递该参数，默认**<em>调用Spider的parse**</em>方法。</p>
+</li>
+<li><p>method </p>
+<p>HTTP请求的方法，默认为’GET。</p>
+ <img data-src="/2022/02/21/Scrapy1/image06.png" class>
+
+<img data-src="/2022/02/21/Scrapy1/image14.png" class>
+
+</li>
+</ul>
+<p>虽然参数很多，但除了url参数外，其他都带有默认值。在构造Request对象时，通常我们只需传递一个url参数或再加一个callback参数，其他使用默认值即可。</p>
+<blockquote>
+<p>&gt;&gt;&gt; request = scrapy.Request(‘<a href="http://books.toscrape.com/&#39;">http://books.toscrape.com/&#39;</a>) </p>
+</blockquote>
+<h4 id="Response对象"><a href="#Response对象" class="headerlink" title="Response对象"></a>Response对象</h4><p>Response对象用来描述一个HTTP响应，Response只是一个基类，根据响应内容的不同有如下子类：</p>
+<ul>
+<li>TextResponse</li>
+<li>HtmlResponse</li>
+<li>XmlResponse</li>
+</ul>
+<p>当一个页面下载完成时，下载器依据HTTP响应头部中的 Content-Type信息创建某个Response的子类对象。我们通常爬取的网页，其内容是HTML文本，创建的便是HtmlResponse对象，其 中**<em>HtmlResponse和XmlResponse是TextResponse的子类**</em>。实际上，这3个子类只有细微的差别</p>
+<p>​        </p>
+<p><strong><em>HtmlResponse对象的属性与方法</em></strong></p>
+ <img data-src="/2022/02/21/Scrapy1/image07.png" class>
+
+ <img data-src="/2022/02/21/Scrapy1/image08.png" class>
+
+ <img data-src="/2022/02/21/Scrapy1/image15.png" class>
+
+ <img data-src="/2022/02/21/Scrapy1/image09.png" class>
+
+
+
+<h3 id="Spider开发流程"><a href="#Spider开发流程" class="headerlink" title="Spider开发流程"></a>Spider开发流程</h3><p>爬虫开发的逻辑：</p>
+ <img data-src="/2022/02/21/Scrapy1/image10.png" class>
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> scrapy</span><br><span class="line"><span class="keyword">from</span> ..items <span class="keyword">import</span> BookItem</span><br><span class="line"><span class="keyword">from</span> scrapy.linkextractors <span class="keyword">import</span> LinkExtractor</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BooksSpider</span>(<span class="params">scrapy.Spider</span>):</span></span><br><span class="line">    <span class="comment"># 爬虫名，每一个爬虫的唯一标识</span></span><br><span class="line">    name = <span class="string">&#x27;books&#x27;</span></span><br><span class="line">    <span class="comment"># 第 1 章 1.3.4 实现 Spider</span></span><br><span class="line">    <span class="comment"># 定义爬虫爬取的起始点，起始点可以是多个，这里只有一个。</span></span><br><span class="line">    <span class="comment">#start_urls = [&#x27;http://books.toscrape.com/&#x27;]</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 第 2 章 2.3.3 设定起始爬取点</span></span><br><span class="line">    <span class="comment"># 实现 start_resquests 方法代替start_urls类属性</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">start_requests</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">yield</span> scrapy.Request(<span class="string">&#x27;http://books.toscrape.com/&#x27;</span>,</span><br><span class="line">                             callback=self.parse,</span><br><span class="line">                             headers=&#123;<span class="string">&#x27;User-Agent&#x27;</span>:<span class="string">&#x27;Mozill/5.0&#x27;</span>&#125;,</span><br><span class="line">                             dont_filter=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span>(<span class="params">self, response</span>):</span></span><br><span class="line">        <span class="comment"># 提取数据</span></span><br><span class="line">        <span class="comment"># 重写</span></span><br><span class="line">        <span class="keyword">for</span> sel <span class="keyword">in</span> response.css(<span class="string">&#x27;article.product_pod&#x27;</span>):</span><br><span class="line">            book = BookItem() <span class="comment"># from ..items import BookItem 类</span></span><br><span class="line">            book[<span class="string">&#x27;name&#x27;</span>] = sel.xpath(<span class="string">&#x27;./h3/a/@title&#x27;</span>).extract_first()</span><br><span class="line">            book[<span class="string">&#x27;price&#x27;</span>] = sel.css(<span class="string">&#x27;p.price_color::text&#x27;</span>).extract_first()</span><br><span class="line">            <span class="keyword">yield</span> book</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 第 1 章 1.3.4 实现 Spider</span></span><br><span class="line">        <span class="comment"># 以下代码值直接保存，没有通过 Item 封装数据</span></span><br><span class="line">        <span class="comment"># for book in response.css(&#x27;article.product_pod&#x27;):</span></span><br><span class="line">            <span class="comment"># name = book.xpath(&#x27;./h3/a/@title&#x27;).extract_first()</span></span><br><span class="line">            <span class="comment"># price = book.css(&#x27;p.price_color::text&#x27;).extract_first()</span></span><br><span class="line">            <span class="comment"># yield &#123;</span></span><br><span class="line">            <span class="comment">#     &#x27;name&#x27;: name,</span></span><br><span class="line">            <span class="comment">#     &#x27;price&#x27;: price</span></span><br><span class="line">            <span class="comment"># &#125;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 第 1 章 1.3.4 实现 Spider</span></span><br><span class="line">        <span class="comment"># 直接用 Selector 提取下一页链接 （没有用 LinkExtractor 提取链接）</span></span><br><span class="line">        <span class="comment"># 下一页链接在 ul.pager &gt; li.next &gt; a 里</span></span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        &lt;ul class=&quot;pager&quot;&gt;          </span></span><br><span class="line"><span class="string">            &lt;li class=&quot;current&quot;&gt; Page 1 of 50 &lt;/li&gt;           </span></span><br><span class="line"><span class="string">            &lt;li class=&quot;next&quot;&gt;&lt;a href=&quot;catalogue/page-2.html&quot;&gt;next&lt;/a&gt;&lt;/li&gt;            </span></span><br><span class="line"><span class="string">        &lt;/ul&gt;</span></span><br><span class="line"><span class="string">        #default &gt; div &gt; div &gt; div &gt; div &gt; section &gt; div:nth-child(2) &gt; div &gt; ul.pager &gt; li.next &gt; a</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="comment"># next_url = response.css(&#x27;ul.pager li.next a::attr(href)&#x27;).extract_first()</span></span><br><span class="line">        <span class="comment"># if next_url:</span></span><br><span class="line">        <span class="comment">#     next_url = response.urljoin(next_url)</span></span><br><span class="line">        <span class="comment">#     yield scrapy.Request(next_url, callback=self.parse)</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 第6章 使用 LinkExtractor 提取链接</span></span><br><span class="line">        <span class="comment"># 提取下一页链接重写（用 LinkExtractor提取）</span></span><br><span class="line">        <span class="comment"># 说明 from scrapy.linkextractors import LinkExtractor</span></span><br><span class="line">        le = LinkExtractor(restrict_css=<span class="string">&#x27;ul.pager li.next&#x27;</span>)</span><br><span class="line">        links = le.extract_links(response)</span><br><span class="line">        <span class="comment"># print(type(links),links)</span></span><br><span class="line">        <span class="keyword">if</span> links:</span><br><span class="line">            <span class="comment"># 用links[0]获取的Link对象属性是绝对链接地址，无需要用response.urljoin拼接</span></span><br><span class="line">            next_url = links[<span class="number">0</span>].url</span><br><span class="line">            <span class="keyword">yield</span> scrapy.Request(next_url, callback=self.parse)</span><br></pre></td></tr></table></figure>
+  <img data-src="/2022/02/21/Scrapy1/image16.png" class>
+
+
+
+<h4 id="继承scrapy-Spider"><a href="#继承scrapy-Spider" class="headerlink" title="继承scrapy.Spider"></a>继承scrapy.Spider</h4><p>Scrapy框架提供了一个Spider基类，我们编写的Spider需要继承它</p>
+<blockquote>
+<p>import scrapy </p>
+<p>class BooksSpider(scrapy.Spider): </p>
+</blockquote>
+<p>这个Spider基类实现了以下内容： </p>
+<ul>
+<li>供Scrapy引擎调用的<strong>接口</strong>，例如用来创建Spider实例的类方法from_crawler。 </li>
+</ul>
+<p>● 供用户使用的<strong>实用工具函数</strong>，例如可以调用log方法将调试信息输出到日志。 </p>
+<p>● 供用户访问的<strong>属性</strong>，例如可以通过settings属性访问配置文件中的配置。 </p>
+<h4 id="为Spider命名"><a href="#为Spider命名" class="headerlink" title="为Spider命名"></a>为Spider命名</h4><p>在一个Scrapy项目中可以实现多个Spider，每个Spider需要有一个能够区分彼此的唯一标识，Spider的类属性name便是这个唯一标识。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BooksSpider</span>(<span class="params">scrapy.Spider</span>):</span> </span><br><span class="line">    name = <span class="string">&quot;books&quot;</span> </span><br><span class="line">    	...</span><br></pre></td></tr></table></figure>
+<p>执行scrapy crawl命令时就用到了这个标识，告诉Scrapy使用哪个Spider进行爬取。</p>
+<h4 id="设定起始爬取点"><a href="#设定起始爬取点" class="headerlink" title="设定起始爬取点"></a>设定起始爬取点</h4><p>Spider必然要从某个或某些页面开始爬取，我们称这些页面为**<em>起始爬取点**</em>，可以通过类属性start_urls来设定起始爬取点：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BooksSpider</span>(<span class="params">scrapy.Spider</span>):</span> </span><br><span class="line">    ... </span><br><span class="line">    start_urls = [<span class="string">&#x27;http://books.toscrape.com/&#x27;</span>]</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+<p>start_urls通常被实现成一个列表，其中放入所有起始爬取点的url。</p>
+<p>请求页 面下载一定要提交Request对象，这时候，我们仅仅定义了URL列表，Spider基类的start_requests方法帮助我们基于URL构造并提交了Request对象。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Spider</span>(<span class="params">object_ref</span>):</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">start_requests</span>(<span class="params">self</span>):</span> </span><br><span class="line">        <span class="keyword">for</span> url <span class="keyword">in</span> self.start_urls: </span><br><span class="line">            <span class="keyword">yield</span> self.make_requests_from_url(url)</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">make_requests_from_url</span>(<span class="params">self, url</span>):</span> </span><br><span class="line">        <span class="keyword">return</span> Request(url, dont_filter=<span class="literal">True</span>)</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span>(<span class="params">self, response</span>):</span> </span><br><span class="line">        <span class="keyword">raise</span> NotImplementedError ..</span><br></pre></td></tr></table></figure>
+ <img data-src="/2022/02/21/Scrapy1/image11.png" class>
+
+<p>由于起始爬取点的下载请求是由引擎调用Spider对象的 start_requests方法产生的，因此我们也可以在BooksSpider中实现start_requests方法（**<em>覆盖基类Spider的start_requests方法**</em>），直接构造并提交起始爬取点的Request对象。在某些场景下使用这种方式更加灵活，例如有时想为Request添加特定的HTTP请求头部,或想为Request指定特定的页面解析函数</p>
+ <img data-src="/2022/02/21/Scrapy1/image12.png" class>
+
+
+
+
+
+<h4 id="实现页面解析函数"><a href="#实现页面解析函数" class="headerlink" title="实现页面解析函数"></a>实现页面解析函数</h4><p>页面解析函数也就是构造Request对象时**<em>通过callback参数指定**</em> 的回调函数（或默认的parse方法）。页面解析函数是实现Spider中最核心的部分，它需要完成以下两项工作：</p>
+ <img data-src="/2022/02/21/Scrapy1/image13.png" class>
+
+<p>一个页面中可能包含多项数据以及多个链接，因此页面解析函数被要求返回一个可迭代对象（通常被实现成一个生成器函数），每次迭代返回一项数据（Item或字典）或一个Request对象。</p>
+]]></content>
+      <categories>
+        <category>Scrapy爬虫</category>
+      </categories>
+      <tags>
+        <tag>爬虫</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Section1</title>
+    <url>/2022/02/21/Section1/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>中断</title>
     <url>/2021/02/03/%E4%B8%AD%E6%96%AD/</url>
     <content><![CDATA[<h3 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h3><p>中断使得硬件得以发出通知给处理器，是一种变内核主动为硬件主动的方式。中断本质上是一种特殊的电信号。硬件在生成中断的时候并不需要考虑与处理器的时钟同步，即中断可以随时产生，<strong>内核随时可能因为新到来的中断而被打断</strong>。</p>
@@ -396,54 +587,25 @@
       </tags>
   </entry>
   <entry>
-    <title>Python自动化办公</title>
-    <url>/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC/</url>
-    <content><![CDATA[<h1 id="任务场景一：拆分与合并–快速的批量处理内容相似的Excel"><a href="#任务场景一：拆分与合并–快速的批量处理内容相似的Excel" class="headerlink" title="任务场景一：拆分与合并–快速的批量处理内容相似的Excel"></a>任务场景一：拆分与合并–快速的批量处理内容相似的Excel</h1><blockquote>
-<p>批量合并</p>
-<p>假设你需要对某些工作内容进行问卷调查，这时你用Excel做了调查问卷模版。 我想你会这样做：先把Excel通过工作群分发给所有员工，再把群里收集到的反馈附件汇总 成一个文件。</p>
-<p>批量拆分</p>
-<p>假设你是公司的财务人员，你需要使用Excel对员工工资进行核算，之后再打印 出来。但是公司要求员工薪水保密，所以每个员工的工资需要拆分成一个独立的文件，最 后还需要打印出来。</p>
-</blockquote>
-<ul>
-<li>解决方案：使用Python实现自动化批量处理。<ul>
-<li>安装扩展库：支持Excel读取的扩展库叫做xlrd库，支持Excel写入的扩展库叫做xlwt库</li>
-<li>找到整个工作过程当中重复操作的部分；</li>
-<li> 将重复操作的部分需要哪些手工操作找出来，使用Python编写程序代替手工操作的部分；</li>
-<li> 对重复的部分，使用循环语句进行批量处理。</li>
-<li>可以使用绘制时序图来实现手工操作到Python程序的过渡</li>
-</ul>
-</li>
-</ul>
-<img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC/image.png" class>
-
-
-
-
-
-<h2 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h2><h3 id="Merge-py"><a href="#Merge-py" class="headerlink" title="Merge.py"></a>Merge.py</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">import</span> xlwt</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导入Excel和文件操作库</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定要合并excel的路径</span></span><br><span class="line">src_path = <span class="string">&#x27;D:/Python自动化办公/Day01/调查问卷&#x27;</span></span><br><span class="line"><span class="comment"># 指定合并完成的路径</span></span><br><span class="line">dst_file = <span class="string">&#x27;D:/Python自动化办公/Day01/result/结果.xls&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取得给目录下所有的xlsx格式文件</span></span><br><span class="line">p = Path(src_path)</span><br><span class="line">files = [x <span class="keyword">for</span> x <span class="keyword">in</span> p.iterdir() <span class="keyword">if</span> PurePath(x).match(<span class="string">&#x27;*.xls&#x27;</span>)]</span><br><span class="line">print(files)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 准备列表存放读取结果</span></span><br><span class="line">content = []</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 对每一个文件进行重复处理</span></span><br><span class="line"><span class="keyword">for</span> file <span class="keyword">in</span> files:</span><br><span class="line">    <span class="comment"># 用文件作为每个用户的标识</span></span><br><span class="line">    username = file.stem</span><br><span class="line">    data = xlrd.open_workbook(file)</span><br><span class="line">    table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 取得每一项的结果</span></span><br><span class="line">    answer1 = table.cell_value(rowx=<span class="number">4</span>, colx=<span class="number">4</span>)</span><br><span class="line">    answer2 = table.cell_value(rowx=<span class="number">10</span>, colx=<span class="number">4</span>)</span><br><span class="line">    temp = <span class="string">f&#x27;<span class="subst">&#123;username&#125;</span>,<span class="subst">&#123;answer1&#125;</span>,<span class="subst">&#123;answer2&#125;</span>&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 合并为一行存储</span></span><br><span class="line">    content.append(temp.split(<span class="string">&#x27;,&#x27;</span>))</span><br><span class="line">    print(<span class="string">&quot;你好&quot;</span>)</span><br><span class="line">    print(temp)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 准备写入文件的表头</span></span><br><span class="line">table_header = [<span class="string">&#x27;员工姓名&#x27;</span>, <span class="string">&#x27;第一题&#x27;</span>, <span class="string">&#x27;第二题&#x27;</span>]</span><br><span class="line"></span><br><span class="line">workbook = xlwt.Workbook(encoding=<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">x1sheet = workbook.add_sheet(<span class="string">&quot;统计结果&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 写入表头</span></span><br><span class="line">row = <span class="number">0</span></span><br><span class="line">col = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> cell_header <span class="keyword">in</span> table_header:</span><br><span class="line">    x1sheet.write(row, col, cell_header)</span><br><span class="line">    col += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 向下移动一行</span></span><br><span class="line">row += <span class="number">1</span></span><br><span class="line"><span class="comment"># 取出每一行的内容</span></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> content:</span><br><span class="line">    col = <span class="number">0</span></span><br><span class="line">    <span class="comment"># 取出每个单元格内容</span></span><br><span class="line">    <span class="keyword">for</span> cell <span class="keyword">in</span> line:</span><br><span class="line">        <span class="comment"># 写入内容</span></span><br><span class="line">        x1sheet.write(row, col, cell)</span><br><span class="line">        <span class="comment"># 向右移动一个单元格</span></span><br><span class="line">        col += <span class="number">1</span></span><br><span class="line">    <span class="comment"># 向下移动一行</span></span><br><span class="line">    row += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存最终结果</span></span><br><span class="line">workbook.save(dst_file)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="Split-py"><a href="#Split-py" class="headerlink" title="Split.py"></a>Split.py</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">import</span> xlwt</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># 工资单文件</span></span><br><span class="line">salary_file = <span class="string">&#x27;D:/Python自动化办公/Day01/工资单/工资单.xls&#x27;</span></span><br><span class="line"><span class="comment"># 拆分文件保存路径</span></span><br><span class="line">dst_path = <span class="string">&#x27;D:/Python自动化办公/Day01/工资单&#x27;</span></span><br><span class="line"></span><br><span class="line">data = xlrd.open_workbook(salary_file)</span><br><span class="line">table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"><span class="comment"># 取得表头</span></span><br><span class="line">salary_header = table.row_values(rowx=<span class="number">0</span>, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>) </span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义写入文件的函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">write_to_file</span>(<span class="params">filename, cnt</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27; </span></span><br><span class="line"><span class="string">    filename : 写入的文件名</span></span><br><span class="line"><span class="string">    cnt      : 写入的内容</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    workbook = xlwt.Workbook(encoding=<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">    xlsheet = workbook.add_sheet(<span class="string">&quot;本月工资&quot;</span>)</span><br><span class="line"></span><br><span class="line">    row = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> cnt:</span><br><span class="line">        col = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> cell <span class="keyword">in</span> line:</span><br><span class="line">            xlsheet.write(row, col, cell)</span><br><span class="line">            col += <span class="number">1</span></span><br><span class="line">        row += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    workbook.save(PurePath(salary_file).with_name(filename).with_suffix(<span class="string">&#x27;.xls&#x27;</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取得员工数量</span></span><br><span class="line">employee_number = table.nrows</span><br><span class="line"><span class="comment"># 取得每一行,并用第二个单元格作为新的文件名</span></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,employee_number):</span><br><span class="line">    content = table.row_values(rowx=line, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>)</span><br><span class="line">    <span class="comment"># 将表头和员工数量重新组成一个新的文件 </span></span><br><span class="line">    new_content = []</span><br><span class="line">    <span class="comment"># 增加表头到要写入的内容中</span></span><br><span class="line">    new_content.append(salary_header)</span><br><span class="line">    <span class="comment"># 增加员工工资到要写入的内容中</span></span><br><span class="line">    new_content.append(content)</span><br><span class="line">    <span class="comment"># 调用自定义函数write_to_file()写入新的文件</span></span><br><span class="line">    write_to_file(filename = content[<span class="number">1</span>], cnt = new_content)</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="Python与Excel交互模块学习"><a href="#Python与Excel交互模块学习" class="headerlink" title="Python与Excel交互模块学习"></a>Python与Excel交互模块学习</h2>]]></content>
-      <categories>
-        <category>Python开发</category>
-      </categories>
-      <tags>
-        <tag>Python自动化</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>创建高性能索引</title>
     <url>/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[<h1 id="索引基础"><a href="#索引基础" class="headerlink" title="索引基础"></a>索引基础</h1>]]></content>
       <categories>
         <category>MySQL数据库</category>
       </categories>
       <tags>
         <tag>MySQL数据库索引</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>进程通信</title>
+    <url>/2022/02/17/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>牛客网刷题-操作系统2</title>
+    <url>/2022/02/18/%E7%89%9B%E5%AE%A2%E7%BD%91%E5%88%B7%E9%A2%98-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F2/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>系统调用</title>
@@ -530,16 +692,6 @@
       <tags>
         <tag>Linux系统内核设计</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>牛客网刷题-操作系统2</title>
-    <url>/2022/02/18/%E7%89%9B%E5%AE%A2%E7%BD%91%E5%88%B7%E9%A2%98-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F2/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>进程通信</title>
-    <url>/2022/02/17/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Process</title>
