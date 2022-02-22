@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.mindmaster.top","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="进程调度问题，结合Linux kernel总结">
+<meta property="og:type" content="article">
+<meta property="og:title" content="进程调度">
+<meta property="og:url" content="https://www.mindmaster.top/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/index.html">
+<meta property="og:site_name" content="一只小码农">
+<meta property="og:description" content="进程调度问题，结合Linux kernel总结">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220222181234434.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220222152122750.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220222152328067.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220222160121844.png">
+<meta property="article:published_time" content="2022-02-22T14:40:23.000Z">
+<meta property="article:modified_time" content="2022-02-22T10:12:39.862Z">
+<meta property="article:author" content="邢浩东">
+<meta property="article:tag" content="进程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.mindmaster.top/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220222181234434.png">
+
+<link rel="canonical" href="https://www.mindmaster.top/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>进程调度 | 一只小码农</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">一只小码农</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">每天进步一点点</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-stethoscope fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">10</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-braille fa-fw"></i>分类<span class="badge">7</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">18</span></a>
+
+  </li>
+        <li class="menu-item menu-item-movies">
+
+    <a href="/movies/" rel="section"><i class="fa fa-film fa-fw"></i>电影</a>
+
+  </li>
+        <li class="menu-item menu-item-book">
+
+    <a href="/book/" rel="section"><i class="fa fa-book fa-fw"></i>书籍</a>
+
+  </li>
+        <li class="menu-item menu-item-view">
+
+    <a href="/view/" rel="section"><i class="fa fa-blind fa-fw"></i>生活见闻--杂谈</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml/" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/mindmaster1" class="github-corner" title="Fork me on GitHub" aria-label="Fork me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.mindmaster.top/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/OIP.jfif">
+      <meta itemprop="name" content="邢浩东">
+      <meta itemprop="description" content="The world favors the underdog,and I would be the bad guy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一只小码农">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          进程调度
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-02-22 14:40:23 / 修改时间：10:12:39" itemprop="dateCreated datePublished" datetime="2022-02-22T14:40:23Z">2022-02-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux%E5%86%85%E6%A0%B8%E7%9B%B8%E5%85%B3/" itemprop="url" rel="index"><span itemprop="name">Linux内核相关</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+            <div class="post-description">进程调度问题，结合Linux kernel总结</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Linux进程调度"><a href="#Linux进程调度" class="headerlink" title="Linux进程调度"></a>Linux进程调度</h1><p><img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222181234434.png" alt="image-20220222181234434"></p>
+<p>调度程序负责决定将哪个进程投入运行，何时运行以及运行多长时间。进程调度程序(常常简称调度程序)可看做在可运行态进程之间分配有限的**<em>处理器时间资源的内核子系统**</em>。调度程序是像Linux这样的多任务操作系统的基础。只有通过调度程序的合理调度，系统资源才能最大限度地发挥作用，多进程才会有并发执行的效果。 </p>
+<blockquote>
+<p>在一组处于可运行状态的进程中选择一个来执行，是调度程序所需完成的基本工作,最大程度的利用处理器时间为原则。</p>
+</blockquote>
+<h2 id="多任务操作系统"><a href="#多任务操作系统" class="headerlink" title="多任务操作系统"></a>多任务操作系统</h2><p>多任务操作系统就是能同时并发地交互执行多个进程的操作系统。在单处理器机器上，这会产生多个进程在同时运行的幻觉。在多处理器机器上，这会使多个进程在不同的处理机上真正同时、并行地运行。无论在单处理器或者多处理器机器上，多任务操作系统都能使多个进程处堵塞或者睡眠状态，</p>
+<p>多任务系统可以划分为两类：</p>
+<blockquote>
+<p>非抢占式多任务(cooperative multitasking)</p>
+</blockquote>
+<p>在非抢占式多任务模式下，除非进程自己主动停止运行，否则它会一直执行。进程主动挂起自己的操作称为让步(yielding)。理想情况下，进程通常做出让步，以便让每个可运行进程享有足够的处理器时间。但这种机制有很多缺点：调度程序无法对每个进程该执行多长时间做出统一规定，所以进程独占的处理器时间可能超出用户的预料；更糟的是，一个决不做出让步的悬挂进程就能使系统崩溃。</p>
+<blockquote>
+<p>抢占式多任务(preemptive multitasking)</p>
+</blockquote>
+<p>由调度程序来决定什么时候停止一个进程的运行，以便其他进程能够得到执行机会。这个*<strong>强制的挂起动作就叫做抢占(preemption)**<em>。进程在被抢占之前能够运行的时间是预先设置好的，而且有一个专门的名字，叫</em></strong>进程的时间片(timeslice)***。时间片实际上是分配给每个可运行进程的处理器时间段。有效管理时间片能使调度程序从系统全局的角度做出调度决定，这样做还可以避免个别进程独占系统资源</p>
+<h2 id="Linux进程调度-1"><a href="#Linux进程调度-1" class="headerlink" title="Linux进程调度"></a>Linux进程调度</h2><p>开始采用了一种叫做<strong>O(1)*<em>调度程序的新调度程序一一它是因为其算法的行为而得名，0(1)调度程序虽然对于大服务器的工作负载很理想，但是在有很多交互程序要运行的桌面系统上则表现不佳，因为**</em>其缺少交互进程*</strong></p>
+<p>自2.6内核系统开发初期，开发人员为了提高对交 互程序的调度性能引入了新的进程调度算法。其中最为著名的是“**<em>反转楼梯最后期限调度算法(Rotating Staircase Deadline scheduler(RSDL)**</em>,该算法吸取了队列理论，将公平调度的概念引入了 Linux调度程序。并且最终在2623内核版本中替代了 0(1)调度算法，它此刻被称为“完全公平调度算法”，或者简称<strong>CFS</strong></p>
+<h2 id="策略"><a href="#策略" class="headerlink" title="策略"></a>策略</h2><h3 id="根据进程分类确定策略"><a href="#根据进程分类确定策略" class="headerlink" title="根据进程分类确定策略"></a>根据进程分类确定策略</h3><blockquote>
+<p>进程可以被分为I/O消耗型和处理器消耗型。</p>
+</blockquote>
+<ul>
+<li><p>IO消耗型</p>
+<p>指进程的<strong>大部分时间用来提交I/O请求或是等待I/O请求</strong>。因此，这样的进程经常处于可运行状态，但通常都是**<em>运行短短的一会儿**</em>，因为它在等待更多的I/O请求时总会阻塞</p>
+<p>举例来说，多数用户图形界面程序（GUI）都属于I/O密集型，即便它们从不读取或者写入磁盘，它们也会在多数时间里都在等待来自鼠标或者键盘的用户交互操作。</p>
+</li>
+</ul>
+<p><img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222152122750.png" alt="image-20220222152122750"></p>
+<ul>
+<li><p>处理器耗费型(用于计算)</p>
+<p>处理器耗费型进程把时间大多用在执行代码上。除非被抢占，否则它们通常都一直不停地运行，因为它们没有太多的I/O需求。但是，因为它们不属于I/O驱动类型，所以从系统响应速度考虑，调度器不应该经常让它们运行。对于这类处理器消耗型的进程，调度策略往往是**<em>尽量降低它们的调度频率，而延长其运行时间**</em>。</p>
+</li>
+</ul>
+<p><img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222152328067.png" alt="image-20220222152328067"></p>
+<p>有必要指出，随着CPU变得越来越快*<strong>，更多的进程倾向为I/O密集型**<em>。这种现象之所以发生是因为</em></strong>CPU 的改进比磁盘的改进快得多***，其结果是，未来对I/O密集型进程的调度处理似乎更为重要。这里的基本思想 是，如果需要运行I/O密集型进程，那么就应该让它尽快得到机会，以便发出磁盘请求并保持磁盘始终忙 碌。从图中可以看到，如果进程是I/O密集型的，则需要多运行一些这类进程以保持CPU的充分利用。</p>
+<blockquote>
+<p>调度策略通常要在两个矛盾的目标中间寻找平衡：进程响应迅速（响应时间短）和最大系统利用率（高吞吐量）。</p>
+</blockquote>
+<p><strong><em>Linux为了保证交互式应用和桌面系统的性能，所以对进程的响应做了优化（缩短响应时间），更倾向于优先调度I/O消耗型进程</em></strong></p>
+<h3 id="根据进程优先级确定调度策略"><a href="#根据进程优先级确定调度策略" class="headerlink" title="根据进程优先级确定调度策略"></a>根据进程优先级确定调度策略</h3><p>调度算法中最基本的一类就是基于优先级的调度。这是一种根据进程的价值和其对处理器时</p>
+<p>间的需求来对进程分级的想法。</p>
+<p>通常做法是（其并未被Linux系统完全采用）优先级高的进程先运行，低的后运行，相同优先级的进程按轮转方式进行调度（一个接一个，重复进行）。</p>
+<p>Linux采用了两种不同的优先级范围:</p>
+<blockquote>
+<p>nice值</p>
+<p>它的范围是从-20到+19, 默 认值为0 ；越大的nice值意味着更低的优先级;</p>
+<p>在Mac OS X, 进程的nice值 代表分配给进程的时间片的绝对值；而Linux系统中，nice值则代表时间片的比例。你可以通过ps-el命令査看系统中的进程列表，结果中标记N1的一列就是进程对应的nice值。 </p>
+</blockquote>
+<blockquote>
+<p>实时优先级</p>
+<p>默认情况下它的变化范围是从0到99 （包括0和99）。与nice值意义相反，越高的实时优先级数值意味着进程优先级越高。</p>
+<p>实时优先级和nice优先级处于互不相交的两个范畴</p>
+</blockquote>
+<h3 id="时间片"><a href="#时间片" class="headerlink" title="时间片"></a>时间片</h3><p>时间片是一个数值，它表明进程在被抢占前所能持续运行的时间。*<strong>调度策略必须规定一*** *</strong>个默认的时间片***</p>
+<blockquote>
+<p>时间片太长</p>
+</blockquote>
+<p>时间片过长会导致系统对交互的响应表现欠佳，让人觉得系统无法并发执行应用程序</p>
+<blockquote>
+<p>时间片太短</p>
+</blockquote>
+<p>会明显增大进程切换带来的处理器耗时，因 为肯定会有相当一部分系统时间用在进程切换上，而这些进程能够用来运行的时间片却很短。</p>
+<p>i/o消耗型和处理器消耗型的进程之间的矛盾在这里也再次显露出来：I/O消耗型不需要长的时间片，而处理器消耗型的进程则希望越长越好</p>
+<p><strong><em>Linux的CFS调度器并没有直接分配时间片到进程，它是将处理器的使用比划分给了进程。</em></strong></p>
+<p>进程所获得的处理器时间其实是和系统负载密切相关的。这个比例进一步还会受进程nice值的影响</p>
+<p><strong>Linux系统是抢占式的</strong>,其抢占时机取决于新的可运行程序消耗了多少处理器使用比。如果消耗的使用比比当前进程小，则新进程立刻投入运行，抢 占当前进程。否则，将推迟其运行。</p>
+<h3 id="案例：文本编辑器（IO）VS视频编码器（处理）"><a href="#案例：文本编辑器（IO）VS视频编码器（处理）" class="headerlink" title="案例：文本编辑器（IO）VS视频编码器（处理）"></a>案例：文本编辑器（IO）VS视频编码器（处理）</h3><p>对于视频编码器。它对什么时间开始运行没有太严格的要求 用户几乎分辨不出也并不关心它到底是立刻就运行还是半秒钟以后才开始的。当然，它完成得越早越好，至于所花时间并不是我们关注的主要问题。 </p>
+<img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222160121844.png" alt="image-20220222160121844" style="zoom:50%;">
+
+<p>​    </p>
+<h2 id="Linux调度算法"><a href="#Linux调度算法" class="headerlink" title="Linux调度算法"></a>Linux调度算法</h2><p>Linux调度器是以**<em>模块方式提供**</em>的，这样做的目的是允许不同类型的进程可以有针对性地选择调度算法。 </p>
+<p>这种模块化结构被称为<strong>调度器类</strong>（scheduler classes）,它允许多种不同的可动态添加的调度算法并存，调度属于自己范畴的进程。每个调度器都有一个优先级，基础的调度器代码定义kemel/schedx文件中，它会按照优先级顺序遍历调度类，拥有一个可执行进程的最高优先级的调度器类胜出，去选择下面要执行的那一个程序。 </p>
+<p>完全公平调度（CFS）是一个**<em>针对普通进程的调度类**</em>，在Linux中称为SCHED_NORMAL（在POSIX中称为SCHED_OTHER） , CFS算法实现定义在文件kemel/sched_fair.c中</p>
+<h3 id="Unix系统中的进程调度–CFS公平调度"><a href="#Unix系统中的进程调度–CFS公平调度" class="headerlink" title="Unix系统中的进程调度–CFS公平调度"></a>Unix系统中的进程调度–CFS公平调度</h3><p>CFS的做法是允许每个进程运行一段时间、循环轮转、选择运行最少的进程作为下一个运行进程，而不再采用分配给每个进程时间片的做法了，CFS在所有可运行进程总数基础上计算出一个进程应该运行多久，而不是依靠nice值来计算时间片</p>
+<p>任何进程所获得的处理器时间是由它自己和其他所有可运行进程nice值的相对差值决定的。nice值对时间片的作用<strong>不再是算数加权，而是几何加权</strong>。任何nice值对应的绝对时间不再是一个绝对值，而是<strong>处理器的使用比</strong>。CFS称为公平调度器是因为它确保给每个进程公平 的处理器使用比。正如我们知道的，CFS不是完美的公平，它只是近乎完美的多任务。但是它确实在多进程环境下，降低了调度延迟带来的不公平性。</p>
+<blockquote>
+<p>目标延迟</p>
+</blockquote>
+<p>CFS为完美多任务中的无限小调度周期的近似值设立了一个目标。越小的调度周期将带来越好的交互性，同时也更接近完美的多任务。但是你必须承受更高的切换代价和更差的系统总吞吐能力。</p>
+<blockquote>
+<p>最小粒度</p>
+</blockquote>
+<p>CFS为此引入每个进程获得的时间片底线， 这个底线称为最小粒度。默认情况下这个值是1ms。如此一来，即便是可运行进程数量趋于无穷，每个最少也能获得1ms的运行时间，确保切换消耗被限制在一定范围内（避免为了降低延迟不断的无限小调度周期，从而增加了进程切换的消耗）</p>
+<h2 id="Linux调度的实现"><a href="#Linux调度的实现" class="headerlink" title="Linux调度的实现"></a>Linux调度的实现</h2><h3 id="时间记账"><a href="#时间记账" class="headerlink" title="时间记账"></a>时间记账</h3><p>所有的调度器都必须对进程运行时间做记账。多数Unix系统，正如我们前面所说，分配一个时间片给每一个进程。那么当每次系统时钟节拍发生时，时间片都会被减少一个节拍周期。当一个进程的时间片被减少到0时，它就会被另一个尚未减到0的时间片可运行进程抢占。</p>
+<h3 id="进程选择"><a href="#进程选择" class="headerlink" title="进程选择"></a>进程选择</h3><p>当CFS需要选择下一个运行进程时，它会挑一个具有最小vruntime的进程。这其实就是CFS调度算法的核心：选择具有最小vruntime的任务。【**<em>最完美的调度：所有可运行进程的vruntime值将一致**</em>】</p>
+<p>CFS使用**<u>红黑树</u>**来组织可运行进程队列，并利用其迅速找到最小vruntime值的进程。</p>
+<h3 id="调度器入口"><a href="#调度器入口" class="headerlink" title="调度器入口"></a>调度器入口</h3><p>进程调度的主要入口点是函数schedule(),它定义在文件kemel/sched.c中。Schedule()通常都需要和一个具体的调度类相关联，也就是说，它会找到一个最高优先级的调度类睡眠和唤醒。</p>
+<p><strong><em>pick_next_task()</em></strong>会以优先级为序，从高到低，依次检查每一个调度类，并且从最高优先级的调度类中，选取最高优先级的进程。</p>
+<h3 id="睡眠和唤醒"><a href="#睡眠和唤醒" class="headerlink" title="睡眠和唤醒"></a>睡眠和唤醒</h3><p><strong>休眠</strong>(被阻塞)的进程处于一个特殊的不可执行状态。这点非常重要，如果没有这种特殊状态的话，调度程序就可能选出一个本不愿意被执行的进程。</p>
+<blockquote>
+<p>休眠的操作</p>
+</blockquote>
+<p>内核的操作都相同：进程把自己标记成休眠状态，从可执行红黑树中移出，放入等待队列，然后调用schedule。选择和执行一个其他进程。</p>
+<p>休眠有两种相关的进程状态：**<em>TASK_INTERRUPTIBLE和TASK_UNINTERRUPTIBLE**</em>.它们的唯_区别是处于TASK_UNINTERRUPTIBLE的进程会忽略信号，而处于TASK_INTERRUPTIBLE状态的进程如果接收到一个信号，会被提前唤醒并响应该信号。 两种状态的进程位于同一个等待队列上，等待某些事件，不能够运行。</p>
+<blockquote>
+<p>唤醒的操作</p>
+</blockquote>
+<p>唤醒操作通过函数wake_up()进行，它会唤醒指定的等待队列上的所有进程。它调用函数try_to_wake_up(),该函数负责将进程设置为TASK_RUNNING状态，调用enqueue_task()将此进程放入红黑树中，如果被唤醒的进程优先级比当前正在执行的进程的优先级高，还要设置need_resched标志</p>
+<h2 id="抢占和上下文切换"><a href="#抢占和上下文切换" class="headerlink" title="抢占和上下文切换"></a>抢占和上下文切换</h2><h3 id="上下文切换"><a href="#上下文切换" class="headerlink" title="上下文切换"></a>上下文切换</h3><p>上下文切换，也就是从一个可执行进程切换到另一个可执行进程，由定义在kemel/sched.c中的context_switch()函数负责处理。每当一个新的进程被选出来准备投入运行的时候，schedule()就会调用该函数。它完成了两项基本的工作： </p>
+<ul>
+<li><p>调用声明在&lt;asm/mmu_context.h&gt;中的switch_mm(),该函数负责把虚拟内存从上一个进程映射切换到新进程中。</p>
+</li>
+<li><p>调用声明在＜asm/system.h＞中的switch_to(),该函数负责从上一个进程的处理器状态切换 </p>
+<p>到新进程的处理器状态。这包括保存、恢复栈信息和寄存器信息，还有其他任何与体系结’ </p>
+<p>构相关的状态信息，都必须以每个进程为对象进行管理和保存。</p>
+</li>
+</ul>
+<h3 id="抢占"><a href="#抢占" class="headerlink" title="抢占"></a>抢占</h3><p>内核提供了一个**<em>need_resched**</em>标志来表明是否需要重新执行一次调度。</p>
+<h4 id="用户抢占"><a href="#用户抢占" class="headerlink" title="用户抢占"></a>用户抢占</h4><ul>
+<li> 从系统调返回用户空间时。 </li>
+<li>从中断处理程序返回用户空间时。</li>
+</ul>
+<h4 id="内核抢占"><a href="#内核抢占" class="headerlink" title="内核抢占"></a>内核抢占</h4><ul>
+<li>中断处理程序正在执行，且返回内核空间之前。</li>
+<li>内核代码再一次具有可抢占性的时候。 </li>
+<li>如果内核中的任务显式地调用schedule。</li>
+<li>如果内核中的任务阻塞(这同样也会导致调用schedule())</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div class="reward-container">
+  <div>谢谢你的支持哦，继续加油.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="邢浩东 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="邢浩东 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>邢浩东
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.mindmaster.top/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/" title="进程调度">https://www.mindmaster.top/2022/02/22/进程调度/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-%E9%82%A2%E6%B5%A9%E4%B8%9C/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-邢浩东</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%BF%9B%E7%A8%8B/" rel="tag"># 进程</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/02/21/Scrapy1/" rel="prev" title="Scrapy1">
+      <i class="fa fa-chevron-left"></i> Scrapy1
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6"><span class="nav-number">1.</span> <span class="nav-text">Linux进程调度</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E4%BB%BB%E5%8A%A1%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.1.</span> <span class="nav-text">多任务操作系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6-1"><span class="nav-number">1.2.</span> <span class="nav-text">Linux进程调度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AD%96%E7%95%A5"><span class="nav-number">1.3.</span> <span class="nav-text">策略</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B9%E6%8D%AE%E8%BF%9B%E7%A8%8B%E5%88%86%E7%B1%BB%E7%A1%AE%E5%AE%9A%E7%AD%96%E7%95%A5"><span class="nav-number">1.3.1.</span> <span class="nav-text">根据进程分类确定策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B9%E6%8D%AE%E8%BF%9B%E7%A8%8B%E4%BC%98%E5%85%88%E7%BA%A7%E7%A1%AE%E5%AE%9A%E8%B0%83%E5%BA%A6%E7%AD%96%E7%95%A5"><span class="nav-number">1.3.2.</span> <span class="nav-text">根据进程优先级确定调度策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E7%89%87"><span class="nav-number">1.3.3.</span> <span class="nav-text">时间片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B%EF%BC%9A%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E5%99%A8%EF%BC%88IO%EF%BC%89VS%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E5%99%A8%EF%BC%88%E5%A4%84%E7%90%86%EF%BC%89"><span class="nav-number">1.3.4.</span> <span class="nav-text">案例：文本编辑器（IO）VS视频编码器（处理）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95"><span class="nav-number">1.4.</span> <span class="nav-text">Linux调度算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Unix%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E2%80%93CFS%E5%85%AC%E5%B9%B3%E8%B0%83%E5%BA%A6"><span class="nav-number">1.4.1.</span> <span class="nav-text">Unix系统中的进程调度–CFS公平调度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux%E8%B0%83%E5%BA%A6%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.5.</span> <span class="nav-text">Linux调度的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E8%AE%B0%E8%B4%A6"><span class="nav-number">1.5.1.</span> <span class="nav-text">时间记账</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E9%80%89%E6%8B%A9"><span class="nav-number">1.5.2.</span> <span class="nav-text">进程选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E5%BA%A6%E5%99%A8%E5%85%A5%E5%8F%A3"><span class="nav-number">1.5.3.</span> <span class="nav-text">调度器入口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9D%A1%E7%9C%A0%E5%92%8C%E5%94%A4%E9%86%92"><span class="nav-number">1.5.4.</span> <span class="nav-text">睡眠和唤醒</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%A2%E5%8D%A0%E5%92%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2"><span class="nav-number">1.6.</span> <span class="nav-text">抢占和上下文切换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2"><span class="nav-number">1.6.1.</span> <span class="nav-text">上下文切换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%A2%E5%8D%A0"><span class="nav-number">1.6.2.</span> <span class="nav-text">抢占</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E6%8A%A2%E5%8D%A0"><span class="nav-number">1.6.2.1.</span> <span class="nav-text">用户抢占</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E6%A0%B8%E6%8A%A2%E5%8D%A0"><span class="nav-number">1.6.2.2.</span> <span class="nav-text">内核抢占</span></a></li></ol></li></ol></li></ol></li></ol></div>
+
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="邢浩东"
+      src="/images/OIP.jfif">
+  <p class="site-author-name" itemprop="name">邢浩东</p>
+  <div class="site-description" itemprop="description">The world favors the underdog,and I would be the bad guy</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mindmaster1" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mindmaster1" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/yourname" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;yourname" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.csdn.net/" title="CSDN → https:&#x2F;&#x2F;www.csdn.net" rel="noopener" target="_blank"><i class="fab fa-apple fa-fw"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://juejin.cn/user/1706074845232983" title="掘金 → https:&#x2F;&#x2F;juejin.cn&#x2F;user&#x2F;1706074845232983" rel="noopener" target="_blank"><i class="fa fa-binoculars fa-fw"></i>掘金</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Leetcode刷题
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://leetcode-cn.com/" title="https:&#x2F;&#x2F;leetcode-cn.com&#x2F;" rel="noopener" target="_blank">通向快乐</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+ <div>
+    <svg>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-1"></text>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-2"></text>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-3"></text>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-4"></text>
+    </svg>
+</div>
+<script>
+function showtime(){
+    var noatime = new Date();
+    var h = noatime.getHours(),
+        m = noatime.getMinutes(),
+        s = noatime.getSeconds();
+    h=checktime(h);
+    m=checktime(m);
+    s=checktime(s);
+  return h+":"+m+":"+s;
+}
+function checktime(x){
+  if(x<10){
+    x="0"+x;
+  }
+  return x;
+}
+var div1=document.getElementsByTagName("text");
+setInterval(function(){
+  for (var i in div1){
+      div1[i].innerHTML=showtime();
+  }
+},1000);
+</script>	   
+
+<script type="text/javascript" src="//rf.revolvermaps.com/0/0/1.js?i=57fnj853bkq&amp;s=220&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+ 
+    
+  </ul>
+    </div>
+	
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+	
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">邢浩东</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">58k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">53 分钟</span>
+</div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'dOLOPmQA1yPidXhJmndTryVE-gzGzoHsz',
+      appKey     : 'tDnfIUMcS9cpj4Rqgxu4mUxG',
+      placeholder: "欢迎大家畅所欲言# Comment box placeholder",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
