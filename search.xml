@@ -82,6 +82,134 @@
       </tags>
   </entry>
   <entry>
+    <title>LVS负载均衡</title>
+    <url>/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</url>
+    <content><![CDATA[<blockquote>
+<h3 id="LVS是什么"><a href="#LVS是什么" class="headerlink" title="LVS是什么?"></a>LVS是什么?</h3></blockquote>
+<p>LVS，全称Linux Virtual Server，是国人章文嵩发起的一个开源项目。<br> 在社区具有很大的热度，是一个基于四层、具有强大性能的反向代理服务器。<br> <code>早期使用lvs需要修改内核才能使用，但是由于性能优异，现在已经被收入内核。</code></p>
+<p>LVS通过工作于内核的ipvs模块来实现功能，其主要工作于netfilter 的INPUT链上。<br> 而用户需要对ipvs进行操作配置则需要使用ipvsadm这个工具。<br> ipvsadm主要用于设置lvs模型、调度方式以及指定后端主机。</p>
+<blockquote>
+<h3 id="LVS中的角色"><a href="#LVS中的角色" class="headerlink" title="LVS中的角色"></a>LVS中的角色</h3></blockquote>
+<h5 id="LVS的一些相关术语"><a href="#LVS的一些相关术语" class="headerlink" title="LVS的一些相关术语"></a><strong>LVS的一些相关术语</strong></h5><p>LVS的模型中有两个角色：<br> **调度器:**Director，又称为Dispatcher，Balancer<br> <code>调度器主要用于接受用户请求。</code><br> **真实主机:**Real Server，简称为RS。<br> <code>用于真正处理用户的请求。</code></p>
+<p>而为了更好地理解，我们将所在角色的IP地址分为以下三种：<br> <strong>Director Virtual IP:**调度器用于与客户端通信的IP地址，简称为VIP<br> **Director IP</strong>:调度器用于与RealServer通信的IP地址，简称为DIP。<br> <strong>Real Server :</strong> 后端主机的用于与调度器通信的IP地址，简称为RIP。</p>
+<img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/02.webp" class>
+
+<p>基本模型</p>
+<blockquote>
+<h3 id="LVS的三种调度模式"><a href="#LVS的三种调度模式" class="headerlink" title="LVS的三种调度模式"></a>LVS的三种调度模式</h3></blockquote>
+<h3 id="LVS-NATNetwork-Address-Transform"><a href="#LVS-NATNetwork-Address-Transform" class="headerlink" title="LVS-NATNetwork Address Transform"></a>LVS-NAT<code>Network Address Transform</code></h3><h6 id="示意图和调度步骤"><a href="#示意图和调度步骤" class="headerlink" title="示意图和调度步骤"></a><strong>示意图和调度步骤</strong></h6><img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/01.webp" class>
+
+<p>LVS-NAT</p>
+<h6 id="原理："><a href="#原理：" class="headerlink" title="原理："></a><strong>原理：</strong></h6><p>基于ip伪装<code>MASQUERADES</code>，原理是多目标DNAT。<br> 所以请求和响应都经由Director调度器。</p>
+<h6 id="LVS-NAT的优点与缺点"><a href="#LVS-NAT的优点与缺点" class="headerlink" title="LVS-NAT的优点与缺点"></a><strong>LVS-NAT的优点与缺点</strong></h6><h6 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h6><ul>
+<li>支持端口映射</li>
+<li>RS可以使用任意操作系统</li>
+<li>节省公有IP地址。<br> <code>RIP和DIP都应该使用同一网段私有地址，而且RS的网关要指向DIP。</code><br> <code>使用nat另外一个好处就是后端的主机相对比较安全。</code></li>
+</ul>
+<h6 id="缺点："><a href="#缺点：" class="headerlink" title="缺点："></a>缺点：</h6><ul>
+<li>请求和响应报文都要经过Director转发;极高负载时，Director可能成为系统瓶颈。<br> <code>就是效率低的意思。</code></li>
+</ul>
+<h3 id="LVS-TUNIP-Tuneling"><a href="#LVS-TUNIP-Tuneling" class="headerlink" title="LVS-TUNIP Tuneling"></a>LVS-TUN<code>IP Tuneling</code></h3><h6 id="示意图和调度步骤-1"><a href="#示意图和调度步骤-1" class="headerlink" title="示意图和调度步骤"></a><strong>示意图和调度步骤</strong></h6><img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/03.webp" class>
+
+<p>LVS-TUN</p>
+<h6 id="原理：-1"><a href="#原理：-1" class="headerlink" title="原理："></a><strong>原理：</strong></h6><p>基于隧道封装技术。在IP报文的外面再包一层IP报文。<br> 当Director接收到请求的时候，选举出调度的RealServer<br> 当接受到从Director而来的请求时，RealServer则会使用lo接口上的VIP直接响应CIP。<br> 这样CIP请求VIP的资源，收到的也是VIP响应。</p>
+<h6 id="LVS-TUN的优点与缺点"><a href="#LVS-TUN的优点与缺点" class="headerlink" title="LVS-TUN的优点与缺点"></a><strong>LVS-TUN的优点与缺点</strong></h6><h6 id="优点：-1"><a href="#优点：-1" class="headerlink" title="优点："></a>优点：</h6><ul>
+<li>RIP,VIP,DIP都应该使用公网地址，且RS网关不指向DIP;<br> <code>只接受进站请求，解决了LVS-NAT时的问题，减少负载。</code><br> <code>请求报文经由Director调度，但是响应报文不需经由Director。</code></li>
+</ul>
+<h6 id="缺点：-1"><a href="#缺点：-1" class="headerlink" title="缺点："></a>缺点：</h6><ul>
+<li>不指向Director所以不支持端口映射。</li>
+<li>RS的OS必须支持隧道功能。</li>
+<li>隧道技术会额外花费性能，增大开销。</li>
+</ul>
+<h3 id="LVS-DRDirect-Routing"><a href="#LVS-DRDirect-Routing" class="headerlink" title="LVS-DRDirect Routing"></a>LVS-DR<code>Direct Routing</code></h3><h6 id="示意图和调度步骤-2"><a href="#示意图和调度步骤-2" class="headerlink" title="示意图和调度步骤"></a><strong>示意图和调度步骤</strong></h6><img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/04.webp" class>
+
+<p>LVS-DR</p>
+<h6 id="原理"><a href="#原理" class="headerlink" title="原理"></a><strong>原理</strong></h6><p>当Director接收到请求之后，通过调度方法选举出RealServer。<br> 讲目标地址的MAC地址改为RealServer的MAC地址。<br> RealServer接受到转发而来的请求，发现目标地址是VIP。<code>RealServer配置在lo接口上。</code><br> 处理请求之后则使用lo接口上的VIP响应CIP。</p>
+<h6 id="LVS-DR的优点与缺点"><a href="#LVS-DR的优点与缺点" class="headerlink" title="LVS-DR的优点与缺点"></a><strong>LVS-DR的优点与缺点</strong></h6><h6 id="优点：-2"><a href="#优点：-2" class="headerlink" title="优点："></a>优点：</h6><ul>
+<li>RIP可以使用私有地址，也可以使用公网地址。<br> <code>只要求DIP和RIP的地址在同一个网段内。</code></li>
+<li>请求报文经由Director调度，但是响应报文不经由Director。</li>
+<li>RS可以使用大多数OS</li>
+</ul>
+<h6 id="缺点：-2"><a href="#缺点：-2" class="headerlink" title="缺点："></a>缺点：</h6><ul>
+<li>不支持端口映射。</li>
+<li>不能跨局域网。</li>
+</ul>
+<h6 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h6><p>三种模型虽然各有利弊，但是由于追求性能和便捷，DR是目前用得最多的LVS模型。</p>
+<blockquote>
+<h3 id="LVS的八种调度方法"><a href="#LVS的八种调度方法" class="headerlink" title="LVS的八种调度方法"></a>LVS的八种调度方法</h3></blockquote>
+<h5 id="静态方法-仅依据算法本身进行轮询调度"><a href="#静态方法-仅依据算法本身进行轮询调度" class="headerlink" title="静态方法:仅依据算法本身进行轮询调度"></a>静态方法:仅依据算法本身进行轮询调度</h5><ul>
+<li>RR:Round Robin,轮调<br> <code>一个接一个，自上而下</code></li>
+<li>WRR:Weighted RR，加权论调<br> <code>加权，手动让能者多劳。</code></li>
+<li>SH:SourceIP Hash<br> <code>来自同一个IP地址的请求都将调度到同一个RealServer</code></li>
+<li>DH:Destination Hash<br> <code>不管IP，请求特定的东西，都定义到同一个RS上。</code></li>
+</ul>
+<h5 id="动态方法-根据算法及RS的当前负载状态进行调度"><a href="#动态方法-根据算法及RS的当前负载状态进行调度" class="headerlink" title="动态方法:根据算法及RS的当前负载状态进行调度"></a>动态方法:根据算法及RS的当前负载状态进行调度</h5><ul>
+<li>LC:least connections(最小链接数)<br> <code>链接最少，也就是Overhead最小就调度给谁。</code><br> <code>假如都一样，就根据配置的RS自上而下调度。</code></li>
+<li>WLC:Weighted Least Connection (加权最小连接数)<br> <code>这个是LVS的默认算法。</code></li>
+<li>SED:Shortest Expection Delay(最小期望延迟)<br> <code>WLC算法的改进。</code></li>
+<li>NQ:Never Queue<br> <code>SED算法的改进。</code></li>
+<li>LBLC:Locality-Based Least-Connection,基于局部的的LC算法<br> 正向代理缓存机制。访问缓存服务器，调高缓存的命中率。<br> 和传统DH算法比较，考虑缓存服务器负载。可以看做是DH+LC<br> 如果有两个缓存服务器<br> 1.只要调度到其中的一个缓存服务器，那缓存服务器内就会记录下来。下一次访问同一个资源的时候也就是这个服务器了。   (DH)<br> 2.有一个用户从来没有访问过这两个缓存服务器，那就分配到负载较小的服务器。<code>LC</code></li>
+</ul>
+<p>LBLCR:Locality-Based Least-Connection  with  Replication(带复制的lblc算法)<br> 缓存服务器中的缓存可以互相复制。<br> 因为即使没有，也能立即从另外一个服务器内复制一份，并且均衡负载</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">man ipvsadm有讲这几种动态或者静态的rs调度方法</span><br></pre></td></tr></table></figure>
+<blockquote>
+<h4 id="配置LVS-DR"><a href="#配置LVS-DR" class="headerlink" title="配置LVS-DR"></a>配置LVS-DR</h4></blockquote>
+<table>
+<thead>
+<tr>
+<th align="center">主机名</th>
+<th align="center">主机地址</th>
+<th align="center">角色</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">node1</td>
+<td align="center">DIP:192.168.2.201，VIP:192.168.2.211</td>
+<td align="center">Director</td>
+</tr>
+<tr>
+<td align="center">node3</td>
+<td align="center">RIP:192.168.2.203，VIP:192.168.2.211</td>
+<td align="center">RealServer</td>
+</tr>
+<tr>
+<td align="center">node4</td>
+<td align="center">RIP:192.168.2.204，VIP:192.168.2.211</td>
+<td align="center">RealServer</td>
+</tr>
+</tbody></table>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">本文中的主机系统均为CentOS7.1，Apache2.4，数据库：MariaDB-5.5.50</span><br></pre></td></tr></table></figure>
+<p>实验拓扑：</p>
+<img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/05.webp" class>
+
+<p>lvs-dr实验拓扑</p>
+<p><strong>(1)在Director上配置VIP和DIP</strong></p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">  [root@bc ~]# vim /etc/sysconfig/network-scripts/ifcfg-eno16777736</span><br><span class="line">    TYPE=Ethernet</span><br><span class="line">    BOOTPROTO=<span class="string">&quot;static&quot;</span></span><br><span class="line">    DEFROUTE=yes</span><br><span class="line">    PEERDNS=yes</span><br><span class="line">    PEERROUTES=yes</span><br><span class="line">    NAME=eno16777736</span><br><span class="line">    DEVICE=eno16777736</span><br><span class="line">    ONBOOT=yes</span><br><span class="line">    IPADDR=<span class="string">&quot;192.168.2.201&quot;</span></span><br><span class="line">    NETMASK=<span class="string">&quot;255.255.255.0&quot;</span></span><br><span class="line">    DNS1=<span class="string">&quot;192.168.2.1&quot;</span></span><br><span class="line">    GATEWAY=<span class="string">&quot;192.168.2.1&quot;</span></span><br><span class="line"></span><br><span class="line">[root@bc ~]# vim /etc/sysconfig/network-scripts/ifcfg-eno16777736:0</span><br><span class="line">    TYPE=Ethernet</span><br><span class="line">    BOOTPROTO=<span class="string">&quot;static&quot;</span></span><br><span class="line">    NAME=eno16777736:<span class="number">0</span></span><br><span class="line">    ONBOOT=yes</span><br><span class="line">    IPADDR=<span class="string">&quot;192.168.2.211&quot;</span></span><br><span class="line">    NETMASK=<span class="string">&quot;255.255.255.0&quot;</span></span><br><span class="line">    DNS1=<span class="string">&quot;192.168.2.1&quot;</span></span><br><span class="line">    GATEWAY=<span class="string">&quot;192.168.2.1&quot;</span></span><br><span class="line">    ONPARENT=yes</span><br></pre></td></tr></table></figure>
+<p>重启网络之后查看配置</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">[root@bc ~]# service NetworkManager stop</span><br><span class="line">  Redirecting to /bin/systemctl stop  NetworkManager.service</span><br><span class="line">[root@bc ~]# service network restart</span><br><span class="line">  Restarting network (via systemctl):                        [  OK  ]</span><br><span class="line">[root@bc ~]# ifconfig</span><br><span class="line">  eno16777736: flags=<span class="number">4163</span>&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu <span class="number">1500</span></span><br><span class="line">        inet <span class="number">192.168</span><span class="number">.2</span><span class="number">.201</span>  netmask <span class="number">255.255</span><span class="number">.255</span><span class="number">.0</span>  broadcast <span class="number">192.168</span><span class="number">.2</span><span class="number">.255</span></span><br><span class="line">        inet6 fe80::<span class="number">250</span>:56ff:fe3c:d757  prefixlen <span class="number">64</span>  scopeid <span class="number">0x20</span>&lt;link&gt;</span><br><span class="line">        ether <span class="number">00</span>:<span class="number">50</span>:<span class="number">56</span>:3c:d7:<span class="number">57</span>  txqueuelen <span class="number">1000</span>  (Ethernet)</span><br><span class="line">        RX packets <span class="number">88853</span>  bytes <span class="number">14843664</span> (<span class="number">14.1</span> MiB)</span><br><span class="line">        RX errors <span class="number">0</span>  dropped <span class="number">0</span>  overruns <span class="number">0</span>  frame <span class="number">0</span></span><br><span class="line">        TX packets <span class="number">79195</span>  bytes <span class="number">6551143</span> (<span class="number">6.2</span> MiB)</span><br><span class="line">        TX errors <span class="number">0</span>  dropped <span class="number">0</span> overruns <span class="number">0</span>  carrier <span class="number">0</span>  collisions <span class="number">0</span></span><br><span class="line"></span><br><span class="line">  eno16777736:<span class="number">0</span>: flags=<span class="number">4163</span>&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu <span class="number">1500</span></span><br><span class="line">        inet <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span>  netmask <span class="number">255.255</span><span class="number">.255</span><span class="number">.0</span>  broadcast <span class="number">192.168</span><span class="number">.2</span><span class="number">.255</span></span><br><span class="line">        ether <span class="number">00</span>:<span class="number">50</span>:<span class="number">56</span>:3c:d7:<span class="number">57</span>  txqueuelen <span class="number">1000</span>  (Ethernet)</span><br><span class="line"></span><br><span class="line">  lo: flags=<span class="number">73</span>&lt;UP,LOOPBACK,RUNNING&gt;  mtu <span class="number">65536</span></span><br><span class="line">        inet <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>  netmask <span class="number">255.0</span><span class="number">.0</span><span class="number">.0</span></span><br><span class="line">        inet6 ::<span class="number">1</span>  prefixlen <span class="number">128</span>  scopeid <span class="number">0x10</span>&lt;host&gt;</span><br><span class="line">        loop  txqueuelen <span class="number">0</span>  (Local Loopback)</span><br><span class="line">        RX packets <span class="number">12998</span>  bytes <span class="number">1140269</span> (<span class="number">1.0</span> MiB)</span><br><span class="line">        RX errors <span class="number">0</span>  dropped <span class="number">0</span>  overruns <span class="number">0</span>  frame <span class="number">0</span></span><br><span class="line">        TX packets <span class="number">12998</span>  bytes <span class="number">1140269</span> (<span class="number">1.0</span> MiB)</span><br><span class="line">        TX errors <span class="number">0</span>  dropped <span class="number">0</span> overruns <span class="number">0</span>  carrier <span class="number">0</span>  collisions <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p><strong>(2)Director使用ipvsadm修改创建ipvs规则</strong></p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">[root@bc ~]# ipvsadm -A -t 192.168.2.211:80 -s rr</span><br><span class="line">[root@bc ~]# ipvsadm -a -t 192.168.2.211:80 -r 192.168.2.203 -g</span><br><span class="line">[root@bc ~]# ipvsadm -a -t 192.168.2.211:80 -r 192.168.2.204 -g</span><br><span class="line">[root@bc ~]# ipvsadm -L -n</span><br><span class="line">IP Virtual Server version <span class="number">1.2</span><span class="number">.1</span> (size=<span class="number">4096</span>)</span><br><span class="line">Prot LocalAddress:Port Scheduler Flags</span><br><span class="line">  -&gt; RemoteAddress:Port           Forward Weight ActiveConn InActConn</span><br><span class="line">TCP  <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span>:<span class="number">80</span> rr</span><br><span class="line">  -&gt; <span class="number">192.168</span><span class="number">.2</span><span class="number">.203</span>:<span class="number">80</span>             Route   <span class="number">1</span>      <span class="number">0</span>          <span class="number">0</span>         </span><br><span class="line">  -&gt; <span class="number">192.168</span><span class="number">.2</span><span class="number">.204</span>:<span class="number">80</span>             Route   <span class="number">1</span>      <span class="number">0</span>          <span class="number">0</span>   </span><br></pre></td></tr></table></figure>
+<p><strong>(3)RealServer安装httpd</strong></p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">[root@node3 ~]# yum install httpd -y</span><br><span class="line">[root@node4 ~]# yum install httpd -y</span><br></pre></td></tr></table></figure>
+<p><code>可以在里面放一个Wordpress,也可以简单echo几个字到index.html</code><br> <strong>(4)node3和node4修改RealServer内核参数</strong></p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">echo <span class="string">&quot;1&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/ip_forward</span><br><span class="line">echo <span class="string">&quot;2&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/conf/all/arp_announce</span><br><span class="line">echo <span class="string">&quot;1&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/conf/all/arp_ignore</span><br><span class="line">echo <span class="string">&quot;1&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/conf/lo/arp_ignore</span><br><span class="line">echo <span class="string">&quot;2&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/conf/lo/arp_announce</span><br><span class="line">ifconfig lo:<span class="number">0</span> <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span>/<span class="number">32</span> broadcast <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span> up</span><br><span class="line">route add -host <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span> dev lo:<span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p><code>修改内核参数，并且配置VIP地址到RealServer的loopback接口上。</code><br> <strong><code>那样的话，当RealServer接到从Director转发而来的数据报文时，RealServer也不会丢弃报文。</code></strong><br> <code>同时，修改了RealServer的参数，局域网内的arp表就只有Director有VIP。</code><br> <code>RealServer的的机器上有VIP这件事，只有RealServer自己知道。</code><br> <strong><code>这样可以保证，当请求到来的时候，第一个会送到Director那里去。</code></strong></p>
+<p><strong>(5)测试结果</strong></p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">[root@node3 httpd]# vim  /var/log/httpd/access_log </span><br><span class="line">[root@node4 httpd]# vim  /var/log/httpd/access_log </span><br></pre></td></tr></table></figure>
+<p>效果差不多就是这样:<br> <code>因为我们使用了RR静态调度方法,所以这node3和node4的请求是一人一个。</code></p>
+<img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/06.webp" class>
+
+
+
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>负载均衡</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Python自动化办公--Word</title>
     <url>/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/</url>
     <content><![CDATA[<h1 id><a href="#" class="headerlink" title></a></h1><h1 id="Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）"><a href="#Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）" class="headerlink" title="Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）"></a>Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）</h1><p>在Word文件中，不但有文字内容，还有加粗、红色等格式，而且这些特殊的格式和文字内容是混合在一起的，但如果用Python来读取Word文件，这段文字会被分为纯文字、段落、字体、字号以及表格 等更具体的部分，而且每一个部分都对应着<strong>Python的变量和函数。</strong></p>
