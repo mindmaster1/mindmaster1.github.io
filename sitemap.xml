@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.mindmaster.top/2022/02/23/HTTP%E6%8A%A5%E6%96%87/</loc>
+    
+    <lastmod>2022-02-23</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.mindmaster.top/2022/02/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E5%BA%94%E7%94%A8%E5%B1%82/</loc>
     
     <lastmod>2022-02-23</lastmod>
@@ -200,13 +207,6 @@
 
   
   <url>
-    <loc>https://www.mindmaster.top/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</loc>
-    <lastmod>2022-02-23</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://www.mindmaster.top/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</loc>
     <lastmod>2022-02-23</lastmod>
     <changefreq>daily</changefreq>
@@ -214,7 +214,21 @@
   </url>
   
   <url>
+    <loc>https://www.mindmaster.top/tags/HTTP/</loc>
+    <lastmod>2022-02-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.mindmaster.top/tags/Python%E8%87%AA%E5%8A%A8%E5%8C%96/</loc>
+    <lastmod>2022-02-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.mindmaster.top/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</loc>
     <lastmod>2022-02-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>

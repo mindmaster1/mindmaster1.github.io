@@ -1,6 +1,334 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>HTTP/1.1深入学习（一）</title>
+    <url>/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/</url>
+    <content><![CDATA[<h2 id="HTTP解决了什么问题"><a href="#HTTP解决了什么问题" class="headerlink" title="HTTP解决了什么问题"></a>HTTP解决了什么问题</h2><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG\source_posts\HTTP-1-1深入学习\image01.png" alt="image-20220216145214793"></p>
+<p>解决 WWW 信息交互必须面对的需求：</p>
+<ul>
+<li><p> 低门槛 </p>
+</li>
+<li><p>可扩展性：巨大的用户群体，超长的寿命 </p>
+</li>
+<li><p> 分布式系统下的 Hypermedia：大粒度数据的网络传输 </p>
+</li>
+<li><p>Internet 规模 </p>
+<ul>
+<li><p>无法控制的 scalability </p>
+<ul>
+<li><p>不可预测的负载、非法格式的数据、恶意消息 </p>
+</li>
+<li><p>客户端不能保持所有服务器信息，服务器不能保持多个请求间的状态信息</p>
+<p>独立的组件部署：新老组件并存</p>
+<p>向前兼容：自 1993 年起 HTTP0.9\1.0（1996）已经被广泛使用</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG\source_posts\HTTP-1-1深入学习\image02.png" alt="image-20220216145500667"></p>
+<h2 id="浏览器发起HTTP请求的典型场景与ABNF定义HTTP协议格式"><a href="#浏览器发起HTTP请求的典型场景与ABNF定义HTTP协议格式" class="headerlink" title="浏览器发起HTTP请求的典型场景与ABNF定义HTTP协议格式"></a>浏览器发起HTTP请求的典型场景与ABNF定义HTTP协议格式</h2><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG\source\_posts\HTTP-1-1深入学习\image03.png" alt="image-20220216143022772" style="zoom:150%;">
+
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143059824.png" alt="image-20220216143059824"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143217688.png" alt="image-20220216143217688"></p>
+<p>一种无状态的、应用层的、以<strong>请求/应答方式</strong>运行的协议，使用可扩展的语义和自描述消息格式，与基于网络的超文本信息系统灵活的互动。</p>
+<h3 id="HTTP的协议格式"><a href="#HTTP的协议格式" class="headerlink" title="HTTP的协议格式"></a>HTTP的协议格式</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143444135.png" alt="image-20220216143444135"></p>
+<h4 id="ABNF-扩充巴科斯-瑙尔范式-操作符"><a href="#ABNF-扩充巴科斯-瑙尔范式-操作符" class="headerlink" title="ABNF(扩充巴科斯-瑙尔范式)操作符"></a>ABNF(扩充巴科斯-瑙尔范式)操作符</h4><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143600821.png" alt="image-20220216143600821"></p>
+<p><strong><em>ABNF的核心规则</em></strong></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143608965.png" alt="image-20220216143608965"></p>
+<blockquote>
+<p>基于ABNF描述的HTTP协议格式 + 具体实例</p>
+</blockquote>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143758587.png" alt="image-20220216143758587"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143824981.png" alt="image-20220216143824981"></p>
+<h2 id="网络分层：OSI模型与TCP-IP模型"><a href="#网络分层：OSI模型与TCP-IP模型" class="headerlink" title="网络分层：OSI模型与TCP/IP模型"></a>网络分层：OSI模型与TCP/IP模型</h2><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216144746312.png" alt="image-20220216144746312"></p>
+<h3 id="OSI模型与TCP模型的对照"><a href="#OSI模型与TCP模型的对照" class="headerlink" title="OSI模型与TCP模型的对照"></a>OSI模型与TCP模型的对照</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216144826027.png" alt="image-20220216144826027"></p>
+<h3 id="在不同层之间的报文头部封装"><a href="#在不同层之间的报文头部封装" class="headerlink" title="在不同层之间的报文头部封装"></a>在不同层之间的报文头部封装</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216144956500.png" alt="image-20220216144956500"></p>
+<p>注意一下在图中表明的各层的报文分别叫什么名字。</p>
+<h2 id="评估Web架构的关键属性"><a href="#评估Web架构的关键属性" class="headerlink" title="评估Web架构的关键属性"></a>评估Web架构的关键属性</h2><p>HTTP 协议应当在以下属性中取得可接受的均衡：</p>
+<ul>
+<li><strong>性能</strong> Performance：影响高可用的关键因素 </li>
+<li><strong>可伸缩性</strong> Scalability：支持部署可以互相交互的大量组件 </li>
+<li><strong>简单性</strong> Simplicity：易理解、易实现、易验证 </li>
+<li><strong>可见性</strong> Visiable：对两个组件间的交互进行监视或者仲裁的能力。如缓存、分层设计等</li>
+<li><strong>可移植性</strong> Portability：在不同的环境下运行的能力 </li>
+<li><strong>可靠性</strong> Reliability：出现部分故障时，对整体影响的程度 </li>
+<li><strong>可修改性</strong> Modifiability：对系统作出修改的难易程度，由可进化性、可定制性、可扩展性、可配置性、可重用性构成</li>
+</ul>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154311688.png" alt="image-20220216154311688"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154333582.png" alt="image-20220216154333582"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154407111.png" alt="image-20220216154407111"></p>
+<h2 id="从五种架构风格推导出HTTP的REST架构"><a href="#从五种架构风格推导出HTTP的REST架构" class="headerlink" title="从五种架构风格推导出HTTP的REST架构"></a>从五种架构风格推导出HTTP的REST架构</h2><p> <img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154624220.png" alt="image-20220216154624220"></p>
+<h3 id="数据流风格-Data-flow-Styles"><a href="#数据流风格-Data-flow-Styles" class="headerlink" title="数据流风格 Data-flow Styles"></a>数据流风格 Data-flow Styles</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154806375.png" alt="image-20220216154806375"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154827521.png" alt="image-20220216154827521"></p>
+<h3 id="复制风格"><a href="#复制风格" class="headerlink" title="复制风格"></a>复制风格</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155000320.png" alt="image-20220216155000320"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155007623.png" alt="image-20220216155007623"></p>
+<h3 id="分层风格"><a href="#分层风格" class="headerlink" title="分层风格"></a>分层风格</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155144846.png" alt="image-20220216155144846"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155211840.png" alt="image-20220216155211840"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155244132.png" alt="image-20220216155244132"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155251415.png" alt="image-20220216155251415"></p>
+<h3 id="移动代码风格-Mobile-Code-Styles"><a href="#移动代码风格-Mobile-Code-Styles" class="headerlink" title="移动代码风格 Mobile Code Styles"></a>移动代码风格 Mobile Code Styles</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155401997.png" alt="image-20220216155401997"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155440972.png" alt="image-20220216155440972"></p>
+<h3 id="点对点风格"><a href="#点对点风格" class="headerlink" title="点对点风格"></a>点对点风格</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155509897.png" alt="image-20220216155509897"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155556884.png" alt="image-20220216155556884"></p>
+<h3 id="不同风格之间的演化"><a href="#不同风格之间的演化" class="headerlink" title="不同风格之间的演化"></a>不同风格之间的演化</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155625246.png" alt="image-20220216155625246"></p>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>计算机网络</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>HTTP报文</title>
+    <url>/2022/02/23/HTTP%E6%8A%A5%E6%96%87/</url>
+    <content><![CDATA[<h1 id="HTTP报文"><a href="#HTTP报文" class="headerlink" title="HTTP报文"></a>HTTP报文</h1><p>HTTP报文是在HTTP应用程序之间发送的数据块。这些数据块以一些文本形式的**<em>元信息**</em>（meta-information）开头，这些信息描述了报文的内容及含义，后面跟着<strong>可选的数据部分</strong>。这些报文在客户端、服务器和代理之间流动。</p>
+
+
+
+
+<h2 id="报文的组成部分"><a href="#报文的组成部分" class="headerlink" title="报文的组成部分"></a>报文的组成部分</h2><p>不论是请求还是响应，由三部分组成；</p>
+<blockquote>
+<p>起始行(start line)、包含属性的首部(header)块，可选的、包含数据的主体（body）</p>
+</blockquote>
+
+
+<p>起始行和首部就是由行分隔的ASCII文本。每行都以一个由两个字符组成的行终止序列作为结束，其中包括一个回车符（ASCII码13）和一个换行符（ASCII码10）。 这个行终止序列可以写做CRLF.需要指出的是，尽管HTTP规范中说明应该用 CRLF来表示行终止，但稳健的应用程序也应该接受单个换行符作为行的终止。有 些老的，或不完整的HTTP应用程序并不总是既发送回车符，又发送换行符。</p>
+<h3 id="报文的语法"><a href="#报文的语法" class="headerlink" title="报文的语法"></a>报文的语法</h3><p>分为：【**<em>请求报文和响应报文**</em>】</p>
+
+
+<p> <strong><em>浏览器发起HTTP请求的典型场景与ABNF定义HTTP协议格式</em></strong></p>
+
+
+
+
+
+
+<h3 id="HTTP的协议格式"><a href="#HTTP的协议格式" class="headerlink" title="HTTP的协议格式"></a>HTTP的协议格式</h3> 
+
+
+
+<h4 id="ABNF-扩充巴科斯-瑙尔范式-操作符"><a href="#ABNF-扩充巴科斯-瑙尔范式-操作符" class="headerlink" title="ABNF(扩充巴科斯-瑙尔范式)操作符"></a>ABNF(扩充巴科斯-瑙尔范式)操作符</h4> 
+
+<p><strong><em>ABNF的核心规则</em></strong></p>
+ 
+
+
+
+<blockquote>
+<p>基于ABNF描述的HTTP协议格式 + 具体实例</p>
+</blockquote>
+ 
+
+
+
+
+
+
+
+<h3 id="起始行-【Start-line】"><a href="#起始行-【Start-line】" class="headerlink" title="起始行 【Start-line】"></a>起始行 【Start-line】</h3><h4 id="请求行-【Request-line】"><a href="#请求行-【Request-line】" class="headerlink" title="请求行 【Request-line】"></a>请求行 【Request-line】</h4><p>请求报文请求服务器对资源进行一些操作。请求报文的起始行，或称为请求行，包含了一个<strong>方法</strong>和一个<strong>请求URL</strong>,这个方法描述了服务器应该执行的操作，请求URL 描述了要对哪个资源执行这个方法。请求行中还包含<strong>HTTP的版本</strong>，用来告知服务 器，客户端使用的是哪种HTTP。</p>
+<h4 id="响应行-【Response-line】"><a href="#响应行-【Response-line】" class="headerlink" title="响应行 【Response-line】"></a>响应行 【Response-line】</h4><p>响应报文承载了状态信息和操作产生的所有结果数据，将其返回给客户端。响应报文的起始行，或称为响应行，包含了响应报文使用的HTTP版本、数字状态码，以及描述操作状态的文本形式的原因短语。</p>
+<p><strong><em>对起始行和响应行中的具体内容进行描述</em></strong></p>
+<h4 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h4><table>
+<thead>
+<tr>
+<th>方 法</th>
+<th>描 述</th>
+<th>是否包含主体</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GET</td>
+<td>从服务器获取一份文档</td>
+<td>否</td>
+<td></td>
+</tr>
+<tr>
+<td>HEAD</td>
+<td>只从服务器获取文档的首部</td>
+<td>否</td>
+<td></td>
+</tr>
+<tr>
+<td>POST</td>
+<td>向服务器发送需要处理的数据</td>
+<td>是</td>
+<td></td>
+</tr>
+<tr>
+<td>PUT</td>
+<td>将请求的主体部分存储在服务器上</td>
+<td>是</td>
+<td></td>
+</tr>
+<tr>
+<td>TRACE</td>
+<td>对可能经过代理服务器传送到服务器上去的报文进行追踪</td>
+<td>否</td>
+<td></td>
+</tr>
+<tr>
+<td>OPTIONS</td>
+<td>决定可以在服务器上执行哪些方法</td>
+<td>否</td>
+<td></td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>从服务器上删除–份文档</td>
+<td>否</td>
+<td></td>
+</tr>
+</tbody></table>
+<ul>
+<li><p><strong>HEAD</strong>: lHEAD方法与GET方法的行为很类似，但服务器在响应中只返回首部。不会返回实体的主体部分。这就允许客户端在未获取实际资源的情况下，对资源的首部进行检査。</p>
+<ul>
+<li>在不获取资源的情况下了解资源的情况（比如，判断其类型）</li>
+<li>通过査看响应中的状态码，看看某个对象是否存在</li>
+<li>通过査看首部，测试资源是否被修改了。</li>
+</ul>
+</li>
+<li><p><strong>PUT</strong>：PUT方法的语义就是让服务器用请求的主体部分来创建一个由所请求的URL命名 的新文档，或者，如果那个URL已经存在的话，就用这个主体来替代它。</p>
+<p>因为PUT允许用户对内容进行修改，所以很多Web服务器都要求在执行PUT之 前，用密码登录。</p>
+ 
+</li>
+<li><p><strong>POST</strong>:POST方法起初是用来向服务器输入数据的。实际上，通常会用它来支持HTML 的表单。表单中填好的数据通常会被送给服务器，然后由服务器将其发送到它要去的地方。</p>
+
+
+
+
+</li>
+</ul>
+<h4 id="状态码"><a href="#状态码" class="headerlink" title="状态码"></a>状态码</h4><p>方法是用来告诉服务器做什么事情的，状态码则用来告诉客户端，发生了什么事情。 状态码位于响应的起始行中。</p>
+<table>
+<thead>
+<tr>
+<th>整体范围</th>
+<th>已定义范围</th>
+<th>分 类</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>100 ~ 199</td>
+<td>100 ~ 101</td>
+<td>信息提示</td>
+</tr>
+<tr>
+<td>200 - 299</td>
+<td>200 〜206</td>
+<td>成功</td>
+</tr>
+<tr>
+<td>300 ~ 399</td>
+<td>300 ~ 305</td>
+<td>重定向</td>
+</tr>
+<tr>
+<td>400 ~ 499</td>
+<td>400 ~ 415</td>
+<td>客户端错误</td>
+</tr>
+<tr>
+<td>500 ~ 599</td>
+<td>500 ~ 505</td>
+<td>服务器错误</td>
+</tr>
+</tbody></table>
+<p>【**<em>原因短语**</em>】：原因短语和状态码是成对出现的。原因短语是状态码的可读版本，应用程序开发者 将其传送给用户，用以说明在请求期间发生了什么情况。</p>
+<h3 id="首部-【header-field】"><a href="#首部-【header-field】" class="headerlink" title="首部 【header-field】"></a>首部 【header-field】</h3>
+
+<p>每个HTTP首部都有-种简单的语法：名字后面跟着冒号（：），然后跟上**<em>可选的空格**</em>，再跟上字段值，最后是一个CRLF。</p>
+<table>
+<thead>
+<tr>
+<th>首部实例</th>
+<th>描 述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Date：Tue,30ct 1997 02:16:03 GMT</td>
+<td>服务器产生响应的日期</td>
+</tr>
+<tr>
+<td>Content-length：15040</td>
+<td>实体的主体部分包含了 15 040字节的数据</td>
+</tr>
+<tr>
+<td>Content-type:image/gif</td>
+<td>实体的主体部分是一个GIF图片</td>
+</tr>
+</tbody></table>
+<p> 首部延续行：</p>
+<p>将长的首部行分为多行可以提高可读性，多出来的每行前面至少要有一个空格或制表符（tab）。</p>
+ 
+
+
+
+<h3 id="Messege-body"><a href="#Messege-body" class="headerlink" title="Messege-body"></a>Messege-body</h3><p>HTTP报文的第三部分是可选的实体主体部分。实体的主体是HTTP报文的负荷。 就是HTTP要传输的内容。</p>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>HTTP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Python自动化办公--Word</title>
+    <url>/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/</url>
+    <content><![CDATA[<h1 id><a href="#" class="headerlink" title></a></h1><h1 id="Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）"><a href="#Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）" class="headerlink" title="Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）"></a>Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）</h1><p>在Word文件中，不但有文字内容，还有加粗、红色等格式，而且这些特殊的格式和文字内容是混合在一起的，但如果用Python来读取Word文件，这段文字会被分为纯文字、段落、字体、字号以及表格 等更具体的部分，而且每一个部分都对应着<strong>Python的变量和函数。</strong></p>
+<p>用Python读取文件时，你需要记住很多个Python变量和函数。当然了，针对这一点， 你也不用担心，这些变量和函数在Python的Word扩展库<a href="https://python-docx.readthedocs.io/en/latest/#"><strong><em>官方文档</em></strong></a>可以查看。所以如果你需 要某个功能，但是不知道应该用什么变量和函数名称时，可以在官方文档中找到它的名字和 描述信息。</p>
+<h3 id="用Python自动合并两个Word文件"><a href="#用Python自动合并两个Word文件" class="headerlink" title="用Python自动合并两个Word文件"></a>用Python自动合并两个Word文件</h3><ul>
+<li><p>文件一（内容包含字体、字号、颜色等额外信息）：</p>
+ <img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/image.png" class>
+</li>
+<li><p>文件二（内容文字出现在表格中）:</p>
+ <img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/image01.png" class>
+
+</li>
+</ul>
+<blockquote>
+<p>第一个文件中，字体使用了黑体和宋体字，此外还有红色字体和加粗等格式。现在我需要 只提取其中的文字内容，不带任何格式。 </p>
+<p>第二个文件中，文字被放在了一张表格里。现在我需要用Python把表格中的文字提取出 来，合并成一个新的文件。</p>
+</blockquote>
+<h4 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"> <span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mrge_without_format</span>(<span class="params">docfiles:<span class="built_in">list</span></span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    只获取内容进行合并</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment">#遍历文件</span></span><br><span class="line">    <span class="keyword">for</span> docx_file <span class="keyword">in</span> <span class="built_in">sorted</span>(docfiles):</span><br><span class="line">        another_doc = Document(docx_file)</span><br><span class="line">        <span class="comment"># 获取每个文件的的所有段落</span></span><br><span class="line">        paras = another_doc.paragraphs</span><br><span class="line">        <span class="keyword">for</span> para <span class="keyword">in</span> paras:</span><br><span class="line">            <span class="comment"># 为新的word文件创建一个新段落</span></span><br><span class="line">            newpar = doc.add_paragraph(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">            <span class="comment">#将提取的内容写入新的文本段落中</span></span><br><span class="line">            newpar.add_run(para.text)</span><br><span class="line"></span><br><span class="line">        <span class="comment">#所有文件合并完成后在指定路径中保存</span></span><br><span class="line">        doc.save(Path(word_files_path,<span class="string">&#x27;new.docx&#x27;</span>))</span><br><span class="line"></span><br><span class="line">    <span class="comment">#调用函数</span></span><br><span class="line">    merge-mrge_without_format(files)</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="用Python合并Word和其他类型的文件"><a href="#用Python合并Word和其他类型的文件" class="headerlink" title="用Python合并Word和其他类型的文件"></a>用Python合并Word和其他类型的文件</h3><p>相较于其他文件，Word文件支持的格式丰富程度远远高于Txt文件等，所以当这两种格式丰富程度不一致的文件进行合并时，要么向下兼容，去掉Txt不支持的格式；要 么向上兼容，对Txt进行格式再调整。否则容易出现合并之后仍需要手动调整格式的问题，影 响工作效率。</p>
+<h4 id="将纯文本和Word文件合并"><a href="#将纯文本和Word文件合并" class="headerlink" title="将纯文本和Word文件合并"></a>将纯文本和Word文件合并</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx.shared <span class="keyword">import</span> RGBColor</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># word文件所在路径</span></span><br><span class="line">word_files_path = <span class="string">&#x27;D:/Python自动化办公/Day02/word样例文件&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># # 取得该目录下所有的docx格式文件</span></span><br><span class="line"><span class="comment"># p = Path(word_files_path)</span></span><br><span class="line"></span><br><span class="line">my_content = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">野老篱边江岸回，柴门不正逐江开。</span></span><br><span class="line"><span class="string">渔人网集澄潭下，贾客船随返照来。</span></span><br><span class="line"><span class="string">长路关心悲剑阁，片云何意傍琴台？</span></span><br><span class="line"><span class="string">王师未报收东郡，城阙秋生画角哀。</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add_content_mode1</span>(<span class="params">content</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    增加内容</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    print(doc)</span><br><span class="line">    para = doc.add_paragraph().add_run(content)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 设置字体格式</span></span><br><span class="line">    para.font.name = <span class="string">&#x27;仿宋&#x27;</span></span><br><span class="line">    <span class="comment"># 设置下划线</span></span><br><span class="line">    para.font.underline = <span class="literal">True</span></span><br><span class="line">    <span class="comment"># 设置颜色</span></span><br><span class="line">    para.font.color.rgb = RGBColor(<span class="number">255</span>, <span class="number">128</span>, <span class="number">128</span>)</span><br><span class="line">    <span class="comment"># 其他设置参考官方文档</span></span><br><span class="line">    <span class="comment"># https://python-docx.readthedocs.io/en/latest/api/text.html#run-objects</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">doc = Document()</span><br><span class="line">add_content_mode1(my_content)</span><br><span class="line">doc.save(Path(word_files_path, <span class="string">&#x27;new2.docx&#x27;</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="将图片和Word文件合并"><a href="#将图片和Word文件合并" class="headerlink" title="将图片和Word文件合并"></a>将图片和Word文件合并</h4><p>我们经常见到的图片格式就有.jpg、.png、.gif等，由于这些格式应用范围广，格式 没有被商业软件加密，所以python-docx库的add_picture函数就能实现把图片插入Word的 功能。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> shared</span><br><span class="line"></span><br><span class="line">doc = Document()</span><br><span class="line"><span class="comment"># 按英寸设置宽度，添加图片</span></span><br><span class="line">doc_add_picture(<span class="string">&#x27;test.jpg&#x27;</span>,width=shared.Inches(<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="将Execl和Word文件合并"><a href="#将Execl和Word文件合并" class="headerlink" title="将Execl和Word文件合并"></a>将Execl和Word文件合并</h4><ul>
+<li><p>使用Python制作邀请函</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line">today=datetime.date.today().strftime(<span class="string">&#x27;%Y-%m-%d&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户信息文件</span></span><br><span class="line">customer = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/客户信息.xlsx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 邀请函模版</span></span><br><span class="line">invitation = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/邀请函模版.docx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 邀请函路径</span></span><br><span class="line">invitation_path = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 替换内容</span></span><br><span class="line">replace_content = &#123;</span><br><span class="line">    <span class="string">&#x27;&lt;姓名&gt;&#x27;</span> : <span class="string">&#x27;no_name&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&lt;性别&gt;&#x27;</span> : <span class="string">&#x27;m_f&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&lt;今天日期&gt;&#x27;</span> : today</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generat_invitation</span>():</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    生成邀请函文件</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    doc = Document(invitation)</span><br><span class="line">    <span class="comment"># 取出每一段</span></span><br><span class="line">    <span class="keyword">for</span> para <span class="keyword">in</span> doc.paragraphs:</span><br><span class="line">        <span class="keyword">for</span> key, value <span class="keyword">in</span> replace_content.items():</span><br><span class="line">            <span class="keyword">if</span> key <span class="keyword">in</span> para.text:</span><br><span class="line">                <span class="comment"># 逐个关键字进行替换</span></span><br><span class="line">                para.text = para.text.replace(key, value)</span><br><span class="line"></span><br><span class="line">    file_name = PurePath(invitation_path).with_name(replace_content[<span class="string">&#x27;&lt;姓名&gt;&#x27;</span>]).with_suffix(<span class="string">&#x27;.docx&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    doc.save(file_name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_customer</span>(<span class="params">customer_file: Path</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    获取邀请函信息</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment"># 从第一个sheet中取出客户信息</span></span><br><span class="line">    data = xlrd.open_workbook(customer_file)</span><br><span class="line">    table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 取得客户数量</span></span><br><span class="line">    customer_number = table.nrows</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, customer_number):</span><br><span class="line">        content = table.row_values(rowx=line, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>)</span><br><span class="line">        replace_content[<span class="string">&#x27;&lt;姓名&gt;&#x27;</span>] = content[<span class="number">0</span>]</span><br><span class="line">        replace_content[<span class="string">&#x27;&lt;性别&gt;&#x27;</span>] = content[<span class="number">1</span>]</span><br><span class="line">        <span class="comment"># print(replace_content)</span></span><br><span class="line">        <span class="comment"># &#123;&#x27;&lt;姓名&gt;&#x27;: &#x27;韩梅梅&#x27;, &#x27;&lt;性别&gt;&#x27;: &#x27;女士&#x27;, &#x27;&lt;今天日期&gt;&#x27;: &#x27;2021-01-01&#x27;&#125;</span></span><br><span class="line">        <span class="comment"># &#123;&#x27;&lt;姓名&gt;&#x27;: &#x27;李雷&#x27;, &#x27;&lt;性别&gt;&#x27;: &#x27;先生&#x27;, &#x27;&lt;今天日期&gt;&#x27;: &#x27;2021-01-01&#x27;&#125;</span></span><br><span class="line">        generat_invitation()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    get_customer(customer)</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在对不同类型文件进行合并时，要考虑不同的问题</p>
+<blockquote>
+<ol>
+<li>对于支持格式丰富不同的文件时要考虑格式的兼容性；</li>
+<li>  对于图片、音乐、视频和Word合并时要考虑是否是受到word支持的通用格式；</li>
+<li>  对于像Excel格式于Word合并时能实现更复杂的功能，代码的复杂程度也会随之提高，一 般需要先分析功能，再进行代码编写。</li>
+</ol>
+</blockquote>
+]]></content>
+      <categories>
+        <category>Python开发</category>
+      </categories>
+      <tags>
+        <tag>Python自动化</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>LVS负载均衡</title>
     <url>/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</url>
     <content><![CDATA[<blockquote>
@@ -129,139 +457,6 @@
       </tags>
   </entry>
   <entry>
-    <title>HTTP/1.1深入学习（一）</title>
-    <url>/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/</url>
-    <content><![CDATA[<h2 id="HTTP解决了什么问题"><a href="#HTTP解决了什么问题" class="headerlink" title="HTTP解决了什么问题"></a>HTTP解决了什么问题</h2><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG\source_posts\HTTP-1-1深入学习\image01.png" alt="image-20220216145214793"></p>
-<p>解决 WWW 信息交互必须面对的需求：</p>
-<ul>
-<li><p> 低门槛 </p>
-</li>
-<li><p>可扩展性：巨大的用户群体，超长的寿命 </p>
-</li>
-<li><p> 分布式系统下的 Hypermedia：大粒度数据的网络传输 </p>
-</li>
-<li><p>Internet 规模 </p>
-<ul>
-<li><p>无法控制的 scalability </p>
-<ul>
-<li><p>不可预测的负载、非法格式的数据、恶意消息 </p>
-</li>
-<li><p>客户端不能保持所有服务器信息，服务器不能保持多个请求间的状态信息</p>
-<p>独立的组件部署：新老组件并存</p>
-<p>向前兼容：自 1993 年起 HTTP0.9\1.0（1996）已经被广泛使用</p>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG\source_posts\HTTP-1-1深入学习\image02.png" alt="image-20220216145500667"></p>
-<h2 id="浏览器发起HTTP请求的典型场景与ABNF定义HTTP协议格式"><a href="#浏览器发起HTTP请求的典型场景与ABNF定义HTTP协议格式" class="headerlink" title="浏览器发起HTTP请求的典型场景与ABNF定义HTTP协议格式"></a>浏览器发起HTTP请求的典型场景与ABNF定义HTTP协议格式</h2><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG\source\_posts\HTTP-1-1深入学习\image03.png" alt="image-20220216143022772" style="zoom:150%;">
-
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143059824.png" alt="image-20220216143059824"></p>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143217688.png" alt="image-20220216143217688"></p>
-<p>一种无状态的、应用层的、以<strong>请求/应答方式</strong>运行的协议，使用可扩展的语义和自描述消息格式，与基于网络的超文本信息系统灵活的互动。</p>
-<h3 id="HTTP的协议格式"><a href="#HTTP的协议格式" class="headerlink" title="HTTP的协议格式"></a>HTTP的协议格式</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143444135.png" alt="image-20220216143444135"></p>
-<h4 id="ABNF-扩充巴科斯-瑙尔范式-操作符"><a href="#ABNF-扩充巴科斯-瑙尔范式-操作符" class="headerlink" title="ABNF(扩充巴科斯-瑙尔范式)操作符"></a>ABNF(扩充巴科斯-瑙尔范式)操作符</h4><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143600821.png" alt="image-20220216143600821"></p>
-<p><strong><em>ABNF的核心规则</em></strong></p>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143608965.png" alt="image-20220216143608965"></p>
-<blockquote>
-<p>基于ABNF描述的HTTP协议格式 + 具体实例</p>
-</blockquote>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143758587.png" alt="image-20220216143758587"></p>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143824981.png" alt="image-20220216143824981"></p>
-<h2 id="网络分层：OSI模型与TCP-IP模型"><a href="#网络分层：OSI模型与TCP-IP模型" class="headerlink" title="网络分层：OSI模型与TCP/IP模型"></a>网络分层：OSI模型与TCP/IP模型</h2><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216144746312.png" alt="image-20220216144746312"></p>
-<h3 id="OSI模型与TCP模型的对照"><a href="#OSI模型与TCP模型的对照" class="headerlink" title="OSI模型与TCP模型的对照"></a>OSI模型与TCP模型的对照</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216144826027.png" alt="image-20220216144826027"></p>
-<h3 id="在不同层之间的报文头部封装"><a href="#在不同层之间的报文头部封装" class="headerlink" title="在不同层之间的报文头部封装"></a>在不同层之间的报文头部封装</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216144956500.png" alt="image-20220216144956500"></p>
-<p>注意一下在图中表明的各层的报文分别叫什么名字。</p>
-<h2 id="评估Web架构的关键属性"><a href="#评估Web架构的关键属性" class="headerlink" title="评估Web架构的关键属性"></a>评估Web架构的关键属性</h2><p>HTTP 协议应当在以下属性中取得可接受的均衡：</p>
-<ul>
-<li><strong>性能</strong> Performance：影响高可用的关键因素 </li>
-<li><strong>可伸缩性</strong> Scalability：支持部署可以互相交互的大量组件 </li>
-<li><strong>简单性</strong> Simplicity：易理解、易实现、易验证 </li>
-<li><strong>可见性</strong> Visiable：对两个组件间的交互进行监视或者仲裁的能力。如缓存、分层设计等</li>
-<li><strong>可移植性</strong> Portability：在不同的环境下运行的能力 </li>
-<li><strong>可靠性</strong> Reliability：出现部分故障时，对整体影响的程度 </li>
-<li><strong>可修改性</strong> Modifiability：对系统作出修改的难易程度，由可进化性、可定制性、可扩展性、可配置性、可重用性构成</li>
-</ul>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154311688.png" alt="image-20220216154311688"></p>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154333582.png" alt="image-20220216154333582"></p>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154407111.png" alt="image-20220216154407111"></p>
-<h2 id="从五种架构风格推导出HTTP的REST架构"><a href="#从五种架构风格推导出HTTP的REST架构" class="headerlink" title="从五种架构风格推导出HTTP的REST架构"></a>从五种架构风格推导出HTTP的REST架构</h2><p> <img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154624220.png" alt="image-20220216154624220"></p>
-<h3 id="数据流风格-Data-flow-Styles"><a href="#数据流风格-Data-flow-Styles" class="headerlink" title="数据流风格 Data-flow Styles"></a>数据流风格 Data-flow Styles</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154806375.png" alt="image-20220216154806375"></p>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154827521.png" alt="image-20220216154827521"></p>
-<h3 id="复制风格"><a href="#复制风格" class="headerlink" title="复制风格"></a>复制风格</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155000320.png" alt="image-20220216155000320"></p>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155007623.png" alt="image-20220216155007623"></p>
-<h3 id="分层风格"><a href="#分层风格" class="headerlink" title="分层风格"></a>分层风格</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155144846.png" alt="image-20220216155144846"></p>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155211840.png" alt="image-20220216155211840"></p>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155244132.png" alt="image-20220216155244132"></p>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155251415.png" alt="image-20220216155251415"></p>
-<h3 id="移动代码风格-Mobile-Code-Styles"><a href="#移动代码风格-Mobile-Code-Styles" class="headerlink" title="移动代码风格 Mobile Code Styles"></a>移动代码风格 Mobile Code Styles</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155401997.png" alt="image-20220216155401997"></p>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155440972.png" alt="image-20220216155440972"></p>
-<h3 id="点对点风格"><a href="#点对点风格" class="headerlink" title="点对点风格"></a>点对点风格</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155509897.png" alt="image-20220216155509897"></p>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155556884.png" alt="image-20220216155556884"></p>
-<h3 id="不同风格之间的演化"><a href="#不同风格之间的演化" class="headerlink" title="不同风格之间的演化"></a>不同风格之间的演化</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155625246.png" alt="image-20220216155625246"></p>
-]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>计算机网络</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Python自动化办公--Word</title>
-    <url>/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/</url>
-    <content><![CDATA[<h1 id><a href="#" class="headerlink" title></a></h1><h1 id="Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）"><a href="#Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）" class="headerlink" title="Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）"></a>Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）</h1><p>在Word文件中，不但有文字内容，还有加粗、红色等格式，而且这些特殊的格式和文字内容是混合在一起的，但如果用Python来读取Word文件，这段文字会被分为纯文字、段落、字体、字号以及表格 等更具体的部分，而且每一个部分都对应着<strong>Python的变量和函数。</strong></p>
-<p>用Python读取文件时，你需要记住很多个Python变量和函数。当然了，针对这一点， 你也不用担心，这些变量和函数在Python的Word扩展库<a href="https://python-docx.readthedocs.io/en/latest/#"><strong><em>官方文档</em></strong></a>可以查看。所以如果你需 要某个功能，但是不知道应该用什么变量和函数名称时，可以在官方文档中找到它的名字和 描述信息。</p>
-<h3 id="用Python自动合并两个Word文件"><a href="#用Python自动合并两个Word文件" class="headerlink" title="用Python自动合并两个Word文件"></a>用Python自动合并两个Word文件</h3><ul>
-<li><p>文件一（内容包含字体、字号、颜色等额外信息）：</p>
- <img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/image.png" class>
-</li>
-<li><p>文件二（内容文字出现在表格中）:</p>
- <img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/image01.png" class>
-
-</li>
-</ul>
-<blockquote>
-<p>第一个文件中，字体使用了黑体和宋体字，此外还有红色字体和加粗等格式。现在我需要 只提取其中的文字内容，不带任何格式。 </p>
-<p>第二个文件中，文字被放在了一张表格里。现在我需要用Python把表格中的文字提取出 来，合并成一个新的文件。</p>
-</blockquote>
-<h4 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"> <span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mrge_without_format</span>(<span class="params">docfiles:<span class="built_in">list</span></span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    只获取内容进行合并</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment">#遍历文件</span></span><br><span class="line">    <span class="keyword">for</span> docx_file <span class="keyword">in</span> <span class="built_in">sorted</span>(docfiles):</span><br><span class="line">        another_doc = Document(docx_file)</span><br><span class="line">        <span class="comment"># 获取每个文件的的所有段落</span></span><br><span class="line">        paras = another_doc.paragraphs</span><br><span class="line">        <span class="keyword">for</span> para <span class="keyword">in</span> paras:</span><br><span class="line">            <span class="comment"># 为新的word文件创建一个新段落</span></span><br><span class="line">            newpar = doc.add_paragraph(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">            <span class="comment">#将提取的内容写入新的文本段落中</span></span><br><span class="line">            newpar.add_run(para.text)</span><br><span class="line"></span><br><span class="line">        <span class="comment">#所有文件合并完成后在指定路径中保存</span></span><br><span class="line">        doc.save(Path(word_files_path,<span class="string">&#x27;new.docx&#x27;</span>))</span><br><span class="line"></span><br><span class="line">    <span class="comment">#调用函数</span></span><br><span class="line">    merge-mrge_without_format(files)</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="用Python合并Word和其他类型的文件"><a href="#用Python合并Word和其他类型的文件" class="headerlink" title="用Python合并Word和其他类型的文件"></a>用Python合并Word和其他类型的文件</h3><p>相较于其他文件，Word文件支持的格式丰富程度远远高于Txt文件等，所以当这两种格式丰富程度不一致的文件进行合并时，要么向下兼容，去掉Txt不支持的格式；要 么向上兼容，对Txt进行格式再调整。否则容易出现合并之后仍需要手动调整格式的问题，影 响工作效率。</p>
-<h4 id="将纯文本和Word文件合并"><a href="#将纯文本和Word文件合并" class="headerlink" title="将纯文本和Word文件合并"></a>将纯文本和Word文件合并</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx.shared <span class="keyword">import</span> RGBColor</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># word文件所在路径</span></span><br><span class="line">word_files_path = <span class="string">&#x27;D:/Python自动化办公/Day02/word样例文件&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># # 取得该目录下所有的docx格式文件</span></span><br><span class="line"><span class="comment"># p = Path(word_files_path)</span></span><br><span class="line"></span><br><span class="line">my_content = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">野老篱边江岸回，柴门不正逐江开。</span></span><br><span class="line"><span class="string">渔人网集澄潭下，贾客船随返照来。</span></span><br><span class="line"><span class="string">长路关心悲剑阁，片云何意傍琴台？</span></span><br><span class="line"><span class="string">王师未报收东郡，城阙秋生画角哀。</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add_content_mode1</span>(<span class="params">content</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    增加内容</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    print(doc)</span><br><span class="line">    para = doc.add_paragraph().add_run(content)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 设置字体格式</span></span><br><span class="line">    para.font.name = <span class="string">&#x27;仿宋&#x27;</span></span><br><span class="line">    <span class="comment"># 设置下划线</span></span><br><span class="line">    para.font.underline = <span class="literal">True</span></span><br><span class="line">    <span class="comment"># 设置颜色</span></span><br><span class="line">    para.font.color.rgb = RGBColor(<span class="number">255</span>, <span class="number">128</span>, <span class="number">128</span>)</span><br><span class="line">    <span class="comment"># 其他设置参考官方文档</span></span><br><span class="line">    <span class="comment"># https://python-docx.readthedocs.io/en/latest/api/text.html#run-objects</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">doc = Document()</span><br><span class="line">add_content_mode1(my_content)</span><br><span class="line">doc.save(Path(word_files_path, <span class="string">&#x27;new2.docx&#x27;</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<h4 id="将图片和Word文件合并"><a href="#将图片和Word文件合并" class="headerlink" title="将图片和Word文件合并"></a>将图片和Word文件合并</h4><p>我们经常见到的图片格式就有.jpg、.png、.gif等，由于这些格式应用范围广，格式 没有被商业软件加密，所以python-docx库的add_picture函数就能实现把图片插入Word的 功能。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> shared</span><br><span class="line"></span><br><span class="line">doc = Document()</span><br><span class="line"><span class="comment"># 按英寸设置宽度，添加图片</span></span><br><span class="line">doc_add_picture(<span class="string">&#x27;test.jpg&#x27;</span>,width=shared.Inches(<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="将Execl和Word文件合并"><a href="#将Execl和Word文件合并" class="headerlink" title="将Execl和Word文件合并"></a>将Execl和Word文件合并</h4><ul>
-<li><p>使用Python制作邀请函</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line">today=datetime.date.today().strftime(<span class="string">&#x27;%Y-%m-%d&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户信息文件</span></span><br><span class="line">customer = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/客户信息.xlsx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 邀请函模版</span></span><br><span class="line">invitation = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/邀请函模版.docx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 邀请函路径</span></span><br><span class="line">invitation_path = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 替换内容</span></span><br><span class="line">replace_content = &#123;</span><br><span class="line">    <span class="string">&#x27;&lt;姓名&gt;&#x27;</span> : <span class="string">&#x27;no_name&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&lt;性别&gt;&#x27;</span> : <span class="string">&#x27;m_f&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&lt;今天日期&gt;&#x27;</span> : today</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generat_invitation</span>():</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    生成邀请函文件</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    doc = Document(invitation)</span><br><span class="line">    <span class="comment"># 取出每一段</span></span><br><span class="line">    <span class="keyword">for</span> para <span class="keyword">in</span> doc.paragraphs:</span><br><span class="line">        <span class="keyword">for</span> key, value <span class="keyword">in</span> replace_content.items():</span><br><span class="line">            <span class="keyword">if</span> key <span class="keyword">in</span> para.text:</span><br><span class="line">                <span class="comment"># 逐个关键字进行替换</span></span><br><span class="line">                para.text = para.text.replace(key, value)</span><br><span class="line"></span><br><span class="line">    file_name = PurePath(invitation_path).with_name(replace_content[<span class="string">&#x27;&lt;姓名&gt;&#x27;</span>]).with_suffix(<span class="string">&#x27;.docx&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    doc.save(file_name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_customer</span>(<span class="params">customer_file: Path</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    获取邀请函信息</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment"># 从第一个sheet中取出客户信息</span></span><br><span class="line">    data = xlrd.open_workbook(customer_file)</span><br><span class="line">    table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 取得客户数量</span></span><br><span class="line">    customer_number = table.nrows</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, customer_number):</span><br><span class="line">        content = table.row_values(rowx=line, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>)</span><br><span class="line">        replace_content[<span class="string">&#x27;&lt;姓名&gt;&#x27;</span>] = content[<span class="number">0</span>]</span><br><span class="line">        replace_content[<span class="string">&#x27;&lt;性别&gt;&#x27;</span>] = content[<span class="number">1</span>]</span><br><span class="line">        <span class="comment"># print(replace_content)</span></span><br><span class="line">        <span class="comment"># &#123;&#x27;&lt;姓名&gt;&#x27;: &#x27;韩梅梅&#x27;, &#x27;&lt;性别&gt;&#x27;: &#x27;女士&#x27;, &#x27;&lt;今天日期&gt;&#x27;: &#x27;2021-01-01&#x27;&#125;</span></span><br><span class="line">        <span class="comment"># &#123;&#x27;&lt;姓名&gt;&#x27;: &#x27;李雷&#x27;, &#x27;&lt;性别&gt;&#x27;: &#x27;先生&#x27;, &#x27;&lt;今天日期&gt;&#x27;: &#x27;2021-01-01&#x27;&#125;</span></span><br><span class="line">        generat_invitation()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    get_customer(customer)</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在对不同类型文件进行合并时，要考虑不同的问题</p>
-<blockquote>
-<ol>
-<li>对于支持格式丰富不同的文件时要考虑格式的兼容性；</li>
-<li>  对于图片、音乐、视频和Word合并时要考虑是否是受到word支持的通用格式；</li>
-<li>  对于像Excel格式于Word合并时能实现更复杂的功能，代码的复杂程度也会随之提高，一 般需要先分析功能，再进行代码编写。</li>
-</ol>
-</blockquote>
-]]></content>
-      <categories>
-        <category>Python开发</category>
-      </categories>
-      <tags>
-        <tag>Python自动化</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Python自动化办公-图片识别</title>
     <url>/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/</url>
     <content><![CDATA[<h1 id="使用Python实现高效自动化图片组在线-离线识别（转文字）"><a href="#使用Python实现高效自动化图片组在线-离线识别（转文字）" class="headerlink" title="使用Python实现高效自动化图片组在线/离线识别（转文字）"></a>使用Python实现高效自动化图片组在线/离线识别（转文字）</h1><h2 id="图片识别转文字的两种方式："><a href="#图片识别转文字的两种方式：" class="headerlink" title="图片识别转文字的两种方式："></a>图片识别转文字的两种方式：</h2><blockquote>
@@ -332,6 +527,59 @@
 <p>处理好的内容如下</p>
 
 
+]]></content>
+      <categories>
+        <category>Python开发</category>
+      </categories>
+      <tags>
+        <tag>Python自动化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Python自动化办公-跨文件字数统计</title>
+    <url>/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/</url>
+    <content><![CDATA[<h1 id="使用Python实现快速读写文件，跨文件字数统计"><a href="#使用Python实现快速读写文件，跨文件字数统计" class="headerlink" title="使用Python实现快速读写文件，跨文件字数统计"></a>使用Python实现快速读写文件，跨文件字数统计</h1><h2 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h2><figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">使用Python来批量统计多个文件的字数和标点符号</span><br></pre></td></tr></table></figure>
+<h2 id="实现单个文件字数统计"><a href="#实现单个文件字数统计" class="headerlink" title="实现单个文件字数统计"></a>实现单个文件字数统计</h2><p>统计单个文件的字数，需要用到Python的文件读写函数和变量这两个功能。Python的读写函 数是对文件内容的读取操作，变量呢，用来存储统计好的文件字数。</p>
+<ul>
+<li>先把要统计的文件读入内存；</li>
+<li>再对读入到内存的字数数量进行统计，并用变量保存；</li>
+<li>最后是将结果写入统计字数的专用文件中。</li>
+</ul>
+<h3 id="将文件内容读取到内存中"><a href="#将文件内容读取到内存中" class="headerlink" title="将文件内容读取到内存中"></a>将文件内容读取到内存中</h3><p>Python实现读取文件内容到内存的函数有三个，这三个函数原理相同，但是读取的内容多少有些不同，分别为：</p>
+<img data-src="/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220209190932306.png" alt="image-20220209190932306" style="zoom:50%;">
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pathlib</span><br><span class="line">file_name = <span class="string">&quot;./e.txt&quot;</span></span><br><span class="line"><span class="comment"># 取得脚本所在目录</span></span><br><span class="line">current_path = pathlib.PurePath(__file__).parent</span><br><span class="line"></span><br><span class="line"><span class="comment">#和脚本同目录下的要打开文件绝对路径</span></span><br><span class="line">file = current_path.joinpath(file_name)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打开文件</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(file,encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    <span class="comment"># 读取文件</span></span><br><span class="line">    content = f.read()</span><br><span class="line">    words = content.rstrip()</span><br><span class="line">    number = <span class="built_in">len</span>(words)</span><br><span class="line">    print(number)</span><br></pre></td></tr></table></figure>
+<p>open()函数参数说明：</p>
+<p>第一个参数file变量的值是要操作的文件路径和文件名称，你需要正 确指定它所在的路径和文件名称。第二个参数encoding变量的值指定了以哪种字符编码打开文件，错误的字符编码会导致内容读取异常，文字内容显示为“乱码”。</p>
+<h4 id="获取完整路径"><a href="#获取完整路径" class="headerlink" title="获取完整路径"></a>获取完整路径</h4><ul>
+<li>在代码中使用pathlib库的PurePath()函数，把当前Python脚本的路径转化为标准的 pathlib格式。</li>
+<li>通过parent属性去掉脚本的文件名，取得当前脚本所在的路径。</li>
+<li>再通过joinpath()函数把脚本所在的路径和e.txt文件名进行拼接，得到e.txt的完整路径。</li>
+</ul>
+<p>这种取得脚本同目录下的其他文件完整路径的用法，要比直接指定文件完整路径用法更灵活。</p>
+<blockquote>
+<p>__file__变量比较特殊，它是在Python中预先定义好的一个变量，默认情况下它的值会被 Python自动设置为当前脚本的完整路径名称。有了它，我就可以通过Python脚本的路径取得 e.txt的完整路径了。</p>
+</blockquote>
+<h4 id="设置字符编码"><a href="#设置字符编码" class="headerlink" title="设置字符编码"></a>设置字符编码</h4><p>第二个参数的作用是设置open()函数使用何种字符编码打开文件。</p>
+<h4 id="函数传参调用"><a href="#函数传参调用" class="headerlink" title="函数传参调用"></a>函数传参调用</h4><p>为什们指定这个参数的时候，要特意写出变量名称encoding呢？</p>
+<p>在函数定义的时候我们可以为函数指定一个或多个参数，如果使用了多个参数，你在调用函 数的时候需要按顺序依次传入每一个参数。但是如果你想要使用某个参数默认值或不想按照 顺序传入参数时怎么办呢？函数调用时，还可以根据参数的关键字来指定为函数传入哪些参 数。比如说open()函数的参数有7个，</p>
+<p><img data-src="/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220209193920724.png" alt="image-20220209193920724"></p>
+<p>在open()函数的定义中，encoding参数是open()函数的第4个参数。如果我们只需要第1个和 第4个参数，其他参数需要保持默认时，就可以使用如下格式调用open()函数：</p>
+<p><img data-src="/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220209193956499.png" alt="image-20220209193956499"></p>
+<p>在代码中，调用open()函数时，由于file参数是open()函数的第一个参数，因此可以不用指定 参数的关键字。encoding参数并非open()函数定义的第二个参数，而是第四个参数，所以需 要指定它的参数名称为encoding，根据open()函数的定义，encoding=”utf-8”会作为 open()函数的第四个参数使用。这种使用关键字作为函数的参数的方式，也被称作<strong>函数的关键字传参方式</strong>。</p>
+<h3 id="with使用"><a href="#with使用" class="headerlink" title="with使用"></a>with使用</h3><p>with关键字下面的代码是缩进形式，和with关键字形成了一个语句块</p>
+<p>在with语句 块结束之后，不必手动调用close()函数关闭文件，Python会自动将文件关闭。因此，你会看到我在程序中调用了open()函数打开文件，但是没有调用关闭文件的close()函数。</p>
+<p>总的来说，相对于手动调用close()函数来关闭文件，使用with函数减少了打开过多文件造成系统资源浪费和数据丢失的风险。</p>
+<h4 id="文件读取"><a href="#文件读取" class="headerlink" title="文件读取"></a>文件读取</h4><p>正确使用了open()函数的两个参数以后，会返回一个表示文件的对象f, 只有设置了正确 的文件路径、文件名称和字符编码，才能继续进行文件读取操作。文件的读取操作使用的是 read()函数，read()函数会根据文件的对象f，按照open()函数定义好的打开方式进行逐个字 的读取操作。Python对文件的其他操作，全都需要通过文件操作函数调用对象f来完成。</p>
+<h4 id="统计文件的字数"><a href="#统计文件的字数" class="headerlink" title="统计文件的字数"></a>统计文件的字数</h4><p>Python的内置函数**len()**来实现</p>
+<p>len()函数在Python中最初设计的功能就是统计字符串的长度，即字符串中有多少字符。利用len()函数可以对字符串数据类型进行操作的特性，将文件一次性读入内存，放入字符串数据类型中。我在统计字数之前还增加了一个rstrip()函数，它会自动剔除出现在文件末尾的空行、空格，让你统计的结果更精确。</p>
+<p>在进行文件字数统计的时候，需要注意，在代码中使用了read()函数实现了对文件内容的一<br>次性读取到内存的功能。如果你的文件较大，我建议你使用readline()函数按行读取，并逐行<br>统计字数，否则容易出现内存不足的问题。</p>
+<h4 id="将统计结果写入文件"><a href="#将统计结果写入文件" class="headerlink" title="将统计结果写入文件"></a>将统计结果写入文件</h4><p>将统计结果写入文件，可以对<strong>open()函数</strong>打开文件方式进行简单的修改，就可以实现文件写入功能了，写入文件的代码如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;total.txt&quot;</span>, <span class="string">&quot;w&quot;</span>, encodong=<span class="string">&quot;utf-8&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">	 f.write(<span class="string">&quot;15个字符&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>open()函数的第二个参数表示文件的打开方式，它默认值是“r”，代表了文件以读取方式进行打开。这时对象f只能进行文件读取操作，我们需要将第二个参数指定为”w”，就可以使用wirte()函数对文件进行写入操作了。而write()函数的第一个参数就是即将要写入文件的内容。</p>
+<h3 id="怎么统计多个文件的次数"><a href="#怎么统计多个文件的次数" class="headerlink" title="怎么统计多个文件的次数"></a>怎么统计多个文件的次数</h3><p>对多个文件的字数统计，就可以使用for循环来实现批量读取多个文件的内容。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">p = Path(src_path)</span><br><span class="line">files = [x <span class="keyword">for</span> x <span class="keyword">in</span> p.iterdir() <span class="keyword">if</span> PurePath(x).match(<span class="string">&#x27;*.txt&#x27;</span>)]</span><br><span class="line"><span class="keyword">for</span> files <span class="keyword">in</span> files:</span><br><span class="line">	<span class="keyword">with</span> <span class="built_in">open</span>(file,encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        content = f.read()</span><br><span class="line">words = content.rstrip()</span><br><span class="line">    	number = <span class="built_in">len</span>(words)</span><br></pre></td></tr></table></figure>
+<p>数字类型是一种非常适合进行整数、浮点数的转换和算数几何计算最常用的类型。在单文件字数统计的场景，用来储存每个文件的字数是最合适的类型。如果把场景扩展到统计多个文件的字数，使用一个数字类型的变量是不够的，你需要在循环中再增加一个新的数字类型的变量，对多个文件的统计结果进行依次累加就可以了。</p>
 ]]></content>
       <categories>
         <category>Python开发</category>
@@ -416,59 +664,6 @@
 
 
 
-]]></content>
-      <categories>
-        <category>Python开发</category>
-      </categories>
-      <tags>
-        <tag>Python自动化</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Python自动化办公-跨文件字数统计</title>
-    <url>/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/</url>
-    <content><![CDATA[<h1 id="使用Python实现快速读写文件，跨文件字数统计"><a href="#使用Python实现快速读写文件，跨文件字数统计" class="headerlink" title="使用Python实现快速读写文件，跨文件字数统计"></a>使用Python实现快速读写文件，跨文件字数统计</h1><h2 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h2><figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">使用Python来批量统计多个文件的字数和标点符号</span><br></pre></td></tr></table></figure>
-<h2 id="实现单个文件字数统计"><a href="#实现单个文件字数统计" class="headerlink" title="实现单个文件字数统计"></a>实现单个文件字数统计</h2><p>统计单个文件的字数，需要用到Python的文件读写函数和变量这两个功能。Python的读写函 数是对文件内容的读取操作，变量呢，用来存储统计好的文件字数。</p>
-<ul>
-<li>先把要统计的文件读入内存；</li>
-<li>再对读入到内存的字数数量进行统计，并用变量保存；</li>
-<li>最后是将结果写入统计字数的专用文件中。</li>
-</ul>
-<h3 id="将文件内容读取到内存中"><a href="#将文件内容读取到内存中" class="headerlink" title="将文件内容读取到内存中"></a>将文件内容读取到内存中</h3><p>Python实现读取文件内容到内存的函数有三个，这三个函数原理相同，但是读取的内容多少有些不同，分别为：</p>
-<img data-src="/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220209190932306.png" alt="image-20220209190932306" style="zoom:50%;">
-
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pathlib</span><br><span class="line">file_name = <span class="string">&quot;./e.txt&quot;</span></span><br><span class="line"><span class="comment"># 取得脚本所在目录</span></span><br><span class="line">current_path = pathlib.PurePath(__file__).parent</span><br><span class="line"></span><br><span class="line"><span class="comment">#和脚本同目录下的要打开文件绝对路径</span></span><br><span class="line">file = current_path.joinpath(file_name)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打开文件</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(file,encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    <span class="comment"># 读取文件</span></span><br><span class="line">    content = f.read()</span><br><span class="line">    words = content.rstrip()</span><br><span class="line">    number = <span class="built_in">len</span>(words)</span><br><span class="line">    print(number)</span><br></pre></td></tr></table></figure>
-<p>open()函数参数说明：</p>
-<p>第一个参数file变量的值是要操作的文件路径和文件名称，你需要正 确指定它所在的路径和文件名称。第二个参数encoding变量的值指定了以哪种字符编码打开文件，错误的字符编码会导致内容读取异常，文字内容显示为“乱码”。</p>
-<h4 id="获取完整路径"><a href="#获取完整路径" class="headerlink" title="获取完整路径"></a>获取完整路径</h4><ul>
-<li>在代码中使用pathlib库的PurePath()函数，把当前Python脚本的路径转化为标准的 pathlib格式。</li>
-<li>通过parent属性去掉脚本的文件名，取得当前脚本所在的路径。</li>
-<li>再通过joinpath()函数把脚本所在的路径和e.txt文件名进行拼接，得到e.txt的完整路径。</li>
-</ul>
-<p>这种取得脚本同目录下的其他文件完整路径的用法，要比直接指定文件完整路径用法更灵活。</p>
-<blockquote>
-<p>__file__变量比较特殊，它是在Python中预先定义好的一个变量，默认情况下它的值会被 Python自动设置为当前脚本的完整路径名称。有了它，我就可以通过Python脚本的路径取得 e.txt的完整路径了。</p>
-</blockquote>
-<h4 id="设置字符编码"><a href="#设置字符编码" class="headerlink" title="设置字符编码"></a>设置字符编码</h4><p>第二个参数的作用是设置open()函数使用何种字符编码打开文件。</p>
-<h4 id="函数传参调用"><a href="#函数传参调用" class="headerlink" title="函数传参调用"></a>函数传参调用</h4><p>为什们指定这个参数的时候，要特意写出变量名称encoding呢？</p>
-<p>在函数定义的时候我们可以为函数指定一个或多个参数，如果使用了多个参数，你在调用函 数的时候需要按顺序依次传入每一个参数。但是如果你想要使用某个参数默认值或不想按照 顺序传入参数时怎么办呢？函数调用时，还可以根据参数的关键字来指定为函数传入哪些参 数。比如说open()函数的参数有7个，</p>
-<p><img data-src="/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220209193920724.png" alt="image-20220209193920724"></p>
-<p>在open()函数的定义中，encoding参数是open()函数的第4个参数。如果我们只需要第1个和 第4个参数，其他参数需要保持默认时，就可以使用如下格式调用open()函数：</p>
-<p><img data-src="/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220209193956499.png" alt="image-20220209193956499"></p>
-<p>在代码中，调用open()函数时，由于file参数是open()函数的第一个参数，因此可以不用指定 参数的关键字。encoding参数并非open()函数定义的第二个参数，而是第四个参数，所以需 要指定它的参数名称为encoding，根据open()函数的定义，encoding=”utf-8”会作为 open()函数的第四个参数使用。这种使用关键字作为函数的参数的方式，也被称作<strong>函数的关键字传参方式</strong>。</p>
-<h3 id="with使用"><a href="#with使用" class="headerlink" title="with使用"></a>with使用</h3><p>with关键字下面的代码是缩进形式，和with关键字形成了一个语句块</p>
-<p>在with语句 块结束之后，不必手动调用close()函数关闭文件，Python会自动将文件关闭。因此，你会看到我在程序中调用了open()函数打开文件，但是没有调用关闭文件的close()函数。</p>
-<p>总的来说，相对于手动调用close()函数来关闭文件，使用with函数减少了打开过多文件造成系统资源浪费和数据丢失的风险。</p>
-<h4 id="文件读取"><a href="#文件读取" class="headerlink" title="文件读取"></a>文件读取</h4><p>正确使用了open()函数的两个参数以后，会返回一个表示文件的对象f, 只有设置了正确 的文件路径、文件名称和字符编码，才能继续进行文件读取操作。文件的读取操作使用的是 read()函数，read()函数会根据文件的对象f，按照open()函数定义好的打开方式进行逐个字 的读取操作。Python对文件的其他操作，全都需要通过文件操作函数调用对象f来完成。</p>
-<h4 id="统计文件的字数"><a href="#统计文件的字数" class="headerlink" title="统计文件的字数"></a>统计文件的字数</h4><p>Python的内置函数**len()**来实现</p>
-<p>len()函数在Python中最初设计的功能就是统计字符串的长度，即字符串中有多少字符。利用len()函数可以对字符串数据类型进行操作的特性，将文件一次性读入内存，放入字符串数据类型中。我在统计字数之前还增加了一个rstrip()函数，它会自动剔除出现在文件末尾的空行、空格，让你统计的结果更精确。</p>
-<p>在进行文件字数统计的时候，需要注意，在代码中使用了read()函数实现了对文件内容的一<br>次性读取到内存的功能。如果你的文件较大，我建议你使用readline()函数按行读取，并逐行<br>统计字数，否则容易出现内存不足的问题。</p>
-<h4 id="将统计结果写入文件"><a href="#将统计结果写入文件" class="headerlink" title="将统计结果写入文件"></a>将统计结果写入文件</h4><p>将统计结果写入文件，可以对<strong>open()函数</strong>打开文件方式进行简单的修改，就可以实现文件写入功能了，写入文件的代码如下：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;total.txt&quot;</span>, <span class="string">&quot;w&quot;</span>, encodong=<span class="string">&quot;utf-8&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">	 f.write(<span class="string">&quot;15个字符&quot;</span>)</span><br></pre></td></tr></table></figure>
-<p>open()函数的第二个参数表示文件的打开方式，它默认值是“r”，代表了文件以读取方式进行打开。这时对象f只能进行文件读取操作，我们需要将第二个参数指定为”w”，就可以使用wirte()函数对文件进行写入操作了。而write()函数的第一个参数就是即将要写入文件的内容。</p>
-<h3 id="怎么统计多个文件的次数"><a href="#怎么统计多个文件的次数" class="headerlink" title="怎么统计多个文件的次数"></a>怎么统计多个文件的次数</h3><p>对多个文件的字数统计，就可以使用for循环来实现批量读取多个文件的内容。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">p = Path(src_path)</span><br><span class="line">files = [x <span class="keyword">for</span> x <span class="keyword">in</span> p.iterdir() <span class="keyword">if</span> PurePath(x).match(<span class="string">&#x27;*.txt&#x27;</span>)]</span><br><span class="line"><span class="keyword">for</span> files <span class="keyword">in</span> files:</span><br><span class="line">	<span class="keyword">with</span> <span class="built_in">open</span>(file,encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        content = f.read()</span><br><span class="line">words = content.rstrip()</span><br><span class="line">    	number = <span class="built_in">len</span>(words)</span><br></pre></td></tr></table></figure>
-<p>数字类型是一种非常适合进行整数、浮点数的转换和算数几何计算最常用的类型。在单文件字数统计的场景，用来储存每个文件的字数是最合适的类型。如果把场景扩展到统计多个文件的字数，使用一个数字类型的变量是不够的，你需要在循环中再增加一个新的数字类型的变量，对多个文件的统计结果进行依次累加就可以了。</p>
 ]]></content>
       <categories>
         <category>Python开发</category>
