@@ -28,16 +28,16 @@
 <meta property="og:site_name" content="一只小码农">
 <meta property="og:description" content="进程调度问题，结合Linux kernel总结">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://www.mindmaster.top/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220222181234434.png">
-<meta property="og:image" content="https://www.mindmaster.top/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220222152122750.png">
-<meta property="og:image" content="https://www.mindmaster.top/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220222152328067.png">
-<meta property="og:image" content="https://www.mindmaster.top/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220222160121844.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image01.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image02.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image03.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image04.png">
 <meta property="article:published_time" content="2022-02-22T14:40:23.000Z">
-<meta property="article:modified_time" content="2022-02-22T10:12:39.862Z">
+<meta property="article:modified_time" content="2022-02-23T01:02:00.353Z">
 <meta property="article:author" content="邢浩东">
 <meta property="article:tag" content="进程">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.mindmaster.top/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220222181234434.png">
+<meta name="twitter:image" content="https://www.mindmaster.top/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image01.png">
 
 <link rel="canonical" href="https://www.mindmaster.top/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/">
 
@@ -138,7 +138,7 @@
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-braille fa-fw"></i>分类<span class="badge">7</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-braille fa-fw"></i>分类<span class="badge">6</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
@@ -252,17 +252,23 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-02-22 14:40:23 / 修改时间：10:12:39" itemprop="dateCreated datePublished" datetime="2022-02-22T14:40:23Z">2022-02-22</time>
+              <time title="创建时间：2022-02-22 14:40:23" itemprop="dateCreated datePublished" datetime="2022-02-22T14:40:23Z">2022-02-22</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-23 01:02:00" itemprop="dateModified" datetime="2022-02-23T01:02:00Z">2022-02-23</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux%E5%86%85%E6%A0%B8%E7%9B%B8%E5%85%B3/" itemprop="url" rel="index"><span itemprop="name">Linux内核相关</span></a>
+                  <a href="/categories/Linux%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E7%9B%B8%E5%85%B3/" itemprop="url" rel="index"><span itemprop="name">Linux系统内核相关</span></a>
                 </span>
             </span>
 
@@ -313,7 +319,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="Linux进程调度"><a href="#Linux进程调度" class="headerlink" title="Linux进程调度"></a>Linux进程调度</h1><p><img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222181234434.png" alt="image-20220222181234434"></p>
+        <h1 id="Linux进程调度"><a href="#Linux进程调度" class="headerlink" title="Linux进程调度"></a>Linux进程调度</h1> <img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image01.png" class>
+
+
+
 <p>调度程序负责决定将哪个进程投入运行，何时运行以及运行多长时间。进程调度程序(常常简称调度程序)可看做在可运行态进程之间分配有限的**<em>处理器时间资源的内核子系统**</em>。调度程序是像Linux这样的多任务操作系统的基础。只有通过调度程序的合理调度，系统资源才能最大限度地发挥作用，多进程才会有并发执行的效果。 </p>
 <blockquote>
 <p>在一组处于可运行状态的进程中选择一个来执行，是调度程序所需完成的基本工作,最大程度的利用处理器时间为原则。</p>
@@ -337,15 +346,19 @@
 <li><p>IO消耗型</p>
 <p>指进程的<strong>大部分时间用来提交I/O请求或是等待I/O请求</strong>。因此，这样的进程经常处于可运行状态，但通常都是**<em>运行短短的一会儿**</em>，因为它在等待更多的I/O请求时总会阻塞</p>
 <p>举例来说，多数用户图形界面程序（GUI）都属于I/O密集型，即便它们从不读取或者写入磁盘，它们也会在多数时间里都在等待来自鼠标或者键盘的用户交互操作。</p>
+<img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image02.png" class>
+
+
+
 </li>
 </ul>
-<p><img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222152122750.png" alt="image-20220222152122750"></p>
 <ul>
 <li><p>处理器耗费型(用于计算)</p>
 <p>处理器耗费型进程把时间大多用在执行代码上。除非被抢占，否则它们通常都一直不停地运行，因为它们没有太多的I/O需求。但是，因为它们不属于I/O驱动类型，所以从系统响应速度考虑，调度器不应该经常让它们运行。对于这类处理器消耗型的进程，调度策略往往是**<em>尽量降低它们的调度频率，而延长其运行时间**</em>。</p>
+<img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image03.png" class>
+
 </li>
 </ul>
-<p><img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222152328067.png" alt="image-20220222152328067"></p>
 <p>有必要指出，随着CPU变得越来越快*<strong>，更多的进程倾向为I/O密集型**<em>。这种现象之所以发生是因为</em></strong>CPU 的改进比磁盘的改进快得多***，其结果是，未来对I/O密集型进程的调度处理似乎更为重要。这里的基本思想 是，如果需要运行I/O密集型进程，那么就应该让它尽快得到机会，以便发出磁盘请求并保持磁盘始终忙 碌。从图中可以看到，如果进程是I/O密集型的，则需要多运行一些这类进程以保持CPU的充分利用。</p>
 <blockquote>
 <p>调度策略通常要在两个矛盾的目标中间寻找平衡：进程响应迅速（响应时间短）和最大系统利用率（高吞吐量）。</p>
@@ -379,7 +392,7 @@
 <p>进程所获得的处理器时间其实是和系统负载密切相关的。这个比例进一步还会受进程nice值的影响</p>
 <p><strong>Linux系统是抢占式的</strong>,其抢占时机取决于新的可运行程序消耗了多少处理器使用比。如果消耗的使用比比当前进程小，则新进程立刻投入运行，抢 占当前进程。否则，将推迟其运行。</p>
 <h3 id="案例：文本编辑器（IO）VS视频编码器（处理）"><a href="#案例：文本编辑器（IO）VS视频编码器（处理）" class="headerlink" title="案例：文本编辑器（IO）VS视频编码器（处理）"></a>案例：文本编辑器（IO）VS视频编码器（处理）</h3><p>对于视频编码器。它对什么时间开始运行没有太严格的要求 用户几乎分辨不出也并不关心它到底是立刻就运行还是半秒钟以后才开始的。当然，它完成得越早越好，至于所花时间并不是我们关注的主要问题。 </p>
-<img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222160121844.png" alt="image-20220222160121844" style="zoom:50%;">
+ <img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image04.png" class>
 
 <p>​    </p>
 <h2 id="Linux调度算法"><a href="#Linux调度算法" class="headerlink" title="Linux调度算法"></a>Linux调度算法</h2><p>Linux调度器是以**<em>模块方式提供**</em>的，这样做的目的是允许不同类型的进程可以有针对性地选择调度算法。 </p>
@@ -574,7 +587,7 @@
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">

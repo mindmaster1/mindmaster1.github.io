@@ -82,6 +82,58 @@
       </tags>
   </entry>
   <entry>
+    <title>Python自动化办公--Word</title>
+    <url>/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/</url>
+    <content><![CDATA[<h1 id><a href="#" class="headerlink" title></a></h1><h1 id="Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）"><a href="#Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）" class="headerlink" title="Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）"></a>Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）</h1><p>在Word文件中，不但有文字内容，还有加粗、红色等格式，而且这些特殊的格式和文字内容是混合在一起的，但如果用Python来读取Word文件，这段文字会被分为纯文字、段落、字体、字号以及表格 等更具体的部分，而且每一个部分都对应着<strong>Python的变量和函数。</strong></p>
+<p>用Python读取文件时，你需要记住很多个Python变量和函数。当然了，针对这一点， 你也不用担心，这些变量和函数在Python的Word扩展库<a href="https://python-docx.readthedocs.io/en/latest/#"><strong><em>官方文档</em></strong></a>可以查看。所以如果你需 要某个功能，但是不知道应该用什么变量和函数名称时，可以在官方文档中找到它的名字和 描述信息。</p>
+<h3 id="用Python自动合并两个Word文件"><a href="#用Python自动合并两个Word文件" class="headerlink" title="用Python自动合并两个Word文件"></a>用Python自动合并两个Word文件</h3><ul>
+<li><p>文件一（内容包含字体、字号、颜色等额外信息）：</p>
+ <img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/image.png" class>
+</li>
+<li><p>文件二（内容文字出现在表格中）:</p>
+ <img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/image01.png" class>
+
+</li>
+</ul>
+<blockquote>
+<p>第一个文件中，字体使用了黑体和宋体字，此外还有红色字体和加粗等格式。现在我需要 只提取其中的文字内容，不带任何格式。 </p>
+<p>第二个文件中，文字被放在了一张表格里。现在我需要用Python把表格中的文字提取出 来，合并成一个新的文件。</p>
+</blockquote>
+<h4 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"> <span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mrge_without_format</span>(<span class="params">docfiles:<span class="built_in">list</span></span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    只获取内容进行合并</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment">#遍历文件</span></span><br><span class="line">    <span class="keyword">for</span> docx_file <span class="keyword">in</span> <span class="built_in">sorted</span>(docfiles):</span><br><span class="line">        another_doc = Document(docx_file)</span><br><span class="line">        <span class="comment"># 获取每个文件的的所有段落</span></span><br><span class="line">        paras = another_doc.paragraphs</span><br><span class="line">        <span class="keyword">for</span> para <span class="keyword">in</span> paras:</span><br><span class="line">            <span class="comment"># 为新的word文件创建一个新段落</span></span><br><span class="line">            newpar = doc.add_paragraph(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">            <span class="comment">#将提取的内容写入新的文本段落中</span></span><br><span class="line">            newpar.add_run(para.text)</span><br><span class="line"></span><br><span class="line">        <span class="comment">#所有文件合并完成后在指定路径中保存</span></span><br><span class="line">        doc.save(Path(word_files_path,<span class="string">&#x27;new.docx&#x27;</span>))</span><br><span class="line"></span><br><span class="line">    <span class="comment">#调用函数</span></span><br><span class="line">    merge-mrge_without_format(files)</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="用Python合并Word和其他类型的文件"><a href="#用Python合并Word和其他类型的文件" class="headerlink" title="用Python合并Word和其他类型的文件"></a>用Python合并Word和其他类型的文件</h3><p>相较于其他文件，Word文件支持的格式丰富程度远远高于Txt文件等，所以当这两种格式丰富程度不一致的文件进行合并时，要么向下兼容，去掉Txt不支持的格式；要 么向上兼容，对Txt进行格式再调整。否则容易出现合并之后仍需要手动调整格式的问题，影 响工作效率。</p>
+<h4 id="将纯文本和Word文件合并"><a href="#将纯文本和Word文件合并" class="headerlink" title="将纯文本和Word文件合并"></a>将纯文本和Word文件合并</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx.shared <span class="keyword">import</span> RGBColor</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># word文件所在路径</span></span><br><span class="line">word_files_path = <span class="string">&#x27;D:/Python自动化办公/Day02/word样例文件&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># # 取得该目录下所有的docx格式文件</span></span><br><span class="line"><span class="comment"># p = Path(word_files_path)</span></span><br><span class="line"></span><br><span class="line">my_content = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">野老篱边江岸回，柴门不正逐江开。</span></span><br><span class="line"><span class="string">渔人网集澄潭下，贾客船随返照来。</span></span><br><span class="line"><span class="string">长路关心悲剑阁，片云何意傍琴台？</span></span><br><span class="line"><span class="string">王师未报收东郡，城阙秋生画角哀。</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add_content_mode1</span>(<span class="params">content</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    增加内容</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    print(doc)</span><br><span class="line">    para = doc.add_paragraph().add_run(content)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 设置字体格式</span></span><br><span class="line">    para.font.name = <span class="string">&#x27;仿宋&#x27;</span></span><br><span class="line">    <span class="comment"># 设置下划线</span></span><br><span class="line">    para.font.underline = <span class="literal">True</span></span><br><span class="line">    <span class="comment"># 设置颜色</span></span><br><span class="line">    para.font.color.rgb = RGBColor(<span class="number">255</span>, <span class="number">128</span>, <span class="number">128</span>)</span><br><span class="line">    <span class="comment"># 其他设置参考官方文档</span></span><br><span class="line">    <span class="comment"># https://python-docx.readthedocs.io/en/latest/api/text.html#run-objects</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">doc = Document()</span><br><span class="line">add_content_mode1(my_content)</span><br><span class="line">doc.save(Path(word_files_path, <span class="string">&#x27;new2.docx&#x27;</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="将图片和Word文件合并"><a href="#将图片和Word文件合并" class="headerlink" title="将图片和Word文件合并"></a>将图片和Word文件合并</h4><p>我们经常见到的图片格式就有.jpg、.png、.gif等，由于这些格式应用范围广，格式 没有被商业软件加密，所以python-docx库的add_picture函数就能实现把图片插入Word的 功能。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> shared</span><br><span class="line"></span><br><span class="line">doc = Document()</span><br><span class="line"><span class="comment"># 按英寸设置宽度，添加图片</span></span><br><span class="line">doc_add_picture(<span class="string">&#x27;test.jpg&#x27;</span>,width=shared.Inches(<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="将Execl和Word文件合并"><a href="#将Execl和Word文件合并" class="headerlink" title="将Execl和Word文件合并"></a>将Execl和Word文件合并</h4><ul>
+<li><p>使用Python制作邀请函</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line">today=datetime.date.today().strftime(<span class="string">&#x27;%Y-%m-%d&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户信息文件</span></span><br><span class="line">customer = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/客户信息.xlsx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 邀请函模版</span></span><br><span class="line">invitation = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/邀请函模版.docx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 邀请函路径</span></span><br><span class="line">invitation_path = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 替换内容</span></span><br><span class="line">replace_content = &#123;</span><br><span class="line">    <span class="string">&#x27;&lt;姓名&gt;&#x27;</span> : <span class="string">&#x27;no_name&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&lt;性别&gt;&#x27;</span> : <span class="string">&#x27;m_f&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&lt;今天日期&gt;&#x27;</span> : today</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generat_invitation</span>():</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    生成邀请函文件</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    doc = Document(invitation)</span><br><span class="line">    <span class="comment"># 取出每一段</span></span><br><span class="line">    <span class="keyword">for</span> para <span class="keyword">in</span> doc.paragraphs:</span><br><span class="line">        <span class="keyword">for</span> key, value <span class="keyword">in</span> replace_content.items():</span><br><span class="line">            <span class="keyword">if</span> key <span class="keyword">in</span> para.text:</span><br><span class="line">                <span class="comment"># 逐个关键字进行替换</span></span><br><span class="line">                para.text = para.text.replace(key, value)</span><br><span class="line"></span><br><span class="line">    file_name = PurePath(invitation_path).with_name(replace_content[<span class="string">&#x27;&lt;姓名&gt;&#x27;</span>]).with_suffix(<span class="string">&#x27;.docx&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    doc.save(file_name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_customer</span>(<span class="params">customer_file: Path</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    获取邀请函信息</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment"># 从第一个sheet中取出客户信息</span></span><br><span class="line">    data = xlrd.open_workbook(customer_file)</span><br><span class="line">    table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 取得客户数量</span></span><br><span class="line">    customer_number = table.nrows</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, customer_number):</span><br><span class="line">        content = table.row_values(rowx=line, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>)</span><br><span class="line">        replace_content[<span class="string">&#x27;&lt;姓名&gt;&#x27;</span>] = content[<span class="number">0</span>]</span><br><span class="line">        replace_content[<span class="string">&#x27;&lt;性别&gt;&#x27;</span>] = content[<span class="number">1</span>]</span><br><span class="line">        <span class="comment"># print(replace_content)</span></span><br><span class="line">        <span class="comment"># &#123;&#x27;&lt;姓名&gt;&#x27;: &#x27;韩梅梅&#x27;, &#x27;&lt;性别&gt;&#x27;: &#x27;女士&#x27;, &#x27;&lt;今天日期&gt;&#x27;: &#x27;2021-01-01&#x27;&#125;</span></span><br><span class="line">        <span class="comment"># &#123;&#x27;&lt;姓名&gt;&#x27;: &#x27;李雷&#x27;, &#x27;&lt;性别&gt;&#x27;: &#x27;先生&#x27;, &#x27;&lt;今天日期&gt;&#x27;: &#x27;2021-01-01&#x27;&#125;</span></span><br><span class="line">        generat_invitation()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    get_customer(customer)</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在对不同类型文件进行合并时，要考虑不同的问题</p>
+<blockquote>
+<ol>
+<li>对于支持格式丰富不同的文件时要考虑格式的兼容性；</li>
+<li>  对于图片、音乐、视频和Word合并时要考虑是否是受到word支持的通用格式；</li>
+<li>  对于像Excel格式于Word合并时能实现更复杂的功能，代码的复杂程度也会随之提高，一 般需要先分析功能，再进行代码编写。</li>
+</ol>
+</blockquote>
+]]></content>
+      <categories>
+        <category>Python开发</category>
+      </categories>
+      <tags>
+        <tag>Python自动化</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>LVS负载均衡</title>
     <url>/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</url>
     <content><![CDATA[<blockquote>
@@ -210,111 +262,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Python自动化办公--Word</title>
-    <url>/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/</url>
-    <content><![CDATA[<h1 id><a href="#" class="headerlink" title></a></h1><h1 id="Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）"><a href="#Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）" class="headerlink" title="Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）"></a>Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）</h1><p>在Word文件中，不但有文字内容，还有加粗、红色等格式，而且这些特殊的格式和文字内容是混合在一起的，但如果用Python来读取Word文件，这段文字会被分为纯文字、段落、字体、字号以及表格 等更具体的部分，而且每一个部分都对应着<strong>Python的变量和函数。</strong></p>
-<p>用Python读取文件时，你需要记住很多个Python变量和函数。当然了，针对这一点， 你也不用担心，这些变量和函数在Python的Word扩展库<a href="https://python-docx.readthedocs.io/en/latest/#"><strong><em>官方文档</em></strong></a>可以查看。所以如果你需 要某个功能，但是不知道应该用什么变量和函数名称时，可以在官方文档中找到它的名字和 描述信息。</p>
-<h3 id="用Python自动合并两个Word文件"><a href="#用Python自动合并两个Word文件" class="headerlink" title="用Python自动合并两个Word文件"></a>用Python自动合并两个Word文件</h3><ul>
-<li><p>文件一（内容包含字体、字号、颜色等额外信息）：</p>
- <img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/image.png" class>
-</li>
-<li><p>文件二（内容文字出现在表格中）:</p>
- <img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/image01.png" class>
-
-</li>
-</ul>
-<blockquote>
-<p>第一个文件中，字体使用了黑体和宋体字，此外还有红色字体和加粗等格式。现在我需要 只提取其中的文字内容，不带任何格式。 </p>
-<p>第二个文件中，文字被放在了一张表格里。现在我需要用Python把表格中的文字提取出 来，合并成一个新的文件。</p>
-</blockquote>
-<h4 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"> <span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mrge_without_format</span>(<span class="params">docfiles:<span class="built_in">list</span></span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    只获取内容进行合并</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment">#遍历文件</span></span><br><span class="line">    <span class="keyword">for</span> docx_file <span class="keyword">in</span> <span class="built_in">sorted</span>(docfiles):</span><br><span class="line">        another_doc = Document(docx_file)</span><br><span class="line">        <span class="comment"># 获取每个文件的的所有段落</span></span><br><span class="line">        paras = another_doc.paragraphs</span><br><span class="line">        <span class="keyword">for</span> para <span class="keyword">in</span> paras:</span><br><span class="line">            <span class="comment"># 为新的word文件创建一个新段落</span></span><br><span class="line">            newpar = doc.add_paragraph(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">            <span class="comment">#将提取的内容写入新的文本段落中</span></span><br><span class="line">            newpar.add_run(para.text)</span><br><span class="line"></span><br><span class="line">        <span class="comment">#所有文件合并完成后在指定路径中保存</span></span><br><span class="line">        doc.save(Path(word_files_path,<span class="string">&#x27;new.docx&#x27;</span>))</span><br><span class="line"></span><br><span class="line">    <span class="comment">#调用函数</span></span><br><span class="line">    merge-mrge_without_format(files)</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="用Python合并Word和其他类型的文件"><a href="#用Python合并Word和其他类型的文件" class="headerlink" title="用Python合并Word和其他类型的文件"></a>用Python合并Word和其他类型的文件</h3><p>相较于其他文件，Word文件支持的格式丰富程度远远高于Txt文件等，所以当这两种格式丰富程度不一致的文件进行合并时，要么向下兼容，去掉Txt不支持的格式；要 么向上兼容，对Txt进行格式再调整。否则容易出现合并之后仍需要手动调整格式的问题，影 响工作效率。</p>
-<h4 id="将纯文本和Word文件合并"><a href="#将纯文本和Word文件合并" class="headerlink" title="将纯文本和Word文件合并"></a>将纯文本和Word文件合并</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx.shared <span class="keyword">import</span> RGBColor</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># word文件所在路径</span></span><br><span class="line">word_files_path = <span class="string">&#x27;D:/Python自动化办公/Day02/word样例文件&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># # 取得该目录下所有的docx格式文件</span></span><br><span class="line"><span class="comment"># p = Path(word_files_path)</span></span><br><span class="line"></span><br><span class="line">my_content = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">野老篱边江岸回，柴门不正逐江开。</span></span><br><span class="line"><span class="string">渔人网集澄潭下，贾客船随返照来。</span></span><br><span class="line"><span class="string">长路关心悲剑阁，片云何意傍琴台？</span></span><br><span class="line"><span class="string">王师未报收东郡，城阙秋生画角哀。</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add_content_mode1</span>(<span class="params">content</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    增加内容</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    print(doc)</span><br><span class="line">    para = doc.add_paragraph().add_run(content)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 设置字体格式</span></span><br><span class="line">    para.font.name = <span class="string">&#x27;仿宋&#x27;</span></span><br><span class="line">    <span class="comment"># 设置下划线</span></span><br><span class="line">    para.font.underline = <span class="literal">True</span></span><br><span class="line">    <span class="comment"># 设置颜色</span></span><br><span class="line">    para.font.color.rgb = RGBColor(<span class="number">255</span>, <span class="number">128</span>, <span class="number">128</span>)</span><br><span class="line">    <span class="comment"># 其他设置参考官方文档</span></span><br><span class="line">    <span class="comment"># https://python-docx.readthedocs.io/en/latest/api/text.html#run-objects</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">doc = Document()</span><br><span class="line">add_content_mode1(my_content)</span><br><span class="line">doc.save(Path(word_files_path, <span class="string">&#x27;new2.docx&#x27;</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<h4 id="将图片和Word文件合并"><a href="#将图片和Word文件合并" class="headerlink" title="将图片和Word文件合并"></a>将图片和Word文件合并</h4><p>我们经常见到的图片格式就有.jpg、.png、.gif等，由于这些格式应用范围广，格式 没有被商业软件加密，所以python-docx库的add_picture函数就能实现把图片插入Word的 功能。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> shared</span><br><span class="line"></span><br><span class="line">doc = Document()</span><br><span class="line"><span class="comment"># 按英寸设置宽度，添加图片</span></span><br><span class="line">doc_add_picture(<span class="string">&#x27;test.jpg&#x27;</span>,width=shared.Inches(<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="将Execl和Word文件合并"><a href="#将Execl和Word文件合并" class="headerlink" title="将Execl和Word文件合并"></a>将Execl和Word文件合并</h4><ul>
-<li><p>使用Python制作邀请函</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line">today=datetime.date.today().strftime(<span class="string">&#x27;%Y-%m-%d&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户信息文件</span></span><br><span class="line">customer = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/客户信息.xlsx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 邀请函模版</span></span><br><span class="line">invitation = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/邀请函模版.docx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 邀请函路径</span></span><br><span class="line">invitation_path = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 替换内容</span></span><br><span class="line">replace_content = &#123;</span><br><span class="line">    <span class="string">&#x27;&lt;姓名&gt;&#x27;</span> : <span class="string">&#x27;no_name&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&lt;性别&gt;&#x27;</span> : <span class="string">&#x27;m_f&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&lt;今天日期&gt;&#x27;</span> : today</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generat_invitation</span>():</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    生成邀请函文件</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    doc = Document(invitation)</span><br><span class="line">    <span class="comment"># 取出每一段</span></span><br><span class="line">    <span class="keyword">for</span> para <span class="keyword">in</span> doc.paragraphs:</span><br><span class="line">        <span class="keyword">for</span> key, value <span class="keyword">in</span> replace_content.items():</span><br><span class="line">            <span class="keyword">if</span> key <span class="keyword">in</span> para.text:</span><br><span class="line">                <span class="comment"># 逐个关键字进行替换</span></span><br><span class="line">                para.text = para.text.replace(key, value)</span><br><span class="line"></span><br><span class="line">    file_name = PurePath(invitation_path).with_name(replace_content[<span class="string">&#x27;&lt;姓名&gt;&#x27;</span>]).with_suffix(<span class="string">&#x27;.docx&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    doc.save(file_name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_customer</span>(<span class="params">customer_file: Path</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    获取邀请函信息</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment"># 从第一个sheet中取出客户信息</span></span><br><span class="line">    data = xlrd.open_workbook(customer_file)</span><br><span class="line">    table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 取得客户数量</span></span><br><span class="line">    customer_number = table.nrows</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, customer_number):</span><br><span class="line">        content = table.row_values(rowx=line, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>)</span><br><span class="line">        replace_content[<span class="string">&#x27;&lt;姓名&gt;&#x27;</span>] = content[<span class="number">0</span>]</span><br><span class="line">        replace_content[<span class="string">&#x27;&lt;性别&gt;&#x27;</span>] = content[<span class="number">1</span>]</span><br><span class="line">        <span class="comment"># print(replace_content)</span></span><br><span class="line">        <span class="comment"># &#123;&#x27;&lt;姓名&gt;&#x27;: &#x27;韩梅梅&#x27;, &#x27;&lt;性别&gt;&#x27;: &#x27;女士&#x27;, &#x27;&lt;今天日期&gt;&#x27;: &#x27;2021-01-01&#x27;&#125;</span></span><br><span class="line">        <span class="comment"># &#123;&#x27;&lt;姓名&gt;&#x27;: &#x27;李雷&#x27;, &#x27;&lt;性别&gt;&#x27;: &#x27;先生&#x27;, &#x27;&lt;今天日期&gt;&#x27;: &#x27;2021-01-01&#x27;&#125;</span></span><br><span class="line">        generat_invitation()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    get_customer(customer)</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在对不同类型文件进行合并时，要考虑不同的问题</p>
-<blockquote>
-<ol>
-<li>对于支持格式丰富不同的文件时要考虑格式的兼容性；</li>
-<li>  对于图片、音乐、视频和Word合并时要考虑是否是受到word支持的通用格式；</li>
-<li>  对于像Excel格式于Word合并时能实现更复杂的功能，代码的复杂程度也会随之提高，一 般需要先分析功能，再进行代码编写。</li>
-</ol>
-</blockquote>
-]]></content>
-      <categories>
-        <category>Python开发</category>
-      </categories>
-      <tags>
-        <tag>Python自动化</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Python自动化办公-跨文件字数统计</title>
-    <url>/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/</url>
-    <content><![CDATA[<h1 id="使用Python实现快速读写文件，跨文件字数统计"><a href="#使用Python实现快速读写文件，跨文件字数统计" class="headerlink" title="使用Python实现快速读写文件，跨文件字数统计"></a>使用Python实现快速读写文件，跨文件字数统计</h1><h2 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h2><figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">使用Python来批量统计多个文件的字数和标点符号</span><br></pre></td></tr></table></figure>
-<h2 id="实现单个文件字数统计"><a href="#实现单个文件字数统计" class="headerlink" title="实现单个文件字数统计"></a>实现单个文件字数统计</h2><p>统计单个文件的字数，需要用到Python的文件读写函数和变量这两个功能。Python的读写函 数是对文件内容的读取操作，变量呢，用来存储统计好的文件字数。</p>
-<ul>
-<li>先把要统计的文件读入内存；</li>
-<li>再对读入到内存的字数数量进行统计，并用变量保存；</li>
-<li>最后是将结果写入统计字数的专用文件中。</li>
-</ul>
-<h3 id="将文件内容读取到内存中"><a href="#将文件内容读取到内存中" class="headerlink" title="将文件内容读取到内存中"></a>将文件内容读取到内存中</h3><p>Python实现读取文件内容到内存的函数有三个，这三个函数原理相同，但是读取的内容多少有些不同，分别为：</p>
-<img data-src="/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220209190932306.png" alt="image-20220209190932306" style="zoom:50%;">
-
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pathlib</span><br><span class="line">file_name = <span class="string">&quot;./e.txt&quot;</span></span><br><span class="line"><span class="comment"># 取得脚本所在目录</span></span><br><span class="line">current_path = pathlib.PurePath(__file__).parent</span><br><span class="line"></span><br><span class="line"><span class="comment">#和脚本同目录下的要打开文件绝对路径</span></span><br><span class="line">file = current_path.joinpath(file_name)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打开文件</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(file,encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    <span class="comment"># 读取文件</span></span><br><span class="line">    content = f.read()</span><br><span class="line">    words = content.rstrip()</span><br><span class="line">    number = <span class="built_in">len</span>(words)</span><br><span class="line">    print(number)</span><br></pre></td></tr></table></figure>
-<p>open()函数参数说明：</p>
-<p>第一个参数file变量的值是要操作的文件路径和文件名称，你需要正 确指定它所在的路径和文件名称。第二个参数encoding变量的值指定了以哪种字符编码打开文件，错误的字符编码会导致内容读取异常，文字内容显示为“乱码”。</p>
-<h4 id="获取完整路径"><a href="#获取完整路径" class="headerlink" title="获取完整路径"></a>获取完整路径</h4><ul>
-<li>在代码中使用pathlib库的PurePath()函数，把当前Python脚本的路径转化为标准的 pathlib格式。</li>
-<li>通过parent属性去掉脚本的文件名，取得当前脚本所在的路径。</li>
-<li>再通过joinpath()函数把脚本所在的路径和e.txt文件名进行拼接，得到e.txt的完整路径。</li>
-</ul>
-<p>这种取得脚本同目录下的其他文件完整路径的用法，要比直接指定文件完整路径用法更灵活。</p>
-<blockquote>
-<p>__file__变量比较特殊，它是在Python中预先定义好的一个变量，默认情况下它的值会被 Python自动设置为当前脚本的完整路径名称。有了它，我就可以通过Python脚本的路径取得 e.txt的完整路径了。</p>
-</blockquote>
-<h4 id="设置字符编码"><a href="#设置字符编码" class="headerlink" title="设置字符编码"></a>设置字符编码</h4><p>第二个参数的作用是设置open()函数使用何种字符编码打开文件。</p>
-<h4 id="函数传参调用"><a href="#函数传参调用" class="headerlink" title="函数传参调用"></a>函数传参调用</h4><p>为什们指定这个参数的时候，要特意写出变量名称encoding呢？</p>
-<p>在函数定义的时候我们可以为函数指定一个或多个参数，如果使用了多个参数，你在调用函 数的时候需要按顺序依次传入每一个参数。但是如果你想要使用某个参数默认值或不想按照 顺序传入参数时怎么办呢？函数调用时，还可以根据参数的关键字来指定为函数传入哪些参 数。比如说open()函数的参数有7个，</p>
-<p><img data-src="/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220209193920724.png" alt="image-20220209193920724"></p>
-<p>在open()函数的定义中，encoding参数是open()函数的第4个参数。如果我们只需要第1个和 第4个参数，其他参数需要保持默认时，就可以使用如下格式调用open()函数：</p>
-<p><img data-src="/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220209193956499.png" alt="image-20220209193956499"></p>
-<p>在代码中，调用open()函数时，由于file参数是open()函数的第一个参数，因此可以不用指定 参数的关键字。encoding参数并非open()函数定义的第二个参数，而是第四个参数，所以需 要指定它的参数名称为encoding，根据open()函数的定义，encoding=”utf-8”会作为 open()函数的第四个参数使用。这种使用关键字作为函数的参数的方式，也被称作<strong>函数的关键字传参方式</strong>。</p>
-<h3 id="with使用"><a href="#with使用" class="headerlink" title="with使用"></a>with使用</h3><p>with关键字下面的代码是缩进形式，和with关键字形成了一个语句块</p>
-<p>在with语句 块结束之后，不必手动调用close()函数关闭文件，Python会自动将文件关闭。因此，你会看到我在程序中调用了open()函数打开文件，但是没有调用关闭文件的close()函数。</p>
-<p>总的来说，相对于手动调用close()函数来关闭文件，使用with函数减少了打开过多文件造成系统资源浪费和数据丢失的风险。</p>
-<h4 id="文件读取"><a href="#文件读取" class="headerlink" title="文件读取"></a>文件读取</h4><p>正确使用了open()函数的两个参数以后，会返回一个表示文件的对象f, 只有设置了正确 的文件路径、文件名称和字符编码，才能继续进行文件读取操作。文件的读取操作使用的是 read()函数，read()函数会根据文件的对象f，按照open()函数定义好的打开方式进行逐个字 的读取操作。Python对文件的其他操作，全都需要通过文件操作函数调用对象f来完成。</p>
-<h4 id="统计文件的字数"><a href="#统计文件的字数" class="headerlink" title="统计文件的字数"></a>统计文件的字数</h4><p>Python的内置函数**len()**来实现</p>
-<p>len()函数在Python中最初设计的功能就是统计字符串的长度，即字符串中有多少字符。利用len()函数可以对字符串数据类型进行操作的特性，将文件一次性读入内存，放入字符串数据类型中。我在统计字数之前还增加了一个rstrip()函数，它会自动剔除出现在文件末尾的空行、空格，让你统计的结果更精确。</p>
-<p>在进行文件字数统计的时候，需要注意，在代码中使用了read()函数实现了对文件内容的一<br>次性读取到内存的功能。如果你的文件较大，我建议你使用readline()函数按行读取，并逐行<br>统计字数，否则容易出现内存不足的问题。</p>
-<h4 id="将统计结果写入文件"><a href="#将统计结果写入文件" class="headerlink" title="将统计结果写入文件"></a>将统计结果写入文件</h4><p>将统计结果写入文件，可以对<strong>open()函数</strong>打开文件方式进行简单的修改，就可以实现文件写入功能了，写入文件的代码如下：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;total.txt&quot;</span>, <span class="string">&quot;w&quot;</span>, encodong=<span class="string">&quot;utf-8&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">	 f.write(<span class="string">&quot;15个字符&quot;</span>)</span><br></pre></td></tr></table></figure>
-<p>open()函数的第二个参数表示文件的打开方式，它默认值是“r”，代表了文件以读取方式进行打开。这时对象f只能进行文件读取操作，我们需要将第二个参数指定为”w”，就可以使用wirte()函数对文件进行写入操作了。而write()函数的第一个参数就是即将要写入文件的内容。</p>
-<h3 id="怎么统计多个文件的次数"><a href="#怎么统计多个文件的次数" class="headerlink" title="怎么统计多个文件的次数"></a>怎么统计多个文件的次数</h3><p>对多个文件的字数统计，就可以使用for循环来实现批量读取多个文件的内容。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">p = Path(src_path)</span><br><span class="line">files = [x <span class="keyword">for</span> x <span class="keyword">in</span> p.iterdir() <span class="keyword">if</span> PurePath(x).match(<span class="string">&#x27;*.txt&#x27;</span>)]</span><br><span class="line"><span class="keyword">for</span> files <span class="keyword">in</span> files:</span><br><span class="line">	<span class="keyword">with</span> <span class="built_in">open</span>(file,encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        content = f.read()</span><br><span class="line">words = content.rstrip()</span><br><span class="line">    	number = <span class="built_in">len</span>(words)</span><br></pre></td></tr></table></figure>
-<p>数字类型是一种非常适合进行整数、浮点数的转换和算数几何计算最常用的类型。在单文件字数统计的场景，用来储存每个文件的字数是最合适的类型。如果把场景扩展到统计多个文件的字数，使用一个数字类型的变量是不够的，你需要在循环中再增加一个新的数字类型的变量，对多个文件的统计结果进行依次累加就可以了。</p>
-]]></content>
-      <categories>
-        <category>Python开发</category>
-      </categories>
-      <tags>
-        <tag>Python自动化</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Python自动化办公-图片识别</title>
     <url>/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/</url>
     <content><![CDATA[<h1 id="使用Python实现高效自动化图片组在线-离线识别（转文字）"><a href="#使用Python实现高效自动化图片组在线-离线识别（转文字）" class="headerlink" title="使用Python实现高效自动化图片组在线/离线识别（转文字）"></a>使用Python实现高效自动化图片组在线/离线识别（转文字）</h1><h2 id="图片识别转文字的两种方式："><a href="#图片识别转文字的两种方式：" class="headerlink" title="图片识别转文字的两种方式："></a>图片识别转文字的两种方式：</h2><blockquote>
@@ -385,6 +332,59 @@
 <p>处理好的内容如下</p>
 
 
+]]></content>
+      <categories>
+        <category>Python开发</category>
+      </categories>
+      <tags>
+        <tag>Python自动化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Python自动化办公-跨文件字数统计</title>
+    <url>/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/</url>
+    <content><![CDATA[<h1 id="使用Python实现快速读写文件，跨文件字数统计"><a href="#使用Python实现快速读写文件，跨文件字数统计" class="headerlink" title="使用Python实现快速读写文件，跨文件字数统计"></a>使用Python实现快速读写文件，跨文件字数统计</h1><h2 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h2><figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">使用Python来批量统计多个文件的字数和标点符号</span><br></pre></td></tr></table></figure>
+<h2 id="实现单个文件字数统计"><a href="#实现单个文件字数统计" class="headerlink" title="实现单个文件字数统计"></a>实现单个文件字数统计</h2><p>统计单个文件的字数，需要用到Python的文件读写函数和变量这两个功能。Python的读写函 数是对文件内容的读取操作，变量呢，用来存储统计好的文件字数。</p>
+<ul>
+<li>先把要统计的文件读入内存；</li>
+<li>再对读入到内存的字数数量进行统计，并用变量保存；</li>
+<li>最后是将结果写入统计字数的专用文件中。</li>
+</ul>
+<h3 id="将文件内容读取到内存中"><a href="#将文件内容读取到内存中" class="headerlink" title="将文件内容读取到内存中"></a>将文件内容读取到内存中</h3><p>Python实现读取文件内容到内存的函数有三个，这三个函数原理相同，但是读取的内容多少有些不同，分别为：</p>
+<img data-src="/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220209190932306.png" alt="image-20220209190932306" style="zoom:50%;">
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pathlib</span><br><span class="line">file_name = <span class="string">&quot;./e.txt&quot;</span></span><br><span class="line"><span class="comment"># 取得脚本所在目录</span></span><br><span class="line">current_path = pathlib.PurePath(__file__).parent</span><br><span class="line"></span><br><span class="line"><span class="comment">#和脚本同目录下的要打开文件绝对路径</span></span><br><span class="line">file = current_path.joinpath(file_name)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打开文件</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(file,encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    <span class="comment"># 读取文件</span></span><br><span class="line">    content = f.read()</span><br><span class="line">    words = content.rstrip()</span><br><span class="line">    number = <span class="built_in">len</span>(words)</span><br><span class="line">    print(number)</span><br></pre></td></tr></table></figure>
+<p>open()函数参数说明：</p>
+<p>第一个参数file变量的值是要操作的文件路径和文件名称，你需要正 确指定它所在的路径和文件名称。第二个参数encoding变量的值指定了以哪种字符编码打开文件，错误的字符编码会导致内容读取异常，文字内容显示为“乱码”。</p>
+<h4 id="获取完整路径"><a href="#获取完整路径" class="headerlink" title="获取完整路径"></a>获取完整路径</h4><ul>
+<li>在代码中使用pathlib库的PurePath()函数，把当前Python脚本的路径转化为标准的 pathlib格式。</li>
+<li>通过parent属性去掉脚本的文件名，取得当前脚本所在的路径。</li>
+<li>再通过joinpath()函数把脚本所在的路径和e.txt文件名进行拼接，得到e.txt的完整路径。</li>
+</ul>
+<p>这种取得脚本同目录下的其他文件完整路径的用法，要比直接指定文件完整路径用法更灵活。</p>
+<blockquote>
+<p>__file__变量比较特殊，它是在Python中预先定义好的一个变量，默认情况下它的值会被 Python自动设置为当前脚本的完整路径名称。有了它，我就可以通过Python脚本的路径取得 e.txt的完整路径了。</p>
+</blockquote>
+<h4 id="设置字符编码"><a href="#设置字符编码" class="headerlink" title="设置字符编码"></a>设置字符编码</h4><p>第二个参数的作用是设置open()函数使用何种字符编码打开文件。</p>
+<h4 id="函数传参调用"><a href="#函数传参调用" class="headerlink" title="函数传参调用"></a>函数传参调用</h4><p>为什们指定这个参数的时候，要特意写出变量名称encoding呢？</p>
+<p>在函数定义的时候我们可以为函数指定一个或多个参数，如果使用了多个参数，你在调用函 数的时候需要按顺序依次传入每一个参数。但是如果你想要使用某个参数默认值或不想按照 顺序传入参数时怎么办呢？函数调用时，还可以根据参数的关键字来指定为函数传入哪些参 数。比如说open()函数的参数有7个，</p>
+<p><img data-src="/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220209193920724.png" alt="image-20220209193920724"></p>
+<p>在open()函数的定义中，encoding参数是open()函数的第4个参数。如果我们只需要第1个和 第4个参数，其他参数需要保持默认时，就可以使用如下格式调用open()函数：</p>
+<p><img data-src="/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220209193956499.png" alt="image-20220209193956499"></p>
+<p>在代码中，调用open()函数时，由于file参数是open()函数的第一个参数，因此可以不用指定 参数的关键字。encoding参数并非open()函数定义的第二个参数，而是第四个参数，所以需 要指定它的参数名称为encoding，根据open()函数的定义，encoding=”utf-8”会作为 open()函数的第四个参数使用。这种使用关键字作为函数的参数的方式，也被称作<strong>函数的关键字传参方式</strong>。</p>
+<h3 id="with使用"><a href="#with使用" class="headerlink" title="with使用"></a>with使用</h3><p>with关键字下面的代码是缩进形式，和with关键字形成了一个语句块</p>
+<p>在with语句 块结束之后，不必手动调用close()函数关闭文件，Python会自动将文件关闭。因此，你会看到我在程序中调用了open()函数打开文件，但是没有调用关闭文件的close()函数。</p>
+<p>总的来说，相对于手动调用close()函数来关闭文件，使用with函数减少了打开过多文件造成系统资源浪费和数据丢失的风险。</p>
+<h4 id="文件读取"><a href="#文件读取" class="headerlink" title="文件读取"></a>文件读取</h4><p>正确使用了open()函数的两个参数以后，会返回一个表示文件的对象f, 只有设置了正确 的文件路径、文件名称和字符编码，才能继续进行文件读取操作。文件的读取操作使用的是 read()函数，read()函数会根据文件的对象f，按照open()函数定义好的打开方式进行逐个字 的读取操作。Python对文件的其他操作，全都需要通过文件操作函数调用对象f来完成。</p>
+<h4 id="统计文件的字数"><a href="#统计文件的字数" class="headerlink" title="统计文件的字数"></a>统计文件的字数</h4><p>Python的内置函数**len()**来实现</p>
+<p>len()函数在Python中最初设计的功能就是统计字符串的长度，即字符串中有多少字符。利用len()函数可以对字符串数据类型进行操作的特性，将文件一次性读入内存，放入字符串数据类型中。我在统计字数之前还增加了一个rstrip()函数，它会自动剔除出现在文件末尾的空行、空格，让你统计的结果更精确。</p>
+<p>在进行文件字数统计的时候，需要注意，在代码中使用了read()函数实现了对文件内容的一<br>次性读取到内存的功能。如果你的文件较大，我建议你使用readline()函数按行读取，并逐行<br>统计字数，否则容易出现内存不足的问题。</p>
+<h4 id="将统计结果写入文件"><a href="#将统计结果写入文件" class="headerlink" title="将统计结果写入文件"></a>将统计结果写入文件</h4><p>将统计结果写入文件，可以对<strong>open()函数</strong>打开文件方式进行简单的修改，就可以实现文件写入功能了，写入文件的代码如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;total.txt&quot;</span>, <span class="string">&quot;w&quot;</span>, encodong=<span class="string">&quot;utf-8&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">	 f.write(<span class="string">&quot;15个字符&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>open()函数的第二个参数表示文件的打开方式，它默认值是“r”，代表了文件以读取方式进行打开。这时对象f只能进行文件读取操作，我们需要将第二个参数指定为”w”，就可以使用wirte()函数对文件进行写入操作了。而write()函数的第一个参数就是即将要写入文件的内容。</p>
+<h3 id="怎么统计多个文件的次数"><a href="#怎么统计多个文件的次数" class="headerlink" title="怎么统计多个文件的次数"></a>怎么统计多个文件的次数</h3><p>对多个文件的字数统计，就可以使用for循环来实现批量读取多个文件的内容。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">p = Path(src_path)</span><br><span class="line">files = [x <span class="keyword">for</span> x <span class="keyword">in</span> p.iterdir() <span class="keyword">if</span> PurePath(x).match(<span class="string">&#x27;*.txt&#x27;</span>)]</span><br><span class="line"><span class="keyword">for</span> files <span class="keyword">in</span> files:</span><br><span class="line">	<span class="keyword">with</span> <span class="built_in">open</span>(file,encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        content = f.read()</span><br><span class="line">words = content.rstrip()</span><br><span class="line">    	number = <span class="built_in">len</span>(words)</span><br></pre></td></tr></table></figure>
+<p>数字类型是一种非常适合进行整数、浮点数的转换和算数几何计算最常用的类型。在单文件字数统计的场景，用来储存每个文件的字数是最合适的类型。如果把场景扩展到统计多个文件的字数，使用一个数字类型的变量是不够的，你需要在循环中再增加一个新的数字类型的变量，对多个文件的统计结果进行依次累加就可以了。</p>
 ]]></content>
       <categories>
         <category>Python开发</category>
@@ -514,6 +514,86 @@
       </categories>
       <tags>
         <tag>Python自动化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Section1</title>
+    <url>/2022/02/21/Section1/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>中断</title>
+    <url>/2021/02/03/%E4%B8%AD%E6%96%AD/</url>
+    <content><![CDATA[<h3 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h3><p>中断使得硬件得以发出通知给处理器，是一种变内核主动为硬件主动的方式。中断本质上是一种特殊的电信号。硬件在生成中断的时候并不需要考虑与处理器的时钟同步，即中断可以随时产生，<strong>内核随时可能因为新到来的中断而被打断</strong>。</p>
+<img data-src="/2021/02/03/%E4%B8%AD%E6%96%AD/%E4%B8%AD%E6%96%AD1.png" class>
+
+<p>不同的设备对应的中断不同，而每个中断都通过唯一的数字标识，这样，操作系统才能给不同的中断提供对应的中断处理程序。硬件发出中断，就是在提醒内核，有新的请求需要读取并处理。</p>
+<h4 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h4><p>异常与中断不同之处就是在于异常在产生时必须要考虑处理器与时钟同步，所以其经常被称为同步中。</p>
+<p>异常的产生原因：</p>
+<blockquote>
+<p>1.处理器由于执行到编程失误而导致的错误指令（如被0除）</p>
+</blockquote>
+<blockquote>
+<p>2.执行期间出现特殊情况，例如缺页</p>
+</blockquote>
+<blockquote>
+<p>3.系统调用陷入内核—–引起了系统调用处理程序异常</p>
+</blockquote>
+<p>以上，产生异常，都需要内核处理。</p>
+<h3 id="中断处理程序"><a href="#中断处理程序" class="headerlink" title="中断处理程序"></a>中断处理程序</h3><p>内核通过执行中断处理程序(interrupt handler)来对某一特定的中断进行响应，产生中断的每一个设备都有一个相应的中断处理程序。一个设备的中断处理程序是其设备驱动程序的一部分—–设备驱动程序是<strong>用于对设备进行管理的内核代码</strong>。</p>
+<p>中断处理程序被内核调用，运行于中断上下文，该上下文的执行代码不可阻塞。</p>
+<h3 id="上半部与下半部的对比"><a href="#上半部与下半部的对比" class="headerlink" title="上半部与下半部的对比"></a>上半部与下半部的对比</h3><p>将中断处理分为两个部分。</p>
+<blockquote>
+<p>中断处理程序是上半部分（top half），接收到一个中断会被立即执行，只做有严格时限的工作。</p>
+</blockquote>
+<blockquote>
+<p>能够被允许稍后完成的工作会被推迟到下半部去执行。即处理和操作中断的非即时完成请求会在随后的下半部中执行。</p>
+</blockquote>
+<h3 id><a href="#" class="headerlink" title></a></h3><h3 id="中断上下文"><a href="#中断上下文" class="headerlink" title="中断上下文"></a>中断上下文</h3><p>当执行一个中断处理程序时，内核处于中断上下文中(interrupt context)。</p>
+<p>注意：</p>
+<ul>
+<li>中断上下文没有后备进程，所以其不可以睡眠。如果一个函数要进行睡眠，就不能出现在中断处理程序中。</li>
+<li>中断处理程序实际上打断了其他的代码，这种异步执行的特性，要求所有的中断处理程序必须尽可能的快速、简单。尽量将工作从中断处理程序中分离出来，放在中断下半部执行。</li>
+<li>中断处理程序栈是一个配置选项。在内核早期版本中，中断处理程序是共享别人的堆栈，获取空间时非常节约。后期，中断处理程序有了自己的栈（中断栈），但无论无何，在内核中还是要尽可能的节省空间的使用，因为内核栈本身就是有限的。</li>
+<li><strong>进程上下文是可以睡眠的</strong></li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>大多数现代硬件都通过中断来与操作系统进行通信。对给定的硬件进行管理的驱动程序注册中断处理程序，是为了响应并处理来自相关硬件的中断。中断过程所作的工作包括应答并重新设置硬件，从设备拷贝数据到内存以及反之，处理硬件请求，并发送新的硬件请求。</p>
+<p>内核提供的接口包括注册和注销中断处理程序、禁止中断、屏蔽中断线以及检查中断系统的状态。</p>
+]]></content>
+      <categories>
+        <category>Linux系统内核相关</category>
+      </categories>
+      <tags>
+        <tag>中断</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>创建高性能索引</title>
+    <url>/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/</url>
+    <content><![CDATA[<h1 id="索引基础"><a href="#索引基础" class="headerlink" title="索引基础"></a>索引基础</h1><p>索引（在MySQL中也叫做“键（key）是**<em>存储引擎用于快速找到记录**</em>的一种数据结构。 这是索引的基本功能。在MySQL中，存储引擎用书本目录类似的方法使用索引，其先在索引中找到对应值，然后根据匹配的索引记录找到对应的数据行</p>
+<p>索引可以包含一个或多个列的值。如果索引包含多个列，那么**<em>列的顺序**</em>也十分重要，因为MySQL只能高效地使用索引的<u><strong>最左前缀列</strong></u>。创建一个包含两个列的索引，和创建两个只包含一列的索引是大不相同的，</p>
+<p><img data-src="/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222091253478.png" alt="image-20220222091253478"></p>
+<h2 id="索引的类型"><a href="#索引的类型" class="headerlink" title="索引的类型"></a>索引的类型</h2><p>索引有很多种类型，可以为不同的场景提供更好的性能。在MySQL中，索引是在**<em>存储引擎层**</em>而不是服务器层实现的。所以，并没有统一的索引标准：不同存储引擎的索引的工作方式并不一样，也不是所有的存储引擎都支持所有类型的索引。即使多个存储引擎支持同一种类型的索引，其底层的实现也可能不同。</p>
+<p>MySQL支持的索引类型，以及它们的优点和缺点如下：</p>
+<h3 id="B-Tree索引"><a href="#B-Tree索引" class="headerlink" title="B-Tree索引"></a>B-Tree索引</h3><p>当人们谈论索引的时候，如果没有特别指明类型，那多半说的是B-Tree索引，它使用 B-Tree数据结构来存储数据，大多数MySQL引擎都支持这种索引。</p>
+<blockquote>
+<p>实际上很多存储引擎使用的是**<em>B+Tree**</em>,即每一个叶子节点都包含指向下一个叶子节点的指针，从 而方便叶子节点的范围遍历。</p>
+</blockquote>
+<p>存储引擎以不同的方式使用B-Tree索引，性能也各有不同，各有优劣。例如，MylSAM 使用前缀压缩技术使得索引更小，但InnoDB则按照原数据格式进行存储。再如 MylSAM索引通过数据的物理位置引用被索引的行，而InnoDB则根据主键引用被索引的行。</p>
+<p><img data-src="/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222092648551.png" alt="image-20220222092648551"></p>
+<p>B-Tree索引能够加快访问数据的速度，因为存储引擎不再需要进行全表扫描来获取需要的数据，取而代之的是从索引的根节点（图示并未画出）开始进行搜索。根节点的槽中存放了指向子节点的指针，存储引擎根据这些指针向下层査找。通过比较节点页的值和要査找的值可以找到合适的指针进入下层子节点，这些指针实际上定义了子节点页中值 的上限和下限。最终存储引擎要么是找到对应的值，要么该记录不存在。</p>
+<p>叶子节点比较特别，它们的指针指向的是被索引的数据，而不是其他的节点页（不同引擎的“指针”类型不同）    </p>
+<blockquote>
+<p>B-Tree对索引列是顺序组织存储的，所以很适合査找范围数据。索引对多个值进行排序的依据是CREATE TABLE语句中定义索引时列的顺序。</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> People(</span><br><span class="line">	last_name <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    first_name <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    dob 	  <span class="type">date</span>         <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    gender    enum(<span class="string">&#x27;m&#x27;</span>,<span class="string">&#x27;f&#x27;</span>) <span class="keyword">not</span> <span class="keyword">null</span>.</span><br><span class="line">    key(last_name,first_name,dob)</span><br><span class="line"> );</span><br></pre></td></tr></table></figure>
+<p><strong><em>B-Tree索引对以下类型的查询有效：</em></strong><br><img data-src="/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222093555561.png" alt="image-20220222093555561"></p>
+]]></content>
+      <categories>
+        <category>MySQL数据库</category>
+      </categories>
+      <tags>
+        <tag>MySQL数据库索引</tag>
       </tags>
   </entry>
   <entry>
@@ -664,86 +744,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Section1</title>
-    <url>/2022/02/21/Section1/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>中断</title>
-    <url>/2021/02/03/%E4%B8%AD%E6%96%AD/</url>
-    <content><![CDATA[<h3 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h3><p>中断使得硬件得以发出通知给处理器，是一种变内核主动为硬件主动的方式。中断本质上是一种特殊的电信号。硬件在生成中断的时候并不需要考虑与处理器的时钟同步，即中断可以随时产生，<strong>内核随时可能因为新到来的中断而被打断</strong>。</p>
-<img data-src="/2021/02/03/%E4%B8%AD%E6%96%AD/%E4%B8%AD%E6%96%AD1.png" class>
-
-<p>不同的设备对应的中断不同，而每个中断都通过唯一的数字标识，这样，操作系统才能给不同的中断提供对应的中断处理程序。硬件发出中断，就是在提醒内核，有新的请求需要读取并处理。</p>
-<h4 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h4><p>异常与中断不同之处就是在于异常在产生时必须要考虑处理器与时钟同步，所以其经常被称为同步中。</p>
-<p>异常的产生原因：</p>
-<blockquote>
-<p>1.处理器由于执行到编程失误而导致的错误指令（如被0除）</p>
-</blockquote>
-<blockquote>
-<p>2.执行期间出现特殊情况，例如缺页</p>
-</blockquote>
-<blockquote>
-<p>3.系统调用陷入内核—–引起了系统调用处理程序异常</p>
-</blockquote>
-<p>以上，产生异常，都需要内核处理。</p>
-<h3 id="中断处理程序"><a href="#中断处理程序" class="headerlink" title="中断处理程序"></a>中断处理程序</h3><p>内核通过执行中断处理程序(interrupt handler)来对某一特定的中断进行响应，产生中断的每一个设备都有一个相应的中断处理程序。一个设备的中断处理程序是其设备驱动程序的一部分—–设备驱动程序是<strong>用于对设备进行管理的内核代码</strong>。</p>
-<p>中断处理程序被内核调用，运行于中断上下文，该上下文的执行代码不可阻塞。</p>
-<h3 id="上半部与下半部的对比"><a href="#上半部与下半部的对比" class="headerlink" title="上半部与下半部的对比"></a>上半部与下半部的对比</h3><p>将中断处理分为两个部分。</p>
-<blockquote>
-<p>中断处理程序是上半部分（top half），接收到一个中断会被立即执行，只做有严格时限的工作。</p>
-</blockquote>
-<blockquote>
-<p>能够被允许稍后完成的工作会被推迟到下半部去执行。即处理和操作中断的非即时完成请求会在随后的下半部中执行。</p>
-</blockquote>
-<h3 id><a href="#" class="headerlink" title></a></h3><h3 id="中断上下文"><a href="#中断上下文" class="headerlink" title="中断上下文"></a>中断上下文</h3><p>当执行一个中断处理程序时，内核处于中断上下文中(interrupt context)。</p>
-<p>注意：</p>
-<ul>
-<li>中断上下文没有后备进程，所以其不可以睡眠。如果一个函数要进行睡眠，就不能出现在中断处理程序中。</li>
-<li>中断处理程序实际上打断了其他的代码，这种异步执行的特性，要求所有的中断处理程序必须尽可能的快速、简单。尽量将工作从中断处理程序中分离出来，放在中断下半部执行。</li>
-<li>中断处理程序栈是一个配置选项。在内核早期版本中，中断处理程序是共享别人的堆栈，获取空间时非常节约。后期，中断处理程序有了自己的栈（中断栈），但无论无何，在内核中还是要尽可能的节省空间的使用，因为内核栈本身就是有限的。</li>
-<li><strong>进程上下文是可以睡眠的</strong></li>
-</ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>大多数现代硬件都通过中断来与操作系统进行通信。对给定的硬件进行管理的驱动程序注册中断处理程序，是为了响应并处理来自相关硬件的中断。中断过程所作的工作包括应答并重新设置硬件，从设备拷贝数据到内存以及反之，处理硬件请求，并发送新的硬件请求。</p>
-<p>内核提供的接口包括注册和注销中断处理程序、禁止中断、屏蔽中断线以及检查中断系统的状态。</p>
-]]></content>
-      <categories>
-        <category>Linux系统内核相关</category>
-      </categories>
-      <tags>
-        <tag>中断</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>创建高性能索引</title>
-    <url>/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/</url>
-    <content><![CDATA[<h1 id="索引基础"><a href="#索引基础" class="headerlink" title="索引基础"></a>索引基础</h1><p>索引（在MySQL中也叫做“键（key）是**<em>存储引擎用于快速找到记录**</em>的一种数据结构。 这是索引的基本功能。在MySQL中，存储引擎用书本目录类似的方法使用索引，其先在索引中找到对应值，然后根据匹配的索引记录找到对应的数据行</p>
-<p>索引可以包含一个或多个列的值。如果索引包含多个列，那么**<em>列的顺序**</em>也十分重要，因为MySQL只能高效地使用索引的<u><strong>最左前缀列</strong></u>。创建一个包含两个列的索引，和创建两个只包含一列的索引是大不相同的，</p>
-<p><img data-src="/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222091253478.png" alt="image-20220222091253478"></p>
-<h2 id="索引的类型"><a href="#索引的类型" class="headerlink" title="索引的类型"></a>索引的类型</h2><p>索引有很多种类型，可以为不同的场景提供更好的性能。在MySQL中，索引是在**<em>存储引擎层**</em>而不是服务器层实现的。所以，并没有统一的索引标准：不同存储引擎的索引的工作方式并不一样，也不是所有的存储引擎都支持所有类型的索引。即使多个存储引擎支持同一种类型的索引，其底层的实现也可能不同。</p>
-<p>MySQL支持的索引类型，以及它们的优点和缺点如下：</p>
-<h3 id="B-Tree索引"><a href="#B-Tree索引" class="headerlink" title="B-Tree索引"></a>B-Tree索引</h3><p>当人们谈论索引的时候，如果没有特别指明类型，那多半说的是B-Tree索引，它使用 B-Tree数据结构来存储数据，大多数MySQL引擎都支持这种索引。</p>
-<blockquote>
-<p>实际上很多存储引擎使用的是**<em>B+Tree**</em>,即每一个叶子节点都包含指向下一个叶子节点的指针，从 而方便叶子节点的范围遍历。</p>
-</blockquote>
-<p>存储引擎以不同的方式使用B-Tree索引，性能也各有不同，各有优劣。例如，MylSAM 使用前缀压缩技术使得索引更小，但InnoDB则按照原数据格式进行存储。再如 MylSAM索引通过数据的物理位置引用被索引的行，而InnoDB则根据主键引用被索引的行。</p>
-<p><img data-src="/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222092648551.png" alt="image-20220222092648551"></p>
-<p>B-Tree索引能够加快访问数据的速度，因为存储引擎不再需要进行全表扫描来获取需要的数据，取而代之的是从索引的根节点（图示并未画出）开始进行搜索。根节点的槽中存放了指向子节点的指针，存储引擎根据这些指针向下层査找。通过比较节点页的值和要査找的值可以找到合适的指针进入下层子节点，这些指针实际上定义了子节点页中值 的上限和下限。最终存储引擎要么是找到对应的值，要么该记录不存在。</p>
-<p>叶子节点比较特别，它们的指针指向的是被索引的数据，而不是其他的节点页（不同引擎的“指针”类型不同）    </p>
-<blockquote>
-<p>B-Tree对索引列是顺序组织存储的，所以很适合査找范围数据。索引对多个值进行排序的依据是CREATE TABLE语句中定义索引时列的顺序。</p>
-</blockquote>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> People(</span><br><span class="line">	last_name <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    first_name <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    dob 	  <span class="type">date</span>         <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    gender    enum(<span class="string">&#x27;m&#x27;</span>,<span class="string">&#x27;f&#x27;</span>) <span class="keyword">not</span> <span class="keyword">null</span>.</span><br><span class="line">    key(last_name,first_name,dob)</span><br><span class="line"> );</span><br></pre></td></tr></table></figure>
-<p><strong><em>B-Tree索引对以下类型的查询有效：</em></strong><br><img data-src="/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222093555561.png" alt="image-20220222093555561"></p>
-]]></content>
-      <categories>
-        <category>MySQL数据库</category>
-      </categories>
-      <tags>
-        <tag>MySQL数据库索引</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>牛客网刷题-操作系统2</title>
     <url>/2022/02/18/%E7%89%9B%E5%AE%A2%E7%BD%91%E5%88%B7%E9%A2%98-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F2/</url>
     <content><![CDATA[]]></content>
@@ -837,7 +837,10 @@
   <entry>
     <title>进程调度</title>
     <url>/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/</url>
-    <content><![CDATA[<h1 id="Linux进程调度"><a href="#Linux进程调度" class="headerlink" title="Linux进程调度"></a>Linux进程调度</h1><p><img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222181234434.png" alt="image-20220222181234434"></p>
+    <content><![CDATA[<h1 id="Linux进程调度"><a href="#Linux进程调度" class="headerlink" title="Linux进程调度"></a>Linux进程调度</h1> <img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image01.png" class>
+
+
+
 <p>调度程序负责决定将哪个进程投入运行，何时运行以及运行多长时间。进程调度程序(常常简称调度程序)可看做在可运行态进程之间分配有限的**<em>处理器时间资源的内核子系统**</em>。调度程序是像Linux这样的多任务操作系统的基础。只有通过调度程序的合理调度，系统资源才能最大限度地发挥作用，多进程才会有并发执行的效果。 </p>
 <blockquote>
 <p>在一组处于可运行状态的进程中选择一个来执行，是调度程序所需完成的基本工作,最大程度的利用处理器时间为原则。</p>
@@ -861,15 +864,19 @@
 <li><p>IO消耗型</p>
 <p>指进程的<strong>大部分时间用来提交I/O请求或是等待I/O请求</strong>。因此，这样的进程经常处于可运行状态，但通常都是**<em>运行短短的一会儿**</em>，因为它在等待更多的I/O请求时总会阻塞</p>
 <p>举例来说，多数用户图形界面程序（GUI）都属于I/O密集型，即便它们从不读取或者写入磁盘，它们也会在多数时间里都在等待来自鼠标或者键盘的用户交互操作。</p>
+<img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image02.png" class>
+
+
+
 </li>
 </ul>
-<p><img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222152122750.png" alt="image-20220222152122750"></p>
 <ul>
 <li><p>处理器耗费型(用于计算)</p>
 <p>处理器耗费型进程把时间大多用在执行代码上。除非被抢占，否则它们通常都一直不停地运行，因为它们没有太多的I/O需求。但是，因为它们不属于I/O驱动类型，所以从系统响应速度考虑，调度器不应该经常让它们运行。对于这类处理器消耗型的进程，调度策略往往是**<em>尽量降低它们的调度频率，而延长其运行时间**</em>。</p>
+<img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image03.png" class>
+
 </li>
 </ul>
-<p><img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222152328067.png" alt="image-20220222152328067"></p>
 <p>有必要指出，随着CPU变得越来越快*<strong>，更多的进程倾向为I/O密集型**<em>。这种现象之所以发生是因为</em></strong>CPU 的改进比磁盘的改进快得多***，其结果是，未来对I/O密集型进程的调度处理似乎更为重要。这里的基本思想 是，如果需要运行I/O密集型进程，那么就应该让它尽快得到机会，以便发出磁盘请求并保持磁盘始终忙 碌。从图中可以看到，如果进程是I/O密集型的，则需要多运行一些这类进程以保持CPU的充分利用。</p>
 <blockquote>
 <p>调度策略通常要在两个矛盾的目标中间寻找平衡：进程响应迅速（响应时间短）和最大系统利用率（高吞吐量）。</p>
@@ -903,7 +910,7 @@
 <p>进程所获得的处理器时间其实是和系统负载密切相关的。这个比例进一步还会受进程nice值的影响</p>
 <p><strong>Linux系统是抢占式的</strong>,其抢占时机取决于新的可运行程序消耗了多少处理器使用比。如果消耗的使用比比当前进程小，则新进程立刻投入运行，抢 占当前进程。否则，将推迟其运行。</p>
 <h3 id="案例：文本编辑器（IO）VS视频编码器（处理）"><a href="#案例：文本编辑器（IO）VS视频编码器（处理）" class="headerlink" title="案例：文本编辑器（IO）VS视频编码器（处理）"></a>案例：文本编辑器（IO）VS视频编码器（处理）</h3><p>对于视频编码器。它对什么时间开始运行没有太严格的要求 用户几乎分辨不出也并不关心它到底是立刻就运行还是半秒钟以后才开始的。当然，它完成得越早越好，至于所花时间并不是我们关注的主要问题。 </p>
-<img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222160121844.png" alt="image-20220222160121844" style="zoom:50%;">
+ <img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image04.png" class>
 
 <p>​    </p>
 <h2 id="Linux调度算法"><a href="#Linux调度算法" class="headerlink" title="Linux调度算法"></a>Linux调度算法</h2><p>Linux调度器是以**<em>模块方式提供**</em>的，这样做的目的是允许不同类型的进程可以有针对性地选择调度算法。 </p>
@@ -956,7 +963,7 @@
 </ul>
 ]]></content>
       <categories>
-        <category>Linux内核相关</category>
+        <category>Linux系统内核相关</category>
       </categories>
       <tags>
         <tag>进程</tag>
