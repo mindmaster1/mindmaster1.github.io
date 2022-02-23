@@ -669,35 +669,6 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>创建高性能索引</title>
-    <url>/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/</url>
-    <content><![CDATA[<h1 id="索引基础"><a href="#索引基础" class="headerlink" title="索引基础"></a>索引基础</h1><p>索引（在MySQL中也叫做“键（key）是**<em>存储引擎用于快速找到记录**</em>的一种数据结构。 这是索引的基本功能。在MySQL中，存储引擎用书本目录类似的方法使用索引，其先在索引中找到对应值，然后根据匹配的索引记录找到对应的数据行</p>
-<p>索引可以包含一个或多个列的值。如果索引包含多个列，那么**<em>列的顺序**</em>也十分重要，因为MySQL只能高效地使用索引的<u><strong>最左前缀列</strong></u>。创建一个包含两个列的索引，和创建两个只包含一列的索引是大不相同的，</p>
-<p><img data-src="/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222091253478.png" alt="image-20220222091253478"></p>
-<h2 id="索引的类型"><a href="#索引的类型" class="headerlink" title="索引的类型"></a>索引的类型</h2><p>索引有很多种类型，可以为不同的场景提供更好的性能。在MySQL中，索引是在**<em>存储引擎层**</em>而不是服务器层实现的。所以，并没有统一的索引标准：不同存储引擎的索引的工作方式并不一样，也不是所有的存储引擎都支持所有类型的索引。即使多个存储引擎支持同一种类型的索引，其底层的实现也可能不同。</p>
-<p>MySQL支持的索引类型，以及它们的优点和缺点如下：</p>
-<h3 id="B-Tree索引"><a href="#B-Tree索引" class="headerlink" title="B-Tree索引"></a>B-Tree索引</h3><p>当人们谈论索引的时候，如果没有特别指明类型，那多半说的是B-Tree索引，它使用 B-Tree数据结构来存储数据，大多数MySQL引擎都支持这种索引。</p>
-<blockquote>
-<p>实际上很多存储引擎使用的是**<em>B+Tree**</em>,即每一个叶子节点都包含指向下一个叶子节点的指针，从 而方便叶子节点的范围遍历。</p>
-</blockquote>
-<p>存储引擎以不同的方式使用B-Tree索引，性能也各有不同，各有优劣。例如，MylSAM 使用前缀压缩技术使得索引更小，但InnoDB则按照原数据格式进行存储。再如 MylSAM索引通过数据的物理位置引用被索引的行，而InnoDB则根据主键引用被索引的行。</p>
-<p><img data-src="/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222092648551.png" alt="image-20220222092648551"></p>
-<p>B-Tree索引能够加快访问数据的速度，因为存储引擎不再需要进行全表扫描来获取需要的数据，取而代之的是从索引的根节点（图示并未画出）开始进行搜索。根节点的槽中存放了指向子节点的指针，存储引擎根据这些指针向下层査找。通过比较节点页的值和要査找的值可以找到合适的指针进入下层子节点，这些指针实际上定义了子节点页中值 的上限和下限。最终存储引擎要么是找到对应的值，要么该记录不存在。</p>
-<p>叶子节点比较特别，它们的指针指向的是被索引的数据，而不是其他的节点页（不同引擎的“指针”类型不同）    </p>
-<blockquote>
-<p>B-Tree对索引列是顺序组织存储的，所以很适合査找范围数据。索引对多个值进行排序的依据是CREATE TABLE语句中定义索引时列的顺序。</p>
-</blockquote>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> People(</span><br><span class="line">	last_name <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    first_name <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    dob 	  <span class="type">date</span>         <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    gender    enum(<span class="string">&#x27;m&#x27;</span>,<span class="string">&#x27;f&#x27;</span>) <span class="keyword">not</span> <span class="keyword">null</span>.</span><br><span class="line">    key(last_name,first_name,dob)</span><br><span class="line"> );</span><br></pre></td></tr></table></figure>
-<p><strong><em>B-Tree索引对以下类型的查询有效：</em></strong><br><img data-src="/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222093555561.png" alt="image-20220222093555561"></p>
-]]></content>
-      <categories>
-        <category>MySQL数据库</category>
-      </categories>
-      <tags>
-        <tag>MySQL数据库索引</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>中断</title>
     <url>/2021/02/03/%E4%B8%AD%E6%96%AD/</url>
     <content><![CDATA[<h3 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h3><p>中断使得硬件得以发出通知给处理器，是一种变内核主动为硬件主动的方式。中断本质上是一种特殊的电信号。硬件在生成中断的时候并不需要考虑与处理器的时钟同步，即中断可以随时产生，<strong>内核随时可能因为新到来的中断而被打断</strong>。</p>
@@ -744,6 +715,35 @@
       </tags>
   </entry>
   <entry>
+    <title>创建高性能索引</title>
+    <url>/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/</url>
+    <content><![CDATA[<h1 id="索引基础"><a href="#索引基础" class="headerlink" title="索引基础"></a>索引基础</h1><p>索引（在MySQL中也叫做“键（key）是**<em>存储引擎用于快速找到记录**</em>的一种数据结构。 这是索引的基本功能。在MySQL中，存储引擎用书本目录类似的方法使用索引，其先在索引中找到对应值，然后根据匹配的索引记录找到对应的数据行</p>
+<p>索引可以包含一个或多个列的值。如果索引包含多个列，那么**<em>列的顺序**</em>也十分重要，因为MySQL只能高效地使用索引的<u><strong>最左前缀列</strong></u>。创建一个包含两个列的索引，和创建两个只包含一列的索引是大不相同的，</p>
+<p><img data-src="/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222091253478.png" alt="image-20220222091253478"></p>
+<h2 id="索引的类型"><a href="#索引的类型" class="headerlink" title="索引的类型"></a>索引的类型</h2><p>索引有很多种类型，可以为不同的场景提供更好的性能。在MySQL中，索引是在**<em>存储引擎层**</em>而不是服务器层实现的。所以，并没有统一的索引标准：不同存储引擎的索引的工作方式并不一样，也不是所有的存储引擎都支持所有类型的索引。即使多个存储引擎支持同一种类型的索引，其底层的实现也可能不同。</p>
+<p>MySQL支持的索引类型，以及它们的优点和缺点如下：</p>
+<h3 id="B-Tree索引"><a href="#B-Tree索引" class="headerlink" title="B-Tree索引"></a>B-Tree索引</h3><p>当人们谈论索引的时候，如果没有特别指明类型，那多半说的是B-Tree索引，它使用 B-Tree数据结构来存储数据，大多数MySQL引擎都支持这种索引。</p>
+<blockquote>
+<p>实际上很多存储引擎使用的是**<em>B+Tree**</em>,即每一个叶子节点都包含指向下一个叶子节点的指针，从 而方便叶子节点的范围遍历。</p>
+</blockquote>
+<p>存储引擎以不同的方式使用B-Tree索引，性能也各有不同，各有优劣。例如，MylSAM 使用前缀压缩技术使得索引更小，但InnoDB则按照原数据格式进行存储。再如 MylSAM索引通过数据的物理位置引用被索引的行，而InnoDB则根据主键引用被索引的行。</p>
+<p><img data-src="/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222092648551.png" alt="image-20220222092648551"></p>
+<p>B-Tree索引能够加快访问数据的速度，因为存储引擎不再需要进行全表扫描来获取需要的数据，取而代之的是从索引的根节点（图示并未画出）开始进行搜索。根节点的槽中存放了指向子节点的指针，存储引擎根据这些指针向下层査找。通过比较节点页的值和要査找的值可以找到合适的指针进入下层子节点，这些指针实际上定义了子节点页中值 的上限和下限。最终存储引擎要么是找到对应的值，要么该记录不存在。</p>
+<p>叶子节点比较特别，它们的指针指向的是被索引的数据，而不是其他的节点页（不同引擎的“指针”类型不同）    </p>
+<blockquote>
+<p>B-Tree对索引列是顺序组织存储的，所以很适合査找范围数据。索引对多个值进行排序的依据是CREATE TABLE语句中定义索引时列的顺序。</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> People(</span><br><span class="line">	last_name <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    first_name <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    dob 	  <span class="type">date</span>         <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    gender    enum(<span class="string">&#x27;m&#x27;</span>,<span class="string">&#x27;f&#x27;</span>) <span class="keyword">not</span> <span class="keyword">null</span>.</span><br><span class="line">    key(last_name,first_name,dob)</span><br><span class="line"> );</span><br></pre></td></tr></table></figure>
+<p><strong><em>B-Tree索引对以下类型的查询有效：</em></strong><br><img data-src="/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222093555561.png" alt="image-20220222093555561"></p>
+]]></content>
+      <categories>
+        <category>MySQL数据库</category>
+      </categories>
+      <tags>
+        <tag>MySQL数据库索引</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>操作系统种类</title>
     <url>/2022/02/23/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%A7%8D%E7%B1%BB/</url>
     <content><![CDATA[]]></content>
@@ -752,6 +752,12 @@
     <title>牛客网刷题-操作系统2</title>
     <url>/2022/02/18/%E7%89%9B%E5%AE%A2%E7%BD%91%E5%88%B7%E9%A2%98-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F2/</url>
     <content><![CDATA[]]></content>
+      <categories>
+        <category>操作系统</category>
+      </categories>
+      <tags>
+        <tag>操作系统</tag>
+      </tags>
   </entry>
   <entry>
     <title>系统调用</title>
