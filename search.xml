@@ -262,6 +262,59 @@
       </tags>
   </entry>
   <entry>
+    <title>Python自动化办公-跨文件字数统计</title>
+    <url>/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/</url>
+    <content><![CDATA[<h1 id="使用Python实现快速读写文件，跨文件字数统计"><a href="#使用Python实现快速读写文件，跨文件字数统计" class="headerlink" title="使用Python实现快速读写文件，跨文件字数统计"></a>使用Python实现快速读写文件，跨文件字数统计</h1><h2 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h2><figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">使用Python来批量统计多个文件的字数和标点符号</span><br></pre></td></tr></table></figure>
+<h2 id="实现单个文件字数统计"><a href="#实现单个文件字数统计" class="headerlink" title="实现单个文件字数统计"></a>实现单个文件字数统计</h2><p>统计单个文件的字数，需要用到Python的文件读写函数和变量这两个功能。Python的读写函 数是对文件内容的读取操作，变量呢，用来存储统计好的文件字数。</p>
+<ul>
+<li>先把要统计的文件读入内存；</li>
+<li>再对读入到内存的字数数量进行统计，并用变量保存；</li>
+<li>最后是将结果写入统计字数的专用文件中。</li>
+</ul>
+<h3 id="将文件内容读取到内存中"><a href="#将文件内容读取到内存中" class="headerlink" title="将文件内容读取到内存中"></a>将文件内容读取到内存中</h3><p>Python实现读取文件内容到内存的函数有三个，这三个函数原理相同，但是读取的内容多少有些不同，分别为：</p>
+<img data-src="/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220209190932306.png" alt="image-20220209190932306" style="zoom:50%;">
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pathlib</span><br><span class="line">file_name = <span class="string">&quot;./e.txt&quot;</span></span><br><span class="line"><span class="comment"># 取得脚本所在目录</span></span><br><span class="line">current_path = pathlib.PurePath(__file__).parent</span><br><span class="line"></span><br><span class="line"><span class="comment">#和脚本同目录下的要打开文件绝对路径</span></span><br><span class="line">file = current_path.joinpath(file_name)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打开文件</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(file,encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    <span class="comment"># 读取文件</span></span><br><span class="line">    content = f.read()</span><br><span class="line">    words = content.rstrip()</span><br><span class="line">    number = <span class="built_in">len</span>(words)</span><br><span class="line">    print(number)</span><br></pre></td></tr></table></figure>
+<p>open()函数参数说明：</p>
+<p>第一个参数file变量的值是要操作的文件路径和文件名称，你需要正 确指定它所在的路径和文件名称。第二个参数encoding变量的值指定了以哪种字符编码打开文件，错误的字符编码会导致内容读取异常，文字内容显示为“乱码”。</p>
+<h4 id="获取完整路径"><a href="#获取完整路径" class="headerlink" title="获取完整路径"></a>获取完整路径</h4><ul>
+<li>在代码中使用pathlib库的PurePath()函数，把当前Python脚本的路径转化为标准的 pathlib格式。</li>
+<li>通过parent属性去掉脚本的文件名，取得当前脚本所在的路径。</li>
+<li>再通过joinpath()函数把脚本所在的路径和e.txt文件名进行拼接，得到e.txt的完整路径。</li>
+</ul>
+<p>这种取得脚本同目录下的其他文件完整路径的用法，要比直接指定文件完整路径用法更灵活。</p>
+<blockquote>
+<p>__file__变量比较特殊，它是在Python中预先定义好的一个变量，默认情况下它的值会被 Python自动设置为当前脚本的完整路径名称。有了它，我就可以通过Python脚本的路径取得 e.txt的完整路径了。</p>
+</blockquote>
+<h4 id="设置字符编码"><a href="#设置字符编码" class="headerlink" title="设置字符编码"></a>设置字符编码</h4><p>第二个参数的作用是设置open()函数使用何种字符编码打开文件。</p>
+<h4 id="函数传参调用"><a href="#函数传参调用" class="headerlink" title="函数传参调用"></a>函数传参调用</h4><p>为什们指定这个参数的时候，要特意写出变量名称encoding呢？</p>
+<p>在函数定义的时候我们可以为函数指定一个或多个参数，如果使用了多个参数，你在调用函 数的时候需要按顺序依次传入每一个参数。但是如果你想要使用某个参数默认值或不想按照 顺序传入参数时怎么办呢？函数调用时，还可以根据参数的关键字来指定为函数传入哪些参 数。比如说open()函数的参数有7个，</p>
+<p><img data-src="/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220209193920724.png" alt="image-20220209193920724"></p>
+<p>在open()函数的定义中，encoding参数是open()函数的第4个参数。如果我们只需要第1个和 第4个参数，其他参数需要保持默认时，就可以使用如下格式调用open()函数：</p>
+<p><img data-src="/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220209193956499.png" alt="image-20220209193956499"></p>
+<p>在代码中，调用open()函数时，由于file参数是open()函数的第一个参数，因此可以不用指定 参数的关键字。encoding参数并非open()函数定义的第二个参数，而是第四个参数，所以需 要指定它的参数名称为encoding，根据open()函数的定义，encoding=”utf-8”会作为 open()函数的第四个参数使用。这种使用关键字作为函数的参数的方式，也被称作<strong>函数的关键字传参方式</strong>。</p>
+<h3 id="with使用"><a href="#with使用" class="headerlink" title="with使用"></a>with使用</h3><p>with关键字下面的代码是缩进形式，和with关键字形成了一个语句块</p>
+<p>在with语句 块结束之后，不必手动调用close()函数关闭文件，Python会自动将文件关闭。因此，你会看到我在程序中调用了open()函数打开文件，但是没有调用关闭文件的close()函数。</p>
+<p>总的来说，相对于手动调用close()函数来关闭文件，使用with函数减少了打开过多文件造成系统资源浪费和数据丢失的风险。</p>
+<h4 id="文件读取"><a href="#文件读取" class="headerlink" title="文件读取"></a>文件读取</h4><p>正确使用了open()函数的两个参数以后，会返回一个表示文件的对象f, 只有设置了正确 的文件路径、文件名称和字符编码，才能继续进行文件读取操作。文件的读取操作使用的是 read()函数，read()函数会根据文件的对象f，按照open()函数定义好的打开方式进行逐个字 的读取操作。Python对文件的其他操作，全都需要通过文件操作函数调用对象f来完成。</p>
+<h4 id="统计文件的字数"><a href="#统计文件的字数" class="headerlink" title="统计文件的字数"></a>统计文件的字数</h4><p>Python的内置函数**len()**来实现</p>
+<p>len()函数在Python中最初设计的功能就是统计字符串的长度，即字符串中有多少字符。利用len()函数可以对字符串数据类型进行操作的特性，将文件一次性读入内存，放入字符串数据类型中。我在统计字数之前还增加了一个rstrip()函数，它会自动剔除出现在文件末尾的空行、空格，让你统计的结果更精确。</p>
+<p>在进行文件字数统计的时候，需要注意，在代码中使用了read()函数实现了对文件内容的一<br>次性读取到内存的功能。如果你的文件较大，我建议你使用readline()函数按行读取，并逐行<br>统计字数，否则容易出现内存不足的问题。</p>
+<h4 id="将统计结果写入文件"><a href="#将统计结果写入文件" class="headerlink" title="将统计结果写入文件"></a>将统计结果写入文件</h4><p>将统计结果写入文件，可以对<strong>open()函数</strong>打开文件方式进行简单的修改，就可以实现文件写入功能了，写入文件的代码如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;total.txt&quot;</span>, <span class="string">&quot;w&quot;</span>, encodong=<span class="string">&quot;utf-8&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">	 f.write(<span class="string">&quot;15个字符&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>open()函数的第二个参数表示文件的打开方式，它默认值是“r”，代表了文件以读取方式进行打开。这时对象f只能进行文件读取操作，我们需要将第二个参数指定为”w”，就可以使用wirte()函数对文件进行写入操作了。而write()函数的第一个参数就是即将要写入文件的内容。</p>
+<h3 id="怎么统计多个文件的次数"><a href="#怎么统计多个文件的次数" class="headerlink" title="怎么统计多个文件的次数"></a>怎么统计多个文件的次数</h3><p>对多个文件的字数统计，就可以使用for循环来实现批量读取多个文件的内容。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">p = Path(src_path)</span><br><span class="line">files = [x <span class="keyword">for</span> x <span class="keyword">in</span> p.iterdir() <span class="keyword">if</span> PurePath(x).match(<span class="string">&#x27;*.txt&#x27;</span>)]</span><br><span class="line"><span class="keyword">for</span> files <span class="keyword">in</span> files:</span><br><span class="line">	<span class="keyword">with</span> <span class="built_in">open</span>(file,encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        content = f.read()</span><br><span class="line">words = content.rstrip()</span><br><span class="line">    	number = <span class="built_in">len</span>(words)</span><br></pre></td></tr></table></figure>
+<p>数字类型是一种非常适合进行整数、浮点数的转换和算数几何计算最常用的类型。在单文件字数统计的场景，用来储存每个文件的字数是最合适的类型。如果把场景扩展到统计多个文件的字数，使用一个数字类型的变量是不够的，你需要在循环中再增加一个新的数字类型的变量，对多个文件的统计结果进行依次累加就可以了。</p>
+]]></content>
+      <categories>
+        <category>Python开发</category>
+      </categories>
+      <tags>
+        <tag>Python自动化</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Python自动化办公-图片识别</title>
     <url>/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/</url>
     <content><![CDATA[<h1 id="使用Python实现高效自动化图片组在线-离线识别（转文字）"><a href="#使用Python实现高效自动化图片组在线-离线识别（转文字）" class="headerlink" title="使用Python实现高效自动化图片组在线/离线识别（转文字）"></a>使用Python实现高效自动化图片组在线/离线识别（转文字）</h1><h2 id="图片识别转文字的两种方式："><a href="#图片识别转文字的两种方式：" class="headerlink" title="图片识别转文字的两种方式："></a>图片识别转文字的两种方式：</h2><blockquote>
@@ -341,51 +394,37 @@
       </tags>
   </entry>
   <entry>
-    <title>Python自动化办公-跨文件字数统计</title>
-    <url>/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/</url>
-    <content><![CDATA[<h1 id="使用Python实现快速读写文件，跨文件字数统计"><a href="#使用Python实现快速读写文件，跨文件字数统计" class="headerlink" title="使用Python实现快速读写文件，跨文件字数统计"></a>使用Python实现快速读写文件，跨文件字数统计</h1><h2 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h2><figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">使用Python来批量统计多个文件的字数和标点符号</span><br></pre></td></tr></table></figure>
-<h2 id="实现单个文件字数统计"><a href="#实现单个文件字数统计" class="headerlink" title="实现单个文件字数统计"></a>实现单个文件字数统计</h2><p>统计单个文件的字数，需要用到Python的文件读写函数和变量这两个功能。Python的读写函 数是对文件内容的读取操作，变量呢，用来存储统计好的文件字数。</p>
-<ul>
-<li>先把要统计的文件读入内存；</li>
-<li>再对读入到内存的字数数量进行统计，并用变量保存；</li>
-<li>最后是将结果写入统计字数的专用文件中。</li>
-</ul>
-<h3 id="将文件内容读取到内存中"><a href="#将文件内容读取到内存中" class="headerlink" title="将文件内容读取到内存中"></a>将文件内容读取到内存中</h3><p>Python实现读取文件内容到内存的函数有三个，这三个函数原理相同，但是读取的内容多少有些不同，分别为：</p>
-<img data-src="/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220209190932306.png" alt="image-20220209190932306" style="zoom:50%;">
-
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pathlib</span><br><span class="line">file_name = <span class="string">&quot;./e.txt&quot;</span></span><br><span class="line"><span class="comment"># 取得脚本所在目录</span></span><br><span class="line">current_path = pathlib.PurePath(__file__).parent</span><br><span class="line"></span><br><span class="line"><span class="comment">#和脚本同目录下的要打开文件绝对路径</span></span><br><span class="line">file = current_path.joinpath(file_name)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打开文件</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(file,encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    <span class="comment"># 读取文件</span></span><br><span class="line">    content = f.read()</span><br><span class="line">    words = content.rstrip()</span><br><span class="line">    number = <span class="built_in">len</span>(words)</span><br><span class="line">    print(number)</span><br></pre></td></tr></table></figure>
-<p>open()函数参数说明：</p>
-<p>第一个参数file变量的值是要操作的文件路径和文件名称，你需要正 确指定它所在的路径和文件名称。第二个参数encoding变量的值指定了以哪种字符编码打开文件，错误的字符编码会导致内容读取异常，文字内容显示为“乱码”。</p>
-<h4 id="获取完整路径"><a href="#获取完整路径" class="headerlink" title="获取完整路径"></a>获取完整路径</h4><ul>
-<li>在代码中使用pathlib库的PurePath()函数，把当前Python脚本的路径转化为标准的 pathlib格式。</li>
-<li>通过parent属性去掉脚本的文件名，取得当前脚本所在的路径。</li>
-<li>再通过joinpath()函数把脚本所在的路径和e.txt文件名进行拼接，得到e.txt的完整路径。</li>
-</ul>
-<p>这种取得脚本同目录下的其他文件完整路径的用法，要比直接指定文件完整路径用法更灵活。</p>
-<blockquote>
-<p>__file__变量比较特殊，它是在Python中预先定义好的一个变量，默认情况下它的值会被 Python自动设置为当前脚本的完整路径名称。有了它，我就可以通过Python脚本的路径取得 e.txt的完整路径了。</p>
+    <title>Python自动化办公</title>
+    <url>/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC/</url>
+    <content><![CDATA[<h1 id="任务场景一：拆分与合并–快速的批量处理内容相似的Excel"><a href="#任务场景一：拆分与合并–快速的批量处理内容相似的Excel" class="headerlink" title="任务场景一：拆分与合并–快速的批量处理内容相似的Excel"></a>任务场景一：拆分与合并–快速的批量处理内容相似的Excel</h1><blockquote>
+<p>批量合并</p>
+<p>假设你需要对某些工作内容进行问卷调查，这时你用Excel做了调查问卷模版。 我想你会这样做：先把Excel通过工作群分发给所有员工，再把群里收集到的反馈附件汇总 成一个文件。</p>
+<p>批量拆分</p>
+<p>假设你是公司的财务人员，你需要使用Excel对员工工资进行核算，之后再打印 出来。但是公司要求员工薪水保密，所以每个员工的工资需要拆分成一个独立的文件，最 后还需要打印出来。</p>
 </blockquote>
-<h4 id="设置字符编码"><a href="#设置字符编码" class="headerlink" title="设置字符编码"></a>设置字符编码</h4><p>第二个参数的作用是设置open()函数使用何种字符编码打开文件。</p>
-<h4 id="函数传参调用"><a href="#函数传参调用" class="headerlink" title="函数传参调用"></a>函数传参调用</h4><p>为什们指定这个参数的时候，要特意写出变量名称encoding呢？</p>
-<p>在函数定义的时候我们可以为函数指定一个或多个参数，如果使用了多个参数，你在调用函 数的时候需要按顺序依次传入每一个参数。但是如果你想要使用某个参数默认值或不想按照 顺序传入参数时怎么办呢？函数调用时，还可以根据参数的关键字来指定为函数传入哪些参 数。比如说open()函数的参数有7个，</p>
-<p><img data-src="/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220209193920724.png" alt="image-20220209193920724"></p>
-<p>在open()函数的定义中，encoding参数是open()函数的第4个参数。如果我们只需要第1个和 第4个参数，其他参数需要保持默认时，就可以使用如下格式调用open()函数：</p>
-<p><img data-src="/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220209193956499.png" alt="image-20220209193956499"></p>
-<p>在代码中，调用open()函数时，由于file参数是open()函数的第一个参数，因此可以不用指定 参数的关键字。encoding参数并非open()函数定义的第二个参数，而是第四个参数，所以需 要指定它的参数名称为encoding，根据open()函数的定义，encoding=”utf-8”会作为 open()函数的第四个参数使用。这种使用关键字作为函数的参数的方式，也被称作<strong>函数的关键字传参方式</strong>。</p>
-<h3 id="with使用"><a href="#with使用" class="headerlink" title="with使用"></a>with使用</h3><p>with关键字下面的代码是缩进形式，和with关键字形成了一个语句块</p>
-<p>在with语句 块结束之后，不必手动调用close()函数关闭文件，Python会自动将文件关闭。因此，你会看到我在程序中调用了open()函数打开文件，但是没有调用关闭文件的close()函数。</p>
-<p>总的来说，相对于手动调用close()函数来关闭文件，使用with函数减少了打开过多文件造成系统资源浪费和数据丢失的风险。</p>
-<h4 id="文件读取"><a href="#文件读取" class="headerlink" title="文件读取"></a>文件读取</h4><p>正确使用了open()函数的两个参数以后，会返回一个表示文件的对象f, 只有设置了正确 的文件路径、文件名称和字符编码，才能继续进行文件读取操作。文件的读取操作使用的是 read()函数，read()函数会根据文件的对象f，按照open()函数定义好的打开方式进行逐个字 的读取操作。Python对文件的其他操作，全都需要通过文件操作函数调用对象f来完成。</p>
-<h4 id="统计文件的字数"><a href="#统计文件的字数" class="headerlink" title="统计文件的字数"></a>统计文件的字数</h4><p>Python的内置函数**len()**来实现</p>
-<p>len()函数在Python中最初设计的功能就是统计字符串的长度，即字符串中有多少字符。利用len()函数可以对字符串数据类型进行操作的特性，将文件一次性读入内存，放入字符串数据类型中。我在统计字数之前还增加了一个rstrip()函数，它会自动剔除出现在文件末尾的空行、空格，让你统计的结果更精确。</p>
-<p>在进行文件字数统计的时候，需要注意，在代码中使用了read()函数实现了对文件内容的一<br>次性读取到内存的功能。如果你的文件较大，我建议你使用readline()函数按行读取，并逐行<br>统计字数，否则容易出现内存不足的问题。</p>
-<h4 id="将统计结果写入文件"><a href="#将统计结果写入文件" class="headerlink" title="将统计结果写入文件"></a>将统计结果写入文件</h4><p>将统计结果写入文件，可以对<strong>open()函数</strong>打开文件方式进行简单的修改，就可以实现文件写入功能了，写入文件的代码如下：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;total.txt&quot;</span>, <span class="string">&quot;w&quot;</span>, encodong=<span class="string">&quot;utf-8&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">	 f.write(<span class="string">&quot;15个字符&quot;</span>)</span><br></pre></td></tr></table></figure>
-<p>open()函数的第二个参数表示文件的打开方式，它默认值是“r”，代表了文件以读取方式进行打开。这时对象f只能进行文件读取操作，我们需要将第二个参数指定为”w”，就可以使用wirte()函数对文件进行写入操作了。而write()函数的第一个参数就是即将要写入文件的内容。</p>
-<h3 id="怎么统计多个文件的次数"><a href="#怎么统计多个文件的次数" class="headerlink" title="怎么统计多个文件的次数"></a>怎么统计多个文件的次数</h3><p>对多个文件的字数统计，就可以使用for循环来实现批量读取多个文件的内容。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">p = Path(src_path)</span><br><span class="line">files = [x <span class="keyword">for</span> x <span class="keyword">in</span> p.iterdir() <span class="keyword">if</span> PurePath(x).match(<span class="string">&#x27;*.txt&#x27;</span>)]</span><br><span class="line"><span class="keyword">for</span> files <span class="keyword">in</span> files:</span><br><span class="line">	<span class="keyword">with</span> <span class="built_in">open</span>(file,encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        content = f.read()</span><br><span class="line">words = content.rstrip()</span><br><span class="line">    	number = <span class="built_in">len</span>(words)</span><br></pre></td></tr></table></figure>
-<p>数字类型是一种非常适合进行整数、浮点数的转换和算数几何计算最常用的类型。在单文件字数统计的场景，用来储存每个文件的字数是最合适的类型。如果把场景扩展到统计多个文件的字数，使用一个数字类型的变量是不够的，你需要在循环中再增加一个新的数字类型的变量，对多个文件的统计结果进行依次累加就可以了。</p>
-]]></content>
+<ul>
+<li>解决方案：使用Python实现自动化批量处理。<ul>
+<li>安装扩展库：支持Excel读取的扩展库叫做xlrd库，支持Excel写入的扩展库叫做xlwt库</li>
+<li>找到整个工作过程当中重复操作的部分；</li>
+<li> 将重复操作的部分需要哪些手工操作找出来，使用Python编写程序代替手工操作的部分；</li>
+<li> 对重复的部分，使用循环语句进行批量处理。</li>
+<li>可以使用绘制时序图来实现手工操作到Python程序的过渡</li>
+</ul>
+</li>
+</ul>
+<img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC/image.png" class>
+
+
+
+
+
+<h2 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h2><h3 id="Merge-py"><a href="#Merge-py" class="headerlink" title="Merge.py"></a>Merge.py</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">import</span> xlwt</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导入Excel和文件操作库</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定要合并excel的路径</span></span><br><span class="line">src_path = <span class="string">&#x27;D:/Python自动化办公/Day01/调查问卷&#x27;</span></span><br><span class="line"><span class="comment"># 指定合并完成的路径</span></span><br><span class="line">dst_file = <span class="string">&#x27;D:/Python自动化办公/Day01/result/结果.xls&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取得给目录下所有的xlsx格式文件</span></span><br><span class="line">p = Path(src_path)</span><br><span class="line">files = [x <span class="keyword">for</span> x <span class="keyword">in</span> p.iterdir() <span class="keyword">if</span> PurePath(x).match(<span class="string">&#x27;*.xls&#x27;</span>)]</span><br><span class="line">print(files)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 准备列表存放读取结果</span></span><br><span class="line">content = []</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 对每一个文件进行重复处理</span></span><br><span class="line"><span class="keyword">for</span> file <span class="keyword">in</span> files:</span><br><span class="line">    <span class="comment"># 用文件作为每个用户的标识</span></span><br><span class="line">    username = file.stem</span><br><span class="line">    data = xlrd.open_workbook(file)</span><br><span class="line">    table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 取得每一项的结果</span></span><br><span class="line">    answer1 = table.cell_value(rowx=<span class="number">4</span>, colx=<span class="number">4</span>)</span><br><span class="line">    answer2 = table.cell_value(rowx=<span class="number">10</span>, colx=<span class="number">4</span>)</span><br><span class="line">    temp = <span class="string">f&#x27;<span class="subst">&#123;username&#125;</span>,<span class="subst">&#123;answer1&#125;</span>,<span class="subst">&#123;answer2&#125;</span>&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 合并为一行存储</span></span><br><span class="line">    content.append(temp.split(<span class="string">&#x27;,&#x27;</span>))</span><br><span class="line">    print(<span class="string">&quot;你好&quot;</span>)</span><br><span class="line">    print(temp)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 准备写入文件的表头</span></span><br><span class="line">table_header = [<span class="string">&#x27;员工姓名&#x27;</span>, <span class="string">&#x27;第一题&#x27;</span>, <span class="string">&#x27;第二题&#x27;</span>]</span><br><span class="line"></span><br><span class="line">workbook = xlwt.Workbook(encoding=<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">x1sheet = workbook.add_sheet(<span class="string">&quot;统计结果&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 写入表头</span></span><br><span class="line">row = <span class="number">0</span></span><br><span class="line">col = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> cell_header <span class="keyword">in</span> table_header:</span><br><span class="line">    x1sheet.write(row, col, cell_header)</span><br><span class="line">    col += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 向下移动一行</span></span><br><span class="line">row += <span class="number">1</span></span><br><span class="line"><span class="comment"># 取出每一行的内容</span></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> content:</span><br><span class="line">    col = <span class="number">0</span></span><br><span class="line">    <span class="comment"># 取出每个单元格内容</span></span><br><span class="line">    <span class="keyword">for</span> cell <span class="keyword">in</span> line:</span><br><span class="line">        <span class="comment"># 写入内容</span></span><br><span class="line">        x1sheet.write(row, col, cell)</span><br><span class="line">        <span class="comment"># 向右移动一个单元格</span></span><br><span class="line">        col += <span class="number">1</span></span><br><span class="line">    <span class="comment"># 向下移动一行</span></span><br><span class="line">    row += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存最终结果</span></span><br><span class="line">workbook.save(dst_file)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="Split-py"><a href="#Split-py" class="headerlink" title="Split.py"></a>Split.py</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">import</span> xlwt</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># 工资单文件</span></span><br><span class="line">salary_file = <span class="string">&#x27;D:/Python自动化办公/Day01/工资单/工资单.xls&#x27;</span></span><br><span class="line"><span class="comment"># 拆分文件保存路径</span></span><br><span class="line">dst_path = <span class="string">&#x27;D:/Python自动化办公/Day01/工资单&#x27;</span></span><br><span class="line"></span><br><span class="line">data = xlrd.open_workbook(salary_file)</span><br><span class="line">table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"><span class="comment"># 取得表头</span></span><br><span class="line">salary_header = table.row_values(rowx=<span class="number">0</span>, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>) </span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义写入文件的函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">write_to_file</span>(<span class="params">filename, cnt</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27; </span></span><br><span class="line"><span class="string">    filename : 写入的文件名</span></span><br><span class="line"><span class="string">    cnt      : 写入的内容</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    workbook = xlwt.Workbook(encoding=<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">    xlsheet = workbook.add_sheet(<span class="string">&quot;本月工资&quot;</span>)</span><br><span class="line"></span><br><span class="line">    row = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> cnt:</span><br><span class="line">        col = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> cell <span class="keyword">in</span> line:</span><br><span class="line">            xlsheet.write(row, col, cell)</span><br><span class="line">            col += <span class="number">1</span></span><br><span class="line">        row += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    workbook.save(PurePath(salary_file).with_name(filename).with_suffix(<span class="string">&#x27;.xls&#x27;</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取得员工数量</span></span><br><span class="line">employee_number = table.nrows</span><br><span class="line"><span class="comment"># 取得每一行,并用第二个单元格作为新的文件名</span></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,employee_number):</span><br><span class="line">    content = table.row_values(rowx=line, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>)</span><br><span class="line">    <span class="comment"># 将表头和员工数量重新组成一个新的文件 </span></span><br><span class="line">    new_content = []</span><br><span class="line">    <span class="comment"># 增加表头到要写入的内容中</span></span><br><span class="line">    new_content.append(salary_header)</span><br><span class="line">    <span class="comment"># 增加员工工资到要写入的内容中</span></span><br><span class="line">    new_content.append(content)</span><br><span class="line">    <span class="comment"># 调用自定义函数write_to_file()写入新的文件</span></span><br><span class="line">    write_to_file(filename = content[<span class="number">1</span>], cnt = new_content)</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="Python与Excel交互模块学习"><a href="#Python与Excel交互模块学习" class="headerlink" title="Python与Excel交互模块学习"></a>Python与Excel交互模块学习</h2>]]></content>
       <categories>
         <category>Python开发</category>
       </categories>
@@ -470,45 +509,6 @@
 
 
 ]]></content>
-      <categories>
-        <category>Python开发</category>
-      </categories>
-      <tags>
-        <tag>Python自动化</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Python自动化办公</title>
-    <url>/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC/</url>
-    <content><![CDATA[<h1 id="任务场景一：拆分与合并–快速的批量处理内容相似的Excel"><a href="#任务场景一：拆分与合并–快速的批量处理内容相似的Excel" class="headerlink" title="任务场景一：拆分与合并–快速的批量处理内容相似的Excel"></a>任务场景一：拆分与合并–快速的批量处理内容相似的Excel</h1><blockquote>
-<p>批量合并</p>
-<p>假设你需要对某些工作内容进行问卷调查，这时你用Excel做了调查问卷模版。 我想你会这样做：先把Excel通过工作群分发给所有员工，再把群里收集到的反馈附件汇总 成一个文件。</p>
-<p>批量拆分</p>
-<p>假设你是公司的财务人员，你需要使用Excel对员工工资进行核算，之后再打印 出来。但是公司要求员工薪水保密，所以每个员工的工资需要拆分成一个独立的文件，最 后还需要打印出来。</p>
-</blockquote>
-<ul>
-<li>解决方案：使用Python实现自动化批量处理。<ul>
-<li>安装扩展库：支持Excel读取的扩展库叫做xlrd库，支持Excel写入的扩展库叫做xlwt库</li>
-<li>找到整个工作过程当中重复操作的部分；</li>
-<li> 将重复操作的部分需要哪些手工操作找出来，使用Python编写程序代替手工操作的部分；</li>
-<li> 对重复的部分，使用循环语句进行批量处理。</li>
-<li>可以使用绘制时序图来实现手工操作到Python程序的过渡</li>
-</ul>
-</li>
-</ul>
-<img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC/image.png" class>
-
-
-
-
-
-<h2 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h2><h3 id="Merge-py"><a href="#Merge-py" class="headerlink" title="Merge.py"></a>Merge.py</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">import</span> xlwt</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导入Excel和文件操作库</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定要合并excel的路径</span></span><br><span class="line">src_path = <span class="string">&#x27;D:/Python自动化办公/Day01/调查问卷&#x27;</span></span><br><span class="line"><span class="comment"># 指定合并完成的路径</span></span><br><span class="line">dst_file = <span class="string">&#x27;D:/Python自动化办公/Day01/result/结果.xls&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取得给目录下所有的xlsx格式文件</span></span><br><span class="line">p = Path(src_path)</span><br><span class="line">files = [x <span class="keyword">for</span> x <span class="keyword">in</span> p.iterdir() <span class="keyword">if</span> PurePath(x).match(<span class="string">&#x27;*.xls&#x27;</span>)]</span><br><span class="line">print(files)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 准备列表存放读取结果</span></span><br><span class="line">content = []</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 对每一个文件进行重复处理</span></span><br><span class="line"><span class="keyword">for</span> file <span class="keyword">in</span> files:</span><br><span class="line">    <span class="comment"># 用文件作为每个用户的标识</span></span><br><span class="line">    username = file.stem</span><br><span class="line">    data = xlrd.open_workbook(file)</span><br><span class="line">    table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 取得每一项的结果</span></span><br><span class="line">    answer1 = table.cell_value(rowx=<span class="number">4</span>, colx=<span class="number">4</span>)</span><br><span class="line">    answer2 = table.cell_value(rowx=<span class="number">10</span>, colx=<span class="number">4</span>)</span><br><span class="line">    temp = <span class="string">f&#x27;<span class="subst">&#123;username&#125;</span>,<span class="subst">&#123;answer1&#125;</span>,<span class="subst">&#123;answer2&#125;</span>&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 合并为一行存储</span></span><br><span class="line">    content.append(temp.split(<span class="string">&#x27;,&#x27;</span>))</span><br><span class="line">    print(<span class="string">&quot;你好&quot;</span>)</span><br><span class="line">    print(temp)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 准备写入文件的表头</span></span><br><span class="line">table_header = [<span class="string">&#x27;员工姓名&#x27;</span>, <span class="string">&#x27;第一题&#x27;</span>, <span class="string">&#x27;第二题&#x27;</span>]</span><br><span class="line"></span><br><span class="line">workbook = xlwt.Workbook(encoding=<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">x1sheet = workbook.add_sheet(<span class="string">&quot;统计结果&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 写入表头</span></span><br><span class="line">row = <span class="number">0</span></span><br><span class="line">col = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> cell_header <span class="keyword">in</span> table_header:</span><br><span class="line">    x1sheet.write(row, col, cell_header)</span><br><span class="line">    col += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 向下移动一行</span></span><br><span class="line">row += <span class="number">1</span></span><br><span class="line"><span class="comment"># 取出每一行的内容</span></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> content:</span><br><span class="line">    col = <span class="number">0</span></span><br><span class="line">    <span class="comment"># 取出每个单元格内容</span></span><br><span class="line">    <span class="keyword">for</span> cell <span class="keyword">in</span> line:</span><br><span class="line">        <span class="comment"># 写入内容</span></span><br><span class="line">        x1sheet.write(row, col, cell)</span><br><span class="line">        <span class="comment"># 向右移动一个单元格</span></span><br><span class="line">        col += <span class="number">1</span></span><br><span class="line">    <span class="comment"># 向下移动一行</span></span><br><span class="line">    row += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存最终结果</span></span><br><span class="line">workbook.save(dst_file)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="Split-py"><a href="#Split-py" class="headerlink" title="Split.py"></a>Split.py</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">import</span> xlwt</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># 工资单文件</span></span><br><span class="line">salary_file = <span class="string">&#x27;D:/Python自动化办公/Day01/工资单/工资单.xls&#x27;</span></span><br><span class="line"><span class="comment"># 拆分文件保存路径</span></span><br><span class="line">dst_path = <span class="string">&#x27;D:/Python自动化办公/Day01/工资单&#x27;</span></span><br><span class="line"></span><br><span class="line">data = xlrd.open_workbook(salary_file)</span><br><span class="line">table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"><span class="comment"># 取得表头</span></span><br><span class="line">salary_header = table.row_values(rowx=<span class="number">0</span>, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>) </span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义写入文件的函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">write_to_file</span>(<span class="params">filename, cnt</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27; </span></span><br><span class="line"><span class="string">    filename : 写入的文件名</span></span><br><span class="line"><span class="string">    cnt      : 写入的内容</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    workbook = xlwt.Workbook(encoding=<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">    xlsheet = workbook.add_sheet(<span class="string">&quot;本月工资&quot;</span>)</span><br><span class="line"></span><br><span class="line">    row = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> cnt:</span><br><span class="line">        col = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> cell <span class="keyword">in</span> line:</span><br><span class="line">            xlsheet.write(row, col, cell)</span><br><span class="line">            col += <span class="number">1</span></span><br><span class="line">        row += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    workbook.save(PurePath(salary_file).with_name(filename).with_suffix(<span class="string">&#x27;.xls&#x27;</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取得员工数量</span></span><br><span class="line">employee_number = table.nrows</span><br><span class="line"><span class="comment"># 取得每一行,并用第二个单元格作为新的文件名</span></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,employee_number):</span><br><span class="line">    content = table.row_values(rowx=line, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>)</span><br><span class="line">    <span class="comment"># 将表头和员工数量重新组成一个新的文件 </span></span><br><span class="line">    new_content = []</span><br><span class="line">    <span class="comment"># 增加表头到要写入的内容中</span></span><br><span class="line">    new_content.append(salary_header)</span><br><span class="line">    <span class="comment"># 增加员工工资到要写入的内容中</span></span><br><span class="line">    new_content.append(content)</span><br><span class="line">    <span class="comment"># 调用自定义函数write_to_file()写入新的文件</span></span><br><span class="line">    write_to_file(filename = content[<span class="number">1</span>], cnt = new_content)</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="Python与Excel交互模块学习"><a href="#Python与Excel交互模块学习" class="headerlink" title="Python与Excel交互模块学习"></a>Python与Excel交互模块学习</h2>]]></content>
       <categories>
         <category>Python开发</category>
       </categories>
