@@ -82,58 +82,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Python自动化办公--Word</title>
-    <url>/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/</url>
-    <content><![CDATA[<h1 id><a href="#" class="headerlink" title></a></h1><h1 id="Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）"><a href="#Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）" class="headerlink" title="Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）"></a>Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）</h1><p>在Word文件中，不但有文字内容，还有加粗、红色等格式，而且这些特殊的格式和文字内容是混合在一起的，但如果用Python来读取Word文件，这段文字会被分为纯文字、段落、字体、字号以及表格 等更具体的部分，而且每一个部分都对应着<strong>Python的变量和函数。</strong></p>
-<p>用Python读取文件时，你需要记住很多个Python变量和函数。当然了，针对这一点， 你也不用担心，这些变量和函数在Python的Word扩展库<a href="https://python-docx.readthedocs.io/en/latest/#"><strong><em>官方文档</em></strong></a>可以查看。所以如果你需 要某个功能，但是不知道应该用什么变量和函数名称时，可以在官方文档中找到它的名字和 描述信息。</p>
-<h3 id="用Python自动合并两个Word文件"><a href="#用Python自动合并两个Word文件" class="headerlink" title="用Python自动合并两个Word文件"></a>用Python自动合并两个Word文件</h3><ul>
-<li><p>文件一（内容包含字体、字号、颜色等额外信息）：</p>
- <img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/image.png" class>
-</li>
-<li><p>文件二（内容文字出现在表格中）:</p>
- <img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/image01.png" class>
-
-</li>
-</ul>
-<blockquote>
-<p>第一个文件中，字体使用了黑体和宋体字，此外还有红色字体和加粗等格式。现在我需要 只提取其中的文字内容，不带任何格式。 </p>
-<p>第二个文件中，文字被放在了一张表格里。现在我需要用Python把表格中的文字提取出 来，合并成一个新的文件。</p>
-</blockquote>
-<h4 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"> <span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mrge_without_format</span>(<span class="params">docfiles:<span class="built_in">list</span></span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    只获取内容进行合并</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment">#遍历文件</span></span><br><span class="line">    <span class="keyword">for</span> docx_file <span class="keyword">in</span> <span class="built_in">sorted</span>(docfiles):</span><br><span class="line">        another_doc = Document(docx_file)</span><br><span class="line">        <span class="comment"># 获取每个文件的的所有段落</span></span><br><span class="line">        paras = another_doc.paragraphs</span><br><span class="line">        <span class="keyword">for</span> para <span class="keyword">in</span> paras:</span><br><span class="line">            <span class="comment"># 为新的word文件创建一个新段落</span></span><br><span class="line">            newpar = doc.add_paragraph(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">            <span class="comment">#将提取的内容写入新的文本段落中</span></span><br><span class="line">            newpar.add_run(para.text)</span><br><span class="line"></span><br><span class="line">        <span class="comment">#所有文件合并完成后在指定路径中保存</span></span><br><span class="line">        doc.save(Path(word_files_path,<span class="string">&#x27;new.docx&#x27;</span>))</span><br><span class="line"></span><br><span class="line">    <span class="comment">#调用函数</span></span><br><span class="line">    merge-mrge_without_format(files)</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="用Python合并Word和其他类型的文件"><a href="#用Python合并Word和其他类型的文件" class="headerlink" title="用Python合并Word和其他类型的文件"></a>用Python合并Word和其他类型的文件</h3><p>相较于其他文件，Word文件支持的格式丰富程度远远高于Txt文件等，所以当这两种格式丰富程度不一致的文件进行合并时，要么向下兼容，去掉Txt不支持的格式；要 么向上兼容，对Txt进行格式再调整。否则容易出现合并之后仍需要手动调整格式的问题，影 响工作效率。</p>
-<h4 id="将纯文本和Word文件合并"><a href="#将纯文本和Word文件合并" class="headerlink" title="将纯文本和Word文件合并"></a>将纯文本和Word文件合并</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx.shared <span class="keyword">import</span> RGBColor</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># word文件所在路径</span></span><br><span class="line">word_files_path = <span class="string">&#x27;D:/Python自动化办公/Day02/word样例文件&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># # 取得该目录下所有的docx格式文件</span></span><br><span class="line"><span class="comment"># p = Path(word_files_path)</span></span><br><span class="line"></span><br><span class="line">my_content = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">野老篱边江岸回，柴门不正逐江开。</span></span><br><span class="line"><span class="string">渔人网集澄潭下，贾客船随返照来。</span></span><br><span class="line"><span class="string">长路关心悲剑阁，片云何意傍琴台？</span></span><br><span class="line"><span class="string">王师未报收东郡，城阙秋生画角哀。</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add_content_mode1</span>(<span class="params">content</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    增加内容</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    print(doc)</span><br><span class="line">    para = doc.add_paragraph().add_run(content)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 设置字体格式</span></span><br><span class="line">    para.font.name = <span class="string">&#x27;仿宋&#x27;</span></span><br><span class="line">    <span class="comment"># 设置下划线</span></span><br><span class="line">    para.font.underline = <span class="literal">True</span></span><br><span class="line">    <span class="comment"># 设置颜色</span></span><br><span class="line">    para.font.color.rgb = RGBColor(<span class="number">255</span>, <span class="number">128</span>, <span class="number">128</span>)</span><br><span class="line">    <span class="comment"># 其他设置参考官方文档</span></span><br><span class="line">    <span class="comment"># https://python-docx.readthedocs.io/en/latest/api/text.html#run-objects</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">doc = Document()</span><br><span class="line">add_content_mode1(my_content)</span><br><span class="line">doc.save(Path(word_files_path, <span class="string">&#x27;new2.docx&#x27;</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<h4 id="将图片和Word文件合并"><a href="#将图片和Word文件合并" class="headerlink" title="将图片和Word文件合并"></a>将图片和Word文件合并</h4><p>我们经常见到的图片格式就有.jpg、.png、.gif等，由于这些格式应用范围广，格式 没有被商业软件加密，所以python-docx库的add_picture函数就能实现把图片插入Word的 功能。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> shared</span><br><span class="line"></span><br><span class="line">doc = Document()</span><br><span class="line"><span class="comment"># 按英寸设置宽度，添加图片</span></span><br><span class="line">doc_add_picture(<span class="string">&#x27;test.jpg&#x27;</span>,width=shared.Inches(<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="将Execl和Word文件合并"><a href="#将Execl和Word文件合并" class="headerlink" title="将Execl和Word文件合并"></a>将Execl和Word文件合并</h4><ul>
-<li><p>使用Python制作邀请函</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line">today=datetime.date.today().strftime(<span class="string">&#x27;%Y-%m-%d&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户信息文件</span></span><br><span class="line">customer = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/客户信息.xlsx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 邀请函模版</span></span><br><span class="line">invitation = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/邀请函模版.docx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 邀请函路径</span></span><br><span class="line">invitation_path = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 替换内容</span></span><br><span class="line">replace_content = &#123;</span><br><span class="line">    <span class="string">&#x27;&lt;姓名&gt;&#x27;</span> : <span class="string">&#x27;no_name&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&lt;性别&gt;&#x27;</span> : <span class="string">&#x27;m_f&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&lt;今天日期&gt;&#x27;</span> : today</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generat_invitation</span>():</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    生成邀请函文件</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    doc = Document(invitation)</span><br><span class="line">    <span class="comment"># 取出每一段</span></span><br><span class="line">    <span class="keyword">for</span> para <span class="keyword">in</span> doc.paragraphs:</span><br><span class="line">        <span class="keyword">for</span> key, value <span class="keyword">in</span> replace_content.items():</span><br><span class="line">            <span class="keyword">if</span> key <span class="keyword">in</span> para.text:</span><br><span class="line">                <span class="comment"># 逐个关键字进行替换</span></span><br><span class="line">                para.text = para.text.replace(key, value)</span><br><span class="line"></span><br><span class="line">    file_name = PurePath(invitation_path).with_name(replace_content[<span class="string">&#x27;&lt;姓名&gt;&#x27;</span>]).with_suffix(<span class="string">&#x27;.docx&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    doc.save(file_name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_customer</span>(<span class="params">customer_file: Path</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    获取邀请函信息</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment"># 从第一个sheet中取出客户信息</span></span><br><span class="line">    data = xlrd.open_workbook(customer_file)</span><br><span class="line">    table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 取得客户数量</span></span><br><span class="line">    customer_number = table.nrows</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, customer_number):</span><br><span class="line">        content = table.row_values(rowx=line, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>)</span><br><span class="line">        replace_content[<span class="string">&#x27;&lt;姓名&gt;&#x27;</span>] = content[<span class="number">0</span>]</span><br><span class="line">        replace_content[<span class="string">&#x27;&lt;性别&gt;&#x27;</span>] = content[<span class="number">1</span>]</span><br><span class="line">        <span class="comment"># print(replace_content)</span></span><br><span class="line">        <span class="comment"># &#123;&#x27;&lt;姓名&gt;&#x27;: &#x27;韩梅梅&#x27;, &#x27;&lt;性别&gt;&#x27;: &#x27;女士&#x27;, &#x27;&lt;今天日期&gt;&#x27;: &#x27;2021-01-01&#x27;&#125;</span></span><br><span class="line">        <span class="comment"># &#123;&#x27;&lt;姓名&gt;&#x27;: &#x27;李雷&#x27;, &#x27;&lt;性别&gt;&#x27;: &#x27;先生&#x27;, &#x27;&lt;今天日期&gt;&#x27;: &#x27;2021-01-01&#x27;&#125;</span></span><br><span class="line">        generat_invitation()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    get_customer(customer)</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在对不同类型文件进行合并时，要考虑不同的问题</p>
-<blockquote>
-<ol>
-<li>对于支持格式丰富不同的文件时要考虑格式的兼容性；</li>
-<li>  对于图片、音乐、视频和Word合并时要考虑是否是受到word支持的通用格式；</li>
-<li>  对于像Excel格式于Word合并时能实现更复杂的功能，代码的复杂程度也会随之提高，一 般需要先分析功能，再进行代码编写。</li>
-</ol>
-</blockquote>
-]]></content>
-      <categories>
-        <category>Python开发</category>
-      </categories>
-      <tags>
-        <tag>Python自动化</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>LVS负载均衡</title>
     <url>/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</url>
     <content><![CDATA[<blockquote>
@@ -259,6 +207,58 @@
       </categories>
       <tags>
         <tag>负载均衡</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Python自动化办公--Word</title>
+    <url>/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/</url>
+    <content><![CDATA[<h1 id><a href="#" class="headerlink" title></a></h1><h1 id="Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）"><a href="#Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）" class="headerlink" title="Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）"></a>Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）</h1><p>在Word文件中，不但有文字内容，还有加粗、红色等格式，而且这些特殊的格式和文字内容是混合在一起的，但如果用Python来读取Word文件，这段文字会被分为纯文字、段落、字体、字号以及表格 等更具体的部分，而且每一个部分都对应着<strong>Python的变量和函数。</strong></p>
+<p>用Python读取文件时，你需要记住很多个Python变量和函数。当然了，针对这一点， 你也不用担心，这些变量和函数在Python的Word扩展库<a href="https://python-docx.readthedocs.io/en/latest/#"><strong><em>官方文档</em></strong></a>可以查看。所以如果你需 要某个功能，但是不知道应该用什么变量和函数名称时，可以在官方文档中找到它的名字和 描述信息。</p>
+<h3 id="用Python自动合并两个Word文件"><a href="#用Python自动合并两个Word文件" class="headerlink" title="用Python自动合并两个Word文件"></a>用Python自动合并两个Word文件</h3><ul>
+<li><p>文件一（内容包含字体、字号、颜色等额外信息）：</p>
+ <img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/image.png" class>
+</li>
+<li><p>文件二（内容文字出现在表格中）:</p>
+ <img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/image01.png" class>
+
+</li>
+</ul>
+<blockquote>
+<p>第一个文件中，字体使用了黑体和宋体字，此外还有红色字体和加粗等格式。现在我需要 只提取其中的文字内容，不带任何格式。 </p>
+<p>第二个文件中，文字被放在了一张表格里。现在我需要用Python把表格中的文字提取出 来，合并成一个新的文件。</p>
+</blockquote>
+<h4 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"> <span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mrge_without_format</span>(<span class="params">docfiles:<span class="built_in">list</span></span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    只获取内容进行合并</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment">#遍历文件</span></span><br><span class="line">    <span class="keyword">for</span> docx_file <span class="keyword">in</span> <span class="built_in">sorted</span>(docfiles):</span><br><span class="line">        another_doc = Document(docx_file)</span><br><span class="line">        <span class="comment"># 获取每个文件的的所有段落</span></span><br><span class="line">        paras = another_doc.paragraphs</span><br><span class="line">        <span class="keyword">for</span> para <span class="keyword">in</span> paras:</span><br><span class="line">            <span class="comment"># 为新的word文件创建一个新段落</span></span><br><span class="line">            newpar = doc.add_paragraph(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">            <span class="comment">#将提取的内容写入新的文本段落中</span></span><br><span class="line">            newpar.add_run(para.text)</span><br><span class="line"></span><br><span class="line">        <span class="comment">#所有文件合并完成后在指定路径中保存</span></span><br><span class="line">        doc.save(Path(word_files_path,<span class="string">&#x27;new.docx&#x27;</span>))</span><br><span class="line"></span><br><span class="line">    <span class="comment">#调用函数</span></span><br><span class="line">    merge-mrge_without_format(files)</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="用Python合并Word和其他类型的文件"><a href="#用Python合并Word和其他类型的文件" class="headerlink" title="用Python合并Word和其他类型的文件"></a>用Python合并Word和其他类型的文件</h3><p>相较于其他文件，Word文件支持的格式丰富程度远远高于Txt文件等，所以当这两种格式丰富程度不一致的文件进行合并时，要么向下兼容，去掉Txt不支持的格式；要 么向上兼容，对Txt进行格式再调整。否则容易出现合并之后仍需要手动调整格式的问题，影 响工作效率。</p>
+<h4 id="将纯文本和Word文件合并"><a href="#将纯文本和Word文件合并" class="headerlink" title="将纯文本和Word文件合并"></a>将纯文本和Word文件合并</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx.shared <span class="keyword">import</span> RGBColor</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># word文件所在路径</span></span><br><span class="line">word_files_path = <span class="string">&#x27;D:/Python自动化办公/Day02/word样例文件&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># # 取得该目录下所有的docx格式文件</span></span><br><span class="line"><span class="comment"># p = Path(word_files_path)</span></span><br><span class="line"></span><br><span class="line">my_content = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">野老篱边江岸回，柴门不正逐江开。</span></span><br><span class="line"><span class="string">渔人网集澄潭下，贾客船随返照来。</span></span><br><span class="line"><span class="string">长路关心悲剑阁，片云何意傍琴台？</span></span><br><span class="line"><span class="string">王师未报收东郡，城阙秋生画角哀。</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add_content_mode1</span>(<span class="params">content</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    增加内容</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    print(doc)</span><br><span class="line">    para = doc.add_paragraph().add_run(content)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 设置字体格式</span></span><br><span class="line">    para.font.name = <span class="string">&#x27;仿宋&#x27;</span></span><br><span class="line">    <span class="comment"># 设置下划线</span></span><br><span class="line">    para.font.underline = <span class="literal">True</span></span><br><span class="line">    <span class="comment"># 设置颜色</span></span><br><span class="line">    para.font.color.rgb = RGBColor(<span class="number">255</span>, <span class="number">128</span>, <span class="number">128</span>)</span><br><span class="line">    <span class="comment"># 其他设置参考官方文档</span></span><br><span class="line">    <span class="comment"># https://python-docx.readthedocs.io/en/latest/api/text.html#run-objects</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">doc = Document()</span><br><span class="line">add_content_mode1(my_content)</span><br><span class="line">doc.save(Path(word_files_path, <span class="string">&#x27;new2.docx&#x27;</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="将图片和Word文件合并"><a href="#将图片和Word文件合并" class="headerlink" title="将图片和Word文件合并"></a>将图片和Word文件合并</h4><p>我们经常见到的图片格式就有.jpg、.png、.gif等，由于这些格式应用范围广，格式 没有被商业软件加密，所以python-docx库的add_picture函数就能实现把图片插入Word的 功能。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> shared</span><br><span class="line"></span><br><span class="line">doc = Document()</span><br><span class="line"><span class="comment"># 按英寸设置宽度，添加图片</span></span><br><span class="line">doc_add_picture(<span class="string">&#x27;test.jpg&#x27;</span>,width=shared.Inches(<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="将Execl和Word文件合并"><a href="#将Execl和Word文件合并" class="headerlink" title="将Execl和Word文件合并"></a>将Execl和Word文件合并</h4><ul>
+<li><p>使用Python制作邀请函</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line">today=datetime.date.today().strftime(<span class="string">&#x27;%Y-%m-%d&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户信息文件</span></span><br><span class="line">customer = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/客户信息.xlsx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 邀请函模版</span></span><br><span class="line">invitation = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/邀请函模版.docx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 邀请函路径</span></span><br><span class="line">invitation_path = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 替换内容</span></span><br><span class="line">replace_content = &#123;</span><br><span class="line">    <span class="string">&#x27;&lt;姓名&gt;&#x27;</span> : <span class="string">&#x27;no_name&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&lt;性别&gt;&#x27;</span> : <span class="string">&#x27;m_f&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&lt;今天日期&gt;&#x27;</span> : today</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generat_invitation</span>():</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    生成邀请函文件</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    doc = Document(invitation)</span><br><span class="line">    <span class="comment"># 取出每一段</span></span><br><span class="line">    <span class="keyword">for</span> para <span class="keyword">in</span> doc.paragraphs:</span><br><span class="line">        <span class="keyword">for</span> key, value <span class="keyword">in</span> replace_content.items():</span><br><span class="line">            <span class="keyword">if</span> key <span class="keyword">in</span> para.text:</span><br><span class="line">                <span class="comment"># 逐个关键字进行替换</span></span><br><span class="line">                para.text = para.text.replace(key, value)</span><br><span class="line"></span><br><span class="line">    file_name = PurePath(invitation_path).with_name(replace_content[<span class="string">&#x27;&lt;姓名&gt;&#x27;</span>]).with_suffix(<span class="string">&#x27;.docx&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    doc.save(file_name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_customer</span>(<span class="params">customer_file: Path</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    获取邀请函信息</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment"># 从第一个sheet中取出客户信息</span></span><br><span class="line">    data = xlrd.open_workbook(customer_file)</span><br><span class="line">    table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 取得客户数量</span></span><br><span class="line">    customer_number = table.nrows</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, customer_number):</span><br><span class="line">        content = table.row_values(rowx=line, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>)</span><br><span class="line">        replace_content[<span class="string">&#x27;&lt;姓名&gt;&#x27;</span>] = content[<span class="number">0</span>]</span><br><span class="line">        replace_content[<span class="string">&#x27;&lt;性别&gt;&#x27;</span>] = content[<span class="number">1</span>]</span><br><span class="line">        <span class="comment"># print(replace_content)</span></span><br><span class="line">        <span class="comment"># &#123;&#x27;&lt;姓名&gt;&#x27;: &#x27;韩梅梅&#x27;, &#x27;&lt;性别&gt;&#x27;: &#x27;女士&#x27;, &#x27;&lt;今天日期&gt;&#x27;: &#x27;2021-01-01&#x27;&#125;</span></span><br><span class="line">        <span class="comment"># &#123;&#x27;&lt;姓名&gt;&#x27;: &#x27;李雷&#x27;, &#x27;&lt;性别&gt;&#x27;: &#x27;先生&#x27;, &#x27;&lt;今天日期&gt;&#x27;: &#x27;2021-01-01&#x27;&#125;</span></span><br><span class="line">        generat_invitation()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    get_customer(customer)</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在对不同类型文件进行合并时，要考虑不同的问题</p>
+<blockquote>
+<ol>
+<li>对于支持格式丰富不同的文件时要考虑格式的兼容性；</li>
+<li>  对于图片、音乐、视频和Word合并时要考虑是否是受到word支持的通用格式；</li>
+<li>  对于像Excel格式于Word合并时能实现更复杂的功能，代码的复杂程度也会随之提高，一 般需要先分析功能，再进行代码编写。</li>
+</ol>
+</blockquote>
+]]></content>
+      <categories>
+        <category>Python开发</category>
+      </categories>
+      <tags>
+        <tag>Python自动化</tag>
       </tags>
   </entry>
   <entry>
@@ -394,45 +394,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Python自动化办公</title>
-    <url>/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC/</url>
-    <content><![CDATA[<h1 id="任务场景一：拆分与合并–快速的批量处理内容相似的Excel"><a href="#任务场景一：拆分与合并–快速的批量处理内容相似的Excel" class="headerlink" title="任务场景一：拆分与合并–快速的批量处理内容相似的Excel"></a>任务场景一：拆分与合并–快速的批量处理内容相似的Excel</h1><blockquote>
-<p>批量合并</p>
-<p>假设你需要对某些工作内容进行问卷调查，这时你用Excel做了调查问卷模版。 我想你会这样做：先把Excel通过工作群分发给所有员工，再把群里收集到的反馈附件汇总 成一个文件。</p>
-<p>批量拆分</p>
-<p>假设你是公司的财务人员，你需要使用Excel对员工工资进行核算，之后再打印 出来。但是公司要求员工薪水保密，所以每个员工的工资需要拆分成一个独立的文件，最 后还需要打印出来。</p>
-</blockquote>
-<ul>
-<li>解决方案：使用Python实现自动化批量处理。<ul>
-<li>安装扩展库：支持Excel读取的扩展库叫做xlrd库，支持Excel写入的扩展库叫做xlwt库</li>
-<li>找到整个工作过程当中重复操作的部分；</li>
-<li> 将重复操作的部分需要哪些手工操作找出来，使用Python编写程序代替手工操作的部分；</li>
-<li> 对重复的部分，使用循环语句进行批量处理。</li>
-<li>可以使用绘制时序图来实现手工操作到Python程序的过渡</li>
-</ul>
-</li>
-</ul>
-<img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC/image.png" class>
-
-
-
-
-
-<h2 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h2><h3 id="Merge-py"><a href="#Merge-py" class="headerlink" title="Merge.py"></a>Merge.py</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">import</span> xlwt</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导入Excel和文件操作库</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定要合并excel的路径</span></span><br><span class="line">src_path = <span class="string">&#x27;D:/Python自动化办公/Day01/调查问卷&#x27;</span></span><br><span class="line"><span class="comment"># 指定合并完成的路径</span></span><br><span class="line">dst_file = <span class="string">&#x27;D:/Python自动化办公/Day01/result/结果.xls&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取得给目录下所有的xlsx格式文件</span></span><br><span class="line">p = Path(src_path)</span><br><span class="line">files = [x <span class="keyword">for</span> x <span class="keyword">in</span> p.iterdir() <span class="keyword">if</span> PurePath(x).match(<span class="string">&#x27;*.xls&#x27;</span>)]</span><br><span class="line">print(files)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 准备列表存放读取结果</span></span><br><span class="line">content = []</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 对每一个文件进行重复处理</span></span><br><span class="line"><span class="keyword">for</span> file <span class="keyword">in</span> files:</span><br><span class="line">    <span class="comment"># 用文件作为每个用户的标识</span></span><br><span class="line">    username = file.stem</span><br><span class="line">    data = xlrd.open_workbook(file)</span><br><span class="line">    table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 取得每一项的结果</span></span><br><span class="line">    answer1 = table.cell_value(rowx=<span class="number">4</span>, colx=<span class="number">4</span>)</span><br><span class="line">    answer2 = table.cell_value(rowx=<span class="number">10</span>, colx=<span class="number">4</span>)</span><br><span class="line">    temp = <span class="string">f&#x27;<span class="subst">&#123;username&#125;</span>,<span class="subst">&#123;answer1&#125;</span>,<span class="subst">&#123;answer2&#125;</span>&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 合并为一行存储</span></span><br><span class="line">    content.append(temp.split(<span class="string">&#x27;,&#x27;</span>))</span><br><span class="line">    print(<span class="string">&quot;你好&quot;</span>)</span><br><span class="line">    print(temp)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 准备写入文件的表头</span></span><br><span class="line">table_header = [<span class="string">&#x27;员工姓名&#x27;</span>, <span class="string">&#x27;第一题&#x27;</span>, <span class="string">&#x27;第二题&#x27;</span>]</span><br><span class="line"></span><br><span class="line">workbook = xlwt.Workbook(encoding=<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">x1sheet = workbook.add_sheet(<span class="string">&quot;统计结果&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 写入表头</span></span><br><span class="line">row = <span class="number">0</span></span><br><span class="line">col = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> cell_header <span class="keyword">in</span> table_header:</span><br><span class="line">    x1sheet.write(row, col, cell_header)</span><br><span class="line">    col += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 向下移动一行</span></span><br><span class="line">row += <span class="number">1</span></span><br><span class="line"><span class="comment"># 取出每一行的内容</span></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> content:</span><br><span class="line">    col = <span class="number">0</span></span><br><span class="line">    <span class="comment"># 取出每个单元格内容</span></span><br><span class="line">    <span class="keyword">for</span> cell <span class="keyword">in</span> line:</span><br><span class="line">        <span class="comment"># 写入内容</span></span><br><span class="line">        x1sheet.write(row, col, cell)</span><br><span class="line">        <span class="comment"># 向右移动一个单元格</span></span><br><span class="line">        col += <span class="number">1</span></span><br><span class="line">    <span class="comment"># 向下移动一行</span></span><br><span class="line">    row += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存最终结果</span></span><br><span class="line">workbook.save(dst_file)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="Split-py"><a href="#Split-py" class="headerlink" title="Split.py"></a>Split.py</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">import</span> xlwt</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># 工资单文件</span></span><br><span class="line">salary_file = <span class="string">&#x27;D:/Python自动化办公/Day01/工资单/工资单.xls&#x27;</span></span><br><span class="line"><span class="comment"># 拆分文件保存路径</span></span><br><span class="line">dst_path = <span class="string">&#x27;D:/Python自动化办公/Day01/工资单&#x27;</span></span><br><span class="line"></span><br><span class="line">data = xlrd.open_workbook(salary_file)</span><br><span class="line">table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"><span class="comment"># 取得表头</span></span><br><span class="line">salary_header = table.row_values(rowx=<span class="number">0</span>, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>) </span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义写入文件的函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">write_to_file</span>(<span class="params">filename, cnt</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27; </span></span><br><span class="line"><span class="string">    filename : 写入的文件名</span></span><br><span class="line"><span class="string">    cnt      : 写入的内容</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    workbook = xlwt.Workbook(encoding=<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">    xlsheet = workbook.add_sheet(<span class="string">&quot;本月工资&quot;</span>)</span><br><span class="line"></span><br><span class="line">    row = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> cnt:</span><br><span class="line">        col = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> cell <span class="keyword">in</span> line:</span><br><span class="line">            xlsheet.write(row, col, cell)</span><br><span class="line">            col += <span class="number">1</span></span><br><span class="line">        row += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    workbook.save(PurePath(salary_file).with_name(filename).with_suffix(<span class="string">&#x27;.xls&#x27;</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取得员工数量</span></span><br><span class="line">employee_number = table.nrows</span><br><span class="line"><span class="comment"># 取得每一行,并用第二个单元格作为新的文件名</span></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,employee_number):</span><br><span class="line">    content = table.row_values(rowx=line, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>)</span><br><span class="line">    <span class="comment"># 将表头和员工数量重新组成一个新的文件 </span></span><br><span class="line">    new_content = []</span><br><span class="line">    <span class="comment"># 增加表头到要写入的内容中</span></span><br><span class="line">    new_content.append(salary_header)</span><br><span class="line">    <span class="comment"># 增加员工工资到要写入的内容中</span></span><br><span class="line">    new_content.append(content)</span><br><span class="line">    <span class="comment"># 调用自定义函数write_to_file()写入新的文件</span></span><br><span class="line">    write_to_file(filename = content[<span class="number">1</span>], cnt = new_content)</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="Python与Excel交互模块学习"><a href="#Python与Excel交互模块学习" class="headerlink" title="Python与Excel交互模块学习"></a>Python与Excel交互模块学习</h2>]]></content>
-      <categories>
-        <category>Python开发</category>
-      </categories>
-      <tags>
-        <tag>Python自动化</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Python自动化办公-长图拼接</title>
     <url>/2022/02/01/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E9%95%BF%E5%9B%BE%E6%8B%BC%E6%8E%A5/</url>
     <content><![CDATA[<h1 id="Python自动化办公–长图拼接"><a href="#Python自动化办公–长图拼接" class="headerlink" title="Python自动化办公–长图拼接"></a>Python自动化办公–长图拼接</h1><h2 id="Python调用外部程序的原理"><a href="#Python调用外部程序的原理" class="headerlink" title="Python调用外部程序的原理"></a>Python调用外部程序的原理</h2><blockquote>
@@ -517,83 +478,42 @@
       </tags>
   </entry>
   <entry>
-    <title>Section1</title>
-    <url>/2022/02/21/Section1/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>中断</title>
-    <url>/2021/02/03/%E4%B8%AD%E6%96%AD/</url>
-    <content><![CDATA[<h3 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h3><p>中断使得硬件得以发出通知给处理器，是一种变内核主动为硬件主动的方式。中断本质上是一种特殊的电信号。硬件在生成中断的时候并不需要考虑与处理器的时钟同步，即中断可以随时产生，<strong>内核随时可能因为新到来的中断而被打断</strong>。</p>
-<img data-src="/2021/02/03/%E4%B8%AD%E6%96%AD/%E4%B8%AD%E6%96%AD1.png" class>
-
-<p>不同的设备对应的中断不同，而每个中断都通过唯一的数字标识，这样，操作系统才能给不同的中断提供对应的中断处理程序。硬件发出中断，就是在提醒内核，有新的请求需要读取并处理。</p>
-<h4 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h4><p>异常与中断不同之处就是在于异常在产生时必须要考虑处理器与时钟同步，所以其经常被称为同步中。</p>
-<p>异常的产生原因：</p>
-<blockquote>
-<p>1.处理器由于执行到编程失误而导致的错误指令（如被0除）</p>
+    <title>Python自动化办公</title>
+    <url>/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC/</url>
+    <content><![CDATA[<h1 id="任务场景一：拆分与合并–快速的批量处理内容相似的Excel"><a href="#任务场景一：拆分与合并–快速的批量处理内容相似的Excel" class="headerlink" title="任务场景一：拆分与合并–快速的批量处理内容相似的Excel"></a>任务场景一：拆分与合并–快速的批量处理内容相似的Excel</h1><blockquote>
+<p>批量合并</p>
+<p>假设你需要对某些工作内容进行问卷调查，这时你用Excel做了调查问卷模版。 我想你会这样做：先把Excel通过工作群分发给所有员工，再把群里收集到的反馈附件汇总 成一个文件。</p>
+<p>批量拆分</p>
+<p>假设你是公司的财务人员，你需要使用Excel对员工工资进行核算，之后再打印 出来。但是公司要求员工薪水保密，所以每个员工的工资需要拆分成一个独立的文件，最 后还需要打印出来。</p>
 </blockquote>
-<blockquote>
-<p>2.执行期间出现特殊情况，例如缺页</p>
-</blockquote>
-<blockquote>
-<p>3.系统调用陷入内核—–引起了系统调用处理程序异常</p>
-</blockquote>
-<p>以上，产生异常，都需要内核处理。</p>
-<h3 id="中断处理程序"><a href="#中断处理程序" class="headerlink" title="中断处理程序"></a>中断处理程序</h3><p>内核通过执行中断处理程序(interrupt handler)来对某一特定的中断进行响应，产生中断的每一个设备都有一个相应的中断处理程序。一个设备的中断处理程序是其设备驱动程序的一部分—–设备驱动程序是<strong>用于对设备进行管理的内核代码</strong>。</p>
-<p>中断处理程序被内核调用，运行于中断上下文，该上下文的执行代码不可阻塞。</p>
-<h3 id="上半部与下半部的对比"><a href="#上半部与下半部的对比" class="headerlink" title="上半部与下半部的对比"></a>上半部与下半部的对比</h3><p>将中断处理分为两个部分。</p>
-<blockquote>
-<p>中断处理程序是上半部分（top half），接收到一个中断会被立即执行，只做有严格时限的工作。</p>
-</blockquote>
-<blockquote>
-<p>能够被允许稍后完成的工作会被推迟到下半部去执行。即处理和操作中断的非即时完成请求会在随后的下半部中执行。</p>
-</blockquote>
-<h3 id><a href="#" class="headerlink" title></a></h3><h3 id="中断上下文"><a href="#中断上下文" class="headerlink" title="中断上下文"></a>中断上下文</h3><p>当执行一个中断处理程序时，内核处于中断上下文中(interrupt context)。</p>
-<p>注意：</p>
 <ul>
-<li>中断上下文没有后备进程，所以其不可以睡眠。如果一个函数要进行睡眠，就不能出现在中断处理程序中。</li>
-<li>中断处理程序实际上打断了其他的代码，这种异步执行的特性，要求所有的中断处理程序必须尽可能的快速、简单。尽量将工作从中断处理程序中分离出来，放在中断下半部执行。</li>
-<li>中断处理程序栈是一个配置选项。在内核早期版本中，中断处理程序是共享别人的堆栈，获取空间时非常节约。后期，中断处理程序有了自己的栈（中断栈），但无论无何，在内核中还是要尽可能的节省空间的使用，因为内核栈本身就是有限的。</li>
-<li><strong>进程上下文是可以睡眠的</strong></li>
+<li>解决方案：使用Python实现自动化批量处理。<ul>
+<li>安装扩展库：支持Excel读取的扩展库叫做xlrd库，支持Excel写入的扩展库叫做xlwt库</li>
+<li>找到整个工作过程当中重复操作的部分；</li>
+<li> 将重复操作的部分需要哪些手工操作找出来，使用Python编写程序代替手工操作的部分；</li>
+<li> 对重复的部分，使用循环语句进行批量处理。</li>
+<li>可以使用绘制时序图来实现手工操作到Python程序的过渡</li>
 </ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>大多数现代硬件都通过中断来与操作系统进行通信。对给定的硬件进行管理的驱动程序注册中断处理程序，是为了响应并处理来自相关硬件的中断。中断过程所作的工作包括应答并重新设置硬件，从设备拷贝数据到内存以及反之，处理硬件请求，并发送新的硬件请求。</p>
-<p>内核提供的接口包括注册和注销中断处理程序、禁止中断、屏蔽中断线以及检查中断系统的状态。</p>
-]]></content>
+</li>
+</ul>
+<img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC/image.png" class>
+
+
+
+
+
+<h2 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h2><h3 id="Merge-py"><a href="#Merge-py" class="headerlink" title="Merge.py"></a>Merge.py</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">import</span> xlwt</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导入Excel和文件操作库</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定要合并excel的路径</span></span><br><span class="line">src_path = <span class="string">&#x27;D:/Python自动化办公/Day01/调查问卷&#x27;</span></span><br><span class="line"><span class="comment"># 指定合并完成的路径</span></span><br><span class="line">dst_file = <span class="string">&#x27;D:/Python自动化办公/Day01/result/结果.xls&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取得给目录下所有的xlsx格式文件</span></span><br><span class="line">p = Path(src_path)</span><br><span class="line">files = [x <span class="keyword">for</span> x <span class="keyword">in</span> p.iterdir() <span class="keyword">if</span> PurePath(x).match(<span class="string">&#x27;*.xls&#x27;</span>)]</span><br><span class="line">print(files)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 准备列表存放读取结果</span></span><br><span class="line">content = []</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 对每一个文件进行重复处理</span></span><br><span class="line"><span class="keyword">for</span> file <span class="keyword">in</span> files:</span><br><span class="line">    <span class="comment"># 用文件作为每个用户的标识</span></span><br><span class="line">    username = file.stem</span><br><span class="line">    data = xlrd.open_workbook(file)</span><br><span class="line">    table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 取得每一项的结果</span></span><br><span class="line">    answer1 = table.cell_value(rowx=<span class="number">4</span>, colx=<span class="number">4</span>)</span><br><span class="line">    answer2 = table.cell_value(rowx=<span class="number">10</span>, colx=<span class="number">4</span>)</span><br><span class="line">    temp = <span class="string">f&#x27;<span class="subst">&#123;username&#125;</span>,<span class="subst">&#123;answer1&#125;</span>,<span class="subst">&#123;answer2&#125;</span>&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 合并为一行存储</span></span><br><span class="line">    content.append(temp.split(<span class="string">&#x27;,&#x27;</span>))</span><br><span class="line">    print(<span class="string">&quot;你好&quot;</span>)</span><br><span class="line">    print(temp)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 准备写入文件的表头</span></span><br><span class="line">table_header = [<span class="string">&#x27;员工姓名&#x27;</span>, <span class="string">&#x27;第一题&#x27;</span>, <span class="string">&#x27;第二题&#x27;</span>]</span><br><span class="line"></span><br><span class="line">workbook = xlwt.Workbook(encoding=<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">x1sheet = workbook.add_sheet(<span class="string">&quot;统计结果&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 写入表头</span></span><br><span class="line">row = <span class="number">0</span></span><br><span class="line">col = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> cell_header <span class="keyword">in</span> table_header:</span><br><span class="line">    x1sheet.write(row, col, cell_header)</span><br><span class="line">    col += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 向下移动一行</span></span><br><span class="line">row += <span class="number">1</span></span><br><span class="line"><span class="comment"># 取出每一行的内容</span></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> content:</span><br><span class="line">    col = <span class="number">0</span></span><br><span class="line">    <span class="comment"># 取出每个单元格内容</span></span><br><span class="line">    <span class="keyword">for</span> cell <span class="keyword">in</span> line:</span><br><span class="line">        <span class="comment"># 写入内容</span></span><br><span class="line">        x1sheet.write(row, col, cell)</span><br><span class="line">        <span class="comment"># 向右移动一个单元格</span></span><br><span class="line">        col += <span class="number">1</span></span><br><span class="line">    <span class="comment"># 向下移动一行</span></span><br><span class="line">    row += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存最终结果</span></span><br><span class="line">workbook.save(dst_file)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="Split-py"><a href="#Split-py" class="headerlink" title="Split.py"></a>Split.py</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">import</span> xlwt</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># 工资单文件</span></span><br><span class="line">salary_file = <span class="string">&#x27;D:/Python自动化办公/Day01/工资单/工资单.xls&#x27;</span></span><br><span class="line"><span class="comment"># 拆分文件保存路径</span></span><br><span class="line">dst_path = <span class="string">&#x27;D:/Python自动化办公/Day01/工资单&#x27;</span></span><br><span class="line"></span><br><span class="line">data = xlrd.open_workbook(salary_file)</span><br><span class="line">table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"><span class="comment"># 取得表头</span></span><br><span class="line">salary_header = table.row_values(rowx=<span class="number">0</span>, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>) </span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义写入文件的函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">write_to_file</span>(<span class="params">filename, cnt</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27; </span></span><br><span class="line"><span class="string">    filename : 写入的文件名</span></span><br><span class="line"><span class="string">    cnt      : 写入的内容</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    workbook = xlwt.Workbook(encoding=<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">    xlsheet = workbook.add_sheet(<span class="string">&quot;本月工资&quot;</span>)</span><br><span class="line"></span><br><span class="line">    row = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> cnt:</span><br><span class="line">        col = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> cell <span class="keyword">in</span> line:</span><br><span class="line">            xlsheet.write(row, col, cell)</span><br><span class="line">            col += <span class="number">1</span></span><br><span class="line">        row += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    workbook.save(PurePath(salary_file).with_name(filename).with_suffix(<span class="string">&#x27;.xls&#x27;</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取得员工数量</span></span><br><span class="line">employee_number = table.nrows</span><br><span class="line"><span class="comment"># 取得每一行,并用第二个单元格作为新的文件名</span></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,employee_number):</span><br><span class="line">    content = table.row_values(rowx=line, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>)</span><br><span class="line">    <span class="comment"># 将表头和员工数量重新组成一个新的文件 </span></span><br><span class="line">    new_content = []</span><br><span class="line">    <span class="comment"># 增加表头到要写入的内容中</span></span><br><span class="line">    new_content.append(salary_header)</span><br><span class="line">    <span class="comment"># 增加员工工资到要写入的内容中</span></span><br><span class="line">    new_content.append(content)</span><br><span class="line">    <span class="comment"># 调用自定义函数write_to_file()写入新的文件</span></span><br><span class="line">    write_to_file(filename = content[<span class="number">1</span>], cnt = new_content)</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="Python与Excel交互模块学习"><a href="#Python与Excel交互模块学习" class="headerlink" title="Python与Excel交互模块学习"></a>Python与Excel交互模块学习</h2>]]></content>
       <categories>
-        <category>Linux系统内核相关</category>
+        <category>Python开发</category>
       </categories>
       <tags>
-        <tag>中断</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>创建高性能索引</title>
-    <url>/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/</url>
-    <content><![CDATA[<h1 id="索引基础"><a href="#索引基础" class="headerlink" title="索引基础"></a>索引基础</h1><p>索引（在MySQL中也叫做“键（key）是**<em>存储引擎用于快速找到记录**</em>的一种数据结构。 这是索引的基本功能。在MySQL中，存储引擎用书本目录类似的方法使用索引，其先在索引中找到对应值，然后根据匹配的索引记录找到对应的数据行</p>
-<p>索引可以包含一个或多个列的值。如果索引包含多个列，那么**<em>列的顺序**</em>也十分重要，因为MySQL只能高效地使用索引的<u><strong>最左前缀列</strong></u>。创建一个包含两个列的索引，和创建两个只包含一列的索引是大不相同的，</p>
-<p><img data-src="/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222091253478.png" alt="image-20220222091253478"></p>
-<h2 id="索引的类型"><a href="#索引的类型" class="headerlink" title="索引的类型"></a>索引的类型</h2><p>索引有很多种类型，可以为不同的场景提供更好的性能。在MySQL中，索引是在**<em>存储引擎层**</em>而不是服务器层实现的。所以，并没有统一的索引标准：不同存储引擎的索引的工作方式并不一样，也不是所有的存储引擎都支持所有类型的索引。即使多个存储引擎支持同一种类型的索引，其底层的实现也可能不同。</p>
-<p>MySQL支持的索引类型，以及它们的优点和缺点如下：</p>
-<h3 id="B-Tree索引"><a href="#B-Tree索引" class="headerlink" title="B-Tree索引"></a>B-Tree索引</h3><p>当人们谈论索引的时候，如果没有特别指明类型，那多半说的是B-Tree索引，它使用 B-Tree数据结构来存储数据，大多数MySQL引擎都支持这种索引。</p>
-<blockquote>
-<p>实际上很多存储引擎使用的是**<em>B+Tree**</em>,即每一个叶子节点都包含指向下一个叶子节点的指针，从 而方便叶子节点的范围遍历。</p>
-</blockquote>
-<p>存储引擎以不同的方式使用B-Tree索引，性能也各有不同，各有优劣。例如，MylSAM 使用前缀压缩技术使得索引更小，但InnoDB则按照原数据格式进行存储。再如 MylSAM索引通过数据的物理位置引用被索引的行，而InnoDB则根据主键引用被索引的行。</p>
-<p><img data-src="/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222092648551.png" alt="image-20220222092648551"></p>
-<p>B-Tree索引能够加快访问数据的速度，因为存储引擎不再需要进行全表扫描来获取需要的数据，取而代之的是从索引的根节点（图示并未画出）开始进行搜索。根节点的槽中存放了指向子节点的指针，存储引擎根据这些指针向下层査找。通过比较节点页的值和要査找的值可以找到合适的指针进入下层子节点，这些指针实际上定义了子节点页中值 的上限和下限。最终存储引擎要么是找到对应的值，要么该记录不存在。</p>
-<p>叶子节点比较特别，它们的指针指向的是被索引的数据，而不是其他的节点页（不同引擎的“指针”类型不同）    </p>
-<blockquote>
-<p>B-Tree对索引列是顺序组织存储的，所以很适合査找范围数据。索引对多个值进行排序的依据是CREATE TABLE语句中定义索引时列的顺序。</p>
-</blockquote>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> People(</span><br><span class="line">	last_name <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    first_name <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    dob 	  <span class="type">date</span>         <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    gender    enum(<span class="string">&#x27;m&#x27;</span>,<span class="string">&#x27;f&#x27;</span>) <span class="keyword">not</span> <span class="keyword">null</span>.</span><br><span class="line">    key(last_name,first_name,dob)</span><br><span class="line"> );</span><br></pre></td></tr></table></figure>
-<p><strong><em>B-Tree索引对以下类型的查询有效：</em></strong><br><img data-src="/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222093555561.png" alt="image-20220222093555561"></p>
-]]></content>
-      <categories>
-        <category>MySQL数据库</category>
-      </categories>
-      <tags>
-        <tag>MySQL数据库索引</tag>
+        <tag>Python自动化</tag>
       </tags>
   </entry>
   <entry>
@@ -744,6 +664,91 @@
       </tags>
   </entry>
   <entry>
+    <title>Section1</title>
+    <url>/2022/02/21/Section1/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>创建高性能索引</title>
+    <url>/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/</url>
+    <content><![CDATA[<h1 id="索引基础"><a href="#索引基础" class="headerlink" title="索引基础"></a>索引基础</h1><p>索引（在MySQL中也叫做“键（key）是**<em>存储引擎用于快速找到记录**</em>的一种数据结构。 这是索引的基本功能。在MySQL中，存储引擎用书本目录类似的方法使用索引，其先在索引中找到对应值，然后根据匹配的索引记录找到对应的数据行</p>
+<p>索引可以包含一个或多个列的值。如果索引包含多个列，那么**<em>列的顺序**</em>也十分重要，因为MySQL只能高效地使用索引的<u><strong>最左前缀列</strong></u>。创建一个包含两个列的索引，和创建两个只包含一列的索引是大不相同的，</p>
+<p><img data-src="/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222091253478.png" alt="image-20220222091253478"></p>
+<h2 id="索引的类型"><a href="#索引的类型" class="headerlink" title="索引的类型"></a>索引的类型</h2><p>索引有很多种类型，可以为不同的场景提供更好的性能。在MySQL中，索引是在**<em>存储引擎层**</em>而不是服务器层实现的。所以，并没有统一的索引标准：不同存储引擎的索引的工作方式并不一样，也不是所有的存储引擎都支持所有类型的索引。即使多个存储引擎支持同一种类型的索引，其底层的实现也可能不同。</p>
+<p>MySQL支持的索引类型，以及它们的优点和缺点如下：</p>
+<h3 id="B-Tree索引"><a href="#B-Tree索引" class="headerlink" title="B-Tree索引"></a>B-Tree索引</h3><p>当人们谈论索引的时候，如果没有特别指明类型，那多半说的是B-Tree索引，它使用 B-Tree数据结构来存储数据，大多数MySQL引擎都支持这种索引。</p>
+<blockquote>
+<p>实际上很多存储引擎使用的是**<em>B+Tree**</em>,即每一个叶子节点都包含指向下一个叶子节点的指针，从 而方便叶子节点的范围遍历。</p>
+</blockquote>
+<p>存储引擎以不同的方式使用B-Tree索引，性能也各有不同，各有优劣。例如，MylSAM 使用前缀压缩技术使得索引更小，但InnoDB则按照原数据格式进行存储。再如 MylSAM索引通过数据的物理位置引用被索引的行，而InnoDB则根据主键引用被索引的行。</p>
+<p><img data-src="/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222092648551.png" alt="image-20220222092648551"></p>
+<p>B-Tree索引能够加快访问数据的速度，因为存储引擎不再需要进行全表扫描来获取需要的数据，取而代之的是从索引的根节点（图示并未画出）开始进行搜索。根节点的槽中存放了指向子节点的指针，存储引擎根据这些指针向下层査找。通过比较节点页的值和要査找的值可以找到合适的指针进入下层子节点，这些指针实际上定义了子节点页中值 的上限和下限。最终存储引擎要么是找到对应的值，要么该记录不存在。</p>
+<p>叶子节点比较特别，它们的指针指向的是被索引的数据，而不是其他的节点页（不同引擎的“指针”类型不同）    </p>
+<blockquote>
+<p>B-Tree对索引列是顺序组织存储的，所以很适合査找范围数据。索引对多个值进行排序的依据是CREATE TABLE语句中定义索引时列的顺序。</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> People(</span><br><span class="line">	last_name <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    first_name <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    dob 	  <span class="type">date</span>         <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    gender    enum(<span class="string">&#x27;m&#x27;</span>,<span class="string">&#x27;f&#x27;</span>) <span class="keyword">not</span> <span class="keyword">null</span>.</span><br><span class="line">    key(last_name,first_name,dob)</span><br><span class="line"> );</span><br></pre></td></tr></table></figure>
+<p><strong><em>B-Tree索引对以下类型的查询有效：</em></strong><br><img data-src="/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222093555561.png" alt="image-20220222093555561"></p>
+]]></content>
+      <categories>
+        <category>MySQL数据库</category>
+      </categories>
+      <tags>
+        <tag>MySQL数据库索引</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>中断</title>
+    <url>/2021/02/03/%E4%B8%AD%E6%96%AD/</url>
+    <content><![CDATA[<h3 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h3><p>中断使得硬件得以发出通知给处理器，是一种变内核主动为硬件主动的方式。中断本质上是一种特殊的电信号。硬件在生成中断的时候并不需要考虑与处理器的时钟同步，即中断可以随时产生，<strong>内核随时可能因为新到来的中断而被打断</strong>。</p>
+<img data-src="/2021/02/03/%E4%B8%AD%E6%96%AD/%E4%B8%AD%E6%96%AD1.png" class>
+
+<p>不同的设备对应的中断不同，而每个中断都通过唯一的数字标识，这样，操作系统才能给不同的中断提供对应的中断处理程序。硬件发出中断，就是在提醒内核，有新的请求需要读取并处理。</p>
+<h4 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h4><p>异常与中断不同之处就是在于异常在产生时必须要考虑处理器与时钟同步，所以其经常被称为同步中。</p>
+<p>异常的产生原因：</p>
+<blockquote>
+<p>1.处理器由于执行到编程失误而导致的错误指令（如被0除）</p>
+</blockquote>
+<blockquote>
+<p>2.执行期间出现特殊情况，例如缺页</p>
+</blockquote>
+<blockquote>
+<p>3.系统调用陷入内核—–引起了系统调用处理程序异常</p>
+</blockquote>
+<p>以上，产生异常，都需要内核处理。</p>
+<h3 id="中断处理程序"><a href="#中断处理程序" class="headerlink" title="中断处理程序"></a>中断处理程序</h3><p>内核通过执行中断处理程序(interrupt handler)来对某一特定的中断进行响应，产生中断的每一个设备都有一个相应的中断处理程序。一个设备的中断处理程序是其设备驱动程序的一部分—–设备驱动程序是<strong>用于对设备进行管理的内核代码</strong>。</p>
+<p>中断处理程序被内核调用，运行于中断上下文，该上下文的执行代码不可阻塞。</p>
+<h3 id="上半部与下半部的对比"><a href="#上半部与下半部的对比" class="headerlink" title="上半部与下半部的对比"></a>上半部与下半部的对比</h3><p>将中断处理分为两个部分。</p>
+<blockquote>
+<p>中断处理程序是上半部分（top half），接收到一个中断会被立即执行，只做有严格时限的工作。</p>
+</blockquote>
+<blockquote>
+<p>能够被允许稍后完成的工作会被推迟到下半部去执行。即处理和操作中断的非即时完成请求会在随后的下半部中执行。</p>
+</blockquote>
+<h3 id><a href="#" class="headerlink" title></a></h3><h3 id="中断上下文"><a href="#中断上下文" class="headerlink" title="中断上下文"></a>中断上下文</h3><p>当执行一个中断处理程序时，内核处于中断上下文中(interrupt context)。</p>
+<p>注意：</p>
+<ul>
+<li>中断上下文没有后备进程，所以其不可以睡眠。如果一个函数要进行睡眠，就不能出现在中断处理程序中。</li>
+<li>中断处理程序实际上打断了其他的代码，这种异步执行的特性，要求所有的中断处理程序必须尽可能的快速、简单。尽量将工作从中断处理程序中分离出来，放在中断下半部执行。</li>
+<li>中断处理程序栈是一个配置选项。在内核早期版本中，中断处理程序是共享别人的堆栈，获取空间时非常节约。后期，中断处理程序有了自己的栈（中断栈），但无论无何，在内核中还是要尽可能的节省空间的使用，因为内核栈本身就是有限的。</li>
+<li><strong>进程上下文是可以睡眠的</strong></li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>大多数现代硬件都通过中断来与操作系统进行通信。对给定的硬件进行管理的驱动程序注册中断处理程序，是为了响应并处理来自相关硬件的中断。中断过程所作的工作包括应答并重新设置硬件，从设备拷贝数据到内存以及反之，处理硬件请求，并发送新的硬件请求。</p>
+<p>内核提供的接口包括注册和注销中断处理程序、禁止中断、屏蔽中断线以及检查中断系统的状态。</p>
+]]></content>
+      <categories>
+        <category>Linux系统内核相关</category>
+      </categories>
+      <tags>
+        <tag>中断</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>操作系统种类</title>
+    <url>/2022/02/23/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%A7%8D%E7%B1%BB/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>牛客网刷题-操作系统2</title>
     <url>/2022/02/18/%E7%89%9B%E5%AE%A2%E7%BD%91%E5%88%B7%E9%A2%98-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F2/</url>
     <content><![CDATA[]]></content>
@@ -832,141 +837,6 @@
       </categories>
       <tags>
         <tag>Linux系统内核设计</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>进程调度</title>
-    <url>/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/</url>
-    <content><![CDATA[<h1 id="Linux进程调度"><a href="#Linux进程调度" class="headerlink" title="Linux进程调度"></a>Linux进程调度</h1> <img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image01.png" class>
-
-
-
-<p>调度程序负责决定将哪个进程投入运行，何时运行以及运行多长时间。进程调度程序(常常简称调度程序)可看做在可运行态进程之间分配有限的**<em>处理器时间资源的内核子系统**</em>。调度程序是像Linux这样的多任务操作系统的基础。只有通过调度程序的合理调度，系统资源才能最大限度地发挥作用，多进程才会有并发执行的效果。 </p>
-<blockquote>
-<p>在一组处于可运行状态的进程中选择一个来执行，是调度程序所需完成的基本工作,最大程度的利用处理器时间为原则。</p>
-</blockquote>
-<h2 id="多任务操作系统"><a href="#多任务操作系统" class="headerlink" title="多任务操作系统"></a>多任务操作系统</h2><p>多任务操作系统就是能同时并发地交互执行多个进程的操作系统。在单处理器机器上，这会产生多个进程在同时运行的幻觉。在多处理器机器上，这会使多个进程在不同的处理机上真正同时、并行地运行。无论在单处理器或者多处理器机器上，多任务操作系统都能使多个进程处堵塞或者睡眠状态，</p>
-<p>多任务系统可以划分为两类：</p>
-<blockquote>
-<p>非抢占式多任务(cooperative multitasking)</p>
-</blockquote>
-<p>在非抢占式多任务模式下，除非进程自己主动停止运行，否则它会一直执行。进程主动挂起自己的操作称为让步(yielding)。理想情况下，进程通常做出让步，以便让每个可运行进程享有足够的处理器时间。但这种机制有很多缺点：调度程序无法对每个进程该执行多长时间做出统一规定，所以进程独占的处理器时间可能超出用户的预料；更糟的是，一个决不做出让步的悬挂进程就能使系统崩溃。</p>
-<blockquote>
-<p>抢占式多任务(preemptive multitasking)</p>
-</blockquote>
-<p>由调度程序来决定什么时候停止一个进程的运行，以便其他进程能够得到执行机会。这个*<strong>强制的挂起动作就叫做抢占(preemption)**<em>。进程在被抢占之前能够运行的时间是预先设置好的，而且有一个专门的名字，叫</em></strong>进程的时间片(timeslice)***。时间片实际上是分配给每个可运行进程的处理器时间段。有效管理时间片能使调度程序从系统全局的角度做出调度决定，这样做还可以避免个别进程独占系统资源</p>
-<h2 id="Linux进程调度-1"><a href="#Linux进程调度-1" class="headerlink" title="Linux进程调度"></a>Linux进程调度</h2><p>开始采用了一种叫做<strong>O(1)*<em>调度程序的新调度程序一一它是因为其算法的行为而得名，0(1)调度程序虽然对于大服务器的工作负载很理想，但是在有很多交互程序要运行的桌面系统上则表现不佳，因为**</em>其缺少交互进程*</strong></p>
-<p>自2.6内核系统开发初期，开发人员为了提高对交 互程序的调度性能引入了新的进程调度算法。其中最为著名的是“**<em>反转楼梯最后期限调度算法(Rotating Staircase Deadline scheduler(RSDL)**</em>,该算法吸取了队列理论，将公平调度的概念引入了 Linux调度程序。并且最终在2623内核版本中替代了 0(1)调度算法，它此刻被称为“完全公平调度算法”，或者简称<strong>CFS</strong></p>
-<h2 id="策略"><a href="#策略" class="headerlink" title="策略"></a>策略</h2><h3 id="根据进程分类确定策略"><a href="#根据进程分类确定策略" class="headerlink" title="根据进程分类确定策略"></a>根据进程分类确定策略</h3><blockquote>
-<p>进程可以被分为I/O消耗型和处理器消耗型。</p>
-</blockquote>
-<ul>
-<li><p>IO消耗型</p>
-<p>指进程的<strong>大部分时间用来提交I/O请求或是等待I/O请求</strong>。因此，这样的进程经常处于可运行状态，但通常都是**<em>运行短短的一会儿**</em>，因为它在等待更多的I/O请求时总会阻塞</p>
-<p>举例来说，多数用户图形界面程序（GUI）都属于I/O密集型，即便它们从不读取或者写入磁盘，它们也会在多数时间里都在等待来自鼠标或者键盘的用户交互操作。</p>
-<img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image02.png" class>
-
-
-
-</li>
-</ul>
-<ul>
-<li><p>处理器耗费型(用于计算)</p>
-<p>处理器耗费型进程把时间大多用在执行代码上。除非被抢占，否则它们通常都一直不停地运行，因为它们没有太多的I/O需求。但是，因为它们不属于I/O驱动类型，所以从系统响应速度考虑，调度器不应该经常让它们运行。对于这类处理器消耗型的进程，调度策略往往是**<em>尽量降低它们的调度频率，而延长其运行时间**</em>。</p>
-<img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image03.png" class>
-
-</li>
-</ul>
-<p>有必要指出，随着CPU变得越来越快*<strong>，更多的进程倾向为I/O密集型**<em>。这种现象之所以发生是因为</em></strong>CPU 的改进比磁盘的改进快得多***，其结果是，未来对I/O密集型进程的调度处理似乎更为重要。这里的基本思想 是，如果需要运行I/O密集型进程，那么就应该让它尽快得到机会，以便发出磁盘请求并保持磁盘始终忙 碌。从图中可以看到，如果进程是I/O密集型的，则需要多运行一些这类进程以保持CPU的充分利用。</p>
-<blockquote>
-<p>调度策略通常要在两个矛盾的目标中间寻找平衡：进程响应迅速（响应时间短）和最大系统利用率（高吞吐量）。</p>
-</blockquote>
-<p><strong><em>Linux为了保证交互式应用和桌面系统的性能，所以对进程的响应做了优化（缩短响应时间），更倾向于优先调度I/O消耗型进程</em></strong></p>
-<h3 id="根据进程优先级确定调度策略"><a href="#根据进程优先级确定调度策略" class="headerlink" title="根据进程优先级确定调度策略"></a>根据进程优先级确定调度策略</h3><p>调度算法中最基本的一类就是基于优先级的调度。这是一种根据进程的价值和其对处理器时</p>
-<p>间的需求来对进程分级的想法。</p>
-<p>通常做法是（其并未被Linux系统完全采用）优先级高的进程先运行，低的后运行，相同优先级的进程按轮转方式进行调度（一个接一个，重复进行）。</p>
-<p>Linux采用了两种不同的优先级范围:</p>
-<blockquote>
-<p>nice值</p>
-<p>它的范围是从-20到+19, 默 认值为0 ；越大的nice值意味着更低的优先级;</p>
-<p>在Mac OS X, 进程的nice值 代表分配给进程的时间片的绝对值；而Linux系统中，nice值则代表时间片的比例。你可以通过ps-el命令査看系统中的进程列表，结果中标记N1的一列就是进程对应的nice值。 </p>
-</blockquote>
-<blockquote>
-<p>实时优先级</p>
-<p>默认情况下它的变化范围是从0到99 （包括0和99）。与nice值意义相反，越高的实时优先级数值意味着进程优先级越高。</p>
-<p>实时优先级和nice优先级处于互不相交的两个范畴</p>
-</blockquote>
-<h3 id="时间片"><a href="#时间片" class="headerlink" title="时间片"></a>时间片</h3><p>时间片是一个数值，它表明进程在被抢占前所能持续运行的时间。*<strong>调度策略必须规定一*** *</strong>个默认的时间片***</p>
-<blockquote>
-<p>时间片太长</p>
-</blockquote>
-<p>时间片过长会导致系统对交互的响应表现欠佳，让人觉得系统无法并发执行应用程序</p>
-<blockquote>
-<p>时间片太短</p>
-</blockquote>
-<p>会明显增大进程切换带来的处理器耗时，因 为肯定会有相当一部分系统时间用在进程切换上，而这些进程能够用来运行的时间片却很短。</p>
-<p>i/o消耗型和处理器消耗型的进程之间的矛盾在这里也再次显露出来：I/O消耗型不需要长的时间片，而处理器消耗型的进程则希望越长越好</p>
-<p><strong><em>Linux的CFS调度器并没有直接分配时间片到进程，它是将处理器的使用比划分给了进程。</em></strong></p>
-<p>进程所获得的处理器时间其实是和系统负载密切相关的。这个比例进一步还会受进程nice值的影响</p>
-<p><strong>Linux系统是抢占式的</strong>,其抢占时机取决于新的可运行程序消耗了多少处理器使用比。如果消耗的使用比比当前进程小，则新进程立刻投入运行，抢 占当前进程。否则，将推迟其运行。</p>
-<h3 id="案例：文本编辑器（IO）VS视频编码器（处理）"><a href="#案例：文本编辑器（IO）VS视频编码器（处理）" class="headerlink" title="案例：文本编辑器（IO）VS视频编码器（处理）"></a>案例：文本编辑器（IO）VS视频编码器（处理）</h3><p>对于视频编码器。它对什么时间开始运行没有太严格的要求 用户几乎分辨不出也并不关心它到底是立刻就运行还是半秒钟以后才开始的。当然，它完成得越早越好，至于所花时间并不是我们关注的主要问题。 </p>
- <img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image04.png" class>
-
-<p>​    </p>
-<h2 id="Linux调度算法"><a href="#Linux调度算法" class="headerlink" title="Linux调度算法"></a>Linux调度算法</h2><p>Linux调度器是以**<em>模块方式提供**</em>的，这样做的目的是允许不同类型的进程可以有针对性地选择调度算法。 </p>
-<p>这种模块化结构被称为<strong>调度器类</strong>（scheduler classes）,它允许多种不同的可动态添加的调度算法并存，调度属于自己范畴的进程。每个调度器都有一个优先级，基础的调度器代码定义kemel/schedx文件中，它会按照优先级顺序遍历调度类，拥有一个可执行进程的最高优先级的调度器类胜出，去选择下面要执行的那一个程序。 </p>
-<p>完全公平调度（CFS）是一个**<em>针对普通进程的调度类**</em>，在Linux中称为SCHED_NORMAL（在POSIX中称为SCHED_OTHER） , CFS算法实现定义在文件kemel/sched_fair.c中</p>
-<h3 id="Unix系统中的进程调度–CFS公平调度"><a href="#Unix系统中的进程调度–CFS公平调度" class="headerlink" title="Unix系统中的进程调度–CFS公平调度"></a>Unix系统中的进程调度–CFS公平调度</h3><p>CFS的做法是允许每个进程运行一段时间、循环轮转、选择运行最少的进程作为下一个运行进程，而不再采用分配给每个进程时间片的做法了，CFS在所有可运行进程总数基础上计算出一个进程应该运行多久，而不是依靠nice值来计算时间片</p>
-<p>任何进程所获得的处理器时间是由它自己和其他所有可运行进程nice值的相对差值决定的。nice值对时间片的作用<strong>不再是算数加权，而是几何加权</strong>。任何nice值对应的绝对时间不再是一个绝对值，而是<strong>处理器的使用比</strong>。CFS称为公平调度器是因为它确保给每个进程公平 的处理器使用比。正如我们知道的，CFS不是完美的公平，它只是近乎完美的多任务。但是它确实在多进程环境下，降低了调度延迟带来的不公平性。</p>
-<blockquote>
-<p>目标延迟</p>
-</blockquote>
-<p>CFS为完美多任务中的无限小调度周期的近似值设立了一个目标。越小的调度周期将带来越好的交互性，同时也更接近完美的多任务。但是你必须承受更高的切换代价和更差的系统总吞吐能力。</p>
-<blockquote>
-<p>最小粒度</p>
-</blockquote>
-<p>CFS为此引入每个进程获得的时间片底线， 这个底线称为最小粒度。默认情况下这个值是1ms。如此一来，即便是可运行进程数量趋于无穷，每个最少也能获得1ms的运行时间，确保切换消耗被限制在一定范围内（避免为了降低延迟不断的无限小调度周期，从而增加了进程切换的消耗）</p>
-<h2 id="Linux调度的实现"><a href="#Linux调度的实现" class="headerlink" title="Linux调度的实现"></a>Linux调度的实现</h2><h3 id="时间记账"><a href="#时间记账" class="headerlink" title="时间记账"></a>时间记账</h3><p>所有的调度器都必须对进程运行时间做记账。多数Unix系统，正如我们前面所说，分配一个时间片给每一个进程。那么当每次系统时钟节拍发生时，时间片都会被减少一个节拍周期。当一个进程的时间片被减少到0时，它就会被另一个尚未减到0的时间片可运行进程抢占。</p>
-<h3 id="进程选择"><a href="#进程选择" class="headerlink" title="进程选择"></a>进程选择</h3><p>当CFS需要选择下一个运行进程时，它会挑一个具有最小vruntime的进程。这其实就是CFS调度算法的核心：选择具有最小vruntime的任务。【**<em>最完美的调度：所有可运行进程的vruntime值将一致**</em>】</p>
-<p>CFS使用**<u>红黑树</u>**来组织可运行进程队列，并利用其迅速找到最小vruntime值的进程。</p>
-<h3 id="调度器入口"><a href="#调度器入口" class="headerlink" title="调度器入口"></a>调度器入口</h3><p>进程调度的主要入口点是函数schedule(),它定义在文件kemel/sched.c中。Schedule()通常都需要和一个具体的调度类相关联，也就是说，它会找到一个最高优先级的调度类睡眠和唤醒。</p>
-<p><strong><em>pick_next_task()</em></strong>会以优先级为序，从高到低，依次检查每一个调度类，并且从最高优先级的调度类中，选取最高优先级的进程。</p>
-<h3 id="睡眠和唤醒"><a href="#睡眠和唤醒" class="headerlink" title="睡眠和唤醒"></a>睡眠和唤醒</h3><p><strong>休眠</strong>(被阻塞)的进程处于一个特殊的不可执行状态。这点非常重要，如果没有这种特殊状态的话，调度程序就可能选出一个本不愿意被执行的进程。</p>
-<blockquote>
-<p>休眠的操作</p>
-</blockquote>
-<p>内核的操作都相同：进程把自己标记成休眠状态，从可执行红黑树中移出，放入等待队列，然后调用schedule。选择和执行一个其他进程。</p>
-<p>休眠有两种相关的进程状态：**<em>TASK_INTERRUPTIBLE和TASK_UNINTERRUPTIBLE**</em>.它们的唯_区别是处于TASK_UNINTERRUPTIBLE的进程会忽略信号，而处于TASK_INTERRUPTIBLE状态的进程如果接收到一个信号，会被提前唤醒并响应该信号。 两种状态的进程位于同一个等待队列上，等待某些事件，不能够运行。</p>
-<blockquote>
-<p>唤醒的操作</p>
-</blockquote>
-<p>唤醒操作通过函数wake_up()进行，它会唤醒指定的等待队列上的所有进程。它调用函数try_to_wake_up(),该函数负责将进程设置为TASK_RUNNING状态，调用enqueue_task()将此进程放入红黑树中，如果被唤醒的进程优先级比当前正在执行的进程的优先级高，还要设置need_resched标志</p>
-<h2 id="抢占和上下文切换"><a href="#抢占和上下文切换" class="headerlink" title="抢占和上下文切换"></a>抢占和上下文切换</h2><h3 id="上下文切换"><a href="#上下文切换" class="headerlink" title="上下文切换"></a>上下文切换</h3><p>上下文切换，也就是从一个可执行进程切换到另一个可执行进程，由定义在kemel/sched.c中的context_switch()函数负责处理。每当一个新的进程被选出来准备投入运行的时候，schedule()就会调用该函数。它完成了两项基本的工作： </p>
-<ul>
-<li><p>调用声明在&lt;asm/mmu_context.h&gt;中的switch_mm(),该函数负责把虚拟内存从上一个进程映射切换到新进程中。</p>
-</li>
-<li><p>调用声明在＜asm/system.h＞中的switch_to(),该函数负责从上一个进程的处理器状态切换 </p>
-<p>到新进程的处理器状态。这包括保存、恢复栈信息和寄存器信息，还有其他任何与体系结’ </p>
-<p>构相关的状态信息，都必须以每个进程为对象进行管理和保存。</p>
-</li>
-</ul>
-<h3 id="抢占"><a href="#抢占" class="headerlink" title="抢占"></a>抢占</h3><p>内核提供了一个**<em>need_resched**</em>标志来表明是否需要重新执行一次调度。</p>
-<h4 id="用户抢占"><a href="#用户抢占" class="headerlink" title="用户抢占"></a>用户抢占</h4><ul>
-<li> 从系统调返回用户空间时。 </li>
-<li>从中断处理程序返回用户空间时。</li>
-</ul>
-<h4 id="内核抢占"><a href="#内核抢占" class="headerlink" title="内核抢占"></a>内核抢占</h4><ul>
-<li>中断处理程序正在执行，且返回内核空间之前。</li>
-<li>内核代码再一次具有可抢占性的时候。 </li>
-<li>如果内核中的任务显式地调用schedule。</li>
-<li>如果内核中的任务阻塞(这同样也会导致调用schedule())</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Linux系统内核相关</category>
-      </categories>
-      <tags>
-        <tag>进程</tag>
       </tags>
   </entry>
   <entry>
@@ -1778,6 +1648,210 @@
       </categories>
       <tags>
         <tag>操作系统</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>进程调度</title>
+    <url>/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/</url>
+    <content><![CDATA[<h1 id="Linux进程调度"><a href="#Linux进程调度" class="headerlink" title="Linux进程调度"></a>Linux进程调度</h1> <img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image01.png" class>
+
+
+
+<p>调度程序负责决定将哪个进程投入运行，何时运行以及运行多长时间。进程调度程序(常常简称调度程序)可看做在可运行态进程之间分配有限的**<em>处理器时间资源的内核子系统**</em>。调度程序是像Linux这样的多任务操作系统的基础。只有通过调度程序的合理调度，系统资源才能最大限度地发挥作用，多进程才会有并发执行的效果。 </p>
+<blockquote>
+<p>在一组处于可运行状态的进程中选择一个来执行，是调度程序所需完成的基本工作,最大程度的利用处理器时间为原则。</p>
+</blockquote>
+<h2 id="多任务操作系统"><a href="#多任务操作系统" class="headerlink" title="多任务操作系统"></a>多任务操作系统</h2><p>多任务操作系统就是能同时并发地交互执行多个进程的操作系统。在单处理器机器上，这会产生多个进程在同时运行的幻觉。在多处理器机器上，这会使多个进程在不同的处理机上真正同时、并行地运行。无论在单处理器或者多处理器机器上，多任务操作系统都能使多个进程处堵塞或者睡眠状态，</p>
+<p>多任务系统可以划分为两类：</p>
+<blockquote>
+<p>非抢占式多任务(cooperative multitasking)</p>
+</blockquote>
+<p>在非抢占式多任务模式下，除非进程自己主动停止运行，否则它会一直执行。进程主动挂起自己的操作称为让步(yielding)。理想情况下，进程通常做出让步，以便让每个可运行进程享有足够的处理器时间。但这种机制有很多缺点：调度程序无法对每个进程该执行多长时间做出统一规定，所以进程独占的处理器时间可能超出用户的预料；更糟的是，一个决不做出让步的悬挂进程就能使系统崩溃。</p>
+<blockquote>
+<p>抢占式多任务(preemptive multitasking)</p>
+</blockquote>
+<p>由调度程序来决定什么时候停止一个进程的运行，以便其他进程能够得到执行机会。这个*<strong>强制的挂起动作就叫做抢占(preemption)**<em>。进程在被抢占之前能够运行的时间是预先设置好的，而且有一个专门的名字，叫</em></strong>进程的时间片(timeslice)***。时间片实际上是分配给每个可运行进程的处理器时间段。有效管理时间片能使调度程序从系统全局的角度做出调度决定，这样做还可以避免个别进程独占系统资源</p>
+<h2 id="Linux进程调度-1"><a href="#Linux进程调度-1" class="headerlink" title="Linux进程调度"></a>Linux进程调度</h2><p>开始采用了一种叫做<strong>O(1)*<em>调度程序的新调度程序一一它是因为其算法的行为而得名，0(1)调度程序虽然对于大服务器的工作负载很理想，但是在有很多交互程序要运行的桌面系统上则表现不佳，因为**</em>其缺少交互进程*</strong></p>
+<p>自2.6内核系统开发初期，开发人员为了提高对交 互程序的调度性能引入了新的进程调度算法。其中最为著名的是“**<em>反转楼梯最后期限调度算法(Rotating Staircase Deadline scheduler(RSDL)**</em>,该算法吸取了队列理论，将公平调度的概念引入了 Linux调度程序。并且最终在2623内核版本中替代了 0(1)调度算法，它此刻被称为“完全公平调度算法”，或者简称<strong>CFS</strong></p>
+<h2 id="策略"><a href="#策略" class="headerlink" title="策略"></a>策略</h2><h3 id="根据进程分类确定策略"><a href="#根据进程分类确定策略" class="headerlink" title="根据进程分类确定策略"></a>根据进程分类确定策略</h3><blockquote>
+<p>进程可以被分为I/O消耗型和处理器消耗型。</p>
+</blockquote>
+<ul>
+<li><p>IO消耗型</p>
+<p>指进程的<strong>大部分时间用来提交I/O请求或是等待I/O请求</strong>。因此，这样的进程经常处于可运行状态，但通常都是**<em>运行短短的一会儿**</em>，因为它在等待更多的I/O请求时总会阻塞</p>
+<p>举例来说，多数用户图形界面程序（GUI）都属于I/O密集型，即便它们从不读取或者写入磁盘，它们也会在多数时间里都在等待来自鼠标或者键盘的用户交互操作。</p>
+<img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image02.png" class>
+
+
+
+</li>
+</ul>
+<ul>
+<li><p>处理器耗费型(用于计算)</p>
+<p>处理器耗费型进程把时间大多用在执行代码上。除非被抢占，否则它们通常都一直不停地运行，因为它们没有太多的I/O需求。但是，因为它们不属于I/O驱动类型，所以从系统响应速度考虑，调度器不应该经常让它们运行。对于这类处理器消耗型的进程，调度策略往往是**<em>尽量降低它们的调度频率，而延长其运行时间**</em>。</p>
+<img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image03.png" class>
+
+</li>
+</ul>
+<p>有必要指出，随着CPU变得越来越快*<strong>，更多的进程倾向为I/O密集型**<em>。这种现象之所以发生是因为</em></strong>CPU 的改进比磁盘的改进快得多***，其结果是，未来对I/O密集型进程的调度处理似乎更为重要。这里的基本思想 是，如果需要运行I/O密集型进程，那么就应该让它尽快得到机会，以便发出磁盘请求并保持磁盘始终忙 碌。从图中可以看到，如果进程是I/O密集型的，则需要多运行一些这类进程以保持CPU的充分利用。</p>
+<blockquote>
+<p>调度策略通常要在两个矛盾的目标中间寻找平衡：进程响应迅速（响应时间短）和最大系统利用率（高吞吐量）。</p>
+</blockquote>
+<p><strong><em>Linux为了保证交互式应用和桌面系统的性能，所以对进程的响应做了优化（缩短响应时间），更倾向于优先调度I/O消耗型进程</em></strong></p>
+<h3 id="根据进程优先级确定调度策略"><a href="#根据进程优先级确定调度策略" class="headerlink" title="根据进程优先级确定调度策略"></a>根据进程优先级确定调度策略</h3><p>调度算法中最基本的一类就是基于优先级的调度。这是一种根据进程的价值和其对处理器时</p>
+<p>间的需求来对进程分级的想法。</p>
+<p>通常做法是（其并未被Linux系统完全采用）优先级高的进程先运行，低的后运行，相同优先级的进程按轮转方式进行调度（一个接一个，重复进行）。</p>
+<p>Linux采用了两种不同的优先级范围:</p>
+<blockquote>
+<p>nice值</p>
+<p>它的范围是从-20到+19, 默 认值为0 ；越大的nice值意味着更低的优先级;</p>
+<p>在Mac OS X, 进程的nice值 代表分配给进程的时间片的绝对值；而Linux系统中，nice值则代表时间片的比例。你可以通过ps-el命令査看系统中的进程列表，结果中标记N1的一列就是进程对应的nice值。 </p>
+</blockquote>
+<blockquote>
+<p>实时优先级</p>
+<p>默认情况下它的变化范围是从0到99 （包括0和99）。与nice值意义相反，越高的实时优先级数值意味着进程优先级越高。</p>
+<p>实时优先级和nice优先级处于互不相交的两个范畴</p>
+</blockquote>
+<h3 id="时间片"><a href="#时间片" class="headerlink" title="时间片"></a>时间片</h3><p>时间片是一个数值，它表明进程在被抢占前所能持续运行的时间。*<strong>调度策略必须规定一*** *</strong>个默认的时间片***</p>
+<blockquote>
+<p>时间片太长</p>
+</blockquote>
+<p>时间片过长会导致系统对交互的响应表现欠佳，让人觉得系统无法并发执行应用程序</p>
+<blockquote>
+<p>时间片太短</p>
+</blockquote>
+<p>会明显增大进程切换带来的处理器耗时，因 为肯定会有相当一部分系统时间用在进程切换上，而这些进程能够用来运行的时间片却很短。</p>
+<p>i/o消耗型和处理器消耗型的进程之间的矛盾在这里也再次显露出来：I/O消耗型不需要长的时间片，而处理器消耗型的进程则希望越长越好</p>
+<p><strong><em>Linux的CFS调度器并没有直接分配时间片到进程，它是将处理器的使用比划分给了进程。</em></strong></p>
+<p>进程所获得的处理器时间其实是和系统负载密切相关的。这个比例进一步还会受进程nice值的影响</p>
+<p><strong>Linux系统是抢占式的</strong>,其抢占时机取决于新的可运行程序消耗了多少处理器使用比。如果消耗的使用比比当前进程小，则新进程立刻投入运行，抢 占当前进程。否则，将推迟其运行。</p>
+<h3 id="案例：文本编辑器（IO）VS视频编码器（处理）"><a href="#案例：文本编辑器（IO）VS视频编码器（处理）" class="headerlink" title="案例：文本编辑器（IO）VS视频编码器（处理）"></a>案例：文本编辑器（IO）VS视频编码器（处理）</h3><p>对于视频编码器。它对什么时间开始运行没有太严格的要求 用户几乎分辨不出也并不关心它到底是立刻就运行还是半秒钟以后才开始的。当然，它完成得越早越好，至于所花时间并不是我们关注的主要问题。 </p>
+ <img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image04.png" class>
+
+<p>​    </p>
+<h2 id="Linux调度算法"><a href="#Linux调度算法" class="headerlink" title="Linux调度算法"></a>Linux调度算法</h2><p>Linux调度器是以**<em>模块方式提供**</em>的，这样做的目的是允许不同类型的进程可以有针对性地选择调度算法。 </p>
+<p>这种模块化结构被称为<strong>调度器类</strong>（scheduler classes）,它允许多种不同的可动态添加的调度算法并存，调度属于自己范畴的进程。每个调度器都有一个优先级，基础的调度器代码定义kemel/schedx文件中，它会按照优先级顺序遍历调度类，拥有一个可执行进程的最高优先级的调度器类胜出，去选择下面要执行的那一个程序。 </p>
+<p>完全公平调度（CFS）是一个**<em>针对普通进程的调度类**</em>，在Linux中称为SCHED_NORMAL（在POSIX中称为SCHED_OTHER） , CFS算法实现定义在文件kemel/sched_fair.c中</p>
+<h3 id="Unix系统中的进程调度–CFS公平调度"><a href="#Unix系统中的进程调度–CFS公平调度" class="headerlink" title="Unix系统中的进程调度–CFS公平调度"></a>Unix系统中的进程调度–CFS公平调度</h3><p>CFS的做法是允许每个进程运行一段时间、循环轮转、选择运行最少的进程作为下一个运行进程，而不再采用分配给每个进程时间片的做法了，CFS在所有可运行进程总数基础上计算出一个进程应该运行多久，而不是依靠nice值来计算时间片</p>
+<p>任何进程所获得的处理器时间是由它自己和其他所有可运行进程nice值的相对差值决定的。nice值对时间片的作用<strong>不再是算数加权，而是几何加权</strong>。任何nice值对应的绝对时间不再是一个绝对值，而是<strong>处理器的使用比</strong>。CFS称为公平调度器是因为它确保给每个进程公平 的处理器使用比。正如我们知道的，CFS不是完美的公平，它只是近乎完美的多任务。但是它确实在多进程环境下，降低了调度延迟带来的不公平性。</p>
+<blockquote>
+<p>目标延迟</p>
+</blockquote>
+<p>CFS为完美多任务中的无限小调度周期的近似值设立了一个目标。越小的调度周期将带来越好的交互性，同时也更接近完美的多任务。但是你必须承受更高的切换代价和更差的系统总吞吐能力。</p>
+<blockquote>
+<p>最小粒度</p>
+</blockquote>
+<p>CFS为此引入每个进程获得的时间片底线， 这个底线称为最小粒度。默认情况下这个值是1ms。如此一来，即便是可运行进程数量趋于无穷，每个最少也能获得1ms的运行时间，确保切换消耗被限制在一定范围内（避免为了降低延迟不断的无限小调度周期，从而增加了进程切换的消耗）</p>
+<h2 id="Linux调度的实现"><a href="#Linux调度的实现" class="headerlink" title="Linux调度的实现"></a>Linux调度的实现</h2><h3 id="时间记账"><a href="#时间记账" class="headerlink" title="时间记账"></a>时间记账</h3><p>所有的调度器都必须对进程运行时间做记账。多数Unix系统，正如我们前面所说，分配一个时间片给每一个进程。那么当每次系统时钟节拍发生时，时间片都会被减少一个节拍周期。当一个进程的时间片被减少到0时，它就会被另一个尚未减到0的时间片可运行进程抢占。</p>
+<h3 id="进程选择"><a href="#进程选择" class="headerlink" title="进程选择"></a>进程选择</h3><p>当CFS需要选择下一个运行进程时，它会挑一个具有最小vruntime的进程。这其实就是CFS调度算法的核心：选择具有最小vruntime的任务。【**<em>最完美的调度：所有可运行进程的vruntime值将一致**</em>】</p>
+<p>CFS使用**<u>红黑树</u>**来组织可运行进程队列，并利用其迅速找到最小vruntime值的进程。</p>
+<h3 id="调度器入口"><a href="#调度器入口" class="headerlink" title="调度器入口"></a>调度器入口</h3><p>进程调度的主要入口点是函数schedule(),它定义在文件kemel/sched.c中。Schedule()通常都需要和一个具体的调度类相关联，也就是说，它会找到一个最高优先级的调度类睡眠和唤醒。</p>
+<p><strong><em>pick_next_task()</em></strong>会以优先级为序，从高到低，依次检查每一个调度类，并且从最高优先级的调度类中，选取最高优先级的进程。</p>
+<h3 id="睡眠和唤醒"><a href="#睡眠和唤醒" class="headerlink" title="睡眠和唤醒"></a>睡眠和唤醒</h3><p><strong>休眠</strong>(被阻塞)的进程处于一个特殊的不可执行状态。这点非常重要，如果没有这种特殊状态的话，调度程序就可能选出一个本不愿意被执行的进程。</p>
+<blockquote>
+<p>休眠的操作</p>
+</blockquote>
+<p>内核的操作都相同：进程把自己标记成休眠状态，从可执行红黑树中移出，放入等待队列，然后调用schedule。选择和执行一个其他进程。</p>
+<p>休眠有两种相关的进程状态：**<em>TASK_INTERRUPTIBLE和TASK_UNINTERRUPTIBLE**</em>.它们的唯_区别是处于TASK_UNINTERRUPTIBLE的进程会忽略信号，而处于TASK_INTERRUPTIBLE状态的进程如果接收到一个信号，会被提前唤醒并响应该信号。 两种状态的进程位于同一个等待队列上，等待某些事件，不能够运行。</p>
+<blockquote>
+<p>唤醒的操作</p>
+</blockquote>
+<p>唤醒操作通过函数wake_up()进行，它会唤醒指定的等待队列上的所有进程。它调用函数try_to_wake_up(),该函数负责将进程设置为TASK_RUNNING状态，调用enqueue_task()将此进程放入红黑树中，如果被唤醒的进程优先级比当前正在执行的进程的优先级高，还要设置need_resched标志</p>
+<h2 id="抢占和上下文切换"><a href="#抢占和上下文切换" class="headerlink" title="抢占和上下文切换"></a>抢占和上下文切换</h2><h3 id="上下文切换"><a href="#上下文切换" class="headerlink" title="上下文切换"></a>上下文切换</h3><p>上下文切换，也就是从一个可执行进程切换到另一个可执行进程，由定义在kemel/sched.c中的context_switch()函数负责处理。每当一个新的进程被选出来准备投入运行的时候，schedule()就会调用该函数。它完成了两项基本的工作： </p>
+<ul>
+<li><p>调用声明在&lt;asm/mmu_context.h&gt;中的switch_mm(),该函数负责把虚拟内存从上一个进程映射切换到新进程中。</p>
+</li>
+<li><p>调用声明在＜asm/system.h＞中的switch_to(),该函数负责从上一个进程的处理器状态切换 </p>
+<p>到新进程的处理器状态。这包括保存、恢复栈信息和寄存器信息，还有其他任何与体系结’ </p>
+<p>构相关的状态信息，都必须以每个进程为对象进行管理和保存。</p>
+</li>
+</ul>
+<h3 id="抢占"><a href="#抢占" class="headerlink" title="抢占"></a>抢占</h3><p>内核提供了一个**<em>need_resched**</em>标志来表明是否需要重新执行一次调度。</p>
+<h4 id="用户抢占"><a href="#用户抢占" class="headerlink" title="用户抢占"></a>用户抢占</h4><ul>
+<li> 从系统调返回用户空间时。 </li>
+<li>从中断处理程序返回用户空间时。</li>
+</ul>
+<h4 id="内核抢占"><a href="#内核抢占" class="headerlink" title="内核抢占"></a>内核抢占</h4><ul>
+<li>中断处理程序正在执行，且返回内核空间之前。</li>
+<li>内核代码再一次具有可抢占性的时候。 </li>
+<li>如果内核中的任务显式地调用schedule。</li>
+<li>如果内核中的任务阻塞(这同样也会导致调用schedule())</li>
+</ul>
+<h1 id="调度【现代操作系统中根据不同操作系统总结】"><a href="#调度【现代操作系统中根据不同操作系统总结】" class="headerlink" title="调度【现代操作系统中根据不同操作系统总结】"></a>调度【现代操作系统中根据不同操作系统总结】</h1><h2 id="何时调度"><a href="#何时调度" class="headerlink" title="何时调度"></a>何时调度</h2><blockquote>
+<p>在创建一个新进程之后，需要决定是运行父进程还是运行子进程。</p>
+</blockquote>
+<p>由于这两种进程都处于就绪状态，所以这是一种正常的调度决策，可以任意决定，也就是说，调度程序可以合法选择先运行父进程还是先运行子进程。 </p>
+<blockquote>
+<p>在一个进程退出时必须做出调度决策。</p>
+</blockquote>
+<p>一个进程不再运行（因为它不再存在），所以必须从就绪进程集中选择另外某个进程。如果没有就绪的进程，通常会运行一个系统提供的空闲进程。</p>
+<blockquote>
+<p>当一个进程阻塞在I/O和信号量上或由于其他原因阻塞时，必须选择另一个进程运行。</p>
+</blockquote>
+<p>有时，阻塞的原因会成为选择的因素。例如，如果A是一个重要的进程，并正在等待B退出临界区，让B随后运行将会使得B退出临界区，从而可以让A运行。不过问题是，通常调度程序并不拥有做出这种相关考虑的必要信息。</p>
+<blockquote>
+<p>在一个I/O中断发生时，必须做出调度决策。</p>
+</blockquote>
+<p>如果中断来自I/O设备，而该设备现在完成了工作，某些被阻塞的等待该I/O的进程就成为可运行的就绪进程了。是否让新就绪的进程运行，这取决于调度程序的决定，或者让中断发生时运行的进程继续运行，或者应该让某个其他进程运行。</p>
+<p><strong><em>根据如何处理时钟中断，可以把调度算法分为两类。</em></strong></p>
+<ul>
+<li><p>非抢占式调度算法</p>
+<p>非抢占式调度算法挑选一个进程，然后让该进程运行直至被阻塞（阻塞在I/O上或等待另一个进程），或者直到该进程自动释放CPU。即使该进程运行了若干个小时，它也不会被强迫挂起。这样做的结果是，在时钟中断发生时不会进行调度。在处理完时钟中断后，如果没有更高优先级的进程等待到时，则被中断的进程会继续执行。 </p>
+</li>
+<li><p>抢占式调度算法</p>
+<p>抢占式调度算法挑选一个进程，并且让该进程运行某个固定时段的最大值。如果在该时段结束时，该进程仍在运行，它就被挂起，而调度程序挑选另一个进程运行（如果存在一个就绪进程）。进行抢占式调度处理，需要在时间间隔的末端发生时钟中断，以便把CPU控制返回给调度程序。如果没有可用的时钟，那么非抢占式调度就是惟一的选择了。</p>
+</li>
+</ul>
+<h3 id="调度算法分类"><a href="#调度算法分类" class="headerlink" title="调度算法分类"></a>调度算法分类</h3><p>不同的环境需要不同的调度算法，在不同的系统中，调度程序的优化是不同的。</p>
+<ul>
+<li><p>批处理 </p>
+<blockquote>
+<p>批处理系统在商业领域仍在广泛应用，用来处理薪水册、存货清单、账目收入、账目支出、利息计算 （在银行）、索赔处理（在保险公司）和其他的周期性的作业。在批处理系统中，不会有用户不耐烦地在终端旁等待一个短请求的快捷响应。因此，*<strong>非抢占式算法**<em>，或对每个进程</em></strong>都有长时间周期的抢占式算法***，通常都是可接受的。这种处理方式减少了进程的切换从而改善了性能。这些批处理算法实际上相当普及，并经常可以应用在其他场合。</p>
+</blockquote>
+</li>
+<li><p>交互式</p>
+</li>
+</ul>
+<p>为了避免一个进程霸占CPU拒绝为其他进程服务，抢占是必需的。即便没有进程想永远运行，但是，某个进程由于一个程序错误也可能无限期地排斥所有其他进程。为了避免这种现象发生，抢占也是必要的。服务器也归于此类，因为通常它们要服务多个突发的（远程）用户。 </p>
+<ul>
+<li>实时</li>
+</ul>
+<p>有实时限制的系统中，抢占有时是不需要的，因为进程了解它们可能会长时间得不到运行，所以 通常很快地完成各自的工作并阻塞。实时系统与交互式系统的差别是，实时系统只运行那些用来推进现有应用的程序，而交互式系统是通用的，它可以运行任意的非协作甚至是有恶意的程序。 </p>
+ <img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image05.png" class>
+
+<blockquote>
+<p>在所有的情形中，公平是很重要的。相似的进程应该得到相似的服务。</p>
+</blockquote>
+<blockquote>
+<p>保持系统的所有部分尽可能忙碌。【CPU针对于CPU密集作业和磁盘针对于IO密集作业的组合，保证CPU和磁盘是尽可能忙碌，减少空转】</p>
+</blockquote>
+<h3 id="批处理系统中的调度"><a href="#批处理系统中的调度" class="headerlink" title="批处理系统中的调度"></a>批处理系统中的调度</h3><h4 id="先来先服务（first-come-first-served）"><a href="#先来先服务（first-come-first-served）" class="headerlink" title="先来先服务（first-come first-served）"></a>先来先服务（first-come first-served）</h4><p>使用该算法，进程按照它们请求CPU的顺序使用CPU。【**<em>非抢占式**</em>】</p>
+<h5 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h5><blockquote>
+<p>有一个就绪进程的单一队列。早上，当第一个作业从外部进入系统，就立即开始并允许运行它所期望的时间。不会中断该作业，因为它需要很长的时间运行。当其他作业进入时，它们就被安排到队列的尾部。当正在运行的进程被阻塞时，队列中的第一个进程就接着运行。在 <strong>被阻塞的进程变为就绪时，就像一个新来到的作业一样，排到队列的末尾。</strong> </p>
+</blockquote>
+<h5 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h5><ul>
+<li>主要优点是易于理解并且便于在程序中运用</li>
+<li>在计算密集型和IO密集型应用的组合上容易出现问题。</li>
+</ul>
+<p>IO密集型应用在运行期间，多半时间花费在磁盘读写操作上，且时间比较长，影响了计算密集型应用对于CPU的占有使用。</p>
+<h5 id="最短作业优先"><a href="#最短作业优先" class="headerlink" title="最短作业优先"></a>最短作业优先</h5><p>适用于运行时间可以预知的另一个**<em>非抢占式**</em>的批处理调度算法</p>
+<p>当输入队列中有**<em>若干个同等重要的作业**</em>被启动时，调度程序应使用最短作业优先（shortest job first）算法</p>
+ <img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image06.png" class>
+
+<p><strong>a)</strong>   有4个作业A、B、C、D，运行时间分别为8、4、4、4分钟。若按图中的次序运行，则A的周转时间为8分钟，B为12分钟，C为16分钟，D为20分钟，平均为14分钟。</p>
+<p><strong>b）</strong>目前周转时间分别为4、8、12和20分钟，平均为11分钟。可以证明最短作业是最优的。</p>
+<blockquote>
+<p><strong>为什么最短作业最优</strong>的推导</p>
+</blockquote>
+<p>考虑有4个作业的情况，其运行时间分别为a、b、c、d。第一个作业在时间a结束，第二个在时间a+b结束，以此类推。平均周转时间为（4a+3b+2c+d）/4。显然a对平均值影响最大，所以它应是最短作业，其次是b，再次是c，最后的d只影响它自己的周转时间</p>
+<p><strong><em>只有在所有的作业都可同时运行的情形下，最短作业优先算法才是最优化的</em></strong>，不然，运行时间成本里还需要考虑对相关作业的等待时间。</p>
+<h5 id="最短剩余时间优先"><a href="#最短剩余时间优先" class="headerlink" title="最短剩余时间优先"></a>最短剩余时间优先</h5><p>最短作业优先的*<strong>抢占式版本**<em>是最短剩余时间优先（shortest remaining time next）算法。使用这个算法， 调度程序总是选择剩余运行时间最短的那个进程运行。再次提醒，有关的运行时间必须提前掌握。当一个新的作业到达时，其整个时间同当前进程的剩余时间做比较。如果新的进程比当前运行进程需要更少的时间，</em></strong>当前进程就被挂起，而运行新的进程***【抢占】。这种方式可以使新的短作业获得良好的服务</p>
+]]></content>
+      <categories>
+        <category>Linux系统内核相关</category>
+      </categories>
+      <tags>
+        <tag>进程</tag>
       </tags>
   </entry>
 </search>

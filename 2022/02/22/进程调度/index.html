@@ -32,8 +32,10 @@
 <meta property="og:image" content="https://www.mindmaster.top/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image02.png">
 <meta property="og:image" content="https://www.mindmaster.top/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image03.png">
 <meta property="og:image" content="https://www.mindmaster.top/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image04.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image05.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image06.png">
 <meta property="article:published_time" content="2022-02-22T14:40:23.000Z">
-<meta property="article:modified_time" content="2022-02-23T01:02:00.353Z">
+<meta property="article:modified_time" content="2022-02-23T03:14:15.226Z">
 <meta property="article:author" content="邢浩东">
 <meta property="article:tag" content="进程">
 <meta name="twitter:card" content="summary">
@@ -143,7 +145,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">18</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">19</span></a>
 
   </li>
         <li class="menu-item menu-item-movies">
@@ -260,7 +262,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-23 01:02:00" itemprop="dateModified" datetime="2022-02-23T01:02:00Z">2022-02-23</time>
+                <time title="修改时间：2022-02-23 03:14:15" itemprop="dateModified" datetime="2022-02-23T03:14:15Z">2022-02-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -299,14 +301,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>5k</span>
+              <span>7.3k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>5 分钟</span>
+              <span>7 分钟</span>
             </span>
             <div class="post-description">进程调度问题，结合Linux kernel总结</div>
 
@@ -443,6 +445,75 @@
 <li>如果内核中的任务显式地调用schedule。</li>
 <li>如果内核中的任务阻塞(这同样也会导致调用schedule())</li>
 </ul>
+<h1 id="调度【现代操作系统中根据不同操作系统总结】"><a href="#调度【现代操作系统中根据不同操作系统总结】" class="headerlink" title="调度【现代操作系统中根据不同操作系统总结】"></a>调度【现代操作系统中根据不同操作系统总结】</h1><h2 id="何时调度"><a href="#何时调度" class="headerlink" title="何时调度"></a>何时调度</h2><blockquote>
+<p>在创建一个新进程之后，需要决定是运行父进程还是运行子进程。</p>
+</blockquote>
+<p>由于这两种进程都处于就绪状态，所以这是一种正常的调度决策，可以任意决定，也就是说，调度程序可以合法选择先运行父进程还是先运行子进程。 </p>
+<blockquote>
+<p>在一个进程退出时必须做出调度决策。</p>
+</blockquote>
+<p>一个进程不再运行（因为它不再存在），所以必须从就绪进程集中选择另外某个进程。如果没有就绪的进程，通常会运行一个系统提供的空闲进程。</p>
+<blockquote>
+<p>当一个进程阻塞在I/O和信号量上或由于其他原因阻塞时，必须选择另一个进程运行。</p>
+</blockquote>
+<p>有时，阻塞的原因会成为选择的因素。例如，如果A是一个重要的进程，并正在等待B退出临界区，让B随后运行将会使得B退出临界区，从而可以让A运行。不过问题是，通常调度程序并不拥有做出这种相关考虑的必要信息。</p>
+<blockquote>
+<p>在一个I/O中断发生时，必须做出调度决策。</p>
+</blockquote>
+<p>如果中断来自I/O设备，而该设备现在完成了工作，某些被阻塞的等待该I/O的进程就成为可运行的就绪进程了。是否让新就绪的进程运行，这取决于调度程序的决定，或者让中断发生时运行的进程继续运行，或者应该让某个其他进程运行。</p>
+<p><strong><em>根据如何处理时钟中断，可以把调度算法分为两类。</em></strong></p>
+<ul>
+<li><p>非抢占式调度算法</p>
+<p>非抢占式调度算法挑选一个进程，然后让该进程运行直至被阻塞（阻塞在I/O上或等待另一个进程），或者直到该进程自动释放CPU。即使该进程运行了若干个小时，它也不会被强迫挂起。这样做的结果是，在时钟中断发生时不会进行调度。在处理完时钟中断后，如果没有更高优先级的进程等待到时，则被中断的进程会继续执行。 </p>
+</li>
+<li><p>抢占式调度算法</p>
+<p>抢占式调度算法挑选一个进程，并且让该进程运行某个固定时段的最大值。如果在该时段结束时，该进程仍在运行，它就被挂起，而调度程序挑选另一个进程运行（如果存在一个就绪进程）。进行抢占式调度处理，需要在时间间隔的末端发生时钟中断，以便把CPU控制返回给调度程序。如果没有可用的时钟，那么非抢占式调度就是惟一的选择了。</p>
+</li>
+</ul>
+<h3 id="调度算法分类"><a href="#调度算法分类" class="headerlink" title="调度算法分类"></a>调度算法分类</h3><p>不同的环境需要不同的调度算法，在不同的系统中，调度程序的优化是不同的。</p>
+<ul>
+<li><p>批处理 </p>
+<blockquote>
+<p>批处理系统在商业领域仍在广泛应用，用来处理薪水册、存货清单、账目收入、账目支出、利息计算 （在银行）、索赔处理（在保险公司）和其他的周期性的作业。在批处理系统中，不会有用户不耐烦地在终端旁等待一个短请求的快捷响应。因此，*<strong>非抢占式算法**<em>，或对每个进程</em></strong>都有长时间周期的抢占式算法***，通常都是可接受的。这种处理方式减少了进程的切换从而改善了性能。这些批处理算法实际上相当普及，并经常可以应用在其他场合。</p>
+</blockquote>
+</li>
+<li><p>交互式</p>
+</li>
+</ul>
+<p>为了避免一个进程霸占CPU拒绝为其他进程服务，抢占是必需的。即便没有进程想永远运行，但是，某个进程由于一个程序错误也可能无限期地排斥所有其他进程。为了避免这种现象发生，抢占也是必要的。服务器也归于此类，因为通常它们要服务多个突发的（远程）用户。 </p>
+<ul>
+<li>实时</li>
+</ul>
+<p>有实时限制的系统中，抢占有时是不需要的，因为进程了解它们可能会长时间得不到运行，所以 通常很快地完成各自的工作并阻塞。实时系统与交互式系统的差别是，实时系统只运行那些用来推进现有应用的程序，而交互式系统是通用的，它可以运行任意的非协作甚至是有恶意的程序。 </p>
+ <img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image05.png" class>
+
+<blockquote>
+<p>在所有的情形中，公平是很重要的。相似的进程应该得到相似的服务。</p>
+</blockquote>
+<blockquote>
+<p>保持系统的所有部分尽可能忙碌。【CPU针对于CPU密集作业和磁盘针对于IO密集作业的组合，保证CPU和磁盘是尽可能忙碌，减少空转】</p>
+</blockquote>
+<h3 id="批处理系统中的调度"><a href="#批处理系统中的调度" class="headerlink" title="批处理系统中的调度"></a>批处理系统中的调度</h3><h4 id="先来先服务（first-come-first-served）"><a href="#先来先服务（first-come-first-served）" class="headerlink" title="先来先服务（first-come first-served）"></a>先来先服务（first-come first-served）</h4><p>使用该算法，进程按照它们请求CPU的顺序使用CPU。【**<em>非抢占式**</em>】</p>
+<h5 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h5><blockquote>
+<p>有一个就绪进程的单一队列。早上，当第一个作业从外部进入系统，就立即开始并允许运行它所期望的时间。不会中断该作业，因为它需要很长的时间运行。当其他作业进入时，它们就被安排到队列的尾部。当正在运行的进程被阻塞时，队列中的第一个进程就接着运行。在 <strong>被阻塞的进程变为就绪时，就像一个新来到的作业一样，排到队列的末尾。</strong> </p>
+</blockquote>
+<h5 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h5><ul>
+<li>主要优点是易于理解并且便于在程序中运用</li>
+<li>在计算密集型和IO密集型应用的组合上容易出现问题。</li>
+</ul>
+<p>IO密集型应用在运行期间，多半时间花费在磁盘读写操作上，且时间比较长，影响了计算密集型应用对于CPU的占有使用。</p>
+<h5 id="最短作业优先"><a href="#最短作业优先" class="headerlink" title="最短作业优先"></a>最短作业优先</h5><p>适用于运行时间可以预知的另一个**<em>非抢占式**</em>的批处理调度算法</p>
+<p>当输入队列中有**<em>若干个同等重要的作业**</em>被启动时，调度程序应使用最短作业优先（shortest job first）算法</p>
+ <img data-src="/2022/02/22/%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6/image06.png" class>
+
+<p><strong>a)</strong>   有4个作业A、B、C、D，运行时间分别为8、4、4、4分钟。若按图中的次序运行，则A的周转时间为8分钟，B为12分钟，C为16分钟，D为20分钟，平均为14分钟。</p>
+<p><strong>b）</strong>目前周转时间分别为4、8、12和20分钟，平均为11分钟。可以证明最短作业是最优的。</p>
+<blockquote>
+<p><strong>为什么最短作业最优</strong>的推导</p>
+</blockquote>
+<p>考虑有4个作业的情况，其运行时间分别为a、b、c、d。第一个作业在时间a结束，第二个在时间a+b结束，以此类推。平均周转时间为（4a+3b+2c+d）/4。显然a对平均值影响最大，所以它应是最短作业，其次是b，再次是c，最后的d只影响它自己的周转时间</p>
+<p><strong><em>只有在所有的作业都可同时运行的情形下，最短作业优先算法才是最优化的</em></strong>，不然，运行时间成本里还需要考虑对相关作业的等待时间。</p>
+<h5 id="最短剩余时间优先"><a href="#最短剩余时间优先" class="headerlink" title="最短剩余时间优先"></a>最短剩余时间优先</h5><p>最短作业优先的*<strong>抢占式版本**<em>是最短剩余时间优先（shortest remaining time next）算法。使用这个算法， 调度程序总是选择剩余运行时间最短的那个进程运行。再次提醒，有关的运行时间必须提前掌握。当一个新的作业到达时，其整个时间同当前进程的剩余时间做比较。如果新的进程比当前运行进程需要更少的时间，</em></strong>当前进程就被挂起，而运行新的进程***【抢占】。这种方式可以使新的短作业获得良好的服务</p>
 
     </div>
 
@@ -503,7 +574,10 @@
     <a href="/2022/02/21/Scrapy1/" rel="prev" title="Scrapy1">
       <i class="fa fa-chevron-left"></i> Scrapy1
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2022/02/23/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%A7%8D%E7%B1%BB/" rel="next" title="操作系统种类">
+      操作系统种类 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -563,7 +637,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6"><span class="nav-number">1.</span> <span class="nav-text">Linux进程调度</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E4%BB%BB%E5%8A%A1%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.1.</span> <span class="nav-text">多任务操作系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6-1"><span class="nav-number">1.2.</span> <span class="nav-text">Linux进程调度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AD%96%E7%95%A5"><span class="nav-number">1.3.</span> <span class="nav-text">策略</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B9%E6%8D%AE%E8%BF%9B%E7%A8%8B%E5%88%86%E7%B1%BB%E7%A1%AE%E5%AE%9A%E7%AD%96%E7%95%A5"><span class="nav-number">1.3.1.</span> <span class="nav-text">根据进程分类确定策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B9%E6%8D%AE%E8%BF%9B%E7%A8%8B%E4%BC%98%E5%85%88%E7%BA%A7%E7%A1%AE%E5%AE%9A%E8%B0%83%E5%BA%A6%E7%AD%96%E7%95%A5"><span class="nav-number">1.3.2.</span> <span class="nav-text">根据进程优先级确定调度策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E7%89%87"><span class="nav-number">1.3.3.</span> <span class="nav-text">时间片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B%EF%BC%9A%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E5%99%A8%EF%BC%88IO%EF%BC%89VS%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E5%99%A8%EF%BC%88%E5%A4%84%E7%90%86%EF%BC%89"><span class="nav-number">1.3.4.</span> <span class="nav-text">案例：文本编辑器（IO）VS视频编码器（处理）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95"><span class="nav-number">1.4.</span> <span class="nav-text">Linux调度算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Unix%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E2%80%93CFS%E5%85%AC%E5%B9%B3%E8%B0%83%E5%BA%A6"><span class="nav-number">1.4.1.</span> <span class="nav-text">Unix系统中的进程调度–CFS公平调度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux%E8%B0%83%E5%BA%A6%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.5.</span> <span class="nav-text">Linux调度的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E8%AE%B0%E8%B4%A6"><span class="nav-number">1.5.1.</span> <span class="nav-text">时间记账</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E9%80%89%E6%8B%A9"><span class="nav-number">1.5.2.</span> <span class="nav-text">进程选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E5%BA%A6%E5%99%A8%E5%85%A5%E5%8F%A3"><span class="nav-number">1.5.3.</span> <span class="nav-text">调度器入口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9D%A1%E7%9C%A0%E5%92%8C%E5%94%A4%E9%86%92"><span class="nav-number">1.5.4.</span> <span class="nav-text">睡眠和唤醒</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%A2%E5%8D%A0%E5%92%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2"><span class="nav-number">1.6.</span> <span class="nav-text">抢占和上下文切换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2"><span class="nav-number">1.6.1.</span> <span class="nav-text">上下文切换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%A2%E5%8D%A0"><span class="nav-number">1.6.2.</span> <span class="nav-text">抢占</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E6%8A%A2%E5%8D%A0"><span class="nav-number">1.6.2.1.</span> <span class="nav-text">用户抢占</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E6%A0%B8%E6%8A%A2%E5%8D%A0"><span class="nav-number">1.6.2.2.</span> <span class="nav-text">内核抢占</span></a></li></ol></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6"><span class="nav-number">1.</span> <span class="nav-text">Linux进程调度</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E4%BB%BB%E5%8A%A1%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.1.</span> <span class="nav-text">多任务操作系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6-1"><span class="nav-number">1.2.</span> <span class="nav-text">Linux进程调度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AD%96%E7%95%A5"><span class="nav-number">1.3.</span> <span class="nav-text">策略</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B9%E6%8D%AE%E8%BF%9B%E7%A8%8B%E5%88%86%E7%B1%BB%E7%A1%AE%E5%AE%9A%E7%AD%96%E7%95%A5"><span class="nav-number">1.3.1.</span> <span class="nav-text">根据进程分类确定策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B9%E6%8D%AE%E8%BF%9B%E7%A8%8B%E4%BC%98%E5%85%88%E7%BA%A7%E7%A1%AE%E5%AE%9A%E8%B0%83%E5%BA%A6%E7%AD%96%E7%95%A5"><span class="nav-number">1.3.2.</span> <span class="nav-text">根据进程优先级确定调度策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E7%89%87"><span class="nav-number">1.3.3.</span> <span class="nav-text">时间片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B%EF%BC%9A%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E5%99%A8%EF%BC%88IO%EF%BC%89VS%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E5%99%A8%EF%BC%88%E5%A4%84%E7%90%86%EF%BC%89"><span class="nav-number">1.3.4.</span> <span class="nav-text">案例：文本编辑器（IO）VS视频编码器（处理）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95"><span class="nav-number">1.4.</span> <span class="nav-text">Linux调度算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Unix%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E2%80%93CFS%E5%85%AC%E5%B9%B3%E8%B0%83%E5%BA%A6"><span class="nav-number">1.4.1.</span> <span class="nav-text">Unix系统中的进程调度–CFS公平调度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux%E8%B0%83%E5%BA%A6%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.5.</span> <span class="nav-text">Linux调度的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E8%AE%B0%E8%B4%A6"><span class="nav-number">1.5.1.</span> <span class="nav-text">时间记账</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E9%80%89%E6%8B%A9"><span class="nav-number">1.5.2.</span> <span class="nav-text">进程选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E5%BA%A6%E5%99%A8%E5%85%A5%E5%8F%A3"><span class="nav-number">1.5.3.</span> <span class="nav-text">调度器入口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9D%A1%E7%9C%A0%E5%92%8C%E5%94%A4%E9%86%92"><span class="nav-number">1.5.4.</span> <span class="nav-text">睡眠和唤醒</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%A2%E5%8D%A0%E5%92%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2"><span class="nav-number">1.6.</span> <span class="nav-text">抢占和上下文切换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2"><span class="nav-number">1.6.1.</span> <span class="nav-text">上下文切换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%A2%E5%8D%A0"><span class="nav-number">1.6.2.</span> <span class="nav-text">抢占</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E6%8A%A2%E5%8D%A0"><span class="nav-number">1.6.2.1.</span> <span class="nav-text">用户抢占</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E6%A0%B8%E6%8A%A2%E5%8D%A0"><span class="nav-number">1.6.2.2.</span> <span class="nav-text">内核抢占</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%B0%83%E5%BA%A6%E3%80%90%E7%8E%B0%E4%BB%A3%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%AD%E6%A0%B9%E6%8D%AE%E4%B8%8D%E5%90%8C%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%80%BB%E7%BB%93%E3%80%91"><span class="nav-number">2.</span> <span class="nav-text">调度【现代操作系统中根据不同操作系统总结】</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%95%E6%97%B6%E8%B0%83%E5%BA%A6"><span class="nav-number">2.1.</span> <span class="nav-text">何时调度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95%E5%88%86%E7%B1%BB"><span class="nav-number">2.1.1.</span> <span class="nav-text">调度算法分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%B9%E5%A4%84%E7%90%86%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E8%B0%83%E5%BA%A6"><span class="nav-number">2.1.2.</span> <span class="nav-text">批处理系统中的调度</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%88%E6%9D%A5%E5%85%88%E6%9C%8D%E5%8A%A1%EF%BC%88first-come-first-served%EF%BC%89"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">先来先服务（first-come first-served）</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BF%87%E7%A8%8B"><span class="nav-number">2.1.2.1.1.</span> <span class="nav-text">过程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="nav-number">2.1.2.1.2.</span> <span class="nav-text">优缺点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9C%80%E7%9F%AD%E4%BD%9C%E4%B8%9A%E4%BC%98%E5%85%88"><span class="nav-number">2.1.2.1.3.</span> <span class="nav-text">最短作业优先</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9C%80%E7%9F%AD%E5%89%A9%E4%BD%99%E6%97%B6%E9%97%B4%E4%BC%98%E5%85%88"><span class="nav-number">2.1.2.1.4.</span> <span class="nav-text">最短剩余时间优先</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
 
       </div>
       <!--/noindex-->
@@ -580,7 +654,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-count">19</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -698,13 +772,13 @@ setInterval(function(){
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">58k</span>
+    <span title="站点总字数">60k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">53 分钟</span>
+    <span title="站点阅读时长">55 分钟</span>
 </div>
 
 
