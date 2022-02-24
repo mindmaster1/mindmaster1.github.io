@@ -84,7 +84,9 @@
   <entry>
     <title>HTTP报文</title>
     <url>/2022/02/23/HTTP%E6%8A%A5%E6%96%87/</url>
-    <content><![CDATA[<h1 id="HTTP报文"><a href="#HTTP报文" class="headerlink" title="HTTP报文"></a>HTTP报文</h1><p>HTTP报文是在HTTP应用程序之间发送的数据块。这些数据块以一些文本形式的**<em>元信息**</em>（meta-information）开头，这些信息描述了报文的内容及含义，后面跟着<strong>可选的数据部分</strong>。这些报文在客户端、服务器和代理之间流动。</p>
+    <content><![CDATA[<h1 id="HTTP报文"><a href="#HTTP报文" class="headerlink" title="HTTP报文"></a>HTTP报文</h1> 
+
+<p>HTTP报文是在HTTP应用程序之间发送的数据块。这些数据块以一些文本形式的**<em>元信息**</em>（meta-information）开头，这些信息描述了报文的内容及含义，后面跟着<strong>可选的数据部分</strong>。这些报文在客户端、服务器和代理之间流动。</p>
 
 
 
@@ -269,6 +271,74 @@
 
 <h3 id="Messege-body"><a href="#Messege-body" class="headerlink" title="Messege-body"></a>Messege-body</h3><p>HTTP报文的第三部分是可选的实体主体部分。实体的主体是HTTP报文的负荷。 就是HTTP要传输的内容。</p>
 ]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>HTTP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>HTTP连接</title>
+    <url>/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/</url>
+    <content><![CDATA[<h1 id="HTTP连接"><a href="#HTTP连接" class="headerlink" title="HTTP连接"></a>HTTP连接</h1><p>HTTP连接实际上就是TCP连接和一些使用连接的规则。</p>
+<p>TCP为HTTP提供了一条可靠的比特传输管道。从TCP连接一端填入的字节会从另 一端以原有的顺序、正确地传送出来</p>
+<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224094620498.png" alt="image-20220224094620498"></p>
+<p>安全版本**<em>HTTPS**</em>就是在HTTP和TCP之间插入了一个〈称为TLS或SSL 的）密码加密层。</p>
+<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224094734829.png" alt="image-20220224094734829"></p>
+<p>HTTP要传送一条报文时，会以流的形式将报文数据的内容通过一条打开的TCP连 接按序传输。TCP收到数据流之后，会将数据流砍成被称作段的小数据块，并将段 封装在IP分组中，通过因特网进行传输。</p>
+<p><strong><em>每个TCP段都是由IP分组承载</em></strong>，从一个IP地址发送到另一个IP地址的。每个IP 分组中都包括：</p>
+<ul>
+<li><p> 一个IP分组首部（通常为20字节）</p>
+</li>
+<li><p> 一个TCP段首部（通常为20字节）</p>
+</li>
+<li><p>一个TCP数据块（0个或多个字节）。</p>
+</li>
+</ul>
+<img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224095120890.png" alt="image-20220224095120890" style="zoom:50%;">
+
+<p><strong>承载TCP段的IP分组，承载了TCP数据流中的小块数据</strong></p>
+<p>TCP连接通过4个值来识别：【**<em>唯一标识连接**</em>】</p>
+<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224095247616.png" alt="image-20220224095247616"></p>
+<h2 id="HTTP连接的管理"><a href="#HTTP连接的管理" class="headerlink" title="HTTP连接的管理"></a>HTTP连接的管理</h2><h3 id="Connection首部"><a href="#Connection首部" class="headerlink" title="Connection首部"></a>Connection首部</h3><p><strong><em>防止无意中对本地首部的转发，“对首部的保护”</em></strong></p>
+<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224103350199.png" alt="image-20220224103350199"></p>
+<h3 id="串行事务处理时延"><a href="#串行事务处理时延" class="headerlink" title="串行事务处理时延"></a>串行事务处理时延</h3><p>如果只对连接进行简单的管理，TCP的性能时延可能会叠加起来。</p>
+<p>假设有一个包含了 3个嵌入图片的Web页面。浏览器需要发起4个HTTP事务来显示此页面: 1个用于顶层的HTML页面，3个用于嵌入的图片。如果每个事务都需要（串行地建立）一条新的连接，那么连接时延和慢启动时延就会叠加起来。</p>
+<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224103539476.png" alt="image-20220224103539476"></p>
+<p>同时，用户更希望同时加载多幅图片，而不是一张一张的加载。</p>
+<blockquote>
+<p>串行加载的另一个缺点是，有些浏览器在对象加载完毕之前无法获知对象的尺寸， 而且它们可能需要尺寸信息来决定将对象放在屏幕的什么位置上，所以在加载了足够多的对象之前，无法在屏幕上显示任何内容。在这种情况下，可能浏览器串行装 载对象的进度很正常，但用户面对的却是一个空白的屏幕，对装载的进度一无所知。</p>
+</blockquote>
+<p><strong><em>解决方案</em></strong></p>
+<ul>
+<li><p>并行连接</p>
+<p>通过多条TCP连接发起并发的HTTP请求。</p>
+</li>
+<li><p>持久连接</p>
+<p>重用TCP连接，以消除连接及关闭时延。</p>
+</li>
+<li><p>管道化连接</p>
+<p>通过共享的TCP连接发起并发的HTTP请求。</p>
+</li>
+<li><p>复用连接</p>
+<p>通过共享的TCP连接发起并发的HTTP请求。</p>
+</li>
+</ul>
+<h2 id="并行连接"><a href="#并行连接" class="headerlink" title="并行连接"></a>并行连接</h2><p> HTTP允许客户端打开多条连接，并行地执行多个HTTP事务。在 这个例子中，**<em>并行加载**</em>了四幅嵌入式图片，每个事务都有自己的TCP连接。</p>
+<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224104152923.png" alt="image-20220224104152923"></p>
+<h3 id="并行连接可能会提高页面加载速度"><a href="#并行连接可能会提高页面加载速度" class="headerlink" title="并行连接可能会提高页面加载速度"></a>并行连接可能会提高页面加载速度</h3><p>包含嵌入对象的组合页面如果能（通过并行连接）克服单条连接的<strong>空载时间和带宽限制</strong>，加载速度也会有所提高。<strong>时延可以重叠</strong>起来，而且如果单条连接没有充分利用客户端的因特网带宽，可以将未用带宽分配来装载其他对象。</p>
+<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224104412136.png" alt="image-20220224104412136"></p>
+<h3 id="并行连接不一定会更快"><a href="#并行连接不一定会更快" class="headerlink" title="并行连接不一定会更快"></a>并行连接不一定会更快</h3><blockquote>
+<p>如果并行加载多个对象， 每个对象都会去竞争这有限的带宽，每个对象都会以较慢的速度按比例加载，这样带来的性能提升就很小，甚至没什么提升。 </p>
+</blockquote>
+<blockquote>
+<p>打开大量连接会消耗很多内存资源，从而引发自身的性能问题。</p>
+</blockquote>
+<p>实际上，浏览器确实使用了并行连接，但它们会将并行连接的总数限制为一个较小的值（通常是4个）。服务器可以随意关闭来自特定客户端的超量连接。</p>
+<p>但并行连接确实可以让用户感觉到更快一些。</p>
+<p>多个组件对象同时出现在屏幕上时，用户能够看到加载的进展。”如果 整个屏幕上有很多动作在进行，即使实际上秒表显示整个页面的下载时间更长，人们也会认为Web页面加载得更快一些。</p>
+<h2 id="持久连接"><a href="#持久连接" class="headerlink" title="持久连接"></a>持久连接</h2><h2 id="管道化连接"><a href="#管道化连接" class="headerlink" title="管道化连接"></a>管道化连接</h2>]]></content>
       <categories>
         <category>计算机网络</category>
       </categories>
