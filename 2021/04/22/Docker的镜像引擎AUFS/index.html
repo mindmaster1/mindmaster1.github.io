@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.mindmaster.top","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Docker镜像引擎AUFS及联合文件系统Unionfs">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker的镜像引擎AUFS">
+<meta property="og:url" content="https://www.mindmaster.top/2021/04/22/Docker%E7%9A%84%E9%95%9C%E5%83%8F%E5%BC%95%E6%93%8EAUFS/index.html">
+<meta property="og:site_name" content="一只小码农">
+<meta property="og:description" content="Docker镜像引擎AUFS及联合文件系统Unionfs">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-04-21T16:32:43.000Z">
+<meta property="article:modified_time" content="2021-04-21T08:38:24.587Z">
+<meta property="article:author" content="邢浩东">
+<meta property="article:tag" content="Docker">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://www.mindmaster.top/2021/04/22/Docker%E7%9A%84%E9%95%9C%E5%83%8F%E5%BC%95%E6%93%8EAUFS/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Docker的镜像引擎AUFS | 一只小码农</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">一只小码农</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">每天进步一点点</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-stethoscope fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">40</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-braille fa-fw"></i>分类<span class="badge">21</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">68</span></a>
+
+  </li>
+        <li class="menu-item menu-item-movies">
+
+    <a href="/movies/" rel="section"><i class="fa fa-film fa-fw"></i>电影</a>
+
+  </li>
+        <li class="menu-item menu-item-book">
+
+    <a href="/book/" rel="section"><i class="fa fa-book fa-fw"></i>书籍</a>
+
+  </li>
+        <li class="menu-item menu-item-view">
+
+    <a href="/view/" rel="section"><i class="fa fa-blind fa-fw"></i>生活见闻--杂谈</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml/" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/mindmaster1" class="github-corner" title="Fork me on GitHub" aria-label="Fork me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.mindmaster.top/2021/04/22/Docker%E7%9A%84%E9%95%9C%E5%83%8F%E5%BC%95%E6%93%8EAUFS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/OIP.jfif">
+      <meta itemprop="name" content="邢浩东">
+      <meta itemprop="description" content="The world favors the underdog,and I would be the bad guy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一只小码农">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Docker的镜像引擎AUFS
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-04-21 16:32:43 / 修改时间：08:38:24" itemprop="dateCreated datePublished" datetime="2021-04-21T16:32:43Z">2021-04-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/04/22/Docker%E7%9A%84%E9%95%9C%E5%83%8F%E5%BC%95%E6%93%8EAUFS/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/04/22/Docker%E7%9A%84%E9%95%9C%E5%83%8F%E5%BC%95%E6%93%8EAUFS/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>14k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>13 分钟</span>
+            </span>
+            <div class="post-description">Docker镜像引擎AUFS及联合文件系统Unionfs</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><h3 id="Linux-的-rootfs-和-bootfs"><a href="#Linux-的-rootfs-和-bootfs" class="headerlink" title="Linux 的 rootfs 和 bootfs"></a>Linux 的 rootfs 和 bootfs</h3><p>一个典型的 Linux 系统要能运行的话，它至少需要两个文件系统：</p>
+<ul>
+<li>boot file system （bootfs）：包含 boot loader 和 kernel。用户不会修改这个文件系统。实际上，在启动（boot）过程完成后，整个内核都会被<code>加载进内存</code>，此时 bootfs 会<code>被卸载掉</code>从而释放出所占用的内存。同时也可以看出，对于同样内核版本的不同的 Linux 发行版的 bootfs 都是<code>一致的</code>。</li>
+<li>root file system （rootfs）：包含典型的目录结构，包括 /dev, /proc, /bin, /etc, /lib, /usr, and /tmp 等再加上要运行用户应用所需要的所有配置文件，二进制文件和库文件。这个文件系统在不同的 Linux 发行版中是<code>不同的</code>；</li>
+</ul>
+<p>其实相同内核的不同的 Linux 发行版就是<code>rootfs 不同，bootfs 相同</code>，如下图所示，<br> </p>
+<h3 id="AUFS"><a href="#AUFS" class="headerlink" title="AUFS"></a>AUFS</h3><p>最开始的思想是，在一些不可写的媒介上，比如 CD/DVD 上面 mount 一个便携式硬盘（可写磁盘），将 CD/DVD 的文件 mount 一份镜像到该磁盘上，已达到变相的对该媒介进行更改；既是在保证原有镜像不变的前提下，copy 一份镜像到磁盘，然后将变更保存在该磁盘上；这就是 AUFS 的核心思想；AUFS 正好被 Docker 拿来构建其<code>多层镜像</code><br>参考，<a target="_blank" rel="noopener" href="http://coolshell.cn/articles/17061.html">Docker基础技术：AUFS</a></p>
+<h2 id="Docker-的文件系统"><a href="#Docker-的文件系统" class="headerlink" title="Docker 的文件系统"></a>Docker 的文件系统</h2><h3 id="Docker-镜像的-rootfs"><a href="#Docker-镜像的-rootfs" class="headerlink" title="Docker 镜像的 rootfs"></a>Docker 镜像的 rootfs</h3> 
+
+<ul>
+<li>所有 Docker 容器都共享主机系统的 bootfs 即 Linux 内核</li>
+<li>每个容器有自己的 rootfs，它来自不同的 Linux 发行版的基础镜像，包括 Ubuntu，Debian 和 SUSE 等</li>
+<li>所有基于一种基础镜像的容器都共享这种 rootfs</li>
+</ul>
+<p>下面我们来看下 Docker 中的<code>多层镜像</code>，</p>
+<ul>
+<li><p>创建一个容器<code>web31</code>，并在该容器中执行<code>python app.py</code>启动一个 webapp 应用。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 创建一个名为 web31 的容器，会从 docker hub 上下载相关 tranning 镜像</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo docker create --name web31 training/webapp python app.py</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo docker ps -ls <span class="comment">#查看当前正在运行的 docker 容器</span></span></span><br><span class="line">CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES</span><br><span class="line">2210b152b308        training/webapp     &quot;python app.py&quot;     58 minutes ago      Created                              web31</span><br></pre></td></tr></table></figure></li>
+<li><p>查看<code>traning/webapp</code>镜像由哪些镜像构成</p>
+<ul>
+<li><p>history 查找指定镜像的构成历史记录</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 首先切换到 root 账户</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> su - root</span> </span><br><span class="line"><span class="meta">$</span><span class="bash"> docker <span class="built_in">history</span> training/webapp</span></span><br><span class="line">IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT</span><br><span class="line">6fae60ef3446        19 months ago       /bin/sh -c #(nop) CMD [&quot;python&quot; &quot;app.py&quot;]       0 B                 </span><br><span class="line">&lt;missing&gt;           19 months ago       /bin/sh -c #(nop) EXPOSE 5000/tcp               0 B                 </span><br><span class="line">&lt;missing&gt;           19 months ago       /bin/sh -c #(nop) WORKDIR /opt/webapp           0 B                 </span><br><span class="line">&lt;missing&gt;           19 months ago       /bin/sh -c #(nop) ADD dir:9b2a69f6f30d18b02b5   703 B               </span><br><span class="line">&lt;missing&gt;           19 months ago       /bin/sh -c pip install -qr /tmp/requirements.   4.363 MB            </span><br><span class="line">&lt;missing&gt;           19 months ago       /bin/sh -c #(nop) ADD file:c59059439864153904   41 B                </span><br><span class="line">&lt;missing&gt;           19 months ago       /bin/sh -c DEBIAN_FRONTEND=noninteractive apt   135.3 MB            </span><br><span class="line">&lt;missing&gt;           19 months ago       /bin/sh -c apt-get update                       20.8 MB             </span><br><span class="line">&lt;missing&gt;           19 months ago       /bin/sh -c #(nop) MAINTAINER Docker Education   0 B                 </span><br><span class="line">&lt;missing&gt;           19 months ago       /bin/sh -c #(nop) CMD [&quot;/bin/bash&quot;]             0 B                 </span><br><span class="line">&lt;missing&gt;           19 months ago       /bin/sh -c sed -i &#x27;s/^#\s*\(deb.*universe\)$/   1.895 kB            </span><br><span class="line">&lt;missing&gt;           19 months ago       /bin/sh -c echo &#x27;#!/bin/sh&#x27; &gt; /usr/sbin/polic   194.5 kB            </span><br><span class="line">&lt;missing&gt;           19 months ago       /bin/sh -c #(nop) ADD file:f4d7b4b3402b5c53f2   188.1 MB</span><br></pre></td></tr></table></figure></li>
+<li><p><code>/var/lib/docker/aufs/diff/</code> 镜像存放的位置</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ls -l</span></span><br><span class="line">root@ubuntu:/var/lib/docker/aufs/diff# ls -lt</span><br><span class="line">drwxr-xr-x  4 root root 4096 Dec 19 16:25 5420c2ad6952b5597042f7e3ca75e61333e8bda52eb4b9b0a197c4e4c5547c9e</span><br><span class="line">drwxr-xr-x  6 root root 4096 Dec 19 16:25 5420c2ad6952b5597042f7e3ca75e61333e8bda52eb4b9b0a197c4e4c5547c9e-init</span><br><span class="line">drwxr-xr-x  2 root root 4096 Dec 19 16:25 828a1c91a6fb1928559b7b9813c0917affd84fcfa7a4e79476d20623b2c29c2d</span><br><span class="line">drwxr-xr-x  2 root root 4096 Dec 19 16:25 8d8fd100b49edd233212e17c64c8b5061c2b79eb7f7f2fd5fae36c9bf59a502f</span><br><span class="line">drwxr-xr-x  2 root root 4096 Dec 19 16:25 9b79d3f46e7826defa1c283d8282f3169c876bde8b6084cdbe60672acacb9274</span><br><span class="line">drwxr-xr-x  3 root root 4096 Dec 19 16:25 864df82537caf88937c58efbf158f9185ebb872cfb54b15d8888f33561ddaa56</span><br><span class="line">drwxr-xr-x  3 root root 4096 Dec 19 16:25 a3c07d88c61c220d3cc2e2b317b317dec0be11fd629eab7bd3def680a25686cb</span><br><span class="line">drwxr-xr-x  3 root root 4096 Dec 19 16:25 e31f34199774f4446ddde561a3e1a3dbbc254e483f1bd7193571b93f776becc4</span><br><span class="line">drwxr-xr-x  6 root root 4096 Dec 19 16:25 1640c122bc62e1fa893cdeae766952951a934864dacbef3e87d2d9eae68c78d1</span><br><span class="line">drwxr-xr-x  3 root root 4096 Dec 19 16:24 258cfd490a2345067156a2f43d9425e7d12907ce3df64072e37a17ab18b55248</span><br><span class="line">drwxr-xr-x  2 root root 4096 Dec 19 16:24 67614ba4f62bb6f949acff511a18447a620d5b0a2c4c293bdeb7cd9e97a6cdbc</span><br><span class="line">drwxr-xr-x  2 root root 4096 Dec 19 16:24 654940ca942ba450e2c5dd38e10bc462333a0307b8531e3193b9f9cbcb119d16</span><br><span class="line">drwxr-xr-x  3 root root 4096 Dec 19 16:24 37edd74902c396df578b8fcfd233457fe27efd3e0f871e677ada43a92f0bad79</span><br><span class="line">drwxr-xr-x  6 root root 4096 Dec 19 16:24 9c0b2e0c1996496f8031c7bf148940e55b34bf7efa067725453430c8db3a27ea</span><br><span class="line">drwxr-xr-x 21 root root 4096 Dec 19 16:24 5ae0f9c8801e4493a1b5c6a2ba07bf4502e63193603f50681aa07fa5cf992949</span><br></pre></td></tr></table></figure>
+<p>这里，或许会有疑问，<code>training/webapp</code> 不是总共只有 13 层镜像吗？这里怎么显示有 15 层？那是因为容器<code>web31</code>本身包含两层（一层只读、一层可读写镜像），后续会详细描述。</p>
+</li>
+<li><p>定位<code>training/webapp</code>的基础镜像的目录位置<br>由于基础镜像中的 bin 目录会被直接使用，所以，我们可以试着查找 bin 目录中的一个文件来定位基础镜像的目录位置；<br>由此可知，目录<code>5ae0f9c8801e4493a1b5c6a2ba07bf4502e63193603f50681aa07fa5cf992949</code>是基础镜像的目录</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:/var/lib/docker/aufs/diff# find -iname mountpoint</span><br><span class="line">./5ae0f9c8801e4493a1b5c6a2ba07bf4502e63193603f50681aa07fa5cf992949/bin/mountpoint</span><br></pre></td></tr></table></figure></li>
+<li><p>查看基础镜像内容</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:/var/lib/docker/aufs/diff# ls -l 5ae0f9c8801e4493a1b5c6a2ba07bf4502e63193603f50681aa07fa5cf992949</span><br><span class="line">total 76</span><br><span class="line">drwxr-xr-x  2 root root 4096 Apr 27  2015 bin</span><br><span class="line">drwxr-xr-x  2 root root 4096 Apr 11  2014 boot</span><br><span class="line">drwxr-xr-x  3 root root 4096 Apr 27  2015 dev</span><br><span class="line">drwxr-xr-x 61 root root 4096 Apr 27  2015 etc</span><br><span class="line">drwxr-xr-x  2 root root 4096 Apr 11  2014 home</span><br><span class="line">drwxr-xr-x 12 root root 4096 Apr 27  2015 lib</span><br><span class="line">drwxr-xr-x  2 root root 4096 Apr 27  2015 lib64</span><br><span class="line">drwxr-xr-x  2 root root 4096 Apr 27  2015 media</span><br><span class="line">drwxr-xr-x  2 root root 4096 Apr 11  2014 mnt</span><br><span class="line">drwxr-xr-x  2 root root 4096 Apr 27  2015 opt</span><br><span class="line">drwxr-xr-x  2 root root 4096 Apr 11  2014 proc</span><br><span class="line">drwx------  2 root root 4096 Apr 27  2015 root</span><br><span class="line">drwxr-xr-x  7 root root 4096 Apr 27  2015 run</span><br><span class="line">drwxr-xr-x  2 root root 4096 Apr 27  2015 sbin</span><br><span class="line">drwxr-xr-x  2 root root 4096 Apr 27  2015 srv</span><br><span class="line">drwxr-xr-x  2 root root 4096 Mar 13  2014 sys</span><br><span class="line">drwxrwxrwt  2 root root 4096 Apr 27  2015 tmp</span><br><span class="line">drwxr-xr-x 10 root root 4096 Apr 27  2015 usr</span><br><span class="line">drwxr-xr-x 11 root root 4096 Apr 27  2015 var</span><br></pre></td></tr></table></figure>
+<p>可见，基础镜像目录中包含了当前虚拟机操作系统所必须的所有<code>rootfs</code></p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Docker-的-AUFS-文件系统"><a href="#Docker-的-AUFS-文件系统" class="headerlink" title="Docker 的 AUFS 文件系统"></a>Docker 的 AUFS 文件系统</h3><p>关于 Docker的分层镜像，除了 aufs，docker 还支持 btrfs, devicemapper 和 vfs，你可以使用 -s 或 –storage-driver= 选项来指定相关的镜像存储方式；Ubuntu 默认使用的是 AUFS.</p>
+<ul>
+<li><p><code>docker info</code>查看所使用的文件驱动</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:/var/lib/docker/aufs/diff# docker info</span><br><span class="line">Containers: 1</span><br><span class="line"> Running: 0</span><br><span class="line"> Paused: 0</span><br><span class="line"> Stopped: 1</span><br><span class="line">Images: 1</span><br><span class="line">Server Version: 1.12.1</span><br><span class="line">Storage Driver: aufs</span><br><span class="line"> Root Dir: /var/lib/docker/aufs</span><br><span class="line"> Backing Filesystem: extfs</span><br><span class="line"> Dirs: 15</span><br><span class="line"> Dirperm1 Supported: true</span><br><span class="line">Logging Driver: json-file</span><br><span class="line">Cgroup Driver: cgroupfs</span><br></pre></td></tr></table></figure></li>
+<li><p>从<code>training/webapp</code>镜像的角度，总共有 13 层镜像</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> docker images</span></span><br><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">training/webapp     latest              6fae60ef3446        19 months ago       348.8 MB</span><br><span class="line"><span class="meta">$</span><span class="bash"> docker inspect 6fae60ef3446</span></span><br><span class="line">        &quot;RootFS&quot;: &#123;</span><br><span class="line">            &quot;Type&quot;: &quot;layers&quot;,</span><br><span class="line">            &quot;Layers&quot;: [</span><br><span class="line">                &quot;sha256:1154ba695078d29ea6c4e1adb55c463959cd77509adf09710e2315827d66271a&quot;,</span><br><span class="line">                &quot;sha256:528c8710fd95f61d40b8bb8a549fa8dfa737d9b9c7c7b2ae55f745c972dddacd&quot;,</span><br><span class="line">                &quot;sha256:37ee47034d9b78f10f0c5ce3a25e6b6e58997fcadaf5f896c603a10c5f35fb31&quot;,</span><br><span class="line">                &quot;sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef&quot;,</span><br><span class="line">                &quot;sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef&quot;,</span><br><span class="line">                &quot;sha256:b75c0703b86b8ccbdc1f1b28b4982774768861ac250f83bdb940b1e90291f302&quot;,</span><br><span class="line">                &quot;sha256:5c121779bb29172c628a21087ea8ced766959da2f223c8b6bd4ffe943ace43d8&quot;,</span><br><span class="line">                &quot;sha256:3ee91c5cb95b01496b4afdc721ba7fd3c22e0e5e2f3e9e70d3f8579b5082d4f3&quot;,</span><br><span class="line">                &quot;sha256:6bbb1d0f845289217e20b66697fa7d651394d89983b0f5a89b88f037194476fe&quot;,</span><br><span class="line">                &quot;sha256:b44b0832d4c6bf33122ce3aa896b133df88275e6d20663a9bf2d941f764ac1fd&quot;,</span><br><span class="line">                &quot;sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef&quot;,</span><br><span class="line">                &quot;sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef&quot;,</span><br><span class="line">                &quot;sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef&quot;</span><br><span class="line">            ]</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p>可见<code>training/webapp</code>镜像总共由 13 层只读层镜像构成，这个和 <code>$ docker history training/webapp</code> 输出的结果是吻合</p>
+</li>
+<li><p>那么从当前容器<code>web31</code>的角度，AUFS 的结构情况是怎样的呢？</p>
+<ul>
+<li><p>查看宿主机 AUFS 的文件结构</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:/var/lib/docker/aufs/diff# ls -lt</span><br><span class="line">total 60</span><br><span class="line">drwxr-xr-x  4 root root 4096 Dec 19 16:25 5420c2ad6952b5597042f7e3ca75e61333e8bda52eb4b9b0a197c4e4c5547c9e</span><br><span class="line">drwxr-xr-x  6 root root 4096 Dec 19 16:25 5420c2ad6952b5597042f7e3ca75e61333e8bda52eb4b9b0a197c4e4c5547c9e-init</span><br><span class="line">drwxr-xr-x  2 root root 4096 Dec 19 16:25 828a1c91a6fb1928559b7b9813c0917affd84fcfa7a4e79476d20623b2c29c2d</span><br><span class="line">drwxr-xr-x  2 root root 4096 Dec 19 16:25 8d8fd100b49edd233212e17c64c8b5061c2b79eb7f7f2fd5fae36c9bf59a502f</span><br><span class="line">drwxr-xr-x  2 root root 4096 Dec 19 16:25 9b79d3f46e7826defa1c283d8282f3169c876bde8b6084cdbe60672acacb9274</span><br><span class="line">drwxr-xr-x  3 root root 4096 Dec 19 16:25 864df82537caf88937c58efbf158f9185ebb872cfb54b15d8888f33561ddaa56</span><br><span class="line">drwxr-xr-x  3 root root 4096 Dec 19 16:25 a3c07d88c61c220d3cc2e2b317b317dec0be11fd629eab7bd3def680a25686cb</span><br><span class="line">drwxr-xr-x  3 root root 4096 Dec 19 16:25 e31f34199774f4446ddde561a3e1a3dbbc254e483f1bd7193571b93f776becc4</span><br><span class="line">drwxr-xr-x  6 root root 4096 Dec 19 16:25 1640c122bc62e1fa893cdeae766952951a934864dacbef3e87d2d9eae68c78d1</span><br><span class="line">drwxr-xr-x  3 root root 4096 Dec 19 16:24 258cfd490a2345067156a2f43d9425e7d12907ce3df64072e37a17ab18b55248</span><br><span class="line">drwxr-xr-x  2 root root 4096 Dec 19 16:24 67614ba4f62bb6f949acff511a18447a620d5b0a2c4c293bdeb7cd9e97a6cdbc</span><br><span class="line">drwxr-xr-x  2 root root 4096 Dec 19 16:24 654940ca942ba450e2c5dd38e10bc462333a0307b8531e3193b9f9cbcb119d16</span><br><span class="line">drwxr-xr-x  3 root root 4096 Dec 19 16:24 37edd74902c396df578b8fcfd233457fe27efd3e0f871e677ada43a92f0bad79</span><br><span class="line">drwxr-xr-x  6 root root 4096 Dec 19 16:24 9c0b2e0c1996496f8031c7bf148940e55b34bf7efa067725453430c8db3a27ea</span><br><span class="line">drwxr-xr-x 21 root root 4096 Dec 19 16:24 5ae0f9c8801e4493a1b5c6a2ba07bf4502e63193603f50681aa07fa5cf992949</span><br></pre></td></tr></table></figure>
+<p>可以看到，容器需要使用的镜像总共有 15 层，当前容器使用的镜像比<code>training/webapp</code>的初始镜像多了两层，那么这 15 层镜像(目录)在当前容器中是如何对应的呢？</p>
+</li>
+<li><p>查看 Docker 容器中针对 AUFS 文件系统的使用情况<br>进入 docker 的命令行，在 /sys/fs/aufs/si_<CONTAINERID> 中查看各级镜像权限对应情况；</CONTAINERID></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu: docker run -it training/webapp /bin/bash</span><br><span class="line">root@762be790cc1f:/opt/webapp# cd /sys/fs/aufs/si_d37f4010e9a078ff/</span><br><span class="line">root@762be790cc1f:/sys/fs/aufs/si_d37f4010e9a078ff# ls</span><br><span class="line">br0  br10  br12  br14  br3  br5  br7  br9    brid1   brid11  brid13  brid2  brid4  brid6  brid8  xi_path</span><br><span class="line">br1  br11  br13  br2   br4  br6  br8  brid0  brid10  brid12  brid14  brid3  brid5  brid7  brid9</span><br><span class="line">root@762be790cc1f:/sys/fs/aufs/si_d37f4010e9a078ff# cat *</span><br><span class="line">/var/lib/docker/aufs/diff/8a94a9d1a72928628004cb344f92a54b5325f44a10a54eeb83bc0d79bfed3d2f=rw</span><br><span class="line">/var/lib/docker/aufs/diff/8a94a9d1a72928628004cb344f92a54b5325f44a10a54eeb83bc0d79bfed3d2f-init=ro+wh # 该层以及以下的13层都是只读镜像</span><br><span class="line">/var/lib/docker/aufs/diff/67614ba4f62bb6f949acff511a18447a620d5b0a2c4c293bdeb7cd9e97a6cdbc=ro+wh</span><br><span class="line">/var/lib/docker/aufs/diff/654940ca942ba450e2c5dd38e10bc462333a0307b8531e3193b9f9cbcb119d16=ro+wh</span><br><span class="line">/var/lib/docker/aufs/diff/37edd74902c396df578b8fcfd233457fe27efd3e0f871e677ada43a92f0bad79=ro+wh</span><br><span class="line">/var/lib/docker/aufs/diff/9c0b2e0c1996496f8031c7bf148940e55b34bf7efa067725453430c8db3a27ea=ro+wh</span><br><span class="line">/var/lib/docker/aufs/diff/5ae0f9c8801e4493a1b5c6a2ba07bf4502e63193603f50681aa07fa5cf992949=ro+wh</span><br><span class="line">/var/lib/docker/aufs/diff/828a1c91a6fb1928559b7b9813c0917affd84fcfa7a4e79476d20623b2c29c2d=ro+wh</span><br><span class="line">/var/lib/docker/aufs/diff/8d8fd100b49edd233212e17c64c8b5061c2b79eb7f7f2fd5fae36c9bf59a502f=ro+wh</span><br><span class="line">/var/lib/docker/aufs/diff/9b79d3f46e7826defa1c283d8282f3169c876bde8b6084cdbe60672acacb9274=ro+wh</span><br><span class="line">/var/lib/docker/aufs/diff/864df82537caf88937c58efbf158f9185ebb872cfb54b15d8888f33561ddaa56=ro+wh</span><br><span class="line">/var/lib/docker/aufs/diff/a3c07d88c61c220d3cc2e2b317b317dec0be11fd629eab7bd3def680a25686cb=ro+wh</span><br><span class="line">/var/lib/docker/aufs/diff/e31f34199774f4446ddde561a3e1a3dbbc254e483f1bd7193571b93f776becc4=ro+wh</span><br><span class="line">/var/lib/docker/aufs/diff/1640c122bc62e1fa893cdeae766952951a934864dacbef3e87d2d9eae68c78d1=ro+wh</span><br><span class="line">/var/lib/docker/aufs/diff/258cfd490a2345067156a2f43d9425e7d12907ce3df64072e37a17ab18b55248=ro+wh</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">/dev/shm/aufs.xino</span><br></pre></td></tr></table></figure>
+<p>可见，比起该容器的初始镜像，容器多了两层镜像，<br>/var/lib/docker/aufs/diff/8a94a9d1a72928628004cb344f92a54b5325f44a10a54eeb83bc0d79bfed3d2f=rw<br>/var/lib/docker/aufs/diff/8a94a9d1a72928628004cb344f92a54b5325f44a10a54eeb83bc0d79bfed3d2f-init=ro+wh<br>根据已有的13层镜像创建一层新的只读镜像 8a94a9d1a72928628004cb344f92a54b5325f44a10a54eeb83bc0d79bfed3d2f-<code>init</code>，然后再创建一层可读写镜像层 8a94a9d1a72928628004cb344f92a54b5325f44a10a54eeb83bc0d79bfed3d2f，然后所有在容器内发生的改动，均保存到该层中。</p>
+<p>如上，反映了 Docker 的镜像和容器的镜像层次结构，容器的镜像层次结构主要是多了一层可读写的镜像层，使 Docker 容器可以进行读写操作；<code>但要注意的是，Docker 容器对改动的保存是临时的，当 Docker 关闭以后，所有的修改也会随之删除</code>。要能够永久的保留这些修改，有两种选择，1、使用<code>docker commit</code>命令将当前容器中发生的变更生成一个新的只读镜像；2、使用 Data Volume。</p>
+ 
+
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="做一些试验"><a href="#做一些试验" class="headerlink" title="做一些试验"></a>做一些试验</h3><ul>
+<li><p>在容器中创建一个文件，该文件会被创建在可写的容器层中</p>
+<ul>
+<li><p>进入 Docker command，创建一个文件 helloworld</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:~# docker run -it training/webapp /bin/bash</span><br><span class="line">root@832f3494ce20:/opt# cd ~</span><br><span class="line">root@832f3494ce20:~# touch helloworld</span><br><span class="line">root@832f3494ce20:~# echo &quot;hello world&quot; &gt; helloworld</span><br></pre></td></tr></table></figure></li>
+<li><p>在宿主机上查看 AUFS 文件系统的变化</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:~# cd /var/lib/docker/aufs/diff</span><br><span class="line">root@ubuntu:/var/lib/docker/aufs/diff# find -iname helloworld</span><br><span class="line">./a24e1296a1ecce3e8c2a6f2bc5bee83512b05cea70939d536f91b7ba089f7d1c/root/helloworld</span><br><span class="line">root@ubuntu:/var/lib/docker/aufs/diff# ls -lt</span><br><span class="line">total 84</span><br><span class="line">drwxr-xr-x  5 root root 4096 Dec 20 08:14 a24e1296a1ecce3e8c2a6f2bc5bee83512b05cea70939d536f91b7ba089f7d1c</span><br><span class="line">drwxr-xr-x  6 root root 4096 Dec 20 08:13 a24e1296a1ecce3e8c2a6f2bc5bee83512b05cea70939d536f91b7ba089f7d1c-init</span><br><span class="line">drwxr-xr-x  4 root root 4096 Dec 20 08:12 693983a5a21e6225d3dcfc1976b9a97a8e73e66f44e9e8c143b492f393eb040d</span><br></pre></td></tr></table></figure>
+<p>可见，在 docker 中生成的 helloworld 文件，保存在 <code>a24e1296a1ecce3e8c2a6f2bc5bee83512b05cea70939d536f91b7ba089f7d1c</code> 目录中，这正是 Docker 容器的可写层。</p>
+</li>
+</ul>
+</li>
+<li><p>修改一个镜像层中的文件</p>
+<ul>
+<li><p>在 Docker 中，对 source.list 进行修改</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@832f3494ce20:/sys/fs/aufs/si_1dcd197dfd656845# vim /etc/apt/sources.list</span><br></pre></td></tr></table></figure>
+<p>这里，这是简单的将某一行进行注释，下面我们来看看宿主机上 AUFS 的文件的变化情况</p>
+</li>
+<li><p>在宿主机上，我们来看看变化情况<br>修改之前</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:/var/lib/docker/aufs/diff# find -iname sources.list</span><br><span class="line">./37edd74902c396df578b8fcfd233457fe27efd3e0f871e677ada43a92f0bad79/etc/apt/sources.list</span><br><span class="line">./5ae0f9c8801e4493a1b5c6a2ba07bf4502e63193603f50681aa07fa5cf992949/usr/share/doc/apt/examples/sources.list</span><br><span class="line">./5ae0f9c8801e4493a1b5c6a2ba07bf4502e63193603f50681aa07fa5cf992949/etc/apt/sources.list</span><br></pre></td></tr></table></figure>
+<p>修改之后</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:/var/lib/docker/aufs/diff# find -iname sources.list</span><br><span class="line">./37edd74902c396df578b8fcfd233457fe27efd3e0f871e677ada43a92f0bad79/etc/apt/sources.list</span><br><span class="line">./a24e1296a1ecce3e8c2a6f2bc5bee83512b05cea70939d536f91b7ba089f7d1c/etc/apt/sources.list</span><br><span class="line">./5ae0f9c8801e4493a1b5c6a2ba07bf4502e63193603f50681aa07fa5cf992949/usr/share/doc/apt/examples/sources.list</span><br><span class="line">./5ae0f9c8801e4493a1b5c6a2ba07bf4502e63193603f50681aa07fa5cf992949/etc/apt/sources.list</span><br></pre></td></tr></table></figure>
+<p>我们可以清楚的看到，发生变化的 source.list 被添加到了科写层<code>a24e1296a1ecce3e8c2a6f2bc5bee83512b05cea70939d536f91b7ba089f7d1c</code></p>
+</li>
+</ul>
+</li>
+<li><p>删除容器层中的文件<br>我们来试图在容器中删除 itsdangerous.py，看看 AUFS 文件系统发生了什么变化</p>
+<ul>
+<li><p>在容器中删除</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">root@832f3494ce20:/sys/fs/aufs/si_1dcd197dfd656845# cd /</span><br><span class="line">root@832f3494ce20:/# find -iname itsdangerous.py</span><br><span class="line">./usr/local/lib/python2.7/dist-packages/itsdangerous.py</span><br><span class="line">root@832f3494ce20:/# rm ./usr/local/lib/python2.7/dist-packages/itsdangerous.py</span><br><span class="line">root@832f3494ce20:/# find -iname itsdangerous.py</span><br><span class="line">root@832f3494ce20:/#</span><br></pre></td></tr></table></figure></li>
+<li><p>在宿主机上查看 AUFS 文件系统的变化情况</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:/var/lib/docker/aufs/diff# find -iname *itsdangerous.py</span><br><span class="line">./a24e1296a1ecce3e8c2a6f2bc5bee83512b05cea70939d536f91b7ba089f7d1c/usr/local/lib/python2.7/dist-packages/.wh.itsdangerous.py</span><br><span class="line">./a3c07d88c61c220d3cc2e2b317b317dec0be11fd629eab7bd3def680a25686cb/usr/local/lib/python2.7/dist-packages/itsdangerous.py</span><br></pre></td></tr></table></figure>
+<p>可见，容器层(既 AUFS 可写层) <code>a24e1296a1ecce3e8c2a6f2bc5bee83512b05cea70939d536f91b7ba089f7d1c</code>只是相应的生成了一个<code>Whiteout 文件</code>既是<code>.wh.+文件名</code>，让其在容器中不可见，而镜像层的文件不会发生任何变化。</p>
+</li>
+<li><p>在宿主机上直接将 .wh 文件删除，itsdangerous.py 又出现在了容器中<br>在宿主机上删除 .wh 文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:/var/lib/docker/aufs/diff# rm ./a24e1296a1ecce3e8c2a6f2bc5bee83512b05cea70939d536f91b7ba089f7d1c/usr/local/lib/python2.7/dist-packages/.wh.itsdangerous.py</span><br></pre></td></tr></table></figure>
+<p>检查容器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@832f3494ce20:/# find -iname itsdangerous.py</span><br><span class="line">./usr/local/lib/python2.7/dist-packages/itsdangerous.py</span><br></pre></td></tr></table></figure>
+<p>有意思，itsdangerous.py 在容器中又恢复了.. 这就是 AUFS 的特性，被删除的文件只是在容器层中通过 .wh 文件加上了一个不可见的标识。</p>
+</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">相关文章推荐</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2021\04\16\Docker学习第一阶段\" rel="bookmark">Docker基础命令与镜像</a></div>
+        <div class="popular-posts-excerpt"><p>docker第一阶段学习的总结</p></div>
+    </li>
+  </ul>
+
+        <div class="reward-container">
+  <div>谢谢你的支持哦，继续加油.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="邢浩东 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="邢浩东 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>邢浩东
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.mindmaster.top/2021/04/22/Docker%E7%9A%84%E9%95%9C%E5%83%8F%E5%BC%95%E6%93%8EAUFS/" title="Docker的镜像引擎AUFS">https://www.mindmaster.top/2021/04/22/Docker的镜像引擎AUFS/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-%E9%82%A2%E6%B5%A9%E4%B8%9C/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-邢浩东</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Docker/" rel="tag"># Docker</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/04/16/Docker%E5%AD%A6%E4%B9%A0%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5/" rel="prev" title="Docker基础命令与镜像">
+      <i class="fa fa-chevron-left"></i> Docker基础命令与镜像
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/05/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E4%B9%8B%E5%85%AD%E5%A4%A7%E5%8E%9F%E5%88%99/" rel="next" title="设计模式--之六大原则">
+      设计模式--之六大原则 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="nav-number">1.</span> <span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux-%E7%9A%84-rootfs-%E5%92%8C-bootfs"><span class="nav-number">1.1.</span> <span class="nav-text">Linux 的 rootfs 和 bootfs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AUFS"><span class="nav-number">1.2.</span> <span class="nav-text">AUFS</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-%E7%9A%84%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="nav-number">2.</span> <span class="nav-text">Docker 的文件系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker-%E9%95%9C%E5%83%8F%E7%9A%84-rootfs"><span class="nav-number">2.1.</span> <span class="nav-text">Docker 镜像的 rootfs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker-%E7%9A%84-AUFS-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="nav-number">2.2.</span> <span class="nav-text">Docker 的 AUFS 文件系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%9A%E4%B8%80%E4%BA%9B%E8%AF%95%E9%AA%8C"><span class="nav-number">2.3.</span> <span class="nav-text">做一些试验</span></a></li></ol></li></ol></div>
+
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="邢浩东"
+      src="/images/OIP.jfif">
+  <p class="site-author-name" itemprop="name">邢浩东</p>
+  <div class="site-description" itemprop="description">The world favors the underdog,and I would be the bad guy</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mindmaster1" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mindmaster1" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/yourname" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;yourname" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.csdn.net/" title="CSDN → https:&#x2F;&#x2F;www.csdn.net" rel="noopener" target="_blank"><i class="fab fa-apple fa-fw"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://juejin.cn/user/1706074845232983" title="掘金 → https:&#x2F;&#x2F;juejin.cn&#x2F;user&#x2F;1706074845232983" rel="noopener" target="_blank"><i class="fa fa-binoculars fa-fw"></i>掘金</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Leetcode刷题
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://leetcode-cn.com/" title="https:&#x2F;&#x2F;leetcode-cn.com&#x2F;" rel="noopener" target="_blank">通向快乐</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+ <div>
+    <svg>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-1"></text>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-2"></text>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-3"></text>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-4"></text>
+    </svg>
+</div>
+<script>
+function showtime(){
+    var noatime = new Date();
+    var h = noatime.getHours(),
+        m = noatime.getMinutes(),
+        s = noatime.getSeconds();
+    h=checktime(h);
+    m=checktime(m);
+    s=checktime(s);
+  return h+":"+m+":"+s;
+}
+function checktime(x){
+  if(x<10){
+    x="0"+x;
+  }
+  return x;
+}
+var div1=document.getElementsByTagName("text");
+setInterval(function(){
+  for (var i in div1){
+      div1[i].innerHTML=showtime();
+  }
+},1000);
+</script>	   
+
+<script type="text/javascript" src="//rf.revolvermaps.com/0/0/1.js?i=57fnj853bkq&amp;s=220&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+ 
+    
+  </ul>
+    </div>
+	
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+	
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">邢浩东</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">289k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">4:23</span>
+</div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'dOLOPmQA1yPidXhJmndTryVE-gzGzoHsz',
+      appKey     : 'tDnfIUMcS9cpj4Rqgxu4mUxG',
+      placeholder: "欢迎大家畅所欲言# Comment box placeholder",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

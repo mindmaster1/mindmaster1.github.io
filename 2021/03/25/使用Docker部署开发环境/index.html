@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.mindmaster.top","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="使用Docker可以很方便的配置开发环境">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Docker部署开发环境">
+<meta property="og:url" content="https://www.mindmaster.top/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/index.html">
+<meta property="og:site_name" content="一只小码农">
+<meta property="og:description" content="使用Docker可以很方便的配置开发环境">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/01.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/02.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/03.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/04.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/05.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/06.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/07.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/08.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/09.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/12.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/13.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/10.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/11.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/14.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/15.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/16.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/17.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/18.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/19.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/20.png">
+<meta property="og:image" content="https://www.mindmaster.top/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/21.png">
+<meta property="article:published_time" content="2021-03-24T19:07:11.000Z">
+<meta property="article:modified_time" content="2022-03-28T06:39:36.008Z">
+<meta property="article:author" content="邢浩东">
+<meta property="article:tag" content="环境配置">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.mindmaster.top/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/01.png">
+
+<link rel="canonical" href="https://www.mindmaster.top/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>使用Docker部署开发环境 | 一只小码农</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">一只小码农</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">每天进步一点点</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-stethoscope fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">40</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-braille fa-fw"></i>分类<span class="badge">21</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">68</span></a>
+
+  </li>
+        <li class="menu-item menu-item-movies">
+
+    <a href="/movies/" rel="section"><i class="fa fa-film fa-fw"></i>电影</a>
+
+  </li>
+        <li class="menu-item menu-item-book">
+
+    <a href="/book/" rel="section"><i class="fa fa-book fa-fw"></i>书籍</a>
+
+  </li>
+        <li class="menu-item menu-item-view">
+
+    <a href="/view/" rel="section"><i class="fa fa-blind fa-fw"></i>生活见闻--杂谈</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml/" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/mindmaster1" class="github-corner" title="Fork me on GitHub" aria-label="Fork me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.mindmaster.top/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/OIP.jfif">
+      <meta itemprop="name" content="邢浩东">
+      <meta itemprop="description" content="The world favors the underdog,and I would be the bad guy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一只小码农">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用Docker部署开发环境
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-03-24 19:07:11" itemprop="dateCreated datePublished" datetime="2021-03-24T19:07:11Z">2021-03-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-28 06:39:36" itemprop="dateModified" datetime="2022-03-28T06:39:36Z">2022-03-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>9.7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>9 分钟</span>
+            </span>
+            <div class="post-description">使用Docker可以很方便的配置开发环境</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="在Linux上安装Docker"><a href="#在Linux上安装Docker" class="headerlink" title="在Linux上安装Docker"></a>在Linux上安装Docker</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> # 系统内核是3.10以上的</span><br><span class="line">root@theSun:&#x2F;# uname -r</span><br><span class="line">4.4.0-185-generic</span><br><span class="line"></span><br><span class="line"># 系统版本</span><br><span class="line">root@theSun:&#x2F;# cat &#x2F;etc&#x2F;os-release </span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> step 1: 安装必要的一些系统工具</span></span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common</span><br><span class="line"><span class="meta">#</span><span class="bash"> step 2: 安装GPG证书</span></span><br><span class="line">curl -fsSL http://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -</span><br><span class="line"><span class="meta">#</span><span class="bash"> Step 3: 写入软件源信息</span></span><br><span class="line">sudo add-apt-repository &quot;deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable&quot;</span><br><span class="line"><span class="meta">#</span><span class="bash"> Step 4: 更新并安装 Docker-CE</span></span><br><span class="line">sudo apt-get -y update</span><br><span class="line">sudo apt-get -y install docker-ce</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看镜像</span></span><br><span class="line">docker image</span><br><span class="line"></span><br><span class="line">卸载：</span><br><span class="line">1、卸载依赖</span><br><span class="line">sudo apt-get purge docker-ce docker-ce-cli containerd.io</span><br><span class="line">2、删除资源</span><br><span class="line">sudo rm -rf /var/lib/docker</span><br></pre></td></tr></table></figure>
+<h2 id="Docker安装部署RabbitMQ"><a href="#Docker安装部署RabbitMQ" class="headerlink" title="Docker安装部署RabbitMQ"></a>Docker安装部署RabbitMQ</h2><p>这里注意获取镜像的时候要获取management版本的，不要获取last版本的，management版本的才带有管理界面。</p>
+<h3 id="查询镜像"><a href="#查询镜像" class="headerlink" title="查询镜像"></a>查询镜像</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">docker</span> <span class="selector-tag">search</span> <span class="selector-tag">rabbitmq</span><span class="selector-pseudo">:management</span></span><br></pre></td></tr></table></figure>
+<p>可以看到如下结果：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">root@localhost ~</span>]<span class="meta"># docker search rabbitmq:management</span></span><br><span class="line">INDEX       NAME                                          DESCRIPTION                                     STARS     OFFICIAL   AUTOMATED</span><br><span class="line">docker.io   docker.io/macintoshplus/rabbitmq-management   Based <span class="keyword">on</span> rabbitmq:management whit python a...   <span class="number">1</span>                    [OK]</span><br><span class="line">docker.io   docker.io/transmitsms/rabbitmq-sharded        Fork of rabbitmq:management <span class="keyword">with</span> sharded_e...   <span class="number">0</span></span><br><span class="line">[<span class="meta">root@localhost ~</span>]<span class="meta">#</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="获取镜像"><a href="#获取镜像" class="headerlink" title="获取镜像"></a>获取镜像</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">docker</span> <span class="selector-tag">pull</span> <span class="selector-tag">rabbitmq</span><span class="selector-pseudo">:management</span></span><br></pre></td></tr></table></figure>
+<p>可以看到如下结果</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">root@localhost ~</span>]<span class="meta"># docker pull rabbitmq:management</span></span><br><span class="line">Trying to pull repository docker.io/library/rabbitmq ...</span><br><span class="line">management: Pulling <span class="keyword">from</span> docker.io/library/rabbitmq</span><br><span class="line">e7bb522d92ff: Pull complete</span><br><span class="line">ad90649c4d84: Pull complete</span><br><span class="line"><span class="number">5</span>a318b914d6c: Pull complete</span><br><span class="line">cedd60f70052: Pull complete</span><br><span class="line">f4ec28761801: Pull complete</span><br><span class="line">b8fa44aa9074: Pull complete</span><br><span class="line">e8002a209c24: Pull complete</span><br><span class="line">cd1206edcd43: Pull complete</span><br><span class="line"><span class="number">769b</span>e0727074: Pull complete</span><br><span class="line"><span class="number">7308b</span>93d35af: Pull complete</span><br><span class="line">c4102ef22c29: Pull complete</span><br><span class="line">fefc8e1aa4b5: Pull complete</span><br><span class="line">a271d400045b: Pull complete</span><br><span class="line">b0d4c40c62de: Pull complete</span><br><span class="line">Digest: sha256:<span class="number">8761</span>de2c22badfc86dfe89791dc9dbf122f67ff0f8981966573d267af421b97f</span><br><span class="line">[<span class="meta">root@localhost ~</span>]<span class="meta">#</span></span><br></pre></td></tr></table></figure>
+<h3 id="运行镜像"><a href="#运行镜像" class="headerlink" title="运行镜像"></a>运行镜像</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">docker</span> <span class="selector-tag">run</span> <span class="selector-tag">-d</span> <span class="selector-tag">-p</span> 5672<span class="selector-pseudo">:5672</span> <span class="selector-tag">-p</span> 15672<span class="selector-pseudo">:15672</span> <span class="selector-tag">--name</span> <span class="selector-tag">rabbitmq</span> <span class="selector-tag">rabbitmq</span><span class="selector-pseudo">:management</span></span><br></pre></td></tr></table></figure>
+<p>看到如下结果，变成功了：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-attr">[root@localhost ~]</span># <span class="selector-tag">docker</span> <span class="selector-tag">run</span> <span class="selector-tag">-d</span> <span class="selector-tag">-p</span> 5672<span class="selector-pseudo">:5672</span> <span class="selector-tag">-p</span> 15672<span class="selector-pseudo">:15672</span> <span class="selector-tag">--name</span> <span class="selector-tag">rabbitmq</span> <span class="selector-tag">rabbitmq</span><span class="selector-pseudo">:management</span></span><br><span class="line"><span class="selector-tag">e194a2dbeb52f2296dfb6d1c527cf052d82be5ed9a4c974d70dcd6af3da3eb7e</span></span><br><span class="line"><span class="selector-attr">[root@localhost ~]</span>#</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="访问管理页面"><a href="#访问管理页面" class="headerlink" title="访问管理页面"></a>访问管理页面</h3><p>访问管理界面的地址就是 http://[宿主机IP]:15672，可以使用默认的账户登录，用户名和密码都guest，如：</p>
+<img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/01.png" class>
+
+<blockquote>
+<p><strong>需要注意的是</strong>：</p>
+<ul>
+<li>在云服务器上，默认情况下，RabbitMQ的端口号15672是不开放的，需要自己登陆控制台添加安全组规则，放开对15672端口号的访问限制。</li>
+<li>Linux系统上，宿主IP地址直接就是该系统的公网地址。</li>
+</ul>
+</blockquote>
+<img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/02.png" class>
+
+<h2 id="Docker安装Redis"><a href="#Docker安装Redis" class="headerlink" title="Docker安装Redis"></a>Docker安装Redis</h2><h3 id="找到一个合适的docker的redis的版本"><a href="#找到一个合适的docker的redis的版本" class="headerlink" title="找到一个合适的docker的redis的版本"></a>找到一个合适的docker的redis的版本</h3><p>可以去docker hub中去找一下</p>
+<p><a target="_blank" rel="noopener" href="https://hub.docker.com/_/redis?tab=tags">https://hub.docker.com/_/redis?tab=tags</a></p>
+ <img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/03.png" class>
+
+<h3 id="使用docker安装redis"><a href="#使用docker安装redis" class="headerlink" title="使用docker安装redis"></a>使用docker安装redis</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker pull redis</span><br></pre></td></tr></table></figure>
+<p>安装好之后使用<code>docker images即可查看</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">truedei@truedei:~$ </span><br><span class="line">truedei@truedei:~$ sudo docker images</span><br><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">redis               latest              987b78fc9e38        <span class="number">10</span> days ago         104MB</span><br><span class="line">httpd               latest              a8a9cbaadb0c        <span class="number">2</span> weeks ago         166MB</span><br><span class="line">fjudith/draw.io     latest              7b136fc80d31        <span class="number">3</span> weeks ago         683MB</span><br><span class="line">mysql               <span class="number">5.7</span><span class="number">.29</span>              f5829c0eee9e        <span class="number">5</span> weeks ago         455MB</span><br><span class="line">truedei@truedei:~$ </span><br><span class="line">truedei@truedei:~$ </span><br></pre></td></tr></table></figure>
+<h3 id="准备redis"><a href="#准备redis" class="headerlink" title="准备redis"></a>准备redis</h3><p>因为需要<a target="_blank" rel="noopener" href="https://cloud.tencent.com/product/crs?from=10680">redis</a>的配置文件，这里最好还是去redis的官方去下载一个redis使用里面的配置文件即可</p>
+<p>redis中文官方网站：<a target="_blank" rel="noopener" href="http://www.redis.cn/download.html">http://www.redis.cn/download.html</a></p>
+ <img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/04.png" class>
+
+<p>下载后解压出来： </p>
+ <img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/05.png" class>
+
+<p>这个<code>redis.conf</code>文件就是咱们需要的，为了保险，还是拷贝一下，做个备份。</p>
+<h3 id="配置redis"><a href="#配置redis" class="headerlink" title="配置redis"></a>配置redis</h3><p><strong>修改<code>redis.conf</code>配置文件：</strong> 主要配置的如下：</p>
+<blockquote>
+<p> <code>bind 127.0.0.1</code> #注释掉这部分，使redis可以外部访问 <code>daemonize no</code>#用守护线程的方式启动 <code>requirepass 你的密码</code>#给redis设置密码 <code>appendonly yes</code>#redis持久化　　默认是no <code>tcp-keepalive 300</code> #防止出现远程主机强迫关闭了一个现有的连接的错误 默认是300 </p>
+</blockquote>
+<h3 id="创建本地与docker映射的目录，即本地存放的位置"><a href="#创建本地与docker映射的目录，即本地存放的位置" class="headerlink" title="创建本地与docker映射的目录，即本地存放的位置"></a>创建本地与docker映射的目录，即本地存放的位置</h3><p>创建本地存放redis的位置;</p>
+<blockquote>
+<p> 可以自定义，因为我的docker的一些配置文件都是存放在<code>/data</code>目录下面的，所以我依然在<code>/data</code>目录下创建一个<code>redis</code>目录，这样是为了方便后期管理 </p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">truedei@truedei:redis-<span class="number">5.0</span><span class="number">.5</span>$ sudo mkdir /data/redis</span><br><span class="line">truedei@truedei:redis-<span class="number">5.0</span><span class="number">.5</span>$ sudo mkdir /data/redis/data</span><br></pre></td></tr></table></figure>
+<p>把<code>配置文件</code>拷贝到刚才创建好的文件里</p>
+<blockquote>
+<p> 因为我本身就是Linux操作系统，所以我可以直接拷贝过去，如果你是windows的话，可能需要使用ftp拷贝过去，或者直接复制内容，然后粘贴过去。 </p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">truedei@truedei:redis-<span class="number">5.0</span><span class="number">.5</span>$ sudo cp -p redis.conf /data/redis/</span><br><span class="line">truedei@truedei:redis-<span class="number">5.0</span><span class="number">.5</span>$ </span><br></pre></td></tr></table></figure>
+<h3 id="启动docker-redis"><a href="#启动docker-redis" class="headerlink" title="启动docker redis"></a>启动docker redis</h3><p>启动：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">truedei@truedei:~$ sudo docker run -p <span class="number">6379</span>:<span class="number">6379</span> --name redis -v /data/redis/redis.conf:<span class="regexp">/etc/</span>redis/redis.conf  -v /data/redis/data:<span class="regexp">/data -d redis redis-server /</span>etc/redis/redis.conf --appendonly yes</span><br></pre></td></tr></table></figure>
+<p>参数解释：</p>
+<blockquote>
+<p> <code>-p 6379:6379</code>:把容器内的6379端口映射到<a target="_blank" rel="noopener" href="https://cloud.tencent.com/product/cdh?from=10680">宿主机</a>6379端口 <code>-v /data/redis/redis.conf:/etc/redis/redis.conf</code>：把宿主机配置好的redis.conf放到容器内的这个位置中 <code>-v /data/redis/data:/data</code>：把redis持久化的数据在宿主机内显示，做数据备份 <code>redis-server /etc/redis/redis.conf</code>：这个是关键配置，让redis不是无配置启动，而是按照这个redis.conf的配置启动 <code>–appendonly yes</code>：redis启动后数据持久化 </p>
+</blockquote>
+<h3 id="查看是否启动成功"><a href="#查看是否启动成功" class="headerlink" title="查看是否启动成功"></a>查看是否启动成功</h3><p>查看是否成功启动：<code>sudo docker ps</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">truedei@truedei:~$ sudo docker ps</span><br><span class="line">CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                               NAMES</span><br><span class="line">85cb7d83a2ff        redis               <span class="string">&quot;docker-entrypoint.s…&quot;</span>   <span class="number">7</span> minutes ago       Up <span class="number">7</span> minutes        <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>:<span class="number">6379</span>-&gt;<span class="number">6379</span>/tcp              redis</span><br><span class="line">0a122a08125f        mysql:<span class="number">5.7</span><span class="number">.29</span>        <span class="string">&quot;docker-entrypoint.s…&quot;</span>   <span class="number">5</span> weeks ago         Up About an hour    <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>:<span class="number">3306</span>-&gt;<span class="number">3306</span>/tcp, <span class="number">33060</span>/tcp   mysql57</span><br><span class="line">truedei@truedei:~$ </span><br></pre></td></tr></table></figure>
+ <img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/06.png" class>
+
+<p>可以查看一下日志：<code>sudo docker logs redis</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">truedei@truedei:~$ sudo docker logs redis</span><br><span class="line">1:C 29 May 2020 01:16:22.107 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo</span><br><span class="line">1:C 29 May 2020 01:16:22.107 # Redis version=6.0.3, bits=64, commit=00000000, modified=0, pid=1, just started</span><br><span class="line">1:C 29 May 2020 01:16:22.107 # Configuration loaded</span><br><span class="line">                _._                                                  </span><br><span class="line">           _.-<span class="string">``</span>__ <span class="string">&#x27;&#x27;</span>-._                                             </span><br><span class="line">      _.-<span class="string">``</span>    <span class="string">`.  `</span>_.  <span class="string">&#x27;&#x27;</span>-._           Redis <span class="number">6.0</span><span class="number">.3</span> (<span class="number">00000000</span>/<span class="number">0</span>) <span class="number">64</span> bit</span><br><span class="line">  .-<span class="string">``</span> .-<span class="string">``</span><span class="string">`.  `</span><span class="string">``</span>\/    _.,_ <span class="string">&#x27;&#x27;</span>-._                                   </span><br><span class="line"> (    <span class="string">&#x27;      ,       .-`  | `,    )     Running in standalone mode</span></span><br><span class="line"><span class="string"> |`-._`-...-` __...-.``-._|&#x27;</span><span class="string">` _.-&#x27;|     Port: 6379</span></span><br><span class="line"><span class="string"> |    `</span>-._   <span class="string">`._    /     _.-&#x27;    |     PID: 1</span></span><br><span class="line"><span class="string">  `</span>-._    <span class="string">`-._  `</span>-./  _.-<span class="string">&#x27;    _.-&#x27;</span>                                   </span><br><span class="line"> |<span class="string">`-._`</span>-._    <span class="string">`-.__.-&#x27;    _.-&#x27;_.-&#x27;|                                  </span></span><br><span class="line"><span class="string"> |    `</span>-._<span class="string">`-._        _.-&#x27;_.-&#x27;    |           http://redis.io        </span></span><br><span class="line"><span class="string">  `</span>-._    <span class="string">`-._`</span>-.__.-<span class="string">&#x27;_.-&#x27;</span>    _.-<span class="string">&#x27;                                   </span></span><br><span class="line"><span class="string"> |`-._`-._    `-.__.-&#x27;</span>    _.-<span class="string">&#x27;_.-&#x27;</span>|                                  </span><br><span class="line"> |    <span class="string">`-._`</span>-._        _.-<span class="string">&#x27;_.-&#x27;</span>    |                                  </span><br><span class="line">  <span class="string">`-._    `</span>-._<span class="string">`-.__.-&#x27;_.-&#x27;    _.-&#x27;                                   </span></span><br><span class="line"><span class="string">      `</span>-._    <span class="string">`-.__.-&#x27;    _.-&#x27;                                       </span></span><br><span class="line"><span class="string">          `</span>-._        _.-<span class="string">&#x27;                                           </span></span><br><span class="line"><span class="string">              `-.__.-&#x27;</span>                                               </span><br><span class="line"></span><br><span class="line">1:M 29 May 2020 01:16:22.108 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.</span><br><span class="line">1:M 29 May 2020 01:16:22.108 # Server initialized</span><br><span class="line">1:M 29 May 2020 01:16:22.108 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add &#x27;vm.overcommit_memory = 1&#x27; to /etc/sysctl.conf and then reboot or run the command &#x27;sysctl vm.overcommit_memory=1&#x27; for this to take effect.</span><br><span class="line">1:M 29 May 2020 01:16:22.108 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command &#x27;echo never &gt; /sys/kernel/mm/transparent_hugepage/enabled&#x27; as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.</span><br><span class="line"><span class="number">1</span>:M <span class="number">29</span> May <span class="number">2020</span> <span class="number">01</span>:<span class="number">16</span>:<span class="number">22.108</span> * Ready to accept connections</span><br><span class="line">truedei@truedei:~$ </span><br></pre></td></tr></table></figure>
+ <img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/07.png" class>
+
+<h2 id="Docker安装MongoDB"><a href="#Docker安装MongoDB" class="headerlink" title="Docker安装MongoDB"></a>Docker安装MongoDB</h2><p>MongoDB 是一个免费的开源跨平台面向文档的 NoSQL 数据库程序。</p>
+<h3 id="1、查看可用的-MongoDB-版本"><a href="#1、查看可用的-MongoDB-版本" class="headerlink" title="1、查看可用的 MongoDB 版本"></a>1、查看可用的 MongoDB 版本</h3><p>访问 MongoDB 镜像库地址： <a target="_blank" rel="noopener" href="https://hub.docker.com/_/mongo?tab=tags&amp;page=1%E3%80%82">https://hub.docker.com/_/mongo?tab=tags&amp;page=1。</a></p>
+<p>可以通过 Sort by 查看其他版本的 MongoDB，默认是最新版本 <strong>mongo:latest</strong>。</p>
+<img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/08.png" class>
+
+<img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/09.png" class>
+
+<p>此外，我们还可以用  docker search mongo 命令来查看可用版本：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> docker search mongo</span></span><br><span class="line">NAME                              DESCRIPTION                      STARS     OFFICIAL   AUTOMATED</span><br><span class="line">mongo                             MongoDB document databases ...   1989      [OK]       </span><br><span class="line">mongo-express                     Web-based MongoDB admin int...   22        [OK]       </span><br><span class="line">mvertes/alpine-mongo              light MongoDB container          19                   [OK]</span><br><span class="line">mongooseim/mongooseim-docker      MongooseIM server the lates...   9                    [OK]</span><br><span class="line">torusware/speedus-mongo           Always updated official Mon...   9                    [OK]</span><br><span class="line">jacksoncage/mongo                 Instant MongoDB sharded cluster  6                    [OK]</span><br><span class="line">mongoclient/mongoclient           Official docker image for M...   4                    [OK]</span><br><span class="line">jadsonlourenco/mongo-rocks        Percona Mongodb with Rocksd...   4                    [OK]</span><br><span class="line">asteris/apache-php-mongo          Apache2.4 + PHP + Mongo + m...   2                    [OK]</span><br><span class="line">19hz/mongo-container              Mongodb replicaset for coreos    1                    [OK]</span><br><span class="line">nitra/mongo                       Mongo3 centos7                   1                    [OK]</span><br><span class="line">ackee/mongo                       MongoDB with fixed Bluemix p...  1                    [OK]</span><br><span class="line">kobotoolbox/mongo                 https://github.com/kobotoolb...  1                    [OK]</span><br><span class="line">valtlfelipe/mongo                 Docker Image based on the la...  1                    [OK]</span><br></pre></td></tr></table></figure>
+<h3 id="2、取最新版的-MongoDB-镜像"><a href="#2、取最新版的-MongoDB-镜像" class="headerlink" title="2、取最新版的 MongoDB 镜像"></a>2、取最新版的 MongoDB 镜像</h3><p>这里我们拉取官方的最新版本的镜像：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker pull mongo:latest</span><br></pre></td></tr></table></figure>
+<img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/12.png" class>
+
+<h3 id="3、查看本地镜像"><a href="#3、查看本地镜像" class="headerlink" title="3、查看本地镜像"></a>3、查看本地镜像</h3><p>使用以下命令来查看是否已安装了 mongo：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker images</span><br></pre></td></tr></table></figure>
+<img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/13.png" class>
+
+<h3 id="4、运行容器"><a href="#4、运行容器" class="headerlink" title="4、运行容器"></a>4、运行容器</h3><p>安装完成后，我们可以使用以下命令来运行 mongo 容器：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -itd --name mongo -p 27017:27017 mongo --auth</span><br></pre></td></tr></table></figure>
+<p>参数说明：</p>
+<ul>
+<li><strong>-p 27017:27017</strong> ：映射容器服务的 27017 端口到宿主机的 27017 端口。外部可以直接通过 宿主机 ip:27017 访问到 mongo 的服务。</li>
+<li><strong>–auth</strong>：需要密码才能访问容器服务。</li>
+</ul>
+<img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/10.png" class>
+
+<img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/11.png" class>
+
+
+
+<h2 id="Docker安装ElasticSearch"><a href="#Docker安装ElasticSearch" class="headerlink" title="Docker安装ElasticSearch"></a>Docker安装ElasticSearch</h2><h3 id="下载ElasticSearch"><a href="#下载ElasticSearch" class="headerlink" title="下载ElasticSearch"></a>下载ElasticSearch</h3><blockquote>
+<p>docker pull elasticsearch:6.8.6</p>
+</blockquote>
+<h3 id="运行ElasticSearch"><a href="#运行ElasticSearch" class="headerlink" title="运行ElasticSearch"></a>运行ElasticSearch</h3><blockquote>
+<p>docker run -d –name elasticsearch -p 9200:9200 -p 9300:9300 -e “discovery.type=single-node”  -e “ES_JAVA_OPTS=-Xms512m -Xmx512m” elasticsearch:6.8.6</p>
+</blockquote>
+<h3 id="查看正在运行的容器"><a href="#查看正在运行的容器" class="headerlink" title="查看正在运行的容器"></a>查看正在运行的容器</h3><blockquote>
+<p>docker ps</p>
+</blockquote>
+<h3 id="启动测试"><a href="#启动测试" class="headerlink" title="启动测试"></a>启动测试</h3><p>网页输入：“主机地址:9200”，出现如下json数据，即成功！<strong>同样需要放开端口</strong></p>
+<img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/14.png" class>
+
+<h2 id="Docker安装MySQL"><a href="#Docker安装MySQL" class="headerlink" title="Docker安装MySQL"></a>Docker安装MySQL</h2><h3 id="拉取MySQL镜像"><a href="#拉取MySQL镜像" class="headerlink" title="拉取MySQL镜像"></a>拉取MySQL镜像</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull mysql </span><br></pre></td></tr></table></figure>
+<h3 id="查看镜像"><a href="#查看镜像" class="headerlink" title="查看镜像"></a>查看镜像</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images </span><br></pre></td></tr></table></figure>
+<h3 id="创建目录"><a href="#创建目录" class="headerlink" title="创建目录"></a>创建目录</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p &#x2F;home&#x2F;docker&#x2F;mysql&#x2F;conf.d </span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p &#x2F;home&#x2F;docker&#x2F;mysql&#x2F;data </span><br></pre></td></tr></table></figure>
+<p>这两个用于保存配置和数据</p>
+<h3 id="创建MySQL容器"><a href="#创建MySQL容器" class="headerlink" title="创建MySQL容器"></a>创建MySQL容器</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -di -p 3307:3306 -v /home/docker/mysql/conf.d:/etc/mysql/conf.d -v /home/docker/mysql/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 --name mysql mysql</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+<p>-v 映射目录，将容器内的配置与数据文件夹，映射到宿主机目录</p>
+<p>-p 代表端口映射，格式为 宿主机映射端口:容器运行端口</p>
+<p>-e 代表添加环境变量 MYSQL_ROOT_PASSWORD是root用户的登陆密码</p>
+<h3 id="进入MySQL容器"><a href="#进入MySQL容器" class="headerlink" title="进入MySQL容器,"></a>进入MySQL容器,</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it mysql &#x2F;bin&#x2F;bash</span><br></pre></td></tr></table></figure>
+<h3 id="登陆mysql"><a href="#登陆mysql" class="headerlink" title="登陆mysql"></a>登陆mysql</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
+<p>输入密码，即可进入mysql，证明安装成功。</p>
+<h3 id="打开远程连接"><a href="#打开远程连接" class="headerlink" title="打开远程连接"></a><strong>打开远程连接</strong></h3><p>此时，当使用Navicat远程连接docker容器中的mysql时，会报错</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1251 - Client does not support authentication protocol </span><br></pre></td></tr></table></figure>
+<p>这是因为mysql并没有打开远程连接，打开方法如下：</p>
+<p>1,容器中登录mysql,查看mysql的版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; status; </span><br></pre></td></tr></table></figure>
+<p>mysql Ver 8.0.11 for Linux on x86_64 (MySQL Community Server - GPL) </p>
+<p>2,进行授权远程连接(注意mysql 8.0跟之前的授权方式不同)授权</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; GRANT ALL ON *.* TO &#39;root&#39;@&#39;%&#39;;  </span><br></pre></td></tr></table></figure>
+<p>刷新权限 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; flush privileges;  </span><br></pre></td></tr></table></figure>
+<p>此时,还不能远程访问,因为Navicat只支持旧版本的加密,需要更改mysql的加密规则</p>
+<p>更改加密规则</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;password&#39; PASSWORD EXPIRE NEVER;  </span><br></pre></td></tr></table></figure>
+<p>更新root用户密码 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; ALTER USER &#39;root&#39;@&#39;%&#39; IDENTIFIED WITH mysql_native_password BY &#39;123456&#39;;  </span><br></pre></td></tr></table></figure>
+<p>刷新权限 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; flush privileges;  </span><br></pre></td></tr></table></figure>
+<p>OK，设置完成，再次使用 Navicat 连接数据库  </p>
+<p>退出mysql数据库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; exit; </span><br></pre></td></tr></table></figure>
+<p>退出当前mysql容器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exit; </span><br></pre></td></tr></table></figure>
+
+
+<h3 id="优化mysql所用内存"><a href="#优化mysql所用内存" class="headerlink" title="优化mysql所用内存"></a><strong>优化mysql所用内存</strong></h3><p>通过docker查看容器使用内存情况</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stats </span><br></pre></td></tr></table></figure>
+<p>一般情况下，默认装的Mysql是8.0以上，占用内存在350M以上，这个对于小机器来说，占比还是比较大的，可以优化。</p>
+<p>进入文件夹</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;home&#x2F;docker&#x2F;mysql&#x2F;conf.d&#x2F; </span><br></pre></td></tr></table></figure>
+<p>查看 .cnf 文件，如果没有，随便新建个，例如 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim my.cnf</span><br></pre></td></tr></table></figure>
+<p>输入内容，并保存</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[mysqld] </span><br><span class="line">performance_schema &#x3D; OFF  </span><br></pre></td></tr></table></figure>
+<p>重启mysql 容器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker restart mysql容器的id </span><br></pre></td></tr></table></figure>
+<p>再查看</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stats </span><br></pre></td></tr></table></figure>
+
+
+<h3 id="清理linux中buff-cache过大的方法"><a href="#清理linux中buff-cache过大的方法" class="headerlink" title="清理linux中buff/cache过大的方法"></a><strong>清理linux中buff/cache过大的方法</strong></h3><p>第一步：sync先同步一下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sync </span><br></pre></td></tr></table></figure>
+<p>第二步：清cache</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo 3 &gt; &#x2F;proc&#x2F;sys&#x2F;vm&#x2F;drop_caches</span><br></pre></td></tr></table></figure>
+<h2 id="Docker安装Nginx和Tomcat"><a href="#Docker安装Nginx和Tomcat" class="headerlink" title="Docker安装Nginx和Tomcat"></a>Docker安装Nginx和Tomcat</h2><h3 id="Docker-pull拉取相关的镜像"><a href="#Docker-pull拉取相关的镜像" class="headerlink" title="Docker pull拉取相关的镜像"></a>Docker pull拉取相关的镜像</h3><img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/15.png" class>
+
+<img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/16.png" class>
+
+
+
+<h3 id="Docker-run-启动服务器"><a href="#Docker-run-启动服务器" class="headerlink" title="Docker run 启动服务器"></a>Docker run 启动服务器</h3><blockquote>
+<p>Docker run -d -p 9090:80 nginx</p>
+</blockquote>
+<p>后台-d运行一个nginx，并把本地的9090端口映射到nginx的80端口。也可以用<code>docker run -d -P xx</code>用-P来随机映射一个端口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">用lsof -i:9090查看端口</span><br></pre></td></tr></table></figure>
+<img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/17.png" class>
+
+
+
+<blockquote>
+<p>Docker run -d -p 8080:80 tomcat</p>
+</blockquote>
+<p>与docker运行nginx同理。</p>
+<blockquote>
+<p>对Tomcat编写Dockerfile</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FROM tomcat  # 启动镜像的名字</span><br><span class="line">MAINTAINER xudong xxd0225@gmail.com # 维护信息</span><br><span class="line">COPY jpress-v3.3.0.war &#x2F;usr&#x2F;local&#x2F;tomcat&#x2F;webapps  # 把当前目录的war包copy到tocat的目录下</span><br></pre></td></tr></table></figure>
+<img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/18.png" class>
+
+<p>开始制作一个imagesdocker build .这个之多的名字是none， 可以用tag来指定一个名字，注意名字要全部小写。</p>
+<blockquote>
+<p>docker build -t chasaystest:1.0 .</p>
+</blockquote>
+<p>然后运行docker run -d -P 80:8080 chasaystest。 这样就可以把tomcat 8080的映射到1234端口。本机用1234就可以访问tomcat端口。<a target="_blank" rel="noopener" href="http://localhost:1234/">http://localhost:1234</a></p>
+ <img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/19.png" class>
+
+
+
+<h3 id="相关问题"><a href="#相关问题" class="headerlink" title="相关问题"></a>相关问题</h3><h4 id="Docker中安装Tomcat外部访问报错404资源未找到"><a href="#Docker中安装Tomcat外部访问报错404资源未找到" class="headerlink" title="Docker中安装Tomcat外部访问报错404资源未找到"></a>Docker中安装Tomcat外部访问报错404资源未找到</h4><p>1.将webapps.dist更名为webapps</p>
+ <img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/20.png" class>
+
+
+
+<p>2.将webapps.dist中的内容复制到webapps</p>
+ <img data-src="/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/21.png" class>
+    </div>
+
+    
+    
+    
+      
+
+        <div class="reward-container">
+  <div>谢谢你的支持哦，继续加油.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="邢浩东 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="邢浩东 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>邢浩东
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.mindmaster.top/2021/03/25/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" title="使用Docker部署开发环境">https://www.mindmaster.top/2021/03/25/使用Docker部署开发环境/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-%E9%82%A2%E6%B5%A9%E4%B8%9C/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-邢浩东</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" rel="tag"># 环境配置</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/03/23/Leetcode%E6%A0%91%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/" rel="prev" title="Leetcode树刷题总结">
+      <i class="fa fa-chevron-left"></i> Leetcode树刷题总结
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/03/25/IPVS/" rel="next" title="IPVS">
+      IPVS <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8Linux%E4%B8%8A%E5%AE%89%E8%A3%85Docker"><span class="nav-number">1.</span> <span class="nav-text">在Linux上安装Docker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2RabbitMQ"><span class="nav-number">2.</span> <span class="nav-text">Docker安装部署RabbitMQ</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E9%95%9C%E5%83%8F"><span class="nav-number">2.1.</span> <span class="nav-text">查询镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E9%95%9C%E5%83%8F"><span class="nav-number">2.2.</span> <span class="nav-text">获取镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E9%95%9C%E5%83%8F"><span class="nav-number">2.3.</span> <span class="nav-text">运行镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E7%AE%A1%E7%90%86%E9%A1%B5%E9%9D%A2"><span class="nav-number">2.4.</span> <span class="nav-text">访问管理页面</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker%E5%AE%89%E8%A3%85Redis"><span class="nav-number">3.</span> <span class="nav-text">Docker安装Redis</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%BE%E5%88%B0%E4%B8%80%E4%B8%AA%E5%90%88%E9%80%82%E7%9A%84docker%E7%9A%84redis%E7%9A%84%E7%89%88%E6%9C%AC"><span class="nav-number">3.1.</span> <span class="nav-text">找到一个合适的docker的redis的版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8docker%E5%AE%89%E8%A3%85redis"><span class="nav-number">3.2.</span> <span class="nav-text">使用docker安装redis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%86%E5%A4%87redis"><span class="nav-number">3.3.</span> <span class="nav-text">准备redis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEredis"><span class="nav-number">3.4.</span> <span class="nav-text">配置redis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%9C%AC%E5%9C%B0%E4%B8%8Edocker%E6%98%A0%E5%B0%84%E7%9A%84%E7%9B%AE%E5%BD%95%EF%BC%8C%E5%8D%B3%E6%9C%AC%E5%9C%B0%E5%AD%98%E6%94%BE%E7%9A%84%E4%BD%8D%E7%BD%AE"><span class="nav-number">3.5.</span> <span class="nav-text">创建本地与docker映射的目录，即本地存放的位置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8docker-redis"><span class="nav-number">3.6.</span> <span class="nav-text">启动docker redis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%98%AF%E5%90%A6%E5%90%AF%E5%8A%A8%E6%88%90%E5%8A%9F"><span class="nav-number">3.7.</span> <span class="nav-text">查看是否启动成功</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker%E5%AE%89%E8%A3%85MongoDB"><span class="nav-number">4.</span> <span class="nav-text">Docker安装MongoDB</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E6%9F%A5%E7%9C%8B%E5%8F%AF%E7%94%A8%E7%9A%84-MongoDB-%E7%89%88%E6%9C%AC"><span class="nav-number">4.1.</span> <span class="nav-text">1、查看可用的 MongoDB 版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E5%8F%96%E6%9C%80%E6%96%B0%E7%89%88%E7%9A%84-MongoDB-%E9%95%9C%E5%83%8F"><span class="nav-number">4.2.</span> <span class="nav-text">2、取最新版的 MongoDB 镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81%E6%9F%A5%E7%9C%8B%E6%9C%AC%E5%9C%B0%E9%95%9C%E5%83%8F"><span class="nav-number">4.3.</span> <span class="nav-text">3、查看本地镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81%E8%BF%90%E8%A1%8C%E5%AE%B9%E5%99%A8"><span class="nav-number">4.4.</span> <span class="nav-text">4、运行容器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker%E5%AE%89%E8%A3%85ElasticSearch"><span class="nav-number">5.</span> <span class="nav-text">Docker安装ElasticSearch</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BDElasticSearch"><span class="nav-number">5.1.</span> <span class="nav-text">下载ElasticSearch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8CElasticSearch"><span class="nav-number">5.2.</span> <span class="nav-text">运行ElasticSearch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%AD%A3%E5%9C%A8%E8%BF%90%E8%A1%8C%E7%9A%84%E5%AE%B9%E5%99%A8"><span class="nav-number">5.3.</span> <span class="nav-text">查看正在运行的容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E6%B5%8B%E8%AF%95"><span class="nav-number">5.4.</span> <span class="nav-text">启动测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker%E5%AE%89%E8%A3%85MySQL"><span class="nav-number">6.</span> <span class="nav-text">Docker安装MySQL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%89%E5%8F%96MySQL%E9%95%9C%E5%83%8F"><span class="nav-number">6.1.</span> <span class="nav-text">拉取MySQL镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E9%95%9C%E5%83%8F"><span class="nav-number">6.2.</span> <span class="nav-text">查看镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%9B%AE%E5%BD%95"><span class="nav-number">6.3.</span> <span class="nav-text">创建目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAMySQL%E5%AE%B9%E5%99%A8"><span class="nav-number">6.4.</span> <span class="nav-text">创建MySQL容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E5%85%A5MySQL%E5%AE%B9%E5%99%A8"><span class="nav-number">6.5.</span> <span class="nav-text">进入MySQL容器,</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%99%BB%E9%99%86mysql"><span class="nav-number">6.6.</span> <span class="nav-text">登陆mysql</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%93%E5%BC%80%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5"><span class="nav-number">6.7.</span> <span class="nav-text">打开远程连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96mysql%E6%89%80%E7%94%A8%E5%86%85%E5%AD%98"><span class="nav-number">6.8.</span> <span class="nav-text">优化mysql所用内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B8%85%E7%90%86linux%E4%B8%ADbuff-cache%E8%BF%87%E5%A4%A7%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">6.9.</span> <span class="nav-text">清理linux中buff&#x2F;cache过大的方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker%E5%AE%89%E8%A3%85Nginx%E5%92%8CTomcat"><span class="nav-number">7.</span> <span class="nav-text">Docker安装Nginx和Tomcat</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker-pull%E6%8B%89%E5%8F%96%E7%9B%B8%E5%85%B3%E7%9A%84%E9%95%9C%E5%83%8F"><span class="nav-number">7.1.</span> <span class="nav-text">Docker pull拉取相关的镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker-run-%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">7.2.</span> <span class="nav-text">Docker run 启动服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98"><span class="nav-number">7.3.</span> <span class="nav-text">相关问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Docker%E4%B8%AD%E5%AE%89%E8%A3%85Tomcat%E5%A4%96%E9%83%A8%E8%AE%BF%E9%97%AE%E6%8A%A5%E9%94%99404%E8%B5%84%E6%BA%90%E6%9C%AA%E6%89%BE%E5%88%B0"><span class="nav-number">7.3.1.</span> <span class="nav-text">Docker中安装Tomcat外部访问报错404资源未找到</span></a></li></ol></li></ol></li></ol></div>
+
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="邢浩东"
+      src="/images/OIP.jfif">
+  <p class="site-author-name" itemprop="name">邢浩东</p>
+  <div class="site-description" itemprop="description">The world favors the underdog,and I would be the bad guy</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mindmaster1" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mindmaster1" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/yourname" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;yourname" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.csdn.net/" title="CSDN → https:&#x2F;&#x2F;www.csdn.net" rel="noopener" target="_blank"><i class="fab fa-apple fa-fw"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://juejin.cn/user/1706074845232983" title="掘金 → https:&#x2F;&#x2F;juejin.cn&#x2F;user&#x2F;1706074845232983" rel="noopener" target="_blank"><i class="fa fa-binoculars fa-fw"></i>掘金</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Leetcode刷题
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://leetcode-cn.com/" title="https:&#x2F;&#x2F;leetcode-cn.com&#x2F;" rel="noopener" target="_blank">通向快乐</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+ <div>
+    <svg>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-1"></text>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-2"></text>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-3"></text>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-4"></text>
+    </svg>
+</div>
+<script>
+function showtime(){
+    var noatime = new Date();
+    var h = noatime.getHours(),
+        m = noatime.getMinutes(),
+        s = noatime.getSeconds();
+    h=checktime(h);
+    m=checktime(m);
+    s=checktime(s);
+  return h+":"+m+":"+s;
+}
+function checktime(x){
+  if(x<10){
+    x="0"+x;
+  }
+  return x;
+}
+var div1=document.getElementsByTagName("text");
+setInterval(function(){
+  for (var i in div1){
+      div1[i].innerHTML=showtime();
+  }
+},1000);
+</script>	   
+
+<script type="text/javascript" src="//rf.revolvermaps.com/0/0/1.js?i=57fnj853bkq&amp;s=220&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+ 
+    
+  </ul>
+    </div>
+	
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+	
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">邢浩东</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">289k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">4:23</span>
+</div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'dOLOPmQA1yPidXhJmndTryVE-gzGzoHsz',
+      appKey     : 'tDnfIUMcS9cpj4Rqgxu4mUxG',
+      placeholder: "欢迎大家畅所欲言# Comment box placeholder",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
