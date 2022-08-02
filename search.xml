@@ -332,73 +332,6 @@
       </tags>
   </entry>
   <entry>
-    <title>HTTP连接</title>
-    <url>/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/</url>
-    <content><![CDATA[<h1 id="HTTP连接"><a href="#HTTP连接" class="headerlink" title="HTTP连接"></a>HTTP连接</h1><p>HTTP连接实际上就是TCP连接和一些使用连接的规则。</p>
-<p>TCP为HTTP提供了一条可靠的比特传输管道。从TCP连接一端填入的字节会从另 一端以原有的顺序、正确地传送出来</p>
-<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224094620498.png" alt="image-20220224094620498"></p>
-<p>安全版本**<em>HTTPS**</em>就是在HTTP和TCP之间插入了一个〈称为TLS或SSL 的）密码加密层。</p>
-<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224094734829.png" alt="image-20220224094734829"></p>
-<p>HTTP要传送一条报文时，会以流的形式将报文数据的内容通过一条打开的TCP连 接按序传输。TCP收到数据流之后，会将数据流砍成被称作段的小数据块，并将段 封装在IP分组中，通过因特网进行传输。</p>
-<p><strong><em>每个TCP段都是由IP分组承载</em></strong>，从一个IP地址发送到另一个IP地址的。每个IP 分组中都包括：</p>
-<ul>
-<li><p> 一个IP分组首部（通常为20字节）</p>
-</li>
-<li><p> 一个TCP段首部（通常为20字节）</p>
-</li>
-<li><p>一个TCP数据块（0个或多个字节）。</p>
-</li>
-</ul>
-<img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224095120890.png" alt="image-20220224095120890" style="zoom:50%;">
-
-<p><strong>承载TCP段的IP分组，承载了TCP数据流中的小块数据</strong></p>
-<p>TCP连接通过4个值来识别：【**<em>唯一标识连接**</em>】</p>
-<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224095247616.png" alt="image-20220224095247616"></p>
-<h2 id="HTTP连接的管理"><a href="#HTTP连接的管理" class="headerlink" title="HTTP连接的管理"></a>HTTP连接的管理</h2><h3 id="Connection首部"><a href="#Connection首部" class="headerlink" title="Connection首部"></a>Connection首部</h3><p><strong><em>防止无意中对本地首部的转发，“对首部的保护”</em></strong></p>
-<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224103350199.png" alt="image-20220224103350199"></p>
-<h3 id="串行事务处理时延"><a href="#串行事务处理时延" class="headerlink" title="串行事务处理时延"></a>串行事务处理时延</h3><p>如果只对连接进行简单的管理，TCP的性能时延可能会叠加起来。</p>
-<p>假设有一个包含了 3个嵌入图片的Web页面。浏览器需要发起4个HTTP事务来显示此页面: 1个用于顶层的HTML页面，3个用于嵌入的图片。如果每个事务都需要（串行地建立）一条新的连接，那么连接时延和慢启动时延就会叠加起来。</p>
-<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224103539476.png" alt="image-20220224103539476"></p>
-<p>同时，用户更希望同时加载多幅图片，而不是一张一张的加载。</p>
-<blockquote>
-<p>串行加载的另一个缺点是，有些浏览器在对象加载完毕之前无法获知对象的尺寸， 而且它们可能需要尺寸信息来决定将对象放在屏幕的什么位置上，所以在加载了足够多的对象之前，无法在屏幕上显示任何内容。在这种情况下，可能浏览器串行装 载对象的进度很正常，但用户面对的却是一个空白的屏幕，对装载的进度一无所知。</p>
-</blockquote>
-<p><strong><em>解决方案</em></strong></p>
-<ul>
-<li><p>并行连接</p>
-<p>通过多条TCP连接发起并发的HTTP请求。</p>
-</li>
-<li><p>持久连接</p>
-<p>重用TCP连接，以消除连接及关闭时延。</p>
-</li>
-<li><p>管道化连接</p>
-<p>通过共享的TCP连接发起并发的HTTP请求。</p>
-</li>
-<li><p>复用连接</p>
-<p>通过共享的TCP连接发起并发的HTTP请求。</p>
-</li>
-</ul>
-<h2 id="并行连接"><a href="#并行连接" class="headerlink" title="并行连接"></a>并行连接</h2><p> HTTP允许客户端打开多条连接，并行地执行多个HTTP事务。在 这个例子中，**<em>并行加载**</em>了四幅嵌入式图片，每个事务都有自己的TCP连接。</p>
-<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224104152923.png" alt="image-20220224104152923"></p>
-<h3 id="并行连接可能会提高页面加载速度"><a href="#并行连接可能会提高页面加载速度" class="headerlink" title="并行连接可能会提高页面加载速度"></a>并行连接可能会提高页面加载速度</h3><p>包含嵌入对象的组合页面如果能（通过并行连接）克服单条连接的<strong>空载时间和带宽限制</strong>，加载速度也会有所提高。<strong>时延可以重叠</strong>起来，而且如果单条连接没有充分利用客户端的因特网带宽，可以将未用带宽分配来装载其他对象。</p>
-<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224104412136.png" alt="image-20220224104412136"></p>
-<h3 id="并行连接不一定会更快"><a href="#并行连接不一定会更快" class="headerlink" title="并行连接不一定会更快"></a>并行连接不一定会更快</h3><blockquote>
-<p>如果并行加载多个对象， 每个对象都会去竞争这有限的带宽，每个对象都会以较慢的速度按比例加载，这样带来的性能提升就很小，甚至没什么提升。 </p>
-</blockquote>
-<blockquote>
-<p>打开大量连接会消耗很多内存资源，从而引发自身的性能问题。</p>
-</blockquote>
-<p>实际上，浏览器确实使用了并行连接，但它们会将并行连接的总数限制为一个较小的值（通常是4个）。服务器可以随意关闭来自特定客户端的超量连接。</p>
-<p>但并行连接确实可以让用户感觉到</p>
-<h2 id="持久连接"><a href="#持久连接" class="headerlink" title="持久连接"></a>持久连接</h2><h2 id="管道化连接"><a href="#管道化连接" class="headerlink" title="管道化连接"></a>管道化连接</h2>]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>HTTP</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>IOC创建对象</title>
     <url>/2021/02/28/IOC%E6%8E%A7%E5%88%B6%E5%8F%8D%E8%BD%AC/</url>
     <content><![CDATA[<h2 id="IOC"><a href="#IOC" class="headerlink" title="IOC"></a>IOC</h2><p>控制反转（<strong>IoC，Inversion of Control</strong>），是一个概念，是一种思想。指将传统上由程序代 码直接操控的对象调用权交给容器，通过容器来实现对象的装配和管理。控制反转就是对对 象控制权的转移，从程序代码本身反转到了外部容器。通过容器实现对象的创建，属性赋值， 依赖的管理。</p>
@@ -499,6 +432,73 @@
       </categories>
       <tags>
         <tag>spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>HTTP连接</title>
+    <url>/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/</url>
+    <content><![CDATA[<h1 id="HTTP连接"><a href="#HTTP连接" class="headerlink" title="HTTP连接"></a>HTTP连接</h1><p>HTTP连接实际上就是TCP连接和一些使用连接的规则。</p>
+<p>TCP为HTTP提供了一条可靠的比特传输管道。从TCP连接一端填入的字节会从另 一端以原有的顺序、正确地传送出来</p>
+<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224094620498.png" alt="image-20220224094620498"></p>
+<p>安全版本**<em>HTTPS**</em>就是在HTTP和TCP之间插入了一个〈称为TLS或SSL 的）密码加密层。</p>
+<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224094734829.png" alt="image-20220224094734829"></p>
+<p>HTTP要传送一条报文时，会以流的形式将报文数据的内容通过一条打开的TCP连 接按序传输。TCP收到数据流之后，会将数据流砍成被称作段的小数据块，并将段 封装在IP分组中，通过因特网进行传输。</p>
+<p><strong><em>每个TCP段都是由IP分组承载</em></strong>，从一个IP地址发送到另一个IP地址的。每个IP 分组中都包括：</p>
+<ul>
+<li><p> 一个IP分组首部（通常为20字节）</p>
+</li>
+<li><p> 一个TCP段首部（通常为20字节）</p>
+</li>
+<li><p>一个TCP数据块（0个或多个字节）。</p>
+</li>
+</ul>
+<img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224095120890.png" alt="image-20220224095120890" style="zoom:50%;">
+
+<p><strong>承载TCP段的IP分组，承载了TCP数据流中的小块数据</strong></p>
+<p>TCP连接通过4个值来识别：【**<em>唯一标识连接**</em>】</p>
+<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224095247616.png" alt="image-20220224095247616"></p>
+<h2 id="HTTP连接的管理"><a href="#HTTP连接的管理" class="headerlink" title="HTTP连接的管理"></a>HTTP连接的管理</h2><h3 id="Connection首部"><a href="#Connection首部" class="headerlink" title="Connection首部"></a>Connection首部</h3><p><strong><em>防止无意中对本地首部的转发，“对首部的保护”</em></strong></p>
+<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224103350199.png" alt="image-20220224103350199"></p>
+<h3 id="串行事务处理时延"><a href="#串行事务处理时延" class="headerlink" title="串行事务处理时延"></a>串行事务处理时延</h3><p>如果只对连接进行简单的管理，TCP的性能时延可能会叠加起来。</p>
+<p>假设有一个包含了 3个嵌入图片的Web页面。浏览器需要发起4个HTTP事务来显示此页面: 1个用于顶层的HTML页面，3个用于嵌入的图片。如果每个事务都需要（串行地建立）一条新的连接，那么连接时延和慢启动时延就会叠加起来。</p>
+<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224103539476.png" alt="image-20220224103539476"></p>
+<p>同时，用户更希望同时加载多幅图片，而不是一张一张的加载。</p>
+<blockquote>
+<p>串行加载的另一个缺点是，有些浏览器在对象加载完毕之前无法获知对象的尺寸， 而且它们可能需要尺寸信息来决定将对象放在屏幕的什么位置上，所以在加载了足够多的对象之前，无法在屏幕上显示任何内容。在这种情况下，可能浏览器串行装 载对象的进度很正常，但用户面对的却是一个空白的屏幕，对装载的进度一无所知。</p>
+</blockquote>
+<p><strong><em>解决方案</em></strong></p>
+<ul>
+<li><p>并行连接</p>
+<p>通过多条TCP连接发起并发的HTTP请求。</p>
+</li>
+<li><p>持久连接</p>
+<p>重用TCP连接，以消除连接及关闭时延。</p>
+</li>
+<li><p>管道化连接</p>
+<p>通过共享的TCP连接发起并发的HTTP请求。</p>
+</li>
+<li><p>复用连接</p>
+<p>通过共享的TCP连接发起并发的HTTP请求。</p>
+</li>
+</ul>
+<h2 id="并行连接"><a href="#并行连接" class="headerlink" title="并行连接"></a>并行连接</h2><p> HTTP允许客户端打开多条连接，并行地执行多个HTTP事务。在 这个例子中，**<em>并行加载**</em>了四幅嵌入式图片，每个事务都有自己的TCP连接。</p>
+<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224104152923.png" alt="image-20220224104152923"></p>
+<h3 id="并行连接可能会提高页面加载速度"><a href="#并行连接可能会提高页面加载速度" class="headerlink" title="并行连接可能会提高页面加载速度"></a>并行连接可能会提高页面加载速度</h3><p>包含嵌入对象的组合页面如果能（通过并行连接）克服单条连接的<strong>空载时间和带宽限制</strong>，加载速度也会有所提高。<strong>时延可以重叠</strong>起来，而且如果单条连接没有充分利用客户端的因特网带宽，可以将未用带宽分配来装载其他对象。</p>
+<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224104412136.png" alt="image-20220224104412136"></p>
+<h3 id="并行连接不一定会更快"><a href="#并行连接不一定会更快" class="headerlink" title="并行连接不一定会更快"></a>并行连接不一定会更快</h3><blockquote>
+<p>如果并行加载多个对象， 每个对象都会去竞争这有限的带宽，每个对象都会以较慢的速度按比例加载，这样带来的性能提升就很小，甚至没什么提升。 </p>
+</blockquote>
+<blockquote>
+<p>打开大量连接会消耗很多内存资源，从而引发自身的性能问题。</p>
+</blockquote>
+<p>实际上，浏览器确实使用了并行连接，但它们会将并行连接的总数限制为一个较小的值（通常是4个）。服务器可以随意关闭来自特定客户端的超量连接。</p>
+<p>但并行连接确实可以让用户感觉到</p>
+<h2 id="持久连接"><a href="#持久连接" class="headerlink" title="持久连接"></a>持久连接</h2><h2 id="管道化连接"><a href="#管道化连接" class="headerlink" title="管道化连接"></a>管道化连接</h2>]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>HTTP</tag>
       </tags>
   </entry>
   <entry>
@@ -678,134 +678,6 @@
       </categories>
       <tags>
         <tag>Java内存区域</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>LVS负载均衡</title>
-    <url>/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</url>
-    <content><![CDATA[<blockquote>
-<h3 id="LVS是什么"><a href="#LVS是什么" class="headerlink" title="LVS是什么?"></a>LVS是什么?</h3></blockquote>
-<p>LVS，全称Linux Virtual Server，是国人章文嵩发起的一个开源项目。<br> 在社区具有很大的热度，是一个基于四层、具有强大性能的反向代理服务器。<br> <code>早期使用lvs需要修改内核才能使用，但是由于性能优异，现在已经被收入内核。</code></p>
-<p>LVS通过工作于内核的ipvs模块来实现功能，其主要工作于netfilter 的INPUT链上。<br> 而用户需要对ipvs进行操作配置则需要使用ipvsadm这个工具。<br> ipvsadm主要用于设置lvs模型、调度方式以及指定后端主机。</p>
-<blockquote>
-<h3 id="LVS中的角色"><a href="#LVS中的角色" class="headerlink" title="LVS中的角色"></a>LVS中的角色</h3></blockquote>
-<h5 id="LVS的一些相关术语"><a href="#LVS的一些相关术语" class="headerlink" title="LVS的一些相关术语"></a><strong>LVS的一些相关术语</strong></h5><p>LVS的模型中有两个角色：<br> **调度器:**Director，又称为Dispatcher，Balancer<br> <code>调度器主要用于接受用户请求。</code><br> **真实主机:**Real Server，简称为RS。<br> <code>用于真正处理用户的请求。</code></p>
-<p>而为了更好地理解，我们将所在角色的IP地址分为以下三种：<br> <strong>Director Virtual IP:**调度器用于与客户端通信的IP地址，简称为VIP<br> **Director IP</strong>:调度器用于与RealServer通信的IP地址，简称为DIP。<br> <strong>Real Server :</strong> 后端主机的用于与调度器通信的IP地址，简称为RIP。</p>
-<img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/02.webp" class>
-
-<p>基本模型</p>
-<blockquote>
-<h3 id="LVS的三种调度模式"><a href="#LVS的三种调度模式" class="headerlink" title="LVS的三种调度模式"></a>LVS的三种调度模式</h3></blockquote>
-<h3 id="LVS-NATNetwork-Address-Transform"><a href="#LVS-NATNetwork-Address-Transform" class="headerlink" title="LVS-NATNetwork Address Transform"></a>LVS-NAT<code>Network Address Transform</code></h3><h6 id="示意图和调度步骤"><a href="#示意图和调度步骤" class="headerlink" title="示意图和调度步骤"></a><strong>示意图和调度步骤</strong></h6><img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/01.webp" class>
-
-<p>LVS-NAT</p>
-<h6 id="原理："><a href="#原理：" class="headerlink" title="原理："></a><strong>原理：</strong></h6><p>基于ip伪装<code>MASQUERADES</code>，原理是多目标DNAT。<br> 所以请求和响应都经由Director调度器。</p>
-<h6 id="LVS-NAT的优点与缺点"><a href="#LVS-NAT的优点与缺点" class="headerlink" title="LVS-NAT的优点与缺点"></a><strong>LVS-NAT的优点与缺点</strong></h6><h6 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h6><ul>
-<li>支持端口映射</li>
-<li>RS可以使用任意操作系统</li>
-<li>节省公有IP地址。<br> <code>RIP和DIP都应该使用同一网段私有地址，而且RS的网关要指向DIP。</code><br> <code>使用nat另外一个好处就是后端的主机相对比较安全。</code></li>
-</ul>
-<h6 id="缺点："><a href="#缺点：" class="headerlink" title="缺点："></a>缺点：</h6><ul>
-<li>请求和响应报文都要经过Director转发;极高负载时，Director可能成为系统瓶颈。<br> <code>就是效率低的意思。</code></li>
-</ul>
-<h3 id="LVS-TUNIP-Tuneling"><a href="#LVS-TUNIP-Tuneling" class="headerlink" title="LVS-TUNIP Tuneling"></a>LVS-TUN<code>IP Tuneling</code></h3><h6 id="示意图和调度步骤-1"><a href="#示意图和调度步骤-1" class="headerlink" title="示意图和调度步骤"></a><strong>示意图和调度步骤</strong></h6><img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/03.webp" class>
-
-<p>LVS-TUN</p>
-<h6 id="原理：-1"><a href="#原理：-1" class="headerlink" title="原理："></a><strong>原理：</strong></h6><p>基于隧道封装技术。在IP报文的外面再包一层IP报文。<br> 当Director接收到请求的时候，选举出调度的RealServer<br> 当接受到从Director而来的请求时，RealServer则会使用lo接口上的VIP直接响应CIP。<br> 这样CIP请求VIP的资源，收到的也是VIP响应。</p>
-<h6 id="LVS-TUN的优点与缺点"><a href="#LVS-TUN的优点与缺点" class="headerlink" title="LVS-TUN的优点与缺点"></a><strong>LVS-TUN的优点与缺点</strong></h6><h6 id="优点：-1"><a href="#优点：-1" class="headerlink" title="优点："></a>优点：</h6><ul>
-<li>RIP,VIP,DIP都应该使用公网地址，且RS网关不指向DIP;<br> <code>只接受进站请求，解决了LVS-NAT时的问题，减少负载。</code><br> <code>请求报文经由Director调度，但是响应报文不需经由Director。</code></li>
-</ul>
-<h6 id="缺点：-1"><a href="#缺点：-1" class="headerlink" title="缺点："></a>缺点：</h6><ul>
-<li>不指向Director所以不支持端口映射。</li>
-<li>RS的OS必须支持隧道功能。</li>
-<li>隧道技术会额外花费性能，增大开销。</li>
-</ul>
-<h3 id="LVS-DRDirect-Routing"><a href="#LVS-DRDirect-Routing" class="headerlink" title="LVS-DRDirect Routing"></a>LVS-DR<code>Direct Routing</code></h3><h6 id="示意图和调度步骤-2"><a href="#示意图和调度步骤-2" class="headerlink" title="示意图和调度步骤"></a><strong>示意图和调度步骤</strong></h6><img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/04.webp" class>
-
-<p>LVS-DR</p>
-<h6 id="原理"><a href="#原理" class="headerlink" title="原理"></a><strong>原理</strong></h6><p>当Director接收到请求之后，通过调度方法选举出RealServer。<br> 讲目标地址的MAC地址改为RealServer的MAC地址。<br> RealServer接受到转发而来的请求，发现目标地址是VIP。<code>RealServer配置在lo接口上。</code><br> 处理请求之后则使用lo接口上的VIP响应CIP。</p>
-<h6 id="LVS-DR的优点与缺点"><a href="#LVS-DR的优点与缺点" class="headerlink" title="LVS-DR的优点与缺点"></a><strong>LVS-DR的优点与缺点</strong></h6><h6 id="优点：-2"><a href="#优点：-2" class="headerlink" title="优点："></a>优点：</h6><ul>
-<li>RIP可以使用私有地址，也可以使用公网地址。<br> <code>只要求DIP和RIP的地址在同一个网段内。</code></li>
-<li>请求报文经由Director调度，但是响应报文不经由Director。</li>
-<li>RS可以使用大多数OS</li>
-</ul>
-<h6 id="缺点：-2"><a href="#缺点：-2" class="headerlink" title="缺点："></a>缺点：</h6><ul>
-<li>不支持端口映射。</li>
-<li>不能跨局域网。</li>
-</ul>
-<h6 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h6><p>三种模型虽然各有利弊，但是由于追求性能和便捷，DR是目前用得最多的LVS模型。</p>
-<blockquote>
-<h3 id="LVS的八种调度方法"><a href="#LVS的八种调度方法" class="headerlink" title="LVS的八种调度方法"></a>LVS的八种调度方法</h3></blockquote>
-<h5 id="静态方法-仅依据算法本身进行轮询调度"><a href="#静态方法-仅依据算法本身进行轮询调度" class="headerlink" title="静态方法:仅依据算法本身进行轮询调度"></a>静态方法:仅依据算法本身进行轮询调度</h5><ul>
-<li>RR:Round Robin,轮调<br> <code>一个接一个，自上而下</code></li>
-<li>WRR:Weighted RR，加权论调<br> <code>加权，手动让能者多劳。</code></li>
-<li>SH:SourceIP Hash<br> <code>来自同一个IP地址的请求都将调度到同一个RealServer</code></li>
-<li>DH:Destination Hash<br> <code>不管IP，请求特定的东西，都定义到同一个RS上。</code></li>
-</ul>
-<h5 id="动态方法-根据算法及RS的当前负载状态进行调度"><a href="#动态方法-根据算法及RS的当前负载状态进行调度" class="headerlink" title="动态方法:根据算法及RS的当前负载状态进行调度"></a>动态方法:根据算法及RS的当前负载状态进行调度</h5><ul>
-<li>LC:least connections(最小链接数)<br> <code>链接最少，也就是Overhead最小就调度给谁。</code><br> <code>假如都一样，就根据配置的RS自上而下调度。</code></li>
-<li>WLC:Weighted Least Connection (加权最小连接数)<br> <code>这个是LVS的默认算法。</code></li>
-<li>SED:Shortest Expection Delay(最小期望延迟)<br> <code>WLC算法的改进。</code></li>
-<li>NQ:Never Queue<br> <code>SED算法的改进。</code></li>
-<li>LBLC:Locality-Based Least-Connection,基于局部的的LC算法<br> 正向代理缓存机制。访问缓存服务器，调高缓存的命中率。<br> 和传统DH算法比较，考虑缓存服务器负载。可以看做是DH+LC<br> 如果有两个缓存服务器<br> 1.只要调度到其中的一个缓存服务器，那缓存服务器内就会记录下来。下一次访问同一个资源的时候也就是这个服务器了。   (DH)<br> 2.有一个用户从来没有访问过这两个缓存服务器，那就分配到负载较小的服务器。<code>LC</code></li>
-</ul>
-<p>LBLCR:Locality-Based Least-Connection  with  Replication(带复制的lblc算法)<br> 缓存服务器中的缓存可以互相复制。<br> 因为即使没有，也能立即从另外一个服务器内复制一份，并且均衡负载</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">man ipvsadm有讲这几种动态或者静态的rs调度方法</span><br></pre></td></tr></table></figure>
-<blockquote>
-<h4 id="配置LVS-DR"><a href="#配置LVS-DR" class="headerlink" title="配置LVS-DR"></a>配置LVS-DR</h4></blockquote>
-<table>
-<thead>
-<tr>
-<th align="center">主机名</th>
-<th align="center">主机地址</th>
-<th align="center">角色</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">node1</td>
-<td align="center">DIP:192.168.2.201，VIP:192.168.2.211</td>
-<td align="center">Director</td>
-</tr>
-<tr>
-<td align="center">node3</td>
-<td align="center">RIP:192.168.2.203，VIP:192.168.2.211</td>
-<td align="center">RealServer</td>
-</tr>
-<tr>
-<td align="center">node4</td>
-<td align="center">RIP:192.168.2.204，VIP:192.168.2.211</td>
-<td align="center">RealServer</td>
-</tr>
-</tbody></table>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">本文中的主机系统均为CentOS7.1，Apache2.4，数据库：MariaDB-5.5.50</span><br></pre></td></tr></table></figure>
-<p>实验拓扑：</p>
-<img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/05.webp" class>
-
-<p>lvs-dr实验拓扑</p>
-<p><strong>(1)在Director上配置VIP和DIP</strong></p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">  [root@bc ~]# vim /etc/sysconfig/network-scripts/ifcfg-eno16777736</span><br><span class="line">    TYPE=Ethernet</span><br><span class="line">    BOOTPROTO=<span class="string">&quot;static&quot;</span></span><br><span class="line">    DEFROUTE=yes</span><br><span class="line">    PEERDNS=yes</span><br><span class="line">    PEERROUTES=yes</span><br><span class="line">    NAME=eno16777736</span><br><span class="line">    DEVICE=eno16777736</span><br><span class="line">    ONBOOT=yes</span><br><span class="line">    IPADDR=<span class="string">&quot;192.168.2.201&quot;</span></span><br><span class="line">    NETMASK=<span class="string">&quot;255.255.255.0&quot;</span></span><br><span class="line">    DNS1=<span class="string">&quot;192.168.2.1&quot;</span></span><br><span class="line">    GATEWAY=<span class="string">&quot;192.168.2.1&quot;</span></span><br><span class="line"></span><br><span class="line">[root@bc ~]# vim /etc/sysconfig/network-scripts/ifcfg-eno16777736:0</span><br><span class="line">    TYPE=Ethernet</span><br><span class="line">    BOOTPROTO=<span class="string">&quot;static&quot;</span></span><br><span class="line">    NAME=eno16777736:<span class="number">0</span></span><br><span class="line">    ONBOOT=yes</span><br><span class="line">    IPADDR=<span class="string">&quot;192.168.2.211&quot;</span></span><br><span class="line">    NETMASK=<span class="string">&quot;255.255.255.0&quot;</span></span><br><span class="line">    DNS1=<span class="string">&quot;192.168.2.1&quot;</span></span><br><span class="line">    GATEWAY=<span class="string">&quot;192.168.2.1&quot;</span></span><br><span class="line">    ONPARENT=yes</span><br></pre></td></tr></table></figure>
-<p>重启网络之后查看配置</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">[root@bc ~]# service NetworkManager stop</span><br><span class="line">  Redirecting to /bin/systemctl stop  NetworkManager.service</span><br><span class="line">[root@bc ~]# service network restart</span><br><span class="line">  Restarting network (via systemctl):                        [  OK  ]</span><br><span class="line">[root@bc ~]# ifconfig</span><br><span class="line">  eno16777736: flags=<span class="number">4163</span>&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu <span class="number">1500</span></span><br><span class="line">        inet <span class="number">192.168</span><span class="number">.2</span><span class="number">.201</span>  netmask <span class="number">255.255</span><span class="number">.255</span><span class="number">.0</span>  broadcast <span class="number">192.168</span><span class="number">.2</span><span class="number">.255</span></span><br><span class="line">        inet6 fe80::<span class="number">250</span>:56ff:fe3c:d757  prefixlen <span class="number">64</span>  scopeid <span class="number">0x20</span>&lt;link&gt;</span><br><span class="line">        ether <span class="number">00</span>:<span class="number">50</span>:<span class="number">56</span>:3c:d7:<span class="number">57</span>  txqueuelen <span class="number">1000</span>  (Ethernet)</span><br><span class="line">        RX packets <span class="number">88853</span>  bytes <span class="number">14843664</span> (<span class="number">14.1</span> MiB)</span><br><span class="line">        RX errors <span class="number">0</span>  dropped <span class="number">0</span>  overruns <span class="number">0</span>  frame <span class="number">0</span></span><br><span class="line">        TX packets <span class="number">79195</span>  bytes <span class="number">6551143</span> (<span class="number">6.2</span> MiB)</span><br><span class="line">        TX errors <span class="number">0</span>  dropped <span class="number">0</span> overruns <span class="number">0</span>  carrier <span class="number">0</span>  collisions <span class="number">0</span></span><br><span class="line"></span><br><span class="line">  eno16777736:<span class="number">0</span>: flags=<span class="number">4163</span>&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu <span class="number">1500</span></span><br><span class="line">        inet <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span>  netmask <span class="number">255.255</span><span class="number">.255</span><span class="number">.0</span>  broadcast <span class="number">192.168</span><span class="number">.2</span><span class="number">.255</span></span><br><span class="line">        ether <span class="number">00</span>:<span class="number">50</span>:<span class="number">56</span>:3c:d7:<span class="number">57</span>  txqueuelen <span class="number">1000</span>  (Ethernet)</span><br><span class="line"></span><br><span class="line">  lo: flags=<span class="number">73</span>&lt;UP,LOOPBACK,RUNNING&gt;  mtu <span class="number">65536</span></span><br><span class="line">        inet <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>  netmask <span class="number">255.0</span><span class="number">.0</span><span class="number">.0</span></span><br><span class="line">        inet6 ::<span class="number">1</span>  prefixlen <span class="number">128</span>  scopeid <span class="number">0x10</span>&lt;host&gt;</span><br><span class="line">        loop  txqueuelen <span class="number">0</span>  (Local Loopback)</span><br><span class="line">        RX packets <span class="number">12998</span>  bytes <span class="number">1140269</span> (<span class="number">1.0</span> MiB)</span><br><span class="line">        RX errors <span class="number">0</span>  dropped <span class="number">0</span>  overruns <span class="number">0</span>  frame <span class="number">0</span></span><br><span class="line">        TX packets <span class="number">12998</span>  bytes <span class="number">1140269</span> (<span class="number">1.0</span> MiB)</span><br><span class="line">        TX errors <span class="number">0</span>  dropped <span class="number">0</span> overruns <span class="number">0</span>  carrier <span class="number">0</span>  collisions <span class="number">0</span></span><br></pre></td></tr></table></figure>
-<p><strong>(2)Director使用ipvsadm修改创建ipvs规则</strong></p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">[root@bc ~]# ipvsadm -A -t 192.168.2.211:80 -s rr</span><br><span class="line">[root@bc ~]# ipvsadm -a -t 192.168.2.211:80 -r 192.168.2.203 -g</span><br><span class="line">[root@bc ~]# ipvsadm -a -t 192.168.2.211:80 -r 192.168.2.204 -g</span><br><span class="line">[root@bc ~]# ipvsadm -L -n</span><br><span class="line">IP Virtual Server version <span class="number">1.2</span><span class="number">.1</span> (size=<span class="number">4096</span>)</span><br><span class="line">Prot LocalAddress:Port Scheduler Flags</span><br><span class="line">  -&gt; RemoteAddress:Port           Forward Weight ActiveConn InActConn</span><br><span class="line">TCP  <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span>:<span class="number">80</span> rr</span><br><span class="line">  -&gt; <span class="number">192.168</span><span class="number">.2</span><span class="number">.203</span>:<span class="number">80</span>             Route   <span class="number">1</span>      <span class="number">0</span>          <span class="number">0</span>         </span><br><span class="line">  -&gt; <span class="number">192.168</span><span class="number">.2</span><span class="number">.204</span>:<span class="number">80</span>             Route   <span class="number">1</span>      <span class="number">0</span>          <span class="number">0</span>   </span><br></pre></td></tr></table></figure>
-<p><strong>(3)RealServer安装httpd</strong></p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">[root@node3 ~]# yum install httpd -y</span><br><span class="line">[root@node4 ~]# yum install httpd -y</span><br></pre></td></tr></table></figure>
-<p><code>可以在里面放一个Wordpress,也可以简单echo几个字到index.html</code><br> <strong>(4)node3和node4修改RealServer内核参数</strong></p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">echo <span class="string">&quot;1&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/ip_forward</span><br><span class="line">echo <span class="string">&quot;2&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/conf/all/arp_announce</span><br><span class="line">echo <span class="string">&quot;1&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/conf/all/arp_ignore</span><br><span class="line">echo <span class="string">&quot;1&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/conf/lo/arp_ignore</span><br><span class="line">echo <span class="string">&quot;2&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/conf/lo/arp_announce</span><br><span class="line">ifconfig lo:<span class="number">0</span> <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span>/<span class="number">32</span> broadcast <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span> up</span><br><span class="line">route add -host <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span> dev lo:<span class="number">0</span></span><br></pre></td></tr></table></figure>
-<p><code>修改内核参数，并且配置VIP地址到RealServer的loopback接口上。</code><br> <strong><code>那样的话，当RealServer接到从Director转发而来的数据报文时，RealServer也不会丢弃报文。</code></strong><br> <code>同时，修改了RealServer的参数，局域网内的arp表就只有Director有VIP。</code><br> <code>RealServer的的机器上有VIP这件事，只有RealServer自己知道。</code><br> <strong><code>这样可以保证，当请求到来的时候，第一个会送到Director那里去。</code></strong></p>
-<p><strong>(5)测试结果</strong></p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">[root@node3 httpd]# vim  /var/log/httpd/access_log </span><br><span class="line">[root@node4 httpd]# vim  /var/log/httpd/access_log </span><br></pre></td></tr></table></figure>
-<p>效果差不多就是这样:<br> <code>因为我们使用了RR静态调度方法,所以这node3和node4的请求是一人一个。</code></p>
-<img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/06.webp" class>
-
-
-
-]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>负载均衡</tag>
       </tags>
   </entry>
   <entry>
@@ -1037,101 +909,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Maven学习笔记</title>
-    <url>/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-3/</url>
-    <content><![CDATA[<h3 id="Maven仓库的基本概念"><a href="#Maven仓库的基本概念" class="headerlink" title="Maven仓库的基本概念"></a>Maven仓库的基本概念</h3><p> 当第⼀次运⾏Maven命令的时候， 你需要Internet链接， 因为它需要从⽹上下载⼀些⽂件。 那么它从 哪⾥下载呢？ 它是从Maven默认的远程库下载的。 这个远程仓库有Maven的核⼼插件和可供下载的jar⽂件。</p>
-<p>对于Maven来说， 仓库只分为两类： 本地仓库和远程仓库。</p>
-<p>当Maven根据坐标寻找构件的时候，它⾸先会查看本地仓库，如果本地仓库存在，则直接使⽤； 如果 本地没有，Maven就会去远程仓库查找，发现需要的构件之后，下载到本地仓库再使⽤。 如果本地仓库和远程仓库都没有，Maven就会报错。 </p>
-<p>远程仓库分为三种： 中央仓库，私服， 其他公共库。</p>
-<ul>
-<li><p>中央仓库：默认配置下，Maven下载jar包的地⽅。</p>
-<blockquote>
-<p>由于原始的本地仓库是空的，maven必须知道⾄少⼀个可⽤的远程仓库，才能执⾏maven命令的时候 下载到需要的构件。中央仓库就是这样⼀个默认的远程仓库。 maven-model-builder-3.3.9.jar maven⾃动的 jar 中包含了⼀个 超级POM。定义了默认中央仓库的位 置。 中央仓库包含了2000多个开源项⽬，接收每天1亿次以上的访问</p>
-</blockquote>
-</li>
-<li><p>私服：是另⼀种特殊的远程仓库，为了节省带宽和时间，应该在局域⽹内架设⼀个私有的仓库服务器， ⽤其代理所有外部的远程仓库。 内部的项⽬还能部署到私服上供其他项⽬使用</p>
-<blockquote>
-<p>私服是⼀种特殊的远程仓库，它是架设在局域⽹内的仓库服务， 私服代理⼴域⽹上的远程仓库，供局 域⽹内的maven⽤户使⽤。 当maven需要下载构件时， 它去私服当中找，如果私服没有， 则从外部远 程仓库下载，并缓存在私服上， 再为maven提供。 此外，⼀些⽆法从外部仓库下载的构件也能从本地上传到私服提供局域⽹中其他⼈使⽤</p>
-</blockquote>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">repositories</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">snapshots</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">enabled</span>&gt;</span>true<span class="tag">&lt;/<span class="name">enabled</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;/<span class="name">snapshots</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">id</span>&gt;</span>public<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>Public Repositories<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://192.168.0.96:8081/content/groups/public/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">id</span>&gt;</span>getui-nexus<span class="tag">&lt;/<span class="name">id</span>&gt;</span>       				<span class="tag">&lt;<span class="name">url</span>&gt;</span>http://mvn.gt.igexin.com/nexus/content/repositories/releases/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">repositories</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<p>公司内部为何需要建立私服：</p>
-<blockquote>
-<p>节省⾃⼰的外⽹带宽 加速maven构建 部署第三⽅控件 提⾼稳定性 降低中央仓库的负荷</p>
-</blockquote>
-<p>常用的阿里云仓库配置，需要修改settings.xml文件</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus-aliyun<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">name</span>&gt;</span>Nexus aliyun<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-<p>⼀般来说，在Maven项⽬⽬录下，没有诸如lib/这样⽤来存放依赖⽂件的⽬录。 当Maven在执⾏编译或 测试时，如果需要使⽤依赖⽂件，它总是基于坐标使⽤本地仓库的依赖⽂件。</p>
-<p>每个⽤户在⾃⼰的⽤户⽬录下都有⼀个路径名为.m2/repository/的仓库⽬录。 有时候， 因为某些原因（⽐如c盘空间不⾜）,需要修改本地仓库⽬录地址。</p>
-<p>对于仓库路径的修改，可以通过maven 配置⽂件conf ⽬录下settings.xml来指定仓库路径。</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置到指定⽬录中，路径的斜杆不要写反 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">settings</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">localRepository</span>&gt;</span>D:/m2/repository<span class="tag">&lt;/<span class="name">localRepository</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-<h3 id="Maven依赖的基本概念"><a href="#Maven依赖的基本概念" class="headerlink" title="Maven依赖的基本概念"></a>Maven依赖的基本概念</h3><p>根元素project下的dependencies可以包含多个 dependence元素，以声明多个依赖。每个依赖都应该包含以下元素：</p>
-<ol>
-<li><p>groupId, artifactId, version : 依赖的基本坐标， 对于任何⼀个依赖来说，基本坐标是最重要的， Maven根据坐标才能找到需要的依赖。</p>
-</li>
-<li><p>Type： 依赖的类型，⼤部分情况下不需要声明。 默认值为jar</p>
-</li>
-<li><p>Scope： 依赖范围（compile,test,provided,runtime,system）</p>
-</li>
-</ol>
-<blockquote>
-<p>compile：编译依赖范围</p>
-</blockquote>
-<p>如果没有指定，就会默认使⽤该依赖范围。使⽤此依赖范围的Maven依赖，对于编译、测 试、运⾏三种classpath都有效。</p>
-<blockquote>
-<p>test：测试依赖范围</p>
-</blockquote>
-<p>使⽤此依赖范围的Maven依赖，只对于测试classpath有效，在编译主代码或者运⾏项⽬的使 ⽤时将⽆法使⽤此类依赖。典型的例⼦就是JUnit，它只有在编译测试代码及运⾏测试的时候才需要</p>
-<blockquote>
-<p>provided：已提供依赖范围</p>
-</blockquote>
-<p>使⽤此依赖范围的Maven依赖，对于编译和测试classpath有效，但在运⾏时⽆效。典型的例 ⼦是servlet-api，编译和测试项⽬的时候需要该依赖，但在运⾏项⽬的时候，由于容器已经提供，就不需要Maven重复地引⼊⼀遍(如：servlet-api)。</p>
-<blockquote>
-<p>runtime：运行时依赖范围</p>
-</blockquote>
-<p>使⽤此依赖范围的Maven依赖，对于测试和运⾏classpath有效，但在编译主代码时⽆效。典 型的例⼦是JDBC驱动实现，项⽬主代码的编译只需要JDK提供的JDBC接⼝，只有在执⾏测 试或者运⾏项⽬的时候才需要实现上述接⼝的具体JDBC驱动。</p>
-<blockquote>
-<p>system：系统依赖范围</p>
-</blockquote>
-<p>该依赖与三种classpath的关系，和provided依赖范围完全⼀致。但是，使⽤system范围依赖 时必须通过systemPath元素显式地指定依赖⽂件的路径。由于此类依赖不是通过Maven仓库 解析的，⽽且往往与本机系统绑定，可能造成构建的不可移植，因此应该谨慎使⽤。</p>
-<ol start="4">
-<li><p>Optional：标记依赖是否可选</p>
-</li>
-<li><p>Exclusions： ⽤来排除传递性依赖。</p>
-</li>
-</ol>
-<h3 id="Maven依赖的依赖范围"><a href="#Maven依赖的依赖范围" class="headerlink" title="Maven依赖的依赖范围"></a>Maven依赖的依赖范围</h3><p>⾸先需要知道，Maven在编译项⽬主代码的时候需要使⽤⼀套classpath。 ⽐如：编译项⽬代码的时候 需要⽤到spring-core, 该⽂件以依赖的⽅式被引⼊到classpath中。 其次， Maven在执⾏测试的时候会使 ⽤另外⼀套classpath。 如：junit。</p>
-<p>最后在实际运⾏项⽬时，⼜会使⽤⼀套classpath， spring-core需要在该classpath中，⽽junit不需要。</p>
-<p>那么依赖范围就是⽤来控制依赖与这三种classpath(编译classpath，测试classpath，运⾏时classpath)的 关系， Maven有以下⼏种依赖范围：<strong>（如上所述）</strong></p>
-<h3 id="传递性依赖"><a href="#传递性依赖" class="headerlink" title="传递性依赖"></a>传递性依赖</h3><p>传递依赖机制， 让我们在使⽤某个jar的时候就不⽤去考虑它依赖了什么。也不⽤担⼼引⼊多余的依 赖。 Maven会解析各个直接依赖的POM，将那些必要的间接依赖，以传递性依赖的形式引⼊到当前项⽬中。</p>
-<p><strong>注意：传递依赖有可能产生冲突</strong></p>
-<p>冲突场景”</p>
-<blockquote>
-<p>A–&gt;B—&gt;C (2.0) </p>
-<p>A–&gt;E—&gt;C (1.0)</p>
-</blockquote>
-<p>如果A下同时存在两个不同version的C，冲突！！（选取同时适合A、B的版本）</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">version</span>&gt;</span>xxx<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>项目工具</category>
-      </categories>
-      <tags>
-        <tag>Maven</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Maven学习笔记&lt;一&gt;</title>
     <url>/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</url>
     <content><![CDATA[<h2 id="Maven的简介"><a href="#Maven的简介" class="headerlink" title="Maven的简介"></a>Maven的简介</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p> Maven【[ˈmevən]】这个词可以翻译为”专家”,”内⾏”。 作为Apache组织中的⼀个颇为成功的开源项⽬， Maven主要服务于基于java平台的项⽬构建，依赖管理和项⽬信息管理。 ⽆论是⼩型的开源类库项⽬，还是⼤型的企业级应⽤； ⽆论是传统的瀑布式开发，还是流⾏的敏捷开 发，Maven都能⼤显身⼿。</p>
@@ -1299,6 +1076,229 @@
       </categories>
       <tags>
         <tag>Maven</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Maven学习笔记</title>
+    <url>/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-3/</url>
+    <content><![CDATA[<h3 id="Maven仓库的基本概念"><a href="#Maven仓库的基本概念" class="headerlink" title="Maven仓库的基本概念"></a>Maven仓库的基本概念</h3><p> 当第⼀次运⾏Maven命令的时候， 你需要Internet链接， 因为它需要从⽹上下载⼀些⽂件。 那么它从 哪⾥下载呢？ 它是从Maven默认的远程库下载的。 这个远程仓库有Maven的核⼼插件和可供下载的jar⽂件。</p>
+<p>对于Maven来说， 仓库只分为两类： 本地仓库和远程仓库。</p>
+<p>当Maven根据坐标寻找构件的时候，它⾸先会查看本地仓库，如果本地仓库存在，则直接使⽤； 如果 本地没有，Maven就会去远程仓库查找，发现需要的构件之后，下载到本地仓库再使⽤。 如果本地仓库和远程仓库都没有，Maven就会报错。 </p>
+<p>远程仓库分为三种： 中央仓库，私服， 其他公共库。</p>
+<ul>
+<li><p>中央仓库：默认配置下，Maven下载jar包的地⽅。</p>
+<blockquote>
+<p>由于原始的本地仓库是空的，maven必须知道⾄少⼀个可⽤的远程仓库，才能执⾏maven命令的时候 下载到需要的构件。中央仓库就是这样⼀个默认的远程仓库。 maven-model-builder-3.3.9.jar maven⾃动的 jar 中包含了⼀个 超级POM。定义了默认中央仓库的位 置。 中央仓库包含了2000多个开源项⽬，接收每天1亿次以上的访问</p>
+</blockquote>
+</li>
+<li><p>私服：是另⼀种特殊的远程仓库，为了节省带宽和时间，应该在局域⽹内架设⼀个私有的仓库服务器， ⽤其代理所有外部的远程仓库。 内部的项⽬还能部署到私服上供其他项⽬使用</p>
+<blockquote>
+<p>私服是⼀种特殊的远程仓库，它是架设在局域⽹内的仓库服务， 私服代理⼴域⽹上的远程仓库，供局 域⽹内的maven⽤户使⽤。 当maven需要下载构件时， 它去私服当中找，如果私服没有， 则从外部远 程仓库下载，并缓存在私服上， 再为maven提供。 此外，⼀些⽆法从外部仓库下载的构件也能从本地上传到私服提供局域⽹中其他⼈使⽤</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">repositories</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">snapshots</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">enabled</span>&gt;</span>true<span class="tag">&lt;/<span class="name">enabled</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;/<span class="name">snapshots</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">id</span>&gt;</span>public<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>Public Repositories<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://192.168.0.96:8081/content/groups/public/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">id</span>&gt;</span>getui-nexus<span class="tag">&lt;/<span class="name">id</span>&gt;</span>       				<span class="tag">&lt;<span class="name">url</span>&gt;</span>http://mvn.gt.igexin.com/nexus/content/repositories/releases/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">repositories</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<p>公司内部为何需要建立私服：</p>
+<blockquote>
+<p>节省⾃⼰的外⽹带宽 加速maven构建 部署第三⽅控件 提⾼稳定性 降低中央仓库的负荷</p>
+</blockquote>
+<p>常用的阿里云仓库配置，需要修改settings.xml文件</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus-aliyun<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">name</span>&gt;</span>Nexus aliyun<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+<p>⼀般来说，在Maven项⽬⽬录下，没有诸如lib/这样⽤来存放依赖⽂件的⽬录。 当Maven在执⾏编译或 测试时，如果需要使⽤依赖⽂件，它总是基于坐标使⽤本地仓库的依赖⽂件。</p>
+<p>每个⽤户在⾃⼰的⽤户⽬录下都有⼀个路径名为.m2/repository/的仓库⽬录。 有时候， 因为某些原因（⽐如c盘空间不⾜）,需要修改本地仓库⽬录地址。</p>
+<p>对于仓库路径的修改，可以通过maven 配置⽂件conf ⽬录下settings.xml来指定仓库路径。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置到指定⽬录中，路径的斜杆不要写反 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">settings</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">localRepository</span>&gt;</span>D:/m2/repository<span class="tag">&lt;/<span class="name">localRepository</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+<h3 id="Maven依赖的基本概念"><a href="#Maven依赖的基本概念" class="headerlink" title="Maven依赖的基本概念"></a>Maven依赖的基本概念</h3><p>根元素project下的dependencies可以包含多个 dependence元素，以声明多个依赖。每个依赖都应该包含以下元素：</p>
+<ol>
+<li><p>groupId, artifactId, version : 依赖的基本坐标， 对于任何⼀个依赖来说，基本坐标是最重要的， Maven根据坐标才能找到需要的依赖。</p>
+</li>
+<li><p>Type： 依赖的类型，⼤部分情况下不需要声明。 默认值为jar</p>
+</li>
+<li><p>Scope： 依赖范围（compile,test,provided,runtime,system）</p>
+</li>
+</ol>
+<blockquote>
+<p>compile：编译依赖范围</p>
+</blockquote>
+<p>如果没有指定，就会默认使⽤该依赖范围。使⽤此依赖范围的Maven依赖，对于编译、测 试、运⾏三种classpath都有效。</p>
+<blockquote>
+<p>test：测试依赖范围</p>
+</blockquote>
+<p>使⽤此依赖范围的Maven依赖，只对于测试classpath有效，在编译主代码或者运⾏项⽬的使 ⽤时将⽆法使⽤此类依赖。典型的例⼦就是JUnit，它只有在编译测试代码及运⾏测试的时候才需要</p>
+<blockquote>
+<p>provided：已提供依赖范围</p>
+</blockquote>
+<p>使⽤此依赖范围的Maven依赖，对于编译和测试classpath有效，但在运⾏时⽆效。典型的例 ⼦是servlet-api，编译和测试项⽬的时候需要该依赖，但在运⾏项⽬的时候，由于容器已经提供，就不需要Maven重复地引⼊⼀遍(如：servlet-api)。</p>
+<blockquote>
+<p>runtime：运行时依赖范围</p>
+</blockquote>
+<p>使⽤此依赖范围的Maven依赖，对于测试和运⾏classpath有效，但在编译主代码时⽆效。典 型的例⼦是JDBC驱动实现，项⽬主代码的编译只需要JDK提供的JDBC接⼝，只有在执⾏测 试或者运⾏项⽬的时候才需要实现上述接⼝的具体JDBC驱动。</p>
+<blockquote>
+<p>system：系统依赖范围</p>
+</blockquote>
+<p>该依赖与三种classpath的关系，和provided依赖范围完全⼀致。但是，使⽤system范围依赖 时必须通过systemPath元素显式地指定依赖⽂件的路径。由于此类依赖不是通过Maven仓库 解析的，⽽且往往与本机系统绑定，可能造成构建的不可移植，因此应该谨慎使⽤。</p>
+<ol start="4">
+<li><p>Optional：标记依赖是否可选</p>
+</li>
+<li><p>Exclusions： ⽤来排除传递性依赖。</p>
+</li>
+</ol>
+<h3 id="Maven依赖的依赖范围"><a href="#Maven依赖的依赖范围" class="headerlink" title="Maven依赖的依赖范围"></a>Maven依赖的依赖范围</h3><p>⾸先需要知道，Maven在编译项⽬主代码的时候需要使⽤⼀套classpath。 ⽐如：编译项⽬代码的时候 需要⽤到spring-core, 该⽂件以依赖的⽅式被引⼊到classpath中。 其次， Maven在执⾏测试的时候会使 ⽤另外⼀套classpath。 如：junit。</p>
+<p>最后在实际运⾏项⽬时，⼜会使⽤⼀套classpath， spring-core需要在该classpath中，⽽junit不需要。</p>
+<p>那么依赖范围就是⽤来控制依赖与这三种classpath(编译classpath，测试classpath，运⾏时classpath)的 关系， Maven有以下⼏种依赖范围：<strong>（如上所述）</strong></p>
+<h3 id="传递性依赖"><a href="#传递性依赖" class="headerlink" title="传递性依赖"></a>传递性依赖</h3><p>传递依赖机制， 让我们在使⽤某个jar的时候就不⽤去考虑它依赖了什么。也不⽤担⼼引⼊多余的依 赖。 Maven会解析各个直接依赖的POM，将那些必要的间接依赖，以传递性依赖的形式引⼊到当前项⽬中。</p>
+<p><strong>注意：传递依赖有可能产生冲突</strong></p>
+<p>冲突场景”</p>
+<blockquote>
+<p>A–&gt;B—&gt;C (2.0) </p>
+<p>A–&gt;E—&gt;C (1.0)</p>
+</blockquote>
+<p>如果A下同时存在两个不同version的C，冲突！！（选取同时适合A、B的版本）</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">version</span>&gt;</span>xxx<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>项目工具</category>
+      </categories>
+      <tags>
+        <tag>Maven</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LVS负载均衡</title>
+    <url>/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</url>
+    <content><![CDATA[<blockquote>
+<h3 id="LVS是什么"><a href="#LVS是什么" class="headerlink" title="LVS是什么?"></a>LVS是什么?</h3></blockquote>
+<p>LVS，全称Linux Virtual Server，是国人章文嵩发起的一个开源项目。<br> 在社区具有很大的热度，是一个基于四层、具有强大性能的反向代理服务器。<br> <code>早期使用lvs需要修改内核才能使用，但是由于性能优异，现在已经被收入内核。</code></p>
+<p>LVS通过工作于内核的ipvs模块来实现功能，其主要工作于netfilter 的INPUT链上。<br> 而用户需要对ipvs进行操作配置则需要使用ipvsadm这个工具。<br> ipvsadm主要用于设置lvs模型、调度方式以及指定后端主机。</p>
+<blockquote>
+<h3 id="LVS中的角色"><a href="#LVS中的角色" class="headerlink" title="LVS中的角色"></a>LVS中的角色</h3></blockquote>
+<h5 id="LVS的一些相关术语"><a href="#LVS的一些相关术语" class="headerlink" title="LVS的一些相关术语"></a><strong>LVS的一些相关术语</strong></h5><p>LVS的模型中有两个角色：<br> **调度器:**Director，又称为Dispatcher，Balancer<br> <code>调度器主要用于接受用户请求。</code><br> **真实主机:**Real Server，简称为RS。<br> <code>用于真正处理用户的请求。</code></p>
+<p>而为了更好地理解，我们将所在角色的IP地址分为以下三种：<br> <strong>Director Virtual IP:**调度器用于与客户端通信的IP地址，简称为VIP<br> **Director IP</strong>:调度器用于与RealServer通信的IP地址，简称为DIP。<br> <strong>Real Server :</strong> 后端主机的用于与调度器通信的IP地址，简称为RIP。</p>
+<img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/02.webp" class>
+
+<p>基本模型</p>
+<blockquote>
+<h3 id="LVS的三种调度模式"><a href="#LVS的三种调度模式" class="headerlink" title="LVS的三种调度模式"></a>LVS的三种调度模式</h3></blockquote>
+<h3 id="LVS-NATNetwork-Address-Transform"><a href="#LVS-NATNetwork-Address-Transform" class="headerlink" title="LVS-NATNetwork Address Transform"></a>LVS-NAT<code>Network Address Transform</code></h3><h6 id="示意图和调度步骤"><a href="#示意图和调度步骤" class="headerlink" title="示意图和调度步骤"></a><strong>示意图和调度步骤</strong></h6><img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/01.webp" class>
+
+<p>LVS-NAT</p>
+<h6 id="原理："><a href="#原理：" class="headerlink" title="原理："></a><strong>原理：</strong></h6><p>基于ip伪装<code>MASQUERADES</code>，原理是多目标DNAT。<br> 所以请求和响应都经由Director调度器。</p>
+<h6 id="LVS-NAT的优点与缺点"><a href="#LVS-NAT的优点与缺点" class="headerlink" title="LVS-NAT的优点与缺点"></a><strong>LVS-NAT的优点与缺点</strong></h6><h6 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h6><ul>
+<li>支持端口映射</li>
+<li>RS可以使用任意操作系统</li>
+<li>节省公有IP地址。<br> <code>RIP和DIP都应该使用同一网段私有地址，而且RS的网关要指向DIP。</code><br> <code>使用nat另外一个好处就是后端的主机相对比较安全。</code></li>
+</ul>
+<h6 id="缺点："><a href="#缺点：" class="headerlink" title="缺点："></a>缺点：</h6><ul>
+<li>请求和响应报文都要经过Director转发;极高负载时，Director可能成为系统瓶颈。<br> <code>就是效率低的意思。</code></li>
+</ul>
+<h3 id="LVS-TUNIP-Tuneling"><a href="#LVS-TUNIP-Tuneling" class="headerlink" title="LVS-TUNIP Tuneling"></a>LVS-TUN<code>IP Tuneling</code></h3><h6 id="示意图和调度步骤-1"><a href="#示意图和调度步骤-1" class="headerlink" title="示意图和调度步骤"></a><strong>示意图和调度步骤</strong></h6><img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/03.webp" class>
+
+<p>LVS-TUN</p>
+<h6 id="原理：-1"><a href="#原理：-1" class="headerlink" title="原理："></a><strong>原理：</strong></h6><p>基于隧道封装技术。在IP报文的外面再包一层IP报文。<br> 当Director接收到请求的时候，选举出调度的RealServer<br> 当接受到从Director而来的请求时，RealServer则会使用lo接口上的VIP直接响应CIP。<br> 这样CIP请求VIP的资源，收到的也是VIP响应。</p>
+<h6 id="LVS-TUN的优点与缺点"><a href="#LVS-TUN的优点与缺点" class="headerlink" title="LVS-TUN的优点与缺点"></a><strong>LVS-TUN的优点与缺点</strong></h6><h6 id="优点：-1"><a href="#优点：-1" class="headerlink" title="优点："></a>优点：</h6><ul>
+<li>RIP,VIP,DIP都应该使用公网地址，且RS网关不指向DIP;<br> <code>只接受进站请求，解决了LVS-NAT时的问题，减少负载。</code><br> <code>请求报文经由Director调度，但是响应报文不需经由Director。</code></li>
+</ul>
+<h6 id="缺点：-1"><a href="#缺点：-1" class="headerlink" title="缺点："></a>缺点：</h6><ul>
+<li>不指向Director所以不支持端口映射。</li>
+<li>RS的OS必须支持隧道功能。</li>
+<li>隧道技术会额外花费性能，增大开销。</li>
+</ul>
+<h3 id="LVS-DRDirect-Routing"><a href="#LVS-DRDirect-Routing" class="headerlink" title="LVS-DRDirect Routing"></a>LVS-DR<code>Direct Routing</code></h3><h6 id="示意图和调度步骤-2"><a href="#示意图和调度步骤-2" class="headerlink" title="示意图和调度步骤"></a><strong>示意图和调度步骤</strong></h6><img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/04.webp" class>
+
+<p>LVS-DR</p>
+<h6 id="原理"><a href="#原理" class="headerlink" title="原理"></a><strong>原理</strong></h6><p>当Director接收到请求之后，通过调度方法选举出RealServer。<br> 讲目标地址的MAC地址改为RealServer的MAC地址。<br> RealServer接受到转发而来的请求，发现目标地址是VIP。<code>RealServer配置在lo接口上。</code><br> 处理请求之后则使用lo接口上的VIP响应CIP。</p>
+<h6 id="LVS-DR的优点与缺点"><a href="#LVS-DR的优点与缺点" class="headerlink" title="LVS-DR的优点与缺点"></a><strong>LVS-DR的优点与缺点</strong></h6><h6 id="优点：-2"><a href="#优点：-2" class="headerlink" title="优点："></a>优点：</h6><ul>
+<li>RIP可以使用私有地址，也可以使用公网地址。<br> <code>只要求DIP和RIP的地址在同一个网段内。</code></li>
+<li>请求报文经由Director调度，但是响应报文不经由Director。</li>
+<li>RS可以使用大多数OS</li>
+</ul>
+<h6 id="缺点：-2"><a href="#缺点：-2" class="headerlink" title="缺点："></a>缺点：</h6><ul>
+<li>不支持端口映射。</li>
+<li>不能跨局域网。</li>
+</ul>
+<h6 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h6><p>三种模型虽然各有利弊，但是由于追求性能和便捷，DR是目前用得最多的LVS模型。</p>
+<blockquote>
+<h3 id="LVS的八种调度方法"><a href="#LVS的八种调度方法" class="headerlink" title="LVS的八种调度方法"></a>LVS的八种调度方法</h3></blockquote>
+<h5 id="静态方法-仅依据算法本身进行轮询调度"><a href="#静态方法-仅依据算法本身进行轮询调度" class="headerlink" title="静态方法:仅依据算法本身进行轮询调度"></a>静态方法:仅依据算法本身进行轮询调度</h5><ul>
+<li>RR:Round Robin,轮调<br> <code>一个接一个，自上而下</code></li>
+<li>WRR:Weighted RR，加权论调<br> <code>加权，手动让能者多劳。</code></li>
+<li>SH:SourceIP Hash<br> <code>来自同一个IP地址的请求都将调度到同一个RealServer</code></li>
+<li>DH:Destination Hash<br> <code>不管IP，请求特定的东西，都定义到同一个RS上。</code></li>
+</ul>
+<h5 id="动态方法-根据算法及RS的当前负载状态进行调度"><a href="#动态方法-根据算法及RS的当前负载状态进行调度" class="headerlink" title="动态方法:根据算法及RS的当前负载状态进行调度"></a>动态方法:根据算法及RS的当前负载状态进行调度</h5><ul>
+<li>LC:least connections(最小链接数)<br> <code>链接最少，也就是Overhead最小就调度给谁。</code><br> <code>假如都一样，就根据配置的RS自上而下调度。</code></li>
+<li>WLC:Weighted Least Connection (加权最小连接数)<br> <code>这个是LVS的默认算法。</code></li>
+<li>SED:Shortest Expection Delay(最小期望延迟)<br> <code>WLC算法的改进。</code></li>
+<li>NQ:Never Queue<br> <code>SED算法的改进。</code></li>
+<li>LBLC:Locality-Based Least-Connection,基于局部的的LC算法<br> 正向代理缓存机制。访问缓存服务器，调高缓存的命中率。<br> 和传统DH算法比较，考虑缓存服务器负载。可以看做是DH+LC<br> 如果有两个缓存服务器<br> 1.只要调度到其中的一个缓存服务器，那缓存服务器内就会记录下来。下一次访问同一个资源的时候也就是这个服务器了。   (DH)<br> 2.有一个用户从来没有访问过这两个缓存服务器，那就分配到负载较小的服务器。<code>LC</code></li>
+</ul>
+<p>LBLCR:Locality-Based Least-Connection  with  Replication(带复制的lblc算法)<br> 缓存服务器中的缓存可以互相复制。<br> 因为即使没有，也能立即从另外一个服务器内复制一份，并且均衡负载</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">man ipvsadm有讲这几种动态或者静态的rs调度方法</span><br></pre></td></tr></table></figure>
+<blockquote>
+<h4 id="配置LVS-DR"><a href="#配置LVS-DR" class="headerlink" title="配置LVS-DR"></a>配置LVS-DR</h4></blockquote>
+<table>
+<thead>
+<tr>
+<th align="center">主机名</th>
+<th align="center">主机地址</th>
+<th align="center">角色</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">node1</td>
+<td align="center">DIP:192.168.2.201，VIP:192.168.2.211</td>
+<td align="center">Director</td>
+</tr>
+<tr>
+<td align="center">node3</td>
+<td align="center">RIP:192.168.2.203，VIP:192.168.2.211</td>
+<td align="center">RealServer</td>
+</tr>
+<tr>
+<td align="center">node4</td>
+<td align="center">RIP:192.168.2.204，VIP:192.168.2.211</td>
+<td align="center">RealServer</td>
+</tr>
+</tbody></table>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">本文中的主机系统均为CentOS7.1，Apache2.4，数据库：MariaDB-5.5.50</span><br></pre></td></tr></table></figure>
+<p>实验拓扑：</p>
+<img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/05.webp" class>
+
+<p>lvs-dr实验拓扑</p>
+<p><strong>(1)在Director上配置VIP和DIP</strong></p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">  [root@bc ~]# vim /etc/sysconfig/network-scripts/ifcfg-eno16777736</span><br><span class="line">    TYPE=Ethernet</span><br><span class="line">    BOOTPROTO=<span class="string">&quot;static&quot;</span></span><br><span class="line">    DEFROUTE=yes</span><br><span class="line">    PEERDNS=yes</span><br><span class="line">    PEERROUTES=yes</span><br><span class="line">    NAME=eno16777736</span><br><span class="line">    DEVICE=eno16777736</span><br><span class="line">    ONBOOT=yes</span><br><span class="line">    IPADDR=<span class="string">&quot;192.168.2.201&quot;</span></span><br><span class="line">    NETMASK=<span class="string">&quot;255.255.255.0&quot;</span></span><br><span class="line">    DNS1=<span class="string">&quot;192.168.2.1&quot;</span></span><br><span class="line">    GATEWAY=<span class="string">&quot;192.168.2.1&quot;</span></span><br><span class="line"></span><br><span class="line">[root@bc ~]# vim /etc/sysconfig/network-scripts/ifcfg-eno16777736:0</span><br><span class="line">    TYPE=Ethernet</span><br><span class="line">    BOOTPROTO=<span class="string">&quot;static&quot;</span></span><br><span class="line">    NAME=eno16777736:<span class="number">0</span></span><br><span class="line">    ONBOOT=yes</span><br><span class="line">    IPADDR=<span class="string">&quot;192.168.2.211&quot;</span></span><br><span class="line">    NETMASK=<span class="string">&quot;255.255.255.0&quot;</span></span><br><span class="line">    DNS1=<span class="string">&quot;192.168.2.1&quot;</span></span><br><span class="line">    GATEWAY=<span class="string">&quot;192.168.2.1&quot;</span></span><br><span class="line">    ONPARENT=yes</span><br></pre></td></tr></table></figure>
+<p>重启网络之后查看配置</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">[root@bc ~]# service NetworkManager stop</span><br><span class="line">  Redirecting to /bin/systemctl stop  NetworkManager.service</span><br><span class="line">[root@bc ~]# service network restart</span><br><span class="line">  Restarting network (via systemctl):                        [  OK  ]</span><br><span class="line">[root@bc ~]# ifconfig</span><br><span class="line">  eno16777736: flags=<span class="number">4163</span>&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu <span class="number">1500</span></span><br><span class="line">        inet <span class="number">192.168</span><span class="number">.2</span><span class="number">.201</span>  netmask <span class="number">255.255</span><span class="number">.255</span><span class="number">.0</span>  broadcast <span class="number">192.168</span><span class="number">.2</span><span class="number">.255</span></span><br><span class="line">        inet6 fe80::<span class="number">250</span>:56ff:fe3c:d757  prefixlen <span class="number">64</span>  scopeid <span class="number">0x20</span>&lt;link&gt;</span><br><span class="line">        ether <span class="number">00</span>:<span class="number">50</span>:<span class="number">56</span>:3c:d7:<span class="number">57</span>  txqueuelen <span class="number">1000</span>  (Ethernet)</span><br><span class="line">        RX packets <span class="number">88853</span>  bytes <span class="number">14843664</span> (<span class="number">14.1</span> MiB)</span><br><span class="line">        RX errors <span class="number">0</span>  dropped <span class="number">0</span>  overruns <span class="number">0</span>  frame <span class="number">0</span></span><br><span class="line">        TX packets <span class="number">79195</span>  bytes <span class="number">6551143</span> (<span class="number">6.2</span> MiB)</span><br><span class="line">        TX errors <span class="number">0</span>  dropped <span class="number">0</span> overruns <span class="number">0</span>  carrier <span class="number">0</span>  collisions <span class="number">0</span></span><br><span class="line"></span><br><span class="line">  eno16777736:<span class="number">0</span>: flags=<span class="number">4163</span>&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu <span class="number">1500</span></span><br><span class="line">        inet <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span>  netmask <span class="number">255.255</span><span class="number">.255</span><span class="number">.0</span>  broadcast <span class="number">192.168</span><span class="number">.2</span><span class="number">.255</span></span><br><span class="line">        ether <span class="number">00</span>:<span class="number">50</span>:<span class="number">56</span>:3c:d7:<span class="number">57</span>  txqueuelen <span class="number">1000</span>  (Ethernet)</span><br><span class="line"></span><br><span class="line">  lo: flags=<span class="number">73</span>&lt;UP,LOOPBACK,RUNNING&gt;  mtu <span class="number">65536</span></span><br><span class="line">        inet <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>  netmask <span class="number">255.0</span><span class="number">.0</span><span class="number">.0</span></span><br><span class="line">        inet6 ::<span class="number">1</span>  prefixlen <span class="number">128</span>  scopeid <span class="number">0x10</span>&lt;host&gt;</span><br><span class="line">        loop  txqueuelen <span class="number">0</span>  (Local Loopback)</span><br><span class="line">        RX packets <span class="number">12998</span>  bytes <span class="number">1140269</span> (<span class="number">1.0</span> MiB)</span><br><span class="line">        RX errors <span class="number">0</span>  dropped <span class="number">0</span>  overruns <span class="number">0</span>  frame <span class="number">0</span></span><br><span class="line">        TX packets <span class="number">12998</span>  bytes <span class="number">1140269</span> (<span class="number">1.0</span> MiB)</span><br><span class="line">        TX errors <span class="number">0</span>  dropped <span class="number">0</span> overruns <span class="number">0</span>  carrier <span class="number">0</span>  collisions <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p><strong>(2)Director使用ipvsadm修改创建ipvs规则</strong></p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">[root@bc ~]# ipvsadm -A -t 192.168.2.211:80 -s rr</span><br><span class="line">[root@bc ~]# ipvsadm -a -t 192.168.2.211:80 -r 192.168.2.203 -g</span><br><span class="line">[root@bc ~]# ipvsadm -a -t 192.168.2.211:80 -r 192.168.2.204 -g</span><br><span class="line">[root@bc ~]# ipvsadm -L -n</span><br><span class="line">IP Virtual Server version <span class="number">1.2</span><span class="number">.1</span> (size=<span class="number">4096</span>)</span><br><span class="line">Prot LocalAddress:Port Scheduler Flags</span><br><span class="line">  -&gt; RemoteAddress:Port           Forward Weight ActiveConn InActConn</span><br><span class="line">TCP  <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span>:<span class="number">80</span> rr</span><br><span class="line">  -&gt; <span class="number">192.168</span><span class="number">.2</span><span class="number">.203</span>:<span class="number">80</span>             Route   <span class="number">1</span>      <span class="number">0</span>          <span class="number">0</span>         </span><br><span class="line">  -&gt; <span class="number">192.168</span><span class="number">.2</span><span class="number">.204</span>:<span class="number">80</span>             Route   <span class="number">1</span>      <span class="number">0</span>          <span class="number">0</span>   </span><br></pre></td></tr></table></figure>
+<p><strong>(3)RealServer安装httpd</strong></p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">[root@node3 ~]# yum install httpd -y</span><br><span class="line">[root@node4 ~]# yum install httpd -y</span><br></pre></td></tr></table></figure>
+<p><code>可以在里面放一个Wordpress,也可以简单echo几个字到index.html</code><br> <strong>(4)node3和node4修改RealServer内核参数</strong></p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">echo <span class="string">&quot;1&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/ip_forward</span><br><span class="line">echo <span class="string">&quot;2&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/conf/all/arp_announce</span><br><span class="line">echo <span class="string">&quot;1&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/conf/all/arp_ignore</span><br><span class="line">echo <span class="string">&quot;1&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/conf/lo/arp_ignore</span><br><span class="line">echo <span class="string">&quot;2&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/conf/lo/arp_announce</span><br><span class="line">ifconfig lo:<span class="number">0</span> <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span>/<span class="number">32</span> broadcast <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span> up</span><br><span class="line">route add -host <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span> dev lo:<span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p><code>修改内核参数，并且配置VIP地址到RealServer的loopback接口上。</code><br> <strong><code>那样的话，当RealServer接到从Director转发而来的数据报文时，RealServer也不会丢弃报文。</code></strong><br> <code>同时，修改了RealServer的参数，局域网内的arp表就只有Director有VIP。</code><br> <code>RealServer的的机器上有VIP这件事，只有RealServer自己知道。</code><br> <strong><code>这样可以保证，当请求到来的时候，第一个会送到Director那里去。</code></strong></p>
+<p><strong>(5)测试结果</strong></p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">[root@node3 httpd]# vim  /var/log/httpd/access_log </span><br><span class="line">[root@node4 httpd]# vim  /var/log/httpd/access_log </span><br></pre></td></tr></table></figure>
+<p>效果差不多就是这样:<br> <code>因为我们使用了RR静态调度方法,所以这node3和node4的请求是一人一个。</code></p>
+<img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/06.webp" class>
+
+
+
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>负载均衡</tag>
       </tags>
   </entry>
   <entry>
@@ -1480,6 +1480,76 @@
       </tags>
   </entry>
   <entry>
+    <title>Mybatis框架概述</title>
+    <url>/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6/</url>
+    <content><![CDATA[<h2 id="软件开发常用结构"><a href="#软件开发常用结构" class="headerlink" title="软件开发常用结构"></a>软件开发常用结构</h2><h3 id="三层架构"><a href="#三层架构" class="headerlink" title="三层架构"></a>三层架构</h3><p>三层架构包含的三层： 界面层（User Interface layer）、业务逻辑层（Business Logic Layer）、数据访问层（Data access layer）</p>
+<blockquote>
+<p>三层的职责</p>
+</blockquote>
+<ul>
+<li><p>1、界面层（表示层\视图层）：主要功能是接受用户的数据，显示请求的处理结果。使用 web 页面和 用户交互，手机 app 也就是表示层的，用户在 app 中操作，业务逻辑在服务器端处理。</p>
+</li>
+<li><p>2、业务逻辑层：接收表示传递过来的数据，检查数据，计算业务逻辑，调用数据访问层获取数据。</p>
+</li>
+<li><p>3、数据访问层（持久层）：与数据库打交道。主要实现对数据的增、删、改、查。将存储在数据库中的数据提交 给业务层，同时将业务层处理的数据保存到数据库。</p>
+</li>
+</ul>
+<p>三层的处理请求的交互：</p>
+<p>用户—&gt;界面层—&gt;业务逻辑层—&gt;数据访问层—&gt;DB数据库</p>
+ <img data-src="/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6/01.png" class>
+
+
+
+<blockquote>
+<p>为什么使用三层？</p>
+</blockquote>
+<p>1，结构清晰、耦合度低, 各层分工明确 </p>
+<p>2，可维护性高，可扩展性高</p>
+<p> 3，有利于标准化 </p>
+<p>4，开发人员可以只关注整个结构中的其中某一层的功能实现 </p>
+<p>5，有利于各层逻辑的复用</p>
+<h3 id="常用框架"><a href="#常用框架" class="headerlink" title="常用框架"></a>常用框架</h3><ul>
+<li><p>Mybatis框架</p>
+<p>MyBatis 是一个优秀的基于 java 的持久层框架，内部封装了 jdbc，开发者只需要关注 sql 语句本身，而不需要处理加载驱动、创建连接、创建 statement、关闭连接，资源等繁杂的过程。 MyBatis 通过 xml 或注解两种方式将要执行的各种 sql 语句配置起来，并通过 java 对象和 sql 的 动态参数进行映射生成最终执行的 sql 语句，最后由 mybatis 框架执行 sql 并将结果映射为 java 对象并返回。</p>
+</li>
+<li><p>Spring框架</p>
+<p>Spring 框架为了解决软件开发的复杂性而创建的。Spring 使用的是基本的 JavaBean 来完成以前 非常复杂的企业级开发。Spring 解决了业务对象，功能模块之间的耦合，不仅在 javase,web 中使用， 大部分 Java 应用都可以从 Spring 中受益。 Spring 是一个轻量级控制反转(IoC)和面向切面(AOP)的容器。</p>
+</li>
+<li><p>SpringMVC框架</p>
+<p>SpringMVC 框架 Spring MVC 属于 SpringFrameWork 3.0 版本加入的一个模块，为 Spring 框架提供了构建 Web 应用程序的能力。现在可以 Spring 框架提供的 SpringMVC 模块实现 web 应用开发，在 web 项目中 可以无缝使用 Spring 和 Spring MVC 框架。</p>
+</li>
+</ul>
+<h2 id="框架的定义"><a href="#框架的定义" class="headerlink" title="框架的定义"></a>框架的定义</h2><h3 id="框架定义"><a href="#框架定义" class="headerlink" title="框架定义"></a>框架定义</h3><p>框架（Framework）是整个或部分系统的可重用设计，表现为一组抽象构件及构件实例间交互的方法;另一种认为，框架是可被应用开发者定制的应用骨架、模板。 简单的说，框架其实是半成品软件，就是一组组件，供你使用完成你自己的系统。从另一个角度来 说框架一个舞台，你在舞台上做表演。在框架基础上加入你要完成的功能。 框架安全的，可复用的，不断升级的软件。 </p>
+<h3 id="框架解决的问题"><a href="#框架解决的问题" class="headerlink" title="框架解决的问题"></a>框架解决的问题</h3><p>框架要解决的最重要的一个问题是技术整合，在 J2EE 的 框架中，有着各种各样的技术，不同的应用，系统使用不同的技术解决问题。需要从 J2EE 中选择不同的技术，而技术自身的复杂性，有导致更大的风险。企业在开发软件项目时，主要目的是解决业务问题。 即要求企业负责技术本身，又要求解决业务问题。这是大多数企业不能完成的。框架把相关的技术融合在一起，企业开发可以集中在业务领域方面。 另一个方面可以提供开发的效率。</p>
+<h2 id="JDBC编程"><a href="#JDBC编程" class="headerlink" title="JDBC编程"></a>JDBC编程</h2><h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">findStudent</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> 	Connection conn = <span class="keyword">null</span>;</span><br><span class="line"> 	Statement stmt = <span class="keyword">null</span>;</span><br><span class="line">    ResultSet rs = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line"> 		<span class="comment">//注册 mysql 驱动</span></span><br><span class="line">		 Class.forName(<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>);</span><br><span class="line">		 <span class="comment">//连接数据的基本信息 url ，username，password</span></span><br><span class="line">		 String url = <span class="string">&quot;jdbc:mysql://localhost:3306/springdb&quot;</span>;</span><br><span class="line">		 String username = <span class="string">&quot;root&quot;</span>;</span><br><span class="line">		 String password = <span class="string">&quot;123456&quot;</span>;</span><br><span class="line"> 		<span class="comment">//创建连接对象</span></span><br><span class="line">		 conn = DriverManager.getConnection(url, username, password);</span><br><span class="line">		 <span class="comment">//保存查询结果</span></span><br><span class="line">		 List&lt;Student&gt; stuList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"> 		<span class="comment">//创建 Statement, 用来执行 sql 语句</span></span><br><span class="line"> 		stmt = conn.createStatement();</span><br><span class="line"> 		<span class="comment">//执行查询，创建记录集，</span></span><br><span class="line"> 		rs = stmt.executeQuery(<span class="string">&quot;select * from student&quot;</span>);</span><br><span class="line">		 <span class="keyword">while</span> (rs.next()) &#123;</span><br><span class="line">			 Student stu = <span class="keyword">new</span> Student();</span><br><span class="line">			 stu.setId(rs.getInt(<span class="string">&quot;id&quot;</span>));</span><br><span class="line">			 stu.setName(rs.getString(<span class="string">&quot;name&quot;</span>));</span><br><span class="line">			 stu.setAge(rs.getInt(<span class="string">&quot;age&quot;</span>));</span><br><span class="line">			 <span class="comment">//从数据库取出数据转为 Student 对象，封装到 List 集合</span></span><br><span class="line">			 stuList.add(stu);</span><br><span class="line">			 &#125;</span><br><span class="line"> 		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			 e.printStackTrace();</span><br><span class="line">	    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line"> 			<span class="keyword">try</span> &#123;</span><br><span class="line">				 <span class="comment">//关闭资源</span></span><br><span class="line">                 <span class="keyword">if</span> (rs != <span class="keyword">null</span>) ;</span><br><span class="line"> 				&#123;</span><br><span class="line">					 rs.close();</span><br><span class="line">				 &#125;</span><br><span class="line"> 				<span class="keyword">if</span> (stmt != <span class="keyword">null</span>) &#123;</span><br><span class="line"> 					stmt.close();</span><br><span class="line"> 				&#125;</span><br><span class="line"> 				<span class="keyword">if</span> (conn != <span class="keyword">null</span>) &#123;</span><br><span class="line"> 					conn.close();</span><br><span class="line"> 				&#125;</span><br><span class="line"> 				&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">				 e.printStackTrace();</span><br><span class="line"> 				&#125;</span><br><span class="line"> 			&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="使用JDBC的缺陷"><a href="#使用JDBC的缺陷" class="headerlink" title="使用JDBC的缺陷"></a>使用JDBC的缺陷</h3><ol>
+<li>代码比较多，开发效率低 </li>
+<li> 需要关注 Connection ,Statement, ResultSet 对象创建和销毁 </li>
+<li> 对 ResultSet 查询的结果，需要自己封装为 List </li>
+<li> 重复的代码比较多些 </li>
+<li> 业务代码和数据库的操作混在一起</li>
+</ol>
+<h2 id="Mybatis框架"><a href="#Mybatis框架" class="headerlink" title="Mybatis框架"></a>Mybatis框架</h2><p>MyBatis 框架：</p>
+<p> MyBatis 本是 apache 的一个开源项目 iBatis, 2010 年这个项目由 apache software foundation 迁 移到了 google code，并且改名为 MyBatis 。2013 年 11 月迁移到 Github。 iBATIS 一词来源于“internet”和“abatis”的组合，是一个基于 Java 的持久层框架。iBATIS 提供的 持久层框架包括 SQL Maps 和 Data Access Objects（DAOs） 当前，最新版本是 MyBatis 3.5.1 ，其发布时间是 2019 年 4 月 8 日。</p>
+<h3 id="Mybatis框架解决的主要问题"><a href="#Mybatis框架解决的主要问题" class="headerlink" title="Mybatis框架解决的主要问题"></a>Mybatis框架解决的主要问题</h3><p>减轻使用 JDBC 的复杂性，不用编写重复的创建 Connetion , Statement ; 不用编写关闭资源代码。 直接使用 java 对象，表示结果数据。让开发者专注 SQL 的处理。 其他分心的工作MyBatis 代劳。</p>
+<p> MyBatis 可以完成：  </p>
+<ul>
+<li>注册数据库的驱动，例如 Class.forName(“com.mysql.jdbc.Driver”))</li>
+<li>创建 JDBC 中必须使用的 Connection ， Statement， ResultSet 对象</li>
+<li>从 xml 中获取 sql，并执行 sql 语句，把 ResultSet 结果转换 java 对象</li>
+<li>关闭资源 ResultSet.close() , Statement.close() , Conenection.close()</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Mybatis框架</category>
+      </categories>
+      <tags>
+        <tag>Mybatis</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Mybatis框架</title>
     <url>/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6-1/</url>
     <content><![CDATA[<h2 id="Mybatis入门案例"><a href="#Mybatis入门案例" class="headerlink" title="Mybatis入门案例"></a>Mybatis入门案例</h2><h3 id="搭建Mybatis开发环境–基础CRUD操作实例"><a href="#搭建Mybatis开发环境–基础CRUD操作实例" class="headerlink" title="搭建Mybatis开发环境–基础CRUD操作实例"></a>搭建Mybatis开发环境–基础CRUD操作实例</h3><h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><blockquote>
@@ -1575,76 +1645,6 @@
 
 
 
-]]></content>
-      <categories>
-        <category>Mybatis框架</category>
-      </categories>
-      <tags>
-        <tag>Mybatis</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Mybatis框架概述</title>
-    <url>/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6/</url>
-    <content><![CDATA[<h2 id="软件开发常用结构"><a href="#软件开发常用结构" class="headerlink" title="软件开发常用结构"></a>软件开发常用结构</h2><h3 id="三层架构"><a href="#三层架构" class="headerlink" title="三层架构"></a>三层架构</h3><p>三层架构包含的三层： 界面层（User Interface layer）、业务逻辑层（Business Logic Layer）、数据访问层（Data access layer）</p>
-<blockquote>
-<p>三层的职责</p>
-</blockquote>
-<ul>
-<li><p>1、界面层（表示层\视图层）：主要功能是接受用户的数据，显示请求的处理结果。使用 web 页面和 用户交互，手机 app 也就是表示层的，用户在 app 中操作，业务逻辑在服务器端处理。</p>
-</li>
-<li><p>2、业务逻辑层：接收表示传递过来的数据，检查数据，计算业务逻辑，调用数据访问层获取数据。</p>
-</li>
-<li><p>3、数据访问层（持久层）：与数据库打交道。主要实现对数据的增、删、改、查。将存储在数据库中的数据提交 给业务层，同时将业务层处理的数据保存到数据库。</p>
-</li>
-</ul>
-<p>三层的处理请求的交互：</p>
-<p>用户—&gt;界面层—&gt;业务逻辑层—&gt;数据访问层—&gt;DB数据库</p>
- <img data-src="/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6/01.png" class>
-
-
-
-<blockquote>
-<p>为什么使用三层？</p>
-</blockquote>
-<p>1，结构清晰、耦合度低, 各层分工明确 </p>
-<p>2，可维护性高，可扩展性高</p>
-<p> 3，有利于标准化 </p>
-<p>4，开发人员可以只关注整个结构中的其中某一层的功能实现 </p>
-<p>5，有利于各层逻辑的复用</p>
-<h3 id="常用框架"><a href="#常用框架" class="headerlink" title="常用框架"></a>常用框架</h3><ul>
-<li><p>Mybatis框架</p>
-<p>MyBatis 是一个优秀的基于 java 的持久层框架，内部封装了 jdbc，开发者只需要关注 sql 语句本身，而不需要处理加载驱动、创建连接、创建 statement、关闭连接，资源等繁杂的过程。 MyBatis 通过 xml 或注解两种方式将要执行的各种 sql 语句配置起来，并通过 java 对象和 sql 的 动态参数进行映射生成最终执行的 sql 语句，最后由 mybatis 框架执行 sql 并将结果映射为 java 对象并返回。</p>
-</li>
-<li><p>Spring框架</p>
-<p>Spring 框架为了解决软件开发的复杂性而创建的。Spring 使用的是基本的 JavaBean 来完成以前 非常复杂的企业级开发。Spring 解决了业务对象，功能模块之间的耦合，不仅在 javase,web 中使用， 大部分 Java 应用都可以从 Spring 中受益。 Spring 是一个轻量级控制反转(IoC)和面向切面(AOP)的容器。</p>
-</li>
-<li><p>SpringMVC框架</p>
-<p>SpringMVC 框架 Spring MVC 属于 SpringFrameWork 3.0 版本加入的一个模块，为 Spring 框架提供了构建 Web 应用程序的能力。现在可以 Spring 框架提供的 SpringMVC 模块实现 web 应用开发，在 web 项目中 可以无缝使用 Spring 和 Spring MVC 框架。</p>
-</li>
-</ul>
-<h2 id="框架的定义"><a href="#框架的定义" class="headerlink" title="框架的定义"></a>框架的定义</h2><h3 id="框架定义"><a href="#框架定义" class="headerlink" title="框架定义"></a>框架定义</h3><p>框架（Framework）是整个或部分系统的可重用设计，表现为一组抽象构件及构件实例间交互的方法;另一种认为，框架是可被应用开发者定制的应用骨架、模板。 简单的说，框架其实是半成品软件，就是一组组件，供你使用完成你自己的系统。从另一个角度来 说框架一个舞台，你在舞台上做表演。在框架基础上加入你要完成的功能。 框架安全的，可复用的，不断升级的软件。 </p>
-<h3 id="框架解决的问题"><a href="#框架解决的问题" class="headerlink" title="框架解决的问题"></a>框架解决的问题</h3><p>框架要解决的最重要的一个问题是技术整合，在 J2EE 的 框架中，有着各种各样的技术，不同的应用，系统使用不同的技术解决问题。需要从 J2EE 中选择不同的技术，而技术自身的复杂性，有导致更大的风险。企业在开发软件项目时，主要目的是解决业务问题。 即要求企业负责技术本身，又要求解决业务问题。这是大多数企业不能完成的。框架把相关的技术融合在一起，企业开发可以集中在业务领域方面。 另一个方面可以提供开发的效率。</p>
-<h2 id="JDBC编程"><a href="#JDBC编程" class="headerlink" title="JDBC编程"></a>JDBC编程</h2><h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">findStudent</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> 	Connection conn = <span class="keyword">null</span>;</span><br><span class="line"> 	Statement stmt = <span class="keyword">null</span>;</span><br><span class="line">    ResultSet rs = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line"> 		<span class="comment">//注册 mysql 驱动</span></span><br><span class="line">		 Class.forName(<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>);</span><br><span class="line">		 <span class="comment">//连接数据的基本信息 url ，username，password</span></span><br><span class="line">		 String url = <span class="string">&quot;jdbc:mysql://localhost:3306/springdb&quot;</span>;</span><br><span class="line">		 String username = <span class="string">&quot;root&quot;</span>;</span><br><span class="line">		 String password = <span class="string">&quot;123456&quot;</span>;</span><br><span class="line"> 		<span class="comment">//创建连接对象</span></span><br><span class="line">		 conn = DriverManager.getConnection(url, username, password);</span><br><span class="line">		 <span class="comment">//保存查询结果</span></span><br><span class="line">		 List&lt;Student&gt; stuList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"> 		<span class="comment">//创建 Statement, 用来执行 sql 语句</span></span><br><span class="line"> 		stmt = conn.createStatement();</span><br><span class="line"> 		<span class="comment">//执行查询，创建记录集，</span></span><br><span class="line"> 		rs = stmt.executeQuery(<span class="string">&quot;select * from student&quot;</span>);</span><br><span class="line">		 <span class="keyword">while</span> (rs.next()) &#123;</span><br><span class="line">			 Student stu = <span class="keyword">new</span> Student();</span><br><span class="line">			 stu.setId(rs.getInt(<span class="string">&quot;id&quot;</span>));</span><br><span class="line">			 stu.setName(rs.getString(<span class="string">&quot;name&quot;</span>));</span><br><span class="line">			 stu.setAge(rs.getInt(<span class="string">&quot;age&quot;</span>));</span><br><span class="line">			 <span class="comment">//从数据库取出数据转为 Student 对象，封装到 List 集合</span></span><br><span class="line">			 stuList.add(stu);</span><br><span class="line">			 &#125;</span><br><span class="line"> 		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			 e.printStackTrace();</span><br><span class="line">	    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line"> 			<span class="keyword">try</span> &#123;</span><br><span class="line">				 <span class="comment">//关闭资源</span></span><br><span class="line">                 <span class="keyword">if</span> (rs != <span class="keyword">null</span>) ;</span><br><span class="line"> 				&#123;</span><br><span class="line">					 rs.close();</span><br><span class="line">				 &#125;</span><br><span class="line"> 				<span class="keyword">if</span> (stmt != <span class="keyword">null</span>) &#123;</span><br><span class="line"> 					stmt.close();</span><br><span class="line"> 				&#125;</span><br><span class="line"> 				<span class="keyword">if</span> (conn != <span class="keyword">null</span>) &#123;</span><br><span class="line"> 					conn.close();</span><br><span class="line"> 				&#125;</span><br><span class="line"> 				&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">				 e.printStackTrace();</span><br><span class="line"> 				&#125;</span><br><span class="line"> 			&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="使用JDBC的缺陷"><a href="#使用JDBC的缺陷" class="headerlink" title="使用JDBC的缺陷"></a>使用JDBC的缺陷</h3><ol>
-<li>代码比较多，开发效率低 </li>
-<li> 需要关注 Connection ,Statement, ResultSet 对象创建和销毁 </li>
-<li> 对 ResultSet 查询的结果，需要自己封装为 List </li>
-<li> 重复的代码比较多些 </li>
-<li> 业务代码和数据库的操作混在一起</li>
-</ol>
-<h2 id="Mybatis框架"><a href="#Mybatis框架" class="headerlink" title="Mybatis框架"></a>Mybatis框架</h2><p>MyBatis 框架：</p>
-<p> MyBatis 本是 apache 的一个开源项目 iBatis, 2010 年这个项目由 apache software foundation 迁 移到了 google code，并且改名为 MyBatis 。2013 年 11 月迁移到 Github。 iBATIS 一词来源于“internet”和“abatis”的组合，是一个基于 Java 的持久层框架。iBATIS 提供的 持久层框架包括 SQL Maps 和 Data Access Objects（DAOs） 当前，最新版本是 MyBatis 3.5.1 ，其发布时间是 2019 年 4 月 8 日。</p>
-<h3 id="Mybatis框架解决的主要问题"><a href="#Mybatis框架解决的主要问题" class="headerlink" title="Mybatis框架解决的主要问题"></a>Mybatis框架解决的主要问题</h3><p>减轻使用 JDBC 的复杂性，不用编写重复的创建 Connetion , Statement ; 不用编写关闭资源代码。 直接使用 java 对象，表示结果数据。让开发者专注 SQL 的处理。 其他分心的工作MyBatis 代劳。</p>
-<p> MyBatis 可以完成：  </p>
-<ul>
-<li>注册数据库的驱动，例如 Class.forName(“com.mysql.jdbc.Driver”))</li>
-<li>创建 JDBC 中必须使用的 Connection ， Statement， ResultSet 对象</li>
-<li>从 xml 中获取 sql，并执行 sql 语句，把 ResultSet 结果转换 java 对象</li>
-<li>关闭资源 ResultSet.close() , Statement.close() , Conenection.close()</li>
-</ul>
 ]]></content>
       <categories>
         <category>Mybatis框架</category>
@@ -1839,85 +1839,6 @@
 <li>  对于像Excel格式于Word合并时能实现更复杂的功能，代码的复杂程度也会随之提高，一 般需要先分析功能，再进行代码编写。</li>
 </ol>
 </blockquote>
-]]></content>
-      <categories>
-        <category>Python开发</category>
-      </categories>
-      <tags>
-        <tag>Python自动化</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Python自动化办公-图片识别</title>
-    <url>/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/</url>
-    <content><![CDATA[<h1 id="使用Python实现高效自动化图片组在线-离线识别（转文字）"><a href="#使用Python实现高效自动化图片组在线-离线识别（转文字）" class="headerlink" title="使用Python实现高效自动化图片组在线/离线识别（转文字）"></a>使用Python实现高效自动化图片组在线/离线识别（转文字）</h1><h2 id="图片识别转文字的两种方式："><a href="#图片识别转文字的两种方式：" class="headerlink" title="图片识别转文字的两种方式："></a>图片识别转文字的两种方式：</h2><blockquote>
-<p>在线识别</p>
-<p>优点： 在线识别在初次进行文字识别的时候，准确率非常高。比如对聊天截图中的识别准确率就高达99%。因为在线识别使用了人工智能领域的深度学习算法和文字识别相结合的技术，能够把图片转换成文字后，还能在语义上把相近的字进行二次纠正。 比如说，被识别的内容包含英文单词“Hello”，一旦它的字母“o”被识别成数字“0”，在 线识别软件就会根据上下文语境把这类错误纠正回来，而这种二次纠正的功能在离线识别软 件中是没有的。</p>
-<p>缺点：</p>
-<ol>
-<li>识别文字的过程需要在公有云的服务器上完成。也 就是说需要通过互联网把图片上传到服务器，那么一旦图片过大，或者图片数量比较多，就会导致上传时间过长。对于一些大批量文字识别场景/实时性要求很高的场景，在线识别不能满足要求</li>
-<li>图片需要经过互联网传输，识别以后的图片该怎么保存，怎么销毁，是不是会被其他 人得到，这些都是安全风险。总之，信息泄露的风险比较大。所以像公司的合同、财务资料 等涉密程度比较高的扫描件，很少使用在线识别。</li>
-</ol>
-</blockquote>
-<blockquote>
-<p>离线识别</p>
-<p>这种方式在识别过程中不需要连接网络，节省了在线传输图片的时间，适合那些对实时性要 求比较高或网络信号比较差的场景。</p>
-<p>离线识别方式的问题就在于，初次识别文字的准确率比较低，识别完之后必须要经过人 工二次纠正才行。所以在前期人工校对，花费的时间相对来说会比较长。</p>
-</blockquote>
-<img data-src="/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/image01.png" class>
-
-<h2 id="在线识别"><a href="#在线识别" class="headerlink" title="在线识别"></a>在线识别</h2><p>在线文字识别方式，识别的主要功能的需要放在公有云的服务器中才能实现，所以在代码实 现中就要考虑用户验证和图片加密传输问题。</p>
-<p>用户验证能确保识别的结果交还给你本人，图片加密传输能确保图片上的信息不会被其他人 窃取到。这些功能，各个公有云的AI产品都考虑得非常周全，一般会提供给用户一个扩展 库。你要做的，就是安装这些扩展库。</p>
-<p><strong>以百度Ai图片转文字识别产品为例</strong></p>
-<blockquote>
-<p>pip install baidu-aip</p>
-</blockquote>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> aip <span class="keyword">import</span> AipOcr</span><br><span class="line"></span><br><span class="line">APP_ID = <span class="string">&#x27;&#x27;</span></span><br><span class="line">API_Key = <span class="string">&#x27;&#x27;</span></span><br><span class="line">SECRET_KEY = <span class="string">&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">client = AipOcr(APP_ID,API_Key,SECRET_KEY)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取图片</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_file_content</span>(<span class="params">filepath</span>):</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(filepath,<span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> fp:</span><br><span class="line">        <span class="keyword">return</span> fp.read()</span><br><span class="line"></span><br><span class="line">image = get_file_content(<span class="string">&#x27;example.png&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调用文字识别，图片参数为本地图片</span></span><br><span class="line">result = client.basicGeneral(image)</span><br><span class="line">print(result)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
- <img data-src="/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/image02.png" class>
-
-<p>当把这三个变量传入AipOcr函数，使用AipOcr函数通过互联网交互后，就可以用来识别用户 是不是被授权使用相应的产品，之后就可以把图片加密发送到AI产品的服务器上了。</p>
-<h2 id="离线识别（pytesseract）"><a href="#离线识别（pytesseract）" class="headerlink" title="离线识别（pytesseract）"></a>离线识别（pytesseract）</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pytesseract</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打开图片</span></span><br><span class="line">image = Image.<span class="built_in">open</span>(<span class="string">&#x27;example.png&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 转为灰度图片</span></span><br><span class="line">imgry = image.convert(<span class="string">&#x27;L&#x27;</span>)</span><br><span class="line"><span class="comment"># 二值化，采用阈值分割算法，threhold为分割点，根据图片质量调节</span></span><br><span class="line">threhold = <span class="number">150</span></span><br><span class="line">table = []</span><br><span class="line"><span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">256</span>):</span><br><span class="line">    <span class="keyword">if</span> j&lt;threhold:</span><br><span class="line">        table.append(<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        table.append(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">temp = imgry.point(table,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">temp = imgry.point(table,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># OCR识别，调用pytesseract库，lang指定中文，--psm 6表示按行识别，有助于提升准确率</span></span><br><span class="line">text = pytesseract.image_to_string(temp,lang=<span class="string">&quot;chi_sim+eng&quot;</span>,config=<span class="string">&#x27;--psm 6&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印识别结果</span></span><br><span class="line">print(text)</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><strong>遇到问题</strong></p>
-<p>TesseractNotFoundError: tesseract is not installed or it’s not in your PATH. See README file for more information.</p>
-<p><strong>原因</strong>：</p>
-<p>pytesseract是依赖c++编写的tesseract工具才能正常工作的，需要先安装teseract</p>
-<p><strong>解决</strong>：</p>
-<p><a href="https://blog.csdn.net/wang_hugh/article/details/80760940">https://blog.csdn.net/wang_hugh/article/details/80760940</a></p>
-</blockquote>
-<p>对图片文字离线识别的一般过程如下：</p>
-<ul>
-<li>图像输入</li>
-<li>前期处理，比如二值化，图像降噪，倾斜纠正</li>
-<li>文字检测，比如版面分析，字符分割</li>
-<li>文本识别，比如字符识别，后期纠正（<strong>影响准确率最大</strong>）</li>
-<li>输出文本</li>
-</ul>
-<p>离线识别训练样本较小，正确率相较于在线识别是不高的。具体的解决方案有以下两种</p>
-<blockquote>
-<p>通过人工纠正，形成新的训练模型（不断增加算法模型中标本的数量）</p>
-</blockquote>
-<p>像身份证识别、票据识别、聊天截图等大部分文字识别场景，这些待识别图片采用了印刷体，每个字的间隔都是固定的，所以我们要想提升准确率，通常的做法是对每个字都进行人 工纠错。</p>
-<p>所以整个过程你可以理解成三个步骤： 第一步，人工观察； 第二步，对比原始图像； 第三步，把错误的文字手工纠正为正确的汉字。 比如截图中的“某”字，多次识别错误，当我们人工把这些文字改为正确的“某”字之后， 就可以生成一个训练文件，再把训练文件和文字识别的算法合并成新的识别模型。等下次再 识别发票的时候，就可以采用新的模型进行识别。所以再次出  现“某”字，就可以正确识别了。</p>
-<p><strong>这种文字标注对于单一场景非常有效，比如名片、火车票、飞机票、发票、车牌的识别场 景，经过手工标注，不断增加样本数量之后，能够让正确率呈对数级别增加。</strong></p>
-<blockquote>
-<p>使用在线识别软件来优化离线识别软件</p>
-</blockquote>
-<img data-src="/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/image03.png" class>
-
-
-
-<h2 id="识别成功后的文字处理工作"><a href="#识别成功后的文字处理工作" class="headerlink" title="识别成功后的文字处理工作"></a>识别成功后的文字处理工作</h2><p>下图为在线识别的结果</p>
-<img data-src="/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/image04.png" class>
-
-<p>为了能够提取文本内容，去掉记录分段信息的”word”和 “{ }”，需要对这段文字再加工处理。</p>
-<p>仔细观察的话，就会发现这段文字是有一定规律的，它的写法就是Python的基本数据类型“字典”，字典类型会强调一对或多对数据之间的映射关系。为了将识别的文字结果进行保存，我们还会使用另一个基本数据类型“列表”，一般用来表示多段文字的并列关系， 为了提取文本内容，我接下来把字典转换成列表就可以实现内容的提取了。 从字典到列表转换的功能怎么实现呢？首先来看一下两种数据类型的定义</p>
-<p><img data-src="/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220131094327030.png" alt="image-20220131094327030"></p>
-<p>观察这两个数据类型不难发现，把字典的VALUE存放到列表里就能实现内容的提取了，如果 字典里有多个值，可以使用for循环进行遍历，然后批量提取。对于识别的结果，我们可以采 用一段代码进行从字典到列表的转换。代码如下：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">info = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> result[<span class="string">&#x27;words_result&#x27;</span>]:</span><br><span class="line">	info.append(i[<span class="string">&#x27;words&#x27;</span>])</span><br><span class="line">print(info)</span><br></pre></td></tr></table></figure>
-<p>处理好的内容如下</p>
-
-
 ]]></content>
       <categories>
         <category>Python开发</category>
@@ -2384,6 +2305,85 @@
       </tags>
   </entry>
   <entry>
+    <title>Python自动化办公-图片识别</title>
+    <url>/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/</url>
+    <content><![CDATA[<h1 id="使用Python实现高效自动化图片组在线-离线识别（转文字）"><a href="#使用Python实现高效自动化图片组在线-离线识别（转文字）" class="headerlink" title="使用Python实现高效自动化图片组在线/离线识别（转文字）"></a>使用Python实现高效自动化图片组在线/离线识别（转文字）</h1><h2 id="图片识别转文字的两种方式："><a href="#图片识别转文字的两种方式：" class="headerlink" title="图片识别转文字的两种方式："></a>图片识别转文字的两种方式：</h2><blockquote>
+<p>在线识别</p>
+<p>优点： 在线识别在初次进行文字识别的时候，准确率非常高。比如对聊天截图中的识别准确率就高达99%。因为在线识别使用了人工智能领域的深度学习算法和文字识别相结合的技术，能够把图片转换成文字后，还能在语义上把相近的字进行二次纠正。 比如说，被识别的内容包含英文单词“Hello”，一旦它的字母“o”被识别成数字“0”，在 线识别软件就会根据上下文语境把这类错误纠正回来，而这种二次纠正的功能在离线识别软 件中是没有的。</p>
+<p>缺点：</p>
+<ol>
+<li>识别文字的过程需要在公有云的服务器上完成。也 就是说需要通过互联网把图片上传到服务器，那么一旦图片过大，或者图片数量比较多，就会导致上传时间过长。对于一些大批量文字识别场景/实时性要求很高的场景，在线识别不能满足要求</li>
+<li>图片需要经过互联网传输，识别以后的图片该怎么保存，怎么销毁，是不是会被其他 人得到，这些都是安全风险。总之，信息泄露的风险比较大。所以像公司的合同、财务资料 等涉密程度比较高的扫描件，很少使用在线识别。</li>
+</ol>
+</blockquote>
+<blockquote>
+<p>离线识别</p>
+<p>这种方式在识别过程中不需要连接网络，节省了在线传输图片的时间，适合那些对实时性要 求比较高或网络信号比较差的场景。</p>
+<p>离线识别方式的问题就在于，初次识别文字的准确率比较低，识别完之后必须要经过人 工二次纠正才行。所以在前期人工校对，花费的时间相对来说会比较长。</p>
+</blockquote>
+<img data-src="/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/image01.png" class>
+
+<h2 id="在线识别"><a href="#在线识别" class="headerlink" title="在线识别"></a>在线识别</h2><p>在线文字识别方式，识别的主要功能的需要放在公有云的服务器中才能实现，所以在代码实 现中就要考虑用户验证和图片加密传输问题。</p>
+<p>用户验证能确保识别的结果交还给你本人，图片加密传输能确保图片上的信息不会被其他人 窃取到。这些功能，各个公有云的AI产品都考虑得非常周全，一般会提供给用户一个扩展 库。你要做的，就是安装这些扩展库。</p>
+<p><strong>以百度Ai图片转文字识别产品为例</strong></p>
+<blockquote>
+<p>pip install baidu-aip</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> aip <span class="keyword">import</span> AipOcr</span><br><span class="line"></span><br><span class="line">APP_ID = <span class="string">&#x27;&#x27;</span></span><br><span class="line">API_Key = <span class="string">&#x27;&#x27;</span></span><br><span class="line">SECRET_KEY = <span class="string">&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">client = AipOcr(APP_ID,API_Key,SECRET_KEY)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取图片</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_file_content</span>(<span class="params">filepath</span>):</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(filepath,<span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> fp:</span><br><span class="line">        <span class="keyword">return</span> fp.read()</span><br><span class="line"></span><br><span class="line">image = get_file_content(<span class="string">&#x27;example.png&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调用文字识别，图片参数为本地图片</span></span><br><span class="line">result = client.basicGeneral(image)</span><br><span class="line">print(result)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+ <img data-src="/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/image02.png" class>
+
+<p>当把这三个变量传入AipOcr函数，使用AipOcr函数通过互联网交互后，就可以用来识别用户 是不是被授权使用相应的产品，之后就可以把图片加密发送到AI产品的服务器上了。</p>
+<h2 id="离线识别（pytesseract）"><a href="#离线识别（pytesseract）" class="headerlink" title="离线识别（pytesseract）"></a>离线识别（pytesseract）</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pytesseract</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打开图片</span></span><br><span class="line">image = Image.<span class="built_in">open</span>(<span class="string">&#x27;example.png&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 转为灰度图片</span></span><br><span class="line">imgry = image.convert(<span class="string">&#x27;L&#x27;</span>)</span><br><span class="line"><span class="comment"># 二值化，采用阈值分割算法，threhold为分割点，根据图片质量调节</span></span><br><span class="line">threhold = <span class="number">150</span></span><br><span class="line">table = []</span><br><span class="line"><span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">256</span>):</span><br><span class="line">    <span class="keyword">if</span> j&lt;threhold:</span><br><span class="line">        table.append(<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        table.append(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">temp = imgry.point(table,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">temp = imgry.point(table,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># OCR识别，调用pytesseract库，lang指定中文，--psm 6表示按行识别，有助于提升准确率</span></span><br><span class="line">text = pytesseract.image_to_string(temp,lang=<span class="string">&quot;chi_sim+eng&quot;</span>,config=<span class="string">&#x27;--psm 6&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印识别结果</span></span><br><span class="line">print(text)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>遇到问题</strong></p>
+<p>TesseractNotFoundError: tesseract is not installed or it’s not in your PATH. See README file for more information.</p>
+<p><strong>原因</strong>：</p>
+<p>pytesseract是依赖c++编写的tesseract工具才能正常工作的，需要先安装teseract</p>
+<p><strong>解决</strong>：</p>
+<p><a href="https://blog.csdn.net/wang_hugh/article/details/80760940">https://blog.csdn.net/wang_hugh/article/details/80760940</a></p>
+</blockquote>
+<p>对图片文字离线识别的一般过程如下：</p>
+<ul>
+<li>图像输入</li>
+<li>前期处理，比如二值化，图像降噪，倾斜纠正</li>
+<li>文字检测，比如版面分析，字符分割</li>
+<li>文本识别，比如字符识别，后期纠正（<strong>影响准确率最大</strong>）</li>
+<li>输出文本</li>
+</ul>
+<p>离线识别训练样本较小，正确率相较于在线识别是不高的。具体的解决方案有以下两种</p>
+<blockquote>
+<p>通过人工纠正，形成新的训练模型（不断增加算法模型中标本的数量）</p>
+</blockquote>
+<p>像身份证识别、票据识别、聊天截图等大部分文字识别场景，这些待识别图片采用了印刷体，每个字的间隔都是固定的，所以我们要想提升准确率，通常的做法是对每个字都进行人 工纠错。</p>
+<p>所以整个过程你可以理解成三个步骤： 第一步，人工观察； 第二步，对比原始图像； 第三步，把错误的文字手工纠正为正确的汉字。 比如截图中的“某”字，多次识别错误，当我们人工把这些文字改为正确的“某”字之后， 就可以生成一个训练文件，再把训练文件和文字识别的算法合并成新的识别模型。等下次再 识别发票的时候，就可以采用新的模型进行识别。所以再次出  现“某”字，就可以正确识别了。</p>
+<p><strong>这种文字标注对于单一场景非常有效，比如名片、火车票、飞机票、发票、车牌的识别场 景，经过手工标注，不断增加样本数量之后，能够让正确率呈对数级别增加。</strong></p>
+<blockquote>
+<p>使用在线识别软件来优化离线识别软件</p>
+</blockquote>
+<img data-src="/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/image03.png" class>
+
+
+
+<h2 id="识别成功后的文字处理工作"><a href="#识别成功后的文字处理工作" class="headerlink" title="识别成功后的文字处理工作"></a>识别成功后的文字处理工作</h2><p>下图为在线识别的结果</p>
+<img data-src="/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/image04.png" class>
+
+<p>为了能够提取文本内容，去掉记录分段信息的”word”和 “{ }”，需要对这段文字再加工处理。</p>
+<p>仔细观察的话，就会发现这段文字是有一定规律的，它的写法就是Python的基本数据类型“字典”，字典类型会强调一对或多对数据之间的映射关系。为了将识别的文字结果进行保存，我们还会使用另一个基本数据类型“列表”，一般用来表示多段文字的并列关系， 为了提取文本内容，我接下来把字典转换成列表就可以实现内容的提取了。 从字典到列表转换的功能怎么实现呢？首先来看一下两种数据类型的定义</p>
+<p><img data-src="/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220131094327030.png" alt="image-20220131094327030"></p>
+<p>观察这两个数据类型不难发现，把字典的VALUE存放到列表里就能实现内容的提取了，如果 字典里有多个值，可以使用for循环进行遍历，然后批量提取。对于识别的结果，我们可以采 用一段代码进行从字典到列表的转换。代码如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">info = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> result[<span class="string">&#x27;words_result&#x27;</span>]:</span><br><span class="line">	info.append(i[<span class="string">&#x27;words&#x27;</span>])</span><br><span class="line">print(info)</span><br></pre></td></tr></table></figure>
+<p>处理好的内容如下</p>
+
+
+]]></content>
+      <categories>
+        <category>Python开发</category>
+      </categories>
+      <tags>
+        <tag>Python自动化</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Swagger使用</title>
     <url>/2021/04/07/Swagger%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<h2 id="Swagger简介"><a href="#Swagger简介" class="headerlink" title="Swagger简介"></a>Swagger简介</h2><p><strong>前后端分离</strong></p>
@@ -2720,6 +2720,96 @@
       </tags>
   </entry>
   <entry>
+    <title>消息队列MQ</title>
+    <url>/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/</url>
+    <content><![CDATA[<h2 id="MQ的基本概念"><a href="#MQ的基本概念" class="headerlink" title="MQ的基本概念"></a>MQ的基本概念</h2><p>MQ全称 Message Queue（消息队列），是在消息的传输过程中保存消息的容器。多用于分布式系统之间进行通信。消息队列已经逐渐成为企业IT系统内部通信的核心手段。它具有低耦合、可靠投递、广播、流量控制、最终一致性等一系列功能，成为异步RPC的主要手段之一。 当今市面上有很多主流的消息中间件，如老牌的ActiveMQ、RabbitMQ，炙手可热的Kafka，阿里巴巴自主开发的Notify、MetaQ、RocketMQ等。</p>
+<p>当你需要使用消息队列时，首先需要考虑它的必要性。可以使用mq的场景有很多，最常用的几种，是做业务解耦/最终一致性/广播/错峰流控等。反之，如果需要强一致性，关注业务逻辑的处理结果，则RPC显得更为合适</p>
+<p>如果没有消息队列，分布式系统之间可能互相通过远程调用来实现不同系统之间的访问。</p>
+ <img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/01.png" class>
+
+<p>MQ，消息队列，存储消息的<strong>中间件</strong>,分布式系统通信两种方式：直接远程调用 和 借助第三方 完成间接通信,发送方称为生产者，接收方称为消费者。</p>
+<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/02.png" class>
+
+<h2 id="MQ的优势与劣势"><a href="#MQ的优势与劣势" class="headerlink" title="MQ的优势与劣势"></a>MQ的优势与劣势</h2><h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><blockquote>
+<p>应用解耦</p>
+</blockquote>
+<p>解耦是消息队列要解决的最本质问题。所谓解耦，简单点讲就是一个事务，只关心核心的流程。而需要依赖其他系统但不那么重要的事情，**==有通知即可，无需等待结果==**。换句话说，基于消息的模型，关心的是“通知”，而非“处理”。 </p>
+<p>比如在美团旅游，我们有一个产品中心，产品中心上游对接的是主站、移动后台、旅游供应链等各个数据源；下游对接的是筛选系统、API系统等展示系统。当上游的数据发生变更的时候，如果不使用消息系统，势必要调用我们的接口来更新数据，就特别依赖产品中心接口的稳定性和处理能力。但其实，作为旅游的产品中心，也许只有对于旅游自建供应链，产品中心更新成功才是他们关心的事情。而对于团购等外部系统，产品中心更新成功也好、失败也罢，并不是他们的职责所在。他们只需要保证在信息变更的时候通知到我们就好了。 而我们的下游，可能有更新索引、刷新缓存等一系列需求。对于产品中心来说，这也不是我们的职责所在。说白了，如果他们定时来拉取数据，也能保证数据的更新，只是实时性没有那么强。但使用接口方式去更新他们的数据，显然对于产品中心来说太过于“重量级”了，只需要发布一个产品ID变更的通知，由下游系统来处理，可能更为合理。 再举一个例子，对于我们的订单系统，订单最终支付成功之后可能需要给用户发送短信积分什么的，但其实这已经不是我们系统的核心流程了。如果外部系统速度偏慢（比如短信网关速度不好），那么主流程的时间会加长很多，用户肯定不希望点击支付过好几分钟才看到结果。那么我们只需要通知短信系统“我们支付成功了”，不一定非要等待它处理完成。</p>
+ <img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/03.png" class>
+
+<p>例如，在上面的例子中，订单系统过分依赖剩余四个系统。用户向订单系统发送消息，订单系统分别向下层的四个系统传递用户消息。这样一来，不仅时间上效率很低，而且，一旦下层的某个系统挂掉，订单系统以及上层用户迟迟得不到反馈，这对于“争分夺秒”的电商行业是不能承受的。而添加了MQ之后，订单系统只需要将消息发给MQ，并且MQ可以先行通知用户操作成功，而不一定非要等到下层子系统操作完成之后在进行反馈。同时，如果下层系统挂掉(通常很快就可以修复，只有几分钟，但是对业务的影响是巨大的），订单系统因为由消息队列的存在，仍旧可以给予用户反馈，提升了客户的访问体验。</p>
+<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/04.png" class>
+
+<blockquote>
+<p>异步提速，削峰填谷</p>
+</blockquote>
+<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/05.png" class>
+
+<p><strong>在不使用消息队列服务器的时候，用户的请求数据直接写入数据库，在高并发的情况下数据库压力剧增，使得响应速度变慢。但是在使用消息队列之后，用户的请求数据发送给消息队列之后立即 返回，再由消息队列的消费者进程从消息队列中获取数据，异步写入数据库。由于消息队列服务器处理速度快于数据库（消息队列也比数据库有更好的伸缩性），因此响应速度得到大幅改善。</strong></p>
+<p>通过以上分析我们可以得出<strong>消息队列具有很好的削峰作用的功能</strong>——即<strong>通过异步处理，将短时间高并发产生的事务消息存储在消息队列中，从而削平高峰期的并发事务。</strong> 举例：在电子商务一些秒杀、促销活动中，合理使用消息队列可以有效抵御促销活动刚开始大量订单涌入对系统的冲击。如下图所示：</p>
+<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/06.png" class>
+
+<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/07.png" class>
+
+<p>因为<strong>用户请求数据写入消息队列之后就立即返回给用户了，但是请求数据在后续的业务校验、写数据库等操作中可能失败</strong>。因此使用消息队列进行异步处理之后，需要<strong>适当修改业务流程进行配合</strong>，比如<strong>用户在提交订单之后，订单数据写入消息队列，不能立即返回用户订单提交成功，需要在消息队列的订单消费者进程真正处理完该订单之后，甚至出库后，再通过电子邮件或短信通知用户订单成功</strong>，以免交易纠纷。这就类似我们平时手机订火车票和电影票。</p>
+<blockquote>
+<p>利用消息队列实现事件驱动结构</p>
+</blockquote>
+<p>最常见的<strong>事件驱动架构</strong>类似生产者消费者模式，在大型网站中通常用利用消息队列实现事件驱动结构。</p>
+<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/08.png" class>
+
+<p><strong>消息队列利用发布-订阅模式工作，消息发送者（生产者）发布消息，一个或多个消息接受者（消费者）订阅消息。</strong> 从上图可以看到<strong>消息发送者（生产者）和消息接受者（消费者）之间没有直接耦合</strong>，消息发送者将消息发送至分布式消息队列即结束对消息的处理，消息接受者从分布式消息队列获取该消息后进行后续处理，并不需要知道该消息从何而来。<strong>对新增业务，只要对该类消息感兴趣，即可订阅该消息，对原有系统和业务没有任何影响，从而实现网站业务的可扩展性设计</strong>。</p>
+<p>消息接受者对消息进行过滤、处理、包装后，构造成一个新的消息类型，将消息继续发送出去，等待其他消息接受者订阅该消息。因此基于事件（消息对象）驱动的业务架构可以是一系列流程。</p>
+<p><strong>另外为了避免消息队列服务器宕机造成消息丢失，会将成功发送到消息队列的消息存储在消息生产者服务器上，等消息真正被消费者服务器处理后才删除消息。在消息队列服务器宕机后，生产者服务器会选择分布式消息队列服务器集群中的其他服务器发布消息。</strong></p>
+<p><strong>备注：</strong> 不要认为消息队列只能利用发布-订阅模式工作，只不过在解耦这个特定业务环境下是使用发布-订阅模式的。<strong>除了发布-订阅模式，还有点对点订阅模式（一个消息只有一个消费者），我们比较常用的是发布-订阅模式。</strong> 另外，这两种消息模型是 JMS 提供的，AMQP 协议还提供了 5 种消息模型。</p>
+<blockquote>
+<p>广播</p>
+</blockquote>
+<p>消息队列的基本功能之一是进行广播。如果没有消息队列，每当一个新的业务方接入，我们都要联调一次新接口。有了消息队列，我们只需要关心消息是否送达了队列，至于谁希望订阅，是下游的事情，无疑极大地减少了开发和联调的工作量。 比如本文开始提到的产品中心发布产品变更的消息，以及景点库很多去重更新的消息，可能“关心”方有很多个，但产品中心和景点库只需要发布变更消息即可，谁关心谁接入。</p>
+<blockquote>
+<p>错峰与流控</p>
+</blockquote>
+<p>试想上下游对于事情的处理能力是不同的。比如，Web前端每秒承受上千万的请求，并不是什么神奇的事情，只需要加多一点机器，再搭建一些LVS负载均衡设备和Nginx等即可。但<strong>数据库的处理能力却十分有限</strong>，即使使用SSD加分库分表，单机的处理能力仍然在万级。由于成本的考虑，我们不能奢求数据库的机器数量追上前端。 这种问题同样存在于系统和系统之间，如短信系统可能由于短板效应，速度卡在网关上（每秒几百次请求），跟前端的并发量不是一个数量级。但用户晚上个半分钟左右收到短信，一般是不会有太大问题的。如果没有消息队列，两个系统之间通过协商、滑动窗口等复杂的方案也不是说不能实现。但系统复杂性指数级增长，势必在上游或者下游做存储，并且要处理定时、拥塞等一系列问题。而且每当有处理能力有差距的时候，都需要单独开发一套逻辑来维护这套逻辑。所以，利用中间系统转储两个系统的通信内容，并在下游系统有能力处理这些消息的时候，再处理这些消息，是一套相对较通用的方式。</p>
+<p>总而言之，消息队列不是万能的。<strong>对于需要强事务保证而且延迟敏感的，RPC是优于消息队列</strong>的。 <strong>对于一些无关痛痒，或者对于别人非常重要但是对于自己不是那么关心的事情，可以利用消息队列去做。</strong> 支持最终一致性的消息队列，能够用来处理<strong>延迟不那么敏感</strong>的“分布式事务”场景，而且相对于笨重的分布式事务，可能是更优的处理方式。 当上下游系统处理能力存在差距的时候，利用消息队列做一个通用的“漏斗”。在下游有能力处理的时候，再进行分发。 如果下游有很多系统关心你的系统发出的通知的时候，果断地使用消息队列吧</p>
+<h3 id="MQ的劣势"><a href="#MQ的劣势" class="headerlink" title="MQ的劣势"></a>MQ的劣势</h3><blockquote>
+<p>一致性问题</p>
+</blockquote>
+<p>A 系统处理完业务，通过 MQ 给B、C、D三个系统发消息数据，如果 B 系统、C 系统处理成功，D 系统处理失败。如何保证消息数据处理的一致性？</p>
+<p>最终一致性指的是两个系统的状态保持一致，要么都成功，要么都失败。当然有个时间限制，理论上越快越好，但实际上在各种异常的情况下，可能会有一定延迟达到最终一致状态，但最后两个系统的状态是一样的。 </p>
+<p>业界有一些为“最终一致性”而生的消息队列，如Notify（阿里）、QMQ（去哪儿）等，其设计初衷，就是为了交易系统中的高可靠通知。 </p>
+<p>以一个银行的转账过程来理解最终一致性，转账的需求很简单，如果A系统扣钱成功，则B系统加钱一定成功。反之则一起回滚，像什么都没发生一样。 然而，这个过程中存在很多可能的意外： 1. A扣钱成功，调用B加钱接口失败。 2. A扣钱成功，调用B加钱接口虽然成功，但获取最终结果时网络异常引起超时。 3. A扣钱成功，B加钱失败，A想回滚扣的钱，但A机器down机。</p>
+<p>可见，想把这件看似简单的事真正做成，真的不那么容易。所有跨VM的一致性问题，从技术的角度讲通用的解决方案是：</p>
+<ul>
+<li><p>强一致性，分布式事务，但落地太难且成本太高。</p>
+</li>
+<li><p>最终一致性，主要是用“记录”和“补偿”的方式。在做所有的不确定的事情之前，先把事情记录下来，然后去做不确定的事情，结果可能是：成功、失败或是不确定，“不确定”（例如超时等）可以等价为失败。成功就可以把记录的东西清理掉了，对于失败和不确定，可以依靠定时任务等方式把所有失败的事情重新搞一遍，直到成功为止。</p>
+<p> 回到刚才的例子，系统在A扣钱成功的情况下，把要给B“通知”这件事记录在库里（为了保证最高的可靠性可以把通知B系统加钱和扣钱成功这两件事维护在一个本地事务里），通知成功则删除这条记录，通知失败或不确定则依靠定时任务补偿性地通知我们，直到我们把状态更新成正确的为止。 整个这个模型依然可以基于RPC来做，但可以抽象成一个统一的模型，基于消息队列来做一个“企业总线”。 具体来说，本地事务维护业务变化和通知消息，一起落地（失败则一起回滚），然后RPC到达broker，在broker成功落地后，RPC返回成功，本地消息可以删除。否则本地消息一直靠定时任务轮询不断重发，这样就保证了消息可靠落地broker。 broker往consumer发送消息的过程类似，一直发送消息，直到consumer发送消费成功确认。 我们先不理会重复消息的问题，通过两次消息落地加补偿，下游是一定可以收到消息的。然后依赖状态机版本号等方式做判重，更新自己的业务，就实现了最终一致性。</p>
+</li>
+</ul>
+<blockquote>
+<p>系统可用性降低</p>
+</blockquote>
+<p>系统引入的外部依赖越多，系统稳定性越差。一旦 MQ 宕机，就会对业务造成影响。如何保证MQ的高可用？</p>
+<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/09.png" class>
+
+
+
+<blockquote>
+<p>系统复杂度提高</p>
+</blockquote>
+<p>MQ 的加入大大增加了系统的复杂度，以前系统间是同步的远程调用，现在是通过 MQ 进行异步调用。如何保证消息没有被重复消费？怎么处理消息丢失情况？那么保证消息传递的顺序性？</p>
+<h2 id="MQ的应用场景"><a href="#MQ的应用场景" class="headerlink" title="MQ的应用场景"></a>MQ的应用场景</h2><p>①生产者不需要从消费者处获得反馈。引入消息队列之前的直接调用，其接口的返回值应该为空，这才让明明下层的动作还没做，上层却当成动作做完了继续往后走，即所谓异步成为了可能。</p>
+<p>②容许短暂的不一致性。</p>
+<p>③确实是用了有效果。即解耦、提速、削峰这些方面的收益，超过加入MQ，管理MQ这些成本。</p>
+]]></content>
+      <categories>
+        <category>MQ</category>
+      </categories>
+      <tags>
+        <tag>RabbitMQ</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>初识递归</title>
     <url>/2021/02/03/%E5%88%9D%E8%AF%86%E9%80%92%E5%BD%92/</url>
     <content><![CDATA[<h2 id="二叉搜索树的范围和"><a href="#二叉搜索树的范围和" class="headerlink" title="二叉搜索树的范围和"></a>二叉搜索树的范围和</h2><h3 id="DFS深度优先搜索"><a href="#DFS深度优先搜索" class="headerlink" title="DFS深度优先搜索"></a>DFS深度优先搜索</h3><h4 id="1-递归"><a href="#1-递归" class="headerlink" title="1.递归"></a>1.递归</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * public class TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode left;</span></span><br><span class="line"><span class="comment"> *     TreeNode right;</span></span><br><span class="line"><span class="comment"> *     TreeNode() &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val) &#123; this.val = val; &#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val, TreeNode left, TreeNode right) &#123;</span></span><br><span class="line"><span class="comment"> *         this.val = val;</span></span><br><span class="line"><span class="comment"> *         this.left = left;</span></span><br><span class="line"><span class="comment"> *         this.right = right;</span></span><br><span class="line"><span class="comment"> *     &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> ans;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">rangeSumBST</span><span class="params">(TreeNode root, <span class="keyword">int</span> low, <span class="keyword">int</span> high)</span> </span>&#123;</span><br><span class="line">       ans = <span class="number">0</span> ;</span><br><span class="line">        dfs(root,low,high);</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dfs</span><span class="params">(TreeNode node,<span class="keyword">int</span> L,<span class="keyword">int</span> R)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(node!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(L&lt;=node.val&amp;&amp;node.val&lt;=R)&#123;</span><br><span class="line">                ans+=node.val;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(node.val&gt;L)&#123;</span><br><span class="line">                dfs(node.left,L,R);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(node.val&lt;R)&#123;</span><br><span class="line">                dfs(node.right,L,R);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -2821,96 +2911,6 @@
       </categories>
       <tags>
         <tag>递归</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>消息队列MQ</title>
-    <url>/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/</url>
-    <content><![CDATA[<h2 id="MQ的基本概念"><a href="#MQ的基本概念" class="headerlink" title="MQ的基本概念"></a>MQ的基本概念</h2><p>MQ全称 Message Queue（消息队列），是在消息的传输过程中保存消息的容器。多用于分布式系统之间进行通信。消息队列已经逐渐成为企业IT系统内部通信的核心手段。它具有低耦合、可靠投递、广播、流量控制、最终一致性等一系列功能，成为异步RPC的主要手段之一。 当今市面上有很多主流的消息中间件，如老牌的ActiveMQ、RabbitMQ，炙手可热的Kafka，阿里巴巴自主开发的Notify、MetaQ、RocketMQ等。</p>
-<p>当你需要使用消息队列时，首先需要考虑它的必要性。可以使用mq的场景有很多，最常用的几种，是做业务解耦/最终一致性/广播/错峰流控等。反之，如果需要强一致性，关注业务逻辑的处理结果，则RPC显得更为合适</p>
-<p>如果没有消息队列，分布式系统之间可能互相通过远程调用来实现不同系统之间的访问。</p>
- <img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/01.png" class>
-
-<p>MQ，消息队列，存储消息的<strong>中间件</strong>,分布式系统通信两种方式：直接远程调用 和 借助第三方 完成间接通信,发送方称为生产者，接收方称为消费者。</p>
-<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/02.png" class>
-
-<h2 id="MQ的优势与劣势"><a href="#MQ的优势与劣势" class="headerlink" title="MQ的优势与劣势"></a>MQ的优势与劣势</h2><h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><blockquote>
-<p>应用解耦</p>
-</blockquote>
-<p>解耦是消息队列要解决的最本质问题。所谓解耦，简单点讲就是一个事务，只关心核心的流程。而需要依赖其他系统但不那么重要的事情，**==有通知即可，无需等待结果==**。换句话说，基于消息的模型，关心的是“通知”，而非“处理”。 </p>
-<p>比如在美团旅游，我们有一个产品中心，产品中心上游对接的是主站、移动后台、旅游供应链等各个数据源；下游对接的是筛选系统、API系统等展示系统。当上游的数据发生变更的时候，如果不使用消息系统，势必要调用我们的接口来更新数据，就特别依赖产品中心接口的稳定性和处理能力。但其实，作为旅游的产品中心，也许只有对于旅游自建供应链，产品中心更新成功才是他们关心的事情。而对于团购等外部系统，产品中心更新成功也好、失败也罢，并不是他们的职责所在。他们只需要保证在信息变更的时候通知到我们就好了。 而我们的下游，可能有更新索引、刷新缓存等一系列需求。对于产品中心来说，这也不是我们的职责所在。说白了，如果他们定时来拉取数据，也能保证数据的更新，只是实时性没有那么强。但使用接口方式去更新他们的数据，显然对于产品中心来说太过于“重量级”了，只需要发布一个产品ID变更的通知，由下游系统来处理，可能更为合理。 再举一个例子，对于我们的订单系统，订单最终支付成功之后可能需要给用户发送短信积分什么的，但其实这已经不是我们系统的核心流程了。如果外部系统速度偏慢（比如短信网关速度不好），那么主流程的时间会加长很多，用户肯定不希望点击支付过好几分钟才看到结果。那么我们只需要通知短信系统“我们支付成功了”，不一定非要等待它处理完成。</p>
- <img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/03.png" class>
-
-<p>例如，在上面的例子中，订单系统过分依赖剩余四个系统。用户向订单系统发送消息，订单系统分别向下层的四个系统传递用户消息。这样一来，不仅时间上效率很低，而且，一旦下层的某个系统挂掉，订单系统以及上层用户迟迟得不到反馈，这对于“争分夺秒”的电商行业是不能承受的。而添加了MQ之后，订单系统只需要将消息发给MQ，并且MQ可以先行通知用户操作成功，而不一定非要等到下层子系统操作完成之后在进行反馈。同时，如果下层系统挂掉(通常很快就可以修复，只有几分钟，但是对业务的影响是巨大的），订单系统因为由消息队列的存在，仍旧可以给予用户反馈，提升了客户的访问体验。</p>
-<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/04.png" class>
-
-<blockquote>
-<p>异步提速，削峰填谷</p>
-</blockquote>
-<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/05.png" class>
-
-<p><strong>在不使用消息队列服务器的时候，用户的请求数据直接写入数据库，在高并发的情况下数据库压力剧增，使得响应速度变慢。但是在使用消息队列之后，用户的请求数据发送给消息队列之后立即 返回，再由消息队列的消费者进程从消息队列中获取数据，异步写入数据库。由于消息队列服务器处理速度快于数据库（消息队列也比数据库有更好的伸缩性），因此响应速度得到大幅改善。</strong></p>
-<p>通过以上分析我们可以得出<strong>消息队列具有很好的削峰作用的功能</strong>——即<strong>通过异步处理，将短时间高并发产生的事务消息存储在消息队列中，从而削平高峰期的并发事务。</strong> 举例：在电子商务一些秒杀、促销活动中，合理使用消息队列可以有效抵御促销活动刚开始大量订单涌入对系统的冲击。如下图所示：</p>
-<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/06.png" class>
-
-<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/07.png" class>
-
-<p>因为<strong>用户请求数据写入消息队列之后就立即返回给用户了，但是请求数据在后续的业务校验、写数据库等操作中可能失败</strong>。因此使用消息队列进行异步处理之后，需要<strong>适当修改业务流程进行配合</strong>，比如<strong>用户在提交订单之后，订单数据写入消息队列，不能立即返回用户订单提交成功，需要在消息队列的订单消费者进程真正处理完该订单之后，甚至出库后，再通过电子邮件或短信通知用户订单成功</strong>，以免交易纠纷。这就类似我们平时手机订火车票和电影票。</p>
-<blockquote>
-<p>利用消息队列实现事件驱动结构</p>
-</blockquote>
-<p>最常见的<strong>事件驱动架构</strong>类似生产者消费者模式，在大型网站中通常用利用消息队列实现事件驱动结构。</p>
-<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/08.png" class>
-
-<p><strong>消息队列利用发布-订阅模式工作，消息发送者（生产者）发布消息，一个或多个消息接受者（消费者）订阅消息。</strong> 从上图可以看到<strong>消息发送者（生产者）和消息接受者（消费者）之间没有直接耦合</strong>，消息发送者将消息发送至分布式消息队列即结束对消息的处理，消息接受者从分布式消息队列获取该消息后进行后续处理，并不需要知道该消息从何而来。<strong>对新增业务，只要对该类消息感兴趣，即可订阅该消息，对原有系统和业务没有任何影响，从而实现网站业务的可扩展性设计</strong>。</p>
-<p>消息接受者对消息进行过滤、处理、包装后，构造成一个新的消息类型，将消息继续发送出去，等待其他消息接受者订阅该消息。因此基于事件（消息对象）驱动的业务架构可以是一系列流程。</p>
-<p><strong>另外为了避免消息队列服务器宕机造成消息丢失，会将成功发送到消息队列的消息存储在消息生产者服务器上，等消息真正被消费者服务器处理后才删除消息。在消息队列服务器宕机后，生产者服务器会选择分布式消息队列服务器集群中的其他服务器发布消息。</strong></p>
-<p><strong>备注：</strong> 不要认为消息队列只能利用发布-订阅模式工作，只不过在解耦这个特定业务环境下是使用发布-订阅模式的。<strong>除了发布-订阅模式，还有点对点订阅模式（一个消息只有一个消费者），我们比较常用的是发布-订阅模式。</strong> 另外，这两种消息模型是 JMS 提供的，AMQP 协议还提供了 5 种消息模型。</p>
-<blockquote>
-<p>广播</p>
-</blockquote>
-<p>消息队列的基本功能之一是进行广播。如果没有消息队列，每当一个新的业务方接入，我们都要联调一次新接口。有了消息队列，我们只需要关心消息是否送达了队列，至于谁希望订阅，是下游的事情，无疑极大地减少了开发和联调的工作量。 比如本文开始提到的产品中心发布产品变更的消息，以及景点库很多去重更新的消息，可能“关心”方有很多个，但产品中心和景点库只需要发布变更消息即可，谁关心谁接入。</p>
-<blockquote>
-<p>错峰与流控</p>
-</blockquote>
-<p>试想上下游对于事情的处理能力是不同的。比如，Web前端每秒承受上千万的请求，并不是什么神奇的事情，只需要加多一点机器，再搭建一些LVS负载均衡设备和Nginx等即可。但<strong>数据库的处理能力却十分有限</strong>，即使使用SSD加分库分表，单机的处理能力仍然在万级。由于成本的考虑，我们不能奢求数据库的机器数量追上前端。 这种问题同样存在于系统和系统之间，如短信系统可能由于短板效应，速度卡在网关上（每秒几百次请求），跟前端的并发量不是一个数量级。但用户晚上个半分钟左右收到短信，一般是不会有太大问题的。如果没有消息队列，两个系统之间通过协商、滑动窗口等复杂的方案也不是说不能实现。但系统复杂性指数级增长，势必在上游或者下游做存储，并且要处理定时、拥塞等一系列问题。而且每当有处理能力有差距的时候，都需要单独开发一套逻辑来维护这套逻辑。所以，利用中间系统转储两个系统的通信内容，并在下游系统有能力处理这些消息的时候，再处理这些消息，是一套相对较通用的方式。</p>
-<p>总而言之，消息队列不是万能的。<strong>对于需要强事务保证而且延迟敏感的，RPC是优于消息队列</strong>的。 <strong>对于一些无关痛痒，或者对于别人非常重要但是对于自己不是那么关心的事情，可以利用消息队列去做。</strong> 支持最终一致性的消息队列，能够用来处理<strong>延迟不那么敏感</strong>的“分布式事务”场景，而且相对于笨重的分布式事务，可能是更优的处理方式。 当上下游系统处理能力存在差距的时候，利用消息队列做一个通用的“漏斗”。在下游有能力处理的时候，再进行分发。 如果下游有很多系统关心你的系统发出的通知的时候，果断地使用消息队列吧</p>
-<h3 id="MQ的劣势"><a href="#MQ的劣势" class="headerlink" title="MQ的劣势"></a>MQ的劣势</h3><blockquote>
-<p>一致性问题</p>
-</blockquote>
-<p>A 系统处理完业务，通过 MQ 给B、C、D三个系统发消息数据，如果 B 系统、C 系统处理成功，D 系统处理失败。如何保证消息数据处理的一致性？</p>
-<p>最终一致性指的是两个系统的状态保持一致，要么都成功，要么都失败。当然有个时间限制，理论上越快越好，但实际上在各种异常的情况下，可能会有一定延迟达到最终一致状态，但最后两个系统的状态是一样的。 </p>
-<p>业界有一些为“最终一致性”而生的消息队列，如Notify（阿里）、QMQ（去哪儿）等，其设计初衷，就是为了交易系统中的高可靠通知。 </p>
-<p>以一个银行的转账过程来理解最终一致性，转账的需求很简单，如果A系统扣钱成功，则B系统加钱一定成功。反之则一起回滚，像什么都没发生一样。 然而，这个过程中存在很多可能的意外： 1. A扣钱成功，调用B加钱接口失败。 2. A扣钱成功，调用B加钱接口虽然成功，但获取最终结果时网络异常引起超时。 3. A扣钱成功，B加钱失败，A想回滚扣的钱，但A机器down机。</p>
-<p>可见，想把这件看似简单的事真正做成，真的不那么容易。所有跨VM的一致性问题，从技术的角度讲通用的解决方案是：</p>
-<ul>
-<li><p>强一致性，分布式事务，但落地太难且成本太高。</p>
-</li>
-<li><p>最终一致性，主要是用“记录”和“补偿”的方式。在做所有的不确定的事情之前，先把事情记录下来，然后去做不确定的事情，结果可能是：成功、失败或是不确定，“不确定”（例如超时等）可以等价为失败。成功就可以把记录的东西清理掉了，对于失败和不确定，可以依靠定时任务等方式把所有失败的事情重新搞一遍，直到成功为止。</p>
-<p> 回到刚才的例子，系统在A扣钱成功的情况下，把要给B“通知”这件事记录在库里（为了保证最高的可靠性可以把通知B系统加钱和扣钱成功这两件事维护在一个本地事务里），通知成功则删除这条记录，通知失败或不确定则依靠定时任务补偿性地通知我们，直到我们把状态更新成正确的为止。 整个这个模型依然可以基于RPC来做，但可以抽象成一个统一的模型，基于消息队列来做一个“企业总线”。 具体来说，本地事务维护业务变化和通知消息，一起落地（失败则一起回滚），然后RPC到达broker，在broker成功落地后，RPC返回成功，本地消息可以删除。否则本地消息一直靠定时任务轮询不断重发，这样就保证了消息可靠落地broker。 broker往consumer发送消息的过程类似，一直发送消息，直到consumer发送消费成功确认。 我们先不理会重复消息的问题，通过两次消息落地加补偿，下游是一定可以收到消息的。然后依赖状态机版本号等方式做判重，更新自己的业务，就实现了最终一致性。</p>
-</li>
-</ul>
-<blockquote>
-<p>系统可用性降低</p>
-</blockquote>
-<p>系统引入的外部依赖越多，系统稳定性越差。一旦 MQ 宕机，就会对业务造成影响。如何保证MQ的高可用？</p>
-<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/09.png" class>
-
-
-
-<blockquote>
-<p>系统复杂度提高</p>
-</blockquote>
-<p>MQ 的加入大大增加了系统的复杂度，以前系统间是同步的远程调用，现在是通过 MQ 进行异步调用。如何保证消息没有被重复消费？怎么处理消息丢失情况？那么保证消息传递的顺序性？</p>
-<h2 id="MQ的应用场景"><a href="#MQ的应用场景" class="headerlink" title="MQ的应用场景"></a>MQ的应用场景</h2><p>①生产者不需要从消费者处获得反馈。引入消息队列之前的直接调用，其接口的返回值应该为空，这才让明明下层的动作还没做，上层却当成动作做完了继续往后走，即所谓异步成为了可能。</p>
-<p>②容许短暂的不一致性。</p>
-<p>③确实是用了有效果。即解耦、提速、削峰这些方面的收益，超过加入MQ，管理MQ这些成本。</p>
-]]></content>
-      <categories>
-        <category>MQ</category>
-      </categories>
-      <tags>
-        <tag>RabbitMQ</tag>
       </tags>
   </entry>
   <entry>

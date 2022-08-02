@@ -585,13 +585,6 @@
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</loc>
-    <lastmod>2022-08-02</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://www.mindmaster.top/tags/%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F/</loc>
     <lastmod>2022-08-02</lastmod>
     <changefreq>daily</changefreq>
@@ -600,6 +593,13 @@
   
   <url>
     <loc>https://www.mindmaster.top/tags/Maven/</loc>
+    <lastmod>2022-08-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.mindmaster.top/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</loc>
     <lastmod>2022-08-02</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -669,14 +669,14 @@
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/tags/%E9%80%92%E5%BD%92/</loc>
+    <loc>https://www.mindmaster.top/tags/RabbitMQ/</loc>
     <lastmod>2022-08-02</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://www.mindmaster.top/tags/RabbitMQ/</loc>
+    <loc>https://www.mindmaster.top/tags/%E9%80%92%E5%BD%92/</loc>
     <lastmod>2022-08-02</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
