@@ -332,6 +332,73 @@
       </tags>
   </entry>
   <entry>
+    <title>HTTP连接</title>
+    <url>/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/</url>
+    <content><![CDATA[<h1 id="HTTP连接"><a href="#HTTP连接" class="headerlink" title="HTTP连接"></a>HTTP连接</h1><p>HTTP连接实际上就是TCP连接和一些使用连接的规则。</p>
+<p>TCP为HTTP提供了一条可靠的比特传输管道。从TCP连接一端填入的字节会从另 一端以原有的顺序、正确地传送出来</p>
+<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224094620498.png" alt="image-20220224094620498"></p>
+<p>安全版本**<em>HTTPS**</em>就是在HTTP和TCP之间插入了一个〈称为TLS或SSL 的）密码加密层。</p>
+<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224094734829.png" alt="image-20220224094734829"></p>
+<p>HTTP要传送一条报文时，会以流的形式将报文数据的内容通过一条打开的TCP连 接按序传输。TCP收到数据流之后，会将数据流砍成被称作段的小数据块，并将段 封装在IP分组中，通过因特网进行传输。</p>
+<p><strong><em>每个TCP段都是由IP分组承载</em></strong>，从一个IP地址发送到另一个IP地址的。每个IP 分组中都包括：</p>
+<ul>
+<li><p> 一个IP分组首部（通常为20字节）</p>
+</li>
+<li><p> 一个TCP段首部（通常为20字节）</p>
+</li>
+<li><p>一个TCP数据块（0个或多个字节）。</p>
+</li>
+</ul>
+<img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224095120890.png" alt="image-20220224095120890" style="zoom:50%;">
+
+<p><strong>承载TCP段的IP分组，承载了TCP数据流中的小块数据</strong></p>
+<p>TCP连接通过4个值来识别：【**<em>唯一标识连接**</em>】</p>
+<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224095247616.png" alt="image-20220224095247616"></p>
+<h2 id="HTTP连接的管理"><a href="#HTTP连接的管理" class="headerlink" title="HTTP连接的管理"></a>HTTP连接的管理</h2><h3 id="Connection首部"><a href="#Connection首部" class="headerlink" title="Connection首部"></a>Connection首部</h3><p><strong><em>防止无意中对本地首部的转发，“对首部的保护”</em></strong></p>
+<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224103350199.png" alt="image-20220224103350199"></p>
+<h3 id="串行事务处理时延"><a href="#串行事务处理时延" class="headerlink" title="串行事务处理时延"></a>串行事务处理时延</h3><p>如果只对连接进行简单的管理，TCP的性能时延可能会叠加起来。</p>
+<p>假设有一个包含了 3个嵌入图片的Web页面。浏览器需要发起4个HTTP事务来显示此页面: 1个用于顶层的HTML页面，3个用于嵌入的图片。如果每个事务都需要（串行地建立）一条新的连接，那么连接时延和慢启动时延就会叠加起来。</p>
+<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224103539476.png" alt="image-20220224103539476"></p>
+<p>同时，用户更希望同时加载多幅图片，而不是一张一张的加载。</p>
+<blockquote>
+<p>串行加载的另一个缺点是，有些浏览器在对象加载完毕之前无法获知对象的尺寸， 而且它们可能需要尺寸信息来决定将对象放在屏幕的什么位置上，所以在加载了足够多的对象之前，无法在屏幕上显示任何内容。在这种情况下，可能浏览器串行装 载对象的进度很正常，但用户面对的却是一个空白的屏幕，对装载的进度一无所知。</p>
+</blockquote>
+<p><strong><em>解决方案</em></strong></p>
+<ul>
+<li><p>并行连接</p>
+<p>通过多条TCP连接发起并发的HTTP请求。</p>
+</li>
+<li><p>持久连接</p>
+<p>重用TCP连接，以消除连接及关闭时延。</p>
+</li>
+<li><p>管道化连接</p>
+<p>通过共享的TCP连接发起并发的HTTP请求。</p>
+</li>
+<li><p>复用连接</p>
+<p>通过共享的TCP连接发起并发的HTTP请求。</p>
+</li>
+</ul>
+<h2 id="并行连接"><a href="#并行连接" class="headerlink" title="并行连接"></a>并行连接</h2><p> HTTP允许客户端打开多条连接，并行地执行多个HTTP事务。在 这个例子中，**<em>并行加载**</em>了四幅嵌入式图片，每个事务都有自己的TCP连接。</p>
+<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224104152923.png" alt="image-20220224104152923"></p>
+<h3 id="并行连接可能会提高页面加载速度"><a href="#并行连接可能会提高页面加载速度" class="headerlink" title="并行连接可能会提高页面加载速度"></a>并行连接可能会提高页面加载速度</h3><p>包含嵌入对象的组合页面如果能（通过并行连接）克服单条连接的<strong>空载时间和带宽限制</strong>，加载速度也会有所提高。<strong>时延可以重叠</strong>起来，而且如果单条连接没有充分利用客户端的因特网带宽，可以将未用带宽分配来装载其他对象。</p>
+<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224104412136.png" alt="image-20220224104412136"></p>
+<h3 id="并行连接不一定会更快"><a href="#并行连接不一定会更快" class="headerlink" title="并行连接不一定会更快"></a>并行连接不一定会更快</h3><blockquote>
+<p>如果并行加载多个对象， 每个对象都会去竞争这有限的带宽，每个对象都会以较慢的速度按比例加载，这样带来的性能提升就很小，甚至没什么提升。 </p>
+</blockquote>
+<blockquote>
+<p>打开大量连接会消耗很多内存资源，从而引发自身的性能问题。</p>
+</blockquote>
+<p>实际上，浏览器确实使用了并行连接，但它们会将并行连接的总数限制为一个较小的值（通常是4个）。服务器可以随意关闭来自特定客户端的超量连接。</p>
+<p>但并行连接确实可以让用户感觉到</p>
+<h2 id="持久连接"><a href="#持久连接" class="headerlink" title="持久连接"></a>持久连接</h2><h2 id="管道化连接"><a href="#管道化连接" class="headerlink" title="管道化连接"></a>管道化连接</h2>]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>HTTP</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>IOC创建对象</title>
     <url>/2021/02/28/IOC%E6%8E%A7%E5%88%B6%E5%8F%8D%E8%BD%AC/</url>
     <content><![CDATA[<h2 id="IOC"><a href="#IOC" class="headerlink" title="IOC"></a>IOC</h2><p>控制反转（<strong>IoC，Inversion of Control</strong>），是一个概念，是一种思想。指将传统上由程序代 码直接操控的对象调用权交给容器，通过容器来实现对象的装配和管理。控制反转就是对对 象控制权的转移，从程序代码本身反转到了外部容器。通过容器实现对象的创建，属性赋值， 依赖的管理。</p>
@@ -435,120 +502,6 @@
       </tags>
   </entry>
   <entry>
-    <title>HTTP连接</title>
-    <url>/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/</url>
-    <content><![CDATA[<h1 id="HTTP连接"><a href="#HTTP连接" class="headerlink" title="HTTP连接"></a>HTTP连接</h1><p>HTTP连接实际上就是TCP连接和一些使用连接的规则。</p>
-<p>TCP为HTTP提供了一条可靠的比特传输管道。从TCP连接一端填入的字节会从另 一端以原有的顺序、正确地传送出来</p>
-<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224094620498.png" alt="image-20220224094620498"></p>
-<p>安全版本**<em>HTTPS**</em>就是在HTTP和TCP之间插入了一个〈称为TLS或SSL 的）密码加密层。</p>
-<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224094734829.png" alt="image-20220224094734829"></p>
-<p>HTTP要传送一条报文时，会以流的形式将报文数据的内容通过一条打开的TCP连 接按序传输。TCP收到数据流之后，会将数据流砍成被称作段的小数据块，并将段 封装在IP分组中，通过因特网进行传输。</p>
-<p><strong><em>每个TCP段都是由IP分组承载</em></strong>，从一个IP地址发送到另一个IP地址的。每个IP 分组中都包括：</p>
-<ul>
-<li><p> 一个IP分组首部（通常为20字节）</p>
-</li>
-<li><p> 一个TCP段首部（通常为20字节）</p>
-</li>
-<li><p>一个TCP数据块（0个或多个字节）。</p>
-</li>
-</ul>
-<img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224095120890.png" alt="image-20220224095120890" style="zoom:50%;">
-
-<p><strong>承载TCP段的IP分组，承载了TCP数据流中的小块数据</strong></p>
-<p>TCP连接通过4个值来识别：【**<em>唯一标识连接**</em>】</p>
-<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224095247616.png" alt="image-20220224095247616"></p>
-<h2 id="HTTP连接的管理"><a href="#HTTP连接的管理" class="headerlink" title="HTTP连接的管理"></a>HTTP连接的管理</h2><h3 id="Connection首部"><a href="#Connection首部" class="headerlink" title="Connection首部"></a>Connection首部</h3><p><strong><em>防止无意中对本地首部的转发，“对首部的保护”</em></strong></p>
-<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224103350199.png" alt="image-20220224103350199"></p>
-<h3 id="串行事务处理时延"><a href="#串行事务处理时延" class="headerlink" title="串行事务处理时延"></a>串行事务处理时延</h3><p>如果只对连接进行简单的管理，TCP的性能时延可能会叠加起来。</p>
-<p>假设有一个包含了 3个嵌入图片的Web页面。浏览器需要发起4个HTTP事务来显示此页面: 1个用于顶层的HTML页面，3个用于嵌入的图片。如果每个事务都需要（串行地建立）一条新的连接，那么连接时延和慢启动时延就会叠加起来。</p>
-<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224103539476.png" alt="image-20220224103539476"></p>
-<p>同时，用户更希望同时加载多幅图片，而不是一张一张的加载。</p>
-<blockquote>
-<p>串行加载的另一个缺点是，有些浏览器在对象加载完毕之前无法获知对象的尺寸， 而且它们可能需要尺寸信息来决定将对象放在屏幕的什么位置上，所以在加载了足够多的对象之前，无法在屏幕上显示任何内容。在这种情况下，可能浏览器串行装 载对象的进度很正常，但用户面对的却是一个空白的屏幕，对装载的进度一无所知。</p>
-</blockquote>
-<p><strong><em>解决方案</em></strong></p>
-<ul>
-<li><p>并行连接</p>
-<p>通过多条TCP连接发起并发的HTTP请求。</p>
-</li>
-<li><p>持久连接</p>
-<p>重用TCP连接，以消除连接及关闭时延。</p>
-</li>
-<li><p>管道化连接</p>
-<p>通过共享的TCP连接发起并发的HTTP请求。</p>
-</li>
-<li><p>复用连接</p>
-<p>通过共享的TCP连接发起并发的HTTP请求。</p>
-</li>
-</ul>
-<h2 id="并行连接"><a href="#并行连接" class="headerlink" title="并行连接"></a>并行连接</h2><p> HTTP允许客户端打开多条连接，并行地执行多个HTTP事务。在 这个例子中，**<em>并行加载**</em>了四幅嵌入式图片，每个事务都有自己的TCP连接。</p>
-<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224104152923.png" alt="image-20220224104152923"></p>
-<h3 id="并行连接可能会提高页面加载速度"><a href="#并行连接可能会提高页面加载速度" class="headerlink" title="并行连接可能会提高页面加载速度"></a>并行连接可能会提高页面加载速度</h3><p>包含嵌入对象的组合页面如果能（通过并行连接）克服单条连接的<strong>空载时间和带宽限制</strong>，加载速度也会有所提高。<strong>时延可以重叠</strong>起来，而且如果单条连接没有充分利用客户端的因特网带宽，可以将未用带宽分配来装载其他对象。</p>
-<p><img data-src="/2022/02/24/HTTP%E8%BF%9E%E6%8E%A5/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220224104412136.png" alt="image-20220224104412136"></p>
-<h3 id="并行连接不一定会更快"><a href="#并行连接不一定会更快" class="headerlink" title="并行连接不一定会更快"></a>并行连接不一定会更快</h3><blockquote>
-<p>如果并行加载多个对象， 每个对象都会去竞争这有限的带宽，每个对象都会以较慢的速度按比例加载，这样带来的性能提升就很小，甚至没什么提升。 </p>
-</blockquote>
-<blockquote>
-<p>打开大量连接会消耗很多内存资源，从而引发自身的性能问题。</p>
-</blockquote>
-<p>实际上，浏览器确实使用了并行连接，但它们会将并行连接的总数限制为一个较小的值（通常是4个）。服务器可以随意关闭来自特定客户端的超量连接。</p>
-<p>但并行连接确实可以让用户感觉到</p>
-<h2 id="持久连接"><a href="#持久连接" class="headerlink" title="持久连接"></a>持久连接</h2><h2 id="管道化连接"><a href="#管道化连接" class="headerlink" title="管道化连接"></a>管道化连接</h2>]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>HTTP</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>InnoDB存储引擎</title>
-    <url>/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
-    <content><![CDATA[<h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
-<p>InnoDB存储引擎有多个内存块，这些内存块组成了一个大的内存池</p>
-<p>后台线程的主要作用就是负责刷新内存池中的数据，保证缓存池中的内存缓存的是最近的数据。此外，还将已经修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下，InnoDB可以恢复运行到最佳状态。</p>
-<h4 id="后台线程（InnDB是一个多线程模型"><a href="#后台线程（InnDB是一个多线程模型" class="headerlink" title="后台线程（InnDB是一个多线程模型)"></a>后台线程（InnDB是一个多线程模型)</h4><p>#####Master Thread</p>
-<p><strong>作用：</strong></p>
-<p>​    一个非常核心的后台进程，负责将缓存池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓存、UNDO页的回收等。</p>
-<h5 id="IO-Therad"><a href="#IO-Therad" class="headerlink" title="IO Therad"></a>IO Therad</h5><p>  在InnoDB存储引擎中大量使用了AIO（Async IO）—异步时间非阻塞IO，这样可以极大程度上提高数据库的性能。IO Thread的主要工作就是负责这些IO请求的回调</p>
-<p>共有四个IO Thread:write 、read、insert buffer、log IO thread</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114130216.png" alt="image-20210114114130216"></p>
-<p>通过命令SHOW ENGINE INNODB STASTUS\G来观察IO Thread</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114405936.png" alt="image-20210114114405936"></p>
-<p>有四个write和read IO Thread</p>
-<p>通过innodb_read_io_threads和innodb_write_io_threads参数来进行设置</p>
-<h5 id="Purge-Thread"><a href="#Purge-Thread" class="headerlink" title="Purge Thread"></a>Purge Thread</h5><p><strong>作用</strong>：</p>
-<p>​    Purge Thread回收已经使用并且已经分配的undo页（事务提交之后，其所使用的Undolog可能就不再需要）</p>
-<p>用户需要在<strong>MySQL数据库的配置文件</strong>中添加如下命令来启用独立的Purge Thread: </p>
-<p>​        innodb_purge_threads=1</p>
-<h5 id="Page-Cleaner-Thread"><a href="#Page-Cleaner-Thread" class="headerlink" title="Page Cleaner Thread"></a>Page Cleaner Thread</h5><p><strong>作用</strong>：</p>
-<p>​    将脏页的刷新操作放在单独的线程中完成。减轻Master Thread的工作以及对于用户查询线程的阻塞</p>
-<h4 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h4><h5 id="缓存池"><a href="#缓存池" class="headerlink" title="缓存池"></a>缓存池</h5><p>Innodb存储引擎是基于磁盘存储的（Disk-base Database），将其中的记录按照页来管理。</p>
-<p>缓存池的出现，就是为了解决CPU速度和磁盘速度之间的差异，通过内存的速度来弥补磁盘速度较慢对数据库性能的影响。读取文件时，首先判断给文件是否在缓存池中（没有就去磁盘上找）。</p>
-<p>在修改缓存池中的页时，先以一定频率刷新到缓存池上，然后通过Checkpoint刷新回磁盘。</p>
-<p>数据库服务器最好采用64位操作系统，可以使用更多的内存（512GB），32位（只有64GB）。</p>
-<p>缓存池的配置通过参数innodb_buffer_pool_size来设置。</p>
-<h6 id="缓存池中缓存的数据页类型："><a href="#缓存池中缓存的数据页类型：" class="headerlink" title="缓存池中缓存的数据页类型："></a>缓存池中缓存的数据页类型：</h6><p>​    索引页、数据页、Undo页、插入缓存页、自适应哈希索引页（adaptive hash index）、InnoDB存储的锁信息、数据字典信息等。</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114131120313.png" alt="image-20210114131120313"></p>
-<p><strong>允许有多个缓存池实例</strong>：每个页根据hashcode平均分配到不同的缓存池实例中，减少数据库内部资源的竞争，增加数据库的并发能力。可以通过inodb_buffer_pool_instances来进行配置，通过命令SHOW ENGINE INNODB STATUS可以观察到每个缓存池实例对象运行的状态，还可以通过查看表InnoDB_BUFFER_POOL_STATS来观察缓存的状态(要求在information_schema架构下)</p>
-<h5 id="LRU-LIST-、FREE-LIST-、FLUSH-LIST"><a href="#LRU-LIST-、FREE-LIST-、FLUSH-LIST" class="headerlink" title="LRU LIST 、FREE LIST 、FLUSH LIST"></a>LRU LIST 、FREE LIST 、FLUSH LIST</h5><p><strong>LRU</strong>算法用来管理已经读取的页</p>
-<p>数据库中的缓存池是通过LRU（Latest Recent Used,最近最少使用）算法来管理内部的各种类型的页。</p>
-<p><strong>LRU解释</strong>：将最频繁使用的页放在LRU列表的前端，最少使用的页放在LRU列表的尾端。当缓存池不能存放新读取到的页时，将优先删除列表尾端的页（默认大小为16KB）。</p>
-<p><strong>改进</strong>：</p>
-<p>1、（midpoint insertion strategy）：InnoDB中在LRU中加入了midpoint位置，将新读取到的页放在midpoint，而不是直接放在LRU列表首部。<strong>默认位置在LRU列表长度63%处</strong>（可以通过innodb_old_blocks_pct来控制）</p>
-<p>2、设置了参数innodb_old_blocks_time,用于表示页读取到mid位置后需要等待多久才会加入到LRU列表的热端</p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133522544.png" alt="image-20210114133522544"></p>
-<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133412580.png" alt="image-20210114133412580"></p>
-<p><strong>为什么要对朴素的LRU算法进行改良</strong>？</p>
-<h5 id="重做日志缓存"><a href="#重做日志缓存" class="headerlink" title="重做日志缓存"></a>重做日志缓存</h5><h5 id="额外的内存池"><a href="#额外的内存池" class="headerlink" title="额外的内存池"></a>额外的内存池</h5>]]></content>
-      <categories>
-        <category>MySQL数据库</category>
-      </categories>
-      <tags>
-        <tag>InnoDB存储引擎</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>IPVS</title>
     <url>/2021/03/25/IPVS/</url>
     <content><![CDATA[<h1 id="一、LVS简介"><a href="#一、LVS简介" class="headerlink" title="一、LVS简介"></a>一、LVS简介</h1><p>LVS是Linux Virtual Server的简称，也就是Linux虚拟服务器, 是一个由章文嵩博士发起的自由软件项目，现在已经是 Linux标准内核的一部分。LVS是一种叫基于TCP/IP的负载均衡技术，转发效率极高，具有处理百万计并发连接请求的能力。</p>
@@ -609,6 +562,53 @@
       </categories>
       <tags>
         <tag>IPVS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>InnoDB存储引擎</title>
+    <url>/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
+    <content><![CDATA[<h2 id="InnoDB存储引擎"><a href="#InnoDB存储引擎" class="headerlink" title="InnoDB存储引擎"></a>InnoDB存储引擎</h2><h3 id="InnoDB体系架构"><a href="#InnoDB体系架构" class="headerlink" title="InnoDB体系架构"></a>InnoDB体系架构</h3><p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114112823026.png" alt="image-20210114112823026"></p>
+<p>InnoDB存储引擎有多个内存块，这些内存块组成了一个大的内存池</p>
+<p>后台线程的主要作用就是负责刷新内存池中的数据，保证缓存池中的内存缓存的是最近的数据。此外，还将已经修改的数据文件刷新到磁盘文件，同时保证在数据库发生异常的情况下，InnoDB可以恢复运行到最佳状态。</p>
+<h4 id="后台线程（InnDB是一个多线程模型"><a href="#后台线程（InnDB是一个多线程模型" class="headerlink" title="后台线程（InnDB是一个多线程模型)"></a>后台线程（InnDB是一个多线程模型)</h4><p>#####Master Thread</p>
+<p><strong>作用：</strong></p>
+<p>​    一个非常核心的后台进程，负责将缓存池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓存、UNDO页的回收等。</p>
+<h5 id="IO-Therad"><a href="#IO-Therad" class="headerlink" title="IO Therad"></a>IO Therad</h5><p>  在InnoDB存储引擎中大量使用了AIO（Async IO）—异步时间非阻塞IO，这样可以极大程度上提高数据库的性能。IO Thread的主要工作就是负责这些IO请求的回调</p>
+<p>共有四个IO Thread:write 、read、insert buffer、log IO thread</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114130216.png" alt="image-20210114114130216"></p>
+<p>通过命令SHOW ENGINE INNODB STASTUS\G来观察IO Thread</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114114405936.png" alt="image-20210114114405936"></p>
+<p>有四个write和read IO Thread</p>
+<p>通过innodb_read_io_threads和innodb_write_io_threads参数来进行设置</p>
+<h5 id="Purge-Thread"><a href="#Purge-Thread" class="headerlink" title="Purge Thread"></a>Purge Thread</h5><p><strong>作用</strong>：</p>
+<p>​    Purge Thread回收已经使用并且已经分配的undo页（事务提交之后，其所使用的Undolog可能就不再需要）</p>
+<p>用户需要在<strong>MySQL数据库的配置文件</strong>中添加如下命令来启用独立的Purge Thread: </p>
+<p>​        innodb_purge_threads=1</p>
+<h5 id="Page-Cleaner-Thread"><a href="#Page-Cleaner-Thread" class="headerlink" title="Page Cleaner Thread"></a>Page Cleaner Thread</h5><p><strong>作用</strong>：</p>
+<p>​    将脏页的刷新操作放在单独的线程中完成。减轻Master Thread的工作以及对于用户查询线程的阻塞</p>
+<h4 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h4><h5 id="缓存池"><a href="#缓存池" class="headerlink" title="缓存池"></a>缓存池</h5><p>Innodb存储引擎是基于磁盘存储的（Disk-base Database），将其中的记录按照页来管理。</p>
+<p>缓存池的出现，就是为了解决CPU速度和磁盘速度之间的差异，通过内存的速度来弥补磁盘速度较慢对数据库性能的影响。读取文件时，首先判断给文件是否在缓存池中（没有就去磁盘上找）。</p>
+<p>在修改缓存池中的页时，先以一定频率刷新到缓存池上，然后通过Checkpoint刷新回磁盘。</p>
+<p>数据库服务器最好采用64位操作系统，可以使用更多的内存（512GB），32位（只有64GB）。</p>
+<p>缓存池的配置通过参数innodb_buffer_pool_size来设置。</p>
+<h6 id="缓存池中缓存的数据页类型："><a href="#缓存池中缓存的数据页类型：" class="headerlink" title="缓存池中缓存的数据页类型："></a>缓存池中缓存的数据页类型：</h6><p>​    索引页、数据页、Undo页、插入缓存页、自适应哈希索引页（adaptive hash index）、InnoDB存储的锁信息、数据字典信息等。</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114131120313.png" alt="image-20210114131120313"></p>
+<p><strong>允许有多个缓存池实例</strong>：每个页根据hashcode平均分配到不同的缓存池实例中，减少数据库内部资源的竞争，增加数据库的并发能力。可以通过inodb_buffer_pool_instances来进行配置，通过命令SHOW ENGINE INNODB STATUS可以观察到每个缓存池实例对象运行的状态，还可以通过查看表InnoDB_BUFFER_POOL_STATS来观察缓存的状态(要求在information_schema架构下)</p>
+<h5 id="LRU-LIST-、FREE-LIST-、FLUSH-LIST"><a href="#LRU-LIST-、FREE-LIST-、FLUSH-LIST" class="headerlink" title="LRU LIST 、FREE LIST 、FLUSH LIST"></a>LRU LIST 、FREE LIST 、FLUSH LIST</h5><p><strong>LRU</strong>算法用来管理已经读取的页</p>
+<p>数据库中的缓存池是通过LRU（Latest Recent Used,最近最少使用）算法来管理内部的各种类型的页。</p>
+<p><strong>LRU解释</strong>：将最频繁使用的页放在LRU列表的前端，最少使用的页放在LRU列表的尾端。当缓存池不能存放新读取到的页时，将优先删除列表尾端的页（默认大小为16KB）。</p>
+<p><strong>改进</strong>：</p>
+<p>1、（midpoint insertion strategy）：InnoDB中在LRU中加入了midpoint位置，将新读取到的页放在midpoint，而不是直接放在LRU列表首部。<strong>默认位置在LRU列表长度63%处</strong>（可以通过innodb_old_blocks_pct来控制）</p>
+<p>2、设置了参数innodb_old_blocks_time,用于表示页读取到mid位置后需要等待多久才会加入到LRU列表的热端</p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133522544.png" alt="image-20210114133522544"></p>
+<p><img data-src="/2021/01/14/InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114133412580.png" alt="image-20210114133412580"></p>
+<p><strong>为什么要对朴素的LRU算法进行改良</strong>？</p>
+<h5 id="重做日志缓存"><a href="#重做日志缓存" class="headerlink" title="重做日志缓存"></a>重做日志缓存</h5><h5 id="额外的内存池"><a href="#额外的内存池" class="headerlink" title="额外的内存池"></a>额外的内存池</h5>]]></content>
+      <categories>
+        <category>MySQL数据库</category>
+      </categories>
+      <tags>
+        <tag>InnoDB存储引擎</tag>
       </tags>
   </entry>
   <entry>
@@ -678,6 +678,134 @@
       </categories>
       <tags>
         <tag>Java内存区域</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LVS负载均衡</title>
+    <url>/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</url>
+    <content><![CDATA[<blockquote>
+<h3 id="LVS是什么"><a href="#LVS是什么" class="headerlink" title="LVS是什么?"></a>LVS是什么?</h3></blockquote>
+<p>LVS，全称Linux Virtual Server，是国人章文嵩发起的一个开源项目。<br> 在社区具有很大的热度，是一个基于四层、具有强大性能的反向代理服务器。<br> <code>早期使用lvs需要修改内核才能使用，但是由于性能优异，现在已经被收入内核。</code></p>
+<p>LVS通过工作于内核的ipvs模块来实现功能，其主要工作于netfilter 的INPUT链上。<br> 而用户需要对ipvs进行操作配置则需要使用ipvsadm这个工具。<br> ipvsadm主要用于设置lvs模型、调度方式以及指定后端主机。</p>
+<blockquote>
+<h3 id="LVS中的角色"><a href="#LVS中的角色" class="headerlink" title="LVS中的角色"></a>LVS中的角色</h3></blockquote>
+<h5 id="LVS的一些相关术语"><a href="#LVS的一些相关术语" class="headerlink" title="LVS的一些相关术语"></a><strong>LVS的一些相关术语</strong></h5><p>LVS的模型中有两个角色：<br> **调度器:**Director，又称为Dispatcher，Balancer<br> <code>调度器主要用于接受用户请求。</code><br> **真实主机:**Real Server，简称为RS。<br> <code>用于真正处理用户的请求。</code></p>
+<p>而为了更好地理解，我们将所在角色的IP地址分为以下三种：<br> <strong>Director Virtual IP:**调度器用于与客户端通信的IP地址，简称为VIP<br> **Director IP</strong>:调度器用于与RealServer通信的IP地址，简称为DIP。<br> <strong>Real Server :</strong> 后端主机的用于与调度器通信的IP地址，简称为RIP。</p>
+<img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/02.webp" class>
+
+<p>基本模型</p>
+<blockquote>
+<h3 id="LVS的三种调度模式"><a href="#LVS的三种调度模式" class="headerlink" title="LVS的三种调度模式"></a>LVS的三种调度模式</h3></blockquote>
+<h3 id="LVS-NATNetwork-Address-Transform"><a href="#LVS-NATNetwork-Address-Transform" class="headerlink" title="LVS-NATNetwork Address Transform"></a>LVS-NAT<code>Network Address Transform</code></h3><h6 id="示意图和调度步骤"><a href="#示意图和调度步骤" class="headerlink" title="示意图和调度步骤"></a><strong>示意图和调度步骤</strong></h6><img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/01.webp" class>
+
+<p>LVS-NAT</p>
+<h6 id="原理："><a href="#原理：" class="headerlink" title="原理："></a><strong>原理：</strong></h6><p>基于ip伪装<code>MASQUERADES</code>，原理是多目标DNAT。<br> 所以请求和响应都经由Director调度器。</p>
+<h6 id="LVS-NAT的优点与缺点"><a href="#LVS-NAT的优点与缺点" class="headerlink" title="LVS-NAT的优点与缺点"></a><strong>LVS-NAT的优点与缺点</strong></h6><h6 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h6><ul>
+<li>支持端口映射</li>
+<li>RS可以使用任意操作系统</li>
+<li>节省公有IP地址。<br> <code>RIP和DIP都应该使用同一网段私有地址，而且RS的网关要指向DIP。</code><br> <code>使用nat另外一个好处就是后端的主机相对比较安全。</code></li>
+</ul>
+<h6 id="缺点："><a href="#缺点：" class="headerlink" title="缺点："></a>缺点：</h6><ul>
+<li>请求和响应报文都要经过Director转发;极高负载时，Director可能成为系统瓶颈。<br> <code>就是效率低的意思。</code></li>
+</ul>
+<h3 id="LVS-TUNIP-Tuneling"><a href="#LVS-TUNIP-Tuneling" class="headerlink" title="LVS-TUNIP Tuneling"></a>LVS-TUN<code>IP Tuneling</code></h3><h6 id="示意图和调度步骤-1"><a href="#示意图和调度步骤-1" class="headerlink" title="示意图和调度步骤"></a><strong>示意图和调度步骤</strong></h6><img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/03.webp" class>
+
+<p>LVS-TUN</p>
+<h6 id="原理：-1"><a href="#原理：-1" class="headerlink" title="原理："></a><strong>原理：</strong></h6><p>基于隧道封装技术。在IP报文的外面再包一层IP报文。<br> 当Director接收到请求的时候，选举出调度的RealServer<br> 当接受到从Director而来的请求时，RealServer则会使用lo接口上的VIP直接响应CIP。<br> 这样CIP请求VIP的资源，收到的也是VIP响应。</p>
+<h6 id="LVS-TUN的优点与缺点"><a href="#LVS-TUN的优点与缺点" class="headerlink" title="LVS-TUN的优点与缺点"></a><strong>LVS-TUN的优点与缺点</strong></h6><h6 id="优点：-1"><a href="#优点：-1" class="headerlink" title="优点："></a>优点：</h6><ul>
+<li>RIP,VIP,DIP都应该使用公网地址，且RS网关不指向DIP;<br> <code>只接受进站请求，解决了LVS-NAT时的问题，减少负载。</code><br> <code>请求报文经由Director调度，但是响应报文不需经由Director。</code></li>
+</ul>
+<h6 id="缺点：-1"><a href="#缺点：-1" class="headerlink" title="缺点："></a>缺点：</h6><ul>
+<li>不指向Director所以不支持端口映射。</li>
+<li>RS的OS必须支持隧道功能。</li>
+<li>隧道技术会额外花费性能，增大开销。</li>
+</ul>
+<h3 id="LVS-DRDirect-Routing"><a href="#LVS-DRDirect-Routing" class="headerlink" title="LVS-DRDirect Routing"></a>LVS-DR<code>Direct Routing</code></h3><h6 id="示意图和调度步骤-2"><a href="#示意图和调度步骤-2" class="headerlink" title="示意图和调度步骤"></a><strong>示意图和调度步骤</strong></h6><img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/04.webp" class>
+
+<p>LVS-DR</p>
+<h6 id="原理"><a href="#原理" class="headerlink" title="原理"></a><strong>原理</strong></h6><p>当Director接收到请求之后，通过调度方法选举出RealServer。<br> 讲目标地址的MAC地址改为RealServer的MAC地址。<br> RealServer接受到转发而来的请求，发现目标地址是VIP。<code>RealServer配置在lo接口上。</code><br> 处理请求之后则使用lo接口上的VIP响应CIP。</p>
+<h6 id="LVS-DR的优点与缺点"><a href="#LVS-DR的优点与缺点" class="headerlink" title="LVS-DR的优点与缺点"></a><strong>LVS-DR的优点与缺点</strong></h6><h6 id="优点：-2"><a href="#优点：-2" class="headerlink" title="优点："></a>优点：</h6><ul>
+<li>RIP可以使用私有地址，也可以使用公网地址。<br> <code>只要求DIP和RIP的地址在同一个网段内。</code></li>
+<li>请求报文经由Director调度，但是响应报文不经由Director。</li>
+<li>RS可以使用大多数OS</li>
+</ul>
+<h6 id="缺点：-2"><a href="#缺点：-2" class="headerlink" title="缺点："></a>缺点：</h6><ul>
+<li>不支持端口映射。</li>
+<li>不能跨局域网。</li>
+</ul>
+<h6 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h6><p>三种模型虽然各有利弊，但是由于追求性能和便捷，DR是目前用得最多的LVS模型。</p>
+<blockquote>
+<h3 id="LVS的八种调度方法"><a href="#LVS的八种调度方法" class="headerlink" title="LVS的八种调度方法"></a>LVS的八种调度方法</h3></blockquote>
+<h5 id="静态方法-仅依据算法本身进行轮询调度"><a href="#静态方法-仅依据算法本身进行轮询调度" class="headerlink" title="静态方法:仅依据算法本身进行轮询调度"></a>静态方法:仅依据算法本身进行轮询调度</h5><ul>
+<li>RR:Round Robin,轮调<br> <code>一个接一个，自上而下</code></li>
+<li>WRR:Weighted RR，加权论调<br> <code>加权，手动让能者多劳。</code></li>
+<li>SH:SourceIP Hash<br> <code>来自同一个IP地址的请求都将调度到同一个RealServer</code></li>
+<li>DH:Destination Hash<br> <code>不管IP，请求特定的东西，都定义到同一个RS上。</code></li>
+</ul>
+<h5 id="动态方法-根据算法及RS的当前负载状态进行调度"><a href="#动态方法-根据算法及RS的当前负载状态进行调度" class="headerlink" title="动态方法:根据算法及RS的当前负载状态进行调度"></a>动态方法:根据算法及RS的当前负载状态进行调度</h5><ul>
+<li>LC:least connections(最小链接数)<br> <code>链接最少，也就是Overhead最小就调度给谁。</code><br> <code>假如都一样，就根据配置的RS自上而下调度。</code></li>
+<li>WLC:Weighted Least Connection (加权最小连接数)<br> <code>这个是LVS的默认算法。</code></li>
+<li>SED:Shortest Expection Delay(最小期望延迟)<br> <code>WLC算法的改进。</code></li>
+<li>NQ:Never Queue<br> <code>SED算法的改进。</code></li>
+<li>LBLC:Locality-Based Least-Connection,基于局部的的LC算法<br> 正向代理缓存机制。访问缓存服务器，调高缓存的命中率。<br> 和传统DH算法比较，考虑缓存服务器负载。可以看做是DH+LC<br> 如果有两个缓存服务器<br> 1.只要调度到其中的一个缓存服务器，那缓存服务器内就会记录下来。下一次访问同一个资源的时候也就是这个服务器了。   (DH)<br> 2.有一个用户从来没有访问过这两个缓存服务器，那就分配到负载较小的服务器。<code>LC</code></li>
+</ul>
+<p>LBLCR:Locality-Based Least-Connection  with  Replication(带复制的lblc算法)<br> 缓存服务器中的缓存可以互相复制。<br> 因为即使没有，也能立即从另外一个服务器内复制一份，并且均衡负载</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">man ipvsadm有讲这几种动态或者静态的rs调度方法</span><br></pre></td></tr></table></figure>
+<blockquote>
+<h4 id="配置LVS-DR"><a href="#配置LVS-DR" class="headerlink" title="配置LVS-DR"></a>配置LVS-DR</h4></blockquote>
+<table>
+<thead>
+<tr>
+<th align="center">主机名</th>
+<th align="center">主机地址</th>
+<th align="center">角色</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">node1</td>
+<td align="center">DIP:192.168.2.201，VIP:192.168.2.211</td>
+<td align="center">Director</td>
+</tr>
+<tr>
+<td align="center">node3</td>
+<td align="center">RIP:192.168.2.203，VIP:192.168.2.211</td>
+<td align="center">RealServer</td>
+</tr>
+<tr>
+<td align="center">node4</td>
+<td align="center">RIP:192.168.2.204，VIP:192.168.2.211</td>
+<td align="center">RealServer</td>
+</tr>
+</tbody></table>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">本文中的主机系统均为CentOS7.1，Apache2.4，数据库：MariaDB-5.5.50</span><br></pre></td></tr></table></figure>
+<p>实验拓扑：</p>
+<img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/05.webp" class>
+
+<p>lvs-dr实验拓扑</p>
+<p><strong>(1)在Director上配置VIP和DIP</strong></p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">  [root@bc ~]# vim /etc/sysconfig/network-scripts/ifcfg-eno16777736</span><br><span class="line">    TYPE=Ethernet</span><br><span class="line">    BOOTPROTO=<span class="string">&quot;static&quot;</span></span><br><span class="line">    DEFROUTE=yes</span><br><span class="line">    PEERDNS=yes</span><br><span class="line">    PEERROUTES=yes</span><br><span class="line">    NAME=eno16777736</span><br><span class="line">    DEVICE=eno16777736</span><br><span class="line">    ONBOOT=yes</span><br><span class="line">    IPADDR=<span class="string">&quot;192.168.2.201&quot;</span></span><br><span class="line">    NETMASK=<span class="string">&quot;255.255.255.0&quot;</span></span><br><span class="line">    DNS1=<span class="string">&quot;192.168.2.1&quot;</span></span><br><span class="line">    GATEWAY=<span class="string">&quot;192.168.2.1&quot;</span></span><br><span class="line"></span><br><span class="line">[root@bc ~]# vim /etc/sysconfig/network-scripts/ifcfg-eno16777736:0</span><br><span class="line">    TYPE=Ethernet</span><br><span class="line">    BOOTPROTO=<span class="string">&quot;static&quot;</span></span><br><span class="line">    NAME=eno16777736:<span class="number">0</span></span><br><span class="line">    ONBOOT=yes</span><br><span class="line">    IPADDR=<span class="string">&quot;192.168.2.211&quot;</span></span><br><span class="line">    NETMASK=<span class="string">&quot;255.255.255.0&quot;</span></span><br><span class="line">    DNS1=<span class="string">&quot;192.168.2.1&quot;</span></span><br><span class="line">    GATEWAY=<span class="string">&quot;192.168.2.1&quot;</span></span><br><span class="line">    ONPARENT=yes</span><br></pre></td></tr></table></figure>
+<p>重启网络之后查看配置</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">[root@bc ~]# service NetworkManager stop</span><br><span class="line">  Redirecting to /bin/systemctl stop  NetworkManager.service</span><br><span class="line">[root@bc ~]# service network restart</span><br><span class="line">  Restarting network (via systemctl):                        [  OK  ]</span><br><span class="line">[root@bc ~]# ifconfig</span><br><span class="line">  eno16777736: flags=<span class="number">4163</span>&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu <span class="number">1500</span></span><br><span class="line">        inet <span class="number">192.168</span><span class="number">.2</span><span class="number">.201</span>  netmask <span class="number">255.255</span><span class="number">.255</span><span class="number">.0</span>  broadcast <span class="number">192.168</span><span class="number">.2</span><span class="number">.255</span></span><br><span class="line">        inet6 fe80::<span class="number">250</span>:56ff:fe3c:d757  prefixlen <span class="number">64</span>  scopeid <span class="number">0x20</span>&lt;link&gt;</span><br><span class="line">        ether <span class="number">00</span>:<span class="number">50</span>:<span class="number">56</span>:3c:d7:<span class="number">57</span>  txqueuelen <span class="number">1000</span>  (Ethernet)</span><br><span class="line">        RX packets <span class="number">88853</span>  bytes <span class="number">14843664</span> (<span class="number">14.1</span> MiB)</span><br><span class="line">        RX errors <span class="number">0</span>  dropped <span class="number">0</span>  overruns <span class="number">0</span>  frame <span class="number">0</span></span><br><span class="line">        TX packets <span class="number">79195</span>  bytes <span class="number">6551143</span> (<span class="number">6.2</span> MiB)</span><br><span class="line">        TX errors <span class="number">0</span>  dropped <span class="number">0</span> overruns <span class="number">0</span>  carrier <span class="number">0</span>  collisions <span class="number">0</span></span><br><span class="line"></span><br><span class="line">  eno16777736:<span class="number">0</span>: flags=<span class="number">4163</span>&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu <span class="number">1500</span></span><br><span class="line">        inet <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span>  netmask <span class="number">255.255</span><span class="number">.255</span><span class="number">.0</span>  broadcast <span class="number">192.168</span><span class="number">.2</span><span class="number">.255</span></span><br><span class="line">        ether <span class="number">00</span>:<span class="number">50</span>:<span class="number">56</span>:3c:d7:<span class="number">57</span>  txqueuelen <span class="number">1000</span>  (Ethernet)</span><br><span class="line"></span><br><span class="line">  lo: flags=<span class="number">73</span>&lt;UP,LOOPBACK,RUNNING&gt;  mtu <span class="number">65536</span></span><br><span class="line">        inet <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>  netmask <span class="number">255.0</span><span class="number">.0</span><span class="number">.0</span></span><br><span class="line">        inet6 ::<span class="number">1</span>  prefixlen <span class="number">128</span>  scopeid <span class="number">0x10</span>&lt;host&gt;</span><br><span class="line">        loop  txqueuelen <span class="number">0</span>  (Local Loopback)</span><br><span class="line">        RX packets <span class="number">12998</span>  bytes <span class="number">1140269</span> (<span class="number">1.0</span> MiB)</span><br><span class="line">        RX errors <span class="number">0</span>  dropped <span class="number">0</span>  overruns <span class="number">0</span>  frame <span class="number">0</span></span><br><span class="line">        TX packets <span class="number">12998</span>  bytes <span class="number">1140269</span> (<span class="number">1.0</span> MiB)</span><br><span class="line">        TX errors <span class="number">0</span>  dropped <span class="number">0</span> overruns <span class="number">0</span>  carrier <span class="number">0</span>  collisions <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p><strong>(2)Director使用ipvsadm修改创建ipvs规则</strong></p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">[root@bc ~]# ipvsadm -A -t 192.168.2.211:80 -s rr</span><br><span class="line">[root@bc ~]# ipvsadm -a -t 192.168.2.211:80 -r 192.168.2.203 -g</span><br><span class="line">[root@bc ~]# ipvsadm -a -t 192.168.2.211:80 -r 192.168.2.204 -g</span><br><span class="line">[root@bc ~]# ipvsadm -L -n</span><br><span class="line">IP Virtual Server version <span class="number">1.2</span><span class="number">.1</span> (size=<span class="number">4096</span>)</span><br><span class="line">Prot LocalAddress:Port Scheduler Flags</span><br><span class="line">  -&gt; RemoteAddress:Port           Forward Weight ActiveConn InActConn</span><br><span class="line">TCP  <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span>:<span class="number">80</span> rr</span><br><span class="line">  -&gt; <span class="number">192.168</span><span class="number">.2</span><span class="number">.203</span>:<span class="number">80</span>             Route   <span class="number">1</span>      <span class="number">0</span>          <span class="number">0</span>         </span><br><span class="line">  -&gt; <span class="number">192.168</span><span class="number">.2</span><span class="number">.204</span>:<span class="number">80</span>             Route   <span class="number">1</span>      <span class="number">0</span>          <span class="number">0</span>   </span><br></pre></td></tr></table></figure>
+<p><strong>(3)RealServer安装httpd</strong></p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">[root@node3 ~]# yum install httpd -y</span><br><span class="line">[root@node4 ~]# yum install httpd -y</span><br></pre></td></tr></table></figure>
+<p><code>可以在里面放一个Wordpress,也可以简单echo几个字到index.html</code><br> <strong>(4)node3和node4修改RealServer内核参数</strong></p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">echo <span class="string">&quot;1&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/ip_forward</span><br><span class="line">echo <span class="string">&quot;2&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/conf/all/arp_announce</span><br><span class="line">echo <span class="string">&quot;1&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/conf/all/arp_ignore</span><br><span class="line">echo <span class="string">&quot;1&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/conf/lo/arp_ignore</span><br><span class="line">echo <span class="string">&quot;2&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/conf/lo/arp_announce</span><br><span class="line">ifconfig lo:<span class="number">0</span> <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span>/<span class="number">32</span> broadcast <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span> up</span><br><span class="line">route add -host <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span> dev lo:<span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p><code>修改内核参数，并且配置VIP地址到RealServer的loopback接口上。</code><br> <strong><code>那样的话，当RealServer接到从Director转发而来的数据报文时，RealServer也不会丢弃报文。</code></strong><br> <code>同时，修改了RealServer的参数，局域网内的arp表就只有Director有VIP。</code><br> <code>RealServer的的机器上有VIP这件事，只有RealServer自己知道。</code><br> <strong><code>这样可以保证，当请求到来的时候，第一个会送到Director那里去。</code></strong></p>
+<p><strong>(5)测试结果</strong></p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">[root@node3 httpd]# vim  /var/log/httpd/access_log </span><br><span class="line">[root@node4 httpd]# vim  /var/log/httpd/access_log </span><br></pre></td></tr></table></figure>
+<p>效果差不多就是这样:<br> <code>因为我们使用了RR静态调度方法,所以这node3和node4的请求是一人一个。</code></p>
+<img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/06.webp" class>
+
+
+
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>负载均衡</tag>
       </tags>
   </entry>
   <entry>
@@ -909,6 +1037,101 @@
       </tags>
   </entry>
   <entry>
+    <title>Maven学习笔记</title>
+    <url>/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-3/</url>
+    <content><![CDATA[<h3 id="Maven仓库的基本概念"><a href="#Maven仓库的基本概念" class="headerlink" title="Maven仓库的基本概念"></a>Maven仓库的基本概念</h3><p> 当第⼀次运⾏Maven命令的时候， 你需要Internet链接， 因为它需要从⽹上下载⼀些⽂件。 那么它从 哪⾥下载呢？ 它是从Maven默认的远程库下载的。 这个远程仓库有Maven的核⼼插件和可供下载的jar⽂件。</p>
+<p>对于Maven来说， 仓库只分为两类： 本地仓库和远程仓库。</p>
+<p>当Maven根据坐标寻找构件的时候，它⾸先会查看本地仓库，如果本地仓库存在，则直接使⽤； 如果 本地没有，Maven就会去远程仓库查找，发现需要的构件之后，下载到本地仓库再使⽤。 如果本地仓库和远程仓库都没有，Maven就会报错。 </p>
+<p>远程仓库分为三种： 中央仓库，私服， 其他公共库。</p>
+<ul>
+<li><p>中央仓库：默认配置下，Maven下载jar包的地⽅。</p>
+<blockquote>
+<p>由于原始的本地仓库是空的，maven必须知道⾄少⼀个可⽤的远程仓库，才能执⾏maven命令的时候 下载到需要的构件。中央仓库就是这样⼀个默认的远程仓库。 maven-model-builder-3.3.9.jar maven⾃动的 jar 中包含了⼀个 超级POM。定义了默认中央仓库的位 置。 中央仓库包含了2000多个开源项⽬，接收每天1亿次以上的访问</p>
+</blockquote>
+</li>
+<li><p>私服：是另⼀种特殊的远程仓库，为了节省带宽和时间，应该在局域⽹内架设⼀个私有的仓库服务器， ⽤其代理所有外部的远程仓库。 内部的项⽬还能部署到私服上供其他项⽬使用</p>
+<blockquote>
+<p>私服是⼀种特殊的远程仓库，它是架设在局域⽹内的仓库服务， 私服代理⼴域⽹上的远程仓库，供局 域⽹内的maven⽤户使⽤。 当maven需要下载构件时， 它去私服当中找，如果私服没有， 则从外部远 程仓库下载，并缓存在私服上， 再为maven提供。 此外，⼀些⽆法从外部仓库下载的构件也能从本地上传到私服提供局域⽹中其他⼈使⽤</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">repositories</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">snapshots</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">enabled</span>&gt;</span>true<span class="tag">&lt;/<span class="name">enabled</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;/<span class="name">snapshots</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">id</span>&gt;</span>public<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>Public Repositories<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://192.168.0.96:8081/content/groups/public/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">id</span>&gt;</span>getui-nexus<span class="tag">&lt;/<span class="name">id</span>&gt;</span>       				<span class="tag">&lt;<span class="name">url</span>&gt;</span>http://mvn.gt.igexin.com/nexus/content/repositories/releases/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">repositories</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<p>公司内部为何需要建立私服：</p>
+<blockquote>
+<p>节省⾃⼰的外⽹带宽 加速maven构建 部署第三⽅控件 提⾼稳定性 降低中央仓库的负荷</p>
+</blockquote>
+<p>常用的阿里云仓库配置，需要修改settings.xml文件</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus-aliyun<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">name</span>&gt;</span>Nexus aliyun<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+<p>⼀般来说，在Maven项⽬⽬录下，没有诸如lib/这样⽤来存放依赖⽂件的⽬录。 当Maven在执⾏编译或 测试时，如果需要使⽤依赖⽂件，它总是基于坐标使⽤本地仓库的依赖⽂件。</p>
+<p>每个⽤户在⾃⼰的⽤户⽬录下都有⼀个路径名为.m2/repository/的仓库⽬录。 有时候， 因为某些原因（⽐如c盘空间不⾜）,需要修改本地仓库⽬录地址。</p>
+<p>对于仓库路径的修改，可以通过maven 配置⽂件conf ⽬录下settings.xml来指定仓库路径。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置到指定⽬录中，路径的斜杆不要写反 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">settings</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">localRepository</span>&gt;</span>D:/m2/repository<span class="tag">&lt;/<span class="name">localRepository</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+<h3 id="Maven依赖的基本概念"><a href="#Maven依赖的基本概念" class="headerlink" title="Maven依赖的基本概念"></a>Maven依赖的基本概念</h3><p>根元素project下的dependencies可以包含多个 dependence元素，以声明多个依赖。每个依赖都应该包含以下元素：</p>
+<ol>
+<li><p>groupId, artifactId, version : 依赖的基本坐标， 对于任何⼀个依赖来说，基本坐标是最重要的， Maven根据坐标才能找到需要的依赖。</p>
+</li>
+<li><p>Type： 依赖的类型，⼤部分情况下不需要声明。 默认值为jar</p>
+</li>
+<li><p>Scope： 依赖范围（compile,test,provided,runtime,system）</p>
+</li>
+</ol>
+<blockquote>
+<p>compile：编译依赖范围</p>
+</blockquote>
+<p>如果没有指定，就会默认使⽤该依赖范围。使⽤此依赖范围的Maven依赖，对于编译、测 试、运⾏三种classpath都有效。</p>
+<blockquote>
+<p>test：测试依赖范围</p>
+</blockquote>
+<p>使⽤此依赖范围的Maven依赖，只对于测试classpath有效，在编译主代码或者运⾏项⽬的使 ⽤时将⽆法使⽤此类依赖。典型的例⼦就是JUnit，它只有在编译测试代码及运⾏测试的时候才需要</p>
+<blockquote>
+<p>provided：已提供依赖范围</p>
+</blockquote>
+<p>使⽤此依赖范围的Maven依赖，对于编译和测试classpath有效，但在运⾏时⽆效。典型的例 ⼦是servlet-api，编译和测试项⽬的时候需要该依赖，但在运⾏项⽬的时候，由于容器已经提供，就不需要Maven重复地引⼊⼀遍(如：servlet-api)。</p>
+<blockquote>
+<p>runtime：运行时依赖范围</p>
+</blockquote>
+<p>使⽤此依赖范围的Maven依赖，对于测试和运⾏classpath有效，但在编译主代码时⽆效。典 型的例⼦是JDBC驱动实现，项⽬主代码的编译只需要JDK提供的JDBC接⼝，只有在执⾏测 试或者运⾏项⽬的时候才需要实现上述接⼝的具体JDBC驱动。</p>
+<blockquote>
+<p>system：系统依赖范围</p>
+</blockquote>
+<p>该依赖与三种classpath的关系，和provided依赖范围完全⼀致。但是，使⽤system范围依赖 时必须通过systemPath元素显式地指定依赖⽂件的路径。由于此类依赖不是通过Maven仓库 解析的，⽽且往往与本机系统绑定，可能造成构建的不可移植，因此应该谨慎使⽤。</p>
+<ol start="4">
+<li><p>Optional：标记依赖是否可选</p>
+</li>
+<li><p>Exclusions： ⽤来排除传递性依赖。</p>
+</li>
+</ol>
+<h3 id="Maven依赖的依赖范围"><a href="#Maven依赖的依赖范围" class="headerlink" title="Maven依赖的依赖范围"></a>Maven依赖的依赖范围</h3><p>⾸先需要知道，Maven在编译项⽬主代码的时候需要使⽤⼀套classpath。 ⽐如：编译项⽬代码的时候 需要⽤到spring-core, 该⽂件以依赖的⽅式被引⼊到classpath中。 其次， Maven在执⾏测试的时候会使 ⽤另外⼀套classpath。 如：junit。</p>
+<p>最后在实际运⾏项⽬时，⼜会使⽤⼀套classpath， spring-core需要在该classpath中，⽽junit不需要。</p>
+<p>那么依赖范围就是⽤来控制依赖与这三种classpath(编译classpath，测试classpath，运⾏时classpath)的 关系， Maven有以下⼏种依赖范围：<strong>（如上所述）</strong></p>
+<h3 id="传递性依赖"><a href="#传递性依赖" class="headerlink" title="传递性依赖"></a>传递性依赖</h3><p>传递依赖机制， 让我们在使⽤某个jar的时候就不⽤去考虑它依赖了什么。也不⽤担⼼引⼊多余的依 赖。 Maven会解析各个直接依赖的POM，将那些必要的间接依赖，以传递性依赖的形式引⼊到当前项⽬中。</p>
+<p><strong>注意：传递依赖有可能产生冲突</strong></p>
+<p>冲突场景”</p>
+<blockquote>
+<p>A–&gt;B—&gt;C (2.0) </p>
+<p>A–&gt;E—&gt;C (1.0)</p>
+</blockquote>
+<p>如果A下同时存在两个不同version的C，冲突！！（选取同时适合A、B的版本）</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">version</span>&gt;</span>xxx<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>项目工具</category>
+      </categories>
+      <tags>
+        <tag>Maven</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Maven学习笔记&lt;一&gt;</title>
     <url>/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</url>
     <content><![CDATA[<h2 id="Maven的简介"><a href="#Maven的简介" class="headerlink" title="Maven的简介"></a>Maven的简介</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p> Maven【[ˈmevən]】这个词可以翻译为”专家”,”内⾏”。 作为Apache组织中的⼀个颇为成功的开源项⽬， Maven主要服务于基于java平台的项⽬构建，依赖管理和项⽬信息管理。 ⽆论是⼩型的开源类库项⽬，还是⼤型的企业级应⽤； ⽆论是传统的瀑布式开发，还是流⾏的敏捷开 发，Maven都能⼤显身⼿。</p>
@@ -1076,229 +1299,6 @@
       </categories>
       <tags>
         <tag>Maven</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Maven学习笔记</title>
-    <url>/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-3/</url>
-    <content><![CDATA[<h3 id="Maven仓库的基本概念"><a href="#Maven仓库的基本概念" class="headerlink" title="Maven仓库的基本概念"></a>Maven仓库的基本概念</h3><p> 当第⼀次运⾏Maven命令的时候， 你需要Internet链接， 因为它需要从⽹上下载⼀些⽂件。 那么它从 哪⾥下载呢？ 它是从Maven默认的远程库下载的。 这个远程仓库有Maven的核⼼插件和可供下载的jar⽂件。</p>
-<p>对于Maven来说， 仓库只分为两类： 本地仓库和远程仓库。</p>
-<p>当Maven根据坐标寻找构件的时候，它⾸先会查看本地仓库，如果本地仓库存在，则直接使⽤； 如果 本地没有，Maven就会去远程仓库查找，发现需要的构件之后，下载到本地仓库再使⽤。 如果本地仓库和远程仓库都没有，Maven就会报错。 </p>
-<p>远程仓库分为三种： 中央仓库，私服， 其他公共库。</p>
-<ul>
-<li><p>中央仓库：默认配置下，Maven下载jar包的地⽅。</p>
-<blockquote>
-<p>由于原始的本地仓库是空的，maven必须知道⾄少⼀个可⽤的远程仓库，才能执⾏maven命令的时候 下载到需要的构件。中央仓库就是这样⼀个默认的远程仓库。 maven-model-builder-3.3.9.jar maven⾃动的 jar 中包含了⼀个 超级POM。定义了默认中央仓库的位 置。 中央仓库包含了2000多个开源项⽬，接收每天1亿次以上的访问</p>
-</blockquote>
-</li>
-<li><p>私服：是另⼀种特殊的远程仓库，为了节省带宽和时间，应该在局域⽹内架设⼀个私有的仓库服务器， ⽤其代理所有外部的远程仓库。 内部的项⽬还能部署到私服上供其他项⽬使用</p>
-<blockquote>
-<p>私服是⼀种特殊的远程仓库，它是架设在局域⽹内的仓库服务， 私服代理⼴域⽹上的远程仓库，供局 域⽹内的maven⽤户使⽤。 当maven需要下载构件时， 它去私服当中找，如果私服没有， 则从外部远 程仓库下载，并缓存在私服上， 再为maven提供。 此外，⼀些⽆法从外部仓库下载的构件也能从本地上传到私服提供局域⽹中其他⼈使⽤</p>
-</blockquote>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">repositories</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">snapshots</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">enabled</span>&gt;</span>true<span class="tag">&lt;/<span class="name">enabled</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;/<span class="name">snapshots</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">id</span>&gt;</span>public<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>Public Repositories<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://192.168.0.96:8081/content/groups/public/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">id</span>&gt;</span>getui-nexus<span class="tag">&lt;/<span class="name">id</span>&gt;</span>       				<span class="tag">&lt;<span class="name">url</span>&gt;</span>http://mvn.gt.igexin.com/nexus/content/repositories/releases/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">repositories</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<p>公司内部为何需要建立私服：</p>
-<blockquote>
-<p>节省⾃⼰的外⽹带宽 加速maven构建 部署第三⽅控件 提⾼稳定性 降低中央仓库的负荷</p>
-</blockquote>
-<p>常用的阿里云仓库配置，需要修改settings.xml文件</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus-aliyun<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">name</span>&gt;</span>Nexus aliyun<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-<p>⼀般来说，在Maven项⽬⽬录下，没有诸如lib/这样⽤来存放依赖⽂件的⽬录。 当Maven在执⾏编译或 测试时，如果需要使⽤依赖⽂件，它总是基于坐标使⽤本地仓库的依赖⽂件。</p>
-<p>每个⽤户在⾃⼰的⽤户⽬录下都有⼀个路径名为.m2/repository/的仓库⽬录。 有时候， 因为某些原因（⽐如c盘空间不⾜）,需要修改本地仓库⽬录地址。</p>
-<p>对于仓库路径的修改，可以通过maven 配置⽂件conf ⽬录下settings.xml来指定仓库路径。</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置到指定⽬录中，路径的斜杆不要写反 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">settings</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">localRepository</span>&gt;</span>D:/m2/repository<span class="tag">&lt;/<span class="name">localRepository</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-<h3 id="Maven依赖的基本概念"><a href="#Maven依赖的基本概念" class="headerlink" title="Maven依赖的基本概念"></a>Maven依赖的基本概念</h3><p>根元素project下的dependencies可以包含多个 dependence元素，以声明多个依赖。每个依赖都应该包含以下元素：</p>
-<ol>
-<li><p>groupId, artifactId, version : 依赖的基本坐标， 对于任何⼀个依赖来说，基本坐标是最重要的， Maven根据坐标才能找到需要的依赖。</p>
-</li>
-<li><p>Type： 依赖的类型，⼤部分情况下不需要声明。 默认值为jar</p>
-</li>
-<li><p>Scope： 依赖范围（compile,test,provided,runtime,system）</p>
-</li>
-</ol>
-<blockquote>
-<p>compile：编译依赖范围</p>
-</blockquote>
-<p>如果没有指定，就会默认使⽤该依赖范围。使⽤此依赖范围的Maven依赖，对于编译、测 试、运⾏三种classpath都有效。</p>
-<blockquote>
-<p>test：测试依赖范围</p>
-</blockquote>
-<p>使⽤此依赖范围的Maven依赖，只对于测试classpath有效，在编译主代码或者运⾏项⽬的使 ⽤时将⽆法使⽤此类依赖。典型的例⼦就是JUnit，它只有在编译测试代码及运⾏测试的时候才需要</p>
-<blockquote>
-<p>provided：已提供依赖范围</p>
-</blockquote>
-<p>使⽤此依赖范围的Maven依赖，对于编译和测试classpath有效，但在运⾏时⽆效。典型的例 ⼦是servlet-api，编译和测试项⽬的时候需要该依赖，但在运⾏项⽬的时候，由于容器已经提供，就不需要Maven重复地引⼊⼀遍(如：servlet-api)。</p>
-<blockquote>
-<p>runtime：运行时依赖范围</p>
-</blockquote>
-<p>使⽤此依赖范围的Maven依赖，对于测试和运⾏classpath有效，但在编译主代码时⽆效。典 型的例⼦是JDBC驱动实现，项⽬主代码的编译只需要JDK提供的JDBC接⼝，只有在执⾏测 试或者运⾏项⽬的时候才需要实现上述接⼝的具体JDBC驱动。</p>
-<blockquote>
-<p>system：系统依赖范围</p>
-</blockquote>
-<p>该依赖与三种classpath的关系，和provided依赖范围完全⼀致。但是，使⽤system范围依赖 时必须通过systemPath元素显式地指定依赖⽂件的路径。由于此类依赖不是通过Maven仓库 解析的，⽽且往往与本机系统绑定，可能造成构建的不可移植，因此应该谨慎使⽤。</p>
-<ol start="4">
-<li><p>Optional：标记依赖是否可选</p>
-</li>
-<li><p>Exclusions： ⽤来排除传递性依赖。</p>
-</li>
-</ol>
-<h3 id="Maven依赖的依赖范围"><a href="#Maven依赖的依赖范围" class="headerlink" title="Maven依赖的依赖范围"></a>Maven依赖的依赖范围</h3><p>⾸先需要知道，Maven在编译项⽬主代码的时候需要使⽤⼀套classpath。 ⽐如：编译项⽬代码的时候 需要⽤到spring-core, 该⽂件以依赖的⽅式被引⼊到classpath中。 其次， Maven在执⾏测试的时候会使 ⽤另外⼀套classpath。 如：junit。</p>
-<p>最后在实际运⾏项⽬时，⼜会使⽤⼀套classpath， spring-core需要在该classpath中，⽽junit不需要。</p>
-<p>那么依赖范围就是⽤来控制依赖与这三种classpath(编译classpath，测试classpath，运⾏时classpath)的 关系， Maven有以下⼏种依赖范围：<strong>（如上所述）</strong></p>
-<h3 id="传递性依赖"><a href="#传递性依赖" class="headerlink" title="传递性依赖"></a>传递性依赖</h3><p>传递依赖机制， 让我们在使⽤某个jar的时候就不⽤去考虑它依赖了什么。也不⽤担⼼引⼊多余的依 赖。 Maven会解析各个直接依赖的POM，将那些必要的间接依赖，以传递性依赖的形式引⼊到当前项⽬中。</p>
-<p><strong>注意：传递依赖有可能产生冲突</strong></p>
-<p>冲突场景”</p>
-<blockquote>
-<p>A–&gt;B—&gt;C (2.0) </p>
-<p>A–&gt;E—&gt;C (1.0)</p>
-</blockquote>
-<p>如果A下同时存在两个不同version的C，冲突！！（选取同时适合A、B的版本）</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">version</span>&gt;</span>xxx<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>项目工具</category>
-      </categories>
-      <tags>
-        <tag>Maven</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>LVS负载均衡</title>
-    <url>/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</url>
-    <content><![CDATA[<blockquote>
-<h3 id="LVS是什么"><a href="#LVS是什么" class="headerlink" title="LVS是什么?"></a>LVS是什么?</h3></blockquote>
-<p>LVS，全称Linux Virtual Server，是国人章文嵩发起的一个开源项目。<br> 在社区具有很大的热度，是一个基于四层、具有强大性能的反向代理服务器。<br> <code>早期使用lvs需要修改内核才能使用，但是由于性能优异，现在已经被收入内核。</code></p>
-<p>LVS通过工作于内核的ipvs模块来实现功能，其主要工作于netfilter 的INPUT链上。<br> 而用户需要对ipvs进行操作配置则需要使用ipvsadm这个工具。<br> ipvsadm主要用于设置lvs模型、调度方式以及指定后端主机。</p>
-<blockquote>
-<h3 id="LVS中的角色"><a href="#LVS中的角色" class="headerlink" title="LVS中的角色"></a>LVS中的角色</h3></blockquote>
-<h5 id="LVS的一些相关术语"><a href="#LVS的一些相关术语" class="headerlink" title="LVS的一些相关术语"></a><strong>LVS的一些相关术语</strong></h5><p>LVS的模型中有两个角色：<br> **调度器:**Director，又称为Dispatcher，Balancer<br> <code>调度器主要用于接受用户请求。</code><br> **真实主机:**Real Server，简称为RS。<br> <code>用于真正处理用户的请求。</code></p>
-<p>而为了更好地理解，我们将所在角色的IP地址分为以下三种：<br> <strong>Director Virtual IP:**调度器用于与客户端通信的IP地址，简称为VIP<br> **Director IP</strong>:调度器用于与RealServer通信的IP地址，简称为DIP。<br> <strong>Real Server :</strong> 后端主机的用于与调度器通信的IP地址，简称为RIP。</p>
-<img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/02.webp" class>
-
-<p>基本模型</p>
-<blockquote>
-<h3 id="LVS的三种调度模式"><a href="#LVS的三种调度模式" class="headerlink" title="LVS的三种调度模式"></a>LVS的三种调度模式</h3></blockquote>
-<h3 id="LVS-NATNetwork-Address-Transform"><a href="#LVS-NATNetwork-Address-Transform" class="headerlink" title="LVS-NATNetwork Address Transform"></a>LVS-NAT<code>Network Address Transform</code></h3><h6 id="示意图和调度步骤"><a href="#示意图和调度步骤" class="headerlink" title="示意图和调度步骤"></a><strong>示意图和调度步骤</strong></h6><img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/01.webp" class>
-
-<p>LVS-NAT</p>
-<h6 id="原理："><a href="#原理：" class="headerlink" title="原理："></a><strong>原理：</strong></h6><p>基于ip伪装<code>MASQUERADES</code>，原理是多目标DNAT。<br> 所以请求和响应都经由Director调度器。</p>
-<h6 id="LVS-NAT的优点与缺点"><a href="#LVS-NAT的优点与缺点" class="headerlink" title="LVS-NAT的优点与缺点"></a><strong>LVS-NAT的优点与缺点</strong></h6><h6 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h6><ul>
-<li>支持端口映射</li>
-<li>RS可以使用任意操作系统</li>
-<li>节省公有IP地址。<br> <code>RIP和DIP都应该使用同一网段私有地址，而且RS的网关要指向DIP。</code><br> <code>使用nat另外一个好处就是后端的主机相对比较安全。</code></li>
-</ul>
-<h6 id="缺点："><a href="#缺点：" class="headerlink" title="缺点："></a>缺点：</h6><ul>
-<li>请求和响应报文都要经过Director转发;极高负载时，Director可能成为系统瓶颈。<br> <code>就是效率低的意思。</code></li>
-</ul>
-<h3 id="LVS-TUNIP-Tuneling"><a href="#LVS-TUNIP-Tuneling" class="headerlink" title="LVS-TUNIP Tuneling"></a>LVS-TUN<code>IP Tuneling</code></h3><h6 id="示意图和调度步骤-1"><a href="#示意图和调度步骤-1" class="headerlink" title="示意图和调度步骤"></a><strong>示意图和调度步骤</strong></h6><img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/03.webp" class>
-
-<p>LVS-TUN</p>
-<h6 id="原理：-1"><a href="#原理：-1" class="headerlink" title="原理："></a><strong>原理：</strong></h6><p>基于隧道封装技术。在IP报文的外面再包一层IP报文。<br> 当Director接收到请求的时候，选举出调度的RealServer<br> 当接受到从Director而来的请求时，RealServer则会使用lo接口上的VIP直接响应CIP。<br> 这样CIP请求VIP的资源，收到的也是VIP响应。</p>
-<h6 id="LVS-TUN的优点与缺点"><a href="#LVS-TUN的优点与缺点" class="headerlink" title="LVS-TUN的优点与缺点"></a><strong>LVS-TUN的优点与缺点</strong></h6><h6 id="优点：-1"><a href="#优点：-1" class="headerlink" title="优点："></a>优点：</h6><ul>
-<li>RIP,VIP,DIP都应该使用公网地址，且RS网关不指向DIP;<br> <code>只接受进站请求，解决了LVS-NAT时的问题，减少负载。</code><br> <code>请求报文经由Director调度，但是响应报文不需经由Director。</code></li>
-</ul>
-<h6 id="缺点：-1"><a href="#缺点：-1" class="headerlink" title="缺点："></a>缺点：</h6><ul>
-<li>不指向Director所以不支持端口映射。</li>
-<li>RS的OS必须支持隧道功能。</li>
-<li>隧道技术会额外花费性能，增大开销。</li>
-</ul>
-<h3 id="LVS-DRDirect-Routing"><a href="#LVS-DRDirect-Routing" class="headerlink" title="LVS-DRDirect Routing"></a>LVS-DR<code>Direct Routing</code></h3><h6 id="示意图和调度步骤-2"><a href="#示意图和调度步骤-2" class="headerlink" title="示意图和调度步骤"></a><strong>示意图和调度步骤</strong></h6><img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/04.webp" class>
-
-<p>LVS-DR</p>
-<h6 id="原理"><a href="#原理" class="headerlink" title="原理"></a><strong>原理</strong></h6><p>当Director接收到请求之后，通过调度方法选举出RealServer。<br> 讲目标地址的MAC地址改为RealServer的MAC地址。<br> RealServer接受到转发而来的请求，发现目标地址是VIP。<code>RealServer配置在lo接口上。</code><br> 处理请求之后则使用lo接口上的VIP响应CIP。</p>
-<h6 id="LVS-DR的优点与缺点"><a href="#LVS-DR的优点与缺点" class="headerlink" title="LVS-DR的优点与缺点"></a><strong>LVS-DR的优点与缺点</strong></h6><h6 id="优点：-2"><a href="#优点：-2" class="headerlink" title="优点："></a>优点：</h6><ul>
-<li>RIP可以使用私有地址，也可以使用公网地址。<br> <code>只要求DIP和RIP的地址在同一个网段内。</code></li>
-<li>请求报文经由Director调度，但是响应报文不经由Director。</li>
-<li>RS可以使用大多数OS</li>
-</ul>
-<h6 id="缺点：-2"><a href="#缺点：-2" class="headerlink" title="缺点："></a>缺点：</h6><ul>
-<li>不支持端口映射。</li>
-<li>不能跨局域网。</li>
-</ul>
-<h6 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h6><p>三种模型虽然各有利弊，但是由于追求性能和便捷，DR是目前用得最多的LVS模型。</p>
-<blockquote>
-<h3 id="LVS的八种调度方法"><a href="#LVS的八种调度方法" class="headerlink" title="LVS的八种调度方法"></a>LVS的八种调度方法</h3></blockquote>
-<h5 id="静态方法-仅依据算法本身进行轮询调度"><a href="#静态方法-仅依据算法本身进行轮询调度" class="headerlink" title="静态方法:仅依据算法本身进行轮询调度"></a>静态方法:仅依据算法本身进行轮询调度</h5><ul>
-<li>RR:Round Robin,轮调<br> <code>一个接一个，自上而下</code></li>
-<li>WRR:Weighted RR，加权论调<br> <code>加权，手动让能者多劳。</code></li>
-<li>SH:SourceIP Hash<br> <code>来自同一个IP地址的请求都将调度到同一个RealServer</code></li>
-<li>DH:Destination Hash<br> <code>不管IP，请求特定的东西，都定义到同一个RS上。</code></li>
-</ul>
-<h5 id="动态方法-根据算法及RS的当前负载状态进行调度"><a href="#动态方法-根据算法及RS的当前负载状态进行调度" class="headerlink" title="动态方法:根据算法及RS的当前负载状态进行调度"></a>动态方法:根据算法及RS的当前负载状态进行调度</h5><ul>
-<li>LC:least connections(最小链接数)<br> <code>链接最少，也就是Overhead最小就调度给谁。</code><br> <code>假如都一样，就根据配置的RS自上而下调度。</code></li>
-<li>WLC:Weighted Least Connection (加权最小连接数)<br> <code>这个是LVS的默认算法。</code></li>
-<li>SED:Shortest Expection Delay(最小期望延迟)<br> <code>WLC算法的改进。</code></li>
-<li>NQ:Never Queue<br> <code>SED算法的改进。</code></li>
-<li>LBLC:Locality-Based Least-Connection,基于局部的的LC算法<br> 正向代理缓存机制。访问缓存服务器，调高缓存的命中率。<br> 和传统DH算法比较，考虑缓存服务器负载。可以看做是DH+LC<br> 如果有两个缓存服务器<br> 1.只要调度到其中的一个缓存服务器，那缓存服务器内就会记录下来。下一次访问同一个资源的时候也就是这个服务器了。   (DH)<br> 2.有一个用户从来没有访问过这两个缓存服务器，那就分配到负载较小的服务器。<code>LC</code></li>
-</ul>
-<p>LBLCR:Locality-Based Least-Connection  with  Replication(带复制的lblc算法)<br> 缓存服务器中的缓存可以互相复制。<br> 因为即使没有，也能立即从另外一个服务器内复制一份，并且均衡负载</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">man ipvsadm有讲这几种动态或者静态的rs调度方法</span><br></pre></td></tr></table></figure>
-<blockquote>
-<h4 id="配置LVS-DR"><a href="#配置LVS-DR" class="headerlink" title="配置LVS-DR"></a>配置LVS-DR</h4></blockquote>
-<table>
-<thead>
-<tr>
-<th align="center">主机名</th>
-<th align="center">主机地址</th>
-<th align="center">角色</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">node1</td>
-<td align="center">DIP:192.168.2.201，VIP:192.168.2.211</td>
-<td align="center">Director</td>
-</tr>
-<tr>
-<td align="center">node3</td>
-<td align="center">RIP:192.168.2.203，VIP:192.168.2.211</td>
-<td align="center">RealServer</td>
-</tr>
-<tr>
-<td align="center">node4</td>
-<td align="center">RIP:192.168.2.204，VIP:192.168.2.211</td>
-<td align="center">RealServer</td>
-</tr>
-</tbody></table>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">本文中的主机系统均为CentOS7.1，Apache2.4，数据库：MariaDB-5.5.50</span><br></pre></td></tr></table></figure>
-<p>实验拓扑：</p>
-<img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/05.webp" class>
-
-<p>lvs-dr实验拓扑</p>
-<p><strong>(1)在Director上配置VIP和DIP</strong></p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">  [root@bc ~]# vim /etc/sysconfig/network-scripts/ifcfg-eno16777736</span><br><span class="line">    TYPE=Ethernet</span><br><span class="line">    BOOTPROTO=<span class="string">&quot;static&quot;</span></span><br><span class="line">    DEFROUTE=yes</span><br><span class="line">    PEERDNS=yes</span><br><span class="line">    PEERROUTES=yes</span><br><span class="line">    NAME=eno16777736</span><br><span class="line">    DEVICE=eno16777736</span><br><span class="line">    ONBOOT=yes</span><br><span class="line">    IPADDR=<span class="string">&quot;192.168.2.201&quot;</span></span><br><span class="line">    NETMASK=<span class="string">&quot;255.255.255.0&quot;</span></span><br><span class="line">    DNS1=<span class="string">&quot;192.168.2.1&quot;</span></span><br><span class="line">    GATEWAY=<span class="string">&quot;192.168.2.1&quot;</span></span><br><span class="line"></span><br><span class="line">[root@bc ~]# vim /etc/sysconfig/network-scripts/ifcfg-eno16777736:0</span><br><span class="line">    TYPE=Ethernet</span><br><span class="line">    BOOTPROTO=<span class="string">&quot;static&quot;</span></span><br><span class="line">    NAME=eno16777736:<span class="number">0</span></span><br><span class="line">    ONBOOT=yes</span><br><span class="line">    IPADDR=<span class="string">&quot;192.168.2.211&quot;</span></span><br><span class="line">    NETMASK=<span class="string">&quot;255.255.255.0&quot;</span></span><br><span class="line">    DNS1=<span class="string">&quot;192.168.2.1&quot;</span></span><br><span class="line">    GATEWAY=<span class="string">&quot;192.168.2.1&quot;</span></span><br><span class="line">    ONPARENT=yes</span><br></pre></td></tr></table></figure>
-<p>重启网络之后查看配置</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">[root@bc ~]# service NetworkManager stop</span><br><span class="line">  Redirecting to /bin/systemctl stop  NetworkManager.service</span><br><span class="line">[root@bc ~]# service network restart</span><br><span class="line">  Restarting network (via systemctl):                        [  OK  ]</span><br><span class="line">[root@bc ~]# ifconfig</span><br><span class="line">  eno16777736: flags=<span class="number">4163</span>&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu <span class="number">1500</span></span><br><span class="line">        inet <span class="number">192.168</span><span class="number">.2</span><span class="number">.201</span>  netmask <span class="number">255.255</span><span class="number">.255</span><span class="number">.0</span>  broadcast <span class="number">192.168</span><span class="number">.2</span><span class="number">.255</span></span><br><span class="line">        inet6 fe80::<span class="number">250</span>:56ff:fe3c:d757  prefixlen <span class="number">64</span>  scopeid <span class="number">0x20</span>&lt;link&gt;</span><br><span class="line">        ether <span class="number">00</span>:<span class="number">50</span>:<span class="number">56</span>:3c:d7:<span class="number">57</span>  txqueuelen <span class="number">1000</span>  (Ethernet)</span><br><span class="line">        RX packets <span class="number">88853</span>  bytes <span class="number">14843664</span> (<span class="number">14.1</span> MiB)</span><br><span class="line">        RX errors <span class="number">0</span>  dropped <span class="number">0</span>  overruns <span class="number">0</span>  frame <span class="number">0</span></span><br><span class="line">        TX packets <span class="number">79195</span>  bytes <span class="number">6551143</span> (<span class="number">6.2</span> MiB)</span><br><span class="line">        TX errors <span class="number">0</span>  dropped <span class="number">0</span> overruns <span class="number">0</span>  carrier <span class="number">0</span>  collisions <span class="number">0</span></span><br><span class="line"></span><br><span class="line">  eno16777736:<span class="number">0</span>: flags=<span class="number">4163</span>&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu <span class="number">1500</span></span><br><span class="line">        inet <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span>  netmask <span class="number">255.255</span><span class="number">.255</span><span class="number">.0</span>  broadcast <span class="number">192.168</span><span class="number">.2</span><span class="number">.255</span></span><br><span class="line">        ether <span class="number">00</span>:<span class="number">50</span>:<span class="number">56</span>:3c:d7:<span class="number">57</span>  txqueuelen <span class="number">1000</span>  (Ethernet)</span><br><span class="line"></span><br><span class="line">  lo: flags=<span class="number">73</span>&lt;UP,LOOPBACK,RUNNING&gt;  mtu <span class="number">65536</span></span><br><span class="line">        inet <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>  netmask <span class="number">255.0</span><span class="number">.0</span><span class="number">.0</span></span><br><span class="line">        inet6 ::<span class="number">1</span>  prefixlen <span class="number">128</span>  scopeid <span class="number">0x10</span>&lt;host&gt;</span><br><span class="line">        loop  txqueuelen <span class="number">0</span>  (Local Loopback)</span><br><span class="line">        RX packets <span class="number">12998</span>  bytes <span class="number">1140269</span> (<span class="number">1.0</span> MiB)</span><br><span class="line">        RX errors <span class="number">0</span>  dropped <span class="number">0</span>  overruns <span class="number">0</span>  frame <span class="number">0</span></span><br><span class="line">        TX packets <span class="number">12998</span>  bytes <span class="number">1140269</span> (<span class="number">1.0</span> MiB)</span><br><span class="line">        TX errors <span class="number">0</span>  dropped <span class="number">0</span> overruns <span class="number">0</span>  carrier <span class="number">0</span>  collisions <span class="number">0</span></span><br></pre></td></tr></table></figure>
-<p><strong>(2)Director使用ipvsadm修改创建ipvs规则</strong></p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">[root@bc ~]# ipvsadm -A -t 192.168.2.211:80 -s rr</span><br><span class="line">[root@bc ~]# ipvsadm -a -t 192.168.2.211:80 -r 192.168.2.203 -g</span><br><span class="line">[root@bc ~]# ipvsadm -a -t 192.168.2.211:80 -r 192.168.2.204 -g</span><br><span class="line">[root@bc ~]# ipvsadm -L -n</span><br><span class="line">IP Virtual Server version <span class="number">1.2</span><span class="number">.1</span> (size=<span class="number">4096</span>)</span><br><span class="line">Prot LocalAddress:Port Scheduler Flags</span><br><span class="line">  -&gt; RemoteAddress:Port           Forward Weight ActiveConn InActConn</span><br><span class="line">TCP  <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span>:<span class="number">80</span> rr</span><br><span class="line">  -&gt; <span class="number">192.168</span><span class="number">.2</span><span class="number">.203</span>:<span class="number">80</span>             Route   <span class="number">1</span>      <span class="number">0</span>          <span class="number">0</span>         </span><br><span class="line">  -&gt; <span class="number">192.168</span><span class="number">.2</span><span class="number">.204</span>:<span class="number">80</span>             Route   <span class="number">1</span>      <span class="number">0</span>          <span class="number">0</span>   </span><br></pre></td></tr></table></figure>
-<p><strong>(3)RealServer安装httpd</strong></p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">[root@node3 ~]# yum install httpd -y</span><br><span class="line">[root@node4 ~]# yum install httpd -y</span><br></pre></td></tr></table></figure>
-<p><code>可以在里面放一个Wordpress,也可以简单echo几个字到index.html</code><br> <strong>(4)node3和node4修改RealServer内核参数</strong></p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">echo <span class="string">&quot;1&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/ip_forward</span><br><span class="line">echo <span class="string">&quot;2&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/conf/all/arp_announce</span><br><span class="line">echo <span class="string">&quot;1&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/conf/all/arp_ignore</span><br><span class="line">echo <span class="string">&quot;1&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/conf/lo/arp_ignore</span><br><span class="line">echo <span class="string">&quot;2&quot;</span> &gt; <span class="regexp">/proc/</span>sys/net/ipv4/conf/lo/arp_announce</span><br><span class="line">ifconfig lo:<span class="number">0</span> <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span>/<span class="number">32</span> broadcast <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span> up</span><br><span class="line">route add -host <span class="number">192.168</span><span class="number">.2</span><span class="number">.211</span> dev lo:<span class="number">0</span></span><br></pre></td></tr></table></figure>
-<p><code>修改内核参数，并且配置VIP地址到RealServer的loopback接口上。</code><br> <strong><code>那样的话，当RealServer接到从Director转发而来的数据报文时，RealServer也不会丢弃报文。</code></strong><br> <code>同时，修改了RealServer的参数，局域网内的arp表就只有Director有VIP。</code><br> <code>RealServer的的机器上有VIP这件事，只有RealServer自己知道。</code><br> <strong><code>这样可以保证，当请求到来的时候，第一个会送到Director那里去。</code></strong></p>
-<p><strong>(5)测试结果</strong></p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">[root@node3 httpd]# vim  /var/log/httpd/access_log </span><br><span class="line">[root@node4 httpd]# vim  /var/log/httpd/access_log </span><br></pre></td></tr></table></figure>
-<p>效果差不多就是这样:<br> <code>因为我们使用了RR静态调度方法,所以这node3和node4的请求是一人一个。</code></p>
-<img data-src="/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/06.webp" class>
-
-
-
-]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>负载均衡</tag>
       </tags>
   </entry>
   <entry>
@@ -1848,50 +1848,76 @@
       </tags>
   </entry>
   <entry>
-    <title>Python自动化办公-跨文件字数统计</title>
-    <url>/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/</url>
-    <content><![CDATA[<h1 id="使用Python实现快速读写文件，跨文件字数统计"><a href="#使用Python实现快速读写文件，跨文件字数统计" class="headerlink" title="使用Python实现快速读写文件，跨文件字数统计"></a>使用Python实现快速读写文件，跨文件字数统计</h1><h2 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h2><figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">使用Python来批量统计多个文件的字数和标点符号</span><br></pre></td></tr></table></figure>
-<h2 id="实现单个文件字数统计"><a href="#实现单个文件字数统计" class="headerlink" title="实现单个文件字数统计"></a>实现单个文件字数统计</h2><p>统计单个文件的字数，需要用到Python的文件读写函数和变量这两个功能。Python的读写函 数是对文件内容的读取操作，变量呢，用来存储统计好的文件字数。</p>
-<ul>
-<li>先把要统计的文件读入内存；</li>
-<li>再对读入到内存的字数数量进行统计，并用变量保存；</li>
-<li>最后是将结果写入统计字数的专用文件中。</li>
-</ul>
-<h3 id="将文件内容读取到内存中"><a href="#将文件内容读取到内存中" class="headerlink" title="将文件内容读取到内存中"></a>将文件内容读取到内存中</h3><p>Python实现读取文件内容到内存的函数有三个，这三个函数原理相同，但是读取的内容多少有些不同，分别为：</p>
-<img data-src="/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220209190932306.png" alt="image-20220209190932306" style="zoom:50%;">
-
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pathlib</span><br><span class="line">file_name = <span class="string">&quot;./e.txt&quot;</span></span><br><span class="line"><span class="comment"># 取得脚本所在目录</span></span><br><span class="line">current_path = pathlib.PurePath(__file__).parent</span><br><span class="line"></span><br><span class="line"><span class="comment">#和脚本同目录下的要打开文件绝对路径</span></span><br><span class="line">file = current_path.joinpath(file_name)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打开文件</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(file,encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    <span class="comment"># 读取文件</span></span><br><span class="line">    content = f.read()</span><br><span class="line">    words = content.rstrip()</span><br><span class="line">    number = <span class="built_in">len</span>(words)</span><br><span class="line">    print(number)</span><br></pre></td></tr></table></figure>
-<p>open()函数参数说明：</p>
-<p>第一个参数file变量的值是要操作的文件路径和文件名称，你需要正 确指定它所在的路径和文件名称。第二个参数encoding变量的值指定了以哪种字符编码打开文件，错误的字符编码会导致内容读取异常，文字内容显示为“乱码”。</p>
-<h4 id="获取完整路径"><a href="#获取完整路径" class="headerlink" title="获取完整路径"></a>获取完整路径</h4><ul>
-<li>在代码中使用pathlib库的PurePath()函数，把当前Python脚本的路径转化为标准的 pathlib格式。</li>
-<li>通过parent属性去掉脚本的文件名，取得当前脚本所在的路径。</li>
-<li>再通过joinpath()函数把脚本所在的路径和e.txt文件名进行拼接，得到e.txt的完整路径。</li>
-</ul>
-<p>这种取得脚本同目录下的其他文件完整路径的用法，要比直接指定文件完整路径用法更灵活。</p>
-<blockquote>
-<p>__file__变量比较特殊，它是在Python中预先定义好的一个变量，默认情况下它的值会被 Python自动设置为当前脚本的完整路径名称。有了它，我就可以通过Python脚本的路径取得 e.txt的完整路径了。</p>
+    <title>Python自动化办公-图片识别</title>
+    <url>/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/</url>
+    <content><![CDATA[<h1 id="使用Python实现高效自动化图片组在线-离线识别（转文字）"><a href="#使用Python实现高效自动化图片组在线-离线识别（转文字）" class="headerlink" title="使用Python实现高效自动化图片组在线/离线识别（转文字）"></a>使用Python实现高效自动化图片组在线/离线识别（转文字）</h1><h2 id="图片识别转文字的两种方式："><a href="#图片识别转文字的两种方式：" class="headerlink" title="图片识别转文字的两种方式："></a>图片识别转文字的两种方式：</h2><blockquote>
+<p>在线识别</p>
+<p>优点： 在线识别在初次进行文字识别的时候，准确率非常高。比如对聊天截图中的识别准确率就高达99%。因为在线识别使用了人工智能领域的深度学习算法和文字识别相结合的技术，能够把图片转换成文字后，还能在语义上把相近的字进行二次纠正。 比如说，被识别的内容包含英文单词“Hello”，一旦它的字母“o”被识别成数字“0”，在 线识别软件就会根据上下文语境把这类错误纠正回来，而这种二次纠正的功能在离线识别软 件中是没有的。</p>
+<p>缺点：</p>
+<ol>
+<li>识别文字的过程需要在公有云的服务器上完成。也 就是说需要通过互联网把图片上传到服务器，那么一旦图片过大，或者图片数量比较多，就会导致上传时间过长。对于一些大批量文字识别场景/实时性要求很高的场景，在线识别不能满足要求</li>
+<li>图片需要经过互联网传输，识别以后的图片该怎么保存，怎么销毁，是不是会被其他 人得到，这些都是安全风险。总之，信息泄露的风险比较大。所以像公司的合同、财务资料 等涉密程度比较高的扫描件，很少使用在线识别。</li>
+</ol>
 </blockquote>
-<h4 id="设置字符编码"><a href="#设置字符编码" class="headerlink" title="设置字符编码"></a>设置字符编码</h4><p>第二个参数的作用是设置open()函数使用何种字符编码打开文件。</p>
-<h4 id="函数传参调用"><a href="#函数传参调用" class="headerlink" title="函数传参调用"></a>函数传参调用</h4><p>为什们指定这个参数的时候，要特意写出变量名称encoding呢？</p>
-<p>在函数定义的时候我们可以为函数指定一个或多个参数，如果使用了多个参数，你在调用函 数的时候需要按顺序依次传入每一个参数。但是如果你想要使用某个参数默认值或不想按照 顺序传入参数时怎么办呢？函数调用时，还可以根据参数的关键字来指定为函数传入哪些参 数。比如说open()函数的参数有7个，</p>
-<p><img data-src="/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220209193920724.png" alt="image-20220209193920724"></p>
-<p>在open()函数的定义中，encoding参数是open()函数的第4个参数。如果我们只需要第1个和 第4个参数，其他参数需要保持默认时，就可以使用如下格式调用open()函数：</p>
-<p><img data-src="/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220209193956499.png" alt="image-20220209193956499"></p>
-<p>在代码中，调用open()函数时，由于file参数是open()函数的第一个参数，因此可以不用指定 参数的关键字。encoding参数并非open()函数定义的第二个参数，而是第四个参数，所以需 要指定它的参数名称为encoding，根据open()函数的定义，encoding=”utf-8”会作为 open()函数的第四个参数使用。这种使用关键字作为函数的参数的方式，也被称作<strong>函数的关键字传参方式</strong>。</p>
-<h3 id="with使用"><a href="#with使用" class="headerlink" title="with使用"></a>with使用</h3><p>with关键字下面的代码是缩进形式，和with关键字形成了一个语句块</p>
-<p>在with语句 块结束之后，不必手动调用close()函数关闭文件，Python会自动将文件关闭。因此，你会看到我在程序中调用了open()函数打开文件，但是没有调用关闭文件的close()函数。</p>
-<p>总的来说，相对于手动调用close()函数来关闭文件，使用with函数减少了打开过多文件造成系统资源浪费和数据丢失的风险。</p>
-<h4 id="文件读取"><a href="#文件读取" class="headerlink" title="文件读取"></a>文件读取</h4><p>正确使用了open()函数的两个参数以后，会返回一个表示文件的对象f, 只有设置了正确 的文件路径、文件名称和字符编码，才能继续进行文件读取操作。文件的读取操作使用的是 read()函数，read()函数会根据文件的对象f，按照open()函数定义好的打开方式进行逐个字 的读取操作。Python对文件的其他操作，全都需要通过文件操作函数调用对象f来完成。</p>
-<h4 id="统计文件的字数"><a href="#统计文件的字数" class="headerlink" title="统计文件的字数"></a>统计文件的字数</h4><p>Python的内置函数**len()**来实现</p>
-<p>len()函数在Python中最初设计的功能就是统计字符串的长度，即字符串中有多少字符。利用len()函数可以对字符串数据类型进行操作的特性，将文件一次性读入内存，放入字符串数据类型中。我在统计字数之前还增加了一个rstrip()函数，它会自动剔除出现在文件末尾的空行、空格，让你统计的结果更精确。</p>
-<p>在进行文件字数统计的时候，需要注意，在代码中使用了read()函数实现了对文件内容的一<br>次性读取到内存的功能。如果你的文件较大，我建议你使用readline()函数按行读取，并逐行<br>统计字数，否则容易出现内存不足的问题。</p>
-<h4 id="将统计结果写入文件"><a href="#将统计结果写入文件" class="headerlink" title="将统计结果写入文件"></a>将统计结果写入文件</h4><p>将统计结果写入文件，可以对<strong>open()函数</strong>打开文件方式进行简单的修改，就可以实现文件写入功能了，写入文件的代码如下：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;total.txt&quot;</span>, <span class="string">&quot;w&quot;</span>, encodong=<span class="string">&quot;utf-8&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">	 f.write(<span class="string">&quot;15个字符&quot;</span>)</span><br></pre></td></tr></table></figure>
-<p>open()函数的第二个参数表示文件的打开方式，它默认值是“r”，代表了文件以读取方式进行打开。这时对象f只能进行文件读取操作，我们需要将第二个参数指定为”w”，就可以使用wirte()函数对文件进行写入操作了。而write()函数的第一个参数就是即将要写入文件的内容。</p>
-<h3 id="怎么统计多个文件的次数"><a href="#怎么统计多个文件的次数" class="headerlink" title="怎么统计多个文件的次数"></a>怎么统计多个文件的次数</h3><p>对多个文件的字数统计，就可以使用for循环来实现批量读取多个文件的内容。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">p = Path(src_path)</span><br><span class="line">files = [x <span class="keyword">for</span> x <span class="keyword">in</span> p.iterdir() <span class="keyword">if</span> PurePath(x).match(<span class="string">&#x27;*.txt&#x27;</span>)]</span><br><span class="line"><span class="keyword">for</span> files <span class="keyword">in</span> files:</span><br><span class="line">	<span class="keyword">with</span> <span class="built_in">open</span>(file,encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        content = f.read()</span><br><span class="line">words = content.rstrip()</span><br><span class="line">    	number = <span class="built_in">len</span>(words)</span><br></pre></td></tr></table></figure>
-<p>数字类型是一种非常适合进行整数、浮点数的转换和算数几何计算最常用的类型。在单文件字数统计的场景，用来储存每个文件的字数是最合适的类型。如果把场景扩展到统计多个文件的字数，使用一个数字类型的变量是不够的，你需要在循环中再增加一个新的数字类型的变量，对多个文件的统计结果进行依次累加就可以了。</p>
+<blockquote>
+<p>离线识别</p>
+<p>这种方式在识别过程中不需要连接网络，节省了在线传输图片的时间，适合那些对实时性要 求比较高或网络信号比较差的场景。</p>
+<p>离线识别方式的问题就在于，初次识别文字的准确率比较低，识别完之后必须要经过人 工二次纠正才行。所以在前期人工校对，花费的时间相对来说会比较长。</p>
+</blockquote>
+<img data-src="/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/image01.png" class>
+
+<h2 id="在线识别"><a href="#在线识别" class="headerlink" title="在线识别"></a>在线识别</h2><p>在线文字识别方式，识别的主要功能的需要放在公有云的服务器中才能实现，所以在代码实 现中就要考虑用户验证和图片加密传输问题。</p>
+<p>用户验证能确保识别的结果交还给你本人，图片加密传输能确保图片上的信息不会被其他人 窃取到。这些功能，各个公有云的AI产品都考虑得非常周全，一般会提供给用户一个扩展 库。你要做的，就是安装这些扩展库。</p>
+<p><strong>以百度Ai图片转文字识别产品为例</strong></p>
+<blockquote>
+<p>pip install baidu-aip</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> aip <span class="keyword">import</span> AipOcr</span><br><span class="line"></span><br><span class="line">APP_ID = <span class="string">&#x27;&#x27;</span></span><br><span class="line">API_Key = <span class="string">&#x27;&#x27;</span></span><br><span class="line">SECRET_KEY = <span class="string">&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">client = AipOcr(APP_ID,API_Key,SECRET_KEY)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取图片</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_file_content</span>(<span class="params">filepath</span>):</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(filepath,<span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> fp:</span><br><span class="line">        <span class="keyword">return</span> fp.read()</span><br><span class="line"></span><br><span class="line">image = get_file_content(<span class="string">&#x27;example.png&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调用文字识别，图片参数为本地图片</span></span><br><span class="line">result = client.basicGeneral(image)</span><br><span class="line">print(result)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+ <img data-src="/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/image02.png" class>
+
+<p>当把这三个变量传入AipOcr函数，使用AipOcr函数通过互联网交互后，就可以用来识别用户 是不是被授权使用相应的产品，之后就可以把图片加密发送到AI产品的服务器上了。</p>
+<h2 id="离线识别（pytesseract）"><a href="#离线识别（pytesseract）" class="headerlink" title="离线识别（pytesseract）"></a>离线识别（pytesseract）</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pytesseract</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打开图片</span></span><br><span class="line">image = Image.<span class="built_in">open</span>(<span class="string">&#x27;example.png&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 转为灰度图片</span></span><br><span class="line">imgry = image.convert(<span class="string">&#x27;L&#x27;</span>)</span><br><span class="line"><span class="comment"># 二值化，采用阈值分割算法，threhold为分割点，根据图片质量调节</span></span><br><span class="line">threhold = <span class="number">150</span></span><br><span class="line">table = []</span><br><span class="line"><span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">256</span>):</span><br><span class="line">    <span class="keyword">if</span> j&lt;threhold:</span><br><span class="line">        table.append(<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        table.append(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">temp = imgry.point(table,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">temp = imgry.point(table,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># OCR识别，调用pytesseract库，lang指定中文，--psm 6表示按行识别，有助于提升准确率</span></span><br><span class="line">text = pytesseract.image_to_string(temp,lang=<span class="string">&quot;chi_sim+eng&quot;</span>,config=<span class="string">&#x27;--psm 6&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印识别结果</span></span><br><span class="line">print(text)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>遇到问题</strong></p>
+<p>TesseractNotFoundError: tesseract is not installed or it’s not in your PATH. See README file for more information.</p>
+<p><strong>原因</strong>：</p>
+<p>pytesseract是依赖c++编写的tesseract工具才能正常工作的，需要先安装teseract</p>
+<p><strong>解决</strong>：</p>
+<p><a href="https://blog.csdn.net/wang_hugh/article/details/80760940">https://blog.csdn.net/wang_hugh/article/details/80760940</a></p>
+</blockquote>
+<p>对图片文字离线识别的一般过程如下：</p>
+<ul>
+<li>图像输入</li>
+<li>前期处理，比如二值化，图像降噪，倾斜纠正</li>
+<li>文字检测，比如版面分析，字符分割</li>
+<li>文本识别，比如字符识别，后期纠正（<strong>影响准确率最大</strong>）</li>
+<li>输出文本</li>
+</ul>
+<p>离线识别训练样本较小，正确率相较于在线识别是不高的。具体的解决方案有以下两种</p>
+<blockquote>
+<p>通过人工纠正，形成新的训练模型（不断增加算法模型中标本的数量）</p>
+</blockquote>
+<p>像身份证识别、票据识别、聊天截图等大部分文字识别场景，这些待识别图片采用了印刷体，每个字的间隔都是固定的，所以我们要想提升准确率，通常的做法是对每个字都进行人 工纠错。</p>
+<p>所以整个过程你可以理解成三个步骤： 第一步，人工观察； 第二步，对比原始图像； 第三步，把错误的文字手工纠正为正确的汉字。 比如截图中的“某”字，多次识别错误，当我们人工把这些文字改为正确的“某”字之后， 就可以生成一个训练文件，再把训练文件和文字识别的算法合并成新的识别模型。等下次再 识别发票的时候，就可以采用新的模型进行识别。所以再次出  现“某”字，就可以正确识别了。</p>
+<p><strong>这种文字标注对于单一场景非常有效，比如名片、火车票、飞机票、发票、车牌的识别场 景，经过手工标注，不断增加样本数量之后，能够让正确率呈对数级别增加。</strong></p>
+<blockquote>
+<p>使用在线识别软件来优化离线识别软件</p>
+</blockquote>
+<img data-src="/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/image03.png" class>
+
+
+
+<h2 id="识别成功后的文字处理工作"><a href="#识别成功后的文字处理工作" class="headerlink" title="识别成功后的文字处理工作"></a>识别成功后的文字处理工作</h2><p>下图为在线识别的结果</p>
+<img data-src="/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/image04.png" class>
+
+<p>为了能够提取文本内容，去掉记录分段信息的”word”和 “{ }”，需要对这段文字再加工处理。</p>
+<p>仔细观察的话，就会发现这段文字是有一定规律的，它的写法就是Python的基本数据类型“字典”，字典类型会强调一对或多对数据之间的映射关系。为了将识别的文字结果进行保存，我们还会使用另一个基本数据类型“列表”，一般用来表示多段文字的并列关系， 为了提取文本内容，我接下来把字典转换成列表就可以实现内容的提取了。 从字典到列表转换的功能怎么实现呢？首先来看一下两种数据类型的定义</p>
+<p><img data-src="/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220131094327030.png" alt="image-20220131094327030"></p>
+<p>观察这两个数据类型不难发现，把字典的VALUE存放到列表里就能实现内容的提取了，如果 字典里有多个值，可以使用for循环进行遍历，然后批量提取。对于识别的结果，我们可以采 用一段代码进行从字典到列表的转换。代码如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">info = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> result[<span class="string">&#x27;words_result&#x27;</span>]:</span><br><span class="line">	info.append(i[<span class="string">&#x27;words&#x27;</span>])</span><br><span class="line">print(info)</span><br></pre></td></tr></table></figure>
+<p>处理好的内容如下</p>
+
+
 ]]></content>
       <categories>
         <category>Python开发</category>
@@ -1976,6 +2002,59 @@
 
 
 
+]]></content>
+      <categories>
+        <category>Python开发</category>
+      </categories>
+      <tags>
+        <tag>Python自动化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Python自动化办公-跨文件字数统计</title>
+    <url>/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/</url>
+    <content><![CDATA[<h1 id="使用Python实现快速读写文件，跨文件字数统计"><a href="#使用Python实现快速读写文件，跨文件字数统计" class="headerlink" title="使用Python实现快速读写文件，跨文件字数统计"></a>使用Python实现快速读写文件，跨文件字数统计</h1><h2 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h2><figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">使用Python来批量统计多个文件的字数和标点符号</span><br></pre></td></tr></table></figure>
+<h2 id="实现单个文件字数统计"><a href="#实现单个文件字数统计" class="headerlink" title="实现单个文件字数统计"></a>实现单个文件字数统计</h2><p>统计单个文件的字数，需要用到Python的文件读写函数和变量这两个功能。Python的读写函 数是对文件内容的读取操作，变量呢，用来存储统计好的文件字数。</p>
+<ul>
+<li>先把要统计的文件读入内存；</li>
+<li>再对读入到内存的字数数量进行统计，并用变量保存；</li>
+<li>最后是将结果写入统计字数的专用文件中。</li>
+</ul>
+<h3 id="将文件内容读取到内存中"><a href="#将文件内容读取到内存中" class="headerlink" title="将文件内容读取到内存中"></a>将文件内容读取到内存中</h3><p>Python实现读取文件内容到内存的函数有三个，这三个函数原理相同，但是读取的内容多少有些不同，分别为：</p>
+<img data-src="/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220209190932306.png" alt="image-20220209190932306" style="zoom:50%;">
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pathlib</span><br><span class="line">file_name = <span class="string">&quot;./e.txt&quot;</span></span><br><span class="line"><span class="comment"># 取得脚本所在目录</span></span><br><span class="line">current_path = pathlib.PurePath(__file__).parent</span><br><span class="line"></span><br><span class="line"><span class="comment">#和脚本同目录下的要打开文件绝对路径</span></span><br><span class="line">file = current_path.joinpath(file_name)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打开文件</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(file,encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    <span class="comment"># 读取文件</span></span><br><span class="line">    content = f.read()</span><br><span class="line">    words = content.rstrip()</span><br><span class="line">    number = <span class="built_in">len</span>(words)</span><br><span class="line">    print(number)</span><br></pre></td></tr></table></figure>
+<p>open()函数参数说明：</p>
+<p>第一个参数file变量的值是要操作的文件路径和文件名称，你需要正 确指定它所在的路径和文件名称。第二个参数encoding变量的值指定了以哪种字符编码打开文件，错误的字符编码会导致内容读取异常，文字内容显示为“乱码”。</p>
+<h4 id="获取完整路径"><a href="#获取完整路径" class="headerlink" title="获取完整路径"></a>获取完整路径</h4><ul>
+<li>在代码中使用pathlib库的PurePath()函数，把当前Python脚本的路径转化为标准的 pathlib格式。</li>
+<li>通过parent属性去掉脚本的文件名，取得当前脚本所在的路径。</li>
+<li>再通过joinpath()函数把脚本所在的路径和e.txt文件名进行拼接，得到e.txt的完整路径。</li>
+</ul>
+<p>这种取得脚本同目录下的其他文件完整路径的用法，要比直接指定文件完整路径用法更灵活。</p>
+<blockquote>
+<p>__file__变量比较特殊，它是在Python中预先定义好的一个变量，默认情况下它的值会被 Python自动设置为当前脚本的完整路径名称。有了它，我就可以通过Python脚本的路径取得 e.txt的完整路径了。</p>
+</blockquote>
+<h4 id="设置字符编码"><a href="#设置字符编码" class="headerlink" title="设置字符编码"></a>设置字符编码</h4><p>第二个参数的作用是设置open()函数使用何种字符编码打开文件。</p>
+<h4 id="函数传参调用"><a href="#函数传参调用" class="headerlink" title="函数传参调用"></a>函数传参调用</h4><p>为什们指定这个参数的时候，要特意写出变量名称encoding呢？</p>
+<p>在函数定义的时候我们可以为函数指定一个或多个参数，如果使用了多个参数，你在调用函 数的时候需要按顺序依次传入每一个参数。但是如果你想要使用某个参数默认值或不想按照 顺序传入参数时怎么办呢？函数调用时，还可以根据参数的关键字来指定为函数传入哪些参 数。比如说open()函数的参数有7个，</p>
+<p><img data-src="/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220209193920724.png" alt="image-20220209193920724"></p>
+<p>在open()函数的定义中，encoding参数是open()函数的第4个参数。如果我们只需要第1个和 第4个参数，其他参数需要保持默认时，就可以使用如下格式调用open()函数：</p>
+<p><img data-src="/2022/02/06/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E8%B7%A8%E6%96%87%E4%BB%B6%E5%AD%97%E6%95%B0%E7%BB%9F%E8%AE%A1/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220209193956499.png" alt="image-20220209193956499"></p>
+<p>在代码中，调用open()函数时，由于file参数是open()函数的第一个参数，因此可以不用指定 参数的关键字。encoding参数并非open()函数定义的第二个参数，而是第四个参数，所以需 要指定它的参数名称为encoding，根据open()函数的定义，encoding=”utf-8”会作为 open()函数的第四个参数使用。这种使用关键字作为函数的参数的方式，也被称作<strong>函数的关键字传参方式</strong>。</p>
+<h3 id="with使用"><a href="#with使用" class="headerlink" title="with使用"></a>with使用</h3><p>with关键字下面的代码是缩进形式，和with关键字形成了一个语句块</p>
+<p>在with语句 块结束之后，不必手动调用close()函数关闭文件，Python会自动将文件关闭。因此，你会看到我在程序中调用了open()函数打开文件，但是没有调用关闭文件的close()函数。</p>
+<p>总的来说，相对于手动调用close()函数来关闭文件，使用with函数减少了打开过多文件造成系统资源浪费和数据丢失的风险。</p>
+<h4 id="文件读取"><a href="#文件读取" class="headerlink" title="文件读取"></a>文件读取</h4><p>正确使用了open()函数的两个参数以后，会返回一个表示文件的对象f, 只有设置了正确 的文件路径、文件名称和字符编码，才能继续进行文件读取操作。文件的读取操作使用的是 read()函数，read()函数会根据文件的对象f，按照open()函数定义好的打开方式进行逐个字 的读取操作。Python对文件的其他操作，全都需要通过文件操作函数调用对象f来完成。</p>
+<h4 id="统计文件的字数"><a href="#统计文件的字数" class="headerlink" title="统计文件的字数"></a>统计文件的字数</h4><p>Python的内置函数**len()**来实现</p>
+<p>len()函数在Python中最初设计的功能就是统计字符串的长度，即字符串中有多少字符。利用len()函数可以对字符串数据类型进行操作的特性，将文件一次性读入内存，放入字符串数据类型中。我在统计字数之前还增加了一个rstrip()函数，它会自动剔除出现在文件末尾的空行、空格，让你统计的结果更精确。</p>
+<p>在进行文件字数统计的时候，需要注意，在代码中使用了read()函数实现了对文件内容的一<br>次性读取到内存的功能。如果你的文件较大，我建议你使用readline()函数按行读取，并逐行<br>统计字数，否则容易出现内存不足的问题。</p>
+<h4 id="将统计结果写入文件"><a href="#将统计结果写入文件" class="headerlink" title="将统计结果写入文件"></a>将统计结果写入文件</h4><p>将统计结果写入文件，可以对<strong>open()函数</strong>打开文件方式进行简单的修改，就可以实现文件写入功能了，写入文件的代码如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;total.txt&quot;</span>, <span class="string">&quot;w&quot;</span>, encodong=<span class="string">&quot;utf-8&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">	 f.write(<span class="string">&quot;15个字符&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>open()函数的第二个参数表示文件的打开方式，它默认值是“r”，代表了文件以读取方式进行打开。这时对象f只能进行文件读取操作，我们需要将第二个参数指定为”w”，就可以使用wirte()函数对文件进行写入操作了。而write()函数的第一个参数就是即将要写入文件的内容。</p>
+<h3 id="怎么统计多个文件的次数"><a href="#怎么统计多个文件的次数" class="headerlink" title="怎么统计多个文件的次数"></a>怎么统计多个文件的次数</h3><p>对多个文件的字数统计，就可以使用for循环来实现批量读取多个文件的内容。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">p = Path(src_path)</span><br><span class="line">files = [x <span class="keyword">for</span> x <span class="keyword">in</span> p.iterdir() <span class="keyword">if</span> PurePath(x).match(<span class="string">&#x27;*.txt&#x27;</span>)]</span><br><span class="line"><span class="keyword">for</span> files <span class="keyword">in</span> files:</span><br><span class="line">	<span class="keyword">with</span> <span class="built_in">open</span>(file,encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        content = f.read()</span><br><span class="line">words = content.rstrip()</span><br><span class="line">    	number = <span class="built_in">len</span>(words)</span><br></pre></td></tr></table></figure>
+<p>数字类型是一种非常适合进行整数、浮点数的转换和算数几何计算最常用的类型。在单文件字数统计的场景，用来储存每个文件的字数是最合适的类型。如果把场景扩展到统计多个文件的字数，使用一个数字类型的变量是不够的，你需要在循环中再增加一个新的数字类型的变量，对多个文件的统计结果进行依次累加就可以了。</p>
 ]]></content>
       <categories>
         <category>Python开发</category>
@@ -2302,85 +2381,6 @@
       </categories>
       <tags>
         <tag>栈</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Python自动化办公-图片识别</title>
-    <url>/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/</url>
-    <content><![CDATA[<h1 id="使用Python实现高效自动化图片组在线-离线识别（转文字）"><a href="#使用Python实现高效自动化图片组在线-离线识别（转文字）" class="headerlink" title="使用Python实现高效自动化图片组在线/离线识别（转文字）"></a>使用Python实现高效自动化图片组在线/离线识别（转文字）</h1><h2 id="图片识别转文字的两种方式："><a href="#图片识别转文字的两种方式：" class="headerlink" title="图片识别转文字的两种方式："></a>图片识别转文字的两种方式：</h2><blockquote>
-<p>在线识别</p>
-<p>优点： 在线识别在初次进行文字识别的时候，准确率非常高。比如对聊天截图中的识别准确率就高达99%。因为在线识别使用了人工智能领域的深度学习算法和文字识别相结合的技术，能够把图片转换成文字后，还能在语义上把相近的字进行二次纠正。 比如说，被识别的内容包含英文单词“Hello”，一旦它的字母“o”被识别成数字“0”，在 线识别软件就会根据上下文语境把这类错误纠正回来，而这种二次纠正的功能在离线识别软 件中是没有的。</p>
-<p>缺点：</p>
-<ol>
-<li>识别文字的过程需要在公有云的服务器上完成。也 就是说需要通过互联网把图片上传到服务器，那么一旦图片过大，或者图片数量比较多，就会导致上传时间过长。对于一些大批量文字识别场景/实时性要求很高的场景，在线识别不能满足要求</li>
-<li>图片需要经过互联网传输，识别以后的图片该怎么保存，怎么销毁，是不是会被其他 人得到，这些都是安全风险。总之，信息泄露的风险比较大。所以像公司的合同、财务资料 等涉密程度比较高的扫描件，很少使用在线识别。</li>
-</ol>
-</blockquote>
-<blockquote>
-<p>离线识别</p>
-<p>这种方式在识别过程中不需要连接网络，节省了在线传输图片的时间，适合那些对实时性要 求比较高或网络信号比较差的场景。</p>
-<p>离线识别方式的问题就在于，初次识别文字的准确率比较低，识别完之后必须要经过人 工二次纠正才行。所以在前期人工校对，花费的时间相对来说会比较长。</p>
-</blockquote>
-<img data-src="/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/image01.png" class>
-
-<h2 id="在线识别"><a href="#在线识别" class="headerlink" title="在线识别"></a>在线识别</h2><p>在线文字识别方式，识别的主要功能的需要放在公有云的服务器中才能实现，所以在代码实 现中就要考虑用户验证和图片加密传输问题。</p>
-<p>用户验证能确保识别的结果交还给你本人，图片加密传输能确保图片上的信息不会被其他人 窃取到。这些功能，各个公有云的AI产品都考虑得非常周全，一般会提供给用户一个扩展 库。你要做的，就是安装这些扩展库。</p>
-<p><strong>以百度Ai图片转文字识别产品为例</strong></p>
-<blockquote>
-<p>pip install baidu-aip</p>
-</blockquote>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> aip <span class="keyword">import</span> AipOcr</span><br><span class="line"></span><br><span class="line">APP_ID = <span class="string">&#x27;&#x27;</span></span><br><span class="line">API_Key = <span class="string">&#x27;&#x27;</span></span><br><span class="line">SECRET_KEY = <span class="string">&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">client = AipOcr(APP_ID,API_Key,SECRET_KEY)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取图片</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_file_content</span>(<span class="params">filepath</span>):</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(filepath,<span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> fp:</span><br><span class="line">        <span class="keyword">return</span> fp.read()</span><br><span class="line"></span><br><span class="line">image = get_file_content(<span class="string">&#x27;example.png&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调用文字识别，图片参数为本地图片</span></span><br><span class="line">result = client.basicGeneral(image)</span><br><span class="line">print(result)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
- <img data-src="/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/image02.png" class>
-
-<p>当把这三个变量传入AipOcr函数，使用AipOcr函数通过互联网交互后，就可以用来识别用户 是不是被授权使用相应的产品，之后就可以把图片加密发送到AI产品的服务器上了。</p>
-<h2 id="离线识别（pytesseract）"><a href="#离线识别（pytesseract）" class="headerlink" title="离线识别（pytesseract）"></a>离线识别（pytesseract）</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pytesseract</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打开图片</span></span><br><span class="line">image = Image.<span class="built_in">open</span>(<span class="string">&#x27;example.png&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 转为灰度图片</span></span><br><span class="line">imgry = image.convert(<span class="string">&#x27;L&#x27;</span>)</span><br><span class="line"><span class="comment"># 二值化，采用阈值分割算法，threhold为分割点，根据图片质量调节</span></span><br><span class="line">threhold = <span class="number">150</span></span><br><span class="line">table = []</span><br><span class="line"><span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">256</span>):</span><br><span class="line">    <span class="keyword">if</span> j&lt;threhold:</span><br><span class="line">        table.append(<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        table.append(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">temp = imgry.point(table,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">temp = imgry.point(table,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># OCR识别，调用pytesseract库，lang指定中文，--psm 6表示按行识别，有助于提升准确率</span></span><br><span class="line">text = pytesseract.image_to_string(temp,lang=<span class="string">&quot;chi_sim+eng&quot;</span>,config=<span class="string">&#x27;--psm 6&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印识别结果</span></span><br><span class="line">print(text)</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><strong>遇到问题</strong></p>
-<p>TesseractNotFoundError: tesseract is not installed or it’s not in your PATH. See README file for more information.</p>
-<p><strong>原因</strong>：</p>
-<p>pytesseract是依赖c++编写的tesseract工具才能正常工作的，需要先安装teseract</p>
-<p><strong>解决</strong>：</p>
-<p><a href="https://blog.csdn.net/wang_hugh/article/details/80760940">https://blog.csdn.net/wang_hugh/article/details/80760940</a></p>
-</blockquote>
-<p>对图片文字离线识别的一般过程如下：</p>
-<ul>
-<li>图像输入</li>
-<li>前期处理，比如二值化，图像降噪，倾斜纠正</li>
-<li>文字检测，比如版面分析，字符分割</li>
-<li>文本识别，比如字符识别，后期纠正（<strong>影响准确率最大</strong>）</li>
-<li>输出文本</li>
-</ul>
-<p>离线识别训练样本较小，正确率相较于在线识别是不高的。具体的解决方案有以下两种</p>
-<blockquote>
-<p>通过人工纠正，形成新的训练模型（不断增加算法模型中标本的数量）</p>
-</blockquote>
-<p>像身份证识别、票据识别、聊天截图等大部分文字识别场景，这些待识别图片采用了印刷体，每个字的间隔都是固定的，所以我们要想提升准确率，通常的做法是对每个字都进行人 工纠错。</p>
-<p>所以整个过程你可以理解成三个步骤： 第一步，人工观察； 第二步，对比原始图像； 第三步，把错误的文字手工纠正为正确的汉字。 比如截图中的“某”字，多次识别错误，当我们人工把这些文字改为正确的“某”字之后， 就可以生成一个训练文件，再把训练文件和文字识别的算法合并成新的识别模型。等下次再 识别发票的时候，就可以采用新的模型进行识别。所以再次出  现“某”字，就可以正确识别了。</p>
-<p><strong>这种文字标注对于单一场景非常有效，比如名片、火车票、飞机票、发票、车牌的识别场 景，经过手工标注，不断增加样本数量之后，能够让正确率呈对数级别增加。</strong></p>
-<blockquote>
-<p>使用在线识别软件来优化离线识别软件</p>
-</blockquote>
-<img data-src="/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/image03.png" class>
-
-
-
-<h2 id="识别成功后的文字处理工作"><a href="#识别成功后的文字处理工作" class="headerlink" title="识别成功后的文字处理工作"></a>识别成功后的文字处理工作</h2><p>下图为在线识别的结果</p>
-<img data-src="/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/image04.png" class>
-
-<p>为了能够提取文本内容，去掉记录分段信息的”word”和 “{ }”，需要对这段文字再加工处理。</p>
-<p>仔细观察的话，就会发现这段文字是有一定规律的，它的写法就是Python的基本数据类型“字典”，字典类型会强调一对或多对数据之间的映射关系。为了将识别的文字结果进行保存，我们还会使用另一个基本数据类型“列表”，一般用来表示多段文字的并列关系， 为了提取文本内容，我接下来把字典转换成列表就可以实现内容的提取了。 从字典到列表转换的功能怎么实现呢？首先来看一下两种数据类型的定义</p>
-<p><img data-src="/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220131094327030.png" alt="image-20220131094327030"></p>
-<p>观察这两个数据类型不难发现，把字典的VALUE存放到列表里就能实现内容的提取了，如果 字典里有多个值，可以使用for循环进行遍历，然后批量提取。对于识别的结果，我们可以采 用一段代码进行从字典到列表的转换。代码如下：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">info = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> result[<span class="string">&#x27;words_result&#x27;</span>]:</span><br><span class="line">	info.append(i[<span class="string">&#x27;words&#x27;</span>])</span><br><span class="line">print(info)</span><br></pre></td></tr></table></figure>
-<p>处理好的内容如下</p>
-
-
-]]></content>
-      <categories>
-        <category>Python开发</category>
-      </categories>
-      <tags>
-        <tag>Python自动化</tag>
       </tags>
   </entry>
   <entry>
@@ -2989,82 +2989,6 @@
       </tags>
   </entry>
   <entry>
-    <title>哈希表easy篇总结</title>
-    <url>/2021/03/11/%E5%93%88%E5%B8%8C%E8%A1%A8easy%E7%AF%87%E6%80%BB%E7%BB%93/</url>
-    <content><![CDATA[<p>##哈希表刷题总结</p>
-<h3 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h3><p>哈希表（Hash Table，也叫散列表），是根据键（Key）而直接访问在内存存储位置的数据结构。也就是说，它通过计算一个关于键值的函数，将所需查询的数据映射到表中一个位置来访问记录，这加快了查找速度。这个映射函数称做哈希函数，存放记录的数组称做哈希表。</p>
-<p>一个通俗的例子是，为了查找电话簿中某人的号码，可以创建一个按照人名首字母顺序排列的表（即建立人名 xx 到首字母 F(x)F(x) 的一个函数关系），在首字母为 WW 的表中查找 “王” 姓的电话号码，显然比直接查找就要快得多。这里使用人名作为关键字，“取首字母” 是这个例子中哈希函数的函数法则 F()F()，存放首字母的表对应哈希表。关键字和函数法则理论上可以任意确定。</p>
-<p>哈希表是使用 O(1)O(1) 时间进行数据的插入删除和查找，但是哈希表不保证表中数据的有序性，<del>这样在哈希表中查找最大数据或者最小数据的时间是 O(N)O(N) 实现。</del>哈希表不支持需要元素间任何排序信息的操作，例如findMin、findMax或者打印输出排序号的整张表。</p>
-<h3 id="设计哈希映射"><a href="#设计哈希映射" class="headerlink" title="设计哈希映射"></a>设计哈希映射</h3><p>哈希表是一个在不同语言中都有的通用数据结构。例如，Python 中的 dict 和 Java 中的 Hashmap。哈希表的特性是可以根据给出的 key 快速访问 value。</p>
-<p>设计哈希表有两个问题需要去解决： 1). 如何设计哈希方法？ 和 2).如何避免哈希碰撞？ 。</p>
-<p>1). 如何设计哈希方法？：哈希方法会将键值映射到某块存储空间，一个好的哈希方法应该将不同的键值 均匀 地分布在存储空间中。</p>
-<p>2). 如何避免哈希碰撞？：哈希方法要将大量的键值映射到一个有限的空间里,这样就有可能会将不同的键值映射到同一个存储空间，这种情况称为 ‘哈希碰撞’ 。哈希碰撞是不可避免的，但可以用策略来解决哈希碰撞。</p>
-<h3 id="1-有多少小于当前数字的数字"><a href="#1-有多少小于当前数字的数字" class="headerlink" title="1.有多少小于当前数字的数字"></a>1.有多少小于当前数字的数字</h3><p>####一、暴力求解法</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>[] smallerNumbersThanCurrent(<span class="keyword">int</span>[] nums) &#123;</span><br><span class="line">        <span class="comment">//第一种方法1：暴力求解法，逐一遍历除当前元素之外的所有元素</span></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">        复杂度分析：</span></span><br><span class="line"><span class="comment">        空间复杂度为O(n)，需要存储新的答案数组</span></span><br><span class="line"><span class="comment">        时间复杂度为O(n^2)</span></span><br><span class="line"><span class="comment">        **/</span></span><br><span class="line">        <span class="keyword">int</span> length = nums.length;</span><br><span class="line">        <span class="keyword">int</span> newtime[] = <span class="keyword">new</span> <span class="keyword">int</span>[length];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;length;i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> time = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> h=<span class="number">0</span>;h&lt;length;h++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(nums[i]&gt;nums[h])&#123;</span><br><span class="line">                    time++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            newtime[i] = time;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> newtime;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="二、计数排序"><a href="#二、计数排序" class="headerlink" title="二、计数排序"></a>二、计数排序</h4><h4 id="三、快速排序"><a href="#三、快速排序" class="headerlink" title="三、快速排序"></a>三、快速排序</h4><h4 id="四、排序与映射结合"><a href="#四、排序与映射结合" class="headerlink" title="四、排序与映射结合"></a>四、排序与映射结合</h4><h3 id="2-第一个只出现一次的字符"><a href="#2-第一个只出现一次的字符" class="headerlink" title="2.第一个只出现一次的字符"></a>2.第一个只出现一次的字符</h3><h4 id="3-1哈希表的遍历"><a href="#3-1哈希表的遍历" class="headerlink" title="3.1哈希表的遍历"></a>3.1哈希表的遍历</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">char</span> <span class="title">firstUniqChar</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        HashMap&lt;Character,Boolean&gt; dic = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">char</span>[] string = s.toCharArray();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">char</span> c:string)&#123;</span><br><span class="line">            dic.put(c,!dic.containsKey(c));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">char</span> c:string)&#123;</span><br><span class="line">            <span class="keyword">if</span>(dic.get(c))</span><br><span class="line">                <span class="keyword">return</span> c;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">复杂度分析：</span></span><br><span class="line"><span class="comment">时间复杂度：O(n)</span></span><br><span class="line"><span class="comment">空间复杂度：O(1)</span></span><br><span class="line"><span class="comment">**/</span></span><br></pre></td></tr></table></figure>
-
-
-<h4 id="3-2有序hash表的遍历"><a href="#3-2有序hash表的遍历" class="headerlink" title="3.2有序hash表的遍历"></a>3.2有序hash表的遍历</h4><p>哈希表是 去重 的，即哈希表中键值对数量 ≤ 字符串 s 的长度。因此，相比于方法一，方法二减少了第二轮遍历的循环次数。当字符串很长（重复字符很多）时，方法二则效率更高。</p>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">char</span> <span class="title">firstUniqChar</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        Map&lt;Character,Boolean&gt; dic = <span class="keyword">new</span> LinkedHashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">char</span>[] string = s.toCharArray();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">char</span> c:string)&#123;</span><br><span class="line">            dic.put(c,!dic.containsKey(c));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(Map.Entry&lt;Character,Boolean&gt; d : dic.entrySet())&#123;</span><br><span class="line">            <span class="keyword">if</span>(d.getValue())</span><br><span class="line">                <span class="keyword">return</span> d.getKey();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="3-3补充知识：Java中的Character类"><a href="#3-3补充知识：Java中的Character类" class="headerlink" title="3.3补充知识：Java中的Character类"></a>3.3补充知识：Java中的Character类</h4><p>Character 类用于对单个字符进行操作。</p>
-<p>Character 类在对象中包装一个基本类型 <strong>char</strong> 的值(类似于Integer与int的关系)</p>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">char</span> ch = <span class="string">&#x27;a&#x27;</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// Unicode 字符表示形式</span></span><br><span class="line"><span class="keyword">char</span> uniChar = <span class="string">&#x27;\u039A&#x27;</span>; </span><br><span class="line"> </span><br><span class="line"><span class="comment">// 字符数组</span></span><br><span class="line"><span class="keyword">char</span>[] charArray =&#123; <span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;c&#x27;</span>, <span class="string">&#x27;d&#x27;</span>, <span class="string">&#x27;e&#x27;</span> &#125;;</span><br></pre></td></tr></table></figure>
-<p>然而，在实际开发过程中，我们经常会遇到需要使用对象，而不是内置数据类型的情况。为了解决这个问题，Java语言为内置数据类型char提供了<strong>包装类Character类</strong>。</p>
-<p>Character类提供了一系列方法来操纵字符。你可以使用Character的构造方法创建一个Character类对象，例如：</p>
-<p>在某些情况下，Java编译器会自动创建一个Character对象。</p>
-<p>例如，将一个char类型的参数传递给需要一个Character类型参数的方法时，那么编译器会自动地将char类型参数转换为Character对象。 这种特征称为装箱，反过来称为拆箱。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 原始字符 &#x27;a&#x27; 装箱到 Character 对象 ch 中</span></span><br><span class="line">Character ch = <span class="string">&#x27;a&#x27;</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 原始字符 &#x27;x&#x27; 用 test 方法装箱</span></span><br><span class="line"><span class="comment">// 返回拆箱的值到 &#x27;c&#x27;</span></span><br><span class="line"><span class="keyword">char</span> c = test(<span class="string">&#x27;x&#x27;</span>);</span><br></pre></td></tr></table></figure>
-
-
-<p><img data-src="/2021/03/11/%E5%93%88%E5%B8%8C%E8%A1%A8easy%E7%AF%87%E6%80%BB%E7%BB%93/Users\xinghaodong\AppData\Roaming\Typora\typora-user-images\image-20210202160601128.png" alt="image-20210202160601128"></p>
-<p>###3.只出现一次的字符</p>
-<p>####3.1哈希表两次遍历</p>
-<p>使用哈希表存储每个数字和该数字出现的次数。遍历数组即可得到每个数字出现的次数，并更新哈希表，最后遍历哈希表，得到只出现一次的数字。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">singleNumber</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//使用Hash表的第一次遍历</span></span><br><span class="line">        HashMap&lt;Integer,Boolean&gt; dic = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            dic.put(i,!dic.containsKey(i));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            <span class="keyword">if</span>(dic.get(i))</span><br><span class="line">                <span class="keyword">return</span> i;   <span class="comment">//不能返回nums[i],这里的增强for循环中的i代表的是nums[]中的某一个元素</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;   <span class="comment">//当表示如不存在所求值时，，不能返回null,要返回-1.    </span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="3-2位运算"><a href="#3-2位运算" class="headerlink" title="3.2位运算"></a>3.2位运算</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">singleNumber</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> single = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> num : nums) &#123;</span><br><span class="line">            single ^= num;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> single;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="3-3集合运算"><a href="#3-3集合运算" class="headerlink" title="3.3集合运算"></a>3.3集合运算</h4><p>使用集合存储数组中出现的所有数字，并计算数组中的元素之和。由于集合保证元素无重复，因此计算集合中的所有元素之和的两倍，即为每个元素出现两次的情况下的元素之和。由于数组中只有一个元素出现一次，其余元素都出现两次，因此用集合中的元素之和的两倍减去数组中的元素之和，剩下的数就是数组中只出现一次的数字。</p>
-<h4 id="3-4集合放入与删除"><a href="#3-4集合放入与删除" class="headerlink" title="3.4集合放入与删除"></a>3.4集合放入与删除</h4><p>使用集合存储数字。遍历数组中的每个数字，如果集合中没有该数字，则将该数字加入集合，如果集合中已经有该数字，则将该数字从集合中删除，最后剩下的数字就是只出现一次的数字。</p>
-<h3 id="4-岛屿的周长"><a href="#4-岛屿的周长" class="headerlink" title="4.岛屿的周长"></a>4.岛屿的周长</h3><p>####方法一：迭代</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">islandPerimeter</span><span class="params">(<span class="keyword">int</span>[][] grid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> land=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> border=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> j = grid.length;</span><br><span class="line">        <span class="keyword">int</span> k = grid[<span class="number">0</span>].length;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;j;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> h=<span class="number">0</span>;h&lt;k;h++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(grid[i][h]==<span class="number">1</span>)&#123;</span><br><span class="line">                    land++;</span><br><span class="line">                    <span class="keyword">if</span>(i&lt;grid.length-<span class="number">1</span>&amp;&amp;grid[i+<span class="number">1</span>][h]==<span class="number">1</span>)&#123;</span><br><span class="line">                    border++;</span><br><span class="line">                    &#125;</span><br><span class="line">                     <span class="keyword">if</span>(h&lt;grid[<span class="number">0</span>].length-<span class="number">1</span>&amp;&amp;grid[i][h+<span class="number">1</span>]==<span class="number">1</span>)&#123;</span><br><span class="line">                    border++;</span><br><span class="line">                     &#125;</span><br><span class="line">                &#125;</span><br><span class="line">             &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">4</span>*land-<span class="number">2</span>*border;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">找规律，凡是两个陆地相接，必然在最后的周长计算里面损失两个边长值</span></span><br><span class="line"><span class="comment">**/</span></span><br></pre></td></tr></table></figure>
-<h4 id="方法二：DFS深度优先搜索"><a href="#方法二：DFS深度优先搜索" class="headerlink" title="方法二：DFS深度优先搜索"></a>方法二：DFS深度优先搜索</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">从土地到土地，之间不会产生周长，但从土地迈入海洋，之间会产生 1 个周长，从土地迈出矩阵边界，也会产生 1 个周长。</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">dfsfunction</span><span class="params">(<span class="keyword">int</span> i,<span class="keyword">int</span> j,<span class="keyword">int</span>[][]grid)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(i&lt;<span class="number">0</span>||i&gt;=grid.length||j&lt;<span class="number">0</span>||j&gt;=grid[<span class="number">0</span>].length)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;   <span class="comment">//当前正好要越界，周长值+1</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(grid[i][j]==<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;  <span class="comment">//说明从陆地来到了海上，周长值+1</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(grid[i][j]==<span class="number">2</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;   <span class="comment">//DFS需要记录状态，避免重复访问</span></span><br><span class="line">        &#125;</span><br><span class="line">        grid[i][j]=<span class="number">2</span>; <span class="comment">//到此，该节点已经访问完毕，状态变更</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">//从当前模块开始，向上下左右进行遍历，其实有递归的思想，最后的结果随着递归的出栈，子问题的解自上而下的返回，最终得出大问题的解</span></span><br><span class="line">        <span class="keyword">return</span> dfsfunction(i-<span class="number">1</span>,j,grid)+dfsfunction(i,j-<span class="number">1</span>,grid)+dfsfunction(i+<span class="number">1</span>,j,grid)+dfsfunction(i,j+<span class="number">1</span>,grid);       </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">islandPerimeter</span><span class="params">(<span class="keyword">int</span>[][] grid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> row = grid.length;</span><br><span class="line">        <span class="keyword">int</span> col = grid[<span class="number">0</span>].length;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;row;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;col;j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(grid[i][j]==<span class="number">1</span>)&#123;</span><br><span class="line">                       <span class="keyword">return</span> dfsfunction(i,j,grid); </span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="官方题解1-迭代—-利用算子"><a href="#官方题解1-迭代—-利用算子" class="headerlink" title="官方题解1:迭代—-利用算子"></a>官方题解1:迭代—-利用算子</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span>[] dx = &#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span>[] dy = &#123;<span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>, <span class="number">0</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">islandPerimeter</span><span class="params">(<span class="keyword">int</span>[][] grid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = grid.length, m = grid[<span class="number">0</span>].length;</span><br><span class="line">        <span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; m; ++j) &#123;</span><br><span class="line">                <span class="keyword">if</span> (grid[i][j] == <span class="number">1</span>) &#123;</span><br><span class="line">                    <span class="keyword">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">                    <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; <span class="number">4</span>; ++k) &#123;</span><br><span class="line">                        <span class="keyword">int</span> tx = i + dx[k];</span><br><span class="line">                        <span class="keyword">int</span> ty = j + dy[k];</span><br><span class="line">                        <span class="keyword">if</span> (tx &lt; <span class="number">0</span> || tx &gt;= n || ty &lt; <span class="number">0</span> || ty &gt;= m || grid[tx][ty] == <span class="number">0</span>) &#123;</span><br><span class="line">                            cnt += <span class="number">1</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    ans += cnt;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
-<p>####官方题解2:DFS—-利用算子</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    constexpr <span class="keyword">static</span> <span class="keyword">int</span> dx[<span class="number">4</span>] = &#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>&#125;;</span><br><span class="line">    constexpr <span class="keyword">static</span> <span class="keyword">int</span> dy[<span class="number">4</span>] = &#123;<span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>, <span class="number">0</span>&#125;;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y, vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt; &amp;grid, <span class="keyword">int</span> n, <span class="keyword">int</span> m)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (x &lt; <span class="number">0</span> || x &gt;= n || y &lt; <span class="number">0</span> || y &gt;= m || grid[x][y] == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (grid[x][y] == <span class="number">2</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        grid[x][y] = <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; ++i) &#123;</span><br><span class="line">            <span class="keyword">int</span> tx = x + dx[i];</span><br><span class="line">            <span class="keyword">int</span> ty = y + dy[i];</span><br><span class="line">            res += dfs(tx, ty, grid, n, m);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">islandPerimeter</span><span class="params">(vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt; &amp;grid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = grid.size(), m = grid[<span class="number">0</span>].size();</span><br><span class="line">        <span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; m; ++j) &#123;</span><br><span class="line">                <span class="keyword">if</span> (grid[i][j] == <span class="number">1</span>) &#123;</span><br><span class="line">                    ans += dfs(i, j, grid, n, m);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
-<p>这个题放在散列表题目下，个人觉得是因为可以使用散列表去记录方格的访问状态</p>
-<p>key用来放方格点，value用true或者false来代表方格是否被访问过。</p>
-<h3 id="5-岛屿的数量"><a href="#5-岛屿的数量" class="headerlink" title="5.岛屿的数量"></a>5.岛屿的数量</h3><p>###6.岛屿的最大面积</p>
-<h3 id="7-查找常用字符"><a href="#7-查找常用字符" class="headerlink" title="7.查找常用字符"></a>7.查找常用字符</h3><p>总体来说，还是hash表的思路，重点在于用一个数组创建索引，用另外一个数组更新值。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//遍历、计数、更新</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">用数组实现一个哈希表，以字符为数组下标索引：字符-&#x27;a&#x27;=索引---即：0-&#x27;a&#x27;,2-&#x27;b&#x27;,3-&#x27;c&#x27;,25-&#x27;z&#x27;.</span></span><br><span class="line"><span class="comment">用freq数组存储当前遍历字符串中各字符的数量,在遍历完成后，</span></span><br><span class="line"><span class="comment">以各字符数量的最小值更新minfreq数组，遍历完成后即可得到公共字符的数量集合hash，</span></span><br><span class="line"><span class="comment">将minfreq数组中的非0值还原成字符串加入到列表中，即可得到答案。</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">commonChars</span><span class="params">(String[] A)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] minfreq = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">26</span>];   <span class="comment">//建立minfreq[c]来存储各字符串中c出现的最小次数</span></span><br><span class="line">        Arrays.fill(minfreq,Integer.MAX_VALUE);<span class="comment">//将指定的int值分配给指定的int数组的每个元素，即此时minfreq中的每个元素值均为Integer.MAX_VALUE。</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(String word:A)&#123;</span><br><span class="line">            <span class="keyword">int</span>[] freq = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">26</span>];</span><br><span class="line">            <span class="keyword">int</span> length = word.length();</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;length;i++)&#123;</span><br><span class="line">                <span class="keyword">char</span> ch =word.charAt(i);</span><br><span class="line">                ++freq[ch-<span class="string">&#x27;a&#x27;</span>];             <span class="comment">//ch-&#x27;a&#x27;创建索引</span></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">26</span>;i++)&#123;</span><br><span class="line">                minfreq[i] = Math.min(minfreq[i],freq[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        List&lt;String&gt; ans = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">26</span>;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;minfreq[i];j++)&#123;</span><br><span class="line">                ans.add(String.valueOf((<span class="keyword">char</span>)(i+<span class="string">&#x27;a&#x27;</span>)));  <span class="comment">//i+&#x27;a&#x27;是在将还原minfreq中的字符还原成字符串</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="8-唯一元素的和"><a href="#8-唯一元素的和" class="headerlink" title="8.唯一元素的和"></a>8.唯一元素的和</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">sumOfUnique</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        HashMap&lt;Integer,Boolean&gt; dic = <span class="keyword">new</span> HashMap&lt;Integer,Boolean&gt;();</span><br><span class="line">        <span class="keyword">int</span> length = nums.length;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            dic.put(i,!dic.containsKey(i));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> sum=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            <span class="keyword">if</span>(dic.get(i))&#123;</span><br><span class="line">                sum+=i;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> sum;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//字符串调用length，调用的是方法，因而要加()；数组调用length，调用的是属性，不需要加()。</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>数据结构</category>
-      </categories>
-      <tags>
-        <tag>哈希表</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>在Linux环境安装redis</title>
     <url>/2021/03/18/%E5%9C%A8Linux%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85redis/</url>
     <content><![CDATA[<h2 id="开发环境搭建"><a href="#开发环境搭建" class="headerlink" title="开发环境搭建"></a>开发环境搭建</h2><h3 id="云服务器部署redis"><a href="#云服务器部署redis" class="headerlink" title="云服务器部署redis"></a>云服务器部署redis</h3><h4 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h4><blockquote>
@@ -3147,6 +3071,82 @@
       </categories>
       <tags>
         <tag>环境部署</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>哈希表easy篇总结</title>
+    <url>/2021/03/11/%E5%93%88%E5%B8%8C%E8%A1%A8easy%E7%AF%87%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<p>##哈希表刷题总结</p>
+<h3 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h3><p>哈希表（Hash Table，也叫散列表），是根据键（Key）而直接访问在内存存储位置的数据结构。也就是说，它通过计算一个关于键值的函数，将所需查询的数据映射到表中一个位置来访问记录，这加快了查找速度。这个映射函数称做哈希函数，存放记录的数组称做哈希表。</p>
+<p>一个通俗的例子是，为了查找电话簿中某人的号码，可以创建一个按照人名首字母顺序排列的表（即建立人名 xx 到首字母 F(x)F(x) 的一个函数关系），在首字母为 WW 的表中查找 “王” 姓的电话号码，显然比直接查找就要快得多。这里使用人名作为关键字，“取首字母” 是这个例子中哈希函数的函数法则 F()F()，存放首字母的表对应哈希表。关键字和函数法则理论上可以任意确定。</p>
+<p>哈希表是使用 O(1)O(1) 时间进行数据的插入删除和查找，但是哈希表不保证表中数据的有序性，<del>这样在哈希表中查找最大数据或者最小数据的时间是 O(N)O(N) 实现。</del>哈希表不支持需要元素间任何排序信息的操作，例如findMin、findMax或者打印输出排序号的整张表。</p>
+<h3 id="设计哈希映射"><a href="#设计哈希映射" class="headerlink" title="设计哈希映射"></a>设计哈希映射</h3><p>哈希表是一个在不同语言中都有的通用数据结构。例如，Python 中的 dict 和 Java 中的 Hashmap。哈希表的特性是可以根据给出的 key 快速访问 value。</p>
+<p>设计哈希表有两个问题需要去解决： 1). 如何设计哈希方法？ 和 2).如何避免哈希碰撞？ 。</p>
+<p>1). 如何设计哈希方法？：哈希方法会将键值映射到某块存储空间，一个好的哈希方法应该将不同的键值 均匀 地分布在存储空间中。</p>
+<p>2). 如何避免哈希碰撞？：哈希方法要将大量的键值映射到一个有限的空间里,这样就有可能会将不同的键值映射到同一个存储空间，这种情况称为 ‘哈希碰撞’ 。哈希碰撞是不可避免的，但可以用策略来解决哈希碰撞。</p>
+<h3 id="1-有多少小于当前数字的数字"><a href="#1-有多少小于当前数字的数字" class="headerlink" title="1.有多少小于当前数字的数字"></a>1.有多少小于当前数字的数字</h3><p>####一、暴力求解法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>[] smallerNumbersThanCurrent(<span class="keyword">int</span>[] nums) &#123;</span><br><span class="line">        <span class="comment">//第一种方法1：暴力求解法，逐一遍历除当前元素之外的所有元素</span></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">        复杂度分析：</span></span><br><span class="line"><span class="comment">        空间复杂度为O(n)，需要存储新的答案数组</span></span><br><span class="line"><span class="comment">        时间复杂度为O(n^2)</span></span><br><span class="line"><span class="comment">        **/</span></span><br><span class="line">        <span class="keyword">int</span> length = nums.length;</span><br><span class="line">        <span class="keyword">int</span> newtime[] = <span class="keyword">new</span> <span class="keyword">int</span>[length];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;length;i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> time = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> h=<span class="number">0</span>;h&lt;length;h++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(nums[i]&gt;nums[h])&#123;</span><br><span class="line">                    time++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            newtime[i] = time;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> newtime;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="二、计数排序"><a href="#二、计数排序" class="headerlink" title="二、计数排序"></a>二、计数排序</h4><h4 id="三、快速排序"><a href="#三、快速排序" class="headerlink" title="三、快速排序"></a>三、快速排序</h4><h4 id="四、排序与映射结合"><a href="#四、排序与映射结合" class="headerlink" title="四、排序与映射结合"></a>四、排序与映射结合</h4><h3 id="2-第一个只出现一次的字符"><a href="#2-第一个只出现一次的字符" class="headerlink" title="2.第一个只出现一次的字符"></a>2.第一个只出现一次的字符</h3><h4 id="3-1哈希表的遍历"><a href="#3-1哈希表的遍历" class="headerlink" title="3.1哈希表的遍历"></a>3.1哈希表的遍历</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">char</span> <span class="title">firstUniqChar</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        HashMap&lt;Character,Boolean&gt; dic = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">char</span>[] string = s.toCharArray();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">char</span> c:string)&#123;</span><br><span class="line">            dic.put(c,!dic.containsKey(c));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">char</span> c:string)&#123;</span><br><span class="line">            <span class="keyword">if</span>(dic.get(c))</span><br><span class="line">                <span class="keyword">return</span> c;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">复杂度分析：</span></span><br><span class="line"><span class="comment">时间复杂度：O(n)</span></span><br><span class="line"><span class="comment">空间复杂度：O(1)</span></span><br><span class="line"><span class="comment">**/</span></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="3-2有序hash表的遍历"><a href="#3-2有序hash表的遍历" class="headerlink" title="3.2有序hash表的遍历"></a>3.2有序hash表的遍历</h4><p>哈希表是 去重 的，即哈希表中键值对数量 ≤ 字符串 s 的长度。因此，相比于方法一，方法二减少了第二轮遍历的循环次数。当字符串很长（重复字符很多）时，方法二则效率更高。</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">char</span> <span class="title">firstUniqChar</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        Map&lt;Character,Boolean&gt; dic = <span class="keyword">new</span> LinkedHashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">char</span>[] string = s.toCharArray();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">char</span> c:string)&#123;</span><br><span class="line">            dic.put(c,!dic.containsKey(c));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(Map.Entry&lt;Character,Boolean&gt; d : dic.entrySet())&#123;</span><br><span class="line">            <span class="keyword">if</span>(d.getValue())</span><br><span class="line">                <span class="keyword">return</span> d.getKey();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="3-3补充知识：Java中的Character类"><a href="#3-3补充知识：Java中的Character类" class="headerlink" title="3.3补充知识：Java中的Character类"></a>3.3补充知识：Java中的Character类</h4><p>Character 类用于对单个字符进行操作。</p>
+<p>Character 类在对象中包装一个基本类型 <strong>char</strong> 的值(类似于Integer与int的关系)</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">char</span> ch = <span class="string">&#x27;a&#x27;</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// Unicode 字符表示形式</span></span><br><span class="line"><span class="keyword">char</span> uniChar = <span class="string">&#x27;\u039A&#x27;</span>; </span><br><span class="line"> </span><br><span class="line"><span class="comment">// 字符数组</span></span><br><span class="line"><span class="keyword">char</span>[] charArray =&#123; <span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;c&#x27;</span>, <span class="string">&#x27;d&#x27;</span>, <span class="string">&#x27;e&#x27;</span> &#125;;</span><br></pre></td></tr></table></figure>
+<p>然而，在实际开发过程中，我们经常会遇到需要使用对象，而不是内置数据类型的情况。为了解决这个问题，Java语言为内置数据类型char提供了<strong>包装类Character类</strong>。</p>
+<p>Character类提供了一系列方法来操纵字符。你可以使用Character的构造方法创建一个Character类对象，例如：</p>
+<p>在某些情况下，Java编译器会自动创建一个Character对象。</p>
+<p>例如，将一个char类型的参数传递给需要一个Character类型参数的方法时，那么编译器会自动地将char类型参数转换为Character对象。 这种特征称为装箱，反过来称为拆箱。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 原始字符 &#x27;a&#x27; 装箱到 Character 对象 ch 中</span></span><br><span class="line">Character ch = <span class="string">&#x27;a&#x27;</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 原始字符 &#x27;x&#x27; 用 test 方法装箱</span></span><br><span class="line"><span class="comment">// 返回拆箱的值到 &#x27;c&#x27;</span></span><br><span class="line"><span class="keyword">char</span> c = test(<span class="string">&#x27;x&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+
+<p><img data-src="/2021/03/11/%E5%93%88%E5%B8%8C%E8%A1%A8easy%E7%AF%87%E6%80%BB%E7%BB%93/Users\xinghaodong\AppData\Roaming\Typora\typora-user-images\image-20210202160601128.png" alt="image-20210202160601128"></p>
+<p>###3.只出现一次的字符</p>
+<p>####3.1哈希表两次遍历</p>
+<p>使用哈希表存储每个数字和该数字出现的次数。遍历数组即可得到每个数字出现的次数，并更新哈希表，最后遍历哈希表，得到只出现一次的数字。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">singleNumber</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//使用Hash表的第一次遍历</span></span><br><span class="line">        HashMap&lt;Integer,Boolean&gt; dic = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            dic.put(i,!dic.containsKey(i));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            <span class="keyword">if</span>(dic.get(i))</span><br><span class="line">                <span class="keyword">return</span> i;   <span class="comment">//不能返回nums[i],这里的增强for循环中的i代表的是nums[]中的某一个元素</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;   <span class="comment">//当表示如不存在所求值时，，不能返回null,要返回-1.    </span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-2位运算"><a href="#3-2位运算" class="headerlink" title="3.2位运算"></a>3.2位运算</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">singleNumber</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> single = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> num : nums) &#123;</span><br><span class="line">            single ^= num;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> single;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="3-3集合运算"><a href="#3-3集合运算" class="headerlink" title="3.3集合运算"></a>3.3集合运算</h4><p>使用集合存储数组中出现的所有数字，并计算数组中的元素之和。由于集合保证元素无重复，因此计算集合中的所有元素之和的两倍，即为每个元素出现两次的情况下的元素之和。由于数组中只有一个元素出现一次，其余元素都出现两次，因此用集合中的元素之和的两倍减去数组中的元素之和，剩下的数就是数组中只出现一次的数字。</p>
+<h4 id="3-4集合放入与删除"><a href="#3-4集合放入与删除" class="headerlink" title="3.4集合放入与删除"></a>3.4集合放入与删除</h4><p>使用集合存储数字。遍历数组中的每个数字，如果集合中没有该数字，则将该数字加入集合，如果集合中已经有该数字，则将该数字从集合中删除，最后剩下的数字就是只出现一次的数字。</p>
+<h3 id="4-岛屿的周长"><a href="#4-岛屿的周长" class="headerlink" title="4.岛屿的周长"></a>4.岛屿的周长</h3><p>####方法一：迭代</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">islandPerimeter</span><span class="params">(<span class="keyword">int</span>[][] grid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> land=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> border=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> j = grid.length;</span><br><span class="line">        <span class="keyword">int</span> k = grid[<span class="number">0</span>].length;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;j;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> h=<span class="number">0</span>;h&lt;k;h++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(grid[i][h]==<span class="number">1</span>)&#123;</span><br><span class="line">                    land++;</span><br><span class="line">                    <span class="keyword">if</span>(i&lt;grid.length-<span class="number">1</span>&amp;&amp;grid[i+<span class="number">1</span>][h]==<span class="number">1</span>)&#123;</span><br><span class="line">                    border++;</span><br><span class="line">                    &#125;</span><br><span class="line">                     <span class="keyword">if</span>(h&lt;grid[<span class="number">0</span>].length-<span class="number">1</span>&amp;&amp;grid[i][h+<span class="number">1</span>]==<span class="number">1</span>)&#123;</span><br><span class="line">                    border++;</span><br><span class="line">                     &#125;</span><br><span class="line">                &#125;</span><br><span class="line">             &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">4</span>*land-<span class="number">2</span>*border;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">找规律，凡是两个陆地相接，必然在最后的周长计算里面损失两个边长值</span></span><br><span class="line"><span class="comment">**/</span></span><br></pre></td></tr></table></figure>
+<h4 id="方法二：DFS深度优先搜索"><a href="#方法二：DFS深度优先搜索" class="headerlink" title="方法二：DFS深度优先搜索"></a>方法二：DFS深度优先搜索</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">从土地到土地，之间不会产生周长，但从土地迈入海洋，之间会产生 1 个周长，从土地迈出矩阵边界，也会产生 1 个周长。</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">dfsfunction</span><span class="params">(<span class="keyword">int</span> i,<span class="keyword">int</span> j,<span class="keyword">int</span>[][]grid)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(i&lt;<span class="number">0</span>||i&gt;=grid.length||j&lt;<span class="number">0</span>||j&gt;=grid[<span class="number">0</span>].length)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;   <span class="comment">//当前正好要越界，周长值+1</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(grid[i][j]==<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;  <span class="comment">//说明从陆地来到了海上，周长值+1</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(grid[i][j]==<span class="number">2</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;   <span class="comment">//DFS需要记录状态，避免重复访问</span></span><br><span class="line">        &#125;</span><br><span class="line">        grid[i][j]=<span class="number">2</span>; <span class="comment">//到此，该节点已经访问完毕，状态变更</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">//从当前模块开始，向上下左右进行遍历，其实有递归的思想，最后的结果随着递归的出栈，子问题的解自上而下的返回，最终得出大问题的解</span></span><br><span class="line">        <span class="keyword">return</span> dfsfunction(i-<span class="number">1</span>,j,grid)+dfsfunction(i,j-<span class="number">1</span>,grid)+dfsfunction(i+<span class="number">1</span>,j,grid)+dfsfunction(i,j+<span class="number">1</span>,grid);       </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">islandPerimeter</span><span class="params">(<span class="keyword">int</span>[][] grid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> row = grid.length;</span><br><span class="line">        <span class="keyword">int</span> col = grid[<span class="number">0</span>].length;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;row;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;col;j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(grid[i][j]==<span class="number">1</span>)&#123;</span><br><span class="line">                       <span class="keyword">return</span> dfsfunction(i,j,grid); </span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="官方题解1-迭代—-利用算子"><a href="#官方题解1-迭代—-利用算子" class="headerlink" title="官方题解1:迭代—-利用算子"></a>官方题解1:迭代—-利用算子</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span>[] dx = &#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span>[] dy = &#123;<span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>, <span class="number">0</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">islandPerimeter</span><span class="params">(<span class="keyword">int</span>[][] grid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = grid.length, m = grid[<span class="number">0</span>].length;</span><br><span class="line">        <span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; m; ++j) &#123;</span><br><span class="line">                <span class="keyword">if</span> (grid[i][j] == <span class="number">1</span>) &#123;</span><br><span class="line">                    <span class="keyword">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">                    <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; <span class="number">4</span>; ++k) &#123;</span><br><span class="line">                        <span class="keyword">int</span> tx = i + dx[k];</span><br><span class="line">                        <span class="keyword">int</span> ty = j + dy[k];</span><br><span class="line">                        <span class="keyword">if</span> (tx &lt; <span class="number">0</span> || tx &gt;= n || ty &lt; <span class="number">0</span> || ty &gt;= m || grid[tx][ty] == <span class="number">0</span>) &#123;</span><br><span class="line">                            cnt += <span class="number">1</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    ans += cnt;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+<p>####官方题解2:DFS—-利用算子</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    constexpr <span class="keyword">static</span> <span class="keyword">int</span> dx[<span class="number">4</span>] = &#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>&#125;;</span><br><span class="line">    constexpr <span class="keyword">static</span> <span class="keyword">int</span> dy[<span class="number">4</span>] = &#123;<span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>, <span class="number">0</span>&#125;;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y, vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt; &amp;grid, <span class="keyword">int</span> n, <span class="keyword">int</span> m)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (x &lt; <span class="number">0</span> || x &gt;= n || y &lt; <span class="number">0</span> || y &gt;= m || grid[x][y] == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (grid[x][y] == <span class="number">2</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        grid[x][y] = <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; ++i) &#123;</span><br><span class="line">            <span class="keyword">int</span> tx = x + dx[i];</span><br><span class="line">            <span class="keyword">int</span> ty = y + dy[i];</span><br><span class="line">            res += dfs(tx, ty, grid, n, m);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">islandPerimeter</span><span class="params">(vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt; &amp;grid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = grid.size(), m = grid[<span class="number">0</span>].size();</span><br><span class="line">        <span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; m; ++j) &#123;</span><br><span class="line">                <span class="keyword">if</span> (grid[i][j] == <span class="number">1</span>) &#123;</span><br><span class="line">                    ans += dfs(i, j, grid, n, m);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+<p>这个题放在散列表题目下，个人觉得是因为可以使用散列表去记录方格的访问状态</p>
+<p>key用来放方格点，value用true或者false来代表方格是否被访问过。</p>
+<h3 id="5-岛屿的数量"><a href="#5-岛屿的数量" class="headerlink" title="5.岛屿的数量"></a>5.岛屿的数量</h3><p>###6.岛屿的最大面积</p>
+<h3 id="7-查找常用字符"><a href="#7-查找常用字符" class="headerlink" title="7.查找常用字符"></a>7.查找常用字符</h3><p>总体来说，还是hash表的思路，重点在于用一个数组创建索引，用另外一个数组更新值。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//遍历、计数、更新</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">用数组实现一个哈希表，以字符为数组下标索引：字符-&#x27;a&#x27;=索引---即：0-&#x27;a&#x27;,2-&#x27;b&#x27;,3-&#x27;c&#x27;,25-&#x27;z&#x27;.</span></span><br><span class="line"><span class="comment">用freq数组存储当前遍历字符串中各字符的数量,在遍历完成后，</span></span><br><span class="line"><span class="comment">以各字符数量的最小值更新minfreq数组，遍历完成后即可得到公共字符的数量集合hash，</span></span><br><span class="line"><span class="comment">将minfreq数组中的非0值还原成字符串加入到列表中，即可得到答案。</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">commonChars</span><span class="params">(String[] A)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] minfreq = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">26</span>];   <span class="comment">//建立minfreq[c]来存储各字符串中c出现的最小次数</span></span><br><span class="line">        Arrays.fill(minfreq,Integer.MAX_VALUE);<span class="comment">//将指定的int值分配给指定的int数组的每个元素，即此时minfreq中的每个元素值均为Integer.MAX_VALUE。</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(String word:A)&#123;</span><br><span class="line">            <span class="keyword">int</span>[] freq = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">26</span>];</span><br><span class="line">            <span class="keyword">int</span> length = word.length();</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;length;i++)&#123;</span><br><span class="line">                <span class="keyword">char</span> ch =word.charAt(i);</span><br><span class="line">                ++freq[ch-<span class="string">&#x27;a&#x27;</span>];             <span class="comment">//ch-&#x27;a&#x27;创建索引</span></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">26</span>;i++)&#123;</span><br><span class="line">                minfreq[i] = Math.min(minfreq[i],freq[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        List&lt;String&gt; ans = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">26</span>;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;minfreq[i];j++)&#123;</span><br><span class="line">                ans.add(String.valueOf((<span class="keyword">char</span>)(i+<span class="string">&#x27;a&#x27;</span>)));  <span class="comment">//i+&#x27;a&#x27;是在将还原minfreq中的字符还原成字符串</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="8-唯一元素的和"><a href="#8-唯一元素的和" class="headerlink" title="8.唯一元素的和"></a>8.唯一元素的和</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">sumOfUnique</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        HashMap&lt;Integer,Boolean&gt; dic = <span class="keyword">new</span> HashMap&lt;Integer,Boolean&gt;();</span><br><span class="line">        <span class="keyword">int</span> length = nums.length;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            dic.put(i,!dic.containsKey(i));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> sum=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            <span class="keyword">if</span>(dic.get(i))&#123;</span><br><span class="line">                sum+=i;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> sum;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//字符串调用length，调用的是方法，因而要加()；数组调用length，调用的是属性，不需要加()。</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>哈希表</tag>
       </tags>
   </entry>
   <entry>
