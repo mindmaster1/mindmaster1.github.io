@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.mindmaster.top","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="实现固定大小的cache">
+<meta property="og:type" content="article">
+<meta property="og:title" content="项目开发一:实现固定大小的cache">
+<meta property="og:url" content="https://www.mindmaster.top/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/index.html">
+<meta property="og:site_name" content="一只小码农">
+<meta property="og:description" content="实现固定大小的cache">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.mindmaster.top/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/1.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/2.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/3.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/4.png">
+<meta property="og:image" content="https://www.mindmaster.top/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/5.png">
+<meta property="article:published_time" content="2022-08-05T18:11:04.000Z">
+<meta property="article:modified_time" content="2022-08-05T10:19:48.237Z">
+<meta property="article:author" content="邢浩东">
+<meta property="article:tag" content="KV缓存第二讲">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.mindmaster.top/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/1.png">
+
+<link rel="canonical" href="https://www.mindmaster.top/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>项目开发一:实现固定大小的cache | 一只小码农</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">一只小码农</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">每天进步一点点</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-stethoscope fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">42</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-braille fa-fw"></i>分类<span class="badge">22</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">71</span></a>
+
+  </li>
+        <li class="menu-item menu-item-movies">
+
+    <a href="/movies/" rel="section"><i class="fa fa-film fa-fw"></i>电影</a>
+
+  </li>
+        <li class="menu-item menu-item-book">
+
+    <a href="/book/" rel="section"><i class="fa fa-book fa-fw"></i>书籍</a>
+
+  </li>
+        <li class="menu-item menu-item-view">
+
+    <a href="/view/" rel="section"><i class="fa fa-blind fa-fw"></i>生活见闻--杂谈</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml/" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/mindmaster1" class="github-corner" title="Fork me on GitHub" aria-label="Fork me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.mindmaster.top/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/OIP.jfif">
+      <meta itemprop="name" content="邢浩东">
+      <meta itemprop="description" content="The world favors the underdog,and I would be the bad guy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一只小码农">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          项目开发一:实现固定大小的cache
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-08-05 18:11:04 / 修改时间：10:19:48" itemprop="dateCreated datePublished" datetime="2022-08-05T18:11:04Z">2022-08-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Base-Cache%E7%BC%93%E5%AD%98/" itemprop="url" rel="index"><span itemprop="name">Base-Cache缓存</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>7.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+            <div class="post-description">实现固定大小的cache</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="项目开发一：实现固定大小的cache"><a href="#项目开发一：实现固定大小的cache" class="headerlink" title="项目开发一：实现固定大小的cache"></a>项目开发一：实现固定大小的cache</h1><h3 id="cache的发展"><a href="#cache的发展" class="headerlink" title="cache的发展"></a>cache的发展</h3><ul>
+<li><strong>HashMap</strong></li>
+</ul>
+<p>当我们应用有一定流量之后或者查询数据库特别频繁，这个时候就可以祭出我们的java中自带的HashMap或者ConcurrentHashMap。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在java代码中的表现 </span></span><br><span class="line"><span class="keyword">public</span> clasas CustomerService&#123;</span><br><span class="line">    <span class="keyword">private</span> HashMap&lt;String,String&gt; hashMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    <span class="keyword">private</span> CustomerMapper customerMapper;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getCustomer</span><span class="params">(String name)</span></span>&#123;</span><br><span class="line">        String customer = hashMap.get(name);</span><br><span class="line">        <span class="keyword">if</span>(customer == <span class="keyword">null</span>)&#123;</span><br><span class="line">            customer = customerMapper.get(name);</span><br><span class="line">            hashMap.put(name,customer);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> customer;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><ul>
+<li>实现的功能：通过HashMap实现了数据的添加和查找—作为缓存。</li>
+<li>存在的问题：HashMap无法进行数据淘汰，内存会无限制的增长。</li>
+</ul>
+</li>
+<li><p><strong>LRUHashMap</strong></p>
+</li>
+</ul>
+<p>在HashMap的基础上，增加了数据淘汰，下面为几种常见的数据淘汰算法</p>
+<ul>
+<li><ul>
+<li>FIFO</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">先进先出，在这种淘汰算法中，先进入缓存的会先被淘汰。这种可谓是最简单的了，但是会导致我们命中率很低。</span><br><span class="line"></span><br><span class="line">试想一下我们如果有个访问频率很高的数据是所有数据第一个访问的，而那些不是很高的是后面再访问的，那这样就会把我们的首个数据但是他的访问频率很高给挤出。</span><br></pre></td></tr></table></figure>
+<ul>
+<li><ul>
+<li>LRU</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">最近最少使用算法。</span><br><span class="line"></span><br><span class="line">在这种算法中避免了上面的问题，每次访问数据都会将其放在我们的队尾，如果需要淘汰数据，就只需要淘汰队首即可。</span><br><span class="line"></span><br><span class="line">但是这个依然有个问题，如果有个数据在1个小时的前59分钟访问了1万次(可见这是个热点数据),再后一分钟没有访问这个数据，但是有其他的数据访问，就导致了我们这个热点数据被淘汰。</span><br></pre></td></tr></table></figure>
+<ul>
+<li><ul>
+<li>LFU</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">最近最少频率使用。</span><br><span class="line"></span><br><span class="line">在这种算法中又对上面进行了优化，利用额外的空间记录每个数据的使用频率，然后选出频率最低进行淘汰。这样就避免了LRU不能处理时间段的问题。</span><br></pre></td></tr></table></figure>
+<p>上面列举了三种淘汰策略，对于这三种，<strong>实现成本是一个比一个高</strong>，同样的命中率也是一个比一个好。而我们一般来说选择的方案居中即可，即实现成本不是太高，而命中率也还行的<strong>LRU</strong>,如何实现一个LRUMap呢？</p>
+<p>我们可以<strong>通过继承 LinkedHashMap</strong>，<strong>重写 removeEldestEntry</strong> 方法，即可完成一个简单的 LRUMap。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LRUMap</span> <span class="keyword">extends</span> <span class="title">LinkedHashMap</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> max;</span><br><span class="line">    <span class="keyword">private</span> Object lock;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LRUMap</span><span class="params">(<span class="keyword">int</span> max, Object lock)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//无需扩容</span></span><br><span class="line">        <span class="keyword">super</span>((<span class="keyword">int</span>) (max * <span class="number">1.4f</span>), <span class="number">0.75f</span>, <span class="keyword">true</span>);</span><br><span class="line">        <span class="keyword">this</span>.max = max;</span><br><span class="line">        <span class="keyword">this</span>.lock = lock;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 重写LinkedHashMap的removeEldestEntry方法即可</span></span><br><span class="line"><span class="comment">     * 在Put的时候判断，如果为true，就会删除最老的</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> eldest</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">removeEldestEntry</span><span class="params">(Map.Entry eldest)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> size() &gt; max;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getValue</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (lock) &#123;</span><br><span class="line">            <span class="keyword">return</span> get(key);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">putValue</span><span class="params">(Object key, Object value)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (lock) &#123;</span><br><span class="line">            put(key, value);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">removeValue</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (lock) &#123;</span><br><span class="line">            <span class="keyword">return</span> remove(key) != <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">removeAll</span><span class="params">()</span></span>&#123;</span><br><span class="line">        clear();</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; 。</span><br></pre></td></tr></table></figure>
+<p>在LinkedHashMap中维护了一个entry(用来放key和value的对象)链表。在每一次get或者put的时候都会把插入的新entry，或查询到的老entry放在我们<strong>链表末尾</strong>。</p>
+<p>可以注意到我们在构造方法中，设置的大小特意设置到max*1.4，</p>
+<p>在下面的removeEldestEntry方法中只需要size&gt;max就淘汰，这样我们这个map永远也走不到扩容的逻辑了，</p>
+<p>通过重写LinkedHashMap，几个简单的方法我们实现了我们的LruMap。</p>
+<ul>
+<li><ul>
+<li><strong>存在问题：</strong></li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>锁竞争严重，可以看见我的代码中，<strong>Lock是全局锁，在方法级别上面的</strong>，当调用量较大时，性能必然会比较低。</li>
+<li>不支持过期时间</li>
+<li>不支持自动刷新</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Guava cache</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//谷歌的缓存</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ExecutionException </span>&#123;</span><br><span class="line">    LoadingCache&lt;String, String&gt; cache = CacheBuilder.newBuilder()</span><br><span class="line">            .maximumSize(<span class="number">100</span>)</span><br><span class="line">            <span class="comment">//写之后30ms过期</span></span><br><span class="line">            .expireAfterWrite(<span class="number">30L</span>, TimeUnit.MILLISECONDS)</span><br><span class="line">            <span class="comment">//访问之后30ms过期</span></span><br><span class="line">            .expireAfterAccess(<span class="number">30L</span>, TimeUnit.MILLISECONDS)</span><br><span class="line">            <span class="comment">//20ms之后刷新</span></span><br><span class="line">            .refreshAfterWrite(<span class="number">20L</span>, TimeUnit.MILLISECONDS)</span><br><span class="line">            <span class="comment">//开启weakKey key 当启动垃圾回收时，该缓存也被回收</span></span><br><span class="line">            .weakKeys()</span><br><span class="line">            .build(createCacheLoader());</span><br><span class="line">    System.out.println(cache.get(<span class="string">&quot;hello&quot;</span>));</span><br><span class="line">    cache.put(<span class="string">&quot;hello1&quot;</span>, <span class="string">&quot;我是hello1&quot;</span>);</span><br><span class="line">    System.out.println(cache.get(<span class="string">&quot;hello1&quot;</span>));</span><br><span class="line">    cache.put(<span class="string">&quot;hello1&quot;</span>, <span class="string">&quot;我是hello2&quot;</span>);</span><br><span class="line">    System.out.println(cache.get(<span class="string">&quot;hello1&quot;</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> com.google.common.cache.<span class="function">CacheLoader&lt;String, String&gt; <span class="title">createCacheLoader</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> com.google.common.cache.CacheLoader&lt;String, String&gt;() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">load</span><span class="params">(String key)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> key;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="本项目实现"><a href="#本项目实现" class="headerlink" title="本项目实现"></a>本项目实现</h3><h4 id="接口定义"><a href="#接口定义" class="headerlink" title="接口定义"></a>接口定义</h4><p>为了兼容 Map，我们定义缓存接口继承自 Map 接口。</p>
+<img data-src="/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/1.png" class>
+
+<img data-src="/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/2.png" class>
+
+<p>为了实现一个固定大小的cache,Cache中对Map接口方法进行重写</p>
+<h4 id="put时的实现"><a href="#put时的实现" class="headerlink" title="put时的实现"></a>put时的实现</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">   <span class="meta">@CacheInterceptor(aof = true, evict = true)</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> V <span class="title">put</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">       <span class="comment">//1.1 尝试驱除</span></span><br><span class="line">       CacheEvictContext&lt;K,V&gt; context = <span class="keyword">new</span> CacheEvictContext&lt;&gt;();</span><br><span class="line">       context.key(key).size(sizeLimit).cache(<span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line">       ICacheEntry&lt;K,V&gt; evictEntry = evict.evict(context);</span><br><span class="line"></span><br><span class="line">       <span class="comment">// 添加拦截器调用</span></span><br><span class="line">       <span class="keyword">if</span>(ObjectUtil.isNotNull(evictEntry)) &#123;</span><br><span class="line">           <span class="comment">// 执行淘汰监听器</span></span><br><span class="line">           ICacheRemoveListenerContext&lt;K,V&gt; removeListenerContext = CacheRemoveListenerContext.&lt;K,V&gt;newInstance().key(evictEntry.key())</span><br><span class="line">                   .value(evictEntry.value())</span><br><span class="line">                   .type(CacheRemoveType.EVICT.code());</span><br><span class="line">           <span class="keyword">for</span>(ICacheRemoveListener&lt;K,V&gt; listener : context.cache().removeListeners()) &#123;</span><br><span class="line">               listener.listen(removeListenerContext);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="comment">//2. 判断驱除后的信息</span></span><br><span class="line">       <span class="keyword">if</span>(isSizeLimit()) &#123;</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> CacheRuntimeException(<span class="string">&quot;当前队列已满，数据添加失败！&quot;</span>);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="comment">//3. 执行添加</span></span><br><span class="line">       <span class="keyword">return</span> map.put(key, value);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+ <img data-src="/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/3.png" class>
+
+<h4 id="淘汰策略"><a href="#淘汰策略" class="headerlink" title="淘汰策略"></a>淘汰策略</h4><p>淘汰策略可以有多种，比如 LRU/LFU/FIFO 等等，我们此处实现一个最基本的 FIFO。所有实现<strong>以接口的方式实现，便于后期灵活替换</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CacheEvictFifo</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">AbstractCacheEvict</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * queue 信息</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Queue&lt;K&gt; queue = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CacheEntry&lt;K,V&gt; <span class="title">doEvict</span><span class="params">(ICacheEvictContext&lt;K, V&gt; context)</span> </span>&#123;</span><br><span class="line">        CacheEntry&lt;K,V&gt; result = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> ICache&lt;K,V&gt; cache = context.cache();</span><br><span class="line">        <span class="comment">// 超过限制，执行移除</span></span><br><span class="line">        <span class="keyword">if</span>(cache.size() &gt;= context.size()) &#123;</span><br><span class="line">            K evictKey = queue.remove();</span><br><span class="line">            <span class="comment">// 移除最开始的元素</span></span><br><span class="line">            V evictValue = cache.remove(evictKey);</span><br><span class="line">            result = <span class="keyword">new</span> CacheEntry&lt;&gt;(evictKey, evictValue);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 将新加的元素放入队尾</span></span><br><span class="line">        <span class="keyword">final</span> K key = context.key();</span><br><span class="line">        queue.add(key);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>除了FIFO策略的实现，还内置了其他几种实现策略</p>
+ <img data-src="/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/4.png" class>
+
+ <img data-src="/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/5.png" class>
+
+<h4 id="引导类"><a href="#引导类" class="headerlink" title="引导类"></a>引导类</h4><p>为了便于用户使用，我们实现类似于 guava 的引导类。所有参数都提供默认值，使用 fluent 流式写法，提升用户体验</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">CacheBs</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">CacheBs</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 创建对象实例</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> &lt;K&gt; key</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> &lt;V&gt; value</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> this</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;K,V&gt; <span class="function">CacheBs&lt;K,V&gt; <span class="title">newInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> CacheBs&lt;&gt;();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * map 实现</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Map&lt;K,V&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 大小限制</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> size = Integer.MAX_VALUE;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 驱除策略</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> ICacheEvict&lt;K,V&gt; evict = CacheEvicts.fifo();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 删除监听类</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.6</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> List&lt;ICacheRemoveListener&lt;K,V&gt;&gt; removeListeners = CacheRemoveListeners.defaults();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 慢操作监听类</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.9</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> List&lt;ICacheSlowListener&gt; slowListeners = CacheSlowListeners.none();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 加载策略</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.7</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> ICacheLoad&lt;K,V&gt; load = CacheLoads.none();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 持久化实现策略</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.8</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> ICachePersist&lt;K,V&gt; persist = CachePersists.none();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * map 实现</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> map map</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> this</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CacheBs&lt;K, V&gt; <span class="title">map</span><span class="params">(Map&lt;K, V&gt; map)</span> </span>&#123;</span><br><span class="line">        ArgUtil.notNull(map, <span class="string">&quot;map&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.map = map;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 设置 size 信息</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> size size</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> this</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CacheBs&lt;K, V&gt; <span class="title">size</span><span class="params">(<span class="keyword">int</span> size)</span> </span>&#123;</span><br><span class="line">        ArgUtil.notNegative(size, <span class="string">&quot;size&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.size = size;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 设置驱除策略</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> evict 驱除策略</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> this</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CacheBs&lt;K, V&gt; <span class="title">evict</span><span class="params">(ICacheEvict&lt;K, V&gt; evict)</span> </span>&#123;</span><br><span class="line">        ArgUtil.notNull(evict, <span class="string">&quot;evict&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.evict = evict;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 设置加载</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> load 加载</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> this</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.7</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CacheBs&lt;K, V&gt; <span class="title">load</span><span class="params">(ICacheLoad&lt;K, V&gt; load)</span> </span>&#123;</span><br><span class="line">        ArgUtil.notNull(load, <span class="string">&quot;load&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.load = load;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 添加删除监听器</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> removeListener 监听器</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> this</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.6</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CacheBs&lt;K, V&gt; <span class="title">addRemoveListener</span><span class="params">(ICacheRemoveListener&lt;K,V&gt; removeListener)</span> </span>&#123;</span><br><span class="line">        ArgUtil.notNull(removeListener, <span class="string">&quot;removeListener&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.removeListeners.add(removeListener);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 添加慢日志监听器</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> slowListener 监听器</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> this</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.9</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CacheBs&lt;K, V&gt; <span class="title">addSlowListener</span><span class="params">(ICacheSlowListener slowListener)</span> </span>&#123;</span><br><span class="line">        ArgUtil.notNull(slowListener, <span class="string">&quot;slowListener&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.slowListeners.add(slowListener);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 设置持久化策略</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> persist 持久化</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> this</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.8</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CacheBs&lt;K, V&gt; <span class="title">persist</span><span class="params">(ICachePersist&lt;K, V&gt; persist)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.persist = persist;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 构建缓存信息</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 缓存信息</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ICache&lt;K,V&gt; <span class="title">build</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Cache&lt;K,V&gt; cache = <span class="keyword">new</span> Cache&lt;&gt;();</span><br><span class="line">        cache.map(map);</span><br><span class="line">        cache.evict(evict);</span><br><span class="line">        cache.sizeLimit(size);</span><br><span class="line">        cache.removeListeners(removeListeners);</span><br><span class="line">        cache.load(load);</span><br><span class="line">        cache.persist(persist);</span><br><span class="line">        cache.slowListeners(slowListeners);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 初始化</span></span><br><span class="line">        cache.init();</span><br><span class="line">        <span class="keyword">return</span> CacheProxy.getProxy(cache);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">相关文章推荐</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2022\08\06\fluent流式编程\" rel="bookmark">fluent流式编程</a></div>
+        <div class="popular-posts-excerpt"><p>fluent流式编程实现</p></div>
+    </li>
+  </ul>
+
+        <div class="reward-container">
+  <div>谢谢你的支持哦，继续加油.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="邢浩东 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="邢浩东 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>邢浩东
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.mindmaster.top/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/" title="项目开发一:实现固定大小的cache">https://www.mindmaster.top/2022/08/06/项目开发一-实现固定大小的cache/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-%E9%82%A2%E6%B5%A9%E4%B8%9C/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-邢浩东</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/KV%E7%BC%93%E5%AD%98%E7%AC%AC%E4%BA%8C%E8%AE%B2/" rel="tag"># KV缓存第二讲</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/08/06/fluent%E6%B5%81%E5%BC%8F%E7%BC%96%E7%A8%8B/" rel="prev" title="fluent流式编程">
+      <i class="fa fa-chevron-left"></i> fluent流式编程
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80%EF%BC%9A%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache"><span class="nav-number">1.</span> <span class="nav-text">项目开发一：实现固定大小的cache</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cache%E7%9A%84%E5%8F%91%E5%B1%95"><span class="nav-number">1.0.1.</span> <span class="nav-text">cache的发展</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AC%E9%A1%B9%E7%9B%AE%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.0.2.</span> <span class="nav-text">本项目实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A5%E5%8F%A3%E5%AE%9A%E4%B9%89"><span class="nav-number">1.0.2.1.</span> <span class="nav-text">接口定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#put%E6%97%B6%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.0.2.2.</span> <span class="nav-text">put时的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5"><span class="nav-number">1.0.2.3.</span> <span class="nav-text">淘汰策略</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%95%E5%AF%BC%E7%B1%BB"><span class="nav-number">1.0.2.4.</span> <span class="nav-text">引导类</span></a></li></ol></li></ol></li></ol></li></ol></div>
+
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="邢浩东"
+      src="/images/OIP.jfif">
+  <p class="site-author-name" itemprop="name">邢浩东</p>
+  <div class="site-description" itemprop="description">The world favors the underdog,and I would be the bad guy</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">71</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">42</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mindmaster1" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mindmaster1" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/yourname" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;yourname" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.csdn.net/" title="CSDN → https:&#x2F;&#x2F;www.csdn.net" rel="noopener" target="_blank"><i class="fab fa-apple fa-fw"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://juejin.cn/user/1706074845232983" title="掘金 → https:&#x2F;&#x2F;juejin.cn&#x2F;user&#x2F;1706074845232983" rel="noopener" target="_blank"><i class="fa fa-binoculars fa-fw"></i>掘金</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Leetcode刷题
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://leetcode-cn.com/" title="https:&#x2F;&#x2F;leetcode-cn.com&#x2F;" rel="noopener" target="_blank">通向快乐</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+ <div>
+    <svg>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-1"></text>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-2"></text>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-3"></text>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-4"></text>
+    </svg>
+</div>
+<script>
+function showtime(){
+    var noatime = new Date();
+    var h = noatime.getHours(),
+        m = noatime.getMinutes(),
+        s = noatime.getSeconds();
+    h=checktime(h);
+    m=checktime(m);
+    s=checktime(s);
+  return h+":"+m+":"+s;
+}
+function checktime(x){
+  if(x<10){
+    x="0"+x;
+  }
+  return x;
+}
+var div1=document.getElementsByTagName("text");
+setInterval(function(){
+  for (var i in div1){
+      div1[i].innerHTML=showtime();
+  }
+},1000);
+</script>	   
+
+<script type="text/javascript" src="//rf.revolvermaps.com/0/0/1.js?i=57fnj853bkq&amp;s=220&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+ 
+    
+  </ul>
+    </div>
+	
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+	
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">邢浩东</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">298k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">4:31</span>
+</div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'dOLOPmQA1yPidXhJmndTryVE-gzGzoHsz',
+      appKey     : 'tDnfIUMcS9cpj4Rqgxu4mUxG',
+      placeholder: "欢迎大家畅所欲言# Comment box placeholder",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
