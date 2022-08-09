@@ -18,54 +18,54 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"xing_haodong.gitee.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"mindmaster.top","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="HTTP&#x2F;1.1详解">
 <meta property="og:type" content="article">
 <meta property="og:title" content="HTTP&#x2F;1.1深入学习（一）">
-<meta property="og:url" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:url" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/index.html">
 <meta property="og:site_name" content="一只小码农">
 <meta property="og:description" content="HTTP&#x2F;1.1详解">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG/source_posts/HTTP-1-1深入学习/image01.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG/source_posts/HTTP-1-1深入学习/image02.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG/source/_posts/HTTP-1-1深入学习/image03.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216143059824.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216143217688.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216143444135.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216143600821.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216143608965.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216143758587.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216143824981.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216144746312.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216144826027.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216144956500.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216154311688.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216154333582.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216154407111.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216154624220.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216154806375.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216154827521.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155000320.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155007623.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155144846.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155211840.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155244132.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155251415.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155401997.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155440972.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155509897.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155556884.png">
-<meta property="og:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155625246.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG/source_posts/HTTP-1-1深入学习/image01.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG/source_posts/HTTP-1-1深入学习/image02.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG/source/_posts/HTTP-1-1深入学习/image03.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216143059824.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216143217688.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216143444135.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216143600821.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216143608965.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216143758587.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216143824981.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216144746312.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216144826027.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216144956500.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216154311688.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216154333582.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216154407111.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216154624220.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216154806375.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216154827521.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155000320.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155007623.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155144846.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155211840.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155244132.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155251415.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155401997.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155440972.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155509897.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155556884.png">
+<meta property="og:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users/flower/AppData/Roaming/Typora/typora-user-images/image-20220216155625246.png">
 <meta property="article:published_time" content="2022-02-16T14:19:25.000Z">
 <meta property="article:modified_time" content="2022-02-16T08:02:53.554Z">
 <meta property="article:author" content="邢浩东">
 <meta property="article:tag" content="计算机网络">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG/source_posts/HTTP-1-1深入学习/image01.png">
+<meta name="twitter:image" content="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG/source_posts/HTTP-1-1深入学习/image01.png">
 
-<link rel="canonical" href="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/">
+<link rel="canonical" href="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/">
 
 
 <script id="page-configurations">
@@ -256,7 +256,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/">
+    <link itemprop="mainEntityOfPage" href="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/OIP.jfif">
@@ -453,7 +453,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/" title="HTTP&#x2F;1.1深入学习（一）">https://xing_haodong.gitee.io/2022/02/16/HTTP-1-1深入学习/</a>
+    <a href="https://mindmaster.top/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/" title="HTTP&#x2F;1.1深入学习（一）">https://mindmaster.top/2022/02/16/HTTP-1-1深入学习/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-%E9%82%A2%E6%B5%A9%E4%B8%9C/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-邢浩东</a> 许可协议。转载请注明出处！
