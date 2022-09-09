@@ -1502,6 +1502,76 @@
       </tags>
   </entry>
   <entry>
+    <title>Mybatis框架概述</title>
+    <url>/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6/</url>
+    <content><![CDATA[<h2 id="软件开发常用结构"><a href="#软件开发常用结构" class="headerlink" title="软件开发常用结构"></a>软件开发常用结构</h2><h3 id="三层架构"><a href="#三层架构" class="headerlink" title="三层架构"></a>三层架构</h3><p>三层架构包含的三层： 界面层（User Interface layer）、业务逻辑层（Business Logic Layer）、数据访问层（Data access layer）</p>
+<blockquote>
+<p>三层的职责</p>
+</blockquote>
+<ul>
+<li><p>1、界面层（表示层\视图层）：主要功能是接受用户的数据，显示请求的处理结果。使用 web 页面和 用户交互，手机 app 也就是表示层的，用户在 app 中操作，业务逻辑在服务器端处理。</p>
+</li>
+<li><p>2、业务逻辑层：接收表示传递过来的数据，检查数据，计算业务逻辑，调用数据访问层获取数据。</p>
+</li>
+<li><p>3、数据访问层（持久层）：与数据库打交道。主要实现对数据的增、删、改、查。将存储在数据库中的数据提交 给业务层，同时将业务层处理的数据保存到数据库。</p>
+</li>
+</ul>
+<p>三层的处理请求的交互：</p>
+<p>用户—&gt;界面层—&gt;业务逻辑层—&gt;数据访问层—&gt;DB数据库</p>
+ <img data-src="/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6/01.png" class>
+
+
+
+<blockquote>
+<p>为什么使用三层？</p>
+</blockquote>
+<p>1，结构清晰、耦合度低, 各层分工明确 </p>
+<p>2，可维护性高，可扩展性高</p>
+<p> 3，有利于标准化 </p>
+<p>4，开发人员可以只关注整个结构中的其中某一层的功能实现 </p>
+<p>5，有利于各层逻辑的复用</p>
+<h3 id="常用框架"><a href="#常用框架" class="headerlink" title="常用框架"></a>常用框架</h3><ul>
+<li><p>Mybatis框架</p>
+<p>MyBatis 是一个优秀的基于 java 的持久层框架，内部封装了 jdbc，开发者只需要关注 sql 语句本身，而不需要处理加载驱动、创建连接、创建 statement、关闭连接，资源等繁杂的过程。 MyBatis 通过 xml 或注解两种方式将要执行的各种 sql 语句配置起来，并通过 java 对象和 sql 的 动态参数进行映射生成最终执行的 sql 语句，最后由 mybatis 框架执行 sql 并将结果映射为 java 对象并返回。</p>
+</li>
+<li><p>Spring框架</p>
+<p>Spring 框架为了解决软件开发的复杂性而创建的。Spring 使用的是基本的 JavaBean 来完成以前 非常复杂的企业级开发。Spring 解决了业务对象，功能模块之间的耦合，不仅在 javase,web 中使用， 大部分 Java 应用都可以从 Spring 中受益。 Spring 是一个轻量级控制反转(IoC)和面向切面(AOP)的容器。</p>
+</li>
+<li><p>SpringMVC框架</p>
+<p>SpringMVC 框架 Spring MVC 属于 SpringFrameWork 3.0 版本加入的一个模块，为 Spring 框架提供了构建 Web 应用程序的能力。现在可以 Spring 框架提供的 SpringMVC 模块实现 web 应用开发，在 web 项目中 可以无缝使用 Spring 和 Spring MVC 框架。</p>
+</li>
+</ul>
+<h2 id="框架的定义"><a href="#框架的定义" class="headerlink" title="框架的定义"></a>框架的定义</h2><h3 id="框架定义"><a href="#框架定义" class="headerlink" title="框架定义"></a>框架定义</h3><p>框架（Framework）是整个或部分系统的可重用设计，表现为一组抽象构件及构件实例间交互的方法;另一种认为，框架是可被应用开发者定制的应用骨架、模板。 简单的说，框架其实是半成品软件，就是一组组件，供你使用完成你自己的系统。从另一个角度来 说框架一个舞台，你在舞台上做表演。在框架基础上加入你要完成的功能。 框架安全的，可复用的，不断升级的软件。 </p>
+<h3 id="框架解决的问题"><a href="#框架解决的问题" class="headerlink" title="框架解决的问题"></a>框架解决的问题</h3><p>框架要解决的最重要的一个问题是技术整合，在 J2EE 的 框架中，有着各种各样的技术，不同的应用，系统使用不同的技术解决问题。需要从 J2EE 中选择不同的技术，而技术自身的复杂性，有导致更大的风险。企业在开发软件项目时，主要目的是解决业务问题。 即要求企业负责技术本身，又要求解决业务问题。这是大多数企业不能完成的。框架把相关的技术融合在一起，企业开发可以集中在业务领域方面。 另一个方面可以提供开发的效率。</p>
+<h2 id="JDBC编程"><a href="#JDBC编程" class="headerlink" title="JDBC编程"></a>JDBC编程</h2><h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">findStudent</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> 	Connection conn = <span class="keyword">null</span>;</span><br><span class="line"> 	Statement stmt = <span class="keyword">null</span>;</span><br><span class="line">    ResultSet rs = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line"> 		<span class="comment">//注册 mysql 驱动</span></span><br><span class="line">		 Class.forName(<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>);</span><br><span class="line">		 <span class="comment">//连接数据的基本信息 url ，username，password</span></span><br><span class="line">		 String url = <span class="string">&quot;jdbc:mysql://localhost:3306/springdb&quot;</span>;</span><br><span class="line">		 String username = <span class="string">&quot;root&quot;</span>;</span><br><span class="line">		 String password = <span class="string">&quot;123456&quot;</span>;</span><br><span class="line"> 		<span class="comment">//创建连接对象</span></span><br><span class="line">		 conn = DriverManager.getConnection(url, username, password);</span><br><span class="line">		 <span class="comment">//保存查询结果</span></span><br><span class="line">		 List&lt;Student&gt; stuList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"> 		<span class="comment">//创建 Statement, 用来执行 sql 语句</span></span><br><span class="line"> 		stmt = conn.createStatement();</span><br><span class="line"> 		<span class="comment">//执行查询，创建记录集，</span></span><br><span class="line"> 		rs = stmt.executeQuery(<span class="string">&quot;select * from student&quot;</span>);</span><br><span class="line">		 <span class="keyword">while</span> (rs.next()) &#123;</span><br><span class="line">			 Student stu = <span class="keyword">new</span> Student();</span><br><span class="line">			 stu.setId(rs.getInt(<span class="string">&quot;id&quot;</span>));</span><br><span class="line">			 stu.setName(rs.getString(<span class="string">&quot;name&quot;</span>));</span><br><span class="line">			 stu.setAge(rs.getInt(<span class="string">&quot;age&quot;</span>));</span><br><span class="line">			 <span class="comment">//从数据库取出数据转为 Student 对象，封装到 List 集合</span></span><br><span class="line">			 stuList.add(stu);</span><br><span class="line">			 &#125;</span><br><span class="line"> 		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			 e.printStackTrace();</span><br><span class="line">	    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line"> 			<span class="keyword">try</span> &#123;</span><br><span class="line">				 <span class="comment">//关闭资源</span></span><br><span class="line">                 <span class="keyword">if</span> (rs != <span class="keyword">null</span>) ;</span><br><span class="line"> 				&#123;</span><br><span class="line">					 rs.close();</span><br><span class="line">				 &#125;</span><br><span class="line"> 				<span class="keyword">if</span> (stmt != <span class="keyword">null</span>) &#123;</span><br><span class="line"> 					stmt.close();</span><br><span class="line"> 				&#125;</span><br><span class="line"> 				<span class="keyword">if</span> (conn != <span class="keyword">null</span>) &#123;</span><br><span class="line"> 					conn.close();</span><br><span class="line"> 				&#125;</span><br><span class="line"> 				&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">				 e.printStackTrace();</span><br><span class="line"> 				&#125;</span><br><span class="line"> 			&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="使用JDBC的缺陷"><a href="#使用JDBC的缺陷" class="headerlink" title="使用JDBC的缺陷"></a>使用JDBC的缺陷</h3><ol>
+<li>代码比较多，开发效率低 </li>
+<li> 需要关注 Connection ,Statement, ResultSet 对象创建和销毁 </li>
+<li> 对 ResultSet 查询的结果，需要自己封装为 List </li>
+<li> 重复的代码比较多些 </li>
+<li> 业务代码和数据库的操作混在一起</li>
+</ol>
+<h2 id="Mybatis框架"><a href="#Mybatis框架" class="headerlink" title="Mybatis框架"></a>Mybatis框架</h2><p>MyBatis 框架：</p>
+<p> MyBatis 本是 apache 的一个开源项目 iBatis, 2010 年这个项目由 apache software foundation 迁 移到了 google code，并且改名为 MyBatis 。2013 年 11 月迁移到 Github。 iBATIS 一词来源于“internet”和“abatis”的组合，是一个基于 Java 的持久层框架。iBATIS 提供的 持久层框架包括 SQL Maps 和 Data Access Objects（DAOs） 当前，最新版本是 MyBatis 3.5.1 ，其发布时间是 2019 年 4 月 8 日。</p>
+<h3 id="Mybatis框架解决的主要问题"><a href="#Mybatis框架解决的主要问题" class="headerlink" title="Mybatis框架解决的主要问题"></a>Mybatis框架解决的主要问题</h3><p>减轻使用 JDBC 的复杂性，不用编写重复的创建 Connetion , Statement ; 不用编写关闭资源代码。 直接使用 java 对象，表示结果数据。让开发者专注 SQL 的处理。 其他分心的工作MyBatis 代劳。</p>
+<p> MyBatis 可以完成：  </p>
+<ul>
+<li>注册数据库的驱动，例如 Class.forName(“com.mysql.jdbc.Driver”))</li>
+<li>创建 JDBC 中必须使用的 Connection ， Statement， ResultSet 对象</li>
+<li>从 xml 中获取 sql，并执行 sql 语句，把 ResultSet 结果转换 java 对象</li>
+<li>关闭资源 ResultSet.close() , Statement.close() , Conenection.close()</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Mybatis框架</category>
+      </categories>
+      <tags>
+        <tag>Mybatis</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Mybatis框架</title>
     <url>/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6-1/</url>
     <content><![CDATA[<h2 id="Mybatis入门案例"><a href="#Mybatis入门案例" class="headerlink" title="Mybatis入门案例"></a>Mybatis入门案例</h2><h3 id="搭建Mybatis开发环境–基础CRUD操作实例"><a href="#搭建Mybatis开发环境–基础CRUD操作实例" class="headerlink" title="搭建Mybatis开发环境–基础CRUD操作实例"></a>搭建Mybatis开发环境–基础CRUD操作实例</h3><h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><blockquote>
@@ -1597,76 +1667,6 @@
 
 
 
-]]></content>
-      <categories>
-        <category>Mybatis框架</category>
-      </categories>
-      <tags>
-        <tag>Mybatis</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Mybatis框架概述</title>
-    <url>/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6/</url>
-    <content><![CDATA[<h2 id="软件开发常用结构"><a href="#软件开发常用结构" class="headerlink" title="软件开发常用结构"></a>软件开发常用结构</h2><h3 id="三层架构"><a href="#三层架构" class="headerlink" title="三层架构"></a>三层架构</h3><p>三层架构包含的三层： 界面层（User Interface layer）、业务逻辑层（Business Logic Layer）、数据访问层（Data access layer）</p>
-<blockquote>
-<p>三层的职责</p>
-</blockquote>
-<ul>
-<li><p>1、界面层（表示层\视图层）：主要功能是接受用户的数据，显示请求的处理结果。使用 web 页面和 用户交互，手机 app 也就是表示层的，用户在 app 中操作，业务逻辑在服务器端处理。</p>
-</li>
-<li><p>2、业务逻辑层：接收表示传递过来的数据，检查数据，计算业务逻辑，调用数据访问层获取数据。</p>
-</li>
-<li><p>3、数据访问层（持久层）：与数据库打交道。主要实现对数据的增、删、改、查。将存储在数据库中的数据提交 给业务层，同时将业务层处理的数据保存到数据库。</p>
-</li>
-</ul>
-<p>三层的处理请求的交互：</p>
-<p>用户—&gt;界面层—&gt;业务逻辑层—&gt;数据访问层—&gt;DB数据库</p>
- <img data-src="/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6/01.png" class>
-
-
-
-<blockquote>
-<p>为什么使用三层？</p>
-</blockquote>
-<p>1，结构清晰、耦合度低, 各层分工明确 </p>
-<p>2，可维护性高，可扩展性高</p>
-<p> 3，有利于标准化 </p>
-<p>4，开发人员可以只关注整个结构中的其中某一层的功能实现 </p>
-<p>5，有利于各层逻辑的复用</p>
-<h3 id="常用框架"><a href="#常用框架" class="headerlink" title="常用框架"></a>常用框架</h3><ul>
-<li><p>Mybatis框架</p>
-<p>MyBatis 是一个优秀的基于 java 的持久层框架，内部封装了 jdbc，开发者只需要关注 sql 语句本身，而不需要处理加载驱动、创建连接、创建 statement、关闭连接，资源等繁杂的过程。 MyBatis 通过 xml 或注解两种方式将要执行的各种 sql 语句配置起来，并通过 java 对象和 sql 的 动态参数进行映射生成最终执行的 sql 语句，最后由 mybatis 框架执行 sql 并将结果映射为 java 对象并返回。</p>
-</li>
-<li><p>Spring框架</p>
-<p>Spring 框架为了解决软件开发的复杂性而创建的。Spring 使用的是基本的 JavaBean 来完成以前 非常复杂的企业级开发。Spring 解决了业务对象，功能模块之间的耦合，不仅在 javase,web 中使用， 大部分 Java 应用都可以从 Spring 中受益。 Spring 是一个轻量级控制反转(IoC)和面向切面(AOP)的容器。</p>
-</li>
-<li><p>SpringMVC框架</p>
-<p>SpringMVC 框架 Spring MVC 属于 SpringFrameWork 3.0 版本加入的一个模块，为 Spring 框架提供了构建 Web 应用程序的能力。现在可以 Spring 框架提供的 SpringMVC 模块实现 web 应用开发，在 web 项目中 可以无缝使用 Spring 和 Spring MVC 框架。</p>
-</li>
-</ul>
-<h2 id="框架的定义"><a href="#框架的定义" class="headerlink" title="框架的定义"></a>框架的定义</h2><h3 id="框架定义"><a href="#框架定义" class="headerlink" title="框架定义"></a>框架定义</h3><p>框架（Framework）是整个或部分系统的可重用设计，表现为一组抽象构件及构件实例间交互的方法;另一种认为，框架是可被应用开发者定制的应用骨架、模板。 简单的说，框架其实是半成品软件，就是一组组件，供你使用完成你自己的系统。从另一个角度来 说框架一个舞台，你在舞台上做表演。在框架基础上加入你要完成的功能。 框架安全的，可复用的，不断升级的软件。 </p>
-<h3 id="框架解决的问题"><a href="#框架解决的问题" class="headerlink" title="框架解决的问题"></a>框架解决的问题</h3><p>框架要解决的最重要的一个问题是技术整合，在 J2EE 的 框架中，有着各种各样的技术，不同的应用，系统使用不同的技术解决问题。需要从 J2EE 中选择不同的技术，而技术自身的复杂性，有导致更大的风险。企业在开发软件项目时，主要目的是解决业务问题。 即要求企业负责技术本身，又要求解决业务问题。这是大多数企业不能完成的。框架把相关的技术融合在一起，企业开发可以集中在业务领域方面。 另一个方面可以提供开发的效率。</p>
-<h2 id="JDBC编程"><a href="#JDBC编程" class="headerlink" title="JDBC编程"></a>JDBC编程</h2><h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">findStudent</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> 	Connection conn = <span class="keyword">null</span>;</span><br><span class="line"> 	Statement stmt = <span class="keyword">null</span>;</span><br><span class="line">    ResultSet rs = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line"> 		<span class="comment">//注册 mysql 驱动</span></span><br><span class="line">		 Class.forName(<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>);</span><br><span class="line">		 <span class="comment">//连接数据的基本信息 url ，username，password</span></span><br><span class="line">		 String url = <span class="string">&quot;jdbc:mysql://localhost:3306/springdb&quot;</span>;</span><br><span class="line">		 String username = <span class="string">&quot;root&quot;</span>;</span><br><span class="line">		 String password = <span class="string">&quot;123456&quot;</span>;</span><br><span class="line"> 		<span class="comment">//创建连接对象</span></span><br><span class="line">		 conn = DriverManager.getConnection(url, username, password);</span><br><span class="line">		 <span class="comment">//保存查询结果</span></span><br><span class="line">		 List&lt;Student&gt; stuList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"> 		<span class="comment">//创建 Statement, 用来执行 sql 语句</span></span><br><span class="line"> 		stmt = conn.createStatement();</span><br><span class="line"> 		<span class="comment">//执行查询，创建记录集，</span></span><br><span class="line"> 		rs = stmt.executeQuery(<span class="string">&quot;select * from student&quot;</span>);</span><br><span class="line">		 <span class="keyword">while</span> (rs.next()) &#123;</span><br><span class="line">			 Student stu = <span class="keyword">new</span> Student();</span><br><span class="line">			 stu.setId(rs.getInt(<span class="string">&quot;id&quot;</span>));</span><br><span class="line">			 stu.setName(rs.getString(<span class="string">&quot;name&quot;</span>));</span><br><span class="line">			 stu.setAge(rs.getInt(<span class="string">&quot;age&quot;</span>));</span><br><span class="line">			 <span class="comment">//从数据库取出数据转为 Student 对象，封装到 List 集合</span></span><br><span class="line">			 stuList.add(stu);</span><br><span class="line">			 &#125;</span><br><span class="line"> 		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			 e.printStackTrace();</span><br><span class="line">	    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line"> 			<span class="keyword">try</span> &#123;</span><br><span class="line">				 <span class="comment">//关闭资源</span></span><br><span class="line">                 <span class="keyword">if</span> (rs != <span class="keyword">null</span>) ;</span><br><span class="line"> 				&#123;</span><br><span class="line">					 rs.close();</span><br><span class="line">				 &#125;</span><br><span class="line"> 				<span class="keyword">if</span> (stmt != <span class="keyword">null</span>) &#123;</span><br><span class="line"> 					stmt.close();</span><br><span class="line"> 				&#125;</span><br><span class="line"> 				<span class="keyword">if</span> (conn != <span class="keyword">null</span>) &#123;</span><br><span class="line"> 					conn.close();</span><br><span class="line"> 				&#125;</span><br><span class="line"> 				&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">				 e.printStackTrace();</span><br><span class="line"> 				&#125;</span><br><span class="line"> 			&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="使用JDBC的缺陷"><a href="#使用JDBC的缺陷" class="headerlink" title="使用JDBC的缺陷"></a>使用JDBC的缺陷</h3><ol>
-<li>代码比较多，开发效率低 </li>
-<li> 需要关注 Connection ,Statement, ResultSet 对象创建和销毁 </li>
-<li> 对 ResultSet 查询的结果，需要自己封装为 List </li>
-<li> 重复的代码比较多些 </li>
-<li> 业务代码和数据库的操作混在一起</li>
-</ol>
-<h2 id="Mybatis框架"><a href="#Mybatis框架" class="headerlink" title="Mybatis框架"></a>Mybatis框架</h2><p>MyBatis 框架：</p>
-<p> MyBatis 本是 apache 的一个开源项目 iBatis, 2010 年这个项目由 apache software foundation 迁 移到了 google code，并且改名为 MyBatis 。2013 年 11 月迁移到 Github。 iBATIS 一词来源于“internet”和“abatis”的组合，是一个基于 Java 的持久层框架。iBATIS 提供的 持久层框架包括 SQL Maps 和 Data Access Objects（DAOs） 当前，最新版本是 MyBatis 3.5.1 ，其发布时间是 2019 年 4 月 8 日。</p>
-<h3 id="Mybatis框架解决的主要问题"><a href="#Mybatis框架解决的主要问题" class="headerlink" title="Mybatis框架解决的主要问题"></a>Mybatis框架解决的主要问题</h3><p>减轻使用 JDBC 的复杂性，不用编写重复的创建 Connetion , Statement ; 不用编写关闭资源代码。 直接使用 java 对象，表示结果数据。让开发者专注 SQL 的处理。 其他分心的工作MyBatis 代劳。</p>
-<p> MyBatis 可以完成：  </p>
-<ul>
-<li>注册数据库的驱动，例如 Class.forName(“com.mysql.jdbc.Driver”))</li>
-<li>创建 JDBC 中必须使用的 Connection ， Statement， ResultSet 对象</li>
-<li>从 xml 中获取 sql，并执行 sql 语句，把 ResultSet 结果转换 java 对象</li>
-<li>关闭资源 ResultSet.close() , Statement.close() , Conenection.close()</li>
-</ul>
 ]]></content>
       <categories>
         <category>Mybatis框架</category>
@@ -5114,6 +5114,170 @@
       </categories>
       <tags>
         <tag>Linux内核</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>RPC框架概览</title>
+    <url>/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%A6%82%E8%A7%88/</url>
+    <content><![CDATA[<h1 id="RPC简介"><a href="#RPC简介" class="headerlink" title="RPC简介"></a>RPC简介</h1><p>RPC的全称是<strong>Remote Procedure Call</strong>，即远程过程调用。简单解读字面上的意思，远程肯定是指要跨机器而非本机，所以需要用到网络编程才能实现，但是不是只要通过网络通信访问到另一台机器的应用程序，就可以称之为RPC调用了？显然并不够。我理解的RPC是帮助我们屏蔽网络编程细节，实现调用远程方法就跟调用本地（同一个项目中的方法）一样的体验，我们不需要因为这个方法是远程调用就需要编写很多与业务无关的代码。</p>
+<p><strong>RPC的作用体现在两个方面：</strong></p>
+<ol>
+<li><p>屏蔽远程调用跟本地调用的区别，让我们感觉就是调用项目内的方法；</p>
+</li>
+<li><p>隐藏底层网络通信的复杂性，让我们更专注于业务逻辑。</p>
+<img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%A6%82%E8%A7%88/1.png" class>
+
+</li>
+</ol>
+<h2 id="RPC通信流程"><a href="#RPC通信流程" class="headerlink" title="RPC通信流程"></a>RPC通信流程</h2><img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%A6%82%E8%A7%88/2.png" class>
+
+<h2 id="RPC在架构中的位置"><a href="#RPC在架构中的位置" class="headerlink" title="RPC在架构中的位置"></a>RPC在架构中的位置</h2><p>RPC是解决应用间通信的一种方式，而无论是在一个大型的分布式应用系统还是 中小型系统中，应用架构最终都会从“单体”演进成“微服务化”，整个应用系统会被拆分 为多个不同功能的应用，并将它们部署在不同的服务器中，而应用之间会通过RPC进行通信， 可以说RPC对应的是整个分布式应用系统，就像是“经络”一样的存在。</p>
+<p><strong>RPC框架能够帮助我们解决系统拆分后的通信问题，并且能让我们像调用本地一样去调用远 程方法。</strong>利用RPC我们不仅可以很方便地将应用架构从“单体”演进成“微服务化”，而且还 能解决实际开发过程中的效率低下、系统耦合等问题，这样可以使得我们的系统架构整体清 晰、健壮，应用可运维度增强。</p>
+<p>·</p>
+<h1 id="协议化：设计可扩展且向后兼容的协议"><a href="#协议化：设计可扩展且向后兼容的协议" class="headerlink" title="协议化：设计可扩展且向后兼容的协议"></a><strong>协议化：设计可扩展且向后兼容的协议</strong></h1><p>在设计协议前，我们先梳理下要完成RPC通信的时候，在协议里面需要放哪些内容。</p>
+<h2 id="如何设计一个私有RPC协议"><a href="#如何设计一个私有RPC协议" class="headerlink" title="如何设计一个私有RPC协议"></a>如何设计一个私有RPC协议</h2><p>首先要想到的就是我们前面说的消息边界了，但RPC每次发请求发的大小都是不固定的，所以 我们的协议必须能让接收方正确地读出不定长的内容。我们可以先<strong>固定一个长度（比如4个字 节）用来保存整个请求数据大小</strong>，这样收到数据的时候，我们先读取固定长度的位置里面的 值，值的大小就代表协议体的长度，接着再根据值的大小来读取协议体的数据，整个协议可 以设计成这样</p>
+<img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%A6%82%E8%A7%88/3.png" class>
+
+<p>但上面这种协议，只实现了正确的断句效果，在RPC里面还行不通。因为对于服务提供方来 说，他是不知道这个协议体里面的<strong>二进制数据是通过哪种序列化方式生成的</strong>。如果不能知道 调用方用的序列化方式，即使服务提供方还原出了正确的语义，也并不能把二进制还原成对 象，那服务提供方收到这个数据后也就不能完成调用了。因此我们需要<strong>把序列化方式单独拿出来，类似协议长度一样用固定的长度存放</strong>，这些需要固定长度存放的参数我们可以统称 为“协议头”，这样整个协议就会拆分成两部分：<strong>协议头和协议体。</strong></p>
+<p>在协议头里面，我们除了会放协议长度、序列化方式，还会放一些像协议标示、消息ID、消 息类型这样的参数，而协议体一般只放请求接口方法、请求的业务参数值和一些扩展属性。 这样一个完整的RPC协议大概就出来了，协议头是由一堆固定的长度参数组成，而协议体是根 据请求接口和参数构造的，长度属于可变的，具体协议如下图所示</p>
+ <img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%A6%82%E8%A7%88/4.png" class>
+
+
+
+<h2 id="可扩展协议"><a href="#可扩展协议" class="headerlink" title="可扩展协议"></a>可扩展协议</h2><p>刚才讲的协议属于定长协议头，那也就是说往后就不能再往协议头里加新参数了，如果加参 数就会导致线上兼容问题。举个具体例子，假设你设计了一个88Bit的协议头，其中协议长度 占用32bit，然后你为了加入新功能，在协议头里面加了2bit，并且放到协议头的最后。升级 后的应用，会用新的协议发出请求，然而没有升级的应用收到的请求后，还是按照88bit读取 协议头，新加的2个bit会当作协议体前2个bit数据读出来，但原本的协议体最后2个bit会被丢弃了，这样就会导致协议体的数据是错的。</p>
+<p>所以为了保证能平滑地升级改造前后的协议，我们有必要设计一种支持可扩展的协议。<strong>其关键在于让协议头支持可扩展，扩展后协议头的长度就不能定长了。</strong>那要实现读取不定长的协议头里面的内容，在这之前肯定需要一个固定的地方读取长度，所以我们需要<strong>一个固定的写入协议头的长度</strong>。整体协议就变成了三部分内容：固定部分、协议头内容、协议体内容，前 两部分我们还是可以统称为“协议头”，具体协议如下：</p>
+<img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%A6%82%E8%A7%88/5.png" class>
+
+
+
+<h2 id="RPC如何实现请求和响应关联"><a href="#RPC如何实现请求和响应关联" class="headerlink" title="RPC如何实现请求和响应关联"></a>RPC如何实现请求和响应关联</h2><p>RPC不直接用HTTP协议的 一个原因是无法实现请求跟响应关联，每次请求都需要重新建立连接，响应完成后再关闭连 接，所以我们要设计私有协议。那么在RPC里面，我们是怎么实现请求跟响应关联的呢？</p>
+<img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%A6%82%E8%A7%88/9.png" class>
+
+
+
+<h1 id="序列化：对象在网络中传输的关键"><a href="#序列化：对象在网络中传输的关键" class="headerlink" title="序列化：对象在网络中传输的关键"></a>序列化：对象在网络中传输的关键</h1><img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%A6%82%E8%A7%88/6.png" class>
+
+<img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%A6%82%E8%A7%88/7.png" class>
+
+
+
+<h2 id="常用的序列化协议"><a href="#常用的序列化协议" class="headerlink" title="常用的序列化协议"></a>常用的序列化协议</h2><h3 id="JDK原生化序列协议"><a href="#JDK原生化序列协议" class="headerlink" title="JDK原生化序列协议"></a>JDK原生化序列协议</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="comment">//JDK序列化需要实现Serializable接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line"> <span class="comment">//学号</span></span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">int</span> no;</span><br><span class="line"> <span class="comment">//姓名</span></span><br><span class="line"> <span class="keyword">private</span> String name;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getNo</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="keyword">return</span> no;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setNo</span><span class="params">(<span class="keyword">int</span> no)</span> </span>&#123;</span><br><span class="line"> <span class="keyword">this</span>.no = no;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="keyword">return</span> name;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line"> <span class="keyword">this</span>.name = name;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="meta">@Override</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="keyword">return</span> <span class="string">&quot;Student&#123;&quot;</span> +</span><br><span class="line"> <span class="string">&quot;no=&quot;</span> + no +</span><br><span class="line"> <span class="string">&quot;, name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line"> <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line"> &#125;</span><br><span class="line">  </span><br><span class="line"> <span class="comment">//JDK自带的序列化机制对使用者而言是非常简单的。序列化具体的实现是由ObjectOutputStream完成的，而反序列化的具体实现是由ObjectInputStream完成的</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, ClassNotFoundException </span>&#123;</span><br><span class="line"> String home = System.getProperty(<span class="string">&quot;user.home&quot;</span>);</span><br><span class="line"> String basePath = home + <span class="string">&quot;/Desktop&quot;</span>;</span><br><span class="line"> FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(basePath + <span class="string">&quot;student.dat&quot;</span>);</span><br><span class="line"> Student student = <span class="keyword">new</span> Student();</span><br><span class="line"> student.setNo(<span class="number">100</span>);</span><br><span class="line"> student.setName(<span class="string">&quot;TEST_STUDENT&quot;</span>);</span><br><span class="line"> ObjectOutputStream oos = <span class="keyword">new</span> ObjectOutputStream(fos);</span><br><span class="line"> oos.writeObject(student);</span><br><span class="line"> oos.flush();</span><br><span class="line"> oos.close();</span><br><span class="line"> FileInputStream fis = <span class="keyword">new</span> FileInputStream(basePath + <span class="string">&quot;student.dat&quot;</span>);</span><br><span class="line"> ObjectInputStream ois = <span class="keyword">new</span> ObjectInputStream(fis);</span><br><span class="line"> Student deStudent = (Student) ois.readObject();</span><br><span class="line"> ois.close();</span><br><span class="line"> System.out.println(deStudent);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="JDK的序列化过程"><a href="#JDK的序列化过程" class="headerlink" title="JDK的序列化过程"></a>JDK的序列化过程</h4> <img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%A6%82%E8%A7%88/8.png" class>
+
+<p><strong><em>序列化的核心</em></strong></p>
+<p><strong><em>实际上任何一种序列化框架，核心思想就是设计一种序列化协议</em></strong>，将对象的类型、属性类 </p>
+<p>型、属性值一一按照固定的格式写到二进制字节流中来完成序列化，再按照固定的格式一一按照读出对象的类型、属性类型、属性值，通过这些信息重新创建出一个新的对象，来完成反序列化。</p>
+<h3 id="JSON"><a href="#JSON" class="headerlink" title="JSON"></a>JSON</h3><p>JSON可能是我们最熟悉的一种序列化格式了，JSON是典型的Key-Value方式，没有数据类 </p>
+<p>型，是一种文本型序列化框架，</p>
+<p>存在的问题</p>
+<ol>
+<li>JSON进行序列化的额外空间开销比较大，对于大数据量服务这意味着需要巨大的内存和磁盘开销；</li>
+<li>JSON没有类型，但像Java这种强类型语言，需要通过反射统一解决，所以性能不会太好。</li>
+</ol>
+<h3 id="Hessian"><a href="#Hessian" class="headerlink" title="Hessian"></a>Hessian</h3><p>Hessian是动态类型、二进制、紧凑的，并且可跨语言移植的一种序列化框架。Hessian协议 要比JDK、JSON更加紧凑，性能上要比JDK、JSON序列化高效很多，而且生成的字节数也更小。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Student student = <span class="keyword">new</span> Student();</span><br><span class="line">student.setNo(<span class="number">101</span>);</span><br><span class="line">student.setName(<span class="string">&quot;HESSIAN&quot;</span>);</span><br><span class="line"><span class="comment">//把student对象转化为byte数组</span></span><br><span class="line">ByteArrayOutputStream bos = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">Hessian2Output output = <span class="keyword">new</span> Hessian2Output(bos);</span><br><span class="line">output.writeObject(student);</span><br><span class="line">output.flushBuffer();</span><br><span class="line"><span class="keyword">byte</span>[] data = bos.toByteArray();</span><br><span class="line">bos.close();</span><br><span class="line"><span class="comment">//把刚才序列化出来的byte数组转化为student对象</span></span><br><span class="line">ByteArrayInputStream bis = <span class="keyword">new</span> ByteArrayInputStream(data);</span><br><span class="line">Hessian2Input input = <span class="keyword">new</span> Hessian2Input(bis);</span><br><span class="line">Student deStudent = (Student) input.readObject();</span><br><span class="line">input.close();</span><br><span class="line">System.out.println(deStudent);</span><br></pre></td></tr></table></figure>
+<p>Hessian本身也有问题，官方版本对Java里面一些常见对象的类型不支持，比如： </p>
+<p>Linked系列，LinkedHashMap、LinkedHashSet等，但是可以通过扩展 </p>
+<p>CollectionDeserializer类修复； </p>
+<p>Locale类，可以通过扩展ContextSerializerFactory类修复； </p>
+<p>Byte/Short反序列化的时候变成Integer。</p>
+<h3 id="Protobuf"><a href="#Protobuf" class="headerlink" title="Protobuf"></a>Protobuf</h3><p>Protobuf 是 Google 公司内部的混合语言数据标准，是一种轻便、高效的结构化数据存储格 式，可以用于结构化数据序列化，支持Java、Python、C++、Go等语言。Protobuf使用的时候需要定义<strong>IDL（Interface description language）</strong>，然后使用不同语言的IDL编译器，生 成序列化工具类。</p>
+<p>优点：</p>
+<p>序列化后体积相比 JSON、Hessian小很多； </p>
+<p><strong><em>IDL能清晰地描述语义</em></strong>，所以足以帮助并保证应用程序之间的类型不会丢失，无需类似XML 解析器；</p>
+<p>序列化反序列化速度很快，不需要通过反射获取类型； </p>
+<p>消息格式升级和兼容性不错，可以做到向后兼容。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * // IDl 文件格式</span></span><br><span class="line"><span class="comment"> * synax = &quot;proto3&quot;;</span></span><br><span class="line"><span class="comment"> * option java_package = &quot;com.test&quot;;</span></span><br><span class="line"><span class="comment"> * option java_outer_classname = &quot;StudentProtobuf&quot;;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * message StudentMsg &#123;</span></span><br><span class="line"><span class="comment"> * //序号</span></span><br><span class="line"><span class="comment"> * int32 no = 1;</span></span><br><span class="line"><span class="comment"> * //姓名</span></span><br><span class="line"><span class="comment"> * string name = 2;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">StudentProtobuf.StudentMsg.Builder builder = StudentProtobuf.StudentMsg.newBuilder();</span><br><span class="line">builder.setNo(<span class="number">103</span>);</span><br><span class="line">builder.setName(<span class="string">&quot;protobuf&quot;</span>);</span><br><span class="line"><span class="comment">//把student对象转化为byte数组</span></span><br><span class="line">StudentProtobuf.StudentMsg msg = builder.build();</span><br><span class="line"><span class="keyword">byte</span>[] data = msg.toByteArray();</span><br><span class="line"><span class="comment">//把刚才序列化出来的byte数组转化为student对象</span></span><br><span class="line">StudentProtobuf.StudentMsg deStudent = StudentProtobuf.StudentMsg.parseFrom(data);</span><br><span class="line">System.out.println(deStudent);</span><br></pre></td></tr></table></figure>
+<p>Protostuff不需要依赖IDL文件，可以直接对Java领域对象进行反/序列化操作，在效率上跟 Protobuf差不多，生成的二进制格式和Protobuf是完全相同的，可以说是一个Java版本的 Protobuf序列化框架。</p>
+<p>ProtoStuff不支持单纯的Map、List集合对象，需要包在对象里面。</p>
+<h2 id="RPC框架如何选择序列化协议"><a href="#RPC框架如何选择序列化协议" class="headerlink" title="RPC框架如何选择序列化协议"></a>RPC框架如何选择序列化协议</h2><p>RPC框架在 序列化的选择上，我们更关注序列化协议的安全性、通用性、兼容性，其次才关注序列化协议的性能、效率、空间开销。</p>
+<h2 id="RPC框架在使用中需要注意的问题"><a href="#RPC框架在使用中需要注意的问题" class="headerlink" title="RPC框架在使用中需要注意的问题"></a>RPC框架在使用中需要注意的问题</h2><ul>
+<li> 对象要尽量简单，没有太多的依赖关系，属性不要太多，尽量高内聚；</li>
+</ul>
+<p>属性很多，并且存在多层的嵌套，比如A对象关联B对象，B对象又聚 合C对象，C对象又关联聚合很多其他对象，对象依赖关系过于复杂。序列化框架在序列化与反序列化对象时，对象越复杂就越浪费性能，消耗CPU，这会严重影响RPC框架整体的性能；另外，对象越复杂，在序列化与反序列化的过程中，出现问题的概率就越高。</p>
+<ul>
+<li>入参对象与返回值对象体积不要太大，更不要传太大的集合；</li>
+</ul>
+<p>一个大List或者大Map，序列化之后字节长度达到了上兆字节。这 种情况同样会严重地浪费了性能、CPU，并且序列化一个如此大的对象是很耗费时间的，这肯定会直接影响到请求的耗时。</p>
+<ul>
+<li>尽量使用简单的、常用的、开发语言原生的对象，<strong>尤其是集合类；</strong></li>
+</ul>
+<p>比如Hessian框架，他天然是不支持 LinkHashMap、LinkedHashSet等，而且大多数情况下最好不要使用第三方集合类，如Guava中的集合类，很多开源的序列化框架都是**<em>优先支持编程语言原生的对象**</em>。因此如果入参是集合类，应尽量选用原生的、最为常用的集合类，如HashMap、ArrayList。</p>
+<ul>
+<li>对象不要有复杂的继承关系，最好不要有父子类的情况</li>
+</ul>
+<p>大多数序列化框架在序列化对象时都会将对象的属性一一进行序列化，当有继承关系时，会不停地寻找父类，遍历属性。就像问题1一样，对象关系越复杂，就越浪费性能，同时又很容易出现序列化上的问题。</p>
+<h1 id="网络通信：RPC框架的网络IO模型"><a href="#网络通信：RPC框架的网络IO模型" class="headerlink" title="网络通信：RPC框架的网络IO模型"></a>网络通信：RPC框架的网络IO模型</h1><h2 id="网络通信在RPC调用中的作用"><a href="#网络通信在RPC调用中的作用" class="headerlink" title="网络通信在RPC调用中的作用"></a>网络通信在RPC调用中的作用</h2><p>RPC是解决进程间通信的一种方式。一次RPC调用，本质就是服务消费者与服务提供者间的<strong>一次网络信息交换</strong>的过程。服务调用者通过网络IO发送一条请求消 息，服务提供者接收并解析，处理完相关的业务逻辑之后，再发送一条响应消息给服务调用 者，服务调用者接收并解析响应消息，处理完相关的响应逻辑，一次RPC调用便结束了。可以 说，网络通信是整个RPC调用流程的基础。</p>
+<h2 id="常见网络IO模型"><a href="#常见网络IO模型" class="headerlink" title="常见网络IO模型"></a>常见网络IO模型</h2><p>常见的网络IO模型分为四种：同步阻塞IO（BIO）、同步非阻塞IO（NIO）、IO多路复用和 </p>
+<p>异步非阻塞IO（AIO）。在这四种IO模型中，只有AIO为异步IO，其他都是同步IO。</p>
+<h3 id="阻塞IO（blocking-IO）"><a href="#阻塞IO（blocking-IO）" class="headerlink" title="阻塞IO（blocking IO）"></a>阻塞IO（blocking IO）</h3><p>同步阻塞IO是最简单、最常见的IO模型，在Linux中，默认情况下所有的socket都是blocking的。</p>
+<p>首先，应用进程发起IO系统调用后，应用进程被阻塞，转到内核空间处理。之后，内核开始等待数据，等待到数据之后，再将内核中的数据拷贝到用户内存中，整个IO处理完毕后返回 进程。最后应用的进程解除阻塞状态，运行业务逻辑。 </p>
+<p>这里我们可以看到，系统内核处理IO操作分为两个阶段——**<em>等待数据和拷贝数据**</em>。而在这两 </p>
+<p>个阶段中，应用进程中IO操作的线程会一直都处于阻塞状态，如果是基于Java多线程开发， 那么每一个IO操作都要占用线程，直至IO操作结束。</p>
+<h3 id="IO多路复用-IO-multiplexing"><a href="#IO多路复用-IO-multiplexing" class="headerlink" title="IO多路复用(IO multiplexing)"></a>IO多路复用(IO multiplexing)</h3><p>多路复用IO是在高并发场景中使用最为广泛的一种IO模型，如Java的NIO、Redis、Nginx的 底层实现就是此类IO模型的应用，经典的Reactor模式也是基于此类IO模型.</p>
+<p>那么什么是IO多路复用呢？通过字面上的理解，多路就是指多个通道，也就是多个网络连接 的IO，而复用就是指多个通道复用在一个复用器上。 </p>
+<p>多个网络连接的IO可以注册到一个<strong>复用器（select）</strong>上，当用户进程调用了select，那么整个进程会被阻塞。同时，内核会“监视”所有select负责的socket，当任何一个socket中的数据准备好了，select就会返回。这个时候用户进程再调用read操作，将数据从内核中拷贝到用户进程。</p>
+<p>当用户进程发起了select调用，进程会被阻塞，当发现该select负责的socket有准备好的数据时才返回，之后才发起一次read，整个流程要比阻塞IO要复杂，似乎也更浪费性能。但它最大的优势在于，<strong>用户可以在一个线程内同时处理多个socket的IO请 求</strong>。用户可以注册多个socket，然后不断地调用select读取被激活的socket，即可达到在同一个线程内同时处理多个IO请求的目的。而在同步阻塞模型中，必须通过多线程的方式才能达 到这个目的。</p>
+<h2 id="RPC框架在网络通信上倾向选择哪种网络IO模型？"><a href="#RPC框架在网络通信上倾向选择哪种网络IO模型？" class="headerlink" title="RPC框架在网络通信上倾向选择哪种网络IO模型？"></a>RPC框架在网络通信上倾向选择哪种网络IO模型？</h2><img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%A6%82%E8%A7%88/10.png" class>
+
+
+
+<h3 id="零拷贝技术"><a href="#零拷贝技术" class="headerlink" title="零拷贝技术"></a>零拷贝技术</h3><h4 id="零拷贝技术出现的背景"><a href="#零拷贝技术出现的背景" class="headerlink" title="零拷贝技术出现的背景"></a>零拷贝技术出现的背景</h4><p>对于阻塞IO，系统内核处理IO操作分为两个阶段——等待数据和拷贝数据。 等待数据，就是系统内核在等待网卡接收到数据后，把数据写到内核中；而拷贝数据，就是系统内核在获取到数据后，将数据拷贝到用户进程的空间中。以下是具体流程：</p>
+ <img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%A6%82%E8%A7%88/11.png" class>
+
+<p>应用进程的每一次写操，都会把数据写到用户空间的缓冲区中，再由CPU将数据拷贝到系统内核的缓冲区中，之后再由DMA将这份数据拷贝到网卡中，最后由网卡发送出去。这里我们可以看到，**<em>一次写操作数据要拷贝两次才能通过网卡发送出去**</em>，而用户进程的读操作则是将整个流程反过来，数据同样会拷贝两次才能让应用程序读取到数据。</p>
+<p>缺点</p>
+<p>应用进程的一次完整的读写操作，都需要在用户空间与内核空间中<strong>来回拷贝</strong>，并且每一次拷 贝，都需要CPU进行<strong>一次上下文切换</strong>（由用户进程切换到系统内核，或由系统内核切换到用户进程）</p>
+<h4 id="零拷贝-Zero-copy"><a href="#零拷贝-Zero-copy" class="headerlink" title="零拷贝(Zero-copy)"></a>零拷贝(Zero-copy)</h4><p>所谓的零拷贝，就是取消用户空间与内核空间之间的数据拷贝操作，应用进程每一次的读写操作，都可以通过一种方式，让应用进程向用户空间写入或者读取数据，就如同直接向内核空间写入或者读取数据一样，再通过DMA将内核中的数据拷贝到网卡，或将网卡中的数据 copy到内核。</p>
+<img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%A6%82%E8%A7%88/12.png" class>
+
+<p>零拷贝有两种解决方式，分别是 <strong>mmap+write</strong> 方式和 <strong>sendfile</strong> 方式，mmap+write方式的 </p>
+<p>核心原理就是通过虚拟内存来解决的.</p>
+<h3 id="Netty中的零拷贝"><a href="#Netty中的零拷贝" class="headerlink" title="Netty中的零拷贝"></a>Netty中的零拷贝</h3><img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%A6%82%E8%A7%88/13.png" class>
+
+<p>而Netty的零拷贝则不大一样，他完全站在了用户空间上，也就是JVM上，它的零拷贝主要是偏向于数据操作的优化上。</p>
+<p>在传输过程 中，RPC并不会把请求参数的所有二进制数据整体一下子发送到对端机器上，中间可能会拆分 成好几个数据包，也可能会合并其他请求的数据包，所以消息都需要有边界。那么一端的机 器收到消息之后，就需要对数据包进行处理，根据边界对数据包进行分割和合并，最终获得 一条完整的消息。 </p>
+<p>那收到消息后，对数据包的分割和合并，是在用户空间完成，还是在内核空间完成的呢？ </p>
+<p>当然是在用户空间，因为对数据包的处理工作都是由应用程序来处理的，那么这里有没有可 能存在数据的拷贝操作？可能会存在，当然不是在用户空间与内核空间之间的拷贝，是**<em>用户空间内部内存中的拷贝处理操作**</em>。Netty的零拷贝就是为了解决这个问题，在用户空间对数据操作进行优化。</p>
+ <img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%A6%82%E8%A7%88/14.png" class>
+
+<p>Netty对于解决用户空间和内核空间的数据拷贝问题的策略</p>
+<ul>
+<li><p>Netty 的 ByteBuffer 可以采用 Direct Buffers，<strong>使用堆外直接内存进行Socket的读写操作</strong>， </p>
+</li>
+<li><p>Netty 还提供 FileRegion 中包装 NIO 的 FileChannel.transferTo() 方法实现了零拷贝，这 </p>
+</li>
+</ul>
+<p>与Linux 中的 sendfile 方式在原理上也是一样的。</p>
+<h1 id="动态代理：面向接口编程，屏蔽RPC处理流程"><a href="#动态代理：面向接口编程，屏蔽RPC处理流程" class="headerlink" title="动态代理：面向接口编程，屏蔽RPC处理流程"></a>动态代理：面向接口编程，<strong>屏蔽RPC处理流程</strong></h1><p>在项目中，当我们要使用 RPC 的时候，我们一般的做法是先找服务提供方要接口，通过 Maven 或者其他的工具把接口依赖到我们项目中。我们在编写业务逻辑的时候，如果要调用提供方的接口，我们就只需要通过依赖注入的方式把接口注入到项目中就行了，然后在代码 里面直接调用接口的方法 。 我们都知道，**<em>接口里并不会包含真实的业务逻辑，业务逻辑都在服务提供方应用里**</em>，但我们 通过调用接口方法，确实拿到了想要的结果，这就是动态代理的作用。</p>
+<p>这里面用到的核心技术就是前面说的动态代理。RPC 会自动给接口生成一个<strong>代理类</strong>，当我们</p>
+<p>在项目中注入接口的时候，运行过程中实际绑定的是这个接口生成的代理类。这样在接口方</p>
+<p>法被调用的时候，它实际上是<strong>被生成代理类拦截到了</strong>，这样我们就可以**<em>在生成的代理类里**</em></p>
+<p><strong><em>面，加入远程调用逻辑</em></strong>。（调用服务提供方的业务逻辑）。</p>
+<p>通过这种“偷梁换柱”的手法，就可以帮用户屏蔽远程调用的细节，实现像调用本地一样地调用远程的体验。</p>
+<img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%A6%82%E8%A7%88/15.png" class>
+
+
+
+<h2 id="动态代理实现逻辑"><a href="#动态代理实现逻辑" class="headerlink" title="动态代理实现逻辑"></a>动态代理实现逻辑</h2> <img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%A6%82%E8%A7%88/16.png" class>
+
+<p>给 Hello 接口生成一个动态代理类，并调用接口 say() 方法，但真实返回的值居然是来自 RealHello 里面的 invoke() 方法返回值。</p>
+<img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%A6%82%E8%A7%88/17.png" class>
+
+<p><strong><em>代理类生成的逻辑—-Proxy.newProxyInstance</em></strong></p>
+<img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%A6%82%E8%A7%88/18.png" class>
+
+
+
+
+
+<img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%A6%82%E8%A7%88/19.png" class>
+]]></content>
+      <categories>
+        <category>RPC框架</category>
+      </categories>
+      <tags>
+        <tag>RPC框架基础知识</tag>
       </tags>
   </entry>
   <entry>
