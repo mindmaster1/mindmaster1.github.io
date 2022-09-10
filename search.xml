@@ -2283,6 +2283,11 @@
       </tags>
   </entry>
   <entry>
+    <title>Section1</title>
+    <url>/2022/02/21/Section1/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Stack</title>
     <url>/2021/03/11/Stack/</url>
     <content><![CDATA[<h2 id="栈刷题总结"><a href="#栈刷题总结" class="headerlink" title="栈刷题总结"></a>栈刷题总结</h2><h3 id="1-有效的括号"><a href="#1-有效的括号" class="headerlink" title="1.有效的括号"></a>1.有效的括号</h3><h4 id="知识点补充："><a href="#知识点补充：" class="headerlink" title="知识点补充："></a>知识点补充：</h4><blockquote>
@@ -2542,11 +2547,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Section1</title>
-    <url>/2022/02/21/Section1/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>XML配置文件详解</title>
     <url>/2021/03/13/XML%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/</url>
     <content><![CDATA[<h2 id="配置文档顶层结构"><a href="#配置文档顶层结构" class="headerlink" title="配置文档顶层结构"></a>配置文档顶层结构</h2><img data-src="/2021/03/13/XML%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/01.png" class>
@@ -2755,6 +2755,96 @@
       </tags>
   </entry>
   <entry>
+    <title>消息队列MQ</title>
+    <url>/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/</url>
+    <content><![CDATA[<h2 id="MQ的基本概念"><a href="#MQ的基本概念" class="headerlink" title="MQ的基本概念"></a>MQ的基本概念</h2><p>MQ全称 Message Queue（消息队列），是在消息的传输过程中保存消息的容器。多用于分布式系统之间进行通信。消息队列已经逐渐成为企业IT系统内部通信的核心手段。它具有低耦合、可靠投递、广播、流量控制、最终一致性等一系列功能，成为异步RPC的主要手段之一。 当今市面上有很多主流的消息中间件，如老牌的ActiveMQ、RabbitMQ，炙手可热的Kafka，阿里巴巴自主开发的Notify、MetaQ、RocketMQ等。</p>
+<p>当你需要使用消息队列时，首先需要考虑它的必要性。可以使用mq的场景有很多，最常用的几种，是做业务解耦/最终一致性/广播/错峰流控等。反之，如果需要强一致性，关注业务逻辑的处理结果，则RPC显得更为合适</p>
+<p>如果没有消息队列，分布式系统之间可能互相通过远程调用来实现不同系统之间的访问。</p>
+ <img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/01.png" class>
+
+<p>MQ，消息队列，存储消息的<strong>中间件</strong>,分布式系统通信两种方式：直接远程调用 和 借助第三方 完成间接通信,发送方称为生产者，接收方称为消费者。</p>
+<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/02.png" class>
+
+<h2 id="MQ的优势与劣势"><a href="#MQ的优势与劣势" class="headerlink" title="MQ的优势与劣势"></a>MQ的优势与劣势</h2><h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><blockquote>
+<p>应用解耦</p>
+</blockquote>
+<p>解耦是消息队列要解决的最本质问题。所谓解耦，简单点讲就是一个事务，只关心核心的流程。而需要依赖其他系统但不那么重要的事情，**==有通知即可，无需等待结果==**。换句话说，基于消息的模型，关心的是“通知”，而非“处理”。 </p>
+<p>比如在美团旅游，我们有一个产品中心，产品中心上游对接的是主站、移动后台、旅游供应链等各个数据源；下游对接的是筛选系统、API系统等展示系统。当上游的数据发生变更的时候，如果不使用消息系统，势必要调用我们的接口来更新数据，就特别依赖产品中心接口的稳定性和处理能力。但其实，作为旅游的产品中心，也许只有对于旅游自建供应链，产品中心更新成功才是他们关心的事情。而对于团购等外部系统，产品中心更新成功也好、失败也罢，并不是他们的职责所在。他们只需要保证在信息变更的时候通知到我们就好了。 而我们的下游，可能有更新索引、刷新缓存等一系列需求。对于产品中心来说，这也不是我们的职责所在。说白了，如果他们定时来拉取数据，也能保证数据的更新，只是实时性没有那么强。但使用接口方式去更新他们的数据，显然对于产品中心来说太过于“重量级”了，只需要发布一个产品ID变更的通知，由下游系统来处理，可能更为合理。 再举一个例子，对于我们的订单系统，订单最终支付成功之后可能需要给用户发送短信积分什么的，但其实这已经不是我们系统的核心流程了。如果外部系统速度偏慢（比如短信网关速度不好），那么主流程的时间会加长很多，用户肯定不希望点击支付过好几分钟才看到结果。那么我们只需要通知短信系统“我们支付成功了”，不一定非要等待它处理完成。</p>
+ <img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/03.png" class>
+
+<p>例如，在上面的例子中，订单系统过分依赖剩余四个系统。用户向订单系统发送消息，订单系统分别向下层的四个系统传递用户消息。这样一来，不仅时间上效率很低，而且，一旦下层的某个系统挂掉，订单系统以及上层用户迟迟得不到反馈，这对于“争分夺秒”的电商行业是不能承受的。而添加了MQ之后，订单系统只需要将消息发给MQ，并且MQ可以先行通知用户操作成功，而不一定非要等到下层子系统操作完成之后在进行反馈。同时，如果下层系统挂掉(通常很快就可以修复，只有几分钟，但是对业务的影响是巨大的），订单系统因为由消息队列的存在，仍旧可以给予用户反馈，提升了客户的访问体验。</p>
+<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/04.png" class>
+
+<blockquote>
+<p>异步提速，削峰填谷</p>
+</blockquote>
+<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/05.png" class>
+
+<p><strong>在不使用消息队列服务器的时候，用户的请求数据直接写入数据库，在高并发的情况下数据库压力剧增，使得响应速度变慢。但是在使用消息队列之后，用户的请求数据发送给消息队列之后立即 返回，再由消息队列的消费者进程从消息队列中获取数据，异步写入数据库。由于消息队列服务器处理速度快于数据库（消息队列也比数据库有更好的伸缩性），因此响应速度得到大幅改善。</strong></p>
+<p>通过以上分析我们可以得出<strong>消息队列具有很好的削峰作用的功能</strong>——即<strong>通过异步处理，将短时间高并发产生的事务消息存储在消息队列中，从而削平高峰期的并发事务。</strong> 举例：在电子商务一些秒杀、促销活动中，合理使用消息队列可以有效抵御促销活动刚开始大量订单涌入对系统的冲击。如下图所示：</p>
+<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/06.png" class>
+
+<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/07.png" class>
+
+<p>因为<strong>用户请求数据写入消息队列之后就立即返回给用户了，但是请求数据在后续的业务校验、写数据库等操作中可能失败</strong>。因此使用消息队列进行异步处理之后，需要<strong>适当修改业务流程进行配合</strong>，比如<strong>用户在提交订单之后，订单数据写入消息队列，不能立即返回用户订单提交成功，需要在消息队列的订单消费者进程真正处理完该订单之后，甚至出库后，再通过电子邮件或短信通知用户订单成功</strong>，以免交易纠纷。这就类似我们平时手机订火车票和电影票。</p>
+<blockquote>
+<p>利用消息队列实现事件驱动结构</p>
+</blockquote>
+<p>最常见的<strong>事件驱动架构</strong>类似生产者消费者模式，在大型网站中通常用利用消息队列实现事件驱动结构。</p>
+<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/08.png" class>
+
+<p><strong>消息队列利用发布-订阅模式工作，消息发送者（生产者）发布消息，一个或多个消息接受者（消费者）订阅消息。</strong> 从上图可以看到<strong>消息发送者（生产者）和消息接受者（消费者）之间没有直接耦合</strong>，消息发送者将消息发送至分布式消息队列即结束对消息的处理，消息接受者从分布式消息队列获取该消息后进行后续处理，并不需要知道该消息从何而来。<strong>对新增业务，只要对该类消息感兴趣，即可订阅该消息，对原有系统和业务没有任何影响，从而实现网站业务的可扩展性设计</strong>。</p>
+<p>消息接受者对消息进行过滤、处理、包装后，构造成一个新的消息类型，将消息继续发送出去，等待其他消息接受者订阅该消息。因此基于事件（消息对象）驱动的业务架构可以是一系列流程。</p>
+<p><strong>另外为了避免消息队列服务器宕机造成消息丢失，会将成功发送到消息队列的消息存储在消息生产者服务器上，等消息真正被消费者服务器处理后才删除消息。在消息队列服务器宕机后，生产者服务器会选择分布式消息队列服务器集群中的其他服务器发布消息。</strong></p>
+<p><strong>备注：</strong> 不要认为消息队列只能利用发布-订阅模式工作，只不过在解耦这个特定业务环境下是使用发布-订阅模式的。<strong>除了发布-订阅模式，还有点对点订阅模式（一个消息只有一个消费者），我们比较常用的是发布-订阅模式。</strong> 另外，这两种消息模型是 JMS 提供的，AMQP 协议还提供了 5 种消息模型。</p>
+<blockquote>
+<p>广播</p>
+</blockquote>
+<p>消息队列的基本功能之一是进行广播。如果没有消息队列，每当一个新的业务方接入，我们都要联调一次新接口。有了消息队列，我们只需要关心消息是否送达了队列，至于谁希望订阅，是下游的事情，无疑极大地减少了开发和联调的工作量。 比如本文开始提到的产品中心发布产品变更的消息，以及景点库很多去重更新的消息，可能“关心”方有很多个，但产品中心和景点库只需要发布变更消息即可，谁关心谁接入。</p>
+<blockquote>
+<p>错峰与流控</p>
+</blockquote>
+<p>试想上下游对于事情的处理能力是不同的。比如，Web前端每秒承受上千万的请求，并不是什么神奇的事情，只需要加多一点机器，再搭建一些LVS负载均衡设备和Nginx等即可。但<strong>数据库的处理能力却十分有限</strong>，即使使用SSD加分库分表，单机的处理能力仍然在万级。由于成本的考虑，我们不能奢求数据库的机器数量追上前端。 这种问题同样存在于系统和系统之间，如短信系统可能由于短板效应，速度卡在网关上（每秒几百次请求），跟前端的并发量不是一个数量级。但用户晚上个半分钟左右收到短信，一般是不会有太大问题的。如果没有消息队列，两个系统之间通过协商、滑动窗口等复杂的方案也不是说不能实现。但系统复杂性指数级增长，势必在上游或者下游做存储，并且要处理定时、拥塞等一系列问题。而且每当有处理能力有差距的时候，都需要单独开发一套逻辑来维护这套逻辑。所以，利用中间系统转储两个系统的通信内容，并在下游系统有能力处理这些消息的时候，再处理这些消息，是一套相对较通用的方式。</p>
+<p>总而言之，消息队列不是万能的。<strong>对于需要强事务保证而且延迟敏感的，RPC是优于消息队列</strong>的。 <strong>对于一些无关痛痒，或者对于别人非常重要但是对于自己不是那么关心的事情，可以利用消息队列去做。</strong> 支持最终一致性的消息队列，能够用来处理<strong>延迟不那么敏感</strong>的“分布式事务”场景，而且相对于笨重的分布式事务，可能是更优的处理方式。 当上下游系统处理能力存在差距的时候，利用消息队列做一个通用的“漏斗”。在下游有能力处理的时候，再进行分发。 如果下游有很多系统关心你的系统发出的通知的时候，果断地使用消息队列吧</p>
+<h3 id="MQ的劣势"><a href="#MQ的劣势" class="headerlink" title="MQ的劣势"></a>MQ的劣势</h3><blockquote>
+<p>一致性问题</p>
+</blockquote>
+<p>A 系统处理完业务，通过 MQ 给B、C、D三个系统发消息数据，如果 B 系统、C 系统处理成功，D 系统处理失败。如何保证消息数据处理的一致性？</p>
+<p>最终一致性指的是两个系统的状态保持一致，要么都成功，要么都失败。当然有个时间限制，理论上越快越好，但实际上在各种异常的情况下，可能会有一定延迟达到最终一致状态，但最后两个系统的状态是一样的。 </p>
+<p>业界有一些为“最终一致性”而生的消息队列，如Notify（阿里）、QMQ（去哪儿）等，其设计初衷，就是为了交易系统中的高可靠通知。 </p>
+<p>以一个银行的转账过程来理解最终一致性，转账的需求很简单，如果A系统扣钱成功，则B系统加钱一定成功。反之则一起回滚，像什么都没发生一样。 然而，这个过程中存在很多可能的意外： 1. A扣钱成功，调用B加钱接口失败。 2. A扣钱成功，调用B加钱接口虽然成功，但获取最终结果时网络异常引起超时。 3. A扣钱成功，B加钱失败，A想回滚扣的钱，但A机器down机。</p>
+<p>可见，想把这件看似简单的事真正做成，真的不那么容易。所有跨VM的一致性问题，从技术的角度讲通用的解决方案是：</p>
+<ul>
+<li><p>强一致性，分布式事务，但落地太难且成本太高。</p>
+</li>
+<li><p>最终一致性，主要是用“记录”和“补偿”的方式。在做所有的不确定的事情之前，先把事情记录下来，然后去做不确定的事情，结果可能是：成功、失败或是不确定，“不确定”（例如超时等）可以等价为失败。成功就可以把记录的东西清理掉了，对于失败和不确定，可以依靠定时任务等方式把所有失败的事情重新搞一遍，直到成功为止。</p>
+<p> 回到刚才的例子，系统在A扣钱成功的情况下，把要给B“通知”这件事记录在库里（为了保证最高的可靠性可以把通知B系统加钱和扣钱成功这两件事维护在一个本地事务里），通知成功则删除这条记录，通知失败或不确定则依靠定时任务补偿性地通知我们，直到我们把状态更新成正确的为止。 整个这个模型依然可以基于RPC来做，但可以抽象成一个统一的模型，基于消息队列来做一个“企业总线”。 具体来说，本地事务维护业务变化和通知消息，一起落地（失败则一起回滚），然后RPC到达broker，在broker成功落地后，RPC返回成功，本地消息可以删除。否则本地消息一直靠定时任务轮询不断重发，这样就保证了消息可靠落地broker。 broker往consumer发送消息的过程类似，一直发送消息，直到consumer发送消费成功确认。 我们先不理会重复消息的问题，通过两次消息落地加补偿，下游是一定可以收到消息的。然后依赖状态机版本号等方式做判重，更新自己的业务，就实现了最终一致性。</p>
+</li>
+</ul>
+<blockquote>
+<p>系统可用性降低</p>
+</blockquote>
+<p>系统引入的外部依赖越多，系统稳定性越差。一旦 MQ 宕机，就会对业务造成影响。如何保证MQ的高可用？</p>
+<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/09.png" class>
+
+
+
+<blockquote>
+<p>系统复杂度提高</p>
+</blockquote>
+<p>MQ 的加入大大增加了系统的复杂度，以前系统间是同步的远程调用，现在是通过 MQ 进行异步调用。如何保证消息没有被重复消费？怎么处理消息丢失情况？那么保证消息传递的顺序性？</p>
+<h2 id="MQ的应用场景"><a href="#MQ的应用场景" class="headerlink" title="MQ的应用场景"></a>MQ的应用场景</h2><p>①生产者不需要从消费者处获得反馈。引入消息队列之前的直接调用，其接口的返回值应该为空，这才让明明下层的动作还没做，上层却当成动作做完了继续往后走，即所谓异步成为了可能。</p>
+<p>②容许短暂的不一致性。</p>
+<p>③确实是用了有效果。即解耦、提速、削峰这些方面的收益，超过加入MQ，管理MQ这些成本。</p>
+]]></content>
+      <categories>
+        <category>MQ</category>
+      </categories>
+      <tags>
+        <tag>RabbitMQ</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>初识递归</title>
     <url>/2021/02/03/%E5%88%9D%E8%AF%86%E9%80%92%E5%BD%92/</url>
     <content><![CDATA[<h2 id="二叉搜索树的范围和"><a href="#二叉搜索树的范围和" class="headerlink" title="二叉搜索树的范围和"></a>二叉搜索树的范围和</h2><h3 id="DFS深度优先搜索"><a href="#DFS深度优先搜索" class="headerlink" title="DFS深度优先搜索"></a>DFS深度优先搜索</h3><h4 id="1-递归"><a href="#1-递归" class="headerlink" title="1.递归"></a>1.递归</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * public class TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode left;</span></span><br><span class="line"><span class="comment"> *     TreeNode right;</span></span><br><span class="line"><span class="comment"> *     TreeNode() &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val) &#123; this.val = val; &#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int val, TreeNode left, TreeNode right) &#123;</span></span><br><span class="line"><span class="comment"> *         this.val = val;</span></span><br><span class="line"><span class="comment"> *         this.left = left;</span></span><br><span class="line"><span class="comment"> *         this.right = right;</span></span><br><span class="line"><span class="comment"> *     &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> ans;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">rangeSumBST</span><span class="params">(TreeNode root, <span class="keyword">int</span> low, <span class="keyword">int</span> high)</span> </span>&#123;</span><br><span class="line">       ans = <span class="number">0</span> ;</span><br><span class="line">        dfs(root,low,high);</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dfs</span><span class="params">(TreeNode node,<span class="keyword">int</span> L,<span class="keyword">int</span> R)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(node!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(L&lt;=node.val&amp;&amp;node.val&lt;=R)&#123;</span><br><span class="line">                ans+=node.val;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(node.val&gt;L)&#123;</span><br><span class="line">                dfs(node.left,L,R);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(node.val&lt;R)&#123;</span><br><span class="line">                dfs(node.right,L,R);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -2856,96 +2946,6 @@
       </categories>
       <tags>
         <tag>递归</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>消息队列MQ</title>
-    <url>/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/</url>
-    <content><![CDATA[<h2 id="MQ的基本概念"><a href="#MQ的基本概念" class="headerlink" title="MQ的基本概念"></a>MQ的基本概念</h2><p>MQ全称 Message Queue（消息队列），是在消息的传输过程中保存消息的容器。多用于分布式系统之间进行通信。消息队列已经逐渐成为企业IT系统内部通信的核心手段。它具有低耦合、可靠投递、广播、流量控制、最终一致性等一系列功能，成为异步RPC的主要手段之一。 当今市面上有很多主流的消息中间件，如老牌的ActiveMQ、RabbitMQ，炙手可热的Kafka，阿里巴巴自主开发的Notify、MetaQ、RocketMQ等。</p>
-<p>当你需要使用消息队列时，首先需要考虑它的必要性。可以使用mq的场景有很多，最常用的几种，是做业务解耦/最终一致性/广播/错峰流控等。反之，如果需要强一致性，关注业务逻辑的处理结果，则RPC显得更为合适</p>
-<p>如果没有消息队列，分布式系统之间可能互相通过远程调用来实现不同系统之间的访问。</p>
- <img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/01.png" class>
-
-<p>MQ，消息队列，存储消息的<strong>中间件</strong>,分布式系统通信两种方式：直接远程调用 和 借助第三方 完成间接通信,发送方称为生产者，接收方称为消费者。</p>
-<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/02.png" class>
-
-<h2 id="MQ的优势与劣势"><a href="#MQ的优势与劣势" class="headerlink" title="MQ的优势与劣势"></a>MQ的优势与劣势</h2><h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><blockquote>
-<p>应用解耦</p>
-</blockquote>
-<p>解耦是消息队列要解决的最本质问题。所谓解耦，简单点讲就是一个事务，只关心核心的流程。而需要依赖其他系统但不那么重要的事情，**==有通知即可，无需等待结果==**。换句话说，基于消息的模型，关心的是“通知”，而非“处理”。 </p>
-<p>比如在美团旅游，我们有一个产品中心，产品中心上游对接的是主站、移动后台、旅游供应链等各个数据源；下游对接的是筛选系统、API系统等展示系统。当上游的数据发生变更的时候，如果不使用消息系统，势必要调用我们的接口来更新数据，就特别依赖产品中心接口的稳定性和处理能力。但其实，作为旅游的产品中心，也许只有对于旅游自建供应链，产品中心更新成功才是他们关心的事情。而对于团购等外部系统，产品中心更新成功也好、失败也罢，并不是他们的职责所在。他们只需要保证在信息变更的时候通知到我们就好了。 而我们的下游，可能有更新索引、刷新缓存等一系列需求。对于产品中心来说，这也不是我们的职责所在。说白了，如果他们定时来拉取数据，也能保证数据的更新，只是实时性没有那么强。但使用接口方式去更新他们的数据，显然对于产品中心来说太过于“重量级”了，只需要发布一个产品ID变更的通知，由下游系统来处理，可能更为合理。 再举一个例子，对于我们的订单系统，订单最终支付成功之后可能需要给用户发送短信积分什么的，但其实这已经不是我们系统的核心流程了。如果外部系统速度偏慢（比如短信网关速度不好），那么主流程的时间会加长很多，用户肯定不希望点击支付过好几分钟才看到结果。那么我们只需要通知短信系统“我们支付成功了”，不一定非要等待它处理完成。</p>
- <img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/03.png" class>
-
-<p>例如，在上面的例子中，订单系统过分依赖剩余四个系统。用户向订单系统发送消息，订单系统分别向下层的四个系统传递用户消息。这样一来，不仅时间上效率很低，而且，一旦下层的某个系统挂掉，订单系统以及上层用户迟迟得不到反馈，这对于“争分夺秒”的电商行业是不能承受的。而添加了MQ之后，订单系统只需要将消息发给MQ，并且MQ可以先行通知用户操作成功，而不一定非要等到下层子系统操作完成之后在进行反馈。同时，如果下层系统挂掉(通常很快就可以修复，只有几分钟，但是对业务的影响是巨大的），订单系统因为由消息队列的存在，仍旧可以给予用户反馈，提升了客户的访问体验。</p>
-<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/04.png" class>
-
-<blockquote>
-<p>异步提速，削峰填谷</p>
-</blockquote>
-<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/05.png" class>
-
-<p><strong>在不使用消息队列服务器的时候，用户的请求数据直接写入数据库，在高并发的情况下数据库压力剧增，使得响应速度变慢。但是在使用消息队列之后，用户的请求数据发送给消息队列之后立即 返回，再由消息队列的消费者进程从消息队列中获取数据，异步写入数据库。由于消息队列服务器处理速度快于数据库（消息队列也比数据库有更好的伸缩性），因此响应速度得到大幅改善。</strong></p>
-<p>通过以上分析我们可以得出<strong>消息队列具有很好的削峰作用的功能</strong>——即<strong>通过异步处理，将短时间高并发产生的事务消息存储在消息队列中，从而削平高峰期的并发事务。</strong> 举例：在电子商务一些秒杀、促销活动中，合理使用消息队列可以有效抵御促销活动刚开始大量订单涌入对系统的冲击。如下图所示：</p>
-<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/06.png" class>
-
-<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/07.png" class>
-
-<p>因为<strong>用户请求数据写入消息队列之后就立即返回给用户了，但是请求数据在后续的业务校验、写数据库等操作中可能失败</strong>。因此使用消息队列进行异步处理之后，需要<strong>适当修改业务流程进行配合</strong>，比如<strong>用户在提交订单之后，订单数据写入消息队列，不能立即返回用户订单提交成功，需要在消息队列的订单消费者进程真正处理完该订单之后，甚至出库后，再通过电子邮件或短信通知用户订单成功</strong>，以免交易纠纷。这就类似我们平时手机订火车票和电影票。</p>
-<blockquote>
-<p>利用消息队列实现事件驱动结构</p>
-</blockquote>
-<p>最常见的<strong>事件驱动架构</strong>类似生产者消费者模式，在大型网站中通常用利用消息队列实现事件驱动结构。</p>
-<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/08.png" class>
-
-<p><strong>消息队列利用发布-订阅模式工作，消息发送者（生产者）发布消息，一个或多个消息接受者（消费者）订阅消息。</strong> 从上图可以看到<strong>消息发送者（生产者）和消息接受者（消费者）之间没有直接耦合</strong>，消息发送者将消息发送至分布式消息队列即结束对消息的处理，消息接受者从分布式消息队列获取该消息后进行后续处理，并不需要知道该消息从何而来。<strong>对新增业务，只要对该类消息感兴趣，即可订阅该消息，对原有系统和业务没有任何影响，从而实现网站业务的可扩展性设计</strong>。</p>
-<p>消息接受者对消息进行过滤、处理、包装后，构造成一个新的消息类型，将消息继续发送出去，等待其他消息接受者订阅该消息。因此基于事件（消息对象）驱动的业务架构可以是一系列流程。</p>
-<p><strong>另外为了避免消息队列服务器宕机造成消息丢失，会将成功发送到消息队列的消息存储在消息生产者服务器上，等消息真正被消费者服务器处理后才删除消息。在消息队列服务器宕机后，生产者服务器会选择分布式消息队列服务器集群中的其他服务器发布消息。</strong></p>
-<p><strong>备注：</strong> 不要认为消息队列只能利用发布-订阅模式工作，只不过在解耦这个特定业务环境下是使用发布-订阅模式的。<strong>除了发布-订阅模式，还有点对点订阅模式（一个消息只有一个消费者），我们比较常用的是发布-订阅模式。</strong> 另外，这两种消息模型是 JMS 提供的，AMQP 协议还提供了 5 种消息模型。</p>
-<blockquote>
-<p>广播</p>
-</blockquote>
-<p>消息队列的基本功能之一是进行广播。如果没有消息队列，每当一个新的业务方接入，我们都要联调一次新接口。有了消息队列，我们只需要关心消息是否送达了队列，至于谁希望订阅，是下游的事情，无疑极大地减少了开发和联调的工作量。 比如本文开始提到的产品中心发布产品变更的消息，以及景点库很多去重更新的消息，可能“关心”方有很多个，但产品中心和景点库只需要发布变更消息即可，谁关心谁接入。</p>
-<blockquote>
-<p>错峰与流控</p>
-</blockquote>
-<p>试想上下游对于事情的处理能力是不同的。比如，Web前端每秒承受上千万的请求，并不是什么神奇的事情，只需要加多一点机器，再搭建一些LVS负载均衡设备和Nginx等即可。但<strong>数据库的处理能力却十分有限</strong>，即使使用SSD加分库分表，单机的处理能力仍然在万级。由于成本的考虑，我们不能奢求数据库的机器数量追上前端。 这种问题同样存在于系统和系统之间，如短信系统可能由于短板效应，速度卡在网关上（每秒几百次请求），跟前端的并发量不是一个数量级。但用户晚上个半分钟左右收到短信，一般是不会有太大问题的。如果没有消息队列，两个系统之间通过协商、滑动窗口等复杂的方案也不是说不能实现。但系统复杂性指数级增长，势必在上游或者下游做存储，并且要处理定时、拥塞等一系列问题。而且每当有处理能力有差距的时候，都需要单独开发一套逻辑来维护这套逻辑。所以，利用中间系统转储两个系统的通信内容，并在下游系统有能力处理这些消息的时候，再处理这些消息，是一套相对较通用的方式。</p>
-<p>总而言之，消息队列不是万能的。<strong>对于需要强事务保证而且延迟敏感的，RPC是优于消息队列</strong>的。 <strong>对于一些无关痛痒，或者对于别人非常重要但是对于自己不是那么关心的事情，可以利用消息队列去做。</strong> 支持最终一致性的消息队列，能够用来处理<strong>延迟不那么敏感</strong>的“分布式事务”场景，而且相对于笨重的分布式事务，可能是更优的处理方式。 当上下游系统处理能力存在差距的时候，利用消息队列做一个通用的“漏斗”。在下游有能力处理的时候，再进行分发。 如果下游有很多系统关心你的系统发出的通知的时候，果断地使用消息队列吧</p>
-<h3 id="MQ的劣势"><a href="#MQ的劣势" class="headerlink" title="MQ的劣势"></a>MQ的劣势</h3><blockquote>
-<p>一致性问题</p>
-</blockquote>
-<p>A 系统处理完业务，通过 MQ 给B、C、D三个系统发消息数据，如果 B 系统、C 系统处理成功，D 系统处理失败。如何保证消息数据处理的一致性？</p>
-<p>最终一致性指的是两个系统的状态保持一致，要么都成功，要么都失败。当然有个时间限制，理论上越快越好，但实际上在各种异常的情况下，可能会有一定延迟达到最终一致状态，但最后两个系统的状态是一样的。 </p>
-<p>业界有一些为“最终一致性”而生的消息队列，如Notify（阿里）、QMQ（去哪儿）等，其设计初衷，就是为了交易系统中的高可靠通知。 </p>
-<p>以一个银行的转账过程来理解最终一致性，转账的需求很简单，如果A系统扣钱成功，则B系统加钱一定成功。反之则一起回滚，像什么都没发生一样。 然而，这个过程中存在很多可能的意外： 1. A扣钱成功，调用B加钱接口失败。 2. A扣钱成功，调用B加钱接口虽然成功，但获取最终结果时网络异常引起超时。 3. A扣钱成功，B加钱失败，A想回滚扣的钱，但A机器down机。</p>
-<p>可见，想把这件看似简单的事真正做成，真的不那么容易。所有跨VM的一致性问题，从技术的角度讲通用的解决方案是：</p>
-<ul>
-<li><p>强一致性，分布式事务，但落地太难且成本太高。</p>
-</li>
-<li><p>最终一致性，主要是用“记录”和“补偿”的方式。在做所有的不确定的事情之前，先把事情记录下来，然后去做不确定的事情，结果可能是：成功、失败或是不确定，“不确定”（例如超时等）可以等价为失败。成功就可以把记录的东西清理掉了，对于失败和不确定，可以依靠定时任务等方式把所有失败的事情重新搞一遍，直到成功为止。</p>
-<p> 回到刚才的例子，系统在A扣钱成功的情况下，把要给B“通知”这件事记录在库里（为了保证最高的可靠性可以把通知B系统加钱和扣钱成功这两件事维护在一个本地事务里），通知成功则删除这条记录，通知失败或不确定则依靠定时任务补偿性地通知我们，直到我们把状态更新成正确的为止。 整个这个模型依然可以基于RPC来做，但可以抽象成一个统一的模型，基于消息队列来做一个“企业总线”。 具体来说，本地事务维护业务变化和通知消息，一起落地（失败则一起回滚），然后RPC到达broker，在broker成功落地后，RPC返回成功，本地消息可以删除。否则本地消息一直靠定时任务轮询不断重发，这样就保证了消息可靠落地broker。 broker往consumer发送消息的过程类似，一直发送消息，直到consumer发送消费成功确认。 我们先不理会重复消息的问题，通过两次消息落地加补偿，下游是一定可以收到消息的。然后依赖状态机版本号等方式做判重，更新自己的业务，就实现了最终一致性。</p>
-</li>
-</ul>
-<blockquote>
-<p>系统可用性降低</p>
-</blockquote>
-<p>系统引入的外部依赖越多，系统稳定性越差。一旦 MQ 宕机，就会对业务造成影响。如何保证MQ的高可用？</p>
-<img data-src="/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/09.png" class>
-
-
-
-<blockquote>
-<p>系统复杂度提高</p>
-</blockquote>
-<p>MQ 的加入大大增加了系统的复杂度，以前系统间是同步的远程调用，现在是通过 MQ 进行异步调用。如何保证消息没有被重复消费？怎么处理消息丢失情况？那么保证消息传递的顺序性？</p>
-<h2 id="MQ的应用场景"><a href="#MQ的应用场景" class="headerlink" title="MQ的应用场景"></a>MQ的应用场景</h2><p>①生产者不需要从消费者处获得反馈。引入消息队列之前的直接调用，其接口的返回值应该为空，这才让明明下层的动作还没做，上层却当成动作做完了继续往后走，即所谓异步成为了可能。</p>
-<p>②容许短暂的不一致性。</p>
-<p>③确实是用了有效果。即解耦、提速、削峰这些方面的收益，超过加入MQ，管理MQ这些成本。</p>
-]]></content>
-      <categories>
-        <category>MQ</category>
-      </categories>
-      <tags>
-        <tag>RabbitMQ</tag>
       </tags>
   </entry>
   <entry>
@@ -3301,11 +3301,6 @@
       </tags>
   </entry>
   <entry>
-    <title>操作系统种类</title>
-    <url>/2022/02/23/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%A7%8D%E7%B1%BB/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>推荐系统初瞰</title>
     <url>/2021/10/29/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%88%9D%E7%9E%B0/</url>
     <content><![CDATA[<h2 id="一、走进推荐系统的世界"><a href="#一、走进推荐系统的世界" class="headerlink" title="一、走进推荐系统的世界"></a>一、走进推荐系统的世界</h2><p>“啤酒与尿布” 的故事相信很多人都听过，年轻爸爸去超市购买尿布时，经常会买点啤酒犒劳自己。因此，沃尔玛将这两种商品进行了捆绑销售，最终获得了更好的销量。</p>
@@ -3426,6 +3421,11 @@
       <tags>
         <tag>推荐系统入门</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>操作系统种类</title>
+    <url>/2022/02/23/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%A7%8D%E7%B1%BB/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>消息队列产品与RabbitMQ的简介</title>
@@ -3862,6 +3862,100 @@
       </tags>
   </entry>
   <entry>
+    <title>红队攻防入门1</title>
+    <url>/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/</url>
+    <content><![CDATA[<h2 id="红队攻防入门1–初识红队"><a href="#红队攻防入门1–初识红队" class="headerlink" title="红队攻防入门1–初识红队"></a>红队攻防入门1–初识红队</h2><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F1.png" class>
+
+<p>###红队概念</p>
+<p><strong>红队（Red Team）即安全团队最大化模拟真实世界里面的入侵事件，采用入侵者的战术、技术、流程，以此来检验蓝队（Blue Team）的威胁检测和应急响应的机制和效率，最终帮助企业真正提高整个安全建设、安全运营、安全管理等能力。</strong></p>
+<p>####1.1红队VS渗透测试</p>
+<p>在企业内部的一般的渗透测试，很多就是点到为止，并不会被授予很多的权限。而红队整体来看，在合法合规的前提下，在充分沟通的前提下，授权范围会更加广泛，真实程度更加贴合实战。</p>
+<img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F2.jpg" class>
+
+<h4 id="1-2红队VS蓝队"><a href="#1-2红队VS蓝队" class="headerlink" title="1.2红队VS蓝队"></a>1.2红队VS蓝队</h4><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F3.jpg" class>
+
+<p>无论是Red Team 还是Blue Team,这些概念都来自真实的战争领域。</p>
+<blockquote>
+<p>作为红队，是以攻击方的方式做安全工作的，常见的技术概念有APT攻击、渗透测试、零日漏洞、武器开发。</p>
+</blockquote>
+<blockquote>
+<p>作为蓝队，则以防御方的方式做安全工作，是安全合规、安全运营、应急响应、态势感知、威胁情报等等。</p>
+</blockquote>
+<p>####1.3 红队常用模型框架</p>
+ <img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F4.jpg" class>
+
+
+
+<p>#####1.3.1渗透测试执行标准PTES</p>
+
+
+<p>PTES中文全名【渗透测试执行标准】，他是有2010年由业界网络安全专家共同发起并定义的规范，目标是希望为企业和安全服务商，指定整个渗透测试的标准流程，方便大家工作和沟通。</p>
+<p>PTES 包括 7 个标准步骤，即前期交互、情报收集、威胁建模、漏洞分析、渗透利用、报告输出等，一般的渗透测试工作，基本都绕不开这些步骤，可以看成一个标准的工作流。</p>
+<p><strong>① 前期交互</strong></p>
+<p>前期交互阶段，我们得先拿到客户的授权，并且了解授权范围多少？渗透目标是谁？期望目标是什么？</p>
+<p>这些都是前期交互阶段要沟通好的。</p>
+<p><strong>② 情报搜集</strong></p>
+<p>情报搜集阶段，即根据上面的授权、范围、目标等信息，开始进行一些情报搜集工作。</p>
+<p>无论是主动搜集还是被动搜集，我们得知道对方开了哪个端口、提供了什么服务、这些服务的软件版本是什么、这些软件是否曾经出现过漏洞？</p>
+<p><strong>③ 威胁建模</strong></p>
+<p>哪些信息是真正有价值的？哪个口子用什么攻击方法？哪条攻击路径是最大可能的？</p>
+<p>根据情报搜集的汇总，我们得制定出接下来的「作战计划」。</p>
+<p>这些就是在威胁建模阶段要分析出来的。</p>
+<p><strong>④ 漏洞分析</strong></p>
+<p>结合以上情报搜集和威胁建模阶段，此阶段我们要判断出哪些漏洞是最有可能拿到对方权限，打通攻击路径的。</p>
+<p>哪些漏洞的攻击效果最佳？</p>
+<p>哪些漏洞有最新的工具？</p>
+<p>哪些漏洞需要自研渗透代码？</p>
+<p><strong>⑤ 渗透利用</strong></p>
+<p>前面 4 个阶段都不算真正 Hack 进目标系统，而这个阶段则是真正对目标进行渗透攻击，通过漏洞对应的利用工具等，获取目标控制权。</p>
+<p><strong>⑥ 后渗透</strong></p>
+<p>在拿到控制权限之后，为了避免对方发现，还需要进行后渗透，实现更持久地控制，更深层次地执行任务。</p>
+<p>比如进程迁移、隧道建立、数据获取、擦除痕迹等。</p>
+<p><strong>⑦ 报告输出</strong></p>
+<p>最后阶段就是输出一份安全报告，即写明渗透测试工作中，企业 IT 基础系统所存在的漏洞和风险点。</p>
+<p>以上便是 PTES 渗透测试执行标准。</p>
+<h5 id="1-3-2网络杀伤链Cyber-Kill-Chain"><a href="#1-3-2网络杀伤链Cyber-Kill-Chain" class="headerlink" title="1.3.2网络杀伤链Cyber Kill Chain"></a>1.3.2网络杀伤链Cyber Kill Chain</h5><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F6.jpg" class>
+
+<p>网络杀伤链的英文全名是 Cyber Kill Chain，这是 2011 年洛克希德马丁公司提出的网络攻击模型。</p>
+<p>跟真实世界的入侵者，对一个目标系统进行攻击的每个阶段都是一一映射的。</p>
+<p>这里也分为 7 个步骤 =&gt;</p>
+<p><strong>第 1 步，目标侦察，</strong>跟前面 PTES 情报收集阶段是差不多的；</p>
+<p><strong>第 2 步，武器研制，</strong>编写各种工具/后门/病毒 Exp / Weapon / Malware；</p>
+<p><strong>第 3 步，载荷投递，</strong>通过水坑鱼叉等攻击方式将武器散播出去（<strong>投毒</strong>）；</p>
+<p><strong>第 4 步，渗透利用，</strong>通过<strong>漏洞利用</strong>获取对方控制器；</p>
+<p><strong>第 5 步，安装执行</strong>，在目标系统将<strong>后门木马</strong>跑起来；</p>
+<p><strong>第 6 步，命令控制，</strong>对目标来进行<strong>持久化控制</strong>；</p>
+<p><strong>第 7 步，任务执行，</strong>即开始执行<strong>窃取数据、破坏系统</strong>等。</p>
+<p>以上便是网络杀伤链，相比 PTES 更加贴合实战阶段。</p>
+<h5 id="1-3-3MITRE-ATT-amp-CK框架"><a href="#1-3-3MITRE-ATT-amp-CK框架" class="headerlink" title="1.3.3MITRE ATT&amp;CK框架"></a>1.3.3MITRE ATT&amp;CK框架</h5><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F7.jpg" class>
+
+<p>「<strong>ATT&amp;CK 框架</strong>」，由 MITRE 公司于 2013 年提出来的一个通用知识框架，中文名叫做「<strong>对抗战术、技术、常识</strong> 」 。</p>
+<p>ATT&amp;CK 框架是基于真实网络空间攻防案例及数据，采用军事战争中的 <strong>TTPs （Tactics, Techniques &amp; Procedures）</strong>方法论，重新编排的网络安全知识体系，目的是建立一套网络安全的通用语言。</p>
+<p>举例，大家经常听到的什么 APT 攻击、威胁情报、态势感知等等，无论个人还是企业，理解上不尽相同，总会有一些偏差的。</p>
+<p>有了 ATT&amp;CK 框架，大家不会存在太大的偏差，红队具体怎么去攻击的，蓝队具体到怎么去防御的，使用 ATT&amp;CK 矩阵可以将每个细节标记出来，攻击路线和防御过程都可以图形展现出来，攻防双方就有了一套通用语言了。</p>
+<p>网络安全行业的组织、机构、厂家，每年都会造各种 ”新词“，但 MITRE 这个组织推的这套框架，兼具实战和学术价值，具备广泛的应用场景，对安全行业的发展推动是实实在在的。</p>
+<p>我认为，在未来 5 年也好 10 年也好 ，它可能会成为一个事实上的标准。</p>
+<p>这里看一下左上角图片，它整体有三个部分，一个是 PRE ATT&amp;CK，一个是 ATT&amp;CK for Enterprise，一个是 ATT&amp;CK for Mobile，我们学习和研究时，核心放在 ATT&amp;CK forEnterprise 即可。</p>
+<p>大家可以看到，其实左边这里面，也有侦查、武器化、载荷传递、利用、控制、执行、维持等等阶段，是不是跟前面介绍的网络杀伤链是一样的呢？</p>
+<p>是的，你可以这么简单理解，其实 ATT&amp;CK 这个框架，刚开始就是在杀伤链的基础上，提供了更加具体的、更细颗粒度的战术、技术、文档、工具、描述等等。</p>
+<p>因此，如果要深入学习红队，平常可以多逛逛去 ATT&amp;CK 框架官网。</p>
+<img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F8.jpg" class>
+
+<p>接下来，我们来重点看一下 ATT&amp;CK for Enterprise。</p>
+<p>这张图里面，横轴代表是战术（Tactics），最新版本里横轴包括的战术有 12 个（原来是 10 个），纵轴代表的是技术（Techniques）有 156 个技术 272 个子技术。</p>
+<p>前面我们提到了，它是基于 TTPs 方法来描述的，所以非常标准和通用。</p>
+<p>在实际的红蓝对抗、威胁情报分析、安全差距评估等工作场景中，都可以用得上。</p>
+<p>另外补充一点，这 12 个战术从左到右，也是按照网络杀伤链的路径来编排的，包括初始访问、执行、持久化、权限提升、防御绕过、凭证访问、发现、横向移动、收集、命令控制、数据获取、影响。</p>
+<p>每一个战术下面包括很多技术，每个技术有详细的过程，包括独立的编号、描述、工具等。</p>
+]]></content>
+      <categories>
+        <category>网络安全</category>
+      </categories>
+      <tags>
+        <tag>红队攻防</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>编程范式</title>
     <url>/2021/03/02/%E7%BC%96%E7%A8%8B%E8%8C%83%E5%BC%8F/</url>
     <content><![CDATA[<p>相信绝大部分开发人员、DBA都听过范式这个词，在MySQL中有第一范式、第二范式、第三范式、BCNF范式等，在开发中也有相应的范式，专业词汇叫编程范式(ProgrammingParadigm)。由于笔者能力、精力都有限，本篇主要通过针对同一业务场景，基于编程范式的概念，核心原理以及用例实现来对比不同范式及其实现业务功能的差异。</p>
@@ -3988,100 +4082,6 @@
       </categories>
       <tags>
         <tag>高并发网络性能指标</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>红队攻防入门1</title>
-    <url>/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/</url>
-    <content><![CDATA[<h2 id="红队攻防入门1–初识红队"><a href="#红队攻防入门1–初识红队" class="headerlink" title="红队攻防入门1–初识红队"></a>红队攻防入门1–初识红队</h2><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F1.png" class>
-
-<p>###红队概念</p>
-<p><strong>红队（Red Team）即安全团队最大化模拟真实世界里面的入侵事件，采用入侵者的战术、技术、流程，以此来检验蓝队（Blue Team）的威胁检测和应急响应的机制和效率，最终帮助企业真正提高整个安全建设、安全运营、安全管理等能力。</strong></p>
-<p>####1.1红队VS渗透测试</p>
-<p>在企业内部的一般的渗透测试，很多就是点到为止，并不会被授予很多的权限。而红队整体来看，在合法合规的前提下，在充分沟通的前提下，授权范围会更加广泛，真实程度更加贴合实战。</p>
-<img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F2.jpg" class>
-
-<h4 id="1-2红队VS蓝队"><a href="#1-2红队VS蓝队" class="headerlink" title="1.2红队VS蓝队"></a>1.2红队VS蓝队</h4><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F3.jpg" class>
-
-<p>无论是Red Team 还是Blue Team,这些概念都来自真实的战争领域。</p>
-<blockquote>
-<p>作为红队，是以攻击方的方式做安全工作的，常见的技术概念有APT攻击、渗透测试、零日漏洞、武器开发。</p>
-</blockquote>
-<blockquote>
-<p>作为蓝队，则以防御方的方式做安全工作，是安全合规、安全运营、应急响应、态势感知、威胁情报等等。</p>
-</blockquote>
-<p>####1.3 红队常用模型框架</p>
- <img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F4.jpg" class>
-
-
-
-<p>#####1.3.1渗透测试执行标准PTES</p>
-
-
-<p>PTES中文全名【渗透测试执行标准】，他是有2010年由业界网络安全专家共同发起并定义的规范，目标是希望为企业和安全服务商，指定整个渗透测试的标准流程，方便大家工作和沟通。</p>
-<p>PTES 包括 7 个标准步骤，即前期交互、情报收集、威胁建模、漏洞分析、渗透利用、报告输出等，一般的渗透测试工作，基本都绕不开这些步骤，可以看成一个标准的工作流。</p>
-<p><strong>① 前期交互</strong></p>
-<p>前期交互阶段，我们得先拿到客户的授权，并且了解授权范围多少？渗透目标是谁？期望目标是什么？</p>
-<p>这些都是前期交互阶段要沟通好的。</p>
-<p><strong>② 情报搜集</strong></p>
-<p>情报搜集阶段，即根据上面的授权、范围、目标等信息，开始进行一些情报搜集工作。</p>
-<p>无论是主动搜集还是被动搜集，我们得知道对方开了哪个端口、提供了什么服务、这些服务的软件版本是什么、这些软件是否曾经出现过漏洞？</p>
-<p><strong>③ 威胁建模</strong></p>
-<p>哪些信息是真正有价值的？哪个口子用什么攻击方法？哪条攻击路径是最大可能的？</p>
-<p>根据情报搜集的汇总，我们得制定出接下来的「作战计划」。</p>
-<p>这些就是在威胁建模阶段要分析出来的。</p>
-<p><strong>④ 漏洞分析</strong></p>
-<p>结合以上情报搜集和威胁建模阶段，此阶段我们要判断出哪些漏洞是最有可能拿到对方权限，打通攻击路径的。</p>
-<p>哪些漏洞的攻击效果最佳？</p>
-<p>哪些漏洞有最新的工具？</p>
-<p>哪些漏洞需要自研渗透代码？</p>
-<p><strong>⑤ 渗透利用</strong></p>
-<p>前面 4 个阶段都不算真正 Hack 进目标系统，而这个阶段则是真正对目标进行渗透攻击，通过漏洞对应的利用工具等，获取目标控制权。</p>
-<p><strong>⑥ 后渗透</strong></p>
-<p>在拿到控制权限之后，为了避免对方发现，还需要进行后渗透，实现更持久地控制，更深层次地执行任务。</p>
-<p>比如进程迁移、隧道建立、数据获取、擦除痕迹等。</p>
-<p><strong>⑦ 报告输出</strong></p>
-<p>最后阶段就是输出一份安全报告，即写明渗透测试工作中，企业 IT 基础系统所存在的漏洞和风险点。</p>
-<p>以上便是 PTES 渗透测试执行标准。</p>
-<h5 id="1-3-2网络杀伤链Cyber-Kill-Chain"><a href="#1-3-2网络杀伤链Cyber-Kill-Chain" class="headerlink" title="1.3.2网络杀伤链Cyber Kill Chain"></a>1.3.2网络杀伤链Cyber Kill Chain</h5><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F6.jpg" class>
-
-<p>网络杀伤链的英文全名是 Cyber Kill Chain，这是 2011 年洛克希德马丁公司提出的网络攻击模型。</p>
-<p>跟真实世界的入侵者，对一个目标系统进行攻击的每个阶段都是一一映射的。</p>
-<p>这里也分为 7 个步骤 =&gt;</p>
-<p><strong>第 1 步，目标侦察，</strong>跟前面 PTES 情报收集阶段是差不多的；</p>
-<p><strong>第 2 步，武器研制，</strong>编写各种工具/后门/病毒 Exp / Weapon / Malware；</p>
-<p><strong>第 3 步，载荷投递，</strong>通过水坑鱼叉等攻击方式将武器散播出去（<strong>投毒</strong>）；</p>
-<p><strong>第 4 步，渗透利用，</strong>通过<strong>漏洞利用</strong>获取对方控制器；</p>
-<p><strong>第 5 步，安装执行</strong>，在目标系统将<strong>后门木马</strong>跑起来；</p>
-<p><strong>第 6 步，命令控制，</strong>对目标来进行<strong>持久化控制</strong>；</p>
-<p><strong>第 7 步，任务执行，</strong>即开始执行<strong>窃取数据、破坏系统</strong>等。</p>
-<p>以上便是网络杀伤链，相比 PTES 更加贴合实战阶段。</p>
-<h5 id="1-3-3MITRE-ATT-amp-CK框架"><a href="#1-3-3MITRE-ATT-amp-CK框架" class="headerlink" title="1.3.3MITRE ATT&amp;CK框架"></a>1.3.3MITRE ATT&amp;CK框架</h5><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F7.jpg" class>
-
-<p>「<strong>ATT&amp;CK 框架</strong>」，由 MITRE 公司于 2013 年提出来的一个通用知识框架，中文名叫做「<strong>对抗战术、技术、常识</strong> 」 。</p>
-<p>ATT&amp;CK 框架是基于真实网络空间攻防案例及数据，采用军事战争中的 <strong>TTPs （Tactics, Techniques &amp; Procedures）</strong>方法论，重新编排的网络安全知识体系，目的是建立一套网络安全的通用语言。</p>
-<p>举例，大家经常听到的什么 APT 攻击、威胁情报、态势感知等等，无论个人还是企业，理解上不尽相同，总会有一些偏差的。</p>
-<p>有了 ATT&amp;CK 框架，大家不会存在太大的偏差，红队具体怎么去攻击的，蓝队具体到怎么去防御的，使用 ATT&amp;CK 矩阵可以将每个细节标记出来，攻击路线和防御过程都可以图形展现出来，攻防双方就有了一套通用语言了。</p>
-<p>网络安全行业的组织、机构、厂家，每年都会造各种 ”新词“，但 MITRE 这个组织推的这套框架，兼具实战和学术价值，具备广泛的应用场景，对安全行业的发展推动是实实在在的。</p>
-<p>我认为，在未来 5 年也好 10 年也好 ，它可能会成为一个事实上的标准。</p>
-<p>这里看一下左上角图片，它整体有三个部分，一个是 PRE ATT&amp;CK，一个是 ATT&amp;CK for Enterprise，一个是 ATT&amp;CK for Mobile，我们学习和研究时，核心放在 ATT&amp;CK forEnterprise 即可。</p>
-<p>大家可以看到，其实左边这里面，也有侦查、武器化、载荷传递、利用、控制、执行、维持等等阶段，是不是跟前面介绍的网络杀伤链是一样的呢？</p>
-<p>是的，你可以这么简单理解，其实 ATT&amp;CK 这个框架，刚开始就是在杀伤链的基础上，提供了更加具体的、更细颗粒度的战术、技术、文档、工具、描述等等。</p>
-<p>因此，如果要深入学习红队，平常可以多逛逛去 ATT&amp;CK 框架官网。</p>
-<img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F8.jpg" class>
-
-<p>接下来，我们来重点看一下 ATT&amp;CK for Enterprise。</p>
-<p>这张图里面，横轴代表是战术（Tactics），最新版本里横轴包括的战术有 12 个（原来是 10 个），纵轴代表的是技术（Techniques）有 156 个技术 272 个子技术。</p>
-<p>前面我们提到了，它是基于 TTPs 方法来描述的，所以非常标准和通用。</p>
-<p>在实际的红蓝对抗、威胁情报分析、安全差距评估等工作场景中，都可以用得上。</p>
-<p>另外补充一点，这 12 个战术从左到右，也是按照网络杀伤链的路径来编排的，包括初始访问、执行、持久化、权限提升、防御绕过、凭证访问、发现、横向移动、收集、命令控制、数据获取、影响。</p>
-<p>每一个战术下面包括很多技术，每个技术有详细的过程，包括独立的编号、描述、工具等。</p>
-]]></content>
-      <categories>
-        <category>网络安全</category>
-      </categories>
-      <tags>
-        <tag>红队攻防</tag>
       </tags>
   </entry>
   <entry>
@@ -4309,61 +4309,6 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>链表刷题总结（easy篇）</title>
-    <url>/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/</url>
-    <content><![CDATA[<h1 id="链表知识刷题总结（easy篇）"><a href="#链表知识刷题总结（easy篇）" class="headerlink" title="链表知识刷题总结（easy篇）"></a>链表知识刷题总结（easy篇）</h1><p>###1.返回链表的倒数第k个结点</p>
-<p>###题目描述：</p>
-<p>实现一种算法，找出单向链表中倒数第 k 个节点。返回该节点的值。</p>
-<p>注意：本题相对原题稍作改动</p>
-<p>示例：</p>
-<p>输入： 1-&gt;2-&gt;3-&gt;4-&gt;5 和 k = 2<br>输出： 4<br>说明：</p>
-<p>给定的 k 保证是有效的。</p>
-<h3 id="题解："><a href="#题解：" class="headerlink" title="题解："></a>题解：</h3><h4 id="题解一-双指针"><a href="#题解一-双指针" class="headerlink" title="题解一:双指针"></a>题解一:双指针</h4><p> 这题要求链表的倒数第k个节点，最简单的方式就是使用两个指针，第一个指针先移动k步，然后第二个指针再从头开始，这个时候这两个指针同时移动，当第一个指针到链表的末尾的时候，返回第二个指针即可</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">kthToLast</span><span class="params">(ListNode head, <span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">        ListNode first = head;</span><br><span class="line">    	ListNode second = head;</span><br><span class="line">    </span><br><span class="line">    	<span class="keyword">while</span>(k-- &gt;<span class="number">0</span>)&#123;</span><br><span class="line">            first = first.next;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="keyword">while</span>(first!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            first =  first.next;</span><br><span class="line">            second = second.next;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="keyword">return</span> second.val;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<p>####题解二：使用栈求解(一看到倒数某某元素，要先想到栈)</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">kthTolast</span><span class="params">(ListNode head , <span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">        Stack&lt;ListNode&gt; stack = <span class="keyword">new</span> stack&lt;&gt;();</span><br><span class="line">        <span class="comment">//链表结点压栈处理</span></span><br><span class="line">        <span class="keyword">while</span>(head!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            stack.push(head);</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//出栈串成新的链表</span></span><br><span class="line">        ListNode firstnode = stack.pop();</span><br><span class="line">        <span class="keyword">while</span>(--k&gt;<span class="number">0</span>)&#123;</span><br><span class="line">            ListNode temp = stack.pop();</span><br><span class="line">            temp.next = firstNode;     <span class="comment">//这一步是不必要的，除非要求返回最后一个到倒数第k个结点链表，需要从新连接构建</span></span><br><span class="line">            firstNode = temp;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> firstnode.val;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="2-删除中间结点"><a href="#2-删除中间结点" class="headerlink" title="2.删除中间结点"></a>2.删除中间结点</h3><h4 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h4><h4 id="题解：-1"><a href="#题解：-1" class="headerlink" title="题解："></a>题解：</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="3-合并两个有序列表"><a href="#3-合并两个有序列表" class="headerlink" title="3.合并两个有序列表"></a>3.合并两个有序列表</h3><h4 id="题目描述：-1"><a href="#题目描述：-1" class="headerlink" title="题目描述："></a>题目描述：</h4><p>将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。 </p>
-<p>示例 1：</p>
-<p><img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120112941925.png" alt="image-20210120112941925"></p>
-<p>输入：l1 = [1,2,4], l2 = [1,3,4]<br>输出：[1,1,2,3,4,4]<br>示例 2：</p>
-<p>输入：l1 = [], l2 = []<br>输出：[]<br>示例 3：</p>
-<p>输入：l1 = [], l2 = [0]<br>输出：[0]</p>
-<h4 id="题解：-2"><a href="#题解：-2" class="headerlink" title="题解："></a>题解：</h4><h5 id="题解一：递归"><a href="#题解一：递归" class="headerlink" title="题解一：递归"></a>题解一：递归</h5><p>思路</p>
-<p>我们可以如下递归地定义两个链表里的 merge 操作（忽略边界情况，比如空链表等）：<br>    <img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120113648210.png" alt="image-20210120113648210"></p>
-<p>也就是说，两个链表头部值较小的一个节点与剩下元素的 merge 操作结果合并。</p>
-<p>算法</p>
-<p>我们直接将以上递归过程建模，同时需要考虑边界情况。</p>
-<p>如果 l1 或者 l2 一开始就是空链表 ，那么没有任何操作需要合并，所以我们只需要返回非空链表。否则，我们要判断 l1 和 l2 哪一个链表的头节点的值更小，然后递归地决定下一个添加到结果里的节点。如果两个链表有一个为空，递归结束</p>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">mergeTwoLists</span><span class="params">(ListNode l1, ListNode l2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (l1 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> l2;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (l2 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> l1;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (l1.val &lt; l2.val) &#123;</span><br><span class="line">            l1.next = mergeTwoLists(l1.next, l2);</span><br><span class="line">            <span class="keyword">return</span> l1;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            l2.next = mergeTwoLists(l1, l2.next);</span><br><span class="line">            <span class="keyword">return</span> l2;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析："><a href="#复杂度分析：" class="headerlink" title="复杂度分析："></a>复杂度分析：</h5><h3 id="4-回文链表"><a href="#4-回文链表" class="headerlink" title="4.回文链表"></a>4.回文链表</h3><p>####题目描述</p>
-<h4 id="题解：-3"><a href="#题解：-3" class="headerlink" title="题解："></a>题解：</h4><p>#####题解一：将链表中的值复制到数组中在用双指针</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isPalindrome</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        List&lt;Interger&gt; vals = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//将链表中的值赋值到数组中</span></span><br><span class="line">        ListNode currentNode = head;</span><br><span class="line">        <span class="keyword">while</span>(currentNode != <span class="keyword">null</span>)&#123;</span><br><span class="line">            vals.add(currentNode.val);        <span class="comment">//复制的是currentNode的值，而不是其本身</span></span><br><span class="line">            currentNode = currentNode.next;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//使用双指针判断回文</span></span><br><span class="line">        <span class="keyword">int</span> front=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> back = vals.size()-<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(front&lt;back)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!vals.get(front).equals(vals.get(back)))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            front++;</span><br><span class="line">            back--;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析：-1"><a href="#复杂度分析：-1" class="headerlink" title="复杂度分析："></a>复杂度分析：</h5><p><img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120205633023.png" alt="image-20210120205633023"></p>
-<h5 id="题解二：递归"><a href="#题解二：递归" class="headerlink" title="题解二：递归"></a>题解二：递归</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>数据结构</category>
-      </categories>
-      <tags>
-        <tag>链表</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>链表</title>
     <url>/2021/01/13/%E9%93%BE%E8%A1%A8/</url>
     <content><![CDATA[<h2 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h2><h3 id="单链表"><a href="#单链表" class="headerlink" title="单链表"></a>单链表</h3><p>单链表中的每个结点不仅包含值，还包含链接到下一个结点的引用字段。通过这种方式，单链表将所有结点按顺序组织起来。习惯于用头节点来代表整个单链表。</p>
@@ -4432,6 +4377,61 @@
 <p>时间复杂度：<br>addAtHead，addAtTail： \mathcal{O}(1)O(1)<br>get，addAtIndex，delete：\mathcal{O}(\min(k, N - k))O(min(k,N−k))，其中 kk 指的是元素的索引。<br>空间复杂度：所有的操作都是 \mathcal{O}(1)O(1)。</p>
 <p> <strong>说明</strong>:不论是单链表还是双链表，在进行遍历时，如果想要通过index来get某一结点元素，for循环中的终止条件是<strong>i&lt;index+1</strong></p>
 <p>如果是删除或者添加，for循环中的终止条件是**i&lt;index</p>
+]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>链表</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>链表刷题总结（easy篇）</title>
+    <url>/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<h1 id="链表知识刷题总结（easy篇）"><a href="#链表知识刷题总结（easy篇）" class="headerlink" title="链表知识刷题总结（easy篇）"></a>链表知识刷题总结（easy篇）</h1><p>###1.返回链表的倒数第k个结点</p>
+<p>###题目描述：</p>
+<p>实现一种算法，找出单向链表中倒数第 k 个节点。返回该节点的值。</p>
+<p>注意：本题相对原题稍作改动</p>
+<p>示例：</p>
+<p>输入： 1-&gt;2-&gt;3-&gt;4-&gt;5 和 k = 2<br>输出： 4<br>说明：</p>
+<p>给定的 k 保证是有效的。</p>
+<h3 id="题解："><a href="#题解：" class="headerlink" title="题解："></a>题解：</h3><h4 id="题解一-双指针"><a href="#题解一-双指针" class="headerlink" title="题解一:双指针"></a>题解一:双指针</h4><p> 这题要求链表的倒数第k个节点，最简单的方式就是使用两个指针，第一个指针先移动k步，然后第二个指针再从头开始，这个时候这两个指针同时移动，当第一个指针到链表的末尾的时候，返回第二个指针即可</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">kthToLast</span><span class="params">(ListNode head, <span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">        ListNode first = head;</span><br><span class="line">    	ListNode second = head;</span><br><span class="line">    </span><br><span class="line">    	<span class="keyword">while</span>(k-- &gt;<span class="number">0</span>)&#123;</span><br><span class="line">            first = first.next;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="keyword">while</span>(first!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            first =  first.next;</span><br><span class="line">            second = second.next;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="keyword">return</span> second.val;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>####题解二：使用栈求解(一看到倒数某某元素，要先想到栈)</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">kthTolast</span><span class="params">(ListNode head , <span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">        Stack&lt;ListNode&gt; stack = <span class="keyword">new</span> stack&lt;&gt;();</span><br><span class="line">        <span class="comment">//链表结点压栈处理</span></span><br><span class="line">        <span class="keyword">while</span>(head!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            stack.push(head);</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//出栈串成新的链表</span></span><br><span class="line">        ListNode firstnode = stack.pop();</span><br><span class="line">        <span class="keyword">while</span>(--k&gt;<span class="number">0</span>)&#123;</span><br><span class="line">            ListNode temp = stack.pop();</span><br><span class="line">            temp.next = firstNode;     <span class="comment">//这一步是不必要的，除非要求返回最后一个到倒数第k个结点链表，需要从新连接构建</span></span><br><span class="line">            firstNode = temp;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> firstnode.val;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="2-删除中间结点"><a href="#2-删除中间结点" class="headerlink" title="2.删除中间结点"></a>2.删除中间结点</h3><h4 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h4><h4 id="题解：-1"><a href="#题解：-1" class="headerlink" title="题解："></a>题解：</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="3-合并两个有序列表"><a href="#3-合并两个有序列表" class="headerlink" title="3.合并两个有序列表"></a>3.合并两个有序列表</h3><h4 id="题目描述：-1"><a href="#题目描述：-1" class="headerlink" title="题目描述："></a>题目描述：</h4><p>将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。 </p>
+<p>示例 1：</p>
+<p><img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120112941925.png" alt="image-20210120112941925"></p>
+<p>输入：l1 = [1,2,4], l2 = [1,3,4]<br>输出：[1,1,2,3,4,4]<br>示例 2：</p>
+<p>输入：l1 = [], l2 = []<br>输出：[]<br>示例 3：</p>
+<p>输入：l1 = [], l2 = [0]<br>输出：[0]</p>
+<h4 id="题解：-2"><a href="#题解：-2" class="headerlink" title="题解："></a>题解：</h4><h5 id="题解一：递归"><a href="#题解一：递归" class="headerlink" title="题解一：递归"></a>题解一：递归</h5><p>思路</p>
+<p>我们可以如下递归地定义两个链表里的 merge 操作（忽略边界情况，比如空链表等）：<br>    <img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120113648210.png" alt="image-20210120113648210"></p>
+<p>也就是说，两个链表头部值较小的一个节点与剩下元素的 merge 操作结果合并。</p>
+<p>算法</p>
+<p>我们直接将以上递归过程建模，同时需要考虑边界情况。</p>
+<p>如果 l1 或者 l2 一开始就是空链表 ，那么没有任何操作需要合并，所以我们只需要返回非空链表。否则，我们要判断 l1 和 l2 哪一个链表的头节点的值更小，然后递归地决定下一个添加到结果里的节点。如果两个链表有一个为空，递归结束</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">mergeTwoLists</span><span class="params">(ListNode l1, ListNode l2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (l1 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> l2;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (l2 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> l1;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (l1.val &lt; l2.val) &#123;</span><br><span class="line">            l1.next = mergeTwoLists(l1.next, l2);</span><br><span class="line">            <span class="keyword">return</span> l1;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            l2.next = mergeTwoLists(l1, l2.next);</span><br><span class="line">            <span class="keyword">return</span> l2;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析："><a href="#复杂度分析：" class="headerlink" title="复杂度分析："></a>复杂度分析：</h5><h3 id="4-回文链表"><a href="#4-回文链表" class="headerlink" title="4.回文链表"></a>4.回文链表</h3><p>####题目描述</p>
+<h4 id="题解：-3"><a href="#题解：-3" class="headerlink" title="题解："></a>题解：</h4><p>#####题解一：将链表中的值复制到数组中在用双指针</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isPalindrome</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        List&lt;Interger&gt; vals = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//将链表中的值赋值到数组中</span></span><br><span class="line">        ListNode currentNode = head;</span><br><span class="line">        <span class="keyword">while</span>(currentNode != <span class="keyword">null</span>)&#123;</span><br><span class="line">            vals.add(currentNode.val);        <span class="comment">//复制的是currentNode的值，而不是其本身</span></span><br><span class="line">            currentNode = currentNode.next;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//使用双指针判断回文</span></span><br><span class="line">        <span class="keyword">int</span> front=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> back = vals.size()-<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(front&lt;back)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!vals.get(front).equals(vals.get(back)))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            front++;</span><br><span class="line">            back--;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析：-1"><a href="#复杂度分析：-1" class="headerlink" title="复杂度分析："></a>复杂度分析：</h5><p><img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120205633023.png" alt="image-20210120205633023"></p>
+<h5 id="题解二：递归"><a href="#题解二：递归" class="headerlink" title="题解二：递归"></a>题解二：递归</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
 ]]></content>
       <categories>
         <category>数据结构</category>
@@ -5278,6 +5278,183 @@
       </categories>
       <tags>
         <tag>RPC框架基础知识</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>RPC框架深入探索一</title>
+    <url>/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%B4%A2%E4%B8%80/</url>
+    <content><![CDATA[<h1 id="RPC架构设计"><a href="#RPC架构设计" class="headerlink" title="RPC架构设计"></a>RPC架构设计</h1><p><strong>RPC终极含义回顾</strong></p>
+<pre><code> 其实RPC就是把拦截到的方法参数，转成可以在网络中传输的二进制，并保证在服务提供方能正确地还原出语义，最终实现像调用本地一样地调用远程的目的。</code></pre>
+<h2 id="RPC基础架构"><a href="#RPC基础架构" class="headerlink" title="RPC基础架构"></a>RPC基础架构</h2> <img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%B4%A2%E4%B8%80/1.png" class>
+
+<h3 id="传输模块"><a href="#传输模块" class="headerlink" title="传输模块"></a>传输模块</h3><p>RPC本质上就是一个远程调用，那肯定就需要通过网络来传输数据。虽然传输协议 可以有多种选择，但考虑到可靠性的话，我们一**<em>般默认采用TCP协议**</em>。为了屏蔽网络传输的复 </p>
+<p>杂性，我们需要封装一个单独的数据传输模块用来收发二进制数据，这个单独模块我们可以叫做传输模块</p>
+<h3 id="协议模块"><a href="#协议模块" class="headerlink" title="协议模块"></a>协议模块</h3><p>序列化，然后在方法调用参数的二进制数据后面增加“断句”符号来分隔出不同的请求，还可以在协议模块中加入压缩功能。</p>
+<h3 id="集群模块"><a href="#集群模块" class="headerlink" title="集群模块"></a>集群模块</h3><p>服务发现、服务治理功能</p>
+<h3 id="Bootstrap模块"><a href="#Bootstrap模块" class="headerlink" title="Bootstrap模块"></a>Bootstrap模块</h3> <img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%B4%A2%E4%B8%80/2.png" class>
+
+<h2 id="可扩展的架构（添加插件体系）"><a href="#可扩展的架构（添加插件体系）" class="headerlink" title="可扩展的架构（添加插件体系）"></a>可扩展的架构（添加插件体系）</h2>  <img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%B4%A2%E4%B8%80/3.png" class>
+
+<p>在RPC框架里面，我们是怎么支持插件化架构的呢？我们可以将每个功能点抽象成一个接口， <strong>将这个接口作为插件的契约</strong>，然后把这个功能的接口与功能的实现分离，并提供接口的默认 实现。在Java里面，JDK有自带的SPI（Service Provider Interface）服务发现机制，它可以 动态地为某个接口寻找服务实现。使用SPI机制需要在Classpath下的META-INF/services目 录里创建一个以服务接口命名的文件，这个文件里的内容就是这个接口的具体实现类。 </p>
+<p>但在实际项目中，我们其实很少使用到JDK自带的SPI机制，首先它不能按需加载ServiceLoader加载某个接口实现类的时候，会遍历全部获取，也就是接口的实现类得全部载 入并实例化一遍，会造成不必要的浪费。另外就是扩展如果依赖其它的扩展，那就做不到自动注入和装配，这就很难和其他框架集成，比如扩展里面依赖了一个Spring Bean，原生的 Java SPI就不支持。</p>
+<p><strong>这时，整个架构就变成了一个微内核架构</strong>，我们将每个功能点抽象成一个接口，将这个接口 作为插件的契约，然后把这个功能的接口与功能的实现分离并提供接口的默认实现。这样的 架构相比之前的架构，有很多优势。首先它的可扩展性很好，实现了开闭原则，用户可以非 常方便地通过插件扩展实现自己的功能，而且不需要修改核心功能的本身；其次就是保持了 核心包的精简，依赖外部包少，这样可以有效减少开发人员引入RPC导致的包版本冲突问题。</p>
+<h1 id="超大规模RPC服务发现：CP-VS-AP"><a href="#超大规模RPC服务发现：CP-VS-AP" class="headerlink" title="超大规模RPC服务发现：CP VS AP"></a>超大规模RPC服务发现：CP VS AP</h1><h2 id="服务发现的必要性"><a href="#服务发现的必要性" class="headerlink" title="服务发现的必要性"></a>服务发现的必要性</h2><p><strong>服务发现的本质：</strong> <strong><em>完成了接口跟服务提供者IP的映射</em></strong></p>
+<p>为了高可用，在生产环境中服务提供方都是以集群的方式对外提供服务，<strong>集群里面的这些IP随时可能变化</strong>，我们也需要用一本“通信录”及时获取到对应的服务节点，这个获取的 过程我们一般叫作“服务发现”。</p>
+  <img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%B4%A2%E4%B8%80/4.png" class>
+
+<p>服务注册：在服务提供方启动的时候，将对外暴露的接口注册到注册中心之中，注册中心将这个<strong>服务节点的IP和接口</strong>保存下来。</p>
+<p>服务订阅：在服务调用方启动的时候，去注册中心查找并订阅服务提供方的IP，然后缓存 </p>
+<p>到本地，并用于后续的远程调用。</p>
+<h2 id="为什么不使用DNS"><a href="#为什么不使用DNS" class="headerlink" title="为什么不使用DNS"></a>为什么不使用DNS</h2><h2 id="基于ZooKeeper的服务发现"><a href="#基于ZooKeeper的服务发现" class="headerlink" title="基于ZooKeeper的服务发现"></a>基于ZooKeeper的服务发现</h2><p>搭建一个ZooKeeper集群作为注册中心集群，服务注册的时候只需要服务节点向ZooKeeper节点写入注册信息即可，利用ZooKeeper的**<em>Watcher机制**</em>完成服务订阅与服务下发功能，整体流程如下图：</p>
+  <img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%B4%A2%E4%B8%80/5.png" class>
+
+<p>使用步骤：</p>
+<ol>
+<li>服务平台管理端先在ZooKeeper中创建<strong>一个服务根路径</strong>，可以根据接口名命名（例 </li>
+</ol>
+<p>如：/service/com.demo.xxService），在这个路径再<strong>创建服务提供方目录与服务调用方</strong> </p>
+<p><strong>目录</strong>（例如：provider、consumer），分别用来存储服务提供方的节点信息和服务调用方 </p>
+<p>的节点信息。</p>
+<ol>
+<li>当服务提供方发起注册时，会在服务提供方目录中创建<strong>一个临时节点</strong>，节点中存储该服务 </li>
+</ol>
+<p>提供方的注册信息。</p>
+<ol>
+<li>当服务调用方发起订阅时，则在服务调用方目录中创建一个临时节点，节点中存储该服务 </li>
+</ol>
+<p>调用方的信息，同时服务调用方**<em>watch**</em>该服务的服务提供方目录（/service/com.demo.xxService/provider）中所有的服务节点数据。</p>
+<ol>
+<li>当服务提供方目录下有节点数据发生变更时，ZooKeeper就会通知给发起订阅的服务调用 </li>
+</ol>
+<p>方。</p>
+ <img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%B4%A2%E4%B8%80/6.png" class>
+
+<h2 id="基于消息总线的最终一致性的注册中心"><a href="#基于消息总线的最终一致性的注册中心" class="headerlink" title="基于消息总线的最终一致性的注册中心"></a>基于消息总线的最终一致性的注册中心</h2><p><strong><em>ZooKeeper的一大特点就是强一致性</em></strong>，ZooKeeper集群的每个节点的数据每次发生更新操作，都会通知其它ZooKeeper节点同时执行更新。它要求保证每个节点的数据能够<strong>实时的完全一致</strong>，这也就直接导致了ZooKeeper集群性能上的下降。这就好比几个人在玩传递东西的游戏，必须这一轮每个人都拿到东西之后，所有的人才能开始下一轮，而不是说我只要获得到东西之后，就可以直接进行下一轮了。</p>
+  <img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%B4%A2%E4%B8%80/7.png" class>
+
+  <img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%B4%A2%E4%B8%80/8.png" class>
+
+<p>当有服务上线，注册中心节点收到注册请求，服务列表数据发生变化，会生成一个消息， </p>
+<p>推送给消息总线，每个消息都有整体递增的版本。 消息总线会主动推送消息到各个注册中心，同时注册中心也会定时拉取消息<strong>。对于获取到消息的在消息回放模块里面回放，只接受大于本地版本号的消息，小于本地版本号的消息直接丢弃</strong>，从而实现最终一致性。 </p>
+<p>消费者订阅可以从注册中心内存拿到指定接口的全部服务实例，并缓存到消费者的内存里 </p>
+<p>面。采用推拉模式，消费者可以及时地拿到服务实例增量变化情况，并和内存中的缓存数据进 </p>
+<p>行合并。 <strong>为了性能，这里采用了两级缓存，注册中心和消费者的内存缓存</strong>，通过异步推拉模式来确保最终一致性。</p>
+<p>另外，你也可能会想到，服务调用方拿到的服务节点不是最新的，所以目标节点存在已经下线或不提供指定接口服务的情况，这个时候有没有问题？这个问题我们放到了RPC框架里面去处理，在服务调用方发送请求到目标节点后，目标节点会进行合法性验证，如果指定接口服 </p>
+<p>务不存在或正在下线，则会拒绝该请求。服务调用方收到拒绝异常后，会安全重试到其它点。</p>
+<p>通过消息总线的方式，我们就可以完成注册中心集群间数据变更的通知，保证数据的最终一 致性，并能及时地触发注册中心的服务下发操作。 服务发现的特性是允许我们在设计超大规模集群服务发现系统的时候，**<em>舍弃强一致性，更多地考虑 系统的健壮性。最终一致性才是分布式系统设计中更为常用的策略。**</em> </p>
+<p>如果想要切换流量，想把某些服务提供者实例的流量切走，除了下线实例，还可以让服务端配置有权重负载均衡策略，这样服务器端可以通过调整权重来安排流量。</p>
+<h1 id="服务节点健康检测：避免节点挂了，还能接受到请求"><a href="#服务节点健康检测：避免节点挂了，还能接受到请求" class="headerlink" title="服务节点健康检测：避免节点挂了，还能接受到请求"></a>服务节点健康检测：避免节点挂了，还能接受到请求</h1><p><strong><em>重点：让调用方实时感知到节点的状态变化：健康、不建康、亚健康</em></strong></p>
+ <img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%B4%A2%E4%B8%80/9.png" class>
+
+<p>健康状态：建立连接成功，并且心跳探活也成功</p>
+<p>亚健康状态：建立连接成功，但是心跳请求连续失败</p>
+<p>死亡状态：建立连接失败</p>
+<h2 id="健康检测的逻辑"><a href="#健康检测的逻辑" class="headerlink" title="健康检测的逻辑"></a>健康检测的逻辑</h2> <img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%B4%A2%E4%B8%80/10.png" class>
+
+<p>一开始初始化的时候，如果建立连接成功，那就是健康状态，否则就是死亡状态。这里没有亚健康这样的中间态。紧接着，如果健康状态的节点连续出现几次不能响应心跳请求的情况，那就会被标记为亚健康状态，</p>
+<p>生病之后（亚健康状态），如果连续几次都能正常响应心跳请求，那就可以转回健康状态， </p>
+<p>证明病好了。如果病一直好不了，那就会被断定为是死亡节点，死亡之后还需要善后，比如 </p>
+<p>关闭连接。</p>
+<p>死亡并不是真正死亡，它还有复活的机会。如果某个时间点里，死亡的节点能够重连成功，那它就可以重新被标记为健康状态。</p>
+<h2 id="具体的解决方案"><a href="#具体的解决方案" class="headerlink" title="具体的解决方案"></a>具体的解决方案</h2><p>早先版本的解决方案</p>
+<p> 一个节点从健康状态过渡到亚健康状态的前提是“连续”心跳失败次数必须到达某一个 阈值，比如3次。阈值的设置是考验检测机制的关键。</p>
+<ol>
+<li><p>如果阈值过低：</p>
+</li>
+<li><ol>
+<li>调用方跟服务节点之间网络状况瞬息万变，出现网络波动的时候会导致误判。</li>
+<li>在负载高情况，服务端来不及处理心跳请求，由于心跳时间很短，会导致调用方很快触发连续心跳失败而造成断开连接。</li>
+</ol>
+</li>
+<li><p>如果阈值过高：</p>
+</li>
+<li><ol>
+<li>可能服务节点已经出现了问题，但是请求还是不停的打在上面，不能及时的摘除有问题的节点，造成了服务调用者多次调用失败的问题。</li>
+</ol>
+</li>
+</ol>
+<p>阈值的设置还要受到复杂的系统影响：</p>
+<ol>
+<li>调用方每个接口的调用频次不一样，有的接口可能1秒内调用上百次，有的接口可能半个小时才会调用一次，所以我们不能把简单的把总失败的次数当作判断条件。 </li>
+<li> 服务的接口响应时间也是不一样的，有的接口可能1ms，有的接口可能是10s，所以我们也不能把TPS至来当作判断条件。</li>
+</ol>
+<p><strong><em>新版本：可用率—加入了业务请求可用率的考量</em></strong></p>
+<p>可用率的计算方式是某一个时间窗口内接口调用成功次数的百分比（成功次数/总调用次数）。当可用率低于某个比例就认为这个节点存在问题，把它挪到亚健康列表，这样既考虑了高低频的调用接口，也兼顾了接口响应时间不同的问题。</p>
+<p>对于心跳检测本身如何避免出现问题：</p>
+<p><strong><em>把检测程序部署在多个机器里面， 分布在不同的机架，甚至不同的机房。</em></strong>因为网络同时故障的概率非常低，所以只要任意一个检测程序实例访问目标机器正常，就可以说明该目标机器正常。</p>
+<h1 id="路由：让请求按照设定的规则发到不同的节点上"><a href="#路由：让请求按照设定的规则发到不同的节点上" class="headerlink" title="路由：让请求按照设定的规则发到不同的节点上"></a>路由：让请求按照设定的规则发到不同的节点上</h1><p><strong><em>路由策略最好要抽象成配置信息，可以动态下发，根据不同的场景控制选择合适的目标机器</em></strong></p>
+<h2 id="路由选择的必要性："><a href="#路由选择的必要性：" class="headerlink" title="路由选择的必要性："></a>路由选择的必要性：</h2><p>一个接口会有多个服务提供方同时提供服务，所以我们的RPC在每次发起请求的时候，都需要从多个服务提供方节点里面选择一个用于发请求的节点。既然这些节点都可以用来完成这次请求，那么我们就可以简单地认为这些节点是同质的（就是这次请求无论发送到集合中的哪个节点上，返回的结果都是一样的）。</p>
+<p><strong>路由策略对于应用实例发布的重要性</strong></p>
+<p>灰度发布应用实例，比如先发布少量实例观察是否有异常，后续再根据观察的情况，选择发布更多实例还是回滚已经上线的实例。但这种方式不好的一点就是，线上一旦出现问题，影响范围还是挺大的。因为对于我们的服 务提供方来说，我们的服务会同时提供给很多调用方来调用，尤其是像一些基础服务的调用 方会更复杂，比如商品、价格等等，一旦刚上线的实例有问题了，那将会导致所有的调用方业务都会受损。</p>
+<p>可以在上线前把所有的场景都重新测试一遍，但是线上环境太过于复杂，，单纯从测试角度出发只能降低风险出现的概率，想要彻底验证所有场景基本是不可能的。</p>
+<h2 id="如何实现路由策略"><a href="#如何实现路由策略" class="headerlink" title="如何实现路由策略"></a>如何实现路由策略</h2><p>可以在上线完成后，先让一小 部分调用方请求过来进行逻辑验证【路由策略】，待没问题后再接入其他调用方，从而实现流量隔离的效果。</p>
+<p>当选择要灰度验证功能的时候，是不是就可以让**<em>注册中心**</em>在推送的时候区别对待，而不是一股脑的把服务提供方的IP地址推送到所有调用方。换句话说就是，注册中心只会把刚上线的服务IP地址推送到选择指定的调用方，而其他调用方是不能通过服务发现拿到这个IP地址的。</p>
+<p><strong><em>但最好不要使用注册中心，原因如下：</em></strong></p>
+<ol>
+<li>注册中心在RPC里面的定位是用来存储数据并保证数据一致性的。如果把这种复杂的计算逻辑放到注册中心里面，当集群节点变多之后，就会导致注册中心压力很大。</li>
+<li>大部分情况下我们一般都是采用开源软件来搭建注册中心，要满足这种需求还需要进行二次开发。</li>
+</ol>
+<p>解决方案</p>
+<p>当从服务提供方节点集合里面选择一个合适的节点（就是我们常说的负载均衡），可以在选择节点前加上“筛选逻辑”【灰度过程中要验证的规则】，把符合我们要求的节点筛选出来。</p>
+<p>比如我们要求新上线的节点只允许某个IP可以调用，那我们的注<strong>册中心会把这条规则下发到服务调用方。</strong>在调用方收到规则后，在选择具体要发请求的节点前，会先通过筛选规则过滤节点集合。**<em>筛选过程就叫做路由策略**</em></p>
+ <img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%B4%A2%E4%B8%80/11.png" class>
+
+ <img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%B4%A2%E4%B8%80/12.png" class>
+
+
+
+<h2 id="参数路由（更加细粒度的路由方式）"><a href="#参数路由（更加细粒度的路由方式）" class="headerlink" title="参数路由（更加细粒度的路由方式）"></a>参数路由（更加细粒度的路由方式）</h2><p>在IP路由【只是限制调用方来源，并不会根据请求参数请求到预设的服务提供方节点上去】的基础上，添加参数，使路由更加细粒度。</p>
+ <img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%B4%A2%E4%B8%80/13.png" class>
+
+
+
+<h1 id="负载均衡："><a href="#负载均衡：" class="headerlink" title="负载均衡："></a>负载均衡：</h1><p>一个服务节点无法支撑现有的访问量时，我们会部署多个节点，组成一个集群，然后通过负载均衡，将请求分发给这个集群下的每个服务节点，从而达到多个服务节点共同分担请求压力的目的。</p>
+ <img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%B4%A2%E4%B8%80/14.png" class>
+
+<p>负载均衡的分类</p>
+<ol>
+<li>软负载就是在一台或多台服务器上安装负载均衡的软件，如LVS、Nginx等。</li>
+<li>硬负载就是通过硬件设备来实现的负载均衡，如F5服务器等。</li>
+</ol>
+<p>负载均衡的算法主要有随机法、轮询法、最小连接法等</p>
+<h2 id="RPC框架中负载均衡的实现"><a href="#RPC框架中负载均衡的实现" class="headerlink" title="RPC框架中负载均衡的实现"></a>RPC框架中负载均衡的实现</h2><p>与web服务的负载均衡的不同之处</p>
+<p> RPC框架并不是依赖一个负载均衡设备或者负载均衡服务器来实现负载均衡的，而是由RPC框架本身实现的，服务调用者可以自主选择服务节点，发起服务调用。</p>
+<p><strong><em>RPC的负载均衡完全由RPC框架自身实现</em></strong>，RPC的服务调用者会与“注册中心”下发的所有服 </p>
+<p>务节点建立长连接，在每次发起RPC调用时，**<em>服务调用者**</em>都会通过配置的负载均衡插件，自主选择一个服务节点，发起RPC调用请求。</p>
+ <img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%B4%A2%E4%B8%80/15.png" class>
+
+<p>RPC负载均衡策略一般包括随机权重、Hash、轮询。当然，这还是主要看RPC框架自身的实 现。其中的随机权重策略应该是我们最常用的一种了，通过随机算法，我们基本可以保证每 个节点接收到的请求流量是均匀的；同时我们还可以通过控制节点权重的方式，来进行流量控制。比如我们默认每个节点的权重都是100，但当我们把其中的一个节点的权重设置成50时，它接收到的流量就是其他节点的1/2。</p>
+<h2 id="自适应负载均衡【动态、智能的控制服务节点所接受流量】"><a href="#自适应负载均衡【动态、智能的控制服务节点所接受流量】" class="headerlink" title="自适应负载均衡【动态、智能的控制服务节点所接受流量】"></a>自适应负载均衡【动态、智能的控制服务节点所接受流量】</h2><p><strong><em>不需要人工观察节点情况来手动调节</em></strong></p>
+<h3 id="1-对服务节点的处理能力进行量化衡量"><a href="#1-对服务节点的处理能力进行量化衡量" class="headerlink" title="1. 对服务节点的处理能力进行量化衡量"></a>1. 对服务节点的处理能力进行量化衡量</h3><p>这里我们可以采用一种打分的策略，**<em>服务调用者收集与之建立长连接的每个服务节点的指标数据**</em>，如服务节点的负载指标、CPU核数、内存大小、请求处理的耗时指标（如请求平均耗时、TP99、TP999）、服务节点的状态指标（如正常、亚健康）。通过这些指标，计算出一 个分数，比如总分10分，如果CPU负载达到70%，就减它3分。</p>
+<p><strong>可以为每个指标都设置一个指标权重占比，然后再根据这些指标数据，计算分数。</strong></p>
+<h3 id="2-根据打分情况下发流量"><a href="#2-根据打分情况下发流量" class="headerlink" title="2. 根据打分情况下发流量"></a>2. 根据打分情况下发流量</h3><p>可以配合随机权重的负载均衡策略去控制，通过最终的指标分数修改服务节点最终的权 </p>
+<p>重。例如给一个服务节点综合打分是8分（满分10分），服务节点的权重是100，那么计算后 最终权重就是80（100*80%）。服务调用者发送请求时，会通过随机权重的策略来选择服务节点，那么这个节点接收到的流量就是其他正常节点的80%（这里假设其他节点默认权重都是100，且指标正常，打分为10分的情况）。</p>
+ <img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%B4%A2%E4%B8%80/16.png" class>
+
+  <img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%B4%A2%E4%B8%80/21.png" class>
+
+
+
+<h1 id="异常重试机制：在约定时间内安全可靠的重试"><a href="#异常重试机制：在约定时间内安全可靠的重试" class="headerlink" title="异常重试机制：在约定时间内安全可靠的重试"></a>异常重试机制：在约定时间内安全可靠的重试</h1><p>异常重试就是为了尽最大可能保证接口可用率的一种手段，但这种策略只能用在幂等接口上，否则就会因为重试导致应用系统数据“写花”。</p>
+<p>当调用端发起的请求失败时，RPC框架自身可以进行重试，再重新发送请求，用户可以自行设置是否开启重试以及重试的次数。</p>
+ <img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%B4%A2%E4%B8%80/17.png" class>
+
+<p>当消息发送失败或收到异常消息时，我们就可以捕获异常，根据异常触发重试，重新通过负载均衡选择一个节点发送请求消息，并且记录请求的重试次数，当重试次数达到用户配置的重试次数的时候，就返回给调用端动态代理一个失败异常，否则就一直重试下去</p>
+<p>并不是所有的异常都要触发重试机制</p>
+<p>因为这个异常**<em>可能是服务提供方抛回来的业务异常**</em>，它是应该正常返回给动态代理的，所以我们要在触发重试之前对捕获的异常进行判定，只有符合重试条件的异常才能触发重试，比如网络超时异常、网络连接异常等等。</p>
+<p><strong><em>在使用RPC框架的时候，我们要确保被调用的服务的业务逻辑是幂等的，这样我们才能考虑根据事件情况开启RPC框架的异常重试功能。</em></strong></p>
+<h2 id="在约定时间内安全可靠的重试"><a href="#在约定时间内安全可靠的重试" class="headerlink" title="在约定时间内安全可靠的重试"></a>在约定时间内安全可靠的重试</h2><p>连续的异常重试并且每次处理的请求时间比较长，最终会导致请求处理的时间过长，超出用户设置的超时时间。解决这个问题最直接的方式就是，在每次重试后都重置一下请求的超时时间。</p>
+ <img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%B4%A2%E4%B8%80/19.png" class>
+
+ <img data-src="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%B4%A2%E4%B8%80/20.png" class>
+
+<p><strong><em>重试时负载均衡选取节点时要剔除前一次访问的节点</em></strong></p>
+]]></content>
+      <categories>
+        <category>RPC框架</category>
+      </categories>
+      <tags>
+        <tag>RPC框架</tag>
       </tags>
   </entry>
   <entry>
