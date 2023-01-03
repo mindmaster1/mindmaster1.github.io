@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mindmaster.top","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="区块链基础知识">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BTCBasic">
+<meta property="og:url" content="https://mindmaster.top/2023/01/04/BTCBasic/index.html">
+<meta property="og:site_name" content="一只小码农">
+<meta property="og:description" content="区块链基础知识">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mindmaster.top/2023/01/04/BTCBasic/1.png">
+<meta property="og:image" content="https://mindmaster.top/2023/01/04/BTCBasic/2.png">
+<meta property="og:image" content="https://mindmaster.top/2023/01/04/BTCBasic/3.png">
+<meta property="og:image" content="https://mindmaster.top/2023/01/04/BTCBasic/4.png">
+<meta property="og:image" content="https://mindmaster.top/2023/01/04/BTCBasic/5.png">
+<meta property="og:image" content="https://mindmaster.top/2023/01/04/BTCBasic/6.png">
+<meta property="og:image" content="https://mindmaster.top/2023/01/04/BTCBasic/7.png">
+<meta property="article:published_time" content="2023-01-03T17:45:51.000Z">
+<meta property="article:modified_time" content="2023-01-03T10:08:56.648Z">
+<meta property="article:author" content="邢浩东">
+<meta property="article:tag" content="区块链&amp;以太坊&amp;智能合约">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mindmaster.top/2023/01/04/BTCBasic/1.png">
+
+<link rel="canonical" href="https://mindmaster.top/2023/01/04/BTCBasic/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>BTCBasic | 一只小码农</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">一只小码农</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">每天进步一点点</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-stethoscope fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">46</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-braille fa-fw"></i>分类<span class="badge">24</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">75</span></a>
+
+  </li>
+        <li class="menu-item menu-item-movies">
+
+    <a href="/movies/" rel="section"><i class="fa fa-film fa-fw"></i>电影</a>
+
+  </li>
+        <li class="menu-item menu-item-book">
+
+    <a href="/book/" rel="section"><i class="fa fa-book fa-fw"></i>书籍</a>
+
+  </li>
+        <li class="menu-item menu-item-view">
+
+    <a href="/view/" rel="section"><i class="fa fa-blind fa-fw"></i>生活见闻--杂谈</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml/" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/mindmaster1" class="github-corner" title="Fork me on GitHub" aria-label="Fork me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mindmaster.top/2023/01/04/BTCBasic/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/OIP.jfif">
+      <meta itemprop="name" content="邢浩东">
+      <meta itemprop="description" content="The world favors the underdog,and I would be the bad guy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一只小码农">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          BTCBasic
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-01-03 17:45:51 / 修改时间：10:08:56" itemprop="dateCreated datePublished" datetime="2023-01-03T17:45:51Z">2023-01-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%8C%BA%E5%9D%97%E9%93%BE-%E4%BB%A5%E5%A4%AA%E5%9D%8A-%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/" itemprop="url" rel="index"><span itemprop="name">区块链&以太坊&智能合约</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/01/04/BTCBasic/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/01/04/BTCBasic/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+            <div class="post-description">区块链基础知识</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="区块链基础part1-北大肖臻老师-amp-Chainlink预言机-China学习笔记"><a href="#区块链基础part1-北大肖臻老师-amp-Chainlink预言机-China学习笔记" class="headerlink" title="区块链基础part1-北大肖臻老师&amp;Chainlink预言机 China学习笔记"></a>区块链基础part1-北大肖臻老师&amp;Chainlink预言机 China学习笔记</h1><h2 id="1-BTC密码学原理"><a href="#1-BTC密码学原理" class="headerlink" title="1. BTC密码学原理"></a>1. BTC密码学原理</h2><p>比特币属于加密货币，可见其中必然会涉及到密码学的知识。而比特币本身开放，其交易记录、交易金额、交易内容甚至源代码都面向全网开放，加密又使用在哪里呢？在比特币中，正是加密确保了信息的不可篡改，保证了区块链本身的优势——不可篡改。</p>
+<p>在比特币系统中，加密主要涉及两方面内容</p>
+<blockquote>
+<p><strong>hash(哈希)</strong></p>
+</blockquote>
+<p>在密码学中，采用的哈希函数称为名cryptographic hash function【密码散列函数】，其两个重要性质分别为collision resistance（对哈希碰撞具有抗拒性）和hiding(隐藏性)。</p>
+<ul>
+<li><strong>哈希碰撞</strong></li>
+</ul>
+<p>给定x和y，且有x!=y，但给定一个哈希函数Hash(),可以得到Hash(x)=Hash(y)，则称为hash碰撞。collision resistance保证,如果有Hash(x)!=Hash(y)，必然可以得到x!=y（当然，这是理想状态。有兴趣的可以了解针对哈希碰撞出现后如何处理，如：开放定址法、公共溢出区等）。在实际应用中，哈希碰撞基本上难以避免，我们只要保证给定x，很难找到一个y，能够在x!=y的前提下，使得Hash(x)=Hash(y)就认为其是collision resistance的【目前并不存在一个hash函数可以从数学上证明具有collision resistance的性质】。</p>
+<ul>
+<li><strong>collision resistance的用处</strong></li>
+</ul>
+<p>如果我们自己有一条信息x，我们希望别人知道我有x但不想让别人知道x具体是什么，就可以通过告诉其Hash(x)，由于该性质，保证了x!=y时，Hash(x)和Hash(y)是不相等的。我们只需要告诉别人Hash(x)即可，对方可以通过Hash(x)知道你确实知道x这个信息，但他无法（很难）通过Hash(x)反推出x。</p>
+<ul>
+<li><p><strong>hiding</strong></p>
+<p>我们认为，给定x和Hash(),可以很容易得到Hash(x),但没有办法在已知Hash(x)和Hash()的情况下，反推出x的具体取值，当然这也是一个理想的情况。</p>
+</li>
+<li><p><strong>collision resistance和hiding结合实现digital commitment(数据保证)：</strong></p>
+</li>
+</ul>
+<p>在视频中，肖老师提到关于股市预测的案例，某个人对某个股票进行涨停预测，我们如何保证能够知晓其预测是否准确？最简单的是提前公布，等待实际结果出现后验证。但实际中，当提前发布预测后，可能会由于预测者本身对股市实际结果造成影响。所以，应该将提前将其写于纸上并密封，交给第三方机构保管，等到实际结果出现后开启密封与实际对比，这就是digital commitment。而第三方机构需要能够使人信服，在实际生活中，有很多场景并不存在一个这样的第三方机构，而区块链技术正为此提供了一个很好的解决方法。<br>我们把预测结果看作x，提前公布Hash(x)，等到预测结果发生时间来临后，公布x，如果根据x可以得到公布的Hash(x)，则说明公布的x确实为***的内容。从而，我们可以实际进行判断预测是否准确。实际使用中，为了x足够大，会对x进行“加盐”，对x拼接一个nonce，对其整体取Hash。</p>
+<ul>
+<li><strong>Puzzle</strong> <strong>friendly</strong></li>
+</ul>
+<p>在比特币系统中，还需要第三个性质Puzzle friendly。该性质要求哈希值计算事先不可预测，仅仅根据输入很难预测出输出。例如：我们需要一个哈希值，存在于某一个范围内，只能通过不停运算查找出来。该性质保证了比特币系统中，只能通过“挖矿”获得比特币。也就是说，该性质保证了工作量证明(POW)机制可以运行下去【“挖矿难，但验证易”】。<br>在比特币系统中采用SHA-256哈希函数。</p>
+<blockquote>
+<p><strong>签名</strong></p>
+</blockquote>
+<ul>
+<li>比特币中账户管理<br>在第三方中心化系统中，账户开通依赖于第三方。但去中心化的比特币系统中，很明显不能进行“申请账户”。在比特币系统中，申请账户是用户自己来处理的，即自己创建一个公钥-私钥对。（关于公私钥请自行了解非对称加密体系和对称加密体系）<br>公钥和私钥的应用保证了“签名”的应用。当在比特币网络中进行转账时，通过“签名”可以明确是由哪个账户转出的，从而防止不良分子对其他账户比特币的盗取。<br>在发布交易时，通过自己私钥签名，其他人可以根据公钥进行验证，从而保证该交易由自己发起。也就是说，只有拥有私钥，才能将该账户中的比特币转走。<br>【注意：比特币系统中，很难通过生成大量公私钥对来获取他人私钥】</li>
+</ul>
+<h2 id="2-BTC数据结构"><a href="#2-BTC数据结构" class="headerlink" title="2. BTC数据结构"></a>2. BTC数据结构</h2><h3 id="Hash-pointer（哈希指针）"><a href="#Hash-pointer（哈希指针）" class="headerlink" title="Hash pointer（哈希指针）"></a>Hash pointer（哈希指针）</h3><ul>
+<li><p>指针</p>
+<p>在程序运行过程中，需要用到数据。最简单的是直接获取数据，但当数据本身较大，需要占用较大空间时，明显会造成一定麻烦。因此，可以引入<strong>指针</strong>这一概念。当需要获取数据时，只需要按照指针所给的地址，去对应的位置读取数据即可，这样大大节省了内存空间。<br>在实际中，为了便于程序移植性等原因，指针实际上存储的是<strong>逻辑地址</strong>而非物理地址。</p>
+<blockquote>
+<p>区块链结构本身为一条链表，节点为区块。而传统链表实现，便是通过指针将各个节点串联起来而称为最终的链。如下便是我们最常见的一个链表：</p>
+  <img data-src="/2023/01/04/BTCBasic/1.png" class>
+<p>但在区块链系统中，并未采用指针，而是使用了<strong>哈希指针</strong></p>
+</blockquote>
+</li>
+<li><p>哈希指针</p>
+<p>如下图对于该节点，我们可以看到有两个指针指向这个节点（实际上为一个），其中P为该节点的地址，H()为该节点的哈希值，该值与节点中内容有关。当节点（区块）中内容发生改变，该哈希值也会发生改变，从而保证了区块内容不能被篡改。</p>
+  <img data-src="/2023/01/04/BTCBasic/2.png" class>
+
+<blockquote>
+<p>在比特币中，其最基本的数据结构便是一个个区块形成的区块链。</p>
+</blockquote>
+</li>
+<li><p>区块链与链表区别1：哈希指针代替普通指针</p>
+<p>如图为一个简单的区块链。其中，每个区块根据自己的区块内容生成自己的哈希值，此外，每个区块（除创世纪块）都保存有前一个区块的哈希值。需要注意的是，本区块哈希生成依赖于本区块内容，而本区块内容中又包含有前一个区块的哈希值。从而保证了区块内容不被篡改。</p>
+<blockquote>
+<p>如图中所示，如果我们想要破坏区块链完整性。篡改B的内容，而C中保存有B的哈希值，所以C也得进行修改。而同样C后区块也得修改。而用户只需要记住最后一个区块链的哈希地址，就可以检测区块链上内容是否被篡改。<br>在实际应用中，一整条链可能会被切断分开保存在多个地方。若用户仅仅具有其中一段，当用到前面部分区块数据时，直接问系统中其他节点要即可，当要到之后，仅仅通过计算要到的最后一个哈希值和自己保存哈希值是否一致可以判断所给内容是否确实为区块链上真实的内容。</p>
+ <img data-src="/2023/01/04/BTCBasic/3.png" class>
+</blockquote>
+<h3 id="Merkle-Tree"><a href="#Merkle-Tree" class="headerlink" title="Merkle Tree"></a>Merkle Tree</h3><blockquote>
+<p>merkle Tree是比特币系统中又一个重要的数据结构<br>首先，回顾一下Binary Tree(如果不懂请自行复习数据结构)。merkle Tree和Binary Tree的区别有哪些？</p>
+</blockquote>
+</li>
+</ul>
+<ol>
+<li><p>merkle Tree用哈希指针代替了普通指针</p>
+  <img data-src="/2023/01/04/BTCBasic/4.png" class>
+
+<p>上图即为一个简单的merkle Tree，其中A、B、C、D为数据块。可见，A和B各有一个哈希值，将其合并放在一个节点中，C和D同样操作，而后，针对得到的两个节点分别取哈希，又可以得到两个新的哈希值，即为图中根节点。实际中，在区块块头中存储的是根节点的哈希值（对其再取一次哈希）。</p>
+<p>如视频中图片：</p>
+  <img data-src="/2023/01/04/BTCBasic/5.png" class>
+
+<p>该数据结构的优点在于：只需要记住Root Hash（根哈希值），便可以检测出对树中任何部位的修改。</p>
+<p>例如，所绘制merkle Tree中节点B发生了改变，则对应的第二层第一个节点中第二个哈希值便也会发生改变，进而根节点中第一个哈希值也会发生改变，从而导致根哈希值也发生了改变。</p>
+<blockquote>
+<p>在比特币系统中，不同区块通过哈希值指针连接，在同一个区块中的多个交易（数据块），则通过merkle Tree的形式组织在一起。区块本身分为两部分（块头和块身），在块头中存在有根哈希值（没有交易的具体信息），块身中存在交易列表。</p>
+</blockquote>
+</li>
+<li><p>Merkle Tree的实际用途</p>
+<p>Merkle Tree可以用于提供Merkle Proof。关于Merkle proof，需要先了解比特币系统中节点。比特币中节点分为轻节点和全节点。全节点保存整个区块的所有内容，而轻节点仅仅保存区块的块头信息。</p>
+<blockquote>
+<p>为什么要分轻节点和全节点？<br>因为硬件的局限。一个区块大小为1MB，对于移动便携设备来说，如果存储区块的所有内容，则所需空间过大，而这是不现实的。所以轻节点只需要存储区块块头信息，全节点存储区块所有内容即可。</p>
+</blockquote>
+</li>
+</ol>
+<p>当需要向轻节点证明某条交易是否被写入区块链，便需要用到merkle proof。我们将交易到根节点这一条路径称为merkle proof，全节点将整个merkle proof发送给轻节点（如下图所示），轻节点即可根据其算出根哈希值，和自己保存的对比，从而验证该交易是否被写入区块链。只要沿着该路径，所有哈希值都正确，说明内容没有被修改过。<br>  <img data-src="/2023/01/04/BTCBasic/6.png" class></p>
+<blockquote>
+<p>思考：是否存在不安全的情况？如下图我们要验证B，但是H(1)和H(4)都是全节点提供的。全节点可否修改B，通过H(1)调整，使得修改过后的H(1)和轻节点计算出的H(2)一起取得哈希仍然为H(3)？<br>  <img data-src="/2023/01/04/BTCBasic/7.png" class><br>实际上，这种情况为人为制造哈希碰撞。而由于公开课笔记2中可知，由于哈希函数的collision resistance性质，这种情况是不会发生的。从而，保证了系统的不可篡改性。同时，这样一个merkle Proof的事件复杂度为O(log n),非常高效【证明交易存在】。如果要证明交易不存在，如果不对叶节点规定排序顺序，没有一个效率较高的方法证明不存在。<br>在比特币系统中，没有相应的需求，所以在比特币系统中并没有对merkle Tree进行排序。</p>
+</blockquote>
+<p>一般来说，一般的链表我们都可以改造为使用哈希指针的链表，但当链表中存在环时，哈希指针便不能再使用。</p>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div class="reward-container">
+  <div>谢谢你的支持哦，继续加油.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="邢浩东 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="邢浩东 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>邢浩东
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://mindmaster.top/2023/01/04/BTCBasic/" title="BTCBasic">https://mindmaster.top/2023/01/04/BTCBasic/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-%E9%82%A2%E6%B5%A9%E4%B8%9C/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-邢浩东</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE-%E4%BB%A5%E5%A4%AA%E5%9D%8A-%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/" rel="tag"># 区块链&以太坊&智能合约</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/09/10/RPC%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%B4%A2%E4%B8%80/" rel="prev" title="RPC框架深入探索一">
+      <i class="fa fa-chevron-left"></i> RPC框架深入探索一
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8C%BA%E5%9D%97%E9%93%BE%E5%9F%BA%E7%A1%80part1-%E5%8C%97%E5%A4%A7%E8%82%96%E8%87%BB%E8%80%81%E5%B8%88-amp-Chainlink%E9%A2%84%E8%A8%80%E6%9C%BA-China%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0"><span class="nav-number">1.</span> <span class="nav-text">区块链基础part1-北大肖臻老师&amp;Chainlink预言机 China学习笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-BTC%E5%AF%86%E7%A0%81%E5%AD%A6%E5%8E%9F%E7%90%86"><span class="nav-number">1.1.</span> <span class="nav-text">1. BTC密码学原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-BTC%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">2. BTC数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Hash-pointer%EF%BC%88%E5%93%88%E5%B8%8C%E6%8C%87%E9%92%88%EF%BC%89"><span class="nav-number">1.2.1.</span> <span class="nav-text">Hash pointer（哈希指针）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Merkle-Tree"><span class="nav-number">1.2.2.</span> <span class="nav-text">Merkle Tree</span></a></li></ol></li></ol></li></ol></div>
+
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="邢浩东"
+      src="/images/OIP.jfif">
+  <p class="site-author-name" itemprop="name">邢浩东</p>
+  <div class="site-description" itemprop="description">The world favors the underdog,and I would be the bad guy</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">75</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">46</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mindmaster1" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mindmaster1" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/yourname" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;yourname" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.csdn.net/" title="CSDN → https:&#x2F;&#x2F;www.csdn.net" rel="noopener" target="_blank"><i class="fab fa-apple fa-fw"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://juejin.cn/user/1706074845232983" title="掘金 → https:&#x2F;&#x2F;juejin.cn&#x2F;user&#x2F;1706074845232983" rel="noopener" target="_blank"><i class="fa fa-binoculars fa-fw"></i>掘金</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Leetcode刷题
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://leetcode-cn.com/" title="https:&#x2F;&#x2F;leetcode-cn.com&#x2F;" rel="noopener" target="_blank">通向快乐</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+ <div>
+    <svg>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-1"></text>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-2"></text>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-3"></text>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-4"></text>
+    </svg>
+</div>
+<script>
+function showtime(){
+    var noatime = new Date();
+    var h = noatime.getHours(),
+        m = noatime.getMinutes(),
+        s = noatime.getSeconds();
+    h=checktime(h);
+    m=checktime(m);
+    s=checktime(s);
+  return h+":"+m+":"+s;
+}
+function checktime(x){
+  if(x<10){
+    x="0"+x;
+  }
+  return x;
+}
+var div1=document.getElementsByTagName("text");
+setInterval(function(){
+  for (var i in div1){
+      div1[i].innerHTML=showtime();
+  }
+},1000);
+</script>	   
+
+<script type="text/javascript" src="//rf.revolvermaps.com/0/0/1.js?i=57fnj853bkq&amp;s=220&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+ 
+    
+  </ul>
+    </div>
+	
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+	
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">邢浩东</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">317k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">4:48</span>
+</div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'dOLOPmQA1yPidXhJmndTryVE-gzGzoHsz',
+      appKey     : 'tDnfIUMcS9cpj4Rqgxu4mUxG',
+      placeholder: "欢迎大家畅所欲言# Comment box placeholder",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+ 
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
+</html>

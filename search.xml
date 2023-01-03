@@ -1,6 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>BTCBasic</title>
+    <url>/2023/01/04/BTCBasic/</url>
+    <content><![CDATA[<h1 id="区块链基础part1-北大肖臻老师-amp-Chainlink预言机-China学习笔记"><a href="#区块链基础part1-北大肖臻老师-amp-Chainlink预言机-China学习笔记" class="headerlink" title="区块链基础part1-北大肖臻老师&amp;Chainlink预言机 China学习笔记"></a>区块链基础part1-北大肖臻老师&amp;Chainlink预言机 China学习笔记</h1><h2 id="1-BTC密码学原理"><a href="#1-BTC密码学原理" class="headerlink" title="1. BTC密码学原理"></a>1. BTC密码学原理</h2><p>比特币属于加密货币，可见其中必然会涉及到密码学的知识。而比特币本身开放，其交易记录、交易金额、交易内容甚至源代码都面向全网开放，加密又使用在哪里呢？在比特币中，正是加密确保了信息的不可篡改，保证了区块链本身的优势——不可篡改。</p>
+<p>在比特币系统中，加密主要涉及两方面内容</p>
+<blockquote>
+<p><strong>hash(哈希)</strong></p>
+</blockquote>
+<p>在密码学中，采用的哈希函数称为名cryptographic hash function【密码散列函数】，其两个重要性质分别为collision resistance（对哈希碰撞具有抗拒性）和hiding(隐藏性)。</p>
+<ul>
+<li><strong>哈希碰撞</strong></li>
+</ul>
+<p>给定x和y，且有x!=y，但给定一个哈希函数Hash(),可以得到Hash(x)=Hash(y)，则称为hash碰撞。collision resistance保证,如果有Hash(x)!=Hash(y)，必然可以得到x!=y（当然，这是理想状态。有兴趣的可以了解针对哈希碰撞出现后如何处理，如：开放定址法、公共溢出区等）。在实际应用中，哈希碰撞基本上难以避免，我们只要保证给定x，很难找到一个y，能够在x!=y的前提下，使得Hash(x)=Hash(y)就认为其是collision resistance的【目前并不存在一个hash函数可以从数学上证明具有collision resistance的性质】。</p>
+<ul>
+<li><strong>collision resistance的用处</strong></li>
+</ul>
+<p>如果我们自己有一条信息x，我们希望别人知道我有x但不想让别人知道x具体是什么，就可以通过告诉其Hash(x)，由于该性质，保证了x!=y时，Hash(x)和Hash(y)是不相等的。我们只需要告诉别人Hash(x)即可，对方可以通过Hash(x)知道你确实知道x这个信息，但他无法（很难）通过Hash(x)反推出x。</p>
+<ul>
+<li><p><strong>hiding</strong></p>
+<p>我们认为，给定x和Hash(),可以很容易得到Hash(x),但没有办法在已知Hash(x)和Hash()的情况下，反推出x的具体取值，当然这也是一个理想的情况。</p>
+</li>
+<li><p><strong>collision resistance和hiding结合实现digital commitment(数据保证)：</strong></p>
+</li>
+</ul>
+<p>在视频中，肖老师提到关于股市预测的案例，某个人对某个股票进行涨停预测，我们如何保证能够知晓其预测是否准确？最简单的是提前公布，等待实际结果出现后验证。但实际中，当提前发布预测后，可能会由于预测者本身对股市实际结果造成影响。所以，应该将提前将其写于纸上并密封，交给第三方机构保管，等到实际结果出现后开启密封与实际对比，这就是digital commitment。而第三方机构需要能够使人信服，在实际生活中，有很多场景并不存在一个这样的第三方机构，而区块链技术正为此提供了一个很好的解决方法。<br>我们把预测结果看作x，提前公布Hash(x)，等到预测结果发生时间来临后，公布x，如果根据x可以得到公布的Hash(x)，则说明公布的x确实为***的内容。从而，我们可以实际进行判断预测是否准确。实际使用中，为了x足够大，会对x进行“加盐”，对x拼接一个nonce，对其整体取Hash。</p>
+<ul>
+<li><strong>Puzzle</strong> <strong>friendly</strong></li>
+</ul>
+<p>在比特币系统中，还需要第三个性质Puzzle friendly。该性质要求哈希值计算事先不可预测，仅仅根据输入很难预测出输出。例如：我们需要一个哈希值，存在于某一个范围内，只能通过不停运算查找出来。该性质保证了比特币系统中，只能通过“挖矿”获得比特币。也就是说，该性质保证了工作量证明(POW)机制可以运行下去【“挖矿难，但验证易”】。<br>在比特币系统中采用SHA-256哈希函数。</p>
+<blockquote>
+<p><strong>签名</strong></p>
+</blockquote>
+<ul>
+<li>比特币中账户管理<br>在第三方中心化系统中，账户开通依赖于第三方。但去中心化的比特币系统中，很明显不能进行“申请账户”。在比特币系统中，申请账户是用户自己来处理的，即自己创建一个公钥-私钥对。（关于公私钥请自行了解非对称加密体系和对称加密体系）<br>公钥和私钥的应用保证了“签名”的应用。当在比特币网络中进行转账时，通过“签名”可以明确是由哪个账户转出的，从而防止不良分子对其他账户比特币的盗取。<br>在发布交易时，通过自己私钥签名，其他人可以根据公钥进行验证，从而保证该交易由自己发起。也就是说，只有拥有私钥，才能将该账户中的比特币转走。<br>【注意：比特币系统中，很难通过生成大量公私钥对来获取他人私钥】</li>
+</ul>
+<h2 id="2-BTC数据结构"><a href="#2-BTC数据结构" class="headerlink" title="2. BTC数据结构"></a>2. BTC数据结构</h2><h3 id="Hash-pointer（哈希指针）"><a href="#Hash-pointer（哈希指针）" class="headerlink" title="Hash pointer（哈希指针）"></a>Hash pointer（哈希指针）</h3><ul>
+<li><p>指针</p>
+<p>在程序运行过程中，需要用到数据。最简单的是直接获取数据，但当数据本身较大，需要占用较大空间时，明显会造成一定麻烦。因此，可以引入<strong>指针</strong>这一概念。当需要获取数据时，只需要按照指针所给的地址，去对应的位置读取数据即可，这样大大节省了内存空间。<br>在实际中，为了便于程序移植性等原因，指针实际上存储的是<strong>逻辑地址</strong>而非物理地址。</p>
+<blockquote>
+<p>区块链结构本身为一条链表，节点为区块。而传统链表实现，便是通过指针将各个节点串联起来而称为最终的链。如下便是我们最常见的一个链表：</p>
+  <img data-src="/2023/01/04/BTCBasic/1.png" class>
+<p>但在区块链系统中，并未采用指针，而是使用了<strong>哈希指针</strong></p>
+</blockquote>
+</li>
+<li><p>哈希指针</p>
+<p>如下图对于该节点，我们可以看到有两个指针指向这个节点（实际上为一个），其中P为该节点的地址，H()为该节点的哈希值，该值与节点中内容有关。当节点（区块）中内容发生改变，该哈希值也会发生改变，从而保证了区块内容不能被篡改。</p>
+  <img data-src="/2023/01/04/BTCBasic/2.png" class>
+
+<blockquote>
+<p>在比特币中，其最基本的数据结构便是一个个区块形成的区块链。</p>
+</blockquote>
+</li>
+<li><p>区块链与链表区别1：哈希指针代替普通指针</p>
+<p>如图为一个简单的区块链。其中，每个区块根据自己的区块内容生成自己的哈希值，此外，每个区块（除创世纪块）都保存有前一个区块的哈希值。需要注意的是，本区块哈希生成依赖于本区块内容，而本区块内容中又包含有前一个区块的哈希值。从而保证了区块内容不被篡改。</p>
+<blockquote>
+<p>如图中所示，如果我们想要破坏区块链完整性。篡改B的内容，而C中保存有B的哈希值，所以C也得进行修改。而同样C后区块也得修改。而用户只需要记住最后一个区块链的哈希地址，就可以检测区块链上内容是否被篡改。<br>在实际应用中，一整条链可能会被切断分开保存在多个地方。若用户仅仅具有其中一段，当用到前面部分区块数据时，直接问系统中其他节点要即可，当要到之后，仅仅通过计算要到的最后一个哈希值和自己保存哈希值是否一致可以判断所给内容是否确实为区块链上真实的内容。</p>
+ <img data-src="/2023/01/04/BTCBasic/3.png" class>
+</blockquote>
+<h3 id="Merkle-Tree"><a href="#Merkle-Tree" class="headerlink" title="Merkle Tree"></a>Merkle Tree</h3><blockquote>
+<p>merkle Tree是比特币系统中又一个重要的数据结构<br>首先，回顾一下Binary Tree(如果不懂请自行复习数据结构)。merkle Tree和Binary Tree的区别有哪些？</p>
+</blockquote>
+</li>
+</ul>
+<ol>
+<li><p>merkle Tree用哈希指针代替了普通指针</p>
+  <img data-src="/2023/01/04/BTCBasic/4.png" class>
+
+<p>上图即为一个简单的merkle Tree，其中A、B、C、D为数据块。可见，A和B各有一个哈希值，将其合并放在一个节点中，C和D同样操作，而后，针对得到的两个节点分别取哈希，又可以得到两个新的哈希值，即为图中根节点。实际中，在区块块头中存储的是根节点的哈希值（对其再取一次哈希）。</p>
+<p>如视频中图片：</p>
+  <img data-src="/2023/01/04/BTCBasic/5.png" class>
+
+<p>该数据结构的优点在于：只需要记住Root Hash（根哈希值），便可以检测出对树中任何部位的修改。</p>
+<p>例如，所绘制merkle Tree中节点B发生了改变，则对应的第二层第一个节点中第二个哈希值便也会发生改变，进而根节点中第一个哈希值也会发生改变，从而导致根哈希值也发生了改变。</p>
+<blockquote>
+<p>在比特币系统中，不同区块通过哈希值指针连接，在同一个区块中的多个交易（数据块），则通过merkle Tree的形式组织在一起。区块本身分为两部分（块头和块身），在块头中存在有根哈希值（没有交易的具体信息），块身中存在交易列表。</p>
+</blockquote>
+</li>
+<li><p>Merkle Tree的实际用途</p>
+<p>Merkle Tree可以用于提供Merkle Proof。关于Merkle proof，需要先了解比特币系统中节点。比特币中节点分为轻节点和全节点。全节点保存整个区块的所有内容，而轻节点仅仅保存区块的块头信息。</p>
+<blockquote>
+<p>为什么要分轻节点和全节点？<br>因为硬件的局限。一个区块大小为1MB，对于移动便携设备来说，如果存储区块的所有内容，则所需空间过大，而这是不现实的。所以轻节点只需要存储区块块头信息，全节点存储区块所有内容即可。</p>
+</blockquote>
+</li>
+</ol>
+<p>当需要向轻节点证明某条交易是否被写入区块链，便需要用到merkle proof。我们将交易到根节点这一条路径称为merkle proof，全节点将整个merkle proof发送给轻节点（如下图所示），轻节点即可根据其算出根哈希值，和自己保存的对比，从而验证该交易是否被写入区块链。只要沿着该路径，所有哈希值都正确，说明内容没有被修改过。<br>  <img data-src="/2023/01/04/BTCBasic/6.png" class></p>
+<blockquote>
+<p>思考：是否存在不安全的情况？如下图我们要验证B，但是H(1)和H(4)都是全节点提供的。全节点可否修改B，通过H(1)调整，使得修改过后的H(1)和轻节点计算出的H(2)一起取得哈希仍然为H(3)？<br>  <img data-src="/2023/01/04/BTCBasic/7.png" class><br>实际上，这种情况为人为制造哈希碰撞。而由于公开课笔记2中可知，由于哈希函数的collision resistance性质，这种情况是不会发生的。从而，保证了系统的不可篡改性。同时，这样一个merkle Proof的事件复杂度为O(log n),非常高效【证明交易存在】。如果要证明交易不存在，如果不对叶节点规定排序顺序，没有一个效率较高的方法证明不存在。<br>在比特币系统中，没有相应的需求，所以在比特币系统中并没有对merkle Tree进行排序。</p>
+</blockquote>
+<p>一般来说，一般的链表我们都可以改造为使用哈希指针的链表，但当链表中存在环时，哈希指针便不能再使用。</p>
+]]></content>
+      <categories>
+        <category>区块链&amp;以太坊&amp;智能合约</category>
+      </categories>
+      <tags>
+        <tag>区块链&amp;以太坊&amp;智能合约</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>AOF</title>
     <url>/2022/08/06/AOF/</url>
     <content><![CDATA[]]></content>
@@ -617,75 +714,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Java内存区域与内存溢出异常</title>
-    <url>/2021/02/05/Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/</url>
-    <content><![CDATA[<h3 id="1-内存管理那些事"><a href="#1-内存管理那些事" class="headerlink" title="1.内存管理那些事"></a>1.内存管理那些事</h3><p>C、C++：在内存管理领域，没有所谓的内存动态分配机制和垃圾收集技术，他们即拥有每一个对象的所有权，又担负着每一个对象从开始到终结的维护责任。</p>
-<p>Java：在虚拟机自动内存管理机制的帮助下，不再需要为每一个new的对象写相配对的delete和free代码，也不容易出现内存泄漏和内存溢出的问题。</p>
-<p>关于这两者之间对于内存管理之间的区别，从语言本身来说，指针的使用就可以表明二者在内存管理、使用、维护上的巨大差异。</p>
-<h3 id="2-运行时数据区域"><a href="#2-运行时数据区域" class="headerlink" title="2.运行时数据区域"></a>2.运行时数据区域</h3><p>Java虚拟机在执行Java程序的同时会把他创建的内存分为若干个不同的数据区域，如下图所示：</p>
-<img data-src="/2021/02/05/Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/%E6%95%B0%E6%8D%AE%E5%8C%BA.png" class>
-
-<h4 id="2-1程序计数器-Program-Counter-Register"><a href="#2-1程序计数器-Program-Counter-Register" class="headerlink" title="2.1程序计数器(Program Counter Register)"></a>2.1程序计数器(Program Counter Register)</h4><p>这是一块较小的内存区域。可以看作是当前线程所执行的字节码的行号指示器。字节码解释器工作时，就是通过改变这个计数器的值来选取下一条需要执行的字节码指令，包括分支、循环、判断、跳转、异常处理、线程恢复等基础功能都需要依赖该计数器来完成。</p>
-<p>Java虚拟机的多线程是通过线程轮流切换并分配处理器执行时间的方式实现的，在任何一个时刻，一个处理器指挥执行一条线程中的指令。<strong>为了线程切换后可以恢复到正确的执行位置，每条线程都需要有一个独立的程序计数器，且各个线程之间计数器互相不影响，独立存储</strong>。所以说程序计数器是线程私有的一块内存。</p>
-<p><em>这是一个在Java虚拟机规范中没有规定任何OutOfMemoryError情况的区域。</em></p>
-<ul>
-<li><p>如果线程执行的是Java方法，计数器记录的是正在执行的虚拟机字节码指令的地址；</p>
-</li>
-<li><p>如果正在执行的是Native方法，这个计数器值为空(Undefined)。</p>
-</li>
-</ul>
-<h4 id="2-2Java虚拟机栈-Java-Virtual-Machine-Stacks"><a href="#2-2Java虚拟机栈-Java-Virtual-Machine-Stacks" class="headerlink" title="2.2Java虚拟机栈(Java Virtual Machine Stacks)"></a>2.2Java虚拟机栈(Java Virtual Machine Stacks)</h4><p>Java虚拟机栈是线程私有的，生命周期与线程相同。</p>
-<blockquote>
-<p>虚拟机栈描述的是**<em>Java方法**</em>执行的内存模型：每个方法在执行的同时会创建一个栈桢(Stack Frame)用于存储局部变量表、操作数栈、动态链接、方法出口等信息。每一个方法从调用直至执行完成的过程，就对应着一个栈桢在虚拟机栈中从出栈到入栈。</p>
-</blockquote>
-<p>局部变量表存放了：</p>
-<ul>
-<li><p>编译时期可知的各种基本数据类型（boolean\byte\char\short\int\float\long\duoble）</p>
-</li>
-<li><p>对象引用（reference类型，不等同于对象本身，可能是一个指向对象起始地址的引用指针，也可能是指向一个代表对象的句柄和其他与此对象相关的位置）</p>
-</li>
-<li><p>returnAddress类型(指向了一条字节码指令的地址)。</p>
-</li>
-</ul>
-<p>该区域可能会出现的异常情况：</p>
-<p>1.StackOverFlowError:线程请求的栈深度大于虚拟机所允许的深度</p>
-<p>2.OutOfMemoryError: 如果虚拟机可以实现动态扩展，但是在扩展时无法申请到足够的内存。</p>
-<p>####2.3本地方法栈(Native Method Stack)</p>
-<p>本地方法栈与虚拟机栈发挥的作用很相似，区别就是虚拟机栈为虚拟机执行Java方法（也就是字节码服务），而本地方法作为虚拟机使用到的Native方法服务。具体的虚拟机可以自由实现。HotSpot虚拟机将本地方法栈和虚拟机栈合二为一。它的异常类型同样是上述两种。</p>
-<h4 id="2-4Java堆"><a href="#2-4Java堆" class="headerlink" title="2.4Java堆"></a>2.4Java堆</h4><p>Java堆(Java Heap)是Java虚拟机管理内存区域中最大的一块。Java堆是被所有线程共享的一块儿内存区域，在虚拟机启动时被创建。</p>
-<p><strong>此内存区域的唯一目的就是存放对象实例，几乎所有的对象实例都在这里分配内存。</strong></p>
-<p>Java堆是垃圾收集器管理的主要区域，被称为GC堆(Garbage Collected Heap)。</p>
-<blockquote>
-<p>从内存回收的角度来看，基于现在收集器基本上都采用分代收集算法，Java堆可以细分为新生代和老年代；再细致一点有Eden空间、From Survivor空间、To Survivor空间</p>
-</blockquote>
-<blockquote>
-<p>从内存分配的角度来看，线程共享的Java堆可能划分出多个线程私有的分配缓冲区(<strong>Thread Local Allocation Buffer   TLAB</strong>)。</p>
-</blockquote>
-<p><strong><em>不论如何划分，都与存放内容无关无论哪个区域，存放的都是对象实例</em></strong>，进一步划分的目的是为了更好的回收内存，或者更快的分配内存</p>
-<p>根据Java虚拟机规范的规定，Java堆可以处于物理上不连续的内存空间中，只要逻辑上连续的即可。</p>
-<p>在实现时，既可以实现成固定大小的，也可以是可扩展的，不过主流的虚拟机都是按照可扩展来实现的（控制参数：-Xmx和-Xms控制）。如果堆中没有内存可以完成实例分配，并且堆也无法扩展时，将会抛出OutOfMemoryError异常。</p>
-<h4 id="2-5方法区-Method-Area"><a href="#2-5方法区-Method-Area" class="headerlink" title="2.5方法区(Method Area)"></a>2.5方法区(Method Area)</h4><p>方法区与Java堆一样，是各个线程所共享的内存区域，<strong>用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据</strong>。虽然Java虚拟机规范把方法区描述成为堆的一个逻辑部分，但是方法区还有一个别名叫做Non-Heap，目的就是与堆区分开。</p>
-<p>Java虚拟机堆方法区的限制十分宽松，除了和Java堆一样不需要连续的内存和可以选择固定大小或者可扩展外，还可以选择不实现垃圾收集。但并非意味着数据进入了方法去就永久存在，这个区域的回收目标主要是针对常量池的回收和对类型的卸载，而回收的成绩难以令人满意，尤其是类型的卸载，条件更是相当苛刻，但是，<strong>这个区域的回收确实是必要的</strong>，可以一定程度上避免内存泄漏。</p>
-<p>当方法区无法满足内存分配要求时，会报出OutOfMemoryError异常。</p>
-<h4 id="2-6运行时常量池-Runtime-Constant-Pool"><a href="#2-6运行时常量池-Runtime-Constant-Pool" class="headerlink" title="2.6运行时常量池(Runtime Constant Pool)"></a>2.6运行时常量池(Runtime Constant Pool)</h4><p>运行时常量池是方法区的一部分。Class文件中除了有类的版本、字段、方法、接口等描述信息外，还有一项就是常量池(Constant Pool Table），用于存放<strong>编译期生成的各种字面量和符号引用</strong>，这部分内容将在类加载后进入方法区的运行时常量池中存放。</p>
-<ul>
-<li><p>对于运行时常量池，Java虚拟机规范并没有做任何细节的要求，不同的虚拟机提供厂商实现的虚拟机可以按站自己的需要来实现这个内存区域。除了保存Class文件中描述的符号引用外，还会将翻译的直接引用也存储在运行时常量池中。</p>
-</li>
-<li><p>运行时常量池相对于class文件常量池的另一个重要特征是具备动态性，Java语言并不要求常量一定只能在编译期产生，也就是说并非预置于Class文件中常量池的内容才可以进入方法去运行时常量池，运行期间也可能将新的常量放入池中。例如String类的intern()方法。</p>
-</li>
-<li><p>运行时常量池会受到方法区内存的限制，当常量池无法申请到内存是会报OutOfMemoryError异常。</p>
-</li>
-</ul>
-<h4 id="2-7直接内存"><a href="#2-7直接内存" class="headerlink" title="2.7直接内存"></a>2.7直接内存</h4><p>直接内存就是本机的物理内存，服务器管理员在配置虚拟机参数时，要根据实际内存设置-Xmx等参数信息，避免使得各个内存区域大于物理内存限制，从而导致动态扩展时出现OutOfMemoryError异常。</p>
-]]></content>
-      <categories>
-        <category>JVM虚拟机</category>
-      </categories>
-      <tags>
-        <tag>Java内存区域</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>LVS负载均衡</title>
     <url>/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</url>
     <content><![CDATA[<blockquote>
@@ -811,6 +839,75 @@
       </categories>
       <tags>
         <tag>负载均衡</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java内存区域与内存溢出异常</title>
+    <url>/2021/02/05/Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/</url>
+    <content><![CDATA[<h3 id="1-内存管理那些事"><a href="#1-内存管理那些事" class="headerlink" title="1.内存管理那些事"></a>1.内存管理那些事</h3><p>C、C++：在内存管理领域，没有所谓的内存动态分配机制和垃圾收集技术，他们即拥有每一个对象的所有权，又担负着每一个对象从开始到终结的维护责任。</p>
+<p>Java：在虚拟机自动内存管理机制的帮助下，不再需要为每一个new的对象写相配对的delete和free代码，也不容易出现内存泄漏和内存溢出的问题。</p>
+<p>关于这两者之间对于内存管理之间的区别，从语言本身来说，指针的使用就可以表明二者在内存管理、使用、维护上的巨大差异。</p>
+<h3 id="2-运行时数据区域"><a href="#2-运行时数据区域" class="headerlink" title="2.运行时数据区域"></a>2.运行时数据区域</h3><p>Java虚拟机在执行Java程序的同时会把他创建的内存分为若干个不同的数据区域，如下图所示：</p>
+<img data-src="/2021/02/05/Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/%E6%95%B0%E6%8D%AE%E5%8C%BA.png" class>
+
+<h4 id="2-1程序计数器-Program-Counter-Register"><a href="#2-1程序计数器-Program-Counter-Register" class="headerlink" title="2.1程序计数器(Program Counter Register)"></a>2.1程序计数器(Program Counter Register)</h4><p>这是一块较小的内存区域。可以看作是当前线程所执行的字节码的行号指示器。字节码解释器工作时，就是通过改变这个计数器的值来选取下一条需要执行的字节码指令，包括分支、循环、判断、跳转、异常处理、线程恢复等基础功能都需要依赖该计数器来完成。</p>
+<p>Java虚拟机的多线程是通过线程轮流切换并分配处理器执行时间的方式实现的，在任何一个时刻，一个处理器指挥执行一条线程中的指令。<strong>为了线程切换后可以恢复到正确的执行位置，每条线程都需要有一个独立的程序计数器，且各个线程之间计数器互相不影响，独立存储</strong>。所以说程序计数器是线程私有的一块内存。</p>
+<p><em>这是一个在Java虚拟机规范中没有规定任何OutOfMemoryError情况的区域。</em></p>
+<ul>
+<li><p>如果线程执行的是Java方法，计数器记录的是正在执行的虚拟机字节码指令的地址；</p>
+</li>
+<li><p>如果正在执行的是Native方法，这个计数器值为空(Undefined)。</p>
+</li>
+</ul>
+<h4 id="2-2Java虚拟机栈-Java-Virtual-Machine-Stacks"><a href="#2-2Java虚拟机栈-Java-Virtual-Machine-Stacks" class="headerlink" title="2.2Java虚拟机栈(Java Virtual Machine Stacks)"></a>2.2Java虚拟机栈(Java Virtual Machine Stacks)</h4><p>Java虚拟机栈是线程私有的，生命周期与线程相同。</p>
+<blockquote>
+<p>虚拟机栈描述的是**<em>Java方法**</em>执行的内存模型：每个方法在执行的同时会创建一个栈桢(Stack Frame)用于存储局部变量表、操作数栈、动态链接、方法出口等信息。每一个方法从调用直至执行完成的过程，就对应着一个栈桢在虚拟机栈中从出栈到入栈。</p>
+</blockquote>
+<p>局部变量表存放了：</p>
+<ul>
+<li><p>编译时期可知的各种基本数据类型（boolean\byte\char\short\int\float\long\duoble）</p>
+</li>
+<li><p>对象引用（reference类型，不等同于对象本身，可能是一个指向对象起始地址的引用指针，也可能是指向一个代表对象的句柄和其他与此对象相关的位置）</p>
+</li>
+<li><p>returnAddress类型(指向了一条字节码指令的地址)。</p>
+</li>
+</ul>
+<p>该区域可能会出现的异常情况：</p>
+<p>1.StackOverFlowError:线程请求的栈深度大于虚拟机所允许的深度</p>
+<p>2.OutOfMemoryError: 如果虚拟机可以实现动态扩展，但是在扩展时无法申请到足够的内存。</p>
+<p>####2.3本地方法栈(Native Method Stack)</p>
+<p>本地方法栈与虚拟机栈发挥的作用很相似，区别就是虚拟机栈为虚拟机执行Java方法（也就是字节码服务），而本地方法作为虚拟机使用到的Native方法服务。具体的虚拟机可以自由实现。HotSpot虚拟机将本地方法栈和虚拟机栈合二为一。它的异常类型同样是上述两种。</p>
+<h4 id="2-4Java堆"><a href="#2-4Java堆" class="headerlink" title="2.4Java堆"></a>2.4Java堆</h4><p>Java堆(Java Heap)是Java虚拟机管理内存区域中最大的一块。Java堆是被所有线程共享的一块儿内存区域，在虚拟机启动时被创建。</p>
+<p><strong>此内存区域的唯一目的就是存放对象实例，几乎所有的对象实例都在这里分配内存。</strong></p>
+<p>Java堆是垃圾收集器管理的主要区域，被称为GC堆(Garbage Collected Heap)。</p>
+<blockquote>
+<p>从内存回收的角度来看，基于现在收集器基本上都采用分代收集算法，Java堆可以细分为新生代和老年代；再细致一点有Eden空间、From Survivor空间、To Survivor空间</p>
+</blockquote>
+<blockquote>
+<p>从内存分配的角度来看，线程共享的Java堆可能划分出多个线程私有的分配缓冲区(<strong>Thread Local Allocation Buffer   TLAB</strong>)。</p>
+</blockquote>
+<p><strong><em>不论如何划分，都与存放内容无关无论哪个区域，存放的都是对象实例</em></strong>，进一步划分的目的是为了更好的回收内存，或者更快的分配内存</p>
+<p>根据Java虚拟机规范的规定，Java堆可以处于物理上不连续的内存空间中，只要逻辑上连续的即可。</p>
+<p>在实现时，既可以实现成固定大小的，也可以是可扩展的，不过主流的虚拟机都是按照可扩展来实现的（控制参数：-Xmx和-Xms控制）。如果堆中没有内存可以完成实例分配，并且堆也无法扩展时，将会抛出OutOfMemoryError异常。</p>
+<h4 id="2-5方法区-Method-Area"><a href="#2-5方法区-Method-Area" class="headerlink" title="2.5方法区(Method Area)"></a>2.5方法区(Method Area)</h4><p>方法区与Java堆一样，是各个线程所共享的内存区域，<strong>用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据</strong>。虽然Java虚拟机规范把方法区描述成为堆的一个逻辑部分，但是方法区还有一个别名叫做Non-Heap，目的就是与堆区分开。</p>
+<p>Java虚拟机堆方法区的限制十分宽松，除了和Java堆一样不需要连续的内存和可以选择固定大小或者可扩展外，还可以选择不实现垃圾收集。但并非意味着数据进入了方法去就永久存在，这个区域的回收目标主要是针对常量池的回收和对类型的卸载，而回收的成绩难以令人满意，尤其是类型的卸载，条件更是相当苛刻，但是，<strong>这个区域的回收确实是必要的</strong>，可以一定程度上避免内存泄漏。</p>
+<p>当方法区无法满足内存分配要求时，会报出OutOfMemoryError异常。</p>
+<h4 id="2-6运行时常量池-Runtime-Constant-Pool"><a href="#2-6运行时常量池-Runtime-Constant-Pool" class="headerlink" title="2.6运行时常量池(Runtime Constant Pool)"></a>2.6运行时常量池(Runtime Constant Pool)</h4><p>运行时常量池是方法区的一部分。Class文件中除了有类的版本、字段、方法、接口等描述信息外，还有一项就是常量池(Constant Pool Table），用于存放<strong>编译期生成的各种字面量和符号引用</strong>，这部分内容将在类加载后进入方法区的运行时常量池中存放。</p>
+<ul>
+<li><p>对于运行时常量池，Java虚拟机规范并没有做任何细节的要求，不同的虚拟机提供厂商实现的虚拟机可以按站自己的需要来实现这个内存区域。除了保存Class文件中描述的符号引用外，还会将翻译的直接引用也存储在运行时常量池中。</p>
+</li>
+<li><p>运行时常量池相对于class文件常量池的另一个重要特征是具备动态性，Java语言并不要求常量一定只能在编译期产生，也就是说并非预置于Class文件中常量池的内容才可以进入方法去运行时常量池，运行期间也可能将新的常量放入池中。例如String类的intern()方法。</p>
+</li>
+<li><p>运行时常量池会受到方法区内存的限制，当常量池无法申请到内存是会报OutOfMemoryError异常。</p>
+</li>
+</ul>
+<h4 id="2-7直接内存"><a href="#2-7直接内存" class="headerlink" title="2.7直接内存"></a>2.7直接内存</h4><p>直接内存就是本机的物理内存，服务器管理员在配置虚拟机参数时，要根据实际内存设置-Xmx等参数信息，避免使得各个内存区域大于物理内存限制，从而导致动态扩展时出现OutOfMemoryError异常。</p>
+]]></content>
+      <categories>
+        <category>JVM虚拟机</category>
+      </categories>
+      <tags>
+        <tag>Java内存区域</tag>
       </tags>
   </entry>
   <entry>
@@ -1818,58 +1915,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Python自动化办公--Word</title>
-    <url>/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/</url>
-    <content><![CDATA[<h1 id><a href="#" class="headerlink" title></a></h1><h1 id="Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）"><a href="#Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）" class="headerlink" title="Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）"></a>Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）</h1><p>在Word文件中，不但有文字内容，还有加粗、红色等格式，而且这些特殊的格式和文字内容是混合在一起的，但如果用Python来读取Word文件，这段文字会被分为纯文字、段落、字体、字号以及表格 等更具体的部分，而且每一个部分都对应着<strong>Python的变量和函数。</strong></p>
-<p>用Python读取文件时，你需要记住很多个Python变量和函数。当然了，针对这一点， 你也不用担心，这些变量和函数在Python的Word扩展库<a href="https://python-docx.readthedocs.io/en/latest/#"><strong><em>官方文档</em></strong></a>可以查看。所以如果你需 要某个功能，但是不知道应该用什么变量和函数名称时，可以在官方文档中找到它的名字和 描述信息。</p>
-<h3 id="用Python自动合并两个Word文件"><a href="#用Python自动合并两个Word文件" class="headerlink" title="用Python自动合并两个Word文件"></a>用Python自动合并两个Word文件</h3><ul>
-<li><p>文件一（内容包含字体、字号、颜色等额外信息）：</p>
- <img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/image.png" class>
-</li>
-<li><p>文件二（内容文字出现在表格中）:</p>
- <img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/image01.png" class>
-
-</li>
-</ul>
-<blockquote>
-<p>第一个文件中，字体使用了黑体和宋体字，此外还有红色字体和加粗等格式。现在我需要 只提取其中的文字内容，不带任何格式。 </p>
-<p>第二个文件中，文字被放在了一张表格里。现在我需要用Python把表格中的文字提取出 来，合并成一个新的文件。</p>
-</blockquote>
-<h4 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"> <span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mrge_without_format</span>(<span class="params">docfiles:<span class="built_in">list</span></span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    只获取内容进行合并</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment">#遍历文件</span></span><br><span class="line">    <span class="keyword">for</span> docx_file <span class="keyword">in</span> <span class="built_in">sorted</span>(docfiles):</span><br><span class="line">        another_doc = Document(docx_file)</span><br><span class="line">        <span class="comment"># 获取每个文件的的所有段落</span></span><br><span class="line">        paras = another_doc.paragraphs</span><br><span class="line">        <span class="keyword">for</span> para <span class="keyword">in</span> paras:</span><br><span class="line">            <span class="comment"># 为新的word文件创建一个新段落</span></span><br><span class="line">            newpar = doc.add_paragraph(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">            <span class="comment">#将提取的内容写入新的文本段落中</span></span><br><span class="line">            newpar.add_run(para.text)</span><br><span class="line"></span><br><span class="line">        <span class="comment">#所有文件合并完成后在指定路径中保存</span></span><br><span class="line">        doc.save(Path(word_files_path,<span class="string">&#x27;new.docx&#x27;</span>))</span><br><span class="line"></span><br><span class="line">    <span class="comment">#调用函数</span></span><br><span class="line">    merge-mrge_without_format(files)</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="用Python合并Word和其他类型的文件"><a href="#用Python合并Word和其他类型的文件" class="headerlink" title="用Python合并Word和其他类型的文件"></a>用Python合并Word和其他类型的文件</h3><p>相较于其他文件，Word文件支持的格式丰富程度远远高于Txt文件等，所以当这两种格式丰富程度不一致的文件进行合并时，要么向下兼容，去掉Txt不支持的格式；要 么向上兼容，对Txt进行格式再调整。否则容易出现合并之后仍需要手动调整格式的问题，影 响工作效率。</p>
-<h4 id="将纯文本和Word文件合并"><a href="#将纯文本和Word文件合并" class="headerlink" title="将纯文本和Word文件合并"></a>将纯文本和Word文件合并</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx.shared <span class="keyword">import</span> RGBColor</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># word文件所在路径</span></span><br><span class="line">word_files_path = <span class="string">&#x27;D:/Python自动化办公/Day02/word样例文件&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># # 取得该目录下所有的docx格式文件</span></span><br><span class="line"><span class="comment"># p = Path(word_files_path)</span></span><br><span class="line"></span><br><span class="line">my_content = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">野老篱边江岸回，柴门不正逐江开。</span></span><br><span class="line"><span class="string">渔人网集澄潭下，贾客船随返照来。</span></span><br><span class="line"><span class="string">长路关心悲剑阁，片云何意傍琴台？</span></span><br><span class="line"><span class="string">王师未报收东郡，城阙秋生画角哀。</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add_content_mode1</span>(<span class="params">content</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    增加内容</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    print(doc)</span><br><span class="line">    para = doc.add_paragraph().add_run(content)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 设置字体格式</span></span><br><span class="line">    para.font.name = <span class="string">&#x27;仿宋&#x27;</span></span><br><span class="line">    <span class="comment"># 设置下划线</span></span><br><span class="line">    para.font.underline = <span class="literal">True</span></span><br><span class="line">    <span class="comment"># 设置颜色</span></span><br><span class="line">    para.font.color.rgb = RGBColor(<span class="number">255</span>, <span class="number">128</span>, <span class="number">128</span>)</span><br><span class="line">    <span class="comment"># 其他设置参考官方文档</span></span><br><span class="line">    <span class="comment"># https://python-docx.readthedocs.io/en/latest/api/text.html#run-objects</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">doc = Document()</span><br><span class="line">add_content_mode1(my_content)</span><br><span class="line">doc.save(Path(word_files_path, <span class="string">&#x27;new2.docx&#x27;</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<h4 id="将图片和Word文件合并"><a href="#将图片和Word文件合并" class="headerlink" title="将图片和Word文件合并"></a>将图片和Word文件合并</h4><p>我们经常见到的图片格式就有.jpg、.png、.gif等，由于这些格式应用范围广，格式 没有被商业软件加密，所以python-docx库的add_picture函数就能实现把图片插入Word的 功能。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> shared</span><br><span class="line"></span><br><span class="line">doc = Document()</span><br><span class="line"><span class="comment"># 按英寸设置宽度，添加图片</span></span><br><span class="line">doc_add_picture(<span class="string">&#x27;test.jpg&#x27;</span>,width=shared.Inches(<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="将Execl和Word文件合并"><a href="#将Execl和Word文件合并" class="headerlink" title="将Execl和Word文件合并"></a>将Execl和Word文件合并</h4><ul>
-<li><p>使用Python制作邀请函</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line">today=datetime.date.today().strftime(<span class="string">&#x27;%Y-%m-%d&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户信息文件</span></span><br><span class="line">customer = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/客户信息.xlsx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 邀请函模版</span></span><br><span class="line">invitation = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/邀请函模版.docx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 邀请函路径</span></span><br><span class="line">invitation_path = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 替换内容</span></span><br><span class="line">replace_content = &#123;</span><br><span class="line">    <span class="string">&#x27;&lt;姓名&gt;&#x27;</span> : <span class="string">&#x27;no_name&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&lt;性别&gt;&#x27;</span> : <span class="string">&#x27;m_f&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&lt;今天日期&gt;&#x27;</span> : today</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generat_invitation</span>():</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    生成邀请函文件</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    doc = Document(invitation)</span><br><span class="line">    <span class="comment"># 取出每一段</span></span><br><span class="line">    <span class="keyword">for</span> para <span class="keyword">in</span> doc.paragraphs:</span><br><span class="line">        <span class="keyword">for</span> key, value <span class="keyword">in</span> replace_content.items():</span><br><span class="line">            <span class="keyword">if</span> key <span class="keyword">in</span> para.text:</span><br><span class="line">                <span class="comment"># 逐个关键字进行替换</span></span><br><span class="line">                para.text = para.text.replace(key, value)</span><br><span class="line"></span><br><span class="line">    file_name = PurePath(invitation_path).with_name(replace_content[<span class="string">&#x27;&lt;姓名&gt;&#x27;</span>]).with_suffix(<span class="string">&#x27;.docx&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    doc.save(file_name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_customer</span>(<span class="params">customer_file: Path</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    获取邀请函信息</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment"># 从第一个sheet中取出客户信息</span></span><br><span class="line">    data = xlrd.open_workbook(customer_file)</span><br><span class="line">    table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 取得客户数量</span></span><br><span class="line">    customer_number = table.nrows</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, customer_number):</span><br><span class="line">        content = table.row_values(rowx=line, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>)</span><br><span class="line">        replace_content[<span class="string">&#x27;&lt;姓名&gt;&#x27;</span>] = content[<span class="number">0</span>]</span><br><span class="line">        replace_content[<span class="string">&#x27;&lt;性别&gt;&#x27;</span>] = content[<span class="number">1</span>]</span><br><span class="line">        <span class="comment"># print(replace_content)</span></span><br><span class="line">        <span class="comment"># &#123;&#x27;&lt;姓名&gt;&#x27;: &#x27;韩梅梅&#x27;, &#x27;&lt;性别&gt;&#x27;: &#x27;女士&#x27;, &#x27;&lt;今天日期&gt;&#x27;: &#x27;2021-01-01&#x27;&#125;</span></span><br><span class="line">        <span class="comment"># &#123;&#x27;&lt;姓名&gt;&#x27;: &#x27;李雷&#x27;, &#x27;&lt;性别&gt;&#x27;: &#x27;先生&#x27;, &#x27;&lt;今天日期&gt;&#x27;: &#x27;2021-01-01&#x27;&#125;</span></span><br><span class="line">        generat_invitation()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    get_customer(customer)</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在对不同类型文件进行合并时，要考虑不同的问题</p>
-<blockquote>
-<ol>
-<li>对于支持格式丰富不同的文件时要考虑格式的兼容性；</li>
-<li>  对于图片、音乐、视频和Word合并时要考虑是否是受到word支持的通用格式；</li>
-<li>  对于像Excel格式于Word合并时能实现更复杂的功能，代码的复杂程度也会随之提高，一 般需要先分析功能，再进行代码编写。</li>
-</ol>
-</blockquote>
-]]></content>
-      <categories>
-        <category>Python开发</category>
-      </categories>
-      <tags>
-        <tag>Python自动化</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Python自动化办公-图片识别</title>
     <url>/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/</url>
     <content><![CDATA[<h1 id="使用Python实现高效自动化图片组在线-离线识别（转文字）"><a href="#使用Python实现高效自动化图片组在线-离线识别（转文字）" class="headerlink" title="使用Python实现高效自动化图片组在线/离线识别（转文字）"></a>使用Python实现高效自动化图片组在线/离线识别（转文字）</h1><h2 id="图片识别转文字的两种方式："><a href="#图片识别转文字的两种方式：" class="headerlink" title="图片识别转文字的两种方式："></a>图片识别转文字的两种方式：</h2><blockquote>
@@ -2086,6 +2131,58 @@
       </tags>
   </entry>
   <entry>
+    <title>Python自动化办公--Word</title>
+    <url>/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/</url>
+    <content><![CDATA[<h1 id><a href="#" class="headerlink" title></a></h1><h1 id="Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）"><a href="#Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）" class="headerlink" title="Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）"></a>Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）</h1><p>在Word文件中，不但有文字内容，还有加粗、红色等格式，而且这些特殊的格式和文字内容是混合在一起的，但如果用Python来读取Word文件，这段文字会被分为纯文字、段落、字体、字号以及表格 等更具体的部分，而且每一个部分都对应着<strong>Python的变量和函数。</strong></p>
+<p>用Python读取文件时，你需要记住很多个Python变量和函数。当然了，针对这一点， 你也不用担心，这些变量和函数在Python的Word扩展库<a href="https://python-docx.readthedocs.io/en/latest/#"><strong><em>官方文档</em></strong></a>可以查看。所以如果你需 要某个功能，但是不知道应该用什么变量和函数名称时，可以在官方文档中找到它的名字和 描述信息。</p>
+<h3 id="用Python自动合并两个Word文件"><a href="#用Python自动合并两个Word文件" class="headerlink" title="用Python自动合并两个Word文件"></a>用Python自动合并两个Word文件</h3><ul>
+<li><p>文件一（内容包含字体、字号、颜色等额外信息）：</p>
+ <img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/image.png" class>
+</li>
+<li><p>文件二（内容文字出现在表格中）:</p>
+ <img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/image01.png" class>
+
+</li>
+</ul>
+<blockquote>
+<p>第一个文件中，字体使用了黑体和宋体字，此外还有红色字体和加粗等格式。现在我需要 只提取其中的文字内容，不带任何格式。 </p>
+<p>第二个文件中，文字被放在了一张表格里。现在我需要用Python把表格中的文字提取出 来，合并成一个新的文件。</p>
+</blockquote>
+<h4 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"> <span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mrge_without_format</span>(<span class="params">docfiles:<span class="built_in">list</span></span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    只获取内容进行合并</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment">#遍历文件</span></span><br><span class="line">    <span class="keyword">for</span> docx_file <span class="keyword">in</span> <span class="built_in">sorted</span>(docfiles):</span><br><span class="line">        another_doc = Document(docx_file)</span><br><span class="line">        <span class="comment"># 获取每个文件的的所有段落</span></span><br><span class="line">        paras = another_doc.paragraphs</span><br><span class="line">        <span class="keyword">for</span> para <span class="keyword">in</span> paras:</span><br><span class="line">            <span class="comment"># 为新的word文件创建一个新段落</span></span><br><span class="line">            newpar = doc.add_paragraph(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">            <span class="comment">#将提取的内容写入新的文本段落中</span></span><br><span class="line">            newpar.add_run(para.text)</span><br><span class="line"></span><br><span class="line">        <span class="comment">#所有文件合并完成后在指定路径中保存</span></span><br><span class="line">        doc.save(Path(word_files_path,<span class="string">&#x27;new.docx&#x27;</span>))</span><br><span class="line"></span><br><span class="line">    <span class="comment">#调用函数</span></span><br><span class="line">    merge-mrge_without_format(files)</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="用Python合并Word和其他类型的文件"><a href="#用Python合并Word和其他类型的文件" class="headerlink" title="用Python合并Word和其他类型的文件"></a>用Python合并Word和其他类型的文件</h3><p>相较于其他文件，Word文件支持的格式丰富程度远远高于Txt文件等，所以当这两种格式丰富程度不一致的文件进行合并时，要么向下兼容，去掉Txt不支持的格式；要 么向上兼容，对Txt进行格式再调整。否则容易出现合并之后仍需要手动调整格式的问题，影 响工作效率。</p>
+<h4 id="将纯文本和Word文件合并"><a href="#将纯文本和Word文件合并" class="headerlink" title="将纯文本和Word文件合并"></a>将纯文本和Word文件合并</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx.shared <span class="keyword">import</span> RGBColor</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># word文件所在路径</span></span><br><span class="line">word_files_path = <span class="string">&#x27;D:/Python自动化办公/Day02/word样例文件&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># # 取得该目录下所有的docx格式文件</span></span><br><span class="line"><span class="comment"># p = Path(word_files_path)</span></span><br><span class="line"></span><br><span class="line">my_content = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">野老篱边江岸回，柴门不正逐江开。</span></span><br><span class="line"><span class="string">渔人网集澄潭下，贾客船随返照来。</span></span><br><span class="line"><span class="string">长路关心悲剑阁，片云何意傍琴台？</span></span><br><span class="line"><span class="string">王师未报收东郡，城阙秋生画角哀。</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add_content_mode1</span>(<span class="params">content</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    增加内容</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    print(doc)</span><br><span class="line">    para = doc.add_paragraph().add_run(content)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 设置字体格式</span></span><br><span class="line">    para.font.name = <span class="string">&#x27;仿宋&#x27;</span></span><br><span class="line">    <span class="comment"># 设置下划线</span></span><br><span class="line">    para.font.underline = <span class="literal">True</span></span><br><span class="line">    <span class="comment"># 设置颜色</span></span><br><span class="line">    para.font.color.rgb = RGBColor(<span class="number">255</span>, <span class="number">128</span>, <span class="number">128</span>)</span><br><span class="line">    <span class="comment"># 其他设置参考官方文档</span></span><br><span class="line">    <span class="comment"># https://python-docx.readthedocs.io/en/latest/api/text.html#run-objects</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">doc = Document()</span><br><span class="line">add_content_mode1(my_content)</span><br><span class="line">doc.save(Path(word_files_path, <span class="string">&#x27;new2.docx&#x27;</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="将图片和Word文件合并"><a href="#将图片和Word文件合并" class="headerlink" title="将图片和Word文件合并"></a>将图片和Word文件合并</h4><p>我们经常见到的图片格式就有.jpg、.png、.gif等，由于这些格式应用范围广，格式 没有被商业软件加密，所以python-docx库的add_picture函数就能实现把图片插入Word的 功能。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> shared</span><br><span class="line"></span><br><span class="line">doc = Document()</span><br><span class="line"><span class="comment"># 按英寸设置宽度，添加图片</span></span><br><span class="line">doc_add_picture(<span class="string">&#x27;test.jpg&#x27;</span>,width=shared.Inches(<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="将Execl和Word文件合并"><a href="#将Execl和Word文件合并" class="headerlink" title="将Execl和Word文件合并"></a>将Execl和Word文件合并</h4><ul>
+<li><p>使用Python制作邀请函</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line">today=datetime.date.today().strftime(<span class="string">&#x27;%Y-%m-%d&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户信息文件</span></span><br><span class="line">customer = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/客户信息.xlsx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 邀请函模版</span></span><br><span class="line">invitation = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/邀请函模版.docx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 邀请函路径</span></span><br><span class="line">invitation_path = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 替换内容</span></span><br><span class="line">replace_content = &#123;</span><br><span class="line">    <span class="string">&#x27;&lt;姓名&gt;&#x27;</span> : <span class="string">&#x27;no_name&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&lt;性别&gt;&#x27;</span> : <span class="string">&#x27;m_f&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&lt;今天日期&gt;&#x27;</span> : today</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generat_invitation</span>():</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    生成邀请函文件</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    doc = Document(invitation)</span><br><span class="line">    <span class="comment"># 取出每一段</span></span><br><span class="line">    <span class="keyword">for</span> para <span class="keyword">in</span> doc.paragraphs:</span><br><span class="line">        <span class="keyword">for</span> key, value <span class="keyword">in</span> replace_content.items():</span><br><span class="line">            <span class="keyword">if</span> key <span class="keyword">in</span> para.text:</span><br><span class="line">                <span class="comment"># 逐个关键字进行替换</span></span><br><span class="line">                para.text = para.text.replace(key, value)</span><br><span class="line"></span><br><span class="line">    file_name = PurePath(invitation_path).with_name(replace_content[<span class="string">&#x27;&lt;姓名&gt;&#x27;</span>]).with_suffix(<span class="string">&#x27;.docx&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    doc.save(file_name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_customer</span>(<span class="params">customer_file: Path</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    获取邀请函信息</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment"># 从第一个sheet中取出客户信息</span></span><br><span class="line">    data = xlrd.open_workbook(customer_file)</span><br><span class="line">    table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 取得客户数量</span></span><br><span class="line">    customer_number = table.nrows</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, customer_number):</span><br><span class="line">        content = table.row_values(rowx=line, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>)</span><br><span class="line">        replace_content[<span class="string">&#x27;&lt;姓名&gt;&#x27;</span>] = content[<span class="number">0</span>]</span><br><span class="line">        replace_content[<span class="string">&#x27;&lt;性别&gt;&#x27;</span>] = content[<span class="number">1</span>]</span><br><span class="line">        <span class="comment"># print(replace_content)</span></span><br><span class="line">        <span class="comment"># &#123;&#x27;&lt;姓名&gt;&#x27;: &#x27;韩梅梅&#x27;, &#x27;&lt;性别&gt;&#x27;: &#x27;女士&#x27;, &#x27;&lt;今天日期&gt;&#x27;: &#x27;2021-01-01&#x27;&#125;</span></span><br><span class="line">        <span class="comment"># &#123;&#x27;&lt;姓名&gt;&#x27;: &#x27;李雷&#x27;, &#x27;&lt;性别&gt;&#x27;: &#x27;先生&#x27;, &#x27;&lt;今天日期&gt;&#x27;: &#x27;2021-01-01&#x27;&#125;</span></span><br><span class="line">        generat_invitation()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    get_customer(customer)</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在对不同类型文件进行合并时，要考虑不同的问题</p>
+<blockquote>
+<ol>
+<li>对于支持格式丰富不同的文件时要考虑格式的兼容性；</li>
+<li>  对于图片、音乐、视频和Word合并时要考虑是否是受到word支持的通用格式；</li>
+<li>  对于像Excel格式于Word合并时能实现更复杂的功能，代码的复杂程度也会随之提高，一 般需要先分析功能，再进行代码编写。</li>
+</ol>
+</blockquote>
+]]></content>
+      <categories>
+        <category>Python开发</category>
+      </categories>
+      <tags>
+        <tag>Python自动化</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Python自动化办公</title>
     <url>/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC/</url>
     <content><![CDATA[<h1 id="任务场景一：拆分与合并–快速的批量处理内容相似的Excel"><a href="#任务场景一：拆分与合并–快速的批量处理内容相似的Excel" class="headerlink" title="任务场景一：拆分与合并–快速的批量处理内容相似的Excel"></a>任务场景一：拆分与合并–快速的批量处理内容相似的Excel</h1><blockquote>
@@ -2283,11 +2380,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Section1</title>
-    <url>/2022/02/21/Section1/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Stack</title>
     <url>/2021/03/11/Stack/</url>
     <content><![CDATA[<h2 id="栈刷题总结"><a href="#栈刷题总结" class="headerlink" title="栈刷题总结"></a>栈刷题总结</h2><h3 id="1-有效的括号"><a href="#1-有效的括号" class="headerlink" title="1.有效的括号"></a>1.有效的括号</h3><h4 id="知识点补充："><a href="#知识点补充：" class="headerlink" title="知识点补充："></a>知识点补充：</h4><blockquote>
@@ -2404,6 +2496,11 @@
       <tags>
         <tag>栈</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Section1</title>
+    <url>/2022/02/21/Section1/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Swagger使用</title>
@@ -3100,6 +3197,11 @@
       </tags>
   </entry>
   <entry>
+    <title>垃圾收集器与内存分配策略</title>
+    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>在Linux环境安装redis</title>
     <url>/2021/03/18/%E5%9C%A8Linux%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85redis/</url>
     <content><![CDATA[<h2 id="开发环境搭建"><a href="#开发环境搭建" class="headerlink" title="开发环境搭建"></a>开发环境搭建</h2><h3 id="云服务器部署redis"><a href="#云服务器部署redis" class="headerlink" title="云服务器部署redis"></a>云服务器部署redis</h3><h4 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h4><blockquote>
@@ -3183,11 +3285,6 @@
       <tags>
         <tag>环境部署</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>垃圾收集器与内存分配策略</title>
-    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>封装Mybatis输出结果与模糊查询</title>
@@ -4184,6 +4281,41 @@
       </tags>
   </entry>
   <entry>
+    <title>边缘计算与云网融合</title>
+    <url>/2021/10/07/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E4%B8%8E%E4%BA%91%E7%BD%91%E8%9E%8D%E5%90%88/</url>
+    <content><![CDATA[<h1 id="边缘计算基础概念"><a href="#边缘计算基础概念" class="headerlink" title="边缘计算基础概念"></a>边缘计算基础概念</h1><blockquote>
+<p>维基百科的解释</p>
+</blockquote>
+<p><strong>边缘运算</strong>（英语：Edge computing），又译为<strong>边缘计算</strong>，是一种分布式运算的架构，将应用程序、数据资料与服务的运算，由网络中心节点，移往网络逻辑上的<strong>边缘节点</strong>来处理  。边缘运算将原本完全由中心节点处理大型服务加以分解，切割成更小与更容易管理的部分，分散到边缘节点去处理。边缘节点更接近于用户终端设备，可以加快资料的处理与发送速度，减少延迟。在这种架构下，资料的分析与知识的产生，更接近于数据资料的来源，因此更适合处理大数据。</p>
+<h2 id="边缘计算核心：在源头处理数据"><a href="#边缘计算核心：在源头处理数据" class="headerlink" title="边缘计算核心：在源头处理数据"></a>边缘计算核心：在源头处理数据</h2><p>边缘计算是一种分布式计算框架，使企业应用程序更接近物联网设备或本地边缘服务器等数据源。这种在源头上接近数据可以带来强大的业务优势，包括更快的洞察力、更快的响应时间和更好的带宽可用性。</p>
+<p><strong><em>Gartner 估计，到 2025 年，75% 的数据将在传统数据中心或云之外处理。</em></strong></p>
+<h2 id="为什们选择边缘计算"><a href="#为什们选择边缘计算" class="headerlink" title="为什们选择边缘计算"></a>为什们选择边缘计算</h2><p>物联网设备的爆炸性增长和不断增强的计算能力导致了前所未有的数据量。随着 5G 网络增加连接移动设备的数量，数据量将继续增长。</p>
+<p> 过去，云和人工智能的承诺是通过从数据中获得可操作的洞察力来实现自动化和加速创新。但是，由连接设备创建的前所未有的数据规模和复杂性已经超过了网络和基础设施的能力。</p>
+<p>将所有设备生成的数据发送到集中式数据中心或云会导致带宽和延迟问题。边缘计算提供了更有效的替代方案；数据在更接近其创建点的位置进行处理和分析。由于数据不会通过网络传输到云或数据中心进行处理，因此显着减少了延迟。边缘计算——以及 5G 网络上的移动边缘计算——能够实现更快、更全面的数据分析，为获得更深入的洞察、更快的响应时间和改进的客户体验创造机会</p>
+<p>从联网汽车到工厂车间的智能机器人，我们世界中生成的设备数据量比以往任何时候都多，但这些物联网数据中的大部分都没有被开发或使用。例如，麦肯锡公司的一项研究发现，海上石油钻井平台从 30,000 个传感器生成数据——但目前用于决策的数据不到 1%。²</p>
+<p>边缘计算利用不断增长的设备内计算能力，近乎实时地提供深入洞察和预测分析。边缘设备中这种增强的分析能力可以推动创新，以提高质量和增加价值。它还提出了重要的战略问题：在计算容量增加的情况下，如何管理执行这些类型操作的工作负载的部署？如何使用设备中的嵌入式智能来更快速地影响员工、客户和企业的运营流程？为了从所有这些设备中获取最大价值，大量计算必须转移到边缘。</p>
+<h2 id="知乎的一篇文章，很全面"><a href="#知乎的一篇文章，很全面" class="headerlink" title="知乎的一篇文章，很全面"></a>知乎的一篇文章，很全面</h2><p><a href="https://zhuanlan.zhihu.com/p/59899560">详情点击链接</a></p>
+<h2 id="自己总结的图片一张"><a href="#自己总结的图片一张" class="headerlink" title="自己总结的图片一张"></a>自己总结的图片一张</h2><img data-src="/2021/10/07/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E4%B8%8E%E4%BA%91%E7%BD%91%E8%9E%8D%E5%90%88/Users\flower\Pictures\微信图片_20211006194229.jpg" style="zoom:50%;">
+
+
+
+<h2 id="开发接入云网研究及实践"><a href="#开发接入云网研究及实践" class="headerlink" title="开发接入云网研究及实践"></a>开发接入云网研究及实践</h2><h2 id="部署方式"><a href="#部署方式" class="headerlink" title="部署方式"></a>部署方式</h2><ul>
+<li>虚拟专网</li>
+<li>混合专网</li>
+<li>独立专网</li>
+</ul>
+<h2 id="联想应用举例："><a href="#联想应用举例：" class="headerlink" title="联想应用举例："></a>联想应用举例：</h2><h3 id="5G云网融合-5G医疗边缘云"><a href="#5G云网融合-5G医疗边缘云" class="headerlink" title="5G云网融合-5G医疗边缘云"></a>5G云网融合-5G医疗边缘云</h3><h3 id="IT和CT结合"><a href="#IT和CT结合" class="headerlink" title="IT和CT结合"></a>IT和CT结合</h3><h4 id="网络云化，中心集约，解耦"><a href="#网络云化，中心集约，解耦" class="headerlink" title="网络云化，中心集约，解耦"></a>网络云化，中心集约，解耦</h4><ul>
+<li><h2 id="云网一体，多云协同"><a href="#云网一体，多云协同" class="headerlink" title="云网一体，多云协同"></a>云网一体，多云协同</h2></li>
+</ul>
+]]></content>
+      <categories>
+        <category>互联网领先概念</category>
+      </categories>
+      <tags>
+        <tag>Intel边缘与云计算网融合专题峰会参会记录与扩展</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>设计消息队列--&gt;2</title>
     <url>/2021/03/13/%E8%AE%BE%E8%AE%A1%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E9%83%A8%E5%88%86/</url>
     <content><![CDATA[<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p>持久性是事务的一个特性，然而只满足持久性却不一定能满足事务的特性。还是拿扣钱/加钱的例子讲。满足事务的一致性特征，则必须要么都不进行，要么都能成功。 解决方案从大方向上有两种：</p>
@@ -4266,41 +4398,6 @@
       </categories>
       <tags>
         <tag>RabbitMQ</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>边缘计算与云网融合</title>
-    <url>/2021/10/07/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E4%B8%8E%E4%BA%91%E7%BD%91%E8%9E%8D%E5%90%88/</url>
-    <content><![CDATA[<h1 id="边缘计算基础概念"><a href="#边缘计算基础概念" class="headerlink" title="边缘计算基础概念"></a>边缘计算基础概念</h1><blockquote>
-<p>维基百科的解释</p>
-</blockquote>
-<p><strong>边缘运算</strong>（英语：Edge computing），又译为<strong>边缘计算</strong>，是一种分布式运算的架构，将应用程序、数据资料与服务的运算，由网络中心节点，移往网络逻辑上的<strong>边缘节点</strong>来处理  。边缘运算将原本完全由中心节点处理大型服务加以分解，切割成更小与更容易管理的部分，分散到边缘节点去处理。边缘节点更接近于用户终端设备，可以加快资料的处理与发送速度，减少延迟。在这种架构下，资料的分析与知识的产生，更接近于数据资料的来源，因此更适合处理大数据。</p>
-<h2 id="边缘计算核心：在源头处理数据"><a href="#边缘计算核心：在源头处理数据" class="headerlink" title="边缘计算核心：在源头处理数据"></a>边缘计算核心：在源头处理数据</h2><p>边缘计算是一种分布式计算框架，使企业应用程序更接近物联网设备或本地边缘服务器等数据源。这种在源头上接近数据可以带来强大的业务优势，包括更快的洞察力、更快的响应时间和更好的带宽可用性。</p>
-<p><strong><em>Gartner 估计，到 2025 年，75% 的数据将在传统数据中心或云之外处理。</em></strong></p>
-<h2 id="为什们选择边缘计算"><a href="#为什们选择边缘计算" class="headerlink" title="为什们选择边缘计算"></a>为什们选择边缘计算</h2><p>物联网设备的爆炸性增长和不断增强的计算能力导致了前所未有的数据量。随着 5G 网络增加连接移动设备的数量，数据量将继续增长。</p>
-<p> 过去，云和人工智能的承诺是通过从数据中获得可操作的洞察力来实现自动化和加速创新。但是，由连接设备创建的前所未有的数据规模和复杂性已经超过了网络和基础设施的能力。</p>
-<p>将所有设备生成的数据发送到集中式数据中心或云会导致带宽和延迟问题。边缘计算提供了更有效的替代方案；数据在更接近其创建点的位置进行处理和分析。由于数据不会通过网络传输到云或数据中心进行处理，因此显着减少了延迟。边缘计算——以及 5G 网络上的移动边缘计算——能够实现更快、更全面的数据分析，为获得更深入的洞察、更快的响应时间和改进的客户体验创造机会</p>
-<p>从联网汽车到工厂车间的智能机器人，我们世界中生成的设备数据量比以往任何时候都多，但这些物联网数据中的大部分都没有被开发或使用。例如，麦肯锡公司的一项研究发现，海上石油钻井平台从 30,000 个传感器生成数据——但目前用于决策的数据不到 1%。²</p>
-<p>边缘计算利用不断增长的设备内计算能力，近乎实时地提供深入洞察和预测分析。边缘设备中这种增强的分析能力可以推动创新，以提高质量和增加价值。它还提出了重要的战略问题：在计算容量增加的情况下，如何管理执行这些类型操作的工作负载的部署？如何使用设备中的嵌入式智能来更快速地影响员工、客户和企业的运营流程？为了从所有这些设备中获取最大价值，大量计算必须转移到边缘。</p>
-<h2 id="知乎的一篇文章，很全面"><a href="#知乎的一篇文章，很全面" class="headerlink" title="知乎的一篇文章，很全面"></a>知乎的一篇文章，很全面</h2><p><a href="https://zhuanlan.zhihu.com/p/59899560">详情点击链接</a></p>
-<h2 id="自己总结的图片一张"><a href="#自己总结的图片一张" class="headerlink" title="自己总结的图片一张"></a>自己总结的图片一张</h2><img data-src="/2021/10/07/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E4%B8%8E%E4%BA%91%E7%BD%91%E8%9E%8D%E5%90%88/Users\flower\Pictures\微信图片_20211006194229.jpg" style="zoom:50%;">
-
-
-
-<h2 id="开发接入云网研究及实践"><a href="#开发接入云网研究及实践" class="headerlink" title="开发接入云网研究及实践"></a>开发接入云网研究及实践</h2><h2 id="部署方式"><a href="#部署方式" class="headerlink" title="部署方式"></a>部署方式</h2><ul>
-<li>虚拟专网</li>
-<li>混合专网</li>
-<li>独立专网</li>
-</ul>
-<h2 id="联想应用举例："><a href="#联想应用举例：" class="headerlink" title="联想应用举例："></a>联想应用举例：</h2><h3 id="5G云网融合-5G医疗边缘云"><a href="#5G云网融合-5G医疗边缘云" class="headerlink" title="5G云网融合-5G医疗边缘云"></a>5G云网融合-5G医疗边缘云</h3><h3 id="IT和CT结合"><a href="#IT和CT结合" class="headerlink" title="IT和CT结合"></a>IT和CT结合</h3><h4 id="网络云化，中心集约，解耦"><a href="#网络云化，中心集约，解耦" class="headerlink" title="网络云化，中心集约，解耦"></a>网络云化，中心集约，解耦</h4><ul>
-<li><h2 id="云网一体，多云协同"><a href="#云网一体，多云协同" class="headerlink" title="云网一体，多云协同"></a>云网一体，多云协同</h2></li>
-</ul>
-]]></content>
-      <categories>
-        <category>互联网领先概念</category>
-      </categories>
-      <tags>
-        <tag>Intel边缘与云计算网融合专题峰会参会记录与扩展</tag>
       </tags>
   </entry>
   <entry>
