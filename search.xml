@@ -714,6 +714,75 @@
       </tags>
   </entry>
   <entry>
+    <title>Java内存区域与内存溢出异常</title>
+    <url>/2021/02/05/Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/</url>
+    <content><![CDATA[<h3 id="1-内存管理那些事"><a href="#1-内存管理那些事" class="headerlink" title="1.内存管理那些事"></a>1.内存管理那些事</h3><p>C、C++：在内存管理领域，没有所谓的内存动态分配机制和垃圾收集技术，他们即拥有每一个对象的所有权，又担负着每一个对象从开始到终结的维护责任。</p>
+<p>Java：在虚拟机自动内存管理机制的帮助下，不再需要为每一个new的对象写相配对的delete和free代码，也不容易出现内存泄漏和内存溢出的问题。</p>
+<p>关于这两者之间对于内存管理之间的区别，从语言本身来说，指针的使用就可以表明二者在内存管理、使用、维护上的巨大差异。</p>
+<h3 id="2-运行时数据区域"><a href="#2-运行时数据区域" class="headerlink" title="2.运行时数据区域"></a>2.运行时数据区域</h3><p>Java虚拟机在执行Java程序的同时会把他创建的内存分为若干个不同的数据区域，如下图所示：</p>
+<img data-src="/2021/02/05/Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/%E6%95%B0%E6%8D%AE%E5%8C%BA.png" class>
+
+<h4 id="2-1程序计数器-Program-Counter-Register"><a href="#2-1程序计数器-Program-Counter-Register" class="headerlink" title="2.1程序计数器(Program Counter Register)"></a>2.1程序计数器(Program Counter Register)</h4><p>这是一块较小的内存区域。可以看作是当前线程所执行的字节码的行号指示器。字节码解释器工作时，就是通过改变这个计数器的值来选取下一条需要执行的字节码指令，包括分支、循环、判断、跳转、异常处理、线程恢复等基础功能都需要依赖该计数器来完成。</p>
+<p>Java虚拟机的多线程是通过线程轮流切换并分配处理器执行时间的方式实现的，在任何一个时刻，一个处理器指挥执行一条线程中的指令。<strong>为了线程切换后可以恢复到正确的执行位置，每条线程都需要有一个独立的程序计数器，且各个线程之间计数器互相不影响，独立存储</strong>。所以说程序计数器是线程私有的一块内存。</p>
+<p><em>这是一个在Java虚拟机规范中没有规定任何OutOfMemoryError情况的区域。</em></p>
+<ul>
+<li><p>如果线程执行的是Java方法，计数器记录的是正在执行的虚拟机字节码指令的地址；</p>
+</li>
+<li><p>如果正在执行的是Native方法，这个计数器值为空(Undefined)。</p>
+</li>
+</ul>
+<h4 id="2-2Java虚拟机栈-Java-Virtual-Machine-Stacks"><a href="#2-2Java虚拟机栈-Java-Virtual-Machine-Stacks" class="headerlink" title="2.2Java虚拟机栈(Java Virtual Machine Stacks)"></a>2.2Java虚拟机栈(Java Virtual Machine Stacks)</h4><p>Java虚拟机栈是线程私有的，生命周期与线程相同。</p>
+<blockquote>
+<p>虚拟机栈描述的是**<em>Java方法**</em>执行的内存模型：每个方法在执行的同时会创建一个栈桢(Stack Frame)用于存储局部变量表、操作数栈、动态链接、方法出口等信息。每一个方法从调用直至执行完成的过程，就对应着一个栈桢在虚拟机栈中从出栈到入栈。</p>
+</blockquote>
+<p>局部变量表存放了：</p>
+<ul>
+<li><p>编译时期可知的各种基本数据类型（boolean\byte\char\short\int\float\long\duoble）</p>
+</li>
+<li><p>对象引用（reference类型，不等同于对象本身，可能是一个指向对象起始地址的引用指针，也可能是指向一个代表对象的句柄和其他与此对象相关的位置）</p>
+</li>
+<li><p>returnAddress类型(指向了一条字节码指令的地址)。</p>
+</li>
+</ul>
+<p>该区域可能会出现的异常情况：</p>
+<p>1.StackOverFlowError:线程请求的栈深度大于虚拟机所允许的深度</p>
+<p>2.OutOfMemoryError: 如果虚拟机可以实现动态扩展，但是在扩展时无法申请到足够的内存。</p>
+<p>####2.3本地方法栈(Native Method Stack)</p>
+<p>本地方法栈与虚拟机栈发挥的作用很相似，区别就是虚拟机栈为虚拟机执行Java方法（也就是字节码服务），而本地方法作为虚拟机使用到的Native方法服务。具体的虚拟机可以自由实现。HotSpot虚拟机将本地方法栈和虚拟机栈合二为一。它的异常类型同样是上述两种。</p>
+<h4 id="2-4Java堆"><a href="#2-4Java堆" class="headerlink" title="2.4Java堆"></a>2.4Java堆</h4><p>Java堆(Java Heap)是Java虚拟机管理内存区域中最大的一块。Java堆是被所有线程共享的一块儿内存区域，在虚拟机启动时被创建。</p>
+<p><strong>此内存区域的唯一目的就是存放对象实例，几乎所有的对象实例都在这里分配内存。</strong></p>
+<p>Java堆是垃圾收集器管理的主要区域，被称为GC堆(Garbage Collected Heap)。</p>
+<blockquote>
+<p>从内存回收的角度来看，基于现在收集器基本上都采用分代收集算法，Java堆可以细分为新生代和老年代；再细致一点有Eden空间、From Survivor空间、To Survivor空间</p>
+</blockquote>
+<blockquote>
+<p>从内存分配的角度来看，线程共享的Java堆可能划分出多个线程私有的分配缓冲区(<strong>Thread Local Allocation Buffer   TLAB</strong>)。</p>
+</blockquote>
+<p><strong><em>不论如何划分，都与存放内容无关无论哪个区域，存放的都是对象实例</em></strong>，进一步划分的目的是为了更好的回收内存，或者更快的分配内存</p>
+<p>根据Java虚拟机规范的规定，Java堆可以处于物理上不连续的内存空间中，只要逻辑上连续的即可。</p>
+<p>在实现时，既可以实现成固定大小的，也可以是可扩展的，不过主流的虚拟机都是按照可扩展来实现的（控制参数：-Xmx和-Xms控制）。如果堆中没有内存可以完成实例分配，并且堆也无法扩展时，将会抛出OutOfMemoryError异常。</p>
+<h4 id="2-5方法区-Method-Area"><a href="#2-5方法区-Method-Area" class="headerlink" title="2.5方法区(Method Area)"></a>2.5方法区(Method Area)</h4><p>方法区与Java堆一样，是各个线程所共享的内存区域，<strong>用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据</strong>。虽然Java虚拟机规范把方法区描述成为堆的一个逻辑部分，但是方法区还有一个别名叫做Non-Heap，目的就是与堆区分开。</p>
+<p>Java虚拟机堆方法区的限制十分宽松，除了和Java堆一样不需要连续的内存和可以选择固定大小或者可扩展外，还可以选择不实现垃圾收集。但并非意味着数据进入了方法去就永久存在，这个区域的回收目标主要是针对常量池的回收和对类型的卸载，而回收的成绩难以令人满意，尤其是类型的卸载，条件更是相当苛刻，但是，<strong>这个区域的回收确实是必要的</strong>，可以一定程度上避免内存泄漏。</p>
+<p>当方法区无法满足内存分配要求时，会报出OutOfMemoryError异常。</p>
+<h4 id="2-6运行时常量池-Runtime-Constant-Pool"><a href="#2-6运行时常量池-Runtime-Constant-Pool" class="headerlink" title="2.6运行时常量池(Runtime Constant Pool)"></a>2.6运行时常量池(Runtime Constant Pool)</h4><p>运行时常量池是方法区的一部分。Class文件中除了有类的版本、字段、方法、接口等描述信息外，还有一项就是常量池(Constant Pool Table），用于存放<strong>编译期生成的各种字面量和符号引用</strong>，这部分内容将在类加载后进入方法区的运行时常量池中存放。</p>
+<ul>
+<li><p>对于运行时常量池，Java虚拟机规范并没有做任何细节的要求，不同的虚拟机提供厂商实现的虚拟机可以按站自己的需要来实现这个内存区域。除了保存Class文件中描述的符号引用外，还会将翻译的直接引用也存储在运行时常量池中。</p>
+</li>
+<li><p>运行时常量池相对于class文件常量池的另一个重要特征是具备动态性，Java语言并不要求常量一定只能在编译期产生，也就是说并非预置于Class文件中常量池的内容才可以进入方法去运行时常量池，运行期间也可能将新的常量放入池中。例如String类的intern()方法。</p>
+</li>
+<li><p>运行时常量池会受到方法区内存的限制，当常量池无法申请到内存是会报OutOfMemoryError异常。</p>
+</li>
+</ul>
+<h4 id="2-7直接内存"><a href="#2-7直接内存" class="headerlink" title="2.7直接内存"></a>2.7直接内存</h4><p>直接内存就是本机的物理内存，服务器管理员在配置虚拟机参数时，要根据实际内存设置-Xmx等参数信息，避免使得各个内存区域大于物理内存限制，从而导致动态扩展时出现OutOfMemoryError异常。</p>
+]]></content>
+      <categories>
+        <category>JVM虚拟机</category>
+      </categories>
+      <tags>
+        <tag>Java内存区域</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>LVS负载均衡</title>
     <url>/2021/03/14/LVS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</url>
     <content><![CDATA[<blockquote>
@@ -842,72 +911,20 @@
       </tags>
   </entry>
   <entry>
-    <title>Java内存区域与内存溢出异常</title>
-    <url>/2021/02/05/Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/</url>
-    <content><![CDATA[<h3 id="1-内存管理那些事"><a href="#1-内存管理那些事" class="headerlink" title="1.内存管理那些事"></a>1.内存管理那些事</h3><p>C、C++：在内存管理领域，没有所谓的内存动态分配机制和垃圾收集技术，他们即拥有每一个对象的所有权，又担负着每一个对象从开始到终结的维护责任。</p>
-<p>Java：在虚拟机自动内存管理机制的帮助下，不再需要为每一个new的对象写相配对的delete和free代码，也不容易出现内存泄漏和内存溢出的问题。</p>
-<p>关于这两者之间对于内存管理之间的区别，从语言本身来说，指针的使用就可以表明二者在内存管理、使用、维护上的巨大差异。</p>
-<h3 id="2-运行时数据区域"><a href="#2-运行时数据区域" class="headerlink" title="2.运行时数据区域"></a>2.运行时数据区域</h3><p>Java虚拟机在执行Java程序的同时会把他创建的内存分为若干个不同的数据区域，如下图所示：</p>
-<img data-src="/2021/02/05/Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E4%B8%8E%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E5%BC%82%E5%B8%B8/%E6%95%B0%E6%8D%AE%E5%8C%BA.png" class>
+    <title>MVP开发策略</title>
+    <url>/2022/08/06/MVP%E5%BC%80%E5%8F%91%E7%AD%96%E7%95%A5/</url>
+    <content><![CDATA[<h2 id="MVP开发策略"><a href="#MVP开发策略" class="headerlink" title="MVP开发策略"></a>MVP开发策略</h2><p>MVP （最小化可实行产品，Minimum Viable Product）是 Eric Ries 在《精益创业》中关于「精益创业」（Lean Startup）的核心思想，意思是用最快、最简明的方式建立一个可用的产品原型，通过这个最简单的原型来测试产品是否符合市场预期，并通过不断的快速迭代来修正产品，最终适应市场需求。</p>
+<p>简单来说，就是在<strong>做一个新产品的时候，不要一下子做一个「尽善尽美」的产品，而是先花费最小的代价做一个「可用」的产品原型</strong>，去验证这个产品是否有价值、是否可行，再通过迭代来完善细节。</p>
+<img data-src="/2022/08/06/MVP%E5%BC%80%E5%8F%91%E7%AD%96%E7%95%A5/1.png" class>
 
-<h4 id="2-1程序计数器-Program-Counter-Register"><a href="#2-1程序计数器-Program-Counter-Register" class="headerlink" title="2.1程序计数器(Program Counter Register)"></a>2.1程序计数器(Program Counter Register)</h4><p>这是一块较小的内存区域。可以看作是当前线程所执行的字节码的行号指示器。字节码解释器工作时，就是通过改变这个计数器的值来选取下一条需要执行的字节码指令，包括分支、循环、判断、跳转、异常处理、线程恢复等基础功能都需要依赖该计数器来完成。</p>
-<p>Java虚拟机的多线程是通过线程轮流切换并分配处理器执行时间的方式实现的，在任何一个时刻，一个处理器指挥执行一条线程中的指令。<strong>为了线程切换后可以恢复到正确的执行位置，每条线程都需要有一个独立的程序计数器，且各个线程之间计数器互相不影响，独立存储</strong>。所以说程序计数器是线程私有的一块内存。</p>
-<p><em>这是一个在Java虚拟机规范中没有规定任何OutOfMemoryError情况的区域。</em></p>
-<ul>
-<li><p>如果线程执行的是Java方法，计数器记录的是正在执行的虚拟机字节码指令的地址；</p>
-</li>
-<li><p>如果正在执行的是Native方法，这个计数器值为空(Undefined)。</p>
-</li>
-</ul>
-<h4 id="2-2Java虚拟机栈-Java-Virtual-Machine-Stacks"><a href="#2-2Java虚拟机栈-Java-Virtual-Machine-Stacks" class="headerlink" title="2.2Java虚拟机栈(Java Virtual Machine Stacks)"></a>2.2Java虚拟机栈(Java Virtual Machine Stacks)</h4><p>Java虚拟机栈是线程私有的，生命周期与线程相同。</p>
-<blockquote>
-<p>虚拟机栈描述的是**<em>Java方法**</em>执行的内存模型：每个方法在执行的同时会创建一个栈桢(Stack Frame)用于存储局部变量表、操作数栈、动态链接、方法出口等信息。每一个方法从调用直至执行完成的过程，就对应着一个栈桢在虚拟机栈中从出栈到入栈。</p>
-</blockquote>
-<p>局部变量表存放了：</p>
-<ul>
-<li><p>编译时期可知的各种基本数据类型（boolean\byte\char\short\int\float\long\duoble）</p>
-</li>
-<li><p>对象引用（reference类型，不等同于对象本身，可能是一个指向对象起始地址的引用指针，也可能是指向一个代表对象的句柄和其他与此对象相关的位置）</p>
-</li>
-<li><p>returnAddress类型(指向了一条字节码指令的地址)。</p>
-</li>
-</ul>
-<p>该区域可能会出现的异常情况：</p>
-<p>1.StackOverFlowError:线程请求的栈深度大于虚拟机所允许的深度</p>
-<p>2.OutOfMemoryError: 如果虚拟机可以实现动态扩展，但是在扩展时无法申请到足够的内存。</p>
-<p>####2.3本地方法栈(Native Method Stack)</p>
-<p>本地方法栈与虚拟机栈发挥的作用很相似，区别就是虚拟机栈为虚拟机执行Java方法（也就是字节码服务），而本地方法作为虚拟机使用到的Native方法服务。具体的虚拟机可以自由实现。HotSpot虚拟机将本地方法栈和虚拟机栈合二为一。它的异常类型同样是上述两种。</p>
-<h4 id="2-4Java堆"><a href="#2-4Java堆" class="headerlink" title="2.4Java堆"></a>2.4Java堆</h4><p>Java堆(Java Heap)是Java虚拟机管理内存区域中最大的一块。Java堆是被所有线程共享的一块儿内存区域，在虚拟机启动时被创建。</p>
-<p><strong>此内存区域的唯一目的就是存放对象实例，几乎所有的对象实例都在这里分配内存。</strong></p>
-<p>Java堆是垃圾收集器管理的主要区域，被称为GC堆(Garbage Collected Heap)。</p>
-<blockquote>
-<p>从内存回收的角度来看，基于现在收集器基本上都采用分代收集算法，Java堆可以细分为新生代和老年代；再细致一点有Eden空间、From Survivor空间、To Survivor空间</p>
-</blockquote>
-<blockquote>
-<p>从内存分配的角度来看，线程共享的Java堆可能划分出多个线程私有的分配缓冲区(<strong>Thread Local Allocation Buffer   TLAB</strong>)。</p>
-</blockquote>
-<p><strong><em>不论如何划分，都与存放内容无关无论哪个区域，存放的都是对象实例</em></strong>，进一步划分的目的是为了更好的回收内存，或者更快的分配内存</p>
-<p>根据Java虚拟机规范的规定，Java堆可以处于物理上不连续的内存空间中，只要逻辑上连续的即可。</p>
-<p>在实现时，既可以实现成固定大小的，也可以是可扩展的，不过主流的虚拟机都是按照可扩展来实现的（控制参数：-Xmx和-Xms控制）。如果堆中没有内存可以完成实例分配，并且堆也无法扩展时，将会抛出OutOfMemoryError异常。</p>
-<h4 id="2-5方法区-Method-Area"><a href="#2-5方法区-Method-Area" class="headerlink" title="2.5方法区(Method Area)"></a>2.5方法区(Method Area)</h4><p>方法区与Java堆一样，是各个线程所共享的内存区域，<strong>用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据</strong>。虽然Java虚拟机规范把方法区描述成为堆的一个逻辑部分，但是方法区还有一个别名叫做Non-Heap，目的就是与堆区分开。</p>
-<p>Java虚拟机堆方法区的限制十分宽松，除了和Java堆一样不需要连续的内存和可以选择固定大小或者可扩展外，还可以选择不实现垃圾收集。但并非意味着数据进入了方法去就永久存在，这个区域的回收目标主要是针对常量池的回收和对类型的卸载，而回收的成绩难以令人满意，尤其是类型的卸载，条件更是相当苛刻，但是，<strong>这个区域的回收确实是必要的</strong>，可以一定程度上避免内存泄漏。</p>
-<p>当方法区无法满足内存分配要求时，会报出OutOfMemoryError异常。</p>
-<h4 id="2-6运行时常量池-Runtime-Constant-Pool"><a href="#2-6运行时常量池-Runtime-Constant-Pool" class="headerlink" title="2.6运行时常量池(Runtime Constant Pool)"></a>2.6运行时常量池(Runtime Constant Pool)</h4><p>运行时常量池是方法区的一部分。Class文件中除了有类的版本、字段、方法、接口等描述信息外，还有一项就是常量池(Constant Pool Table），用于存放<strong>编译期生成的各种字面量和符号引用</strong>，这部分内容将在类加载后进入方法区的运行时常量池中存放。</p>
-<ul>
-<li><p>对于运行时常量池，Java虚拟机规范并没有做任何细节的要求，不同的虚拟机提供厂商实现的虚拟机可以按站自己的需要来实现这个内存区域。除了保存Class文件中描述的符号引用外，还会将翻译的直接引用也存储在运行时常量池中。</p>
-</li>
-<li><p>运行时常量池相对于class文件常量池的另一个重要特征是具备动态性，Java语言并不要求常量一定只能在编译期产生，也就是说并非预置于Class文件中常量池的内容才可以进入方法去运行时常量池，运行期间也可能将新的常量放入池中。例如String类的intern()方法。</p>
-</li>
-<li><p>运行时常量池会受到方法区内存的限制，当常量池无法申请到内存是会报OutOfMemoryError异常。</p>
-</li>
-</ul>
-<h4 id="2-7直接内存"><a href="#2-7直接内存" class="headerlink" title="2.7直接内存"></a>2.7直接内存</h4><p>直接内存就是本机的物理内存，服务器管理员在配置虚拟机参数时，要根据实际内存设置-Xmx等参数信息，避免使得各个内存区域大于物理内存限制，从而导致动态扩展时出现OutOfMemoryError异常。</p>
+<p>传统产品迭代思路成本高、速度慢、风险大，花高成本做出来的产品用户可能不认可；MVP 策略的优点在于试错成本低、速度快、风险低，能满足产品快速迭代的需求。</p>
+<p>MVP的作用就是让你用最小的代价，最快的速度，最早的时间将你的产品设想拿出来接触用户，并根据用户的反馈来改进你的产品。这里拿出来的「产品」并不一定是一个App、网页或者其他，可以是视频、PPT（额，但是千万别 PPT 造车啊）、RP文件等等。</p>
 ]]></content>
       <categories>
-        <category>JVM虚拟机</category>
+        <category>Base-Cache缓存</category>
       </categories>
       <tags>
-        <tag>Java内存区域</tag>
+        <tag>KV缓存第一讲</tag>
       </tags>
   </entry>
   <entry>
@@ -1004,155 +1021,6 @@
       </categories>
       <tags>
         <tag>架构模式</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MVP开发策略</title>
-    <url>/2022/08/06/MVP%E5%BC%80%E5%8F%91%E7%AD%96%E7%95%A5/</url>
-    <content><![CDATA[<h2 id="MVP开发策略"><a href="#MVP开发策略" class="headerlink" title="MVP开发策略"></a>MVP开发策略</h2><p>MVP （最小化可实行产品，Minimum Viable Product）是 Eric Ries 在《精益创业》中关于「精益创业」（Lean Startup）的核心思想，意思是用最快、最简明的方式建立一个可用的产品原型，通过这个最简单的原型来测试产品是否符合市场预期，并通过不断的快速迭代来修正产品，最终适应市场需求。</p>
-<p>简单来说，就是在<strong>做一个新产品的时候，不要一下子做一个「尽善尽美」的产品，而是先花费最小的代价做一个「可用」的产品原型</strong>，去验证这个产品是否有价值、是否可行，再通过迭代来完善细节。</p>
-<img data-src="/2022/08/06/MVP%E5%BC%80%E5%8F%91%E7%AD%96%E7%95%A5/1.png" class>
-
-<p>传统产品迭代思路成本高、速度慢、风险大，花高成本做出来的产品用户可能不认可；MVP 策略的优点在于试错成本低、速度快、风险低，能满足产品快速迭代的需求。</p>
-<p>MVP的作用就是让你用最小的代价，最快的速度，最早的时间将你的产品设想拿出来接触用户，并根据用户的反馈来改进你的产品。这里拿出来的「产品」并不一定是一个App、网页或者其他，可以是视频、PPT（额，但是千万别 PPT 造车啊）、RP文件等等。</p>
-]]></content>
-      <categories>
-        <category>Base-Cache缓存</category>
-      </categories>
-      <tags>
-        <tag>KV缓存第一讲</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MVVM框架</title>
-    <url>/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/</url>
-    <content><![CDATA[<p>一个软件或者 APP都是服务于某种需求，这称之为“业务需求”。随着业务需求的增多、软件会变得越来越庞大，越来越复杂。所以就会设计一套完整的架构设计、研发流程以及质量管理体系来保证整个研发过程。“架构设计”是一个非常大的话题，它涉及到各方面，近年来前端一个明显的开发趋势就是架构从传统的 MVC 模式向 MVVM 模式迁移，这里来谈谈——MVVM模式。</p>
-<h2 id="什么是MVVM"><a href="#什么是MVVM" class="headerlink" title="什么是MVVM"></a>什么是MVVM</h2><blockquote>
-<p>MVVM（Model–View–Viewmodel）是一种软件架构模式。<br>MVVM有助于将图形用户界面的开发与业务逻辑或后端逻辑（数据模型）的开发分离开，这是通过标记语言或GUI代码实现的。MVVM的视图模型是一个值转换器， 这意味着视图模型负责从模型中暴露（转换）数据对象，以便轻松管理和呈现对象。在这方面，视图模型比视图做得更多，并且处理大部分视图的显示逻辑。 视图模型可以实现中介者模式，组织对视图所支持的用例集的后端逻辑的访问</p>
-</blockquote>
-<p><a href="https://zh.wikipedia.org/wiki/MVVM">想要了解更多关于MVVM的定义，点击访问维基百科</a></p>
-<h2 id="MVVM涉及到的概念"><a href="#MVVM涉及到的概念" class="headerlink" title="MVVM涉及到的概念"></a>MVVM涉及到的概念</h2><ul>
-<li>M(odel)层：模型，定义数据结构。</li>
-<li>C(ontroller)层：实现业务逻辑，数据的增删改查。在MVVM模式中一般把C层算在M层中，（只有在理想的双向绑定模式下，Controller 才会完全的消失。这种理想状态一般不存在）</li>
-<li>ViewModel层：顾名思义是视图View的模型、映射和显示逻辑（如if for等，非业务逻辑），另外绑定器也在此层。ViewModel是基于视图开发的一套模型，如果你的应用是给盲人用的，那么也可以开发一套基于Audio的模型AudioModel。</li>
-<li>V(iew)层：将ViewModel通过特定的GUI展示出来，并在GUI控件上绑定视图交互事件，V(iew)一般由MVVM框架自动生成在浏览器中。</li>
-</ul>
-<h2 id="MVVM的工作机制"><a href="#MVVM的工作机制" class="headerlink" title="MVVM的工作机制"></a>MVVM的工作机制</h2><p>在MVVM架构下，View 和 Model 之间其实并没有直接的联系，而是通<strong>过ViewModel进行交互</strong>，Model 和 ViewModel 之间的交互是*<u>双向</u>*的， 因此View 数据的变化会同步到Model中，而Model 数据的变化也会立即反应到View 上。</p>
-<p>ViewModel 通过双向数据绑定把 View 层和 Model 层连接了起来。ViewModel里面包含DOM Listeners(数据监听)和Data Bindings(数据绑定)，DOM Listeners和Data Bindings是实现双向绑定的关键。</p>
-<blockquote>
-<p>DOM Listeners监听页面所有View层DOM元素的变化，当发生变化，Model层的数据随之变化；</p>
-</blockquote>
-<blockquote>
-<p>Data Bindings监听Model层的数据，当数据发生变化，View层的DOM元素随之变化。</p>
-</blockquote>
-<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/01.png" class>
-
-
-
-<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/02.png" class>
-
-
-
-<h2 id="MVVM模式的优缺点"><a href="#MVVM模式的优缺点" class="headerlink" title="MVVM模式的优缺点"></a>MVVM模式的优缺点</h2><p>MVVM模式相较于原先的MVP模式至少省下30%编码量，甚至能省下70%DOM操作，因为用MVP模式的话主要是在进行DOM操作</p>
-<blockquote>
-<p>优点</p>
-</blockquote>
-<ul>
-<li><strong>低耦合</strong>。View可以独立于Model变化和修改，一个ViewModel可以绑定到不同的View上，当View变化的时候Model可以不变，当Model变化的时候View也可以不变。</li>
-<li><strong>可重用性</strong>。可以把一些视图的逻辑放在ViewModel里面，让很多View重用这段视图逻辑。</li>
-<li>独立开发。开发人员可以专注与业务逻辑和数据的开发(ViewModel)。设计人员可以专注于界面(View)的设计。</li>
-<li><strong>可测试性</strong>。可以针对ViewModel来对界面(View)进行测试</li>
-</ul>
-<blockquote>
-<p>缺点</p>
-</blockquote>
-<ul>
-<li>学习成本高。</li>
-<li>DEBUG困难</li>
-<li>实现MVVM的开销对于简单的UI操作是过度的。而对于更大的应用来说，推广ViewModel将变得更加困难，非常大的应用程序中的数据绑定会导致相当大的内存消耗。</li>
-</ul>
-<h2 id="MVVM应用场景"><a href="#MVVM应用场景" class="headerlink" title="MVVM应用场景"></a>MVVM应用场景</h2><ul>
-<li>针对具有复杂交互逻辑的前端应用</li>
-<li>提供基础的架构抽象</li>
-<li>通过Ajax数据持久化，保证前端用户体验</li>
-</ul>
-<h2 id="常见的MVVM框架"><a href="#常见的MVVM框架" class="headerlink" title="常见的MVVM框架"></a>常见的MVVM框架</h2><p>Vue.js   AngularJs，ReactJs</p>
-]]></content>
-      <categories>
-        <category>项目架构</category>
-      </categories>
-      <tags>
-        <tag>架构模式</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Maven学习笔记</title>
-    <url>/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/</url>
-    <content><![CDATA[<h2 id="IDEA编辑器集成maven环境"><a href="#IDEA编辑器集成maven环境" class="headerlink" title="IDEA编辑器集成maven环境"></a>IDEA编辑器集成maven环境</h2><p>###设置Maven版本</p>
-<ul>
-<li> 设置Maven版本–选择下载好的maven版本（⽬录选到bin⽬录的上⼀级⽬录）</li>
-</ul>
-
-
- <img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven2.png" class>
-
-<ul>
-<li><p>设置settings.xml文件</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven3.png" class>
-
-</li>
-</ul>
-<h3 id="Maven项目的创建"><a href="#Maven项目的创建" class="headerlink" title="Maven项目的创建"></a>Maven项目的创建</h3><ul>
-<li><p>选择Maven,设置JDK版本，选择maven项目里的模板</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven4.png" class>
-</li>
-<li><p>设置项目里的GroupID和ArtifactID</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven5.png" class>
-</li>
-<li><p>检查项目的Maven环境</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven6.png" class>
-</li>
-<li><p>项目的目录结构</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven7.png" class>
-
-</li>
-</ul>
-<p>###项目的编译</p>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven8.png" class>
-
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven9.png" class>
-
-<ul>
-<li>执⾏编译命令，两个图标分别代表”普通模式”和”调试模式”</li>
-</ul>
-<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven10.png" class>
-
-<h3 id="创建WEB项目"><a href="#创建WEB项目" class="headerlink" title="创建WEB项目"></a>创建WEB项目</h3><p>创建web项目与创建普通Java项目步骤基本一致，区别在于选择Maven模板（WEB项目选择webapp)</p>
-<h4 id="启动项目"><a href="#启动项目" class="headerlink" title="启动项目"></a>启动项目</h4><ul>
-<li><p>修改相关版本</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- JDK的版本修改为1.8 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">maven.compiler.target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.target</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- junit的版本修改为4.12 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.12<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li><p>删除pluginManagement标签</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 将这个标签及标签中的内容全部删除 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line">...</span><br><span class="line"><span class="tag">&lt;/<span class="name">pluginManagement</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li><p>添加web部署的插件</p>
-<p>1.jetty插件</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置在plugins标签中 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mortbay.jetty<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-jetty-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">version</span>&gt;</span>6.1.25<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">		 <span class="comment">&lt;!-- 热部署，每10秒扫描⼀次 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">scanIntervalSeconds</span>&gt;</span>10<span class="tag">&lt;/<span class="name">scanIntervalSeconds</span>&gt;</span></span><br><span class="line">		 <span class="comment">&lt;!-- 可指定当前项⽬的站点名 --&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">contextPath</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">contextPath</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">connectors</span>&gt;</span></span><br><span class="line">			 &lt;connector</span><br><span class="line">implementation=&quot;org.mortbay.jetty.nio.SelectChannelConnector&quot;&gt;</span><br><span class="line"> <span class="tag">&lt;<span class="name">port</span>&gt;</span>9090<span class="tag">&lt;/<span class="name">port</span>&gt;</span> <span class="comment">&lt;!-- 设置启动的端⼝号 --&gt;</span></span><br><span class="line"> 			 <span class="tag">&lt;/<span class="name">connector</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">connectors</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<p>  2.tomcat插件</p>
-  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置在plugins标签中 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.tomcat.maven<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>tomcat7-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">port</span>&gt;</span>8081<span class="tag">&lt;/<span class="name">port</span>&gt;</span> <span class="comment">&lt;!-- 启动端⼝ 默认:8080 --&gt;</span></span><br><span class="line"> 		 <span class="tag">&lt;<span class="name">path</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">path</span>&gt;</span> <span class="comment">&lt;!-- 项⽬的站点名，即对外访问路径 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">uriEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">uriEncoding</span>&gt;</span> <span class="comment">&lt;!-- 字符集编码 默认：ISO-8859-1 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">server</span>&gt;</span>tomcat7<span class="tag">&lt;/<span class="name">server</span>&gt;</span> <span class="comment">&lt;!-- 服务器名称 --&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
-  <img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven11.png" class>
-
-
-
-<p>**maven依赖仓库：<a href="https://mvnrepository.com/">https://mvnrepository.com/</a> **</p>
-]]></content>
-      <categories>
-        <category>项目工具</category>
-      </categories>
-      <tags>
-        <tag>Maven</tag>
       </tags>
   </entry>
   <entry>
@@ -1599,6 +1467,138 @@
       </tags>
   </entry>
   <entry>
+    <title>Maven学习笔记</title>
+    <url>/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/</url>
+    <content><![CDATA[<h2 id="IDEA编辑器集成maven环境"><a href="#IDEA编辑器集成maven环境" class="headerlink" title="IDEA编辑器集成maven环境"></a>IDEA编辑器集成maven环境</h2><p>###设置Maven版本</p>
+<ul>
+<li> 设置Maven版本–选择下载好的maven版本（⽬录选到bin⽬录的上⼀级⽬录）</li>
+</ul>
+
+
+ <img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven2.png" class>
+
+<ul>
+<li><p>设置settings.xml文件</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven3.png" class>
+
+</li>
+</ul>
+<h3 id="Maven项目的创建"><a href="#Maven项目的创建" class="headerlink" title="Maven项目的创建"></a>Maven项目的创建</h3><ul>
+<li><p>选择Maven,设置JDK版本，选择maven项目里的模板</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven4.png" class>
+</li>
+<li><p>设置项目里的GroupID和ArtifactID</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven5.png" class>
+</li>
+<li><p>检查项目的Maven环境</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven6.png" class>
+</li>
+<li><p>项目的目录结构</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven7.png" class>
+
+</li>
+</ul>
+<p>###项目的编译</p>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven8.png" class>
+
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven9.png" class>
+
+<ul>
+<li>执⾏编译命令，两个图标分别代表”普通模式”和”调试模式”</li>
+</ul>
+<img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven10.png" class>
+
+<h3 id="创建WEB项目"><a href="#创建WEB项目" class="headerlink" title="创建WEB项目"></a>创建WEB项目</h3><p>创建web项目与创建普通Java项目步骤基本一致，区别在于选择Maven模板（WEB项目选择webapp)</p>
+<h4 id="启动项目"><a href="#启动项目" class="headerlink" title="启动项目"></a>启动项目</h4><ul>
+<li><p>修改相关版本</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- JDK的版本修改为1.8 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">maven.compiler.target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.target</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- junit的版本修改为4.12 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.12<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>删除pluginManagement标签</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 将这个标签及标签中的内容全部删除 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line">...</span><br><span class="line"><span class="tag">&lt;/<span class="name">pluginManagement</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>添加web部署的插件</p>
+<p>1.jetty插件</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置在plugins标签中 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mortbay.jetty<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-jetty-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">version</span>&gt;</span>6.1.25<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">		 <span class="comment">&lt;!-- 热部署，每10秒扫描⼀次 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">scanIntervalSeconds</span>&gt;</span>10<span class="tag">&lt;/<span class="name">scanIntervalSeconds</span>&gt;</span></span><br><span class="line">		 <span class="comment">&lt;!-- 可指定当前项⽬的站点名 --&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">contextPath</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">contextPath</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">connectors</span>&gt;</span></span><br><span class="line">			 &lt;connector</span><br><span class="line">implementation=&quot;org.mortbay.jetty.nio.SelectChannelConnector&quot;&gt;</span><br><span class="line"> <span class="tag">&lt;<span class="name">port</span>&gt;</span>9090<span class="tag">&lt;/<span class="name">port</span>&gt;</span> <span class="comment">&lt;!-- 设置启动的端⼝号 --&gt;</span></span><br><span class="line"> 			 <span class="tag">&lt;/<span class="name">connector</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">connectors</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<p>  2.tomcat插件</p>
+  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置在plugins标签中 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.tomcat.maven<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>tomcat7-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">port</span>&gt;</span>8081<span class="tag">&lt;/<span class="name">port</span>&gt;</span> <span class="comment">&lt;!-- 启动端⼝ 默认:8080 --&gt;</span></span><br><span class="line"> 		 <span class="tag">&lt;<span class="name">path</span>&gt;</span>/test<span class="tag">&lt;/<span class="name">path</span>&gt;</span> <span class="comment">&lt;!-- 项⽬的站点名，即对外访问路径 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">uriEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">uriEncoding</span>&gt;</span> <span class="comment">&lt;!-- 字符集编码 默认：ISO-8859-1 --&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">server</span>&gt;</span>tomcat7<span class="tag">&lt;/<span class="name">server</span>&gt;</span> <span class="comment">&lt;!-- 服务器名称 --&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+  <img data-src="/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/maven11.png" class>
+
+
+
+<p>**maven依赖仓库：<a href="https://mvnrepository.com/">https://mvnrepository.com/</a> **</p>
+]]></content>
+      <categories>
+        <category>项目工具</category>
+      </categories>
+      <tags>
+        <tag>Maven</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MVVM框架</title>
+    <url>/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/</url>
+    <content><![CDATA[<p>一个软件或者 APP都是服务于某种需求，这称之为“业务需求”。随着业务需求的增多、软件会变得越来越庞大，越来越复杂。所以就会设计一套完整的架构设计、研发流程以及质量管理体系来保证整个研发过程。“架构设计”是一个非常大的话题，它涉及到各方面，近年来前端一个明显的开发趋势就是架构从传统的 MVC 模式向 MVVM 模式迁移，这里来谈谈——MVVM模式。</p>
+<h2 id="什么是MVVM"><a href="#什么是MVVM" class="headerlink" title="什么是MVVM"></a>什么是MVVM</h2><blockquote>
+<p>MVVM（Model–View–Viewmodel）是一种软件架构模式。<br>MVVM有助于将图形用户界面的开发与业务逻辑或后端逻辑（数据模型）的开发分离开，这是通过标记语言或GUI代码实现的。MVVM的视图模型是一个值转换器， 这意味着视图模型负责从模型中暴露（转换）数据对象，以便轻松管理和呈现对象。在这方面，视图模型比视图做得更多，并且处理大部分视图的显示逻辑。 视图模型可以实现中介者模式，组织对视图所支持的用例集的后端逻辑的访问</p>
+</blockquote>
+<p><a href="https://zh.wikipedia.org/wiki/MVVM">想要了解更多关于MVVM的定义，点击访问维基百科</a></p>
+<h2 id="MVVM涉及到的概念"><a href="#MVVM涉及到的概念" class="headerlink" title="MVVM涉及到的概念"></a>MVVM涉及到的概念</h2><ul>
+<li>M(odel)层：模型，定义数据结构。</li>
+<li>C(ontroller)层：实现业务逻辑，数据的增删改查。在MVVM模式中一般把C层算在M层中，（只有在理想的双向绑定模式下，Controller 才会完全的消失。这种理想状态一般不存在）</li>
+<li>ViewModel层：顾名思义是视图View的模型、映射和显示逻辑（如if for等，非业务逻辑），另外绑定器也在此层。ViewModel是基于视图开发的一套模型，如果你的应用是给盲人用的，那么也可以开发一套基于Audio的模型AudioModel。</li>
+<li>V(iew)层：将ViewModel通过特定的GUI展示出来，并在GUI控件上绑定视图交互事件，V(iew)一般由MVVM框架自动生成在浏览器中。</li>
+</ul>
+<h2 id="MVVM的工作机制"><a href="#MVVM的工作机制" class="headerlink" title="MVVM的工作机制"></a>MVVM的工作机制</h2><p>在MVVM架构下，View 和 Model 之间其实并没有直接的联系，而是通<strong>过ViewModel进行交互</strong>，Model 和 ViewModel 之间的交互是*<u>双向</u>*的， 因此View 数据的变化会同步到Model中，而Model 数据的变化也会立即反应到View 上。</p>
+<p>ViewModel 通过双向数据绑定把 View 层和 Model 层连接了起来。ViewModel里面包含DOM Listeners(数据监听)和Data Bindings(数据绑定)，DOM Listeners和Data Bindings是实现双向绑定的关键。</p>
+<blockquote>
+<p>DOM Listeners监听页面所有View层DOM元素的变化，当发生变化，Model层的数据随之变化；</p>
+</blockquote>
+<blockquote>
+<p>Data Bindings监听Model层的数据，当数据发生变化，View层的DOM元素随之变化。</p>
+</blockquote>
+<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/01.png" class>
+
+
+
+<img data-src="/2021/03/02/MVVM%E6%A1%86%E6%9E%B6/02.png" class>
+
+
+
+<h2 id="MVVM模式的优缺点"><a href="#MVVM模式的优缺点" class="headerlink" title="MVVM模式的优缺点"></a>MVVM模式的优缺点</h2><p>MVVM模式相较于原先的MVP模式至少省下30%编码量，甚至能省下70%DOM操作，因为用MVP模式的话主要是在进行DOM操作</p>
+<blockquote>
+<p>优点</p>
+</blockquote>
+<ul>
+<li><strong>低耦合</strong>。View可以独立于Model变化和修改，一个ViewModel可以绑定到不同的View上，当View变化的时候Model可以不变，当Model变化的时候View也可以不变。</li>
+<li><strong>可重用性</strong>。可以把一些视图的逻辑放在ViewModel里面，让很多View重用这段视图逻辑。</li>
+<li>独立开发。开发人员可以专注与业务逻辑和数据的开发(ViewModel)。设计人员可以专注于界面(View)的设计。</li>
+<li><strong>可测试性</strong>。可以针对ViewModel来对界面(View)进行测试</li>
+</ul>
+<blockquote>
+<p>缺点</p>
+</blockquote>
+<ul>
+<li>学习成本高。</li>
+<li>DEBUG困难</li>
+<li>实现MVVM的开销对于简单的UI操作是过度的。而对于更大的应用来说，推广ViewModel将变得更加困难，非常大的应用程序中的数据绑定会导致相当大的内存消耗。</li>
+</ul>
+<h2 id="MVVM应用场景"><a href="#MVVM应用场景" class="headerlink" title="MVVM应用场景"></a>MVVM应用场景</h2><ul>
+<li>针对具有复杂交互逻辑的前端应用</li>
+<li>提供基础的架构抽象</li>
+<li>通过Ajax数据持久化，保证前端用户体验</li>
+</ul>
+<h2 id="常见的MVVM框架"><a href="#常见的MVVM框架" class="headerlink" title="常见的MVVM框架"></a>常见的MVVM框架</h2><p>Vue.js   AngularJs，ReactJs</p>
+]]></content>
+      <categories>
+        <category>项目架构</category>
+      </categories>
+      <tags>
+        <tag>架构模式</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Mybatis框架</title>
     <url>/2021/02/25/Mybatis%E6%A1%86%E6%9E%B6-1/</url>
     <content><![CDATA[<h2 id="Mybatis入门案例"><a href="#Mybatis入门案例" class="headerlink" title="Mybatis入门案例"></a>Mybatis入门案例</h2><h3 id="搭建Mybatis开发环境–基础CRUD操作实例"><a href="#搭建Mybatis开发环境–基础CRUD操作实例" class="headerlink" title="搭建Mybatis开发环境–基础CRUD操作实例"></a>搭建Mybatis开发环境–基础CRUD操作实例</h3><h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><blockquote>
@@ -1915,6 +1915,58 @@
       </tags>
   </entry>
   <entry>
+    <title>Python自动化办公--Word</title>
+    <url>/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/</url>
+    <content><![CDATA[<h1 id><a href="#" class="headerlink" title></a></h1><h1 id="Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）"><a href="#Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）" class="headerlink" title="Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）"></a>Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）</h1><p>在Word文件中，不但有文字内容，还有加粗、红色等格式，而且这些特殊的格式和文字内容是混合在一起的，但如果用Python来读取Word文件，这段文字会被分为纯文字、段落、字体、字号以及表格 等更具体的部分，而且每一个部分都对应着<strong>Python的变量和函数。</strong></p>
+<p>用Python读取文件时，你需要记住很多个Python变量和函数。当然了，针对这一点， 你也不用担心，这些变量和函数在Python的Word扩展库<a href="https://python-docx.readthedocs.io/en/latest/#"><strong><em>官方文档</em></strong></a>可以查看。所以如果你需 要某个功能，但是不知道应该用什么变量和函数名称时，可以在官方文档中找到它的名字和 描述信息。</p>
+<h3 id="用Python自动合并两个Word文件"><a href="#用Python自动合并两个Word文件" class="headerlink" title="用Python自动合并两个Word文件"></a>用Python自动合并两个Word文件</h3><ul>
+<li><p>文件一（内容包含字体、字号、颜色等额外信息）：</p>
+ <img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/image.png" class>
+</li>
+<li><p>文件二（内容文字出现在表格中）:</p>
+ <img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/image01.png" class>
+
+</li>
+</ul>
+<blockquote>
+<p>第一个文件中，字体使用了黑体和宋体字，此外还有红色字体和加粗等格式。现在我需要 只提取其中的文字内容，不带任何格式。 </p>
+<p>第二个文件中，文字被放在了一张表格里。现在我需要用Python把表格中的文字提取出 来，合并成一个新的文件。</p>
+</blockquote>
+<h4 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"> <span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mrge_without_format</span>(<span class="params">docfiles:<span class="built_in">list</span></span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    只获取内容进行合并</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment">#遍历文件</span></span><br><span class="line">    <span class="keyword">for</span> docx_file <span class="keyword">in</span> <span class="built_in">sorted</span>(docfiles):</span><br><span class="line">        another_doc = Document(docx_file)</span><br><span class="line">        <span class="comment"># 获取每个文件的的所有段落</span></span><br><span class="line">        paras = another_doc.paragraphs</span><br><span class="line">        <span class="keyword">for</span> para <span class="keyword">in</span> paras:</span><br><span class="line">            <span class="comment"># 为新的word文件创建一个新段落</span></span><br><span class="line">            newpar = doc.add_paragraph(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">            <span class="comment">#将提取的内容写入新的文本段落中</span></span><br><span class="line">            newpar.add_run(para.text)</span><br><span class="line"></span><br><span class="line">        <span class="comment">#所有文件合并完成后在指定路径中保存</span></span><br><span class="line">        doc.save(Path(word_files_path,<span class="string">&#x27;new.docx&#x27;</span>))</span><br><span class="line"></span><br><span class="line">    <span class="comment">#调用函数</span></span><br><span class="line">    merge-mrge_without_format(files)</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="用Python合并Word和其他类型的文件"><a href="#用Python合并Word和其他类型的文件" class="headerlink" title="用Python合并Word和其他类型的文件"></a>用Python合并Word和其他类型的文件</h3><p>相较于其他文件，Word文件支持的格式丰富程度远远高于Txt文件等，所以当这两种格式丰富程度不一致的文件进行合并时，要么向下兼容，去掉Txt不支持的格式；要 么向上兼容，对Txt进行格式再调整。否则容易出现合并之后仍需要手动调整格式的问题，影 响工作效率。</p>
+<h4 id="将纯文本和Word文件合并"><a href="#将纯文本和Word文件合并" class="headerlink" title="将纯文本和Word文件合并"></a>将纯文本和Word文件合并</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx.shared <span class="keyword">import</span> RGBColor</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># word文件所在路径</span></span><br><span class="line">word_files_path = <span class="string">&#x27;D:/Python自动化办公/Day02/word样例文件&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># # 取得该目录下所有的docx格式文件</span></span><br><span class="line"><span class="comment"># p = Path(word_files_path)</span></span><br><span class="line"></span><br><span class="line">my_content = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">野老篱边江岸回，柴门不正逐江开。</span></span><br><span class="line"><span class="string">渔人网集澄潭下，贾客船随返照来。</span></span><br><span class="line"><span class="string">长路关心悲剑阁，片云何意傍琴台？</span></span><br><span class="line"><span class="string">王师未报收东郡，城阙秋生画角哀。</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add_content_mode1</span>(<span class="params">content</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    增加内容</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    print(doc)</span><br><span class="line">    para = doc.add_paragraph().add_run(content)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 设置字体格式</span></span><br><span class="line">    para.font.name = <span class="string">&#x27;仿宋&#x27;</span></span><br><span class="line">    <span class="comment"># 设置下划线</span></span><br><span class="line">    para.font.underline = <span class="literal">True</span></span><br><span class="line">    <span class="comment"># 设置颜色</span></span><br><span class="line">    para.font.color.rgb = RGBColor(<span class="number">255</span>, <span class="number">128</span>, <span class="number">128</span>)</span><br><span class="line">    <span class="comment"># 其他设置参考官方文档</span></span><br><span class="line">    <span class="comment"># https://python-docx.readthedocs.io/en/latest/api/text.html#run-objects</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">doc = Document()</span><br><span class="line">add_content_mode1(my_content)</span><br><span class="line">doc.save(Path(word_files_path, <span class="string">&#x27;new2.docx&#x27;</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="将图片和Word文件合并"><a href="#将图片和Word文件合并" class="headerlink" title="将图片和Word文件合并"></a>将图片和Word文件合并</h4><p>我们经常见到的图片格式就有.jpg、.png、.gif等，由于这些格式应用范围广，格式 没有被商业软件加密，所以python-docx库的add_picture函数就能实现把图片插入Word的 功能。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> shared</span><br><span class="line"></span><br><span class="line">doc = Document()</span><br><span class="line"><span class="comment"># 按英寸设置宽度，添加图片</span></span><br><span class="line">doc_add_picture(<span class="string">&#x27;test.jpg&#x27;</span>,width=shared.Inches(<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="将Execl和Word文件合并"><a href="#将Execl和Word文件合并" class="headerlink" title="将Execl和Word文件合并"></a>将Execl和Word文件合并</h4><ul>
+<li><p>使用Python制作邀请函</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line">today=datetime.date.today().strftime(<span class="string">&#x27;%Y-%m-%d&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户信息文件</span></span><br><span class="line">customer = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/客户信息.xlsx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 邀请函模版</span></span><br><span class="line">invitation = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/邀请函模版.docx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 邀请函路径</span></span><br><span class="line">invitation_path = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 替换内容</span></span><br><span class="line">replace_content = &#123;</span><br><span class="line">    <span class="string">&#x27;&lt;姓名&gt;&#x27;</span> : <span class="string">&#x27;no_name&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&lt;性别&gt;&#x27;</span> : <span class="string">&#x27;m_f&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&lt;今天日期&gt;&#x27;</span> : today</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generat_invitation</span>():</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    生成邀请函文件</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    doc = Document(invitation)</span><br><span class="line">    <span class="comment"># 取出每一段</span></span><br><span class="line">    <span class="keyword">for</span> para <span class="keyword">in</span> doc.paragraphs:</span><br><span class="line">        <span class="keyword">for</span> key, value <span class="keyword">in</span> replace_content.items():</span><br><span class="line">            <span class="keyword">if</span> key <span class="keyword">in</span> para.text:</span><br><span class="line">                <span class="comment"># 逐个关键字进行替换</span></span><br><span class="line">                para.text = para.text.replace(key, value)</span><br><span class="line"></span><br><span class="line">    file_name = PurePath(invitation_path).with_name(replace_content[<span class="string">&#x27;&lt;姓名&gt;&#x27;</span>]).with_suffix(<span class="string">&#x27;.docx&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    doc.save(file_name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_customer</span>(<span class="params">customer_file: Path</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    获取邀请函信息</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment"># 从第一个sheet中取出客户信息</span></span><br><span class="line">    data = xlrd.open_workbook(customer_file)</span><br><span class="line">    table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 取得客户数量</span></span><br><span class="line">    customer_number = table.nrows</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, customer_number):</span><br><span class="line">        content = table.row_values(rowx=line, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>)</span><br><span class="line">        replace_content[<span class="string">&#x27;&lt;姓名&gt;&#x27;</span>] = content[<span class="number">0</span>]</span><br><span class="line">        replace_content[<span class="string">&#x27;&lt;性别&gt;&#x27;</span>] = content[<span class="number">1</span>]</span><br><span class="line">        <span class="comment"># print(replace_content)</span></span><br><span class="line">        <span class="comment"># &#123;&#x27;&lt;姓名&gt;&#x27;: &#x27;韩梅梅&#x27;, &#x27;&lt;性别&gt;&#x27;: &#x27;女士&#x27;, &#x27;&lt;今天日期&gt;&#x27;: &#x27;2021-01-01&#x27;&#125;</span></span><br><span class="line">        <span class="comment"># &#123;&#x27;&lt;姓名&gt;&#x27;: &#x27;李雷&#x27;, &#x27;&lt;性别&gt;&#x27;: &#x27;先生&#x27;, &#x27;&lt;今天日期&gt;&#x27;: &#x27;2021-01-01&#x27;&#125;</span></span><br><span class="line">        generat_invitation()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    get_customer(customer)</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在对不同类型文件进行合并时，要考虑不同的问题</p>
+<blockquote>
+<ol>
+<li>对于支持格式丰富不同的文件时要考虑格式的兼容性；</li>
+<li>  对于图片、音乐、视频和Word合并时要考虑是否是受到word支持的通用格式；</li>
+<li>  对于像Excel格式于Word合并时能实现更复杂的功能，代码的复杂程度也会随之提高，一 般需要先分析功能，再进行代码编写。</li>
+</ol>
+</blockquote>
+]]></content>
+      <categories>
+        <category>Python开发</category>
+      </categories>
+      <tags>
+        <tag>Python自动化</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Python自动化办公-图片识别</title>
     <url>/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/</url>
     <content><![CDATA[<h1 id="使用Python实现高效自动化图片组在线-离线识别（转文字）"><a href="#使用Python实现高效自动化图片组在线-离线识别（转文字）" class="headerlink" title="使用Python实现高效自动化图片组在线/离线识别（转文字）"></a>使用Python实现高效自动化图片组在线/离线识别（转文字）</h1><h2 id="图片识别转文字的两种方式："><a href="#图片识别转文字的两种方式：" class="headerlink" title="图片识别转文字的两种方式："></a>图片识别转文字的两种方式：</h2><blockquote>
@@ -2131,58 +2183,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Python自动化办公--Word</title>
-    <url>/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/</url>
-    <content><![CDATA[<h1 id><a href="#" class="headerlink" title></a></h1><h1 id="Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）"><a href="#Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）" class="headerlink" title="Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）"></a>Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）</h1><p>在Word文件中，不但有文字内容，还有加粗、红色等格式，而且这些特殊的格式和文字内容是混合在一起的，但如果用Python来读取Word文件，这段文字会被分为纯文字、段落、字体、字号以及表格 等更具体的部分，而且每一个部分都对应着<strong>Python的变量和函数。</strong></p>
-<p>用Python读取文件时，你需要记住很多个Python变量和函数。当然了，针对这一点， 你也不用担心，这些变量和函数在Python的Word扩展库<a href="https://python-docx.readthedocs.io/en/latest/#"><strong><em>官方文档</em></strong></a>可以查看。所以如果你需 要某个功能，但是不知道应该用什么变量和函数名称时，可以在官方文档中找到它的名字和 描述信息。</p>
-<h3 id="用Python自动合并两个Word文件"><a href="#用Python自动合并两个Word文件" class="headerlink" title="用Python自动合并两个Word文件"></a>用Python自动合并两个Word文件</h3><ul>
-<li><p>文件一（内容包含字体、字号、颜色等额外信息）：</p>
- <img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/image.png" class>
-</li>
-<li><p>文件二（内容文字出现在表格中）:</p>
- <img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/image01.png" class>
-
-</li>
-</ul>
-<blockquote>
-<p>第一个文件中，字体使用了黑体和宋体字，此外还有红色字体和加粗等格式。现在我需要 只提取其中的文字内容，不带任何格式。 </p>
-<p>第二个文件中，文字被放在了一张表格里。现在我需要用Python把表格中的文字提取出 来，合并成一个新的文件。</p>
-</blockquote>
-<h4 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"> <span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mrge_without_format</span>(<span class="params">docfiles:<span class="built_in">list</span></span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    只获取内容进行合并</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment">#遍历文件</span></span><br><span class="line">    <span class="keyword">for</span> docx_file <span class="keyword">in</span> <span class="built_in">sorted</span>(docfiles):</span><br><span class="line">        another_doc = Document(docx_file)</span><br><span class="line">        <span class="comment"># 获取每个文件的的所有段落</span></span><br><span class="line">        paras = another_doc.paragraphs</span><br><span class="line">        <span class="keyword">for</span> para <span class="keyword">in</span> paras:</span><br><span class="line">            <span class="comment"># 为新的word文件创建一个新段落</span></span><br><span class="line">            newpar = doc.add_paragraph(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">            <span class="comment">#将提取的内容写入新的文本段落中</span></span><br><span class="line">            newpar.add_run(para.text)</span><br><span class="line"></span><br><span class="line">        <span class="comment">#所有文件合并完成后在指定路径中保存</span></span><br><span class="line">        doc.save(Path(word_files_path,<span class="string">&#x27;new.docx&#x27;</span>))</span><br><span class="line"></span><br><span class="line">    <span class="comment">#调用函数</span></span><br><span class="line">    merge-mrge_without_format(files)</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="用Python合并Word和其他类型的文件"><a href="#用Python合并Word和其他类型的文件" class="headerlink" title="用Python合并Word和其他类型的文件"></a>用Python合并Word和其他类型的文件</h3><p>相较于其他文件，Word文件支持的格式丰富程度远远高于Txt文件等，所以当这两种格式丰富程度不一致的文件进行合并时，要么向下兼容，去掉Txt不支持的格式；要 么向上兼容，对Txt进行格式再调整。否则容易出现合并之后仍需要手动调整格式的问题，影 响工作效率。</p>
-<h4 id="将纯文本和Word文件合并"><a href="#将纯文本和Word文件合并" class="headerlink" title="将纯文本和Word文件合并"></a>将纯文本和Word文件合并</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx.shared <span class="keyword">import</span> RGBColor</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># word文件所在路径</span></span><br><span class="line">word_files_path = <span class="string">&#x27;D:/Python自动化办公/Day02/word样例文件&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># # 取得该目录下所有的docx格式文件</span></span><br><span class="line"><span class="comment"># p = Path(word_files_path)</span></span><br><span class="line"></span><br><span class="line">my_content = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">野老篱边江岸回，柴门不正逐江开。</span></span><br><span class="line"><span class="string">渔人网集澄潭下，贾客船随返照来。</span></span><br><span class="line"><span class="string">长路关心悲剑阁，片云何意傍琴台？</span></span><br><span class="line"><span class="string">王师未报收东郡，城阙秋生画角哀。</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add_content_mode1</span>(<span class="params">content</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    增加内容</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    print(doc)</span><br><span class="line">    para = doc.add_paragraph().add_run(content)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 设置字体格式</span></span><br><span class="line">    para.font.name = <span class="string">&#x27;仿宋&#x27;</span></span><br><span class="line">    <span class="comment"># 设置下划线</span></span><br><span class="line">    para.font.underline = <span class="literal">True</span></span><br><span class="line">    <span class="comment"># 设置颜色</span></span><br><span class="line">    para.font.color.rgb = RGBColor(<span class="number">255</span>, <span class="number">128</span>, <span class="number">128</span>)</span><br><span class="line">    <span class="comment"># 其他设置参考官方文档</span></span><br><span class="line">    <span class="comment"># https://python-docx.readthedocs.io/en/latest/api/text.html#run-objects</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">doc = Document()</span><br><span class="line">add_content_mode1(my_content)</span><br><span class="line">doc.save(Path(word_files_path, <span class="string">&#x27;new2.docx&#x27;</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<h4 id="将图片和Word文件合并"><a href="#将图片和Word文件合并" class="headerlink" title="将图片和Word文件合并"></a>将图片和Word文件合并</h4><p>我们经常见到的图片格式就有.jpg、.png、.gif等，由于这些格式应用范围广，格式 没有被商业软件加密，所以python-docx库的add_picture函数就能实现把图片插入Word的 功能。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> shared</span><br><span class="line"></span><br><span class="line">doc = Document()</span><br><span class="line"><span class="comment"># 按英寸设置宽度，添加图片</span></span><br><span class="line">doc_add_picture(<span class="string">&#x27;test.jpg&#x27;</span>,width=shared.Inches(<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="将Execl和Word文件合并"><a href="#将Execl和Word文件合并" class="headerlink" title="将Execl和Word文件合并"></a>将Execl和Word文件合并</h4><ul>
-<li><p>使用Python制作邀请函</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line">today=datetime.date.today().strftime(<span class="string">&#x27;%Y-%m-%d&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户信息文件</span></span><br><span class="line">customer = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/客户信息.xlsx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 邀请函模版</span></span><br><span class="line">invitation = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/邀请函模版.docx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 邀请函路径</span></span><br><span class="line">invitation_path = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 替换内容</span></span><br><span class="line">replace_content = &#123;</span><br><span class="line">    <span class="string">&#x27;&lt;姓名&gt;&#x27;</span> : <span class="string">&#x27;no_name&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&lt;性别&gt;&#x27;</span> : <span class="string">&#x27;m_f&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&lt;今天日期&gt;&#x27;</span> : today</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generat_invitation</span>():</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    生成邀请函文件</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    doc = Document(invitation)</span><br><span class="line">    <span class="comment"># 取出每一段</span></span><br><span class="line">    <span class="keyword">for</span> para <span class="keyword">in</span> doc.paragraphs:</span><br><span class="line">        <span class="keyword">for</span> key, value <span class="keyword">in</span> replace_content.items():</span><br><span class="line">            <span class="keyword">if</span> key <span class="keyword">in</span> para.text:</span><br><span class="line">                <span class="comment"># 逐个关键字进行替换</span></span><br><span class="line">                para.text = para.text.replace(key, value)</span><br><span class="line"></span><br><span class="line">    file_name = PurePath(invitation_path).with_name(replace_content[<span class="string">&#x27;&lt;姓名&gt;&#x27;</span>]).with_suffix(<span class="string">&#x27;.docx&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    doc.save(file_name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_customer</span>(<span class="params">customer_file: Path</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    获取邀请函信息</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment"># 从第一个sheet中取出客户信息</span></span><br><span class="line">    data = xlrd.open_workbook(customer_file)</span><br><span class="line">    table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 取得客户数量</span></span><br><span class="line">    customer_number = table.nrows</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, customer_number):</span><br><span class="line">        content = table.row_values(rowx=line, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>)</span><br><span class="line">        replace_content[<span class="string">&#x27;&lt;姓名&gt;&#x27;</span>] = content[<span class="number">0</span>]</span><br><span class="line">        replace_content[<span class="string">&#x27;&lt;性别&gt;&#x27;</span>] = content[<span class="number">1</span>]</span><br><span class="line">        <span class="comment"># print(replace_content)</span></span><br><span class="line">        <span class="comment"># &#123;&#x27;&lt;姓名&gt;&#x27;: &#x27;韩梅梅&#x27;, &#x27;&lt;性别&gt;&#x27;: &#x27;女士&#x27;, &#x27;&lt;今天日期&gt;&#x27;: &#x27;2021-01-01&#x27;&#125;</span></span><br><span class="line">        <span class="comment"># &#123;&#x27;&lt;姓名&gt;&#x27;: &#x27;李雷&#x27;, &#x27;&lt;性别&gt;&#x27;: &#x27;先生&#x27;, &#x27;&lt;今天日期&gt;&#x27;: &#x27;2021-01-01&#x27;&#125;</span></span><br><span class="line">        generat_invitation()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    get_customer(customer)</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在对不同类型文件进行合并时，要考虑不同的问题</p>
-<blockquote>
-<ol>
-<li>对于支持格式丰富不同的文件时要考虑格式的兼容性；</li>
-<li>  对于图片、音乐、视频和Word合并时要考虑是否是受到word支持的通用格式；</li>
-<li>  对于像Excel格式于Word合并时能实现更复杂的功能，代码的复杂程度也会随之提高，一 般需要先分析功能，再进行代码编写。</li>
-</ol>
-</blockquote>
-]]></content>
-      <categories>
-        <category>Python开发</category>
-      </categories>
-      <tags>
-        <tag>Python自动化</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Python自动化办公</title>
     <url>/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC/</url>
     <content><![CDATA[<h1 id="任务场景一：拆分与合并–快速的批量处理内容相似的Excel"><a href="#任务场景一：拆分与合并–快速的批量处理内容相似的Excel" class="headerlink" title="任务场景一：拆分与合并–快速的批量处理内容相似的Excel"></a>任务场景一：拆分与合并–快速的批量处理内容相似的Excel</h1><blockquote>
@@ -2380,6 +2380,11 @@
       </tags>
   </entry>
   <entry>
+    <title>Section1</title>
+    <url>/2022/02/21/Section1/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Stack</title>
     <url>/2021/03/11/Stack/</url>
     <content><![CDATA[<h2 id="栈刷题总结"><a href="#栈刷题总结" class="headerlink" title="栈刷题总结"></a>栈刷题总结</h2><h3 id="1-有效的括号"><a href="#1-有效的括号" class="headerlink" title="1.有效的括号"></a>1.有效的括号</h3><h4 id="知识点补充："><a href="#知识点补充：" class="headerlink" title="知识点补充："></a>知识点补充：</h4><blockquote>
@@ -2496,11 +2501,6 @@
       <tags>
         <tag>栈</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Section1</title>
-    <url>/2022/02/21/Section1/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Swagger使用</title>
@@ -2772,6 +2772,11 @@
       </tags>
   </entry>
   <entry>
+    <title>云计算</title>
+    <url>/2021/10/07/%E4%BA%91%E8%AE%A1%E7%AE%97/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>中断</title>
     <url>/2021/02/03/%E4%B8%AD%E6%96%AD/</url>
     <content><![CDATA[<h3 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h3><p>中断使得硬件得以发出通知给处理器，是一种变内核主动为硬件主动的方式。中断本质上是一种特殊的电信号。硬件在生成中断的时候并不需要考虑与处理器的时钟同步，即中断可以随时产生，<strong>内核随时可能因为新到来的中断而被打断</strong>。</p>
@@ -2816,11 +2821,6 @@
       <tags>
         <tag>中断</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>云计算</title>
-    <url>/2021/10/07/%E4%BA%91%E8%AE%A1%E7%AE%97/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>创建高性能索引</title>
@@ -3202,91 +3202,6 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>在Linux环境安装redis</title>
-    <url>/2021/03/18/%E5%9C%A8Linux%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85redis/</url>
-    <content><![CDATA[<h2 id="开发环境搭建"><a href="#开发环境搭建" class="headerlink" title="开发环境搭建"></a>开发环境搭建</h2><h3 id="云服务器部署redis"><a href="#云服务器部署redis" class="headerlink" title="云服务器部署redis"></a>云服务器部署redis</h3><h4 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h4><blockquote>
-<p>下载</p>
-</blockquote>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">wget http://download.redis.io/releases/redis-stable.tar.gz </span><br></pre></td></tr></table></figure>
-<p>这样就直接下载好了稳定版本。</p>
-<blockquote>
-<p>解压</p>
-</blockquote>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tar zxvf redis-stable.tar.gz</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>编译</p>
-</blockquote>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">进入到redis的src目录下</span></span><br><span class="line">cd redis/src</span><br><span class="line">make</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>报错处理方法</p>
-</blockquote>
-<ul>
-<li><p>出现了 <strong>zmalloc.h:50:31: error: jemalloc/jemalloc.h: No such file or directory</strong></p>
-<ul>
-<li><blockquote>
-<pre><code class="shell">make MALLOC=libc
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- 出现了serve.c方面的报错</span><br><span class="line"></span><br><span class="line"> &#123;%asset_image 01.png%&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">gcc的版本太低，因为redis本身使用C语言写的，在编译时需要用到GCC编译器，版本过低的话，就会报这个错。</span><br><span class="line"></span><br><span class="line">&gt;[root@localhost redis-6.0.1]# gcc -v                             # 查看gcc版本</span><br><span class="line">&gt;[root@localhost redis-6.0.1]# yum -y install centos-release-scl  # 升级到9.1版本</span><br><span class="line">&gt;[root@localhost redis-6.0.1]# yum -y install devtoolset-9-gcc devtoolset-9-gcc-c++ devtoolset-9-binutils</span><br><span class="line">&gt;[root@localhost redis-6.0.1]# scl enable devtoolset-9 bash</span><br><span class="line">&gt;以上为临时启用，如果要长期使用gcc 9.1的话：</span><br><span class="line">&gt;[root@localhost redis-6.0.1]# echo &quot;source &#x2F;opt&#x2F;rh&#x2F;devtoolset-9&#x2F;enable&quot; &gt;&gt;&#x2F;etc&#x2F;profile</span><br><span class="line"></span><br><span class="line">再执行编译，PREFIX 安装目录</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;shell</span><br><span class="line">[root@localhost redis-6.0.1]# make install PREFIX&#x3D;&#x2F;usr&#x2F;local&#x2F;redis</span><br></pre></td></tr></table></figure></code></pre>
-</blockquote>
-</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p>安装成功</p>
-</blockquote>
-
-
-
-
-<blockquote>
-<p>启动redis服务</p>
-</blockquote>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd redis/src</span><br><span class="line"><span class="meta">#</span><span class="bash">运行以下命令</span></span><br><span class="line">./redis-server</span><br></pre></td></tr></table></figure>
-<p>启动成功界面</p>
- 
-
-
-
-<p><strong>接下来就可以愉快的使用redis了。</strong></p>
-<h4 id="配置过程"><a href="#配置过程" class="headerlink" title="配置过程"></a>配置过程</h4><blockquote>
-<p>redis的启动方式</p>
-</blockquote>
-<ul>
-<li><p>直接启动</p>
-<p>进入到redis根目录，执行以下命令，其中，加上‘&amp;’号可以使redis以后台程序运行</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">. /redis-server  &amp;</span><br></pre></td></tr></table></figure></li>
-<li><p>通过指定配置文件来启动</p>
-<p> 可以为redis服务启动指定配置文件，例如配置为/etc/redis/6379.conf。当然，配置文件不是绝对的，可以通过个人来指定。</p>
-<p>最好不要在原来的redis-conf上进行修改，最好复制一个新的配置文件。</p>
-</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">. /redis-server  /etc/redis/6379 .conf</span><br></pre></td></tr></table></figure>
-<p>​        如果更改了端口，使用<code>redis-cli</code>客户端连接时，也需要指定端口，例如</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">redis-cli -p 6380</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>使用redis启动脚本来设置开机自启动</p>
-<p> 启动脚本 redis_init_script 位于位于Redis的 /utils/ 目录下，redis_init_script脚本代码如下：</p>
-</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta"> #</span><span class="bash">!/bin/sh</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="bash"><span class="comment"># Simple Redis init.d script conceived to work on Linux systems</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> as it does use of the /proc filesystem.</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">## BEGIN INIT INFO</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Provides:     redis_6379</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Default-Start:        2 3 4 5</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Default-Stop:         0 1 6</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Short-Description:    Redis data structure server</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Description:          Redis data structure server. See https://redis.io</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">## END INIT INFO</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">redis服务器监听端口</span></span><br><span class="line">REDISPORT=6379 </span><br><span class="line"><span class="meta">#</span><span class="bash">服务端所处位置</span></span><br><span class="line">EXEC=/usr/local/bin/redis-server</span><br><span class="line"><span class="meta">#</span><span class="bash">客户端位置</span></span><br><span class="line">CLIEXEC=/usr/local/bin/redis-cli</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">redis的PID文件位置，需要修改</span></span><br><span class="line">PIDFILE=/var/run/redis_$&#123;REDISPORT&#125;.pid</span><br><span class="line"><span class="meta">#</span><span class="bash">redis的配置文件位置，需将<span class="variable">$&#123;REDISPORT&#125;</span>修改为文件名</span></span><br><span class="line">CONF=&quot;/etc/redis/$&#123;REDISPORT&#125;.conf&quot;</span><br><span class="line"></span><br><span class="line">case &quot;$1&quot; in</span><br><span class="line">    start)</span><br><span class="line">        if [ -f $PIDFILE ]</span><br><span class="line">        then</span><br><span class="line">                echo &quot;$PIDFILE exists, process is already running or crashed&quot;</span><br><span class="line">        else</span><br><span class="line">                echo &quot;Starting Redis server...&quot;</span><br><span class="line">                $EXEC $CONF</span><br><span class="line">        fi</span><br><span class="line">        ;;</span><br><span class="line">    stop)</span><br><span class="line">        if [ ! -f $PIDFILE ]</span><br><span class="line">        then</span><br><span class="line">                echo &quot;$PIDFILE does not exist, process is not running&quot;</span><br><span class="line">        else</span><br><span class="line">                PID=$(cat $PIDFILE)</span><br><span class="line">                echo &quot;Stopping ...&quot;</span><br><span class="line">                $CLIEXEC -p $REDISPORT shutdown</span><br><span class="line">                while [ -x /proc/$&#123;PID&#125; ]</span><br><span class="line">                do</span><br><span class="line">                    echo &quot;Waiting for Redis to shutdown ...&quot;</span><br><span class="line">                    sleep 1</span><br><span class="line">                done</span><br><span class="line">                echo &quot;Redis stopped&quot;</span><br><span class="line">        fi</span><br><span class="line">        ;;</span><br><span class="line">    *)</span><br><span class="line">        echo &quot;Please use start or stop as first argument&quot;</span><br><span class="line">Type  :quit&lt;Enter&gt;  to exit Vim   </span><br></pre></td></tr></table></figure>
-<p>此处直接配置开启自启动 <code>chkconfig redisd on</code> 将报错误： <code>service redisd does not support chkconfig</code> </p>
-<p>在启动脚本开头添加如下两行注释以修改其运行级别：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#!&#x2F;bin&#x2F;sh</span><br><span class="line"># chkconfig:   2345 90 10</span><br><span class="line"># description:  Redis is a persistent key-value database</span><br><span class="line">#</span><br></pre></td></tr></table></figure>
-
-
-<p>设置即可成功。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#设置为开机自启动服务器</span><br><span class="line">chkconfig redisd on</span><br><span class="line">#打开服务</span><br><span class="line">service redisd start</span><br><span class="line">#关闭服务</span><br><span class="line">service redisd stop</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="远程连接工具"><a href="#远程连接工具" class="headerlink" title="远程连接工具"></a>远程连接工具</h4>]]></content>
-      <categories>
-        <category>环境部署</category>
-      </categories>
-      <tags>
-        <tag>环境部署</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>封装Mybatis输出结果与模糊查询</title>
     <url>/2021/03/14/%E5%B0%81%E8%A3%85Mybatis%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C/</url>
     <content><![CDATA[<h3 id="resultType"><a href="#resultType" class="headerlink" title="resultType"></a>resultType</h3><p>resultType: 执行 sql 得到 ResultSet 转换的类型，使用类型的完全限定名或别名。 注意如果返回的是集合，那应该设置为集合包含的类型，而不是集合本身。resultType 和 resultMap，不能同时使用。</p>
@@ -3398,125 +3313,88 @@
       </tags>
   </entry>
   <entry>
-    <title>推荐系统初瞰</title>
-    <url>/2021/10/29/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%88%9D%E7%9E%B0/</url>
-    <content><![CDATA[<h2 id="一、走进推荐系统的世界"><a href="#一、走进推荐系统的世界" class="headerlink" title="一、走进推荐系统的世界"></a>一、走进推荐系统的世界</h2><p>“啤酒与尿布” 的故事相信很多人都听过，年轻爸爸去超市购买尿布时，经常会买点啤酒犒劳自己。因此，沃尔玛将这两种商品进行了捆绑销售，最终获得了更好的销量。</p>
-<p><img data-src="http://image.woshipm.com/wp-files/2020/10/tdJ56hy73JzRx6F1Fdac.jpeg" alt="23张图，带你入门推荐系统"></p>
-<p>“啤酒与尿布”的故事</p>
-<p>这个故事背后的理论依据就是 “推荐算法”，因为尿布和啤酒经常出现在同一个购物车中，那么向购买尿布的年轻爸爸推荐啤酒确实有一定道理。</p>
-<h3 id="1-推荐系统到底解决的是什么问题？"><a href="#1-推荐系统到底解决的是什么问题？" class="headerlink" title="1. 推荐系统到底解决的是什么问题？"></a>1. 推荐系统到底解决的是什么问题？</h3><p>推荐系统从20世纪90年代就被提出来了，但是真正进入大众视野以及在各大互联网公司中流行起来，还是最近几年的事情。</p>
-<p>随着移动互联网的发展，越来越多的信息开始在互联网上传播，产生了严重的信息过载。因此，如何从众多信息中找到用户感兴趣的信息，这个便是推荐系统的价值。精准推荐解决了用户痛点，提升了用户体验，最终便能留住用户。</p>
-<p>推荐系统本质上就是一个信息过滤系统，通常分为：召回、排序、重排序这3个环节，每个环节逐层过滤，最终从海量的物料库中筛选出几十个用户可能感兴趣的物品推荐给用户。</p>
-<p><img data-src="http://image.woshipm.com/wp-files/2020/10/l3M22Y9Gl96kIA9wSO0P.png" alt="23张图，带你入门推荐系统"></p>
-<p>推荐系统的分阶段过滤流程</p>
-<h3 id="2-推荐系统的应用场景"><a href="#2-推荐系统的应用场景" class="headerlink" title="2. 推荐系统的应用场景"></a>2. 推荐系统的应用场景</h3><p>哪里有海量信息，哪里就有推荐系统，我们每天最常用的APP都涉及到推荐功能：</p>
-<ul>
-<li>资讯类：今日头条、腾讯新闻等</li>
-<li>电商类：淘宝、京东、拼多多、亚马逊等</li>
-<li>娱乐类：抖音、快手、爱奇艺等</li>
-<li>生活服务类：美团、大众点评、携程等</li>
-<li>社交类：微信、陌陌、脉脉等</li>
-</ul>
-<p><img data-src="http://image.woshipm.com/wp-files/2020/10/DJTxPLhs3b2CkIQ2KjlQ.png" alt="23张图，带你入门推荐系统"></p>
-<p>头条、京东、网易云音乐中的推荐功能</p>
-<p>推荐系统的应用场景通常分为以下两类：</p>
-<ul>
-<li>基于用户维度的推荐：根据用户的历史行为和兴趣进行推荐，比如淘宝首页的猜你喜欢、抖音的首页推荐等。</li>
-<li>基于物品维度的推荐：根据用户当前浏览的标的物进行推荐，比如打开京东APP的商品详情页，会推荐和主商品相关的商品给你。</li>
-</ul>
-<h3 id="3-搜索、推荐、广告三者的异同"><a href="#3-搜索、推荐、广告三者的异同" class="headerlink" title="3. 搜索、推荐、广告三者的异同"></a>3. 搜索、推荐、广告三者的异同</h3><p>搜索和推荐是AI算法最常见的两个应用场景，在技术上有相通的地方。这里提到广告，主要考虑很多没做过广告业务的同学不清楚为什么广告和搜索、推荐会有关系，所以做下解释。</p>
-<ul>
-<li>搜索：有明确的搜索意图，搜索出来的结果和用户的搜索词相关。</li>
-<li>推荐：不具有目的性，依赖用户的历史行为和画像数据进行个性化推荐。</li>
-<li>广告：借助搜索和推荐技术实现广告的精准投放，可以将广告理解成搜索推荐的一种应用场景，技术方案更复杂，涉及到智能预算控制、广告竞价等。</li>
-</ul>
-<h2 id="二、推荐系统的整体架构"><a href="#二、推荐系统的整体架构" class="headerlink" title="二、推荐系统的整体架构"></a>二、推荐系统的整体架构</h2><p><img data-src="http://image.woshipm.com/wp-files/2020/10/PA8qx7X5tW3yPM7jKQ7D.png" alt="23张图，带你入门推荐系统"></p>
-<p>推荐系统的整体架构</p>
-<p>上面是推荐系统的整体架构图，自下而上分成了多层，各层的主要作用如下：</p>
-<ul>
-<li>数据源：推荐算法所依赖的各种数据源，包括物品数据、用户数据、行为日志、其他可利用的业务数据、甚至公司外部的数据；</li>
-<li>计算平台：负责对底层的各种异构数据进行清洗、加工，离线计算和实时计算；</li>
-<li>数据存储层：存储计算平台处理后的数据，根据需要可落地到不同的存储系统中，比如Redis中可以存储用户特征和用户画像数据，ES中可以用来索引物品数据，Faiss中可以存储用户或者物品的embedding向量等；</li>
-<li>召回层：包括各种推荐策略或者算法，比如经典的协同过滤，基于内容的召回，基于向量的召回，用于托底的热门推荐等。为了应对线上高并发的流量，召回结果通常会预计算好，建立好倒排索引后存入缓存中；</li>
-<li>融合过滤层：触发多路召回，由于召回层的每个召回源都会返回一个候选集，因此这一层需要进行融合和过滤；</li>
-<li>排序层：利用机器学习或者深度学习模型，以及更丰富的特征进行重排序，筛选出更小、更精准的推荐集合返回给上层业务。</li>
-</ul>
-<p>从数据存储层到召回层、再到融合过滤层和排序层，候选集逐层减少，但是精准性要求越来越高，因此也带来了计算复杂度的逐层增加，这个便是推荐系统的最大挑战。</p>
-<p>其实对于推荐引擎来说，最核心的部分主要是两块：特征和算法。</p>
-<p><img data-src="http://image.woshipm.com/wp-files/2020/10/7BwaFaznNDQVbRJn6i6y.png" alt="23张图，带你入门推荐系统"></p>
-<p>推荐引擎的核心功能和技术方案</p>
-<p>特征计算由于数据量大，通常采用大数据的离线和实时处理技术，像Spark、Flink等。然后将计算结果保存在Redis或者其他存储系统中（比如HBase、MongoDB或者ES），供召回和排序模块使用。</p>
-<p>召回算法的作用是：从海量数据中快速获取一批候选数据，要求是快和尽可能的准。这一层通常有丰富的策略和算法，用来确保多样性，为了更好的推荐效果，某些算法也会做成近实时的。</p>
-<p>排序算法的作用是：对多路召回的候选集进行精细化排序。它会利用物品、用户以及它们之间的交叉特征，然后通过复杂的机器学习或者深度学习模型进行打分排序，这一层的特点是计算复杂但是结果更精准。</p>
-<h2 id="三、图解经典的协同过滤算法"><a href="#三、图解经典的协同过滤算法" class="headerlink" title="三、图解经典的协同过滤算法"></a>三、图解经典的协同过滤算法</h2><p>了解了推荐系统的整体架构和技术方案后，下面带大家深入一下算法细节，这里选择图解的是推荐系统中的明星算法：协同过滤（Collaborative Filtering，CF）。</p>
-<p>对于工程同学来说，可能觉得 AI 算法晦涩难懂，门槛太高，确实很多深度学习算法的确是这样，但是协同过滤却是一个简单同时效果很好的算法，只要你有初中数学的基础就能看懂。</p>
-<h3 id="1-协同过滤是什么？"><a href="#1-协同过滤是什么？" class="headerlink" title="1. 协同过滤是什么？"></a>1. 协同过滤是什么？</h3><p>协同过滤算法的核心就是「找相似」，它基于用户的历史行为（浏览、收藏、评论等），去发现用户对物品的喜好，并对喜好进行度量和打分，最终筛选出推荐集合，它又包括两个分支：</p>
-<p><strong>1）基于用户的协同过滤</strong></p>
-<p>User-CF，核心是找相似的人。</p>
-<p>比如下图中，用户 A 和用户 C 都购买过物品 a 和物品 b，那么可以认为 A 和 C 是相似的，因为他们共同喜欢的物品多。这样，就可以将用户 A 购买过的物品 d 推荐给用户 C。</p>
-<p><img data-src="http://image.woshipm.com/wp-files/2020/10/fR4FCKovZM14CyUN5SUp.png" alt="23张图，带你入门推荐系统"></p>
-<p>基于用户的协同过滤示例</p>
-<p><strong>2）基于物品的协同过滤</strong></p>
-<p>Item-CF，核心是找相似的物品。比如下图中，物品 a 和物品 b 同时被用户 A，B，C 购买了，那么物品 a 和 物品 b 被认为是相似的，因为它们的共现次数很高。</p>
-<p>这样，如果用户 D 购买了物品 a，则可以将和物品 a 最相似的物品 b 推荐给用户 D。</p>
-<p><img data-src="http://image.woshipm.com/wp-files/2020/10/lTBoS62bdkl7UABH1j69.png" alt="23张图，带你入门推荐系统"></p>
-<p>基于物品的协同过滤示例</p>
-<h3 id="2-如何找相似？"><a href="#2-如何找相似？" class="headerlink" title="2. 如何找相似？"></a>2. 如何找相似？</h3><p>前面讲到，协同过滤的核心就是找相似，User-CF是找用户之间的相似，Item-CF是找物品之间的相似，那到底如何衡量两个用户或者物品之间的相似性呢？</p>
-<p>我们都知道，对于坐标中的两个点，如果它们之间的夹角越小，这两个点越相似，这就是初中学过的余弦距离，它的计算公式如下：</p>
-<p><img data-src="http://image.woshipm.com/wp-files/2020/10/cRZVdbR9aBSUd50iDrx1.png" alt="23张图，带你入门推荐系统"></p>
-<p>举个例子，A坐标是（0，3，1），B坐标是（4，3，0），那么这两个点的余弦距离是0.569，余弦距离越接近1，表示它们越相似。</p>
-<p><img data-src="http://image.woshipm.com/wp-files/2020/10/GgBtexz9xXrWVVd6l0Uv.png" alt="23张图，带你入门推荐系统"></p>
-<p>除了余弦距离，衡量相似性的方法还有很多种，比如：欧式距离、皮尔逊相关系数、Jaccard 相似系数等等，这里不做展开，只是计算公式上的差异而已。</p>
-<h3 id="3-Item-CF的算法流程"><a href="#3-Item-CF的算法流程" class="headerlink" title="3. Item-CF的算法流程"></a>3. Item-CF的算法流程</h3><p>清楚了相似性的定义后，下面以Item-CF为例，详细说下这个算法到底是如何选出推荐物品的？</p>
-<p>第一步：整理物品的共现矩阵</p>
-<p>假设有 A、B、C、D、E 5个用户，其中用户 A 喜欢物品 a、b、c，用户 B 喜欢物品 a、b等等。</p>
-<p><img data-src="http://image.woshipm.com/wp-files/2020/10/GS77wKUXFNn8rP4IqqIF.png" alt="23张图，带你入门推荐系统"></p>
-<p>所谓共现，即：两个物品被同一个用户喜欢了。比如物品 a 和 b，由于他们同时被用户 A、B、C 喜欢，所以 a 和 b 的共现次数是3，采用这种统计方法就可以快速构建出共现矩阵。</p>
-<p>第二步：计算物品的相似度矩阵</p>
-<p>对于 Item-CF 算法来说，一般不采用前面提到的余弦距离来衡量物品的相似度，而是采用下面的公式：</p>
-<p><img data-src="http://image.woshipm.com/wp-files/2020/10/ZGWFevvkP2qbNy9mjZUn.png" alt="23张图，带你入门推荐系统"></p>
-<p>其中，N(u) 表示喜欢物品 u 的用户数，N(v) 表示喜欢物品 v 的用户数，两者的交集表示同时喜欢物品 u 和物品 v 的用户数。很显然，如果两个物品同时被很多人喜欢，那么这两个物品越相似。</p>
-<p>基于第1步计算出来的共现矩阵以及每个物品的喜欢人数，便可以构造出物品的相似度矩阵：</p>
-<p><img data-src="http://image.woshipm.com/wp-files/2020/10/SEUFaXvTrlIZ4NwMMUHG.png" alt="23张图，带你入门推荐系统"></p>
-<p>第三步：推荐物品</p>
-<p>最后一步，便可以基于相似度矩阵推荐物品了，公式如下：</p>
-<p><img data-src="http://image.woshipm.com/wp-files/2020/10/sehIXEYg91OlQ4oGwwBf.png" alt="23张图，带你入门推荐系统"></p>
-<p>其中，Puj 表示用户 u 对物品 j 的感兴趣程度，值越大，越值得被推荐。N(u) 表示用户 u 感兴趣的物品集合，S(j,N) 表示和物品 j 最相似的前 N 个物品，Wij 表示物品 i 和物品 j 的相似度，Rui表示用户 u 对物品 i 的兴趣度。</p>
-<p>上面的公式有点抽象，直接看例子更容易理解，假设我要给用户 E 推荐物品，前面我们已经知道用户 E 喜欢物品 b 和物品 c，喜欢程度假设分别为 0.6 和 0.4。那么，利用上面的公式计算出来的推荐结果如下：</p>
-<p><img data-src="http://image.woshipm.com/wp-files/2020/10/cHWgi8xs5QeilawOcyIc.png" alt="23张图，带你入门推荐系统"></p>
-<p>因为物品 b 和物品 c 已经被用户 E 喜欢过了，所以不再重复推荐。最终对比用户 E 对物品 a 和物品 d 的感兴趣程度，因为 0.682 &gt; 0.3，因此选择推荐物品 a。</p>
-<h2 id="四、从0到1搭建一个推荐系统"><a href="#四、从0到1搭建一个推荐系统" class="headerlink" title="四、从0到1搭建一个推荐系统"></a>四、从0到1搭建一个推荐系统</h2><p>有了上面的理论基础后，我们就可以用 Python 快速实现出一个推荐系统。</p>
-<h3 id="1-选择数据集"><a href="#1-选择数据集" class="headerlink" title="1. 选择数据集"></a>1. 选择数据集</h3><p>这里采用的是推荐领域非常经典的 MovieLens 数据集，它是一个关于电影评分的数据集，官网上提供了多个不同大小的版本，下面以 ml-1m 数据集（大约100万条用户评分记录）为例。</p>
-<p>下载解压后，文件夹中包含：ratings.dat、movies.dat、users.dat 3个文件，共6040个用户，3900部电影，1000209条评分记录。各个文件的格式都是一样的，每行表示一条记录，字段之间采用 :: 进行分割。</p>
-<p>以ratings.dat为例，每一行包括4个属性：UserID, MovieID, Rating, Timestamp。通过脚本可以统计出不同评分的人数分布：</p>
-<p><img data-src="http://image.woshipm.com/wp-files/2020/10/8cEVSn9SRtllHfsN7XHl.jpeg" alt="23张图，带你入门推荐系统"></p>
-<h3 id="2-读取原始数据"><a href="#2-读取原始数据" class="headerlink" title="2. 读取原始数据"></a>2. 读取原始数据</h3><p>程序主要使用数据集中的 ratings.dat 这个文件，通过解析该文件，抽取出 user_id、movie_id、rating 3个字段，最终构造出算法依赖的数据，并保存在变量 dataset 中，它的格式为：dict[user_id][movie_id] = rate</p>
-<p><img data-src="http://image.woshipm.com/wp-files/2020/10/qgkENiWG0sCSUce0DQhX.jpeg" alt="23张图，带你入门推荐系统"></p>
-<h3 id="3-构造物品的相似度矩阵"><a href="#3-构造物品的相似度矩阵" class="headerlink" title="3. 构造物品的相似度矩阵"></a>3. 构造物品的相似度矩阵</h3><p>基于第 2 步的 dataset，可以进一步统计出每部电影的评分次数以及电影的共生矩阵，然后再生成相似度矩阵。</p>
-<p><img data-src="http://image.woshipm.com/wp-files/2020/10/8vL2jjyfSgiCb8PTJi8k.png" alt="23张图，带你入门推荐系统"></p>
-<h3 id="4-基于相似度矩阵推荐物品"><a href="#4-基于相似度矩阵推荐物品" class="headerlink" title="4. 基于相似度矩阵推荐物品"></a>4. 基于相似度矩阵推荐物品</h3><p>最后，可以基于相似度矩阵进行推荐了，输入一个用户id，先针对该用户评分过的电影，依次选出 top 10 最相似的电影，然后加权求和后计算出每个候选电影的最终评分，最后再选择得分前 5 的电影进行推荐。</p>
-<p><img data-src="http://image.woshipm.com/wp-files/2020/10/g85iBVfEtMFaHFbYtpG2.png" alt="23张图，带你入门推荐系统"></p>
-<h3 id="5-调用推荐系统"><a href="#5-调用推荐系统" class="headerlink" title="5. 调用推荐系统"></a>5. 调用推荐系统</h3><p>下面选择UserId=1 这个用户，看下程序的执行结果。由于推荐程序输出的是 movieId 列表，为了更直观的了解推荐结果，这里转换成电影的标题进行输出。</p>
-<p><img data-src="http://image.woshipm.com/wp-files/2020/10/WJcKchOscTClEcmu3p5f.png" alt="23张图，带你入门推荐系统"></p>
-<p>最终推荐的前5个电影为：</p>
-<p><img data-src="http://image.woshipm.com/wp-files/2020/10/t4Q0R80zxGFFk2ekQvF1.png" alt="23张图，带你入门推荐系统"></p>
-<h2 id="五、线上推荐系统的挑战"><a href="#五、线上推荐系统的挑战" class="headerlink" title="五、线上推荐系统的挑战"></a>五、线上推荐系统的挑战</h2><p>通过上面的介绍，大家对推荐系统的基本构成应该有了一个初步认识，但是真正运用到线上真实环境时，还会遇到很多算法和工程上的挑战，绝对不是几十行 Python 代码可以搞定的。</p>
-<blockquote>
-<ol>
-<li>上面的示例使用了标准化的数据集，而线上环境的数据是非标准化的，因此涉及到海量数据的收集、清洗和加工，最终构造出模型可使用的数据集。</li>
-<li>复杂且繁琐的特征工程，都说算法模型的上限由数据和特征决定。对于线上环境，需要从业务角度选择出可用的特征，然后对数据进行清洗、标准化、归一化、离散化，并通过实验效果进一步验证特征的有效性。</li>
-<li>算法复杂度如何降低？比如上面介绍的Item-CF算法，时间和空间复杂度都是O(N×N)，而线上环境的数据都是千万甚至上亿级别的，如果不做算法优化，可能几天都跑不出数据，或者内存中根本放不下如此大的矩阵数据。</li>
-<li>实时性如何满足？因为用户的兴趣随着他们最新的行为在实时变化的，如果模型只是基于历史数据进行推荐，可能结果不够精准。因此，如何满足实时性要求，以及对于新加入的物品或者用户该如何推荐，都是要解决的问题。</li>
-<li>算法效果和性能的权衡。从算法角度追求多样性和准确性，从工程角度追求性能，这两者之间必须找到一个平衡点。</li>
-<li>推荐系统的稳定性和效果追踪。需要有一套完善的数据监控和应用监控体系，同时有 ABTest 平台进行灰度实验，进行效果对比。</li>
-</ol>
+    <title>在Linux环境安装redis</title>
+    <url>/2021/03/18/%E5%9C%A8Linux%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85redis/</url>
+    <content><![CDATA[<h2 id="开发环境搭建"><a href="#开发环境搭建" class="headerlink" title="开发环境搭建"></a>开发环境搭建</h2><h3 id="云服务器部署redis"><a href="#云服务器部署redis" class="headerlink" title="云服务器部署redis"></a>云服务器部署redis</h3><h4 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h4><blockquote>
+<p>下载</p>
 </blockquote>
-]]></content>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">wget http://download.redis.io/releases/redis-stable.tar.gz </span><br></pre></td></tr></table></figure>
+<p>这样就直接下载好了稳定版本。</p>
+<blockquote>
+<p>解压</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tar zxvf redis-stable.tar.gz</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>编译</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">进入到redis的src目录下</span></span><br><span class="line">cd redis/src</span><br><span class="line">make</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>报错处理方法</p>
+</blockquote>
+<ul>
+<li><p>出现了 <strong>zmalloc.h:50:31: error: jemalloc/jemalloc.h: No such file or directory</strong></p>
+<ul>
+<li><blockquote>
+<pre><code class="shell">make MALLOC=libc
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- 出现了serve.c方面的报错</span><br><span class="line"></span><br><span class="line"> &#123;%asset_image 01.png%&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">gcc的版本太低，因为redis本身使用C语言写的，在编译时需要用到GCC编译器，版本过低的话，就会报这个错。</span><br><span class="line"></span><br><span class="line">&gt;[root@localhost redis-6.0.1]# gcc -v                             # 查看gcc版本</span><br><span class="line">&gt;[root@localhost redis-6.0.1]# yum -y install centos-release-scl  # 升级到9.1版本</span><br><span class="line">&gt;[root@localhost redis-6.0.1]# yum -y install devtoolset-9-gcc devtoolset-9-gcc-c++ devtoolset-9-binutils</span><br><span class="line">&gt;[root@localhost redis-6.0.1]# scl enable devtoolset-9 bash</span><br><span class="line">&gt;以上为临时启用，如果要长期使用gcc 9.1的话：</span><br><span class="line">&gt;[root@localhost redis-6.0.1]# echo &quot;source &#x2F;opt&#x2F;rh&#x2F;devtoolset-9&#x2F;enable&quot; &gt;&gt;&#x2F;etc&#x2F;profile</span><br><span class="line"></span><br><span class="line">再执行编译，PREFIX 安装目录</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;shell</span><br><span class="line">[root@localhost redis-6.0.1]# make install PREFIX&#x3D;&#x2F;usr&#x2F;local&#x2F;redis</span><br></pre></td></tr></table></figure></code></pre>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>安装成功</p>
+</blockquote>
+
+
+
+
+<blockquote>
+<p>启动redis服务</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd redis/src</span><br><span class="line"><span class="meta">#</span><span class="bash">运行以下命令</span></span><br><span class="line">./redis-server</span><br></pre></td></tr></table></figure>
+<p>启动成功界面</p>
+ 
+
+
+
+<p><strong>接下来就可以愉快的使用redis了。</strong></p>
+<h4 id="配置过程"><a href="#配置过程" class="headerlink" title="配置过程"></a>配置过程</h4><blockquote>
+<p>redis的启动方式</p>
+</blockquote>
+<ul>
+<li><p>直接启动</p>
+<p>进入到redis根目录，执行以下命令，其中，加上‘&amp;’号可以使redis以后台程序运行</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">. /redis-server  &amp;</span><br></pre></td></tr></table></figure></li>
+<li><p>通过指定配置文件来启动</p>
+<p> 可以为redis服务启动指定配置文件，例如配置为/etc/redis/6379.conf。当然，配置文件不是绝对的，可以通过个人来指定。</p>
+<p>最好不要在原来的redis-conf上进行修改，最好复制一个新的配置文件。</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">. /redis-server  /etc/redis/6379 .conf</span><br></pre></td></tr></table></figure>
+<p>​        如果更改了端口，使用<code>redis-cli</code>客户端连接时，也需要指定端口，例如</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">redis-cli -p 6380</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>使用redis启动脚本来设置开机自启动</p>
+<p> 启动脚本 redis_init_script 位于位于Redis的 /utils/ 目录下，redis_init_script脚本代码如下：</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta"> #</span><span class="bash">!/bin/sh</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="bash"><span class="comment"># Simple Redis init.d script conceived to work on Linux systems</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> as it does use of the /proc filesystem.</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">## BEGIN INIT INFO</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Provides:     redis_6379</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Default-Start:        2 3 4 5</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Default-Stop:         0 1 6</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Short-Description:    Redis data structure server</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Description:          Redis data structure server. See https://redis.io</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">## END INIT INFO</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">redis服务器监听端口</span></span><br><span class="line">REDISPORT=6379 </span><br><span class="line"><span class="meta">#</span><span class="bash">服务端所处位置</span></span><br><span class="line">EXEC=/usr/local/bin/redis-server</span><br><span class="line"><span class="meta">#</span><span class="bash">客户端位置</span></span><br><span class="line">CLIEXEC=/usr/local/bin/redis-cli</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">redis的PID文件位置，需要修改</span></span><br><span class="line">PIDFILE=/var/run/redis_$&#123;REDISPORT&#125;.pid</span><br><span class="line"><span class="meta">#</span><span class="bash">redis的配置文件位置，需将<span class="variable">$&#123;REDISPORT&#125;</span>修改为文件名</span></span><br><span class="line">CONF=&quot;/etc/redis/$&#123;REDISPORT&#125;.conf&quot;</span><br><span class="line"></span><br><span class="line">case &quot;$1&quot; in</span><br><span class="line">    start)</span><br><span class="line">        if [ -f $PIDFILE ]</span><br><span class="line">        then</span><br><span class="line">                echo &quot;$PIDFILE exists, process is already running or crashed&quot;</span><br><span class="line">        else</span><br><span class="line">                echo &quot;Starting Redis server...&quot;</span><br><span class="line">                $EXEC $CONF</span><br><span class="line">        fi</span><br><span class="line">        ;;</span><br><span class="line">    stop)</span><br><span class="line">        if [ ! -f $PIDFILE ]</span><br><span class="line">        then</span><br><span class="line">                echo &quot;$PIDFILE does not exist, process is not running&quot;</span><br><span class="line">        else</span><br><span class="line">                PID=$(cat $PIDFILE)</span><br><span class="line">                echo &quot;Stopping ...&quot;</span><br><span class="line">                $CLIEXEC -p $REDISPORT shutdown</span><br><span class="line">                while [ -x /proc/$&#123;PID&#125; ]</span><br><span class="line">                do</span><br><span class="line">                    echo &quot;Waiting for Redis to shutdown ...&quot;</span><br><span class="line">                    sleep 1</span><br><span class="line">                done</span><br><span class="line">                echo &quot;Redis stopped&quot;</span><br><span class="line">        fi</span><br><span class="line">        ;;</span><br><span class="line">    *)</span><br><span class="line">        echo &quot;Please use start or stop as first argument&quot;</span><br><span class="line">Type  :quit&lt;Enter&gt;  to exit Vim   </span><br></pre></td></tr></table></figure>
+<p>此处直接配置开启自启动 <code>chkconfig redisd on</code> 将报错误： <code>service redisd does not support chkconfig</code> </p>
+<p>在启动脚本开头添加如下两行注释以修改其运行级别：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#!&#x2F;bin&#x2F;sh</span><br><span class="line"># chkconfig:   2345 90 10</span><br><span class="line"># description:  Redis is a persistent key-value database</span><br><span class="line">#</span><br></pre></td></tr></table></figure>
+
+
+<p>设置即可成功。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#设置为开机自启动服务器</span><br><span class="line">chkconfig redisd on</span><br><span class="line">#打开服务</span><br><span class="line">service redisd start</span><br><span class="line">#关闭服务</span><br><span class="line">service redisd stop</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="远程连接工具"><a href="#远程连接工具" class="headerlink" title="远程连接工具"></a>远程连接工具</h4>]]></content>
       <categories>
-        <category>推荐系统</category>
+        <category>环境部署</category>
       </categories>
       <tags>
-        <tag>推荐系统入门</tag>
+        <tag>环境部署</tag>
       </tags>
   </entry>
   <entry>
@@ -3704,14 +3582,125 @@
       </tags>
   </entry>
   <entry>
-    <title>牛客网刷题-操作系统2</title>
-    <url>/2022/02/18/%E7%89%9B%E5%AE%A2%E7%BD%91%E5%88%B7%E9%A2%98-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F2/</url>
-    <content><![CDATA[]]></content>
+    <title>推荐系统初瞰</title>
+    <url>/2021/10/29/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%88%9D%E7%9E%B0/</url>
+    <content><![CDATA[<h2 id="一、走进推荐系统的世界"><a href="#一、走进推荐系统的世界" class="headerlink" title="一、走进推荐系统的世界"></a>一、走进推荐系统的世界</h2><p>“啤酒与尿布” 的故事相信很多人都听过，年轻爸爸去超市购买尿布时，经常会买点啤酒犒劳自己。因此，沃尔玛将这两种商品进行了捆绑销售，最终获得了更好的销量。</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/tdJ56hy73JzRx6F1Fdac.jpeg" alt="23张图，带你入门推荐系统"></p>
+<p>“啤酒与尿布”的故事</p>
+<p>这个故事背后的理论依据就是 “推荐算法”，因为尿布和啤酒经常出现在同一个购物车中，那么向购买尿布的年轻爸爸推荐啤酒确实有一定道理。</p>
+<h3 id="1-推荐系统到底解决的是什么问题？"><a href="#1-推荐系统到底解决的是什么问题？" class="headerlink" title="1. 推荐系统到底解决的是什么问题？"></a>1. 推荐系统到底解决的是什么问题？</h3><p>推荐系统从20世纪90年代就被提出来了，但是真正进入大众视野以及在各大互联网公司中流行起来，还是最近几年的事情。</p>
+<p>随着移动互联网的发展，越来越多的信息开始在互联网上传播，产生了严重的信息过载。因此，如何从众多信息中找到用户感兴趣的信息，这个便是推荐系统的价值。精准推荐解决了用户痛点，提升了用户体验，最终便能留住用户。</p>
+<p>推荐系统本质上就是一个信息过滤系统，通常分为：召回、排序、重排序这3个环节，每个环节逐层过滤，最终从海量的物料库中筛选出几十个用户可能感兴趣的物品推荐给用户。</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/l3M22Y9Gl96kIA9wSO0P.png" alt="23张图，带你入门推荐系统"></p>
+<p>推荐系统的分阶段过滤流程</p>
+<h3 id="2-推荐系统的应用场景"><a href="#2-推荐系统的应用场景" class="headerlink" title="2. 推荐系统的应用场景"></a>2. 推荐系统的应用场景</h3><p>哪里有海量信息，哪里就有推荐系统，我们每天最常用的APP都涉及到推荐功能：</p>
+<ul>
+<li>资讯类：今日头条、腾讯新闻等</li>
+<li>电商类：淘宝、京东、拼多多、亚马逊等</li>
+<li>娱乐类：抖音、快手、爱奇艺等</li>
+<li>生活服务类：美团、大众点评、携程等</li>
+<li>社交类：微信、陌陌、脉脉等</li>
+</ul>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/DJTxPLhs3b2CkIQ2KjlQ.png" alt="23张图，带你入门推荐系统"></p>
+<p>头条、京东、网易云音乐中的推荐功能</p>
+<p>推荐系统的应用场景通常分为以下两类：</p>
+<ul>
+<li>基于用户维度的推荐：根据用户的历史行为和兴趣进行推荐，比如淘宝首页的猜你喜欢、抖音的首页推荐等。</li>
+<li>基于物品维度的推荐：根据用户当前浏览的标的物进行推荐，比如打开京东APP的商品详情页，会推荐和主商品相关的商品给你。</li>
+</ul>
+<h3 id="3-搜索、推荐、广告三者的异同"><a href="#3-搜索、推荐、广告三者的异同" class="headerlink" title="3. 搜索、推荐、广告三者的异同"></a>3. 搜索、推荐、广告三者的异同</h3><p>搜索和推荐是AI算法最常见的两个应用场景，在技术上有相通的地方。这里提到广告，主要考虑很多没做过广告业务的同学不清楚为什么广告和搜索、推荐会有关系，所以做下解释。</p>
+<ul>
+<li>搜索：有明确的搜索意图，搜索出来的结果和用户的搜索词相关。</li>
+<li>推荐：不具有目的性，依赖用户的历史行为和画像数据进行个性化推荐。</li>
+<li>广告：借助搜索和推荐技术实现广告的精准投放，可以将广告理解成搜索推荐的一种应用场景，技术方案更复杂，涉及到智能预算控制、广告竞价等。</li>
+</ul>
+<h2 id="二、推荐系统的整体架构"><a href="#二、推荐系统的整体架构" class="headerlink" title="二、推荐系统的整体架构"></a>二、推荐系统的整体架构</h2><p><img data-src="http://image.woshipm.com/wp-files/2020/10/PA8qx7X5tW3yPM7jKQ7D.png" alt="23张图，带你入门推荐系统"></p>
+<p>推荐系统的整体架构</p>
+<p>上面是推荐系统的整体架构图，自下而上分成了多层，各层的主要作用如下：</p>
+<ul>
+<li>数据源：推荐算法所依赖的各种数据源，包括物品数据、用户数据、行为日志、其他可利用的业务数据、甚至公司外部的数据；</li>
+<li>计算平台：负责对底层的各种异构数据进行清洗、加工，离线计算和实时计算；</li>
+<li>数据存储层：存储计算平台处理后的数据，根据需要可落地到不同的存储系统中，比如Redis中可以存储用户特征和用户画像数据，ES中可以用来索引物品数据，Faiss中可以存储用户或者物品的embedding向量等；</li>
+<li>召回层：包括各种推荐策略或者算法，比如经典的协同过滤，基于内容的召回，基于向量的召回，用于托底的热门推荐等。为了应对线上高并发的流量，召回结果通常会预计算好，建立好倒排索引后存入缓存中；</li>
+<li>融合过滤层：触发多路召回，由于召回层的每个召回源都会返回一个候选集，因此这一层需要进行融合和过滤；</li>
+<li>排序层：利用机器学习或者深度学习模型，以及更丰富的特征进行重排序，筛选出更小、更精准的推荐集合返回给上层业务。</li>
+</ul>
+<p>从数据存储层到召回层、再到融合过滤层和排序层，候选集逐层减少，但是精准性要求越来越高，因此也带来了计算复杂度的逐层增加，这个便是推荐系统的最大挑战。</p>
+<p>其实对于推荐引擎来说，最核心的部分主要是两块：特征和算法。</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/7BwaFaznNDQVbRJn6i6y.png" alt="23张图，带你入门推荐系统"></p>
+<p>推荐引擎的核心功能和技术方案</p>
+<p>特征计算由于数据量大，通常采用大数据的离线和实时处理技术，像Spark、Flink等。然后将计算结果保存在Redis或者其他存储系统中（比如HBase、MongoDB或者ES），供召回和排序模块使用。</p>
+<p>召回算法的作用是：从海量数据中快速获取一批候选数据，要求是快和尽可能的准。这一层通常有丰富的策略和算法，用来确保多样性，为了更好的推荐效果，某些算法也会做成近实时的。</p>
+<p>排序算法的作用是：对多路召回的候选集进行精细化排序。它会利用物品、用户以及它们之间的交叉特征，然后通过复杂的机器学习或者深度学习模型进行打分排序，这一层的特点是计算复杂但是结果更精准。</p>
+<h2 id="三、图解经典的协同过滤算法"><a href="#三、图解经典的协同过滤算法" class="headerlink" title="三、图解经典的协同过滤算法"></a>三、图解经典的协同过滤算法</h2><p>了解了推荐系统的整体架构和技术方案后，下面带大家深入一下算法细节，这里选择图解的是推荐系统中的明星算法：协同过滤（Collaborative Filtering，CF）。</p>
+<p>对于工程同学来说，可能觉得 AI 算法晦涩难懂，门槛太高，确实很多深度学习算法的确是这样，但是协同过滤却是一个简单同时效果很好的算法，只要你有初中数学的基础就能看懂。</p>
+<h3 id="1-协同过滤是什么？"><a href="#1-协同过滤是什么？" class="headerlink" title="1. 协同过滤是什么？"></a>1. 协同过滤是什么？</h3><p>协同过滤算法的核心就是「找相似」，它基于用户的历史行为（浏览、收藏、评论等），去发现用户对物品的喜好，并对喜好进行度量和打分，最终筛选出推荐集合，它又包括两个分支：</p>
+<p><strong>1）基于用户的协同过滤</strong></p>
+<p>User-CF，核心是找相似的人。</p>
+<p>比如下图中，用户 A 和用户 C 都购买过物品 a 和物品 b，那么可以认为 A 和 C 是相似的，因为他们共同喜欢的物品多。这样，就可以将用户 A 购买过的物品 d 推荐给用户 C。</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/fR4FCKovZM14CyUN5SUp.png" alt="23张图，带你入门推荐系统"></p>
+<p>基于用户的协同过滤示例</p>
+<p><strong>2）基于物品的协同过滤</strong></p>
+<p>Item-CF，核心是找相似的物品。比如下图中，物品 a 和物品 b 同时被用户 A，B，C 购买了，那么物品 a 和 物品 b 被认为是相似的，因为它们的共现次数很高。</p>
+<p>这样，如果用户 D 购买了物品 a，则可以将和物品 a 最相似的物品 b 推荐给用户 D。</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/lTBoS62bdkl7UABH1j69.png" alt="23张图，带你入门推荐系统"></p>
+<p>基于物品的协同过滤示例</p>
+<h3 id="2-如何找相似？"><a href="#2-如何找相似？" class="headerlink" title="2. 如何找相似？"></a>2. 如何找相似？</h3><p>前面讲到，协同过滤的核心就是找相似，User-CF是找用户之间的相似，Item-CF是找物品之间的相似，那到底如何衡量两个用户或者物品之间的相似性呢？</p>
+<p>我们都知道，对于坐标中的两个点，如果它们之间的夹角越小，这两个点越相似，这就是初中学过的余弦距离，它的计算公式如下：</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/cRZVdbR9aBSUd50iDrx1.png" alt="23张图，带你入门推荐系统"></p>
+<p>举个例子，A坐标是（0，3，1），B坐标是（4，3，0），那么这两个点的余弦距离是0.569，余弦距离越接近1，表示它们越相似。</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/GgBtexz9xXrWVVd6l0Uv.png" alt="23张图，带你入门推荐系统"></p>
+<p>除了余弦距离，衡量相似性的方法还有很多种，比如：欧式距离、皮尔逊相关系数、Jaccard 相似系数等等，这里不做展开，只是计算公式上的差异而已。</p>
+<h3 id="3-Item-CF的算法流程"><a href="#3-Item-CF的算法流程" class="headerlink" title="3. Item-CF的算法流程"></a>3. Item-CF的算法流程</h3><p>清楚了相似性的定义后，下面以Item-CF为例，详细说下这个算法到底是如何选出推荐物品的？</p>
+<p>第一步：整理物品的共现矩阵</p>
+<p>假设有 A、B、C、D、E 5个用户，其中用户 A 喜欢物品 a、b、c，用户 B 喜欢物品 a、b等等。</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/GS77wKUXFNn8rP4IqqIF.png" alt="23张图，带你入门推荐系统"></p>
+<p>所谓共现，即：两个物品被同一个用户喜欢了。比如物品 a 和 b，由于他们同时被用户 A、B、C 喜欢，所以 a 和 b 的共现次数是3，采用这种统计方法就可以快速构建出共现矩阵。</p>
+<p>第二步：计算物品的相似度矩阵</p>
+<p>对于 Item-CF 算法来说，一般不采用前面提到的余弦距离来衡量物品的相似度，而是采用下面的公式：</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/ZGWFevvkP2qbNy9mjZUn.png" alt="23张图，带你入门推荐系统"></p>
+<p>其中，N(u) 表示喜欢物品 u 的用户数，N(v) 表示喜欢物品 v 的用户数，两者的交集表示同时喜欢物品 u 和物品 v 的用户数。很显然，如果两个物品同时被很多人喜欢，那么这两个物品越相似。</p>
+<p>基于第1步计算出来的共现矩阵以及每个物品的喜欢人数，便可以构造出物品的相似度矩阵：</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/SEUFaXvTrlIZ4NwMMUHG.png" alt="23张图，带你入门推荐系统"></p>
+<p>第三步：推荐物品</p>
+<p>最后一步，便可以基于相似度矩阵推荐物品了，公式如下：</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/sehIXEYg91OlQ4oGwwBf.png" alt="23张图，带你入门推荐系统"></p>
+<p>其中，Puj 表示用户 u 对物品 j 的感兴趣程度，值越大，越值得被推荐。N(u) 表示用户 u 感兴趣的物品集合，S(j,N) 表示和物品 j 最相似的前 N 个物品，Wij 表示物品 i 和物品 j 的相似度，Rui表示用户 u 对物品 i 的兴趣度。</p>
+<p>上面的公式有点抽象，直接看例子更容易理解，假设我要给用户 E 推荐物品，前面我们已经知道用户 E 喜欢物品 b 和物品 c，喜欢程度假设分别为 0.6 和 0.4。那么，利用上面的公式计算出来的推荐结果如下：</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/cHWgi8xs5QeilawOcyIc.png" alt="23张图，带你入门推荐系统"></p>
+<p>因为物品 b 和物品 c 已经被用户 E 喜欢过了，所以不再重复推荐。最终对比用户 E 对物品 a 和物品 d 的感兴趣程度，因为 0.682 &gt; 0.3，因此选择推荐物品 a。</p>
+<h2 id="四、从0到1搭建一个推荐系统"><a href="#四、从0到1搭建一个推荐系统" class="headerlink" title="四、从0到1搭建一个推荐系统"></a>四、从0到1搭建一个推荐系统</h2><p>有了上面的理论基础后，我们就可以用 Python 快速实现出一个推荐系统。</p>
+<h3 id="1-选择数据集"><a href="#1-选择数据集" class="headerlink" title="1. 选择数据集"></a>1. 选择数据集</h3><p>这里采用的是推荐领域非常经典的 MovieLens 数据集，它是一个关于电影评分的数据集，官网上提供了多个不同大小的版本，下面以 ml-1m 数据集（大约100万条用户评分记录）为例。</p>
+<p>下载解压后，文件夹中包含：ratings.dat、movies.dat、users.dat 3个文件，共6040个用户，3900部电影，1000209条评分记录。各个文件的格式都是一样的，每行表示一条记录，字段之间采用 :: 进行分割。</p>
+<p>以ratings.dat为例，每一行包括4个属性：UserID, MovieID, Rating, Timestamp。通过脚本可以统计出不同评分的人数分布：</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/8cEVSn9SRtllHfsN7XHl.jpeg" alt="23张图，带你入门推荐系统"></p>
+<h3 id="2-读取原始数据"><a href="#2-读取原始数据" class="headerlink" title="2. 读取原始数据"></a>2. 读取原始数据</h3><p>程序主要使用数据集中的 ratings.dat 这个文件，通过解析该文件，抽取出 user_id、movie_id、rating 3个字段，最终构造出算法依赖的数据，并保存在变量 dataset 中，它的格式为：dict[user_id][movie_id] = rate</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/qgkENiWG0sCSUce0DQhX.jpeg" alt="23张图，带你入门推荐系统"></p>
+<h3 id="3-构造物品的相似度矩阵"><a href="#3-构造物品的相似度矩阵" class="headerlink" title="3. 构造物品的相似度矩阵"></a>3. 构造物品的相似度矩阵</h3><p>基于第 2 步的 dataset，可以进一步统计出每部电影的评分次数以及电影的共生矩阵，然后再生成相似度矩阵。</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/8vL2jjyfSgiCb8PTJi8k.png" alt="23张图，带你入门推荐系统"></p>
+<h3 id="4-基于相似度矩阵推荐物品"><a href="#4-基于相似度矩阵推荐物品" class="headerlink" title="4. 基于相似度矩阵推荐物品"></a>4. 基于相似度矩阵推荐物品</h3><p>最后，可以基于相似度矩阵进行推荐了，输入一个用户id，先针对该用户评分过的电影，依次选出 top 10 最相似的电影，然后加权求和后计算出每个候选电影的最终评分，最后再选择得分前 5 的电影进行推荐。</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/g85iBVfEtMFaHFbYtpG2.png" alt="23张图，带你入门推荐系统"></p>
+<h3 id="5-调用推荐系统"><a href="#5-调用推荐系统" class="headerlink" title="5. 调用推荐系统"></a>5. 调用推荐系统</h3><p>下面选择UserId=1 这个用户，看下程序的执行结果。由于推荐程序输出的是 movieId 列表，为了更直观的了解推荐结果，这里转换成电影的标题进行输出。</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/WJcKchOscTClEcmu3p5f.png" alt="23张图，带你入门推荐系统"></p>
+<p>最终推荐的前5个电影为：</p>
+<p><img data-src="http://image.woshipm.com/wp-files/2020/10/t4Q0R80zxGFFk2ekQvF1.png" alt="23张图，带你入门推荐系统"></p>
+<h2 id="五、线上推荐系统的挑战"><a href="#五、线上推荐系统的挑战" class="headerlink" title="五、线上推荐系统的挑战"></a>五、线上推荐系统的挑战</h2><p>通过上面的介绍，大家对推荐系统的基本构成应该有了一个初步认识，但是真正运用到线上真实环境时，还会遇到很多算法和工程上的挑战，绝对不是几十行 Python 代码可以搞定的。</p>
+<blockquote>
+<ol>
+<li>上面的示例使用了标准化的数据集，而线上环境的数据是非标准化的，因此涉及到海量数据的收集、清洗和加工，最终构造出模型可使用的数据集。</li>
+<li>复杂且繁琐的特征工程，都说算法模型的上限由数据和特征决定。对于线上环境，需要从业务角度选择出可用的特征，然后对数据进行清洗、标准化、归一化、离散化，并通过实验效果进一步验证特征的有效性。</li>
+<li>算法复杂度如何降低？比如上面介绍的Item-CF算法，时间和空间复杂度都是O(N×N)，而线上环境的数据都是千万甚至上亿级别的，如果不做算法优化，可能几天都跑不出数据，或者内存中根本放不下如此大的矩阵数据。</li>
+<li>实时性如何满足？因为用户的兴趣随着他们最新的行为在实时变化的，如果模型只是基于历史数据进行推荐，可能结果不够精准。因此，如何满足实时性要求，以及对于新加入的物品或者用户该如何推荐，都是要解决的问题。</li>
+<li>算法效果和性能的权衡。从算法角度追求多样性和准确性，从工程角度追求性能，这两者之间必须找到一个平衡点。</li>
+<li>推荐系统的稳定性和效果追踪。需要有一套完善的数据监控和应用监控体系，同时有 ABTest 平台进行灰度实验，进行效果对比。</li>
+</ol>
+</blockquote>
+]]></content>
       <categories>
-        <category>操作系统</category>
+        <category>推荐系统</category>
       </categories>
       <tags>
-        <tag>操作系统</tag>
+        <tag>推荐系统入门</tag>
       </tags>
   </entry>
   <entry>
@@ -3741,92 +3730,6 @@
       </categories>
       <tags>
         <tag>JAVA</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>系统调用</title>
-    <url>/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/</url>
-    <content><![CDATA[<h2 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h2><h3 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h3><p>系统调用是内核与用户进程进行交互的一组接口，这些接口让应用程序受限制的访问硬件设备，提供了创建新进程并与已有进程进行交互通信的机制，也提供了申请操作系统其他资源的能力。</p>
-<p>系统调用在Linux系统中的地位如下图所示：</p>
-<img data-src="/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/OIP1.jpg" class>
-
-<h3 id="2-与内核通信"><a href="#2-与内核通信" class="headerlink" title="2.与内核通信"></a>2.与内核通信</h3><p>系统调用在用户空间进程和硬件设备之间添加了一个中间层。这样的中间层有如下作用：</p>
-<blockquote>
-<p>1.为用户空间提供了一种硬件的抽象接口。</p>
-</blockquote>
-<blockquote>
-<p>2.系统调用确保了系统的稳定与安全。内核可以作为硬件设备与用户空间之间的中间人，基于权限、用户类型和一些其他的规则对需要进行的访问做出裁决。</p>
-</blockquote>
-<blockquote>
-<p>3.避免用户空间的应用程序对硬件资源随意访问而内核一无所知，这样既无法实现多任务和虚拟内存，也不能确保良好的稳定性和安全性。</p>
-</blockquote>
-<p><strong>Linux中：系统调用是用户空间访问内核的唯一手段—-除了异常和陷入外，它们是内核唯一的合法入口</strong></p>
-<h3 id="3-API、POSIX、C库"><a href="#3-API、POSIX、C库" class="headerlink" title="3.API、POSIX、C库"></a>3.API、POSIX、C库</h3><p>应用程序通过在用户空间实现的应用编程接口（API）而不是直接通过系统调用。</p>
-<blockquote>
-<p>1.API实际上并不需要与内核提供的系统调用一一对应，程序员只跟API打交道。</p>
-<p>2.内核只跟系统调用打交道，库函数以及应用程序如何使用系统调用不是内核所关心的。</p>
-<p>3.API可以实现成一个系统调用，也可以实现多个系统调用，甚至也可以不实现系统调用。</p>
-</blockquote>
-<p>在UNIX中，最流行的应用编程接口是基于POSIX标准的。</p>
-<p>Linux系统调用作为C库的一部分提供。C库实现了Unix系统的主要API，包括标准C库函数和系统调用接口，此外，C库提供了POSIX的绝大部分API。</p>
-<h3 id="4-系统调用-syscall"><a href="#4-系统调用-syscall" class="headerlink" title="4.系统调用(syscall)"></a>4.系统调用(syscall)</h3><p><strong>通过在C库中定义的函数调用来执行</strong></p>
-<p>系统调用在出现错误的时候C库会将错误码写入errno全局变量。通过调用perror()库函数，可以把该变量翻译成用户可以理解的错误字符串。</p>
-<p>为了保证32为操作系统和64位操作系统的兼容，系统调用在用户空间和内核空间有着不同的返回值类型。用户空间为int，内核空间为long。系统调用在内核中前面会加上sys_。例如：返回当前进程PID的系统调用get_pid（）在内核中被定义为sys_getpid()。</p>
-<h4 id="4-1系统调用号"><a href="#4-1系统调用号" class="headerlink" title="4.1系统调用号"></a>4.1系统调用号</h4><p>在Linux中，每个系统调用都会被赋予一个系统调用号（独一无二的）。进程在执行系统调用时，不需要提及系统调用的名称，只需要使用系统调用号即可。</p>
-<p><strong>系统调用号相当重要，一旦分配好就不能再更改，因为会导致之前编译好的应用程序崩溃。</strong>即使这个系统调用被删除，它所占用的系统调用号也不允许被回收利用。</p>
-<p>内核记录了系统调用表中的所有已经注册过的系统调用的列表，存储在sys_call_table中，这个表为每一个有效的</p>
-<p>系统调用指定了唯一的系统调用号。</p>
-<h4 id="4-2系统调用的性能"><a href="#4-2系统调用的性能" class="headerlink" title="4.2系统调用的性能"></a>4.2系统调用的性能</h4><p>Linux系统调用比其他许多的操作系统执行要快。原因如下：</p>
-<blockquote>
-<p>1.Linux很短的上下文切换时间，进出内核都被优化的极为高效。</p>
-<p>2.系统调用处理程序和每个系统调用本身非常简洁。</p>
-</blockquote>
-<h3 id="5-系统调用处理程序"><a href="#5-系统调用处理程序" class="headerlink" title="5.系统调用处理程序"></a>5.系统调用处理程序</h3><p>应用程序通过<strong>软中断</strong>的方式来告诉内核自己期望执行一个系统调用，希望系统当前可以从用户态切换到内核态，这样内核就可以代表应用程序在内核空间中执行系统调用。</p>
-<p><strong>软中断</strong>：通过引起一个异常来促使系统切换到内核态前去执行异常处理程序。此时的异常处理程序其实就是<strong>系统调用处理程序</strong>。</p>
-<p>在X86系统中预定义的软中断是中断号128，通过int $0x80来触发中断。这条指令会触发一个异常导致系统切换到内核态并执行128号异常处理程序（系统调用处理程序）。</p>
-<h4 id="5-1指定恰当的系统调用"><a href="#5-1指定恰当的系统调用" class="headerlink" title="5.1指定恰当的系统调用"></a>5.1指定恰当的系统调用</h4><p>在陷入内核空间时，要将系统调用号传给内核空间。X86系统，系统调用号是通过eax寄存器传递给内核的。system_call()函数通过将给定的系统调用号与NR_syscalls做比较来检查其有效性。大于或者等于NR_syscalls，函数就返回-ENOSYS,否则，执行相应的系统调用。</p>
-<p>系统调用表中的表项是以64位类型存放的，所以内核需要将给定的系统调用号乘4，然后用所得结果在表中查询位置。</p>
-<h4 id="5-2参数传递"><a href="#5-2参数传递" class="headerlink" title="5.2参数传递"></a>5.2参数传递</h4><p>部分系统调用除了系统调用号之外，还需要传入一些外部参数，在发生陷入的时候，一并传给内核，同样是放在寄存器中。<strong>给用户空间的返回值同样是通过寄存器来传递的</strong></p>
-<h3 id="6-系统调用的实现"><a href="#6-系统调用的实现" class="headerlink" title="6.系统调用的实现"></a>6.系统调用的实现</h3><h4 id="6-1实现系统调用"><a href="#6-1实现系统调用" class="headerlink" title="6.1实现系统调用"></a>6.1实现系统调用</h4><p>要求：</p>
-<ul>
-<li>Linux中不提倡采用多用途的系统调用（一个系统调用通过传递不同的参数值来完成选择的工作）</li>
-<li>系统调用的接口应该力求简洁，参数尽量少。提供标志参数以确保向前兼容。</li>
-<li>系统调用的设计越通用越好。</li>
-</ul>
-<h4 id="6-2参数验证"><a href="#6-2参数验证" class="headerlink" title="6.2参数验证"></a>6.2参数验证</h4><p>系统调用必须检查参数是否合法有效。系统调用在内核空间中执行，任由用户将不合法的输入传递给内核，系统大的安全和稳定性将面临考验。进程不能让内核访问那些他没有权限访问的数据。</p>
-<ul>
-<li>与文件IO有关的系统调用需要检查文件描述符是否有效，与进程有关的函数必须检查提供的PID是否有效。</li>
-<li>检查用户提供的指针是否有效<ul>
-<li>指针指向的内存区域只能属于用户空间，进程不能告诉内核去读内核空间中的数据。</li>
-<li>指针指向的内存区域在自己的进程中，不能让内核去读其他进程中的数据。</li>
-<li>进程不能越过内存访问限制（可读、可写、可执行）</li>
-</ul>
-</li>
-<li>检查是否有合法权限</li>
-</ul>
-<p>内核提供了两个方法来完成必须的检查和内核空间与用户空间之间的数据来回拷贝</p>
-<ul>
-<li>写入：copy_to_user()</li>
-<li>读取：copy_from_user()</li>
-</ul>
-<p>这两个方法可能会引起阻塞。当包含用户数据的页被换出到硬盘上而不是在物理内存上的时候，进程会休眠，直到缺页处理程序将该页从硬盘从新换回物理内存。</p>
-<h3 id="7-系统调用上下文"><a href="#7-系统调用上下文" class="headerlink" title="7.系统调用上下文"></a>7.系统调用上下文</h3><p>在进程调用系统调用时，会有进程上下文。既可以被抢占也可以休眠。</p>
-<p>可以休眠说明系统调用可以利用内核提供的绝大部分功能。可以被抢占说明该系统调用时可重入的（新的进程同样可以使用相同的系统调用）。</p>
-<p>系统调用返回时，控制权仍然在system_call()中，它最终会负责切换到内核工作空间，并让用户进程继续执行下去。</p>
-<h4 id="7-1绑定一个系统调用的最后步骤"><a href="#7-1绑定一个系统调用的最后步骤" class="headerlink" title="7.1绑定一个系统调用的最后步骤"></a>7.1绑定一个系统调用的最后步骤</h4><blockquote>
-<p>1.在系统调用表中的最后加入一个表项。从0开始算起，系统调用在表中的位置就是他的系统调用号。</p>
-</blockquote>
-<blockquote>
-<p>2.系统调用必须被编译进内核映像（不能被编译成模块）</p>
-</blockquote>
-<h4 id="7-2从用户空间访问系统调用"><a href="#7-2从用户空间访问系统调用" class="headerlink" title="7.2从用户空间访问系统调用"></a>7.2从用户空间访问系统调用</h4><p>系统调用靠的时C库的支持，用户程序通过包含标准头文件并和C库链接，就可以使用系统调用。</p>
-<p><strong>Linux新系统调用增添频率很低，说明Linux系统是一个相对较为稳定并且功能已经较为完善的操作系统</strong></p>
-]]></content>
-      <categories>
-        <category>Linux系统内核相关</category>
-      </categories>
-      <tags>
-        <tag>Linux系统内核设计</tag>
       </tags>
   </entry>
   <entry>
@@ -3959,6 +3862,17 @@
       </tags>
   </entry>
   <entry>
+    <title>牛客网刷题-操作系统2</title>
+    <url>/2022/02/18/%E7%89%9B%E5%AE%A2%E7%BD%91%E5%88%B7%E9%A2%98-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F2/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>操作系统</category>
+      </categories>
+      <tags>
+        <tag>操作系统</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>红队攻防入门1</title>
     <url>/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/</url>
     <content><![CDATA[<h2 id="红队攻防入门1–初识红队"><a href="#红队攻防入门1–初识红队" class="headerlink" title="红队攻防入门1–初识红队"></a>红队攻防入门1–初识红队</h2><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F1.png" class>
@@ -4050,6 +3964,92 @@
       </categories>
       <tags>
         <tag>红队攻防</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>系统调用</title>
+    <url>/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/</url>
+    <content><![CDATA[<h2 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h2><h3 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h3><p>系统调用是内核与用户进程进行交互的一组接口，这些接口让应用程序受限制的访问硬件设备，提供了创建新进程并与已有进程进行交互通信的机制，也提供了申请操作系统其他资源的能力。</p>
+<p>系统调用在Linux系统中的地位如下图所示：</p>
+<img data-src="/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/OIP1.jpg" class>
+
+<h3 id="2-与内核通信"><a href="#2-与内核通信" class="headerlink" title="2.与内核通信"></a>2.与内核通信</h3><p>系统调用在用户空间进程和硬件设备之间添加了一个中间层。这样的中间层有如下作用：</p>
+<blockquote>
+<p>1.为用户空间提供了一种硬件的抽象接口。</p>
+</blockquote>
+<blockquote>
+<p>2.系统调用确保了系统的稳定与安全。内核可以作为硬件设备与用户空间之间的中间人，基于权限、用户类型和一些其他的规则对需要进行的访问做出裁决。</p>
+</blockquote>
+<blockquote>
+<p>3.避免用户空间的应用程序对硬件资源随意访问而内核一无所知，这样既无法实现多任务和虚拟内存，也不能确保良好的稳定性和安全性。</p>
+</blockquote>
+<p><strong>Linux中：系统调用是用户空间访问内核的唯一手段—-除了异常和陷入外，它们是内核唯一的合法入口</strong></p>
+<h3 id="3-API、POSIX、C库"><a href="#3-API、POSIX、C库" class="headerlink" title="3.API、POSIX、C库"></a>3.API、POSIX、C库</h3><p>应用程序通过在用户空间实现的应用编程接口（API）而不是直接通过系统调用。</p>
+<blockquote>
+<p>1.API实际上并不需要与内核提供的系统调用一一对应，程序员只跟API打交道。</p>
+<p>2.内核只跟系统调用打交道，库函数以及应用程序如何使用系统调用不是内核所关心的。</p>
+<p>3.API可以实现成一个系统调用，也可以实现多个系统调用，甚至也可以不实现系统调用。</p>
+</blockquote>
+<p>在UNIX中，最流行的应用编程接口是基于POSIX标准的。</p>
+<p>Linux系统调用作为C库的一部分提供。C库实现了Unix系统的主要API，包括标准C库函数和系统调用接口，此外，C库提供了POSIX的绝大部分API。</p>
+<h3 id="4-系统调用-syscall"><a href="#4-系统调用-syscall" class="headerlink" title="4.系统调用(syscall)"></a>4.系统调用(syscall)</h3><p><strong>通过在C库中定义的函数调用来执行</strong></p>
+<p>系统调用在出现错误的时候C库会将错误码写入errno全局变量。通过调用perror()库函数，可以把该变量翻译成用户可以理解的错误字符串。</p>
+<p>为了保证32为操作系统和64位操作系统的兼容，系统调用在用户空间和内核空间有着不同的返回值类型。用户空间为int，内核空间为long。系统调用在内核中前面会加上sys_。例如：返回当前进程PID的系统调用get_pid（）在内核中被定义为sys_getpid()。</p>
+<h4 id="4-1系统调用号"><a href="#4-1系统调用号" class="headerlink" title="4.1系统调用号"></a>4.1系统调用号</h4><p>在Linux中，每个系统调用都会被赋予一个系统调用号（独一无二的）。进程在执行系统调用时，不需要提及系统调用的名称，只需要使用系统调用号即可。</p>
+<p><strong>系统调用号相当重要，一旦分配好就不能再更改，因为会导致之前编译好的应用程序崩溃。</strong>即使这个系统调用被删除，它所占用的系统调用号也不允许被回收利用。</p>
+<p>内核记录了系统调用表中的所有已经注册过的系统调用的列表，存储在sys_call_table中，这个表为每一个有效的</p>
+<p>系统调用指定了唯一的系统调用号。</p>
+<h4 id="4-2系统调用的性能"><a href="#4-2系统调用的性能" class="headerlink" title="4.2系统调用的性能"></a>4.2系统调用的性能</h4><p>Linux系统调用比其他许多的操作系统执行要快。原因如下：</p>
+<blockquote>
+<p>1.Linux很短的上下文切换时间，进出内核都被优化的极为高效。</p>
+<p>2.系统调用处理程序和每个系统调用本身非常简洁。</p>
+</blockquote>
+<h3 id="5-系统调用处理程序"><a href="#5-系统调用处理程序" class="headerlink" title="5.系统调用处理程序"></a>5.系统调用处理程序</h3><p>应用程序通过<strong>软中断</strong>的方式来告诉内核自己期望执行一个系统调用，希望系统当前可以从用户态切换到内核态，这样内核就可以代表应用程序在内核空间中执行系统调用。</p>
+<p><strong>软中断</strong>：通过引起一个异常来促使系统切换到内核态前去执行异常处理程序。此时的异常处理程序其实就是<strong>系统调用处理程序</strong>。</p>
+<p>在X86系统中预定义的软中断是中断号128，通过int $0x80来触发中断。这条指令会触发一个异常导致系统切换到内核态并执行128号异常处理程序（系统调用处理程序）。</p>
+<h4 id="5-1指定恰当的系统调用"><a href="#5-1指定恰当的系统调用" class="headerlink" title="5.1指定恰当的系统调用"></a>5.1指定恰当的系统调用</h4><p>在陷入内核空间时，要将系统调用号传给内核空间。X86系统，系统调用号是通过eax寄存器传递给内核的。system_call()函数通过将给定的系统调用号与NR_syscalls做比较来检查其有效性。大于或者等于NR_syscalls，函数就返回-ENOSYS,否则，执行相应的系统调用。</p>
+<p>系统调用表中的表项是以64位类型存放的，所以内核需要将给定的系统调用号乘4，然后用所得结果在表中查询位置。</p>
+<h4 id="5-2参数传递"><a href="#5-2参数传递" class="headerlink" title="5.2参数传递"></a>5.2参数传递</h4><p>部分系统调用除了系统调用号之外，还需要传入一些外部参数，在发生陷入的时候，一并传给内核，同样是放在寄存器中。<strong>给用户空间的返回值同样是通过寄存器来传递的</strong></p>
+<h3 id="6-系统调用的实现"><a href="#6-系统调用的实现" class="headerlink" title="6.系统调用的实现"></a>6.系统调用的实现</h3><h4 id="6-1实现系统调用"><a href="#6-1实现系统调用" class="headerlink" title="6.1实现系统调用"></a>6.1实现系统调用</h4><p>要求：</p>
+<ul>
+<li>Linux中不提倡采用多用途的系统调用（一个系统调用通过传递不同的参数值来完成选择的工作）</li>
+<li>系统调用的接口应该力求简洁，参数尽量少。提供标志参数以确保向前兼容。</li>
+<li>系统调用的设计越通用越好。</li>
+</ul>
+<h4 id="6-2参数验证"><a href="#6-2参数验证" class="headerlink" title="6.2参数验证"></a>6.2参数验证</h4><p>系统调用必须检查参数是否合法有效。系统调用在内核空间中执行，任由用户将不合法的输入传递给内核，系统大的安全和稳定性将面临考验。进程不能让内核访问那些他没有权限访问的数据。</p>
+<ul>
+<li>与文件IO有关的系统调用需要检查文件描述符是否有效，与进程有关的函数必须检查提供的PID是否有效。</li>
+<li>检查用户提供的指针是否有效<ul>
+<li>指针指向的内存区域只能属于用户空间，进程不能告诉内核去读内核空间中的数据。</li>
+<li>指针指向的内存区域在自己的进程中，不能让内核去读其他进程中的数据。</li>
+<li>进程不能越过内存访问限制（可读、可写、可执行）</li>
+</ul>
+</li>
+<li>检查是否有合法权限</li>
+</ul>
+<p>内核提供了两个方法来完成必须的检查和内核空间与用户空间之间的数据来回拷贝</p>
+<ul>
+<li>写入：copy_to_user()</li>
+<li>读取：copy_from_user()</li>
+</ul>
+<p>这两个方法可能会引起阻塞。当包含用户数据的页被换出到硬盘上而不是在物理内存上的时候，进程会休眠，直到缺页处理程序将该页从硬盘从新换回物理内存。</p>
+<h3 id="7-系统调用上下文"><a href="#7-系统调用上下文" class="headerlink" title="7.系统调用上下文"></a>7.系统调用上下文</h3><p>在进程调用系统调用时，会有进程上下文。既可以被抢占也可以休眠。</p>
+<p>可以休眠说明系统调用可以利用内核提供的绝大部分功能。可以被抢占说明该系统调用时可重入的（新的进程同样可以使用相同的系统调用）。</p>
+<p>系统调用返回时，控制权仍然在system_call()中，它最终会负责切换到内核工作空间，并让用户进程继续执行下去。</p>
+<h4 id="7-1绑定一个系统调用的最后步骤"><a href="#7-1绑定一个系统调用的最后步骤" class="headerlink" title="7.1绑定一个系统调用的最后步骤"></a>7.1绑定一个系统调用的最后步骤</h4><blockquote>
+<p>1.在系统调用表中的最后加入一个表项。从0开始算起，系统调用在表中的位置就是他的系统调用号。</p>
+</blockquote>
+<blockquote>
+<p>2.系统调用必须被编译进内核映像（不能被编译成模块）</p>
+</blockquote>
+<h4 id="7-2从用户空间访问系统调用"><a href="#7-2从用户空间访问系统调用" class="headerlink" title="7.2从用户空间访问系统调用"></a>7.2从用户空间访问系统调用</h4><p>系统调用靠的时C库的支持，用户程序通过包含标准头文件并和C库链接，就可以使用系统调用。</p>
+<p><strong>Linux新系统调用增添频率很低，说明Linux系统是一个相对较为稳定并且功能已经较为完善的操作系统</strong></p>
+]]></content>
+      <categories>
+        <category>Linux系统内核相关</category>
+      </categories>
+      <tags>
+        <tag>Linux系统内核设计</tag>
       </tags>
   </entry>
   <entry>
@@ -4281,41 +4281,6 @@
       </tags>
   </entry>
   <entry>
-    <title>边缘计算与云网融合</title>
-    <url>/2021/10/07/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E4%B8%8E%E4%BA%91%E7%BD%91%E8%9E%8D%E5%90%88/</url>
-    <content><![CDATA[<h1 id="边缘计算基础概念"><a href="#边缘计算基础概念" class="headerlink" title="边缘计算基础概念"></a>边缘计算基础概念</h1><blockquote>
-<p>维基百科的解释</p>
-</blockquote>
-<p><strong>边缘运算</strong>（英语：Edge computing），又译为<strong>边缘计算</strong>，是一种分布式运算的架构，将应用程序、数据资料与服务的运算，由网络中心节点，移往网络逻辑上的<strong>边缘节点</strong>来处理  。边缘运算将原本完全由中心节点处理大型服务加以分解，切割成更小与更容易管理的部分，分散到边缘节点去处理。边缘节点更接近于用户终端设备，可以加快资料的处理与发送速度，减少延迟。在这种架构下，资料的分析与知识的产生，更接近于数据资料的来源，因此更适合处理大数据。</p>
-<h2 id="边缘计算核心：在源头处理数据"><a href="#边缘计算核心：在源头处理数据" class="headerlink" title="边缘计算核心：在源头处理数据"></a>边缘计算核心：在源头处理数据</h2><p>边缘计算是一种分布式计算框架，使企业应用程序更接近物联网设备或本地边缘服务器等数据源。这种在源头上接近数据可以带来强大的业务优势，包括更快的洞察力、更快的响应时间和更好的带宽可用性。</p>
-<p><strong><em>Gartner 估计，到 2025 年，75% 的数据将在传统数据中心或云之外处理。</em></strong></p>
-<h2 id="为什们选择边缘计算"><a href="#为什们选择边缘计算" class="headerlink" title="为什们选择边缘计算"></a>为什们选择边缘计算</h2><p>物联网设备的爆炸性增长和不断增强的计算能力导致了前所未有的数据量。随着 5G 网络增加连接移动设备的数量，数据量将继续增长。</p>
-<p> 过去，云和人工智能的承诺是通过从数据中获得可操作的洞察力来实现自动化和加速创新。但是，由连接设备创建的前所未有的数据规模和复杂性已经超过了网络和基础设施的能力。</p>
-<p>将所有设备生成的数据发送到集中式数据中心或云会导致带宽和延迟问题。边缘计算提供了更有效的替代方案；数据在更接近其创建点的位置进行处理和分析。由于数据不会通过网络传输到云或数据中心进行处理，因此显着减少了延迟。边缘计算——以及 5G 网络上的移动边缘计算——能够实现更快、更全面的数据分析，为获得更深入的洞察、更快的响应时间和改进的客户体验创造机会</p>
-<p>从联网汽车到工厂车间的智能机器人，我们世界中生成的设备数据量比以往任何时候都多，但这些物联网数据中的大部分都没有被开发或使用。例如，麦肯锡公司的一项研究发现，海上石油钻井平台从 30,000 个传感器生成数据——但目前用于决策的数据不到 1%。²</p>
-<p>边缘计算利用不断增长的设备内计算能力，近乎实时地提供深入洞察和预测分析。边缘设备中这种增强的分析能力可以推动创新，以提高质量和增加价值。它还提出了重要的战略问题：在计算容量增加的情况下，如何管理执行这些类型操作的工作负载的部署？如何使用设备中的嵌入式智能来更快速地影响员工、客户和企业的运营流程？为了从所有这些设备中获取最大价值，大量计算必须转移到边缘。</p>
-<h2 id="知乎的一篇文章，很全面"><a href="#知乎的一篇文章，很全面" class="headerlink" title="知乎的一篇文章，很全面"></a>知乎的一篇文章，很全面</h2><p><a href="https://zhuanlan.zhihu.com/p/59899560">详情点击链接</a></p>
-<h2 id="自己总结的图片一张"><a href="#自己总结的图片一张" class="headerlink" title="自己总结的图片一张"></a>自己总结的图片一张</h2><img data-src="/2021/10/07/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E4%B8%8E%E4%BA%91%E7%BD%91%E8%9E%8D%E5%90%88/Users\flower\Pictures\微信图片_20211006194229.jpg" style="zoom:50%;">
-
-
-
-<h2 id="开发接入云网研究及实践"><a href="#开发接入云网研究及实践" class="headerlink" title="开发接入云网研究及实践"></a>开发接入云网研究及实践</h2><h2 id="部署方式"><a href="#部署方式" class="headerlink" title="部署方式"></a>部署方式</h2><ul>
-<li>虚拟专网</li>
-<li>混合专网</li>
-<li>独立专网</li>
-</ul>
-<h2 id="联想应用举例："><a href="#联想应用举例：" class="headerlink" title="联想应用举例："></a>联想应用举例：</h2><h3 id="5G云网融合-5G医疗边缘云"><a href="#5G云网融合-5G医疗边缘云" class="headerlink" title="5G云网融合-5G医疗边缘云"></a>5G云网融合-5G医疗边缘云</h3><h3 id="IT和CT结合"><a href="#IT和CT结合" class="headerlink" title="IT和CT结合"></a>IT和CT结合</h3><h4 id="网络云化，中心集约，解耦"><a href="#网络云化，中心集约，解耦" class="headerlink" title="网络云化，中心集约，解耦"></a>网络云化，中心集约，解耦</h4><ul>
-<li><h2 id="云网一体，多云协同"><a href="#云网一体，多云协同" class="headerlink" title="云网一体，多云协同"></a>云网一体，多云协同</h2></li>
-</ul>
-]]></content>
-      <categories>
-        <category>互联网领先概念</category>
-      </categories>
-      <tags>
-        <tag>Intel边缘与云计算网融合专题峰会参会记录与扩展</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>设计消息队列--&gt;2</title>
     <url>/2021/03/13/%E8%AE%BE%E8%AE%A1%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E9%83%A8%E5%88%86/</url>
     <content><![CDATA[<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p>持久性是事务的一个特性，然而只满足持久性却不一定能满足事务的特性。还是拿扣钱/加钱的例子讲。满足事务的一致性特征，则必须要么都不进行，要么都能成功。 解决方案从大方向上有两种：</p>
@@ -4398,6 +4363,41 @@
       </categories>
       <tags>
         <tag>RabbitMQ</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>边缘计算与云网融合</title>
+    <url>/2021/10/07/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E4%B8%8E%E4%BA%91%E7%BD%91%E8%9E%8D%E5%90%88/</url>
+    <content><![CDATA[<h1 id="边缘计算基础概念"><a href="#边缘计算基础概念" class="headerlink" title="边缘计算基础概念"></a>边缘计算基础概念</h1><blockquote>
+<p>维基百科的解释</p>
+</blockquote>
+<p><strong>边缘运算</strong>（英语：Edge computing），又译为<strong>边缘计算</strong>，是一种分布式运算的架构，将应用程序、数据资料与服务的运算，由网络中心节点，移往网络逻辑上的<strong>边缘节点</strong>来处理  。边缘运算将原本完全由中心节点处理大型服务加以分解，切割成更小与更容易管理的部分，分散到边缘节点去处理。边缘节点更接近于用户终端设备，可以加快资料的处理与发送速度，减少延迟。在这种架构下，资料的分析与知识的产生，更接近于数据资料的来源，因此更适合处理大数据。</p>
+<h2 id="边缘计算核心：在源头处理数据"><a href="#边缘计算核心：在源头处理数据" class="headerlink" title="边缘计算核心：在源头处理数据"></a>边缘计算核心：在源头处理数据</h2><p>边缘计算是一种分布式计算框架，使企业应用程序更接近物联网设备或本地边缘服务器等数据源。这种在源头上接近数据可以带来强大的业务优势，包括更快的洞察力、更快的响应时间和更好的带宽可用性。</p>
+<p><strong><em>Gartner 估计，到 2025 年，75% 的数据将在传统数据中心或云之外处理。</em></strong></p>
+<h2 id="为什们选择边缘计算"><a href="#为什们选择边缘计算" class="headerlink" title="为什们选择边缘计算"></a>为什们选择边缘计算</h2><p>物联网设备的爆炸性增长和不断增强的计算能力导致了前所未有的数据量。随着 5G 网络增加连接移动设备的数量，数据量将继续增长。</p>
+<p> 过去，云和人工智能的承诺是通过从数据中获得可操作的洞察力来实现自动化和加速创新。但是，由连接设备创建的前所未有的数据规模和复杂性已经超过了网络和基础设施的能力。</p>
+<p>将所有设备生成的数据发送到集中式数据中心或云会导致带宽和延迟问题。边缘计算提供了更有效的替代方案；数据在更接近其创建点的位置进行处理和分析。由于数据不会通过网络传输到云或数据中心进行处理，因此显着减少了延迟。边缘计算——以及 5G 网络上的移动边缘计算——能够实现更快、更全面的数据分析，为获得更深入的洞察、更快的响应时间和改进的客户体验创造机会</p>
+<p>从联网汽车到工厂车间的智能机器人，我们世界中生成的设备数据量比以往任何时候都多，但这些物联网数据中的大部分都没有被开发或使用。例如，麦肯锡公司的一项研究发现，海上石油钻井平台从 30,000 个传感器生成数据——但目前用于决策的数据不到 1%。²</p>
+<p>边缘计算利用不断增长的设备内计算能力，近乎实时地提供深入洞察和预测分析。边缘设备中这种增强的分析能力可以推动创新，以提高质量和增加价值。它还提出了重要的战略问题：在计算容量增加的情况下，如何管理执行这些类型操作的工作负载的部署？如何使用设备中的嵌入式智能来更快速地影响员工、客户和企业的运营流程？为了从所有这些设备中获取最大价值，大量计算必须转移到边缘。</p>
+<h2 id="知乎的一篇文章，很全面"><a href="#知乎的一篇文章，很全面" class="headerlink" title="知乎的一篇文章，很全面"></a>知乎的一篇文章，很全面</h2><p><a href="https://zhuanlan.zhihu.com/p/59899560">详情点击链接</a></p>
+<h2 id="自己总结的图片一张"><a href="#自己总结的图片一张" class="headerlink" title="自己总结的图片一张"></a>自己总结的图片一张</h2><img data-src="/2021/10/07/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E4%B8%8E%E4%BA%91%E7%BD%91%E8%9E%8D%E5%90%88/Users\flower\Pictures\微信图片_20211006194229.jpg" style="zoom:50%;">
+
+
+
+<h2 id="开发接入云网研究及实践"><a href="#开发接入云网研究及实践" class="headerlink" title="开发接入云网研究及实践"></a>开发接入云网研究及实践</h2><h2 id="部署方式"><a href="#部署方式" class="headerlink" title="部署方式"></a>部署方式</h2><ul>
+<li>虚拟专网</li>
+<li>混合专网</li>
+<li>独立专网</li>
+</ul>
+<h2 id="联想应用举例："><a href="#联想应用举例：" class="headerlink" title="联想应用举例："></a>联想应用举例：</h2><h3 id="5G云网融合-5G医疗边缘云"><a href="#5G云网融合-5G医疗边缘云" class="headerlink" title="5G云网融合-5G医疗边缘云"></a>5G云网融合-5G医疗边缘云</h3><h3 id="IT和CT结合"><a href="#IT和CT结合" class="headerlink" title="IT和CT结合"></a>IT和CT结合</h3><h4 id="网络云化，中心集约，解耦"><a href="#网络云化，中心集约，解耦" class="headerlink" title="网络云化，中心集约，解耦"></a>网络云化，中心集约，解耦</h4><ul>
+<li><h2 id="云网一体，多云协同"><a href="#云网一体，多云协同" class="headerlink" title="云网一体，多云协同"></a>云网一体，多云协同</h2></li>
+</ul>
+]]></content>
+      <categories>
+        <category>互联网领先概念</category>
+      </categories>
+      <tags>
+        <tag>Intel边缘与云计算网融合专题峰会参会记录与扩展</tag>
       </tags>
   </entry>
   <entry>
@@ -4538,70 +4538,6 @@
       </tags>
   </entry>
   <entry>
-    <title>阿里云ECS部署服务器</title>
-    <url>/2021/01/22/%E9%98%BF%E9%87%8C%E4%BA%91ECS%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
-    <content><![CDATA[<h2 id="阿里云ECS部署Tomcat、Nginx服务器"><a href="#阿里云ECS部署Tomcat、Nginx服务器" class="headerlink" title="阿里云ECS部署Tomcat、Nginx服务器"></a>阿里云ECS部署Tomcat、Nginx服务器</h2><h3 id="Nginx服务器"><a href="#Nginx服务器" class="headerlink" title="Nginx服务器"></a>Nginx服务器</h3><p>####一、简介</p>
-<p>Nginx是一款轻量级的网页服务器、反向代理服务器。相较于Apache、lighttpd具有占有内存少，稳定性高等优势。它最常的用途是提供反向代理服务。</p>
-<h4 id="二、安装"><a href="#二、安装" class="headerlink" title="二、安装"></a>二、安装</h4><h2 id="1、准备工作"><a href="#1、准备工作" class="headerlink" title="1、准备工作"></a>1、准备工作</h2><p>Nginx的安装依赖于以下三个包，意思就是在安装Nginx之前首先必须安装一下的三个包，注意安装顺序如下：</p>
-<p>　　1 SSL功能需要openssl库，直接通过yum安装: #yum install openssl</p>
-<p>　　2 gzip模块需要zlib库，直接通过yum安装: #yum install zlib</p>
-<p>　　3 rewrite模块需要pcre库，直接通过yum安装: #yum install pcre</p>
-<h2 id="2、安装Nginx依赖项和Nginx"><a href="#2、安装Nginx依赖项和Nginx" class="headerlink" title="2、安装Nginx依赖项和Nginx"></a>2、安装Nginx依赖项和Nginx</h2><p>1 、使用yum安装nginx需要包括Nginx的库，安装Nginx的库</p>
-<p>rpm -Uvh <a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm">http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm</a></p>
-<p>2 、使用下面命令安装nginx</p>
-<p> yum install nginx</p>
-<p>3、 启动Nginx</p>
-<p>service nginx start（Centos 6.0）,如果是Centos7.0以上，使用systemctl start nginx启动。</p>
-<p>4、直接浏览器访问localhost就会出现Nginx的欢迎界面表示你安装成功了，否则就是安装失败了</p>
-<p>　　默认80端口加入防火墙访问白名单中：firewall-cmd –permanent –zone=public –add-port=80/tcp</p>
-<p>　　使用firewall-cmd –reload命令使其生效</p>
-<p>5、配置Nginx</p>
-<p>CentOS安装Nginx后，安装在了 /etc/nginx/目录下，你可以打开/etc/nginx/conf.d/default/conf查看里面的配置，包括监听端口，域名和nginx访问的根目录</p>
-<p><strong>如果出现nginx启动之后，通过自己服务器的公网IP地址无法访问，是服务器端口没有开放访问权限的缘故，可以参考博客：<a href="https://blog.csdn.net/inite/article/details/73658214">https://blog.csdn.net/inite/article/details/73658214</a></strong></p>
-<p>####三、配置</p>
-<p>以上安装方法nginx的配置文件位于</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;usr&#x2F;local&#x2F;nginx&#x2F;conf&#x2F;nginx.conf</span><br></pre></td></tr></table></figure>
-<p>Nginx配置文件常见结构的从外到内依次是「http」「server」「location」等等，缺省的继承关系是从外到内，也就是说内层块会自动获取外层块的值作为缺省值。</p>
-<h5 id="Server"><a href="#Server" class="headerlink" title="Server"></a>Server</h5><p>接收请求的服务器需要将不同的请求按规则转发到不同的后端服务器上，在 nginx 中我们可以通过构建虚拟主机（server）的概念来将这些不同的服务配置隔离。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  localhost;</span><br><span class="line">root   html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>例如我们笔戈玩下的两个子项目 passport 和 wan 就可以通过在 nginx 的配置文件中配置两个 server，servername 分别为 passport.bigertech.com 和 wan.bigertech.com。这样的话不同的 url 请求就会对应到 nginx 相应的设置，转发到不同的后端服务器上。</p>
-<p>这里的 listen 指监听端口，server_name 用来指定IP或域名，多个域名对应统一规则可以空格分开，index 用于设定访问的默认首页地址，root 指令用于指定虚拟主机的网页跟目录，这个地方可以是相对地址也可以是绝对地址。</p>
-<p>通常情况下我们可以在 nginx.conf 中配置多个server，对不同的请求进行设置。就像这样：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  host1;</span><br><span class="line">root   html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  host2;</span><br><span class="line">root   &#x2F;data&#x2F;www&#x2F;html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>但是当 server 超过2个时，建议将不同对虚拟主机的配置放在另一个文件中，然后通过在主配置文件 nginx.conf 加上 include 指令包含进来。更便于管理。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">include vhosts&#x2F;*.conf;</span><br></pre></td></tr></table></figure>
-<p>就可以把vhosts的文件都包含进去啦。</p>
-<p>#####Localtion</p>
-<p>每个 url 请求都会对应的一个服务，nginx 进行处理转发或者是本地的一个文件路径，或者是其他服务器的一个服务路径。而这个路径的匹配是通过 location 来进行的。我们可以将 server 当做对应一个域名进行的配置，而 location 是在一个域名下对更精细的路径进行配置。</p>
-<p>以上面的例子，可以将root和index指令放到一个location中，那么只有在匹配到这个location时才会访问root后的内容：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> location &#x2F; &#123;</span><br><span class="line">      root   &#x2F;data&#x2F;www&#x2F;host2;</span><br><span class="line">      index  index.html index.htm;</span><br><span class="line">  &#125;</span><br><span class="line">location 匹配规则</span><br><span class="line"></span><br><span class="line">~      波浪线表示执行一个正则匹配，区分大小写</span><br><span class="line">~*    表示执行一个正则匹配，不区分大小写</span><br><span class="line">^~    ^~表示普通字符匹配，如果该选项匹配，只匹配该选项，不匹配别的选项，一般用来匹配目录</span><br><span class="line">&#x3D;      进行普通字符精确匹配</span><br><span class="line">匹配例子：</span><br><span class="line"></span><br><span class="line">  location  &#x3D; &#x2F; &#123;</span><br><span class="line"># 只匹配&quot;&#x2F;&quot;.</span><br><span class="line">[ configuration A ] </span><br><span class="line">  &#125;</span><br><span class="line">location  &#x2F; &#123;</span><br><span class="line"># 匹配任何请求，因为所有请求都是以&quot;&#x2F;&quot;开始</span><br><span class="line"># 但是更长字符匹配或者正则表达式匹配会优先匹配</span><br><span class="line">[ configuration B ] </span><br><span class="line">&#125;</span><br><span class="line">location ^~ &#x2F;images&#x2F; &#123;</span><br><span class="line"> #匹配任何以 &#x2F;images&#x2F; 开始的请求，并停止匹配 其它location</span><br><span class="line">[ configuration C ] </span><br><span class="line">&#125;</span><br><span class="line">location ~* \.(gif|jpg|jpeg)$ &#123;</span><br><span class="line"># 匹配以 gif, jpg, or jpeg结尾的请求. </span><br><span class="line"># 但是所有 &#x2F;images&#x2F; 目录的请求将由 [Configuration C]处理.   </span><br><span class="line">[ configuration D ] </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">请求:</span><br><span class="line">&#x2F; -&gt; 符合configuration A</span><br><span class="line">&#x2F;documents&#x2F;document.html -&gt; 符合configuration B</span><br><span class="line">&#x2F;images&#x2F;1.gif -&gt; 符合configuration C</span><br><span class="line">&#x2F;documents&#x2F;1.jpg -&gt;符合 configuration D</span><br></pre></td></tr></table></figure>
-<p>#####静态文件映射</p>
-<p>访问文件的配置主要有 root 和 aliasp’s 两个指令。这两个指令的区别容易弄混：</p>
-<p>alias<br>alias后跟的指定目录是准确的，并且末尾必须加 /。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F;c&#x2F; &#123;</span><br><span class="line">    alias &#x2F;a&#x2F;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果访问站点<a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://location/c">http://location/c</a>访问的就是/a/目录下的站点信息。</p>
-<p>#####root</p>
-<p>root后跟的指定目录是上级目录，并且该上级目录下要含有和location后指定名称的同名目录才行。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F;c&#x2F; &#123;</span><br><span class="line">    root &#x2F;a&#x2F;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这时访问站点<a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://location/c">http://location/c</a>访问的就是/a/c目录下的站点信息。</p>
-<p>如果你需要将这个目录展开，在这个location的末尾加上「autoindex on; 」就可以了</p>
-<p>#####转发</p>
-<p>配置起来很简单比如我要将所有的请求到转移到真正提供服务的一台机器的 8001 端口，只要这样：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">proxy_pass 172.16.1.1:8001;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这样访问host时，就都被转发到 172.16.1.1的8001端口去了。</p>
-<p>#####负载均衡</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">upstream myserver; &#123;</span><br><span class="line">ip_hash;    </span><br><span class="line">server 172.16.1.1:8001;</span><br><span class="line">server 172.16.1.2:8002;</span><br><span class="line">server 172.16.1.3;</span><br><span class="line">server 172.16.1.4;</span><br><span class="line">&#125;</span><br><span class="line">location &#x2F; &#123;</span><br><span class="line">proxy_pass http:&#x2F;&#x2F;myserver;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们在 upstream 中指定了一组机器，并将这个组命名为 myserver，这样在 proxypass 中只要将请求转移到 myserver 这个 upstream 中我们就实现了在四台机器的反向代理加负载均衡。其中的 ip_hash 指明了我们均衡的方式是按照用户的 ip 地址进行分配。另外还有轮询、指定权重轮询、fair、url_hash几种调度算法。</p>
-<p>###Tomcat服务器</p>
-<h4 id="一、下载Tomcat"><a href="#一、下载Tomcat" class="headerlink" title="一、下载Tomcat"></a>一、下载Tomcat</h4>]]></content>
-      <categories>
-        <category>阿里云ECS</category>
-      </categories>
-      <tags>
-        <tag>阿里云ECS部署</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>项目开发一:实现固定大小的cache</title>
     <url>/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/</url>
     <content><![CDATA[<h1 id="项目开发一：实现固定大小的cache"><a href="#项目开发一：实现固定大小的cache" class="headerlink" title="项目开发一：实现固定大小的cache"></a>项目开发一：实现固定大小的cache</h1><h3 id="cache的发展"><a href="#cache的发展" class="headerlink" title="cache的发展"></a>cache的发展</h3><ul>
@@ -4689,6 +4625,256 @@
       </categories>
       <tags>
         <tag>KV缓存第三讲</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>阿里云ECS部署服务器</title>
+    <url>/2021/01/22/%E9%98%BF%E9%87%8C%E4%BA%91ECS%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
+    <content><![CDATA[<h2 id="阿里云ECS部署Tomcat、Nginx服务器"><a href="#阿里云ECS部署Tomcat、Nginx服务器" class="headerlink" title="阿里云ECS部署Tomcat、Nginx服务器"></a>阿里云ECS部署Tomcat、Nginx服务器</h2><h3 id="Nginx服务器"><a href="#Nginx服务器" class="headerlink" title="Nginx服务器"></a>Nginx服务器</h3><p>####一、简介</p>
+<p>Nginx是一款轻量级的网页服务器、反向代理服务器。相较于Apache、lighttpd具有占有内存少，稳定性高等优势。它最常的用途是提供反向代理服务。</p>
+<h4 id="二、安装"><a href="#二、安装" class="headerlink" title="二、安装"></a>二、安装</h4><h2 id="1、准备工作"><a href="#1、准备工作" class="headerlink" title="1、准备工作"></a>1、准备工作</h2><p>Nginx的安装依赖于以下三个包，意思就是在安装Nginx之前首先必须安装一下的三个包，注意安装顺序如下：</p>
+<p>　　1 SSL功能需要openssl库，直接通过yum安装: #yum install openssl</p>
+<p>　　2 gzip模块需要zlib库，直接通过yum安装: #yum install zlib</p>
+<p>　　3 rewrite模块需要pcre库，直接通过yum安装: #yum install pcre</p>
+<h2 id="2、安装Nginx依赖项和Nginx"><a href="#2、安装Nginx依赖项和Nginx" class="headerlink" title="2、安装Nginx依赖项和Nginx"></a>2、安装Nginx依赖项和Nginx</h2><p>1 、使用yum安装nginx需要包括Nginx的库，安装Nginx的库</p>
+<p>rpm -Uvh <a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm">http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm</a></p>
+<p>2 、使用下面命令安装nginx</p>
+<p> yum install nginx</p>
+<p>3、 启动Nginx</p>
+<p>service nginx start（Centos 6.0）,如果是Centos7.0以上，使用systemctl start nginx启动。</p>
+<p>4、直接浏览器访问localhost就会出现Nginx的欢迎界面表示你安装成功了，否则就是安装失败了</p>
+<p>　　默认80端口加入防火墙访问白名单中：firewall-cmd –permanent –zone=public –add-port=80/tcp</p>
+<p>　　使用firewall-cmd –reload命令使其生效</p>
+<p>5、配置Nginx</p>
+<p>CentOS安装Nginx后，安装在了 /etc/nginx/目录下，你可以打开/etc/nginx/conf.d/default/conf查看里面的配置，包括监听端口，域名和nginx访问的根目录</p>
+<p><strong>如果出现nginx启动之后，通过自己服务器的公网IP地址无法访问，是服务器端口没有开放访问权限的缘故，可以参考博客：<a href="https://blog.csdn.net/inite/article/details/73658214">https://blog.csdn.net/inite/article/details/73658214</a></strong></p>
+<p>####三、配置</p>
+<p>以上安装方法nginx的配置文件位于</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;usr&#x2F;local&#x2F;nginx&#x2F;conf&#x2F;nginx.conf</span><br></pre></td></tr></table></figure>
+<p>Nginx配置文件常见结构的从外到内依次是「http」「server」「location」等等，缺省的继承关系是从外到内，也就是说内层块会自动获取外层块的值作为缺省值。</p>
+<h5 id="Server"><a href="#Server" class="headerlink" title="Server"></a>Server</h5><p>接收请求的服务器需要将不同的请求按规则转发到不同的后端服务器上，在 nginx 中我们可以通过构建虚拟主机（server）的概念来将这些不同的服务配置隔离。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  localhost;</span><br><span class="line">root   html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>例如我们笔戈玩下的两个子项目 passport 和 wan 就可以通过在 nginx 的配置文件中配置两个 server，servername 分别为 passport.bigertech.com 和 wan.bigertech.com。这样的话不同的 url 请求就会对应到 nginx 相应的设置，转发到不同的后端服务器上。</p>
+<p>这里的 listen 指监听端口，server_name 用来指定IP或域名，多个域名对应统一规则可以空格分开，index 用于设定访问的默认首页地址，root 指令用于指定虚拟主机的网页跟目录，这个地方可以是相对地址也可以是绝对地址。</p>
+<p>通常情况下我们可以在 nginx.conf 中配置多个server，对不同的请求进行设置。就像这样：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  host1;</span><br><span class="line">root   html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  host2;</span><br><span class="line">root   &#x2F;data&#x2F;www&#x2F;html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是当 server 超过2个时，建议将不同对虚拟主机的配置放在另一个文件中，然后通过在主配置文件 nginx.conf 加上 include 指令包含进来。更便于管理。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">include vhosts&#x2F;*.conf;</span><br></pre></td></tr></table></figure>
+<p>就可以把vhosts的文件都包含进去啦。</p>
+<p>#####Localtion</p>
+<p>每个 url 请求都会对应的一个服务，nginx 进行处理转发或者是本地的一个文件路径，或者是其他服务器的一个服务路径。而这个路径的匹配是通过 location 来进行的。我们可以将 server 当做对应一个域名进行的配置，而 location 是在一个域名下对更精细的路径进行配置。</p>
+<p>以上面的例子，可以将root和index指令放到一个location中，那么只有在匹配到这个location时才会访问root后的内容：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> location &#x2F; &#123;</span><br><span class="line">      root   &#x2F;data&#x2F;www&#x2F;host2;</span><br><span class="line">      index  index.html index.htm;</span><br><span class="line">  &#125;</span><br><span class="line">location 匹配规则</span><br><span class="line"></span><br><span class="line">~      波浪线表示执行一个正则匹配，区分大小写</span><br><span class="line">~*    表示执行一个正则匹配，不区分大小写</span><br><span class="line">^~    ^~表示普通字符匹配，如果该选项匹配，只匹配该选项，不匹配别的选项，一般用来匹配目录</span><br><span class="line">&#x3D;      进行普通字符精确匹配</span><br><span class="line">匹配例子：</span><br><span class="line"></span><br><span class="line">  location  &#x3D; &#x2F; &#123;</span><br><span class="line"># 只匹配&quot;&#x2F;&quot;.</span><br><span class="line">[ configuration A ] </span><br><span class="line">  &#125;</span><br><span class="line">location  &#x2F; &#123;</span><br><span class="line"># 匹配任何请求，因为所有请求都是以&quot;&#x2F;&quot;开始</span><br><span class="line"># 但是更长字符匹配或者正则表达式匹配会优先匹配</span><br><span class="line">[ configuration B ] </span><br><span class="line">&#125;</span><br><span class="line">location ^~ &#x2F;images&#x2F; &#123;</span><br><span class="line"> #匹配任何以 &#x2F;images&#x2F; 开始的请求，并停止匹配 其它location</span><br><span class="line">[ configuration C ] </span><br><span class="line">&#125;</span><br><span class="line">location ~* \.(gif|jpg|jpeg)$ &#123;</span><br><span class="line"># 匹配以 gif, jpg, or jpeg结尾的请求. </span><br><span class="line"># 但是所有 &#x2F;images&#x2F; 目录的请求将由 [Configuration C]处理.   </span><br><span class="line">[ configuration D ] </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">请求:</span><br><span class="line">&#x2F; -&gt; 符合configuration A</span><br><span class="line">&#x2F;documents&#x2F;document.html -&gt; 符合configuration B</span><br><span class="line">&#x2F;images&#x2F;1.gif -&gt; 符合configuration C</span><br><span class="line">&#x2F;documents&#x2F;1.jpg -&gt;符合 configuration D</span><br></pre></td></tr></table></figure>
+<p>#####静态文件映射</p>
+<p>访问文件的配置主要有 root 和 aliasp’s 两个指令。这两个指令的区别容易弄混：</p>
+<p>alias<br>alias后跟的指定目录是准确的，并且末尾必须加 /。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F;c&#x2F; &#123;</span><br><span class="line">    alias &#x2F;a&#x2F;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果访问站点<a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://location/c">http://location/c</a>访问的就是/a/目录下的站点信息。</p>
+<p>#####root</p>
+<p>root后跟的指定目录是上级目录，并且该上级目录下要含有和location后指定名称的同名目录才行。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F;c&#x2F; &#123;</span><br><span class="line">    root &#x2F;a&#x2F;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这时访问站点<a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://location/c">http://location/c</a>访问的就是/a/c目录下的站点信息。</p>
+<p>如果你需要将这个目录展开，在这个location的末尾加上「autoindex on; 」就可以了</p>
+<p>#####转发</p>
+<p>配置起来很简单比如我要将所有的请求到转移到真正提供服务的一台机器的 8001 端口，只要这样：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">proxy_pass 172.16.1.1:8001;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样访问host时，就都被转发到 172.16.1.1的8001端口去了。</p>
+<p>#####负载均衡</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">upstream myserver; &#123;</span><br><span class="line">ip_hash;    </span><br><span class="line">server 172.16.1.1:8001;</span><br><span class="line">server 172.16.1.2:8002;</span><br><span class="line">server 172.16.1.3;</span><br><span class="line">server 172.16.1.4;</span><br><span class="line">&#125;</span><br><span class="line">location &#x2F; &#123;</span><br><span class="line">proxy_pass http:&#x2F;&#x2F;myserver;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们在 upstream 中指定了一组机器，并将这个组命名为 myserver，这样在 proxypass 中只要将请求转移到 myserver 这个 upstream 中我们就实现了在四台机器的反向代理加负载均衡。其中的 ip_hash 指明了我们均衡的方式是按照用户的 ip 地址进行分配。另外还有轮询、指定权重轮询、fair、url_hash几种调度算法。</p>
+<p>###Tomcat服务器</p>
+<h4 id="一、下载Tomcat"><a href="#一、下载Tomcat" class="headerlink" title="一、下载Tomcat"></a>一、下载Tomcat</h4>]]></content>
+      <categories>
+        <category>阿里云ECS</category>
+      </categories>
+      <tags>
+        <tag>阿里云ECS部署</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>BTCBasic2</title>
+    <url>/2023/01/04/BTCBasic2/</url>
+    <content><![CDATA[<h1 id="区块链基础part2-北大肖臻老师-amp-Chainlink预言机-China学习笔记"><a href="#区块链基础part2-北大肖臻老师-amp-Chainlink预言机-China学习笔记" class="headerlink" title="区块链基础part2-北大肖臻老师&amp;Chainlink预言机 China学习笔记"></a>区块链基础part2-北大肖臻老师&amp;Chainlink预言机 China学习笔记</h1><h2 id="1-BTC共识协议"><a href="#1-BTC共识协议" class="headerlink" title="1. BTC共识协议"></a>1. BTC共识协议</h2><h3 id="数字货币中经常出现的问题"><a href="#数字货币中经常出现的问题" class="headerlink" title="数字货币中经常出现的问题"></a>数字货币中经常出现的问题</h3><ul>
+<li><p>双花攻击</p>
+<p>数字货币本身为带有签名的数据文件，可以进行复制。即：对用户来说，可以将同一货币花费两次。</p>
+<blockquote>
+<p>修改：对货币添加唯一编号（不可篡改），每次支付向货币发行单位查询真伪。<br>该方法每次交易都需要依赖于第三方机构来判断货币真伪且防止双花攻击。是一个典型的第三方中心化方案。现实中，我们通过支付宝、微信、信用卡等各种支付方式交易时，必然会依赖于第三方机构。由于这些第三方机构具有较高的可信度，有政府进行背书，所以可以采用这种方案。<br>但是，很多场景下，并不存在这样一个可信赖的第三方机构。基于这个背景，以去中心化思想为核心的比特币系统便吸引了人们的注意力。</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="去中心化需要解决的问题"><a href="#去中心化需要解决的问题" class="headerlink" title="去中心化需要解决的问题"></a>去中心化需要解决的问题</h3><ul>
+<li><p>数字货币的发行由谁执行？如何发行？发行多少？什么时候发行？</p>
+<p>在传统中心化货币体系中，这些问题我们可以交给第三方机构（如：央行）。当引入去中心化思想后，系统中节点平等，交易不通过第三方，那么货币发行权的分配必然是一个需要解决的问题。</p>
+<blockquote>
+<p>在比特币系统中由挖矿来决定货币发行权和发行量。</p>
+</blockquote>
+</li>
+<li><p>如何验证交易是否有效？如何防止双花攻击？</p>
+<p>同样，在传统中心化体系中，该问题的解决由第三方机构来完成。而剔除这一机构后，交易双方如何能够验证交易的有效性？如何防止系统中恶意用户作恶获取收益？这也是去中心化交易系统需要解决的问题。</p>
+<blockquote>
+<p>该问题的解决，依赖于系统中维护的一个数据结构，记录货币的使用情况（是否被花过？被谁花过？）。该数据结构由系统中全体用户共同维护，保证了交易的有效性。该数据结构，便是区块链。</p>
+</blockquote>
+<h3 id="案例说明"><a href="#案例说明" class="headerlink" title="案例说明"></a>案例说明</h3><p>如下，假定A获得铸币权，新发布了10个比特币（该交易称为铸币交易）。A将10个比特币转给了B(5个)和C(5个)，A对该交易进行签名，同时该交易需要说明所花掉10个比特币来源（来自铸币交易）。之后，B将自己的5个比特币转给C(2个)和D(3个)，该交易需要B的签名，该交易需要说明所花掉的5个比特币来自于第二个交易中。然后，C将自己所拥有的全部7个比特币都转给E，并对该交易签名，可以发现该交易中C的比特币来源于两个交易中。这样，就构成了一个简单的区块链。</p>
+<p>【红色部分为比特币来源】</p>
+ <img data-src="/2023/01/04/BTCBasic2/1.png" class>
+
+<blockquote>
+<p>需要注意的是，这里面有两种哈希指针。第一种为指向前面的区块（白色），使得各个区块形成链，第二种则是为了说明比特币的来源（红色）。说明比特币的来源并非凭空捏造，可以防止双花攻击。<br>在进行交易时，需要付款人的签名和收款人的地址，在比特币系统中，该地址即为收款人的公钥的哈希。可以将其视为银行账户，根据此进行转账交易。（虽然公钥可以公开，但实际中更多公开的是公钥的哈希）<br>在交易中，收款方需要知道付款方的公钥，从而验证A签名是否有效。即A需要提供自己的公钥，如果所提供公钥与铸币交易中。（实际上其他节点都需要知道付款方公钥，验证交易合法性）实际中A转账时候提供的公钥需要和铸币交易中公钥对的上，这样就防止了恶意节点伪造A的公钥来“偷”走A的比特币。<br>在比特币系统中，通过执行脚本实现上述验证过程。将当前交易输入脚本与前一个交易输出脚本（说明币的来源的交易）拼接执行，如果可以正确执行，说明交易合法。<br>在该图中，一个区块仅含有一个交易，实际中一个区块中包含多个交易，交易通过Markle Tree（详见比特币数据结构篇中）组织起来，在区块中存储。</p>
+</blockquote>
+<h2 id="比特币区块信息"><a href="#比特币区块信息" class="headerlink" title="比特币区块信息"></a>比特币区块信息</h2><table>
+<thead>
+<tr>
+<th>block Header（区块宏观信息）</th>
+<th>block body</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Version(版本协议)</td>
+<td>…</td>
+</tr>
+<tr>
+<td>Hash of previous block header（指向前一个区块指针）</td>
+<td>…</td>
+</tr>
+<tr>
+<td>Merkle root hash（默克尔树根哈希值）</td>
+<td>…</td>
+</tr>
+<tr>
+<td>target（挖矿难度目标阈值）</td>
+<td>…</td>
+</tr>
+<tr>
+<td>nonce（随机数）</td>
+<td>…</td>
+</tr>
+</tbody></table>
+<blockquote>
+<ol>
+<li>挖矿求解问题：Hash（block header）&lt;=target</li>
+<li>Hash of previous block header只计算区块块头部分的哈希（ Merkle root hash保证了block body内容不被篡改，所以只需要计算block header即可保证整个区块内容不会被篡改）</li>
+<li>区块链系统中，轻节点（只存储区块block header信息）只利用区块链，但并不参与区块链系统维护和构造。</li>
+</ol>
+</blockquote>
+<h2 id="分布式共识"><a href="#分布式共识" class="headerlink" title="分布式共识"></a>分布式共识</h2><blockquote>
+<p>可否各个节点独立完成区块链构建？<br>很明显不行，各个节点独立打包交易，形成区块链，必然无法避免区块链内容不一致。从分布式系统角度来说，<strong>账本内容需要取得分布式共识</strong>，从而保证区块链内容在不同节点上的一致性。</p>
+</blockquote>
+</li>
+</ul>
+<p>根据FLP不可能结论，在一个异步系统中，网络时延无上限，即使只有一个成员是有问题的，也不可能达成共识。<br>根据CAP Theorem（Consistency一致性、Availability可靠性、Partition tolerance容错性），任何一个分布式系统中，最多只能满足其中两个性质。<br>分布式共识中协议Paxos 可以保证Consistency（若达成共识必然一致），但在某些情况下，可能会一直无法达成共识。【在这里附上一个Paxos协议详解：<a href="https://my.oschina.net/u/150175/blog/2992187%E3%80%91">https://my.oschina.net/u/150175/blog/2992187】</a></p>
+<h3 id="比特币共识协议"><a href="#比特币共识协议" class="headerlink" title="比特币共识协议"></a>比特币共识协议</h3><blockquote>
+<p>背景：假设系统中存在部分节点有恶意，但存在比例较小。大多数节点为“好”的节点，在这种情况下进行共识协议设置。<br>想法1：直接投票<br>某个节点打包交易到区块，将其发给其他节点，其他节点检查该候选区块，检查若正确投赞成票，若票数过半数，加入区块链。<br>存在的问题1——恶意节点不断打包不合法区块，导致一直无法达成共识，时间全花费在投票上。<br>存在的问题2——无强迫投票手段，某些节点不投票（行政不作为）。<br>存在的问题3——网络延迟事先未知，投票需要等多久？效率上会产生问题。<br>更大的一个问题——membership。如果是联uoyi s盟链，对加入成员有要求，可以基于投票。但比特币系统，任何人都可以加入，且创建账户及其简单，只需要本地产生公私钥对即可。只有转账（交易）时候,比特币系统才能知道该账户的存在。这样，黑客可以使用计算机专门生成大量公私钥对，当其产生大量公私钥对超过系统中一半数目，就可以获得支配地位（<strong>女巫攻击</strong>）。所以，这种简单的投票方案也是不可行的。</p>
+</blockquote>
+<p>比特币系统中采用了很巧妙的方案解决这个问题。虽然仍然是投票，但并非简单的根据账户数目，而是依据计算力进行投票。<br>在比特币系统中，每个节点都可以自行组装一个候选区块，而后，尝试各种nonce值，这就是挖矿。[H(block header)&lt;=target]<br>当某个节点找到符合要求的nonce，便获得了<strong>记账权</strong>，从而可以将区块发布到系统中。其他节点受到区块后，验证区块合法性，如果系统中绝大多数节点验证通过，则接收该区块为最新的区块并加入到区块链中。</p>
+<blockquote>
+<ol>
+<li>会不会合法区块被拒绝？<br>如图所示。发生分叉的情况下，暂时保存分叉情况，但区块链只承认最长合法链，随着时间推移，必然存在某一条链变成最长合法链。这样，也就会导致合法区块被拒绝<img data-src="/2023/01/04/BTCBasic2/2.png" class></li>
+<li>分叉攻击<br>如图所示，A用户对上面的A转账给B的记录回滚，从而非法获取利益。在两条链上，发现交易都合法。这是一个典型的双花攻击。A给B转账后，用分叉攻击将钱又转回来，覆盖掉原来的记录。<br>在比特币系统中，这种情况实际上很难发生。因为大多数矿工认可的是最长的合法链，会沿着上面的链继续挖下去。而A这个攻击者要想回退记录，就必须使得下面的链变得比上面的链还长。理论上来说，攻击者需要达到整个系统中51%的计算力，才能使得这种攻击成功。 <img data-src="/2023/01/04/BTCBasic2/3.png" class>
+此外，区块链正常运行场景下，也可能会发生分叉。当两个节点同时获得记账权时，会有两个等长的合法链。在缺省情况下，节点接收最先听到的区块，该节点会沿着该区块继续延续。但随着时间延续，必然有一个链胜出，由此保证了区块链的一致性。（被扔掉的区块称为“孤儿区块”）</li>
+</ol>
+</blockquote>
+<p>可见，依赖于算力竞争，有效的防止了“女巫攻击”。</p>
+<h3 id="比特币激励机制"><a href="#比特币激励机制" class="headerlink" title="比特币激励机制"></a>比特币激励机制</h3><blockquote>
+<p>为什么系统中节点要竞争记账权？需要提供算力和电力成本，节点为什么要去做？</p>
+</blockquote>
+<p>比特币系统设计之初便考虑到了这个问题，那就是引入激励机制。比特币通过设置<strong>出块奖励</strong>来解决该问题，一个获得合法区块的节点，可以在区块中加入一个特殊交易（铸币交易）。事实上，这种方式也是唯一一个产生新比特币的途径。</p>
+<blockquote>
+<p>比特币系统设计规定，起初每个区块可以获得50个比特币，但之后每隔21万个区块，奖励减半。</p>
+</blockquote>
+<p><strong>但是这样就可以了吗？？？</strong><br>区块中保存交易记录，那么，会不会存在节点只想发布区块而不想打包交易？中本聪在设计该系统时，引入了交易费。在一个区块中，其输入&gt;=输出，差值便是给区块所属节点的手续费。这些会在后续文章中详细说明。</p>
+<h2 id="2-BTC具体实现"><a href="#2-BTC具体实现" class="headerlink" title="2.BTC具体实现"></a>2.BTC具体实现</h2><p> 区块链是一个去中心化的账本，比特币采用了<strong>基于交易的账本模式</strong>。然而，系统中并无显示记录账户包含比特币数，实际上其需要通过交易记录进行推算。在比特币系统中，全节点需要维护一个名为**UTXO(Unspent Transaction Output尚未被花掉的交易输出)**的数据结构。</p>
+<blockquote>
+<p>如图，A转给B五个BTC，转给C3个BTC，B将5个BTC花掉，则该交易记录不保存在UTXO中，C没有花掉，则该交易记录保存在UTXO中<br> <img data-src="/2023/01/04/BTCBasic2/4.png" class></p>
+</blockquote>
+<p>UTXO集合中每个元素要给出产生这个输出的交易的哈希值，以及其在交易中是第几个输出。通过这两个信息，便可以定位到UTXO中的输出。</p>
+<blockquote>
+<p>为什么要维护这样一个数据结构？？？<br>为了防范“双花攻击”，判断一个交易是否合法，要查一下想要花掉的BTC是否在该集合中，只有在集合中才是合法的。如果想要花掉的BTC不在UTXO中，那么说明这个BTC要么根本不存在，要么已经被花过。所以，全节点需要在内存中维护一个UTXO，从而便于快速检测double spending（双花攻击）。</p>
+</blockquote>
+<p>每个交易会消耗输出，但也会产生新的输出。</p>
+<blockquote>
+<p>如图，A转给B5个BTC，之后B将其转给D，则UTXO中会删掉A-&gt;B这一交易记录，同时会添加B-&gt;D这一交易记录。</p>
+ <img data-src="/2023/01/04/BTCBasic2/5.png" class>
+
+<p>假如有人收到BTC转账，但一直不花，那么这个信息会一直保存在UTXO中。这种情况可能是该用户不想花这些BTC(如：中本聪) ，也有可能是忘记了私钥导致无法花掉。所以，UTXO是逐渐增大的，但该数据目前来说，一个普通的服务器硬盘中是可以完全保存这些数据的。</p>
+</blockquote>
+<p>每个交易可以有多个输入，也可以有多个输出，但输入之和要等于输出之和（total inputs = total outputs）。<br>存在一些交易的total inputs 略大于 total outputs，这部分差额便作为交易费，给了获得记账权的节点。在公开课笔记4中最后提及到“区块中保存交易记录，如果仅仅设置出块奖励，那么，会不会存在节点只想发布区块获得出块奖励而不想打包交易？”<br>因此，BTC系统设计了Tranction fee（交易费），对于获得记账权节点来说，除了出块奖励之外，还可以得到打包交易的交易费。但目前来说，交易费远远小于出块奖励。等到未来出块奖励变少，可能区块链的维护便主要依赖于交易费了。</p>
+<blockquote>
+<p>BTC系统中每21万个区块，BTC出块奖励减半。根据下图计算，基本上出块奖励每4年减半。<br> <img data-src="/2023/01/04/BTCBasic2/6.png" class></p>
+</blockquote>
+<blockquote>
+<p>比特币是基于交易的模式，与之对应，还有一种基于账户的模式（如：以太坊）。基于账户的模式要求，系统中显示记录账户余额。也就是说，可以直接查询当前账户余额是多少货币。可以看到，比特币这种模式，隐私性较好，但其也付出一定代价。在进行交易时，因为没有账户这一概念，无法知道账户剩余多少BTC,所以必须说明币的来源（防止双花攻击）。而基于账户的模式，则天然地避免了这种缺陷，转账交易就是对一个（多个）账户余额的数字减和另一个（多个）账户余额的数字加</p>
+</blockquote>
+<h3 id="BTC系统中具体的区块信息"><a href="#BTC系统中具体的区块信息" class="headerlink" title="BTC系统中具体的区块信息"></a>BTC系统中具体的区块信息</h3><p>如下图所示，为一个区块的信息（取自视频中截图，源自blockchain.info）<br>  <img data-src="/2023/01/04/BTCBasic2/7.png" class></p>
+<ul>
+<li>什么是挖矿？<br>可以看到，区块哈希与前一区块哈希都是以一长串0开头的，挖矿本身就是尝试各种nonce，使得产生的区块哈希值小于等于目标阈值。该目标阈值，表示成16进制，就是前面含有一长串的0</li>
+</ul>
+<hr>
+<p>下为block header的代码中实现的数据结构。里面的几个域在公开课笔记4中(比特币区块信息)已经解释过了，这里不再赘述。<br> <img data-src="/2023/01/04/BTCBasic2/8.png" class><br>可以看到，nonce是一个32位的无符号整型数据，在挖矿时候是通过不断调整nonce进行的，但可以看到，nonce的取值最多为2^32(2的32次方)种。但并非将这些nonce全部遍历一遍，就一定能找到符合要求的nonce。由于近年来，挖矿人员越来越多，挖矿难度已经调整的比较大了（关于难度调整请关注后续博文，会有专门一篇介绍难度调整)，而2^32这一搜索空间太小，所以仅调整nonce很大可能找不到正确的结果。</p>
+<blockquote>
+<p>还有哪些域可以调整呢？</p>
+</blockquote>
+<p>下图为block header中对各个域的描述。而仅仅调整nonce是不够的，所以这里可以通过修改Merkle Tree的根哈希值来进行调整。</p>
+<blockquote>
+<p>思考：打包的交易和顺序确定了，根哈希值不就确定了吗？这个怎么能修改呢？</p>
+</blockquote>
+<h3 id="铸币交易（coinbase交易）"><a href="#铸币交易（coinbase交易）" class="headerlink" title="铸币交易（coinbase交易）"></a>铸币交易（coinbase交易）</h3> <img data-src="/2023/01/04/BTCBasic2/9.png" class>
+<p>在公开课笔记4中提及，每个发布区块者可以得到出快奖励，也就是可以在区块中发布一个<strong>铸币交易(coinbase交易)</strong>,这也是BTC系统中产生新比特币的唯一方式。下为一个铸币交易的内容：<br>  <img data-src="/2023/01/04/BTCBasic2/10.png" class><br>可以看到，有一个CoinBase鱼，其中可以写入任何内容，在这里写什么都没有影响。所以可以在这里添加一些任意信息，便可以实现无法篡改（也无法删除）。（例如：提前写入股票预测结果的哈希值、写入人生感谢，写入爱情誓言（无法删除，想想删不掉十年前发表的QQ空间非主流说说是痛苦吧，嘿嘿嘿）)<br>所以，只要我们改变了写入内容，便可以改变Merkle Tree 的根哈希值。</p>
+<p>下图为一个小型的区块链，假定左下角交易为coinbase交易，可以看到，该交易发生改变会逐级向上传递，最终导致Merkle Tree根哈希值发生改变。<br>  <img data-src="/2023/01/04/BTCBasic2/11.png" class><br>所以，在实际的挖矿中，包含两层循环。外层循环调整coinbase域（可以规定只将其中前x个字节作为另一个nonce)，算出block header中根哈希值后，内层循环再调整nonce。</p>
+<h3 id="普通转账交易"><a href="#普通转账交易" class="headerlink" title="普通转账交易"></a>普通转账交易</h3>  <img data-src="/2023/01/04/BTCBasic2/12.png" class>
+<p>如果将输入脚本和输出脚本拼接起来可以顺利执行不出现错误，则说明交易合法。</p>
+<h3 id="挖矿过程的概率分析"><a href="#挖矿过程的概率分析" class="headerlink" title="挖矿过程的概率分析"></a>挖矿过程的概率分析</h3><p>挖矿本质上是不断尝试各种nonce，来求解这样一个puzzle。每次尝试nonce，可以视为一次伯努利试验。最典型的伯努利试验就是投掷硬币，正面和反面朝上概率为p和1-p。在挖矿过程中，一次伯努利试验，成功的概率极小，失败的概率极大。挖矿便是多次进行伯努利试验，且每次随机。这些伯努利试验便构成了a sequence of independent Bernoulli trials(一系列独立的伯努利试验)。根据概率论相关知识知道，伯努利试验本身具有无记忆性。也就是说，无论之前做多少大量试验，对后续继续试验没有任何影响（车牌摇号也是如此，，心痛….）。<br>对于挖矿来说，便是多次伯努利试验尝试nonce，最终找到一个符合要求的nonce。在这种情况下，可以采用泊松分布进行近似，由此通过概率论可以推断出，系统出块时间服从指数分布。(需要注意的是，出块时间指的是整个系统出块时间，并非挖矿的个人)<br>  <img data-src="/2023/01/04/BTCBasic2/13.png" class><br>系统平均出块时间为10min，该时间为系统本身设计，通过难度调整维护其平均出块时间。<br>指数分布本身也具有无记忆性。也就是说，对整个系统而言，已经过去10min，仍然没有人挖到区块，那么平均仍然还需要等10min（很不符合人的直觉)。也就是说，将来要挖多久和已经挖多久无关。</p>
+<blockquote>
+<p>虽然这样看起来是一个冷酷的事情，过去的工作可能都会白做。但实际上这才是挖矿公平性的保障。对算力有优势的矿工来说，其之前所做大量工作仍有可能会白费。</p>
+</blockquote>
+<h3 id="比特币总量计算"><a href="#比特币总量计算" class="headerlink" title="比特币总量计算"></a>比特币总量计算</h3>  <img data-src="/2023/01/04/BTCBasic2/14.png" class>
+<p>也就是说，比特币系统中已经挖出和未挖出的比特币总数便是2100万个。<br>实际上，挖矿这一操作并非在解决数学难题，而是单纯的算力比拼。也就是说，挖矿这一过程并没有实际意义，但挖矿这一过程，却是对比特币系统的稳定起到重要维护作用。<br>所以，只要大多数算力掌握在好的节点手中，便能够保障比特币系统的稳定。</p>
+<blockquote>
+<p>比特币越来越难被挖到，且出块奖励越来越少，是否说明其未来挖矿的动力将越来越低呢？<br>实际上，恰恰相反。在早期比特币很容易挖到的时候，比特币并不被人们所看好，而后，比特币估值上涨，吸引其他人参与挖矿，又进一步促进了比特币价值上涨，进而又吸引更多人参与进来。<br>当出块奖励趋于0时，则整个系统将依赖于交易费运行，届时交易费将成为维护比特币系统运行的重要保障。</p>
+</blockquote>
+<h3 id="比特币系统安全性分析"><a href="#比特币系统安全性分析" class="headerlink" title="比特币系统安全性分析"></a>比特币系统安全性分析</h3><blockquote>
+<p>大多数算力掌握在好的用户手中，能否保障不良交易记录不会被写入区块链？<br>需要注意的是，算力低的用户并非完全不能获得记账权，仅仅是概率上较低的问题。但实际上，即使拥有少量算力的恶意节点，也有一定概率获得某个区块的记账权。</p>
+</blockquote>
+<ul>
+<li><ol>
+<li>可否”偷币”？（恶意节点能不能将其他账户上比特币转给自己？）<br>答案：不能。因为转账交易需要签名，恶意节点无法伪造他人签名。加入其获得记账权并硬往区块中写入该交易，大多数用户会认为其是一个非法区块，大多数算力将不认可该区块，从而沿着其他路径挖矿，随着时间推移，拥有大多数算力的诚实的节点将会仍然沿着原来区块挖矿，从而形成一条“最长合法链”，该区块变成孤儿区块。对于攻击者来说，不仅不能偷到其他人的比特币，而且得不到出块奖励，还浪费了挖矿花费的电费等成本。</li>
+</ol>
+</li>
+<li><ol>
+<li><p>可否将已经话过的币再花一遍？</p>
+<p>如下图1，若M已经将钱转给B，现在想再转给自己，假设其获得记账权，若按照图1方式，很明显为一个非法区块，不会被其他节点承认。</p>
+<p>所以，M只能选择图2方式，将M转账给B的记录回滚掉。这样就有了两条等长合法链，取决于哪一个会胜出。（如果上面交易产生不可逆的外部效果，下面交易回滚便又拿回钱，从而不当获益）</p>
+<blockquote>
+<p>需要注意的是，再挖矿之初便要选择上一个区块是谁。也就是说，并不是获得记账权之后才选择插入到哪一个区块之后。</p>
+  <img data-src="/2023/01/04/BTCBasic2/15.png" class>
+</blockquote>
+</li>
+</ol>
+</li>
+</ul>
+<p>如何防范这种攻击？？？<br>如果再M-&gt;B这个交易之后还延续有几个区块，如下图所示，则大多数诚实节点不会承认下面的链。所以，便变成了恶意节点挖下面的链，其他节点挖上面的链的算力比拼。由于区块链中大多数节点为善意节点，则最终上面链会胜出，而恶意节点的链会不被认可，从而导致投入成本白费。<br>  <img data-src="/2023/01/04/BTCBasic2/16.png" class><br>所以，一种简单防范防范便是多等几个确认区块。比特币协议中，缺省需要等6个确认区块，此时才认为该记录是不可篡改的。平均出块时间10min，六个确认区块便需要1小时，可见等待时间还是相对较长的。</p>
+<ul>
+<li><ol>
+<li>可否故意不包含合法交易？<br>可以，但是可以等待后续区块包含，所以问题不大。实际运行中，可能由于某段时间实际交易数太多，而一个区块包含交易数存在最大值，导致某些合法交易并未被写入区块链（等待后续区块写入）。</li>
+</ol>
+</li>
+<li><ol>
+<li><p>selfish mining</p>
+<p>提前挖到但不发布，继续挖下去，等到想要攻击的交易等了6次确认认为安全之后将整条链发布出去，试图回滚原来记录。这种情况，需要恶意节点掌握系统中半数以上算力才行，否则无法成为最长合法链。</p>
+<blockquote>
+<p>selfish mining有好处吗？<br>如图所示，假使挖到2号时候先不发布，则其他人仍然需要挖1号区块，若其算力足够强，能保证别人挖出1之后可以挖出3.可以此时将2和3一起发布，从而将1区块所在链最长合法链挤掉（减少了别人和自己竞争挖3号区块）。<br>但这样存在风险，如果别人已经挖出1，自己还没挖出3，则需要尽快发布2和别人竞争最长合法链地位。</p>
+  <img data-src="/2023/01/04/BTCBasic2/17.png" class>
+</blockquote>
+</li>
+</ol>
+</li>
+</ul>
+<p>需要注意的是，比特币系统中，假如发生以下情况，各个节点以自己先收到的区块所在链为主链，对后收到的合法区块会不予认可（但会先保存起来）。此时便变成了两批算力分布挖1和2，具体哪一个成为主链，取决于哪一条链先挖到下一个区块，使得两个等长合法链出现长短不一致，最终胜者成为最长合法链。<br>  <img data-src="/2023/01/04/BTCBasic2/18.png" class></p>
+]]></content>
+      <categories>
+        <category>区块链&amp;以太坊&amp;智能合约</category>
+      </categories>
+      <tags>
+        <tag>区块链&amp;以太坊&amp;智能合约</tag>
       </tags>
   </entry>
   <entry>
