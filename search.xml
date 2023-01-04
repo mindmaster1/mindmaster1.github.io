@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>AOF</title>
+    <url>/2022/08/06/AOF/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>BTCBasic</title>
     <url>/2023/01/04/BTCBasic/</url>
     <content><![CDATA[<h1 id="区块链基础part1-北大肖臻老师-amp-Chainlink预言机-China学习笔记"><a href="#区块链基础part1-北大肖臻老师-amp-Chainlink预言机-China学习笔记" class="headerlink" title="区块链基础part1-北大肖臻老师&amp;Chainlink预言机 China学习笔记"></a>区块链基础part1-北大肖臻老师&amp;Chainlink预言机 China学习笔记</h1><h2 id="1-BTC密码学原理"><a href="#1-BTC密码学原理" class="headerlink" title="1. BTC密码学原理"></a>1. BTC密码学原理</h2><p>比特币属于加密货币，可见其中必然会涉及到密码学的知识。而比特币本身开放，其交易记录、交易金额、交易内容甚至源代码都面向全网开放，加密又使用在哪里呢？在比特币中，正是加密确保了信息的不可篡改，保证了区块链本身的优势——不可篡改。</p>
@@ -98,11 +103,6 @@
       </tags>
   </entry>
   <entry>
-    <title>AOF</title>
-    <url>/2022/08/06/AOF/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>BTCBasic3</title>
     <url>/2023/01/04/BTCBasic3/</url>
     <content><![CDATA[<h1 id="区块链基础part3-北大肖臻老师-amp-Chainlink预言机-China学习笔记"><a href="#区块链基础part3-北大肖臻老师-amp-Chainlink预言机-China学习笔记" class="headerlink" title="区块链基础part3-北大肖臻老师&amp;Chainlink预言机 China学习笔记"></a>区块链基础part3-北大肖臻老师&amp;Chainlink预言机 China学习笔记</h1>]]></content>
@@ -164,87 +164,6 @@
       </categories>
       <tags>
         <tag>Grapth</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>HTTP/1.1深入学习（一）</title>
-    <url>/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/</url>
-    <content><![CDATA[<h2 id="HTTP解决了什么问题"><a href="#HTTP解决了什么问题" class="headerlink" title="HTTP解决了什么问题"></a>HTTP解决了什么问题</h2><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG\source_posts\HTTP-1-1深入学习\image01.png" alt="image-20220216145214793"></p>
-<p>解决 WWW 信息交互必须面对的需求：</p>
-<ul>
-<li><p> 低门槛 </p>
-</li>
-<li><p>可扩展性：巨大的用户群体，超长的寿命 </p>
-</li>
-<li><p> 分布式系统下的 Hypermedia：大粒度数据的网络传输 </p>
-</li>
-<li><p>Internet 规模 </p>
-<ul>
-<li><p>无法控制的 scalability </p>
-<ul>
-<li><p>不可预测的负载、非法格式的数据、恶意消息 </p>
-</li>
-<li><p>客户端不能保持所有服务器信息，服务器不能保持多个请求间的状态信息</p>
-<p>独立的组件部署：新老组件并存</p>
-<p>向前兼容：自 1993 年起 HTTP0.9\1.0（1996）已经被广泛使用</p>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG\source_posts\HTTP-1-1深入学习\image02.png" alt="image-20220216145500667"></p>
-<h2 id="浏览器发起HTTP请求的典型场景与ABNF定义HTTP协议格式"><a href="#浏览器发起HTTP请求的典型场景与ABNF定义HTTP协议格式" class="headerlink" title="浏览器发起HTTP请求的典型场景与ABNF定义HTTP协议格式"></a>浏览器发起HTTP请求的典型场景与ABNF定义HTTP协议格式</h2><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG\source\_posts\HTTP-1-1深入学习\image03.png" alt="image-20220216143022772" style="zoom:150%;">
-
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143059824.png" alt="image-20220216143059824"></p>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143217688.png" alt="image-20220216143217688"></p>
-<p>一种无状态的、应用层的、以<strong>请求/应答方式</strong>运行的协议，使用可扩展的语义和自描述消息格式，与基于网络的超文本信息系统灵活的互动。</p>
-<h3 id="HTTP的协议格式"><a href="#HTTP的协议格式" class="headerlink" title="HTTP的协议格式"></a>HTTP的协议格式</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143444135.png" alt="image-20220216143444135"></p>
-<h4 id="ABNF-扩充巴科斯-瑙尔范式-操作符"><a href="#ABNF-扩充巴科斯-瑙尔范式-操作符" class="headerlink" title="ABNF(扩充巴科斯-瑙尔范式)操作符"></a>ABNF(扩充巴科斯-瑙尔范式)操作符</h4><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143600821.png" alt="image-20220216143600821"></p>
-<p><strong><em>ABNF的核心规则</em></strong></p>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143608965.png" alt="image-20220216143608965"></p>
-<blockquote>
-<p>基于ABNF描述的HTTP协议格式 + 具体实例</p>
-</blockquote>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143758587.png" alt="image-20220216143758587"></p>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143824981.png" alt="image-20220216143824981"></p>
-<h2 id="网络分层：OSI模型与TCP-IP模型"><a href="#网络分层：OSI模型与TCP-IP模型" class="headerlink" title="网络分层：OSI模型与TCP/IP模型"></a>网络分层：OSI模型与TCP/IP模型</h2><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216144746312.png" alt="image-20220216144746312"></p>
-<h3 id="OSI模型与TCP模型的对照"><a href="#OSI模型与TCP模型的对照" class="headerlink" title="OSI模型与TCP模型的对照"></a>OSI模型与TCP模型的对照</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216144826027.png" alt="image-20220216144826027"></p>
-<h3 id="在不同层之间的报文头部封装"><a href="#在不同层之间的报文头部封装" class="headerlink" title="在不同层之间的报文头部封装"></a>在不同层之间的报文头部封装</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216144956500.png" alt="image-20220216144956500"></p>
-<p>注意一下在图中表明的各层的报文分别叫什么名字。</p>
-<h2 id="评估Web架构的关键属性"><a href="#评估Web架构的关键属性" class="headerlink" title="评估Web架构的关键属性"></a>评估Web架构的关键属性</h2><p>HTTP 协议应当在以下属性中取得可接受的均衡：</p>
-<ul>
-<li><strong>性能</strong> Performance：影响高可用的关键因素 </li>
-<li><strong>可伸缩性</strong> Scalability：支持部署可以互相交互的大量组件 </li>
-<li><strong>简单性</strong> Simplicity：易理解、易实现、易验证 </li>
-<li><strong>可见性</strong> Visiable：对两个组件间的交互进行监视或者仲裁的能力。如缓存、分层设计等</li>
-<li><strong>可移植性</strong> Portability：在不同的环境下运行的能力 </li>
-<li><strong>可靠性</strong> Reliability：出现部分故障时，对整体影响的程度 </li>
-<li><strong>可修改性</strong> Modifiability：对系统作出修改的难易程度，由可进化性、可定制性、可扩展性、可配置性、可重用性构成</li>
-</ul>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154311688.png" alt="image-20220216154311688"></p>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154333582.png" alt="image-20220216154333582"></p>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154407111.png" alt="image-20220216154407111"></p>
-<h2 id="从五种架构风格推导出HTTP的REST架构"><a href="#从五种架构风格推导出HTTP的REST架构" class="headerlink" title="从五种架构风格推导出HTTP的REST架构"></a>从五种架构风格推导出HTTP的REST架构</h2><p> <img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154624220.png" alt="image-20220216154624220"></p>
-<h3 id="数据流风格-Data-flow-Styles"><a href="#数据流风格-Data-flow-Styles" class="headerlink" title="数据流风格 Data-flow Styles"></a>数据流风格 Data-flow Styles</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154806375.png" alt="image-20220216154806375"></p>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154827521.png" alt="image-20220216154827521"></p>
-<h3 id="复制风格"><a href="#复制风格" class="headerlink" title="复制风格"></a>复制风格</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155000320.png" alt="image-20220216155000320"></p>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155007623.png" alt="image-20220216155007623"></p>
-<h3 id="分层风格"><a href="#分层风格" class="headerlink" title="分层风格"></a>分层风格</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155144846.png" alt="image-20220216155144846"></p>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155211840.png" alt="image-20220216155211840"></p>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155244132.png" alt="image-20220216155244132"></p>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155251415.png" alt="image-20220216155251415"></p>
-<h3 id="移动代码风格-Mobile-Code-Styles"><a href="#移动代码风格-Mobile-Code-Styles" class="headerlink" title="移动代码风格 Mobile Code Styles"></a>移动代码风格 Mobile Code Styles</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155401997.png" alt="image-20220216155401997"></p>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155440972.png" alt="image-20220216155440972"></p>
-<h3 id="点对点风格"><a href="#点对点风格" class="headerlink" title="点对点风格"></a>点对点风格</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155509897.png" alt="image-20220216155509897"></p>
-<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155556884.png" alt="image-20220216155556884"></p>
-<h3 id="不同风格之间的演化"><a href="#不同风格之间的演化" class="headerlink" title="不同风格之间的演化"></a>不同风格之间的演化</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155625246.png" alt="image-20220216155625246"></p>
-]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>计算机网络</tag>
       </tags>
   </entry>
   <entry>
@@ -442,6 +361,87 @@
       </categories>
       <tags>
         <tag>HTTP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>HTTP/1.1深入学习（一）</title>
+    <url>/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/</url>
+    <content><![CDATA[<h2 id="HTTP解决了什么问题"><a href="#HTTP解决了什么问题" class="headerlink" title="HTTP解决了什么问题"></a>HTTP解决了什么问题</h2><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG\source_posts\HTTP-1-1深入学习\image01.png" alt="image-20220216145214793"></p>
+<p>解决 WWW 信息交互必须面对的需求：</p>
+<ul>
+<li><p> 低门槛 </p>
+</li>
+<li><p>可扩展性：巨大的用户群体，超长的寿命 </p>
+</li>
+<li><p> 分布式系统下的 Hypermedia：大粒度数据的网络传输 </p>
+</li>
+<li><p>Internet 规模 </p>
+<ul>
+<li><p>无法控制的 scalability </p>
+<ul>
+<li><p>不可预测的负载、非法格式的数据、恶意消息 </p>
+</li>
+<li><p>客户端不能保持所有服务器信息，服务器不能保持多个请求间的状态信息</p>
+<p>独立的组件部署：新老组件并存</p>
+<p>向前兼容：自 1993 年起 HTTP0.9\1.0（1996）已经被广泛使用</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG\source_posts\HTTP-1-1深入学习\image02.png" alt="image-20220216145500667"></p>
+<h2 id="浏览器发起HTTP请求的典型场景与ABNF定义HTTP协议格式"><a href="#浏览器发起HTTP请求的典型场景与ABNF定义HTTP协议格式" class="headerlink" title="浏览器发起HTTP请求的典型场景与ABNF定义HTTP协议格式"></a>浏览器发起HTTP请求的典型场景与ABNF定义HTTP协议格式</h2><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/BLOG\source\_posts\HTTP-1-1深入学习\image03.png" alt="image-20220216143022772" style="zoom:150%;">
+
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143059824.png" alt="image-20220216143059824"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143217688.png" alt="image-20220216143217688"></p>
+<p>一种无状态的、应用层的、以<strong>请求/应答方式</strong>运行的协议，使用可扩展的语义和自描述消息格式，与基于网络的超文本信息系统灵活的互动。</p>
+<h3 id="HTTP的协议格式"><a href="#HTTP的协议格式" class="headerlink" title="HTTP的协议格式"></a>HTTP的协议格式</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143444135.png" alt="image-20220216143444135"></p>
+<h4 id="ABNF-扩充巴科斯-瑙尔范式-操作符"><a href="#ABNF-扩充巴科斯-瑙尔范式-操作符" class="headerlink" title="ABNF(扩充巴科斯-瑙尔范式)操作符"></a>ABNF(扩充巴科斯-瑙尔范式)操作符</h4><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143600821.png" alt="image-20220216143600821"></p>
+<p><strong><em>ABNF的核心规则</em></strong></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143608965.png" alt="image-20220216143608965"></p>
+<blockquote>
+<p>基于ABNF描述的HTTP协议格式 + 具体实例</p>
+</blockquote>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143758587.png" alt="image-20220216143758587"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216143824981.png" alt="image-20220216143824981"></p>
+<h2 id="网络分层：OSI模型与TCP-IP模型"><a href="#网络分层：OSI模型与TCP-IP模型" class="headerlink" title="网络分层：OSI模型与TCP/IP模型"></a>网络分层：OSI模型与TCP/IP模型</h2><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216144746312.png" alt="image-20220216144746312"></p>
+<h3 id="OSI模型与TCP模型的对照"><a href="#OSI模型与TCP模型的对照" class="headerlink" title="OSI模型与TCP模型的对照"></a>OSI模型与TCP模型的对照</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216144826027.png" alt="image-20220216144826027"></p>
+<h3 id="在不同层之间的报文头部封装"><a href="#在不同层之间的报文头部封装" class="headerlink" title="在不同层之间的报文头部封装"></a>在不同层之间的报文头部封装</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216144956500.png" alt="image-20220216144956500"></p>
+<p>注意一下在图中表明的各层的报文分别叫什么名字。</p>
+<h2 id="评估Web架构的关键属性"><a href="#评估Web架构的关键属性" class="headerlink" title="评估Web架构的关键属性"></a>评估Web架构的关键属性</h2><p>HTTP 协议应当在以下属性中取得可接受的均衡：</p>
+<ul>
+<li><strong>性能</strong> Performance：影响高可用的关键因素 </li>
+<li><strong>可伸缩性</strong> Scalability：支持部署可以互相交互的大量组件 </li>
+<li><strong>简单性</strong> Simplicity：易理解、易实现、易验证 </li>
+<li><strong>可见性</strong> Visiable：对两个组件间的交互进行监视或者仲裁的能力。如缓存、分层设计等</li>
+<li><strong>可移植性</strong> Portability：在不同的环境下运行的能力 </li>
+<li><strong>可靠性</strong> Reliability：出现部分故障时，对整体影响的程度 </li>
+<li><strong>可修改性</strong> Modifiability：对系统作出修改的难易程度，由可进化性、可定制性、可扩展性、可配置性、可重用性构成</li>
+</ul>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154311688.png" alt="image-20220216154311688"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154333582.png" alt="image-20220216154333582"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154407111.png" alt="image-20220216154407111"></p>
+<h2 id="从五种架构风格推导出HTTP的REST架构"><a href="#从五种架构风格推导出HTTP的REST架构" class="headerlink" title="从五种架构风格推导出HTTP的REST架构"></a>从五种架构风格推导出HTTP的REST架构</h2><p> <img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154624220.png" alt="image-20220216154624220"></p>
+<h3 id="数据流风格-Data-flow-Styles"><a href="#数据流风格-Data-flow-Styles" class="headerlink" title="数据流风格 Data-flow Styles"></a>数据流风格 Data-flow Styles</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154806375.png" alt="image-20220216154806375"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216154827521.png" alt="image-20220216154827521"></p>
+<h3 id="复制风格"><a href="#复制风格" class="headerlink" title="复制风格"></a>复制风格</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155000320.png" alt="image-20220216155000320"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155007623.png" alt="image-20220216155007623"></p>
+<h3 id="分层风格"><a href="#分层风格" class="headerlink" title="分层风格"></a>分层风格</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155144846.png" alt="image-20220216155144846"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155211840.png" alt="image-20220216155211840"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155244132.png" alt="image-20220216155244132"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155251415.png" alt="image-20220216155251415"></p>
+<h3 id="移动代码风格-Mobile-Code-Styles"><a href="#移动代码风格-Mobile-Code-Styles" class="headerlink" title="移动代码风格 Mobile Code Styles"></a>移动代码风格 Mobile Code Styles</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155401997.png" alt="image-20220216155401997"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155440972.png" alt="image-20220216155440972"></p>
+<h3 id="点对点风格"><a href="#点对点风格" class="headerlink" title="点对点风格"></a>点对点风格</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155509897.png" alt="image-20220216155509897"></p>
+<p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155556884.png" alt="image-20220216155556884"></p>
+<h3 id="不同风格之间的演化"><a href="#不同风格之间的演化" class="headerlink" title="不同风格之间的演化"></a>不同风格之间的演化</h3><p><img data-src="/2022/02/16/HTTP-1-1%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220216155625246.png" alt="image-20220216155625246"></p>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>计算机网络</tag>
       </tags>
   </entry>
   <entry>
@@ -1167,101 +1167,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Maven学习笔记</title>
-    <url>/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-3/</url>
-    <content><![CDATA[<h3 id="Maven仓库的基本概念"><a href="#Maven仓库的基本概念" class="headerlink" title="Maven仓库的基本概念"></a>Maven仓库的基本概念</h3><p> 当第⼀次运⾏Maven命令的时候， 你需要Internet链接， 因为它需要从⽹上下载⼀些⽂件。 那么它从 哪⾥下载呢？ 它是从Maven默认的远程库下载的。 这个远程仓库有Maven的核⼼插件和可供下载的jar⽂件。</p>
-<p>对于Maven来说， 仓库只分为两类： 本地仓库和远程仓库。</p>
-<p>当Maven根据坐标寻找构件的时候，它⾸先会查看本地仓库，如果本地仓库存在，则直接使⽤； 如果 本地没有，Maven就会去远程仓库查找，发现需要的构件之后，下载到本地仓库再使⽤。 如果本地仓库和远程仓库都没有，Maven就会报错。 </p>
-<p>远程仓库分为三种： 中央仓库，私服， 其他公共库。</p>
-<ul>
-<li><p>中央仓库：默认配置下，Maven下载jar包的地⽅。</p>
-<blockquote>
-<p>由于原始的本地仓库是空的，maven必须知道⾄少⼀个可⽤的远程仓库，才能执⾏maven命令的时候 下载到需要的构件。中央仓库就是这样⼀个默认的远程仓库。 maven-model-builder-3.3.9.jar maven⾃动的 jar 中包含了⼀个 超级POM。定义了默认中央仓库的位 置。 中央仓库包含了2000多个开源项⽬，接收每天1亿次以上的访问</p>
-</blockquote>
-</li>
-<li><p>私服：是另⼀种特殊的远程仓库，为了节省带宽和时间，应该在局域⽹内架设⼀个私有的仓库服务器， ⽤其代理所有外部的远程仓库。 内部的项⽬还能部署到私服上供其他项⽬使用</p>
-<blockquote>
-<p>私服是⼀种特殊的远程仓库，它是架设在局域⽹内的仓库服务， 私服代理⼴域⽹上的远程仓库，供局 域⽹内的maven⽤户使⽤。 当maven需要下载构件时， 它去私服当中找，如果私服没有， 则从外部远 程仓库下载，并缓存在私服上， 再为maven提供。 此外，⼀些⽆法从外部仓库下载的构件也能从本地上传到私服提供局域⽹中其他⼈使⽤</p>
-</blockquote>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">repositories</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">snapshots</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">enabled</span>&gt;</span>true<span class="tag">&lt;/<span class="name">enabled</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;/<span class="name">snapshots</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">id</span>&gt;</span>public<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>Public Repositories<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://192.168.0.96:8081/content/groups/public/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">id</span>&gt;</span>getui-nexus<span class="tag">&lt;/<span class="name">id</span>&gt;</span>       				<span class="tag">&lt;<span class="name">url</span>&gt;</span>http://mvn.gt.igexin.com/nexus/content/repositories/releases/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">repositories</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<p>公司内部为何需要建立私服：</p>
-<blockquote>
-<p>节省⾃⼰的外⽹带宽 加速maven构建 部署第三⽅控件 提⾼稳定性 降低中央仓库的负荷</p>
-</blockquote>
-<p>常用的阿里云仓库配置，需要修改settings.xml文件</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus-aliyun<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">name</span>&gt;</span>Nexus aliyun<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-<p>⼀般来说，在Maven项⽬⽬录下，没有诸如lib/这样⽤来存放依赖⽂件的⽬录。 当Maven在执⾏编译或 测试时，如果需要使⽤依赖⽂件，它总是基于坐标使⽤本地仓库的依赖⽂件。</p>
-<p>每个⽤户在⾃⼰的⽤户⽬录下都有⼀个路径名为.m2/repository/的仓库⽬录。 有时候， 因为某些原因（⽐如c盘空间不⾜）,需要修改本地仓库⽬录地址。</p>
-<p>对于仓库路径的修改，可以通过maven 配置⽂件conf ⽬录下settings.xml来指定仓库路径。</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置到指定⽬录中，路径的斜杆不要写反 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">settings</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">localRepository</span>&gt;</span>D:/m2/repository<span class="tag">&lt;/<span class="name">localRepository</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-<h3 id="Maven依赖的基本概念"><a href="#Maven依赖的基本概念" class="headerlink" title="Maven依赖的基本概念"></a>Maven依赖的基本概念</h3><p>根元素project下的dependencies可以包含多个 dependence元素，以声明多个依赖。每个依赖都应该包含以下元素：</p>
-<ol>
-<li><p>groupId, artifactId, version : 依赖的基本坐标， 对于任何⼀个依赖来说，基本坐标是最重要的， Maven根据坐标才能找到需要的依赖。</p>
-</li>
-<li><p>Type： 依赖的类型，⼤部分情况下不需要声明。 默认值为jar</p>
-</li>
-<li><p>Scope： 依赖范围（compile,test,provided,runtime,system）</p>
-</li>
-</ol>
-<blockquote>
-<p>compile：编译依赖范围</p>
-</blockquote>
-<p>如果没有指定，就会默认使⽤该依赖范围。使⽤此依赖范围的Maven依赖，对于编译、测 试、运⾏三种classpath都有效。</p>
-<blockquote>
-<p>test：测试依赖范围</p>
-</blockquote>
-<p>使⽤此依赖范围的Maven依赖，只对于测试classpath有效，在编译主代码或者运⾏项⽬的使 ⽤时将⽆法使⽤此类依赖。典型的例⼦就是JUnit，它只有在编译测试代码及运⾏测试的时候才需要</p>
-<blockquote>
-<p>provided：已提供依赖范围</p>
-</blockquote>
-<p>使⽤此依赖范围的Maven依赖，对于编译和测试classpath有效，但在运⾏时⽆效。典型的例 ⼦是servlet-api，编译和测试项⽬的时候需要该依赖，但在运⾏项⽬的时候，由于容器已经提供，就不需要Maven重复地引⼊⼀遍(如：servlet-api)。</p>
-<blockquote>
-<p>runtime：运行时依赖范围</p>
-</blockquote>
-<p>使⽤此依赖范围的Maven依赖，对于测试和运⾏classpath有效，但在编译主代码时⽆效。典 型的例⼦是JDBC驱动实现，项⽬主代码的编译只需要JDK提供的JDBC接⼝，只有在执⾏测 试或者运⾏项⽬的时候才需要实现上述接⼝的具体JDBC驱动。</p>
-<blockquote>
-<p>system：系统依赖范围</p>
-</blockquote>
-<p>该依赖与三种classpath的关系，和provided依赖范围完全⼀致。但是，使⽤system范围依赖 时必须通过systemPath元素显式地指定依赖⽂件的路径。由于此类依赖不是通过Maven仓库 解析的，⽽且往往与本机系统绑定，可能造成构建的不可移植，因此应该谨慎使⽤。</p>
-<ol start="4">
-<li><p>Optional：标记依赖是否可选</p>
-</li>
-<li><p>Exclusions： ⽤来排除传递性依赖。</p>
-</li>
-</ol>
-<h3 id="Maven依赖的依赖范围"><a href="#Maven依赖的依赖范围" class="headerlink" title="Maven依赖的依赖范围"></a>Maven依赖的依赖范围</h3><p>⾸先需要知道，Maven在编译项⽬主代码的时候需要使⽤⼀套classpath。 ⽐如：编译项⽬代码的时候 需要⽤到spring-core, 该⽂件以依赖的⽅式被引⼊到classpath中。 其次， Maven在执⾏测试的时候会使 ⽤另外⼀套classpath。 如：junit。</p>
-<p>最后在实际运⾏项⽬时，⼜会使⽤⼀套classpath， spring-core需要在该classpath中，⽽junit不需要。</p>
-<p>那么依赖范围就是⽤来控制依赖与这三种classpath(编译classpath，测试classpath，运⾏时classpath)的 关系， Maven有以下⼏种依赖范围：<strong>（如上所述）</strong></p>
-<h3 id="传递性依赖"><a href="#传递性依赖" class="headerlink" title="传递性依赖"></a>传递性依赖</h3><p>传递依赖机制， 让我们在使⽤某个jar的时候就不⽤去考虑它依赖了什么。也不⽤担⼼引⼊多余的依 赖。 Maven会解析各个直接依赖的POM，将那些必要的间接依赖，以传递性依赖的形式引⼊到当前项⽬中。</p>
-<p><strong>注意：传递依赖有可能产生冲突</strong></p>
-<p>冲突场景”</p>
-<blockquote>
-<p>A–&gt;B—&gt;C (2.0) </p>
-<p>A–&gt;E—&gt;C (1.0)</p>
-</blockquote>
-<p>如果A下同时存在两个不同version的C，冲突！！（选取同时适合A、B的版本）</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">version</span>&gt;</span>xxx<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>项目工具</category>
-      </categories>
-      <tags>
-        <tag>Maven</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Maven学习笔记&lt;一&gt;</title>
     <url>/2021/02/06/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</url>
     <content><![CDATA[<h2 id="Maven的简介"><a href="#Maven的简介" class="headerlink" title="Maven的简介"></a>Maven的简介</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p> Maven【[ˈmevən]】这个词可以翻译为”专家”,”内⾏”。 作为Apache组织中的⼀个颇为成功的开源项⽬， Maven主要服务于基于java平台的项⽬构建，依赖管理和项⽬信息管理。 ⽆论是⼩型的开源类库项⽬，还是⼤型的企业级应⽤； ⽆论是传统的瀑布式开发，还是流⾏的敏捷开 发，Maven都能⼤显身⼿。</p>
@@ -1423,6 +1328,101 @@
 <blockquote>
 <p>mvn package -Pdev -Dmaven.test.skip=true</p>
 </blockquote>
+]]></content>
+      <categories>
+        <category>项目工具</category>
+      </categories>
+      <tags>
+        <tag>Maven</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Maven学习笔记</title>
+    <url>/2021/02/25/Maven%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-3/</url>
+    <content><![CDATA[<h3 id="Maven仓库的基本概念"><a href="#Maven仓库的基本概念" class="headerlink" title="Maven仓库的基本概念"></a>Maven仓库的基本概念</h3><p> 当第⼀次运⾏Maven命令的时候， 你需要Internet链接， 因为它需要从⽹上下载⼀些⽂件。 那么它从 哪⾥下载呢？ 它是从Maven默认的远程库下载的。 这个远程仓库有Maven的核⼼插件和可供下载的jar⽂件。</p>
+<p>对于Maven来说， 仓库只分为两类： 本地仓库和远程仓库。</p>
+<p>当Maven根据坐标寻找构件的时候，它⾸先会查看本地仓库，如果本地仓库存在，则直接使⽤； 如果 本地没有，Maven就会去远程仓库查找，发现需要的构件之后，下载到本地仓库再使⽤。 如果本地仓库和远程仓库都没有，Maven就会报错。 </p>
+<p>远程仓库分为三种： 中央仓库，私服， 其他公共库。</p>
+<ul>
+<li><p>中央仓库：默认配置下，Maven下载jar包的地⽅。</p>
+<blockquote>
+<p>由于原始的本地仓库是空的，maven必须知道⾄少⼀个可⽤的远程仓库，才能执⾏maven命令的时候 下载到需要的构件。中央仓库就是这样⼀个默认的远程仓库。 maven-model-builder-3.3.9.jar maven⾃动的 jar 中包含了⼀个 超级POM。定义了默认中央仓库的位 置。 中央仓库包含了2000多个开源项⽬，接收每天1亿次以上的访问</p>
+</blockquote>
+</li>
+<li><p>私服：是另⼀种特殊的远程仓库，为了节省带宽和时间，应该在局域⽹内架设⼀个私有的仓库服务器， ⽤其代理所有外部的远程仓库。 内部的项⽬还能部署到私服上供其他项⽬使用</p>
+<blockquote>
+<p>私服是⼀种特殊的远程仓库，它是架设在局域⽹内的仓库服务， 私服代理⼴域⽹上的远程仓库，供局 域⽹内的maven⽤户使⽤。 当maven需要下载构件时， 它去私服当中找，如果私服没有， 则从外部远 程仓库下载，并缓存在私服上， 再为maven提供。 此外，⼀些⽆法从外部仓库下载的构件也能从本地上传到私服提供局域⽹中其他⼈使⽤</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">repositories</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">snapshots</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">enabled</span>&gt;</span>true<span class="tag">&lt;/<span class="name">enabled</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;/<span class="name">snapshots</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">id</span>&gt;</span>public<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>Public Repositories<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://192.168.0.96:8081/content/groups/public/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line"> 	 <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">id</span>&gt;</span>getui-nexus<span class="tag">&lt;/<span class="name">id</span>&gt;</span>       				<span class="tag">&lt;<span class="name">url</span>&gt;</span>http://mvn.gt.igexin.com/nexus/content/repositories/releases/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">repositories</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<p>公司内部为何需要建立私服：</p>
+<blockquote>
+<p>节省⾃⼰的外⽹带宽 加速maven构建 部署第三⽅控件 提⾼稳定性 降低中央仓库的负荷</p>
+</blockquote>
+<p>常用的阿里云仓库配置，需要修改settings.xml文件</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus-aliyun<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">name</span>&gt;</span>Nexus aliyun<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+<p>⼀般来说，在Maven项⽬⽬录下，没有诸如lib/这样⽤来存放依赖⽂件的⽬录。 当Maven在执⾏编译或 测试时，如果需要使⽤依赖⽂件，它总是基于坐标使⽤本地仓库的依赖⽂件。</p>
+<p>每个⽤户在⾃⼰的⽤户⽬录下都有⼀个路径名为.m2/repository/的仓库⽬录。 有时候， 因为某些原因（⽐如c盘空间不⾜）,需要修改本地仓库⽬录地址。</p>
+<p>对于仓库路径的修改，可以通过maven 配置⽂件conf ⽬录下settings.xml来指定仓库路径。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 设置到指定⽬录中，路径的斜杆不要写反 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">settings</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">localRepository</span>&gt;</span>D:/m2/repository<span class="tag">&lt;/<span class="name">localRepository</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+<h3 id="Maven依赖的基本概念"><a href="#Maven依赖的基本概念" class="headerlink" title="Maven依赖的基本概念"></a>Maven依赖的基本概念</h3><p>根元素project下的dependencies可以包含多个 dependence元素，以声明多个依赖。每个依赖都应该包含以下元素：</p>
+<ol>
+<li><p>groupId, artifactId, version : 依赖的基本坐标， 对于任何⼀个依赖来说，基本坐标是最重要的， Maven根据坐标才能找到需要的依赖。</p>
+</li>
+<li><p>Type： 依赖的类型，⼤部分情况下不需要声明。 默认值为jar</p>
+</li>
+<li><p>Scope： 依赖范围（compile,test,provided,runtime,system）</p>
+</li>
+</ol>
+<blockquote>
+<p>compile：编译依赖范围</p>
+</blockquote>
+<p>如果没有指定，就会默认使⽤该依赖范围。使⽤此依赖范围的Maven依赖，对于编译、测 试、运⾏三种classpath都有效。</p>
+<blockquote>
+<p>test：测试依赖范围</p>
+</blockquote>
+<p>使⽤此依赖范围的Maven依赖，只对于测试classpath有效，在编译主代码或者运⾏项⽬的使 ⽤时将⽆法使⽤此类依赖。典型的例⼦就是JUnit，它只有在编译测试代码及运⾏测试的时候才需要</p>
+<blockquote>
+<p>provided：已提供依赖范围</p>
+</blockquote>
+<p>使⽤此依赖范围的Maven依赖，对于编译和测试classpath有效，但在运⾏时⽆效。典型的例 ⼦是servlet-api，编译和测试项⽬的时候需要该依赖，但在运⾏项⽬的时候，由于容器已经提供，就不需要Maven重复地引⼊⼀遍(如：servlet-api)。</p>
+<blockquote>
+<p>runtime：运行时依赖范围</p>
+</blockquote>
+<p>使⽤此依赖范围的Maven依赖，对于测试和运⾏classpath有效，但在编译主代码时⽆效。典 型的例⼦是JDBC驱动实现，项⽬主代码的编译只需要JDK提供的JDBC接⼝，只有在执⾏测 试或者运⾏项⽬的时候才需要实现上述接⼝的具体JDBC驱动。</p>
+<blockquote>
+<p>system：系统依赖范围</p>
+</blockquote>
+<p>该依赖与三种classpath的关系，和provided依赖范围完全⼀致。但是，使⽤system范围依赖 时必须通过systemPath元素显式地指定依赖⽂件的路径。由于此类依赖不是通过Maven仓库 解析的，⽽且往往与本机系统绑定，可能造成构建的不可移植，因此应该谨慎使⽤。</p>
+<ol start="4">
+<li><p>Optional：标记依赖是否可选</p>
+</li>
+<li><p>Exclusions： ⽤来排除传递性依赖。</p>
+</li>
+</ol>
+<h3 id="Maven依赖的依赖范围"><a href="#Maven依赖的依赖范围" class="headerlink" title="Maven依赖的依赖范围"></a>Maven依赖的依赖范围</h3><p>⾸先需要知道，Maven在编译项⽬主代码的时候需要使⽤⼀套classpath。 ⽐如：编译项⽬代码的时候 需要⽤到spring-core, 该⽂件以依赖的⽅式被引⼊到classpath中。 其次， Maven在执⾏测试的时候会使 ⽤另外⼀套classpath。 如：junit。</p>
+<p>最后在实际运⾏项⽬时，⼜会使⽤⼀套classpath， spring-core需要在该classpath中，⽽junit不需要。</p>
+<p>那么依赖范围就是⽤来控制依赖与这三种classpath(编译classpath，测试classpath，运⾏时classpath)的 关系， Maven有以下⼏种依赖范围：<strong>（如上所述）</strong></p>
+<h3 id="传递性依赖"><a href="#传递性依赖" class="headerlink" title="传递性依赖"></a>传递性依赖</h3><p>传递依赖机制， 让我们在使⽤某个jar的时候就不⽤去考虑它依赖了什么。也不⽤担⼼引⼊多余的依 赖。 Maven会解析各个直接依赖的POM，将那些必要的间接依赖，以传递性依赖的形式引⼊到当前项⽬中。</p>
+<p><strong>注意：传递依赖有可能产生冲突</strong></p>
+<p>冲突场景”</p>
+<blockquote>
+<p>A–&gt;B—&gt;C (2.0) </p>
+<p>A–&gt;E—&gt;C (1.0)</p>
+</blockquote>
+<p>如果A下同时存在两个不同version的C，冲突！！（选取同时适合A、B的版本）</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>A<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">version</span>&gt;</span>xxx<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>C<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> 			<span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>B<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	 <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>项目工具</category>
@@ -1926,6 +1926,58 @@
       </tags>
   </entry>
   <entry>
+    <title>Python自动化办公--Word</title>
+    <url>/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/</url>
+    <content><![CDATA[<h1 id><a href="#" class="headerlink" title></a></h1><h1 id="Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）"><a href="#Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）" class="headerlink" title="Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）"></a>Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）</h1><p>在Word文件中，不但有文字内容，还有加粗、红色等格式，而且这些特殊的格式和文字内容是混合在一起的，但如果用Python来读取Word文件，这段文字会被分为纯文字、段落、字体、字号以及表格 等更具体的部分，而且每一个部分都对应着<strong>Python的变量和函数。</strong></p>
+<p>用Python读取文件时，你需要记住很多个Python变量和函数。当然了，针对这一点， 你也不用担心，这些变量和函数在Python的Word扩展库<a href="https://python-docx.readthedocs.io/en/latest/#"><strong><em>官方文档</em></strong></a>可以查看。所以如果你需 要某个功能，但是不知道应该用什么变量和函数名称时，可以在官方文档中找到它的名字和 描述信息。</p>
+<h3 id="用Python自动合并两个Word文件"><a href="#用Python自动合并两个Word文件" class="headerlink" title="用Python自动合并两个Word文件"></a>用Python自动合并两个Word文件</h3><ul>
+<li><p>文件一（内容包含字体、字号、颜色等额外信息）：</p>
+ <img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/image.png" class>
+</li>
+<li><p>文件二（内容文字出现在表格中）:</p>
+ <img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/image01.png" class>
+
+</li>
+</ul>
+<blockquote>
+<p>第一个文件中，字体使用了黑体和宋体字，此外还有红色字体和加粗等格式。现在我需要 只提取其中的文字内容，不带任何格式。 </p>
+<p>第二个文件中，文字被放在了一张表格里。现在我需要用Python把表格中的文字提取出 来，合并成一个新的文件。</p>
+</blockquote>
+<h4 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"> <span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mrge_without_format</span>(<span class="params">docfiles:<span class="built_in">list</span></span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    只获取内容进行合并</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment">#遍历文件</span></span><br><span class="line">    <span class="keyword">for</span> docx_file <span class="keyword">in</span> <span class="built_in">sorted</span>(docfiles):</span><br><span class="line">        another_doc = Document(docx_file)</span><br><span class="line">        <span class="comment"># 获取每个文件的的所有段落</span></span><br><span class="line">        paras = another_doc.paragraphs</span><br><span class="line">        <span class="keyword">for</span> para <span class="keyword">in</span> paras:</span><br><span class="line">            <span class="comment"># 为新的word文件创建一个新段落</span></span><br><span class="line">            newpar = doc.add_paragraph(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">            <span class="comment">#将提取的内容写入新的文本段落中</span></span><br><span class="line">            newpar.add_run(para.text)</span><br><span class="line"></span><br><span class="line">        <span class="comment">#所有文件合并完成后在指定路径中保存</span></span><br><span class="line">        doc.save(Path(word_files_path,<span class="string">&#x27;new.docx&#x27;</span>))</span><br><span class="line"></span><br><span class="line">    <span class="comment">#调用函数</span></span><br><span class="line">    merge-mrge_without_format(files)</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="用Python合并Word和其他类型的文件"><a href="#用Python合并Word和其他类型的文件" class="headerlink" title="用Python合并Word和其他类型的文件"></a>用Python合并Word和其他类型的文件</h3><p>相较于其他文件，Word文件支持的格式丰富程度远远高于Txt文件等，所以当这两种格式丰富程度不一致的文件进行合并时，要么向下兼容，去掉Txt不支持的格式；要 么向上兼容，对Txt进行格式再调整。否则容易出现合并之后仍需要手动调整格式的问题，影 响工作效率。</p>
+<h4 id="将纯文本和Word文件合并"><a href="#将纯文本和Word文件合并" class="headerlink" title="将纯文本和Word文件合并"></a>将纯文本和Word文件合并</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx.shared <span class="keyword">import</span> RGBColor</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># word文件所在路径</span></span><br><span class="line">word_files_path = <span class="string">&#x27;D:/Python自动化办公/Day02/word样例文件&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># # 取得该目录下所有的docx格式文件</span></span><br><span class="line"><span class="comment"># p = Path(word_files_path)</span></span><br><span class="line"></span><br><span class="line">my_content = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">野老篱边江岸回，柴门不正逐江开。</span></span><br><span class="line"><span class="string">渔人网集澄潭下，贾客船随返照来。</span></span><br><span class="line"><span class="string">长路关心悲剑阁，片云何意傍琴台？</span></span><br><span class="line"><span class="string">王师未报收东郡，城阙秋生画角哀。</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add_content_mode1</span>(<span class="params">content</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    增加内容</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    print(doc)</span><br><span class="line">    para = doc.add_paragraph().add_run(content)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 设置字体格式</span></span><br><span class="line">    para.font.name = <span class="string">&#x27;仿宋&#x27;</span></span><br><span class="line">    <span class="comment"># 设置下划线</span></span><br><span class="line">    para.font.underline = <span class="literal">True</span></span><br><span class="line">    <span class="comment"># 设置颜色</span></span><br><span class="line">    para.font.color.rgb = RGBColor(<span class="number">255</span>, <span class="number">128</span>, <span class="number">128</span>)</span><br><span class="line">    <span class="comment"># 其他设置参考官方文档</span></span><br><span class="line">    <span class="comment"># https://python-docx.readthedocs.io/en/latest/api/text.html#run-objects</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">doc = Document()</span><br><span class="line">add_content_mode1(my_content)</span><br><span class="line">doc.save(Path(word_files_path, <span class="string">&#x27;new2.docx&#x27;</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="将图片和Word文件合并"><a href="#将图片和Word文件合并" class="headerlink" title="将图片和Word文件合并"></a>将图片和Word文件合并</h4><p>我们经常见到的图片格式就有.jpg、.png、.gif等，由于这些格式应用范围广，格式 没有被商业软件加密，所以python-docx库的add_picture函数就能实现把图片插入Word的 功能。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> shared</span><br><span class="line"></span><br><span class="line">doc = Document()</span><br><span class="line"><span class="comment"># 按英寸设置宽度，添加图片</span></span><br><span class="line">doc_add_picture(<span class="string">&#x27;test.jpg&#x27;</span>,width=shared.Inches(<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="将Execl和Word文件合并"><a href="#将Execl和Word文件合并" class="headerlink" title="将Execl和Word文件合并"></a>将Execl和Word文件合并</h4><ul>
+<li><p>使用Python制作邀请函</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line">today=datetime.date.today().strftime(<span class="string">&#x27;%Y-%m-%d&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户信息文件</span></span><br><span class="line">customer = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/客户信息.xlsx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 邀请函模版</span></span><br><span class="line">invitation = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/邀请函模版.docx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 邀请函路径</span></span><br><span class="line">invitation_path = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 替换内容</span></span><br><span class="line">replace_content = &#123;</span><br><span class="line">    <span class="string">&#x27;&lt;姓名&gt;&#x27;</span> : <span class="string">&#x27;no_name&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&lt;性别&gt;&#x27;</span> : <span class="string">&#x27;m_f&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&lt;今天日期&gt;&#x27;</span> : today</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generat_invitation</span>():</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    生成邀请函文件</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    doc = Document(invitation)</span><br><span class="line">    <span class="comment"># 取出每一段</span></span><br><span class="line">    <span class="keyword">for</span> para <span class="keyword">in</span> doc.paragraphs:</span><br><span class="line">        <span class="keyword">for</span> key, value <span class="keyword">in</span> replace_content.items():</span><br><span class="line">            <span class="keyword">if</span> key <span class="keyword">in</span> para.text:</span><br><span class="line">                <span class="comment"># 逐个关键字进行替换</span></span><br><span class="line">                para.text = para.text.replace(key, value)</span><br><span class="line"></span><br><span class="line">    file_name = PurePath(invitation_path).with_name(replace_content[<span class="string">&#x27;&lt;姓名&gt;&#x27;</span>]).with_suffix(<span class="string">&#x27;.docx&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    doc.save(file_name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_customer</span>(<span class="params">customer_file: Path</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    获取邀请函信息</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment"># 从第一个sheet中取出客户信息</span></span><br><span class="line">    data = xlrd.open_workbook(customer_file)</span><br><span class="line">    table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 取得客户数量</span></span><br><span class="line">    customer_number = table.nrows</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, customer_number):</span><br><span class="line">        content = table.row_values(rowx=line, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>)</span><br><span class="line">        replace_content[<span class="string">&#x27;&lt;姓名&gt;&#x27;</span>] = content[<span class="number">0</span>]</span><br><span class="line">        replace_content[<span class="string">&#x27;&lt;性别&gt;&#x27;</span>] = content[<span class="number">1</span>]</span><br><span class="line">        <span class="comment"># print(replace_content)</span></span><br><span class="line">        <span class="comment"># &#123;&#x27;&lt;姓名&gt;&#x27;: &#x27;韩梅梅&#x27;, &#x27;&lt;性别&gt;&#x27;: &#x27;女士&#x27;, &#x27;&lt;今天日期&gt;&#x27;: &#x27;2021-01-01&#x27;&#125;</span></span><br><span class="line">        <span class="comment"># &#123;&#x27;&lt;姓名&gt;&#x27;: &#x27;李雷&#x27;, &#x27;&lt;性别&gt;&#x27;: &#x27;先生&#x27;, &#x27;&lt;今天日期&gt;&#x27;: &#x27;2021-01-01&#x27;&#125;</span></span><br><span class="line">        generat_invitation()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    get_customer(customer)</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在对不同类型文件进行合并时，要考虑不同的问题</p>
+<blockquote>
+<ol>
+<li>对于支持格式丰富不同的文件时要考虑格式的兼容性；</li>
+<li>  对于图片、音乐、视频和Word合并时要考虑是否是受到word支持的通用格式；</li>
+<li>  对于像Excel格式于Word合并时能实现更复杂的功能，代码的复杂程度也会随之提高，一 般需要先分析功能，再进行代码编写。</li>
+</ol>
+</blockquote>
+]]></content>
+      <categories>
+        <category>Python开发</category>
+      </categories>
+      <tags>
+        <tag>Python自动化</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Python自动化办公-图片识别</title>
     <url>/2022/01/31/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-%E5%9B%BE%E7%89%87%E8%AF%86%E5%88%AB/</url>
     <content><![CDATA[<h1 id="使用Python实现高效自动化图片组在线-离线识别（转文字）"><a href="#使用Python实现高效自动化图片组在线-离线识别（转文字）" class="headerlink" title="使用Python实现高效自动化图片组在线/离线识别（转文字）"></a>使用Python实现高效自动化图片组在线/离线识别（转文字）</h1><h2 id="图片识别转文字的两种方式："><a href="#图片识别转文字的两种方式：" class="headerlink" title="图片识别转文字的两种方式："></a>图片识别转文字的两种方式：</h2><blockquote>
@@ -1996,58 +2048,6 @@
 <p>处理好的内容如下</p>
 
 
-]]></content>
-      <categories>
-        <category>Python开发</category>
-      </categories>
-      <tags>
-        <tag>Python自动化</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Python自动化办公--Word</title>
-    <url>/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/</url>
-    <content><![CDATA[<h1 id><a href="#" class="headerlink" title></a></h1><h1 id="Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）"><a href="#Python实现高效自动化Word办公：如何批量合并多个文档-python-docx库）" class="headerlink" title="Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）"></a>Python实现高效自动化Word办公：如何批量合并多个文档(python-docx库）</h1><p>在Word文件中，不但有文字内容，还有加粗、红色等格式，而且这些特殊的格式和文字内容是混合在一起的，但如果用Python来读取Word文件，这段文字会被分为纯文字、段落、字体、字号以及表格 等更具体的部分，而且每一个部分都对应着<strong>Python的变量和函数。</strong></p>
-<p>用Python读取文件时，你需要记住很多个Python变量和函数。当然了，针对这一点， 你也不用担心，这些变量和函数在Python的Word扩展库<a href="https://python-docx.readthedocs.io/en/latest/#"><strong><em>官方文档</em></strong></a>可以查看。所以如果你需 要某个功能，但是不知道应该用什么变量和函数名称时，可以在官方文档中找到它的名字和 描述信息。</p>
-<h3 id="用Python自动合并两个Word文件"><a href="#用Python自动合并两个Word文件" class="headerlink" title="用Python自动合并两个Word文件"></a>用Python自动合并两个Word文件</h3><ul>
-<li><p>文件一（内容包含字体、字号、颜色等额外信息）：</p>
- <img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/image.png" class>
-</li>
-<li><p>文件二（内容文字出现在表格中）:</p>
- <img data-src="/2022/01/30/Python%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%9E%E5%85%AC-Word/image01.png" class>
-
-</li>
-</ul>
-<blockquote>
-<p>第一个文件中，字体使用了黑体和宋体字，此外还有红色字体和加粗等格式。现在我需要 只提取其中的文字内容，不带任何格式。 </p>
-<p>第二个文件中，文字被放在了一张表格里。现在我需要用Python把表格中的文字提取出 来，合并成一个新的文件。</p>
-</blockquote>
-<h4 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"> <span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mrge_without_format</span>(<span class="params">docfiles:<span class="built_in">list</span></span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    只获取内容进行合并</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment">#遍历文件</span></span><br><span class="line">    <span class="keyword">for</span> docx_file <span class="keyword">in</span> <span class="built_in">sorted</span>(docfiles):</span><br><span class="line">        another_doc = Document(docx_file)</span><br><span class="line">        <span class="comment"># 获取每个文件的的所有段落</span></span><br><span class="line">        paras = another_doc.paragraphs</span><br><span class="line">        <span class="keyword">for</span> para <span class="keyword">in</span> paras:</span><br><span class="line">            <span class="comment"># 为新的word文件创建一个新段落</span></span><br><span class="line">            newpar = doc.add_paragraph(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">            <span class="comment">#将提取的内容写入新的文本段落中</span></span><br><span class="line">            newpar.add_run(para.text)</span><br><span class="line"></span><br><span class="line">        <span class="comment">#所有文件合并完成后在指定路径中保存</span></span><br><span class="line">        doc.save(Path(word_files_path,<span class="string">&#x27;new.docx&#x27;</span>))</span><br><span class="line"></span><br><span class="line">    <span class="comment">#调用函数</span></span><br><span class="line">    merge-mrge_without_format(files)</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="用Python合并Word和其他类型的文件"><a href="#用Python合并Word和其他类型的文件" class="headerlink" title="用Python合并Word和其他类型的文件"></a>用Python合并Word和其他类型的文件</h3><p>相较于其他文件，Word文件支持的格式丰富程度远远高于Txt文件等，所以当这两种格式丰富程度不一致的文件进行合并时，要么向下兼容，去掉Txt不支持的格式；要 么向上兼容，对Txt进行格式再调整。否则容易出现合并之后仍需要手动调整格式的问题，影 响工作效率。</p>
-<h4 id="将纯文本和Word文件合并"><a href="#将纯文本和Word文件合并" class="headerlink" title="将纯文本和Word文件合并"></a>将纯文本和Word文件合并</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx.shared <span class="keyword">import</span> RGBColor</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"></span><br><span class="line"><span class="comment"># word文件所在路径</span></span><br><span class="line">word_files_path = <span class="string">&#x27;D:/Python自动化办公/Day02/word样例文件&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># # 取得该目录下所有的docx格式文件</span></span><br><span class="line"><span class="comment"># p = Path(word_files_path)</span></span><br><span class="line"></span><br><span class="line">my_content = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">野老篱边江岸回，柴门不正逐江开。</span></span><br><span class="line"><span class="string">渔人网集澄潭下，贾客船随返照来。</span></span><br><span class="line"><span class="string">长路关心悲剑阁，片云何意傍琴台？</span></span><br><span class="line"><span class="string">王师未报收东郡，城阙秋生画角哀。</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add_content_mode1</span>(<span class="params">content</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    增加内容</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    print(doc)</span><br><span class="line">    para = doc.add_paragraph().add_run(content)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 设置字体格式</span></span><br><span class="line">    para.font.name = <span class="string">&#x27;仿宋&#x27;</span></span><br><span class="line">    <span class="comment"># 设置下划线</span></span><br><span class="line">    para.font.underline = <span class="literal">True</span></span><br><span class="line">    <span class="comment"># 设置颜色</span></span><br><span class="line">    para.font.color.rgb = RGBColor(<span class="number">255</span>, <span class="number">128</span>, <span class="number">128</span>)</span><br><span class="line">    <span class="comment"># 其他设置参考官方文档</span></span><br><span class="line">    <span class="comment"># https://python-docx.readthedocs.io/en/latest/api/text.html#run-objects</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">doc = Document()</span><br><span class="line">add_content_mode1(my_content)</span><br><span class="line">doc.save(Path(word_files_path, <span class="string">&#x27;new2.docx&#x27;</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<h4 id="将图片和Word文件合并"><a href="#将图片和Word文件合并" class="headerlink" title="将图片和Word文件合并"></a>将图片和Word文件合并</h4><p>我们经常见到的图片格式就有.jpg、.png、.gif等，由于这些格式应用范围广，格式 没有被商业软件加密，所以python-docx库的add_picture函数就能实现把图片插入Word的 功能。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> shared</span><br><span class="line"></span><br><span class="line">doc = Document()</span><br><span class="line"><span class="comment"># 按英寸设置宽度，添加图片</span></span><br><span class="line">doc_add_picture(<span class="string">&#x27;test.jpg&#x27;</span>,width=shared.Inches(<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="将Execl和Word文件合并"><a href="#将Execl和Word文件合并" class="headerlink" title="将Execl和Word文件合并"></a>将Execl和Word文件合并</h4><ul>
-<li><p>使用Python制作邀请函</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">from</span> docx <span class="keyword">import</span> Document</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path, PurePath</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line">today=datetime.date.today().strftime(<span class="string">&#x27;%Y-%m-%d&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户信息文件</span></span><br><span class="line">customer = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/客户信息.xlsx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 邀请函模版</span></span><br><span class="line">invitation = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/邀请函模版.docx&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 邀请函路径</span></span><br><span class="line">invitation_path = <span class="string">&#x27;/Users/edz/Desktop/效率专栏/文章2/邀请函样例文件/&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 替换内容</span></span><br><span class="line">replace_content = &#123;</span><br><span class="line">    <span class="string">&#x27;&lt;姓名&gt;&#x27;</span> : <span class="string">&#x27;no_name&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&lt;性别&gt;&#x27;</span> : <span class="string">&#x27;m_f&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&lt;今天日期&gt;&#x27;</span> : today</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generat_invitation</span>():</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    生成邀请函文件</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    doc = Document(invitation)</span><br><span class="line">    <span class="comment"># 取出每一段</span></span><br><span class="line">    <span class="keyword">for</span> para <span class="keyword">in</span> doc.paragraphs:</span><br><span class="line">        <span class="keyword">for</span> key, value <span class="keyword">in</span> replace_content.items():</span><br><span class="line">            <span class="keyword">if</span> key <span class="keyword">in</span> para.text:</span><br><span class="line">                <span class="comment"># 逐个关键字进行替换</span></span><br><span class="line">                para.text = para.text.replace(key, value)</span><br><span class="line"></span><br><span class="line">    file_name = PurePath(invitation_path).with_name(replace_content[<span class="string">&#x27;&lt;姓名&gt;&#x27;</span>]).with_suffix(<span class="string">&#x27;.docx&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    doc.save(file_name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_customer</span>(<span class="params">customer_file: Path</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    获取邀请函信息</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment"># 从第一个sheet中取出客户信息</span></span><br><span class="line">    data = xlrd.open_workbook(customer_file)</span><br><span class="line">    table = data.sheets()[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 取得客户数量</span></span><br><span class="line">    customer_number = table.nrows</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, customer_number):</span><br><span class="line">        content = table.row_values(rowx=line, start_colx=<span class="number">0</span>, end_colx=<span class="literal">None</span>)</span><br><span class="line">        replace_content[<span class="string">&#x27;&lt;姓名&gt;&#x27;</span>] = content[<span class="number">0</span>]</span><br><span class="line">        replace_content[<span class="string">&#x27;&lt;性别&gt;&#x27;</span>] = content[<span class="number">1</span>]</span><br><span class="line">        <span class="comment"># print(replace_content)</span></span><br><span class="line">        <span class="comment"># &#123;&#x27;&lt;姓名&gt;&#x27;: &#x27;韩梅梅&#x27;, &#x27;&lt;性别&gt;&#x27;: &#x27;女士&#x27;, &#x27;&lt;今天日期&gt;&#x27;: &#x27;2021-01-01&#x27;&#125;</span></span><br><span class="line">        <span class="comment"># &#123;&#x27;&lt;姓名&gt;&#x27;: &#x27;李雷&#x27;, &#x27;&lt;性别&gt;&#x27;: &#x27;先生&#x27;, &#x27;&lt;今天日期&gt;&#x27;: &#x27;2021-01-01&#x27;&#125;</span></span><br><span class="line">        generat_invitation()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    get_customer(customer)</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在对不同类型文件进行合并时，要考虑不同的问题</p>
-<blockquote>
-<ol>
-<li>对于支持格式丰富不同的文件时要考虑格式的兼容性；</li>
-<li>  对于图片、音乐、视频和Word合并时要考虑是否是受到word支持的通用格式；</li>
-<li>  对于像Excel格式于Word合并时能实现更复杂的功能，代码的复杂程度也会随之提高，一 般需要先分析功能，再进行代码编写。</li>
-</ol>
-</blockquote>
 ]]></content>
       <categories>
         <category>Python开发</category>
@@ -2834,35 +2834,6 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>创建高性能索引</title>
-    <url>/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/</url>
-    <content><![CDATA[<h1 id="索引基础"><a href="#索引基础" class="headerlink" title="索引基础"></a>索引基础</h1><p>索引（在MySQL中也叫做“键（key）是**<em>存储引擎用于快速找到记录**</em>的一种数据结构。 这是索引的基本功能。在MySQL中，存储引擎用书本目录类似的方法使用索引，其先在索引中找到对应值，然后根据匹配的索引记录找到对应的数据行</p>
-<p>索引可以包含一个或多个列的值。如果索引包含多个列，那么**<em>列的顺序**</em>也十分重要，因为MySQL只能高效地使用索引的<u><strong>最左前缀列</strong></u>。创建一个包含两个列的索引，和创建两个只包含一列的索引是大不相同的，</p>
-<p><img data-src="/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222091253478.png" alt="image-20220222091253478"></p>
-<h2 id="索引的类型"><a href="#索引的类型" class="headerlink" title="索引的类型"></a>索引的类型</h2><p>索引有很多种类型，可以为不同的场景提供更好的性能。在MySQL中，索引是在**<em>存储引擎层**</em>而不是服务器层实现的。所以，并没有统一的索引标准：不同存储引擎的索引的工作方式并不一样，也不是所有的存储引擎都支持所有类型的索引。即使多个存储引擎支持同一种类型的索引，其底层的实现也可能不同。</p>
-<p>MySQL支持的索引类型，以及它们的优点和缺点如下：</p>
-<h3 id="B-Tree索引"><a href="#B-Tree索引" class="headerlink" title="B-Tree索引"></a>B-Tree索引</h3><p>当人们谈论索引的时候，如果没有特别指明类型，那多半说的是B-Tree索引，它使用 B-Tree数据结构来存储数据，大多数MySQL引擎都支持这种索引。</p>
-<blockquote>
-<p>实际上很多存储引擎使用的是**<em>B+Tree**</em>,即每一个叶子节点都包含指向下一个叶子节点的指针，从 而方便叶子节点的范围遍历。</p>
-</blockquote>
-<p>存储引擎以不同的方式使用B-Tree索引，性能也各有不同，各有优劣。例如，MylSAM 使用前缀压缩技术使得索引更小，但InnoDB则按照原数据格式进行存储。再如 MylSAM索引通过数据的物理位置引用被索引的行，而InnoDB则根据主键引用被索引的行。</p>
-<p><img data-src="/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222092648551.png" alt="image-20220222092648551"></p>
-<p>B-Tree索引能够加快访问数据的速度，因为存储引擎不再需要进行全表扫描来获取需要的数据，取而代之的是从索引的根节点（图示并未画出）开始进行搜索。根节点的槽中存放了指向子节点的指针，存储引擎根据这些指针向下层査找。通过比较节点页的值和要査找的值可以找到合适的指针进入下层子节点，这些指针实际上定义了子节点页中值 的上限和下限。最终存储引擎要么是找到对应的值，要么该记录不存在。</p>
-<p>叶子节点比较特别，它们的指针指向的是被索引的数据，而不是其他的节点页（不同引擎的“指针”类型不同）    </p>
-<blockquote>
-<p>B-Tree对索引列是顺序组织存储的，所以很适合査找范围数据。索引对多个值进行排序的依据是CREATE TABLE语句中定义索引时列的顺序。</p>
-</blockquote>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> People(</span><br><span class="line">	last_name <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    first_name <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    dob 	  <span class="type">date</span>         <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    gender    enum(<span class="string">&#x27;m&#x27;</span>,<span class="string">&#x27;f&#x27;</span>) <span class="keyword">not</span> <span class="keyword">null</span>.</span><br><span class="line">    key(last_name,first_name,dob)</span><br><span class="line"> );</span><br></pre></td></tr></table></figure>
-<p><strong><em>B-Tree索引对以下类型的查询有效：</em></strong><br><img data-src="/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222093555561.png" alt="image-20220222093555561"></p>
-]]></content>
-      <categories>
-        <category>MySQL数据库</category>
-      </categories>
-      <tags>
-        <tag>MySQL数据库索引</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>消息队列MQ</title>
     <url>/2021/03/13/%E5%88%9D%E8%AF%86RabbitMQ/</url>
     <content><![CDATA[<h2 id="MQ的基本概念"><a href="#MQ的基本概念" class="headerlink" title="MQ的基本概念"></a>MQ的基本概念</h2><p>MQ全称 Message Queue（消息队列），是在消息的传输过程中保存消息的容器。多用于分布式系统之间进行通信。消息队列已经逐渐成为企业IT系统内部通信的核心手段。它具有低耦合、可靠投递、广播、流量控制、最终一致性等一系列功能，成为异步RPC的主要手段之一。 当今市面上有很多主流的消息中间件，如老牌的ActiveMQ、RabbitMQ，炙手可热的Kafka，阿里巴巴自主开发的Notify、MetaQ、RocketMQ等。</p>
@@ -2950,6 +2921,110 @@
       </categories>
       <tags>
         <tag>RabbitMQ</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>创建高性能索引</title>
+    <url>/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/</url>
+    <content><![CDATA[<h1 id="索引基础"><a href="#索引基础" class="headerlink" title="索引基础"></a>索引基础</h1><p>索引（在MySQL中也叫做“键（key）是**<em>存储引擎用于快速找到记录**</em>的一种数据结构。 这是索引的基本功能。在MySQL中，存储引擎用书本目录类似的方法使用索引，其先在索引中找到对应值，然后根据匹配的索引记录找到对应的数据行</p>
+<p>索引可以包含一个或多个列的值。如果索引包含多个列，那么**<em>列的顺序**</em>也十分重要，因为MySQL只能高效地使用索引的<u><strong>最左前缀列</strong></u>。创建一个包含两个列的索引，和创建两个只包含一列的索引是大不相同的，</p>
+<p><img data-src="/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222091253478.png" alt="image-20220222091253478"></p>
+<h2 id="索引的类型"><a href="#索引的类型" class="headerlink" title="索引的类型"></a>索引的类型</h2><p>索引有很多种类型，可以为不同的场景提供更好的性能。在MySQL中，索引是在**<em>存储引擎层**</em>而不是服务器层实现的。所以，并没有统一的索引标准：不同存储引擎的索引的工作方式并不一样，也不是所有的存储引擎都支持所有类型的索引。即使多个存储引擎支持同一种类型的索引，其底层的实现也可能不同。</p>
+<p>MySQL支持的索引类型，以及它们的优点和缺点如下：</p>
+<h3 id="B-Tree索引"><a href="#B-Tree索引" class="headerlink" title="B-Tree索引"></a>B-Tree索引</h3><p>当人们谈论索引的时候，如果没有特别指明类型，那多半说的是B-Tree索引，它使用 B-Tree数据结构来存储数据，大多数MySQL引擎都支持这种索引。</p>
+<blockquote>
+<p>实际上很多存储引擎使用的是**<em>B+Tree**</em>,即每一个叶子节点都包含指向下一个叶子节点的指针，从 而方便叶子节点的范围遍历。</p>
+</blockquote>
+<p>存储引擎以不同的方式使用B-Tree索引，性能也各有不同，各有优劣。例如，MylSAM 使用前缀压缩技术使得索引更小，但InnoDB则按照原数据格式进行存储。再如 MylSAM索引通过数据的物理位置引用被索引的行，而InnoDB则根据主键引用被索引的行。</p>
+<p><img data-src="/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222092648551.png" alt="image-20220222092648551"></p>
+<p>B-Tree索引能够加快访问数据的速度，因为存储引擎不再需要进行全表扫描来获取需要的数据，取而代之的是从索引的根节点（图示并未画出）开始进行搜索。根节点的槽中存放了指向子节点的指针，存储引擎根据这些指针向下层査找。通过比较节点页的值和要査找的值可以找到合适的指针进入下层子节点，这些指针实际上定义了子节点页中值 的上限和下限。最终存储引擎要么是找到对应的值，要么该记录不存在。</p>
+<p>叶子节点比较特别，它们的指针指向的是被索引的数据，而不是其他的节点页（不同引擎的“指针”类型不同）    </p>
+<blockquote>
+<p>B-Tree对索引列是顺序组织存储的，所以很适合査找范围数据。索引对多个值进行排序的依据是CREATE TABLE语句中定义索引时列的顺序。</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> People(</span><br><span class="line">	last_name <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    first_name <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    dob 	  <span class="type">date</span>         <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">    gender    enum(<span class="string">&#x27;m&#x27;</span>,<span class="string">&#x27;f&#x27;</span>) <span class="keyword">not</span> <span class="keyword">null</span>.</span><br><span class="line">    key(last_name,first_name,dob)</span><br><span class="line"> );</span><br></pre></td></tr></table></figure>
+<p><strong><em>B-Tree索引对以下类型的查询有效：</em></strong><br><img data-src="/2022/02/20/%E5%88%9B%E5%BB%BA%E9%AB%98%E6%80%A7%E8%83%BD%E7%B4%A2%E5%BC%95/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220222093555561.png" alt="image-20220222093555561"></p>
+]]></content>
+      <categories>
+        <category>MySQL数据库</category>
+      </categories>
+      <tags>
+        <tag>MySQL数据库索引</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>双指针问题</title>
+    <url>/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h2 id="环形列表I"><a href="#环形列表I" class="headerlink" title="环形列表I"></a>环形列表I</h2><h3 id="题目说明"><a href="#题目说明" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，判断链表中是否有环。</p>
+<p>如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。</p>
+<p>如果链表中存在环，则返回 true 。 否则，返回 false 。</p>
+<p> 进阶：</p>
+<p>你能用 O(1)（即，常量）内存解决此问题吗？</p>
+<p> 示例 1：</p>
+<p> <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100453506.png" alt="image-20210114100453506"></p>
+<p>输入：head = [3,2,0,-4], pos = 1<br>输出：true<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100714252.png" alt="image-20210114100714252"></p>
+<p>输入：head = [1,2], pos = 0<br>输出：true<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
+<img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100749569.png" alt="image-20210114100749569" style="zoom:150%;">
+
+<p>输入：head = [1], pos = -1<br>输出：false<br>解释：链表中没有环。</p>
+<p>提示：</p>
+<p>链表中节点的数目范围是 [0, 104]<br>-105 &lt;= Node.val &lt;= 105<br>pos 为 -1 或者链表中的一个 有效索引 </p>
+<h3 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h3><p>####方法一：哈希表<br>思路及算法</p>
+<p>最容易想到的方法是遍历所有节点，每次遍历到一个节点时，判断该节点此前是否被访问过。</p>
+<p>具体地，我们可以使用哈希表来存储所有已经访问过的节点。每次我们到达一个节点，如果该节点已经存在于哈希表中，则说明该链表是环形链表，否则就将该节点加入哈希表中。重复这一过程，直到我们遍历完整个链表即可。</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">pulic <span class="class"><span class="keyword">class</span> <span class="title">solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascirle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        Set&lt;ListNOde&gt; seen = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span>( head !=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!seen.add(head))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>#####复杂度分析</p>
+<p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。最坏情况下我们需要遍历每个节点一次。</p>
+<p>空间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。主要为哈希表的开销，最坏情况下我们需要将每个节点插入到哈希表中一次。</p>
+<h4 id="方式二；双指针–快慢指针"><a href="#方式二；双指针–快慢指针" class="headerlink" title="方式二；双指针–快慢指针"></a>方式二；双指针–快慢指针</h4><p>方法需要读者对「Floyd 判圈算法」（又称龟兔赛跑算法）有所了解。</p>
+<p>假想「乌龟」和「兔子」在链表上移动，「兔子」跑得快，「乌龟」跑得慢。当「乌龟」和「兔子」从链表上的同一个节点开始移动时，如果该链表中没有环，那么「兔子」将一直处于「乌龟」的前方；如果该链表中有环，那么「兔子」会先于「乌龟」进入环，并且一直在环内移动。等到「乌龟」进入环时，由于「兔子」的速度快，它一定会在某个时刻与乌龟相遇，即套了「乌龟」若干圈。</p>
+<p>我们可以根据上述思路来解决本题。具体地，我们定义两个指针，一快一满。慢指针每次只移动一步，而快指针每次移动两步。初始时，慢指针在位置 head，而快指针在位置 head.next。这样一来，如果在移动的过程中，快指针反过来追上慢指针，就说明该链表为环形链表。否则快指针将到达链表尾部，该链表不为环形链表。</p>
+<p> 为什么我们要规定初始时慢指针在位置 head，快指针在位置 head.next，而不是两个指针都在位置 head（即与「乌龟」和「兔子」中的叙述相同）？</p>
+<p>观察下面的代码，我们使用的是 while 循环，循环条件先于循环体。由于循环条件一定是判断快慢指针是否重合，如果我们将两个指针初始都置于 head，那么 while 循环就不会执行。因此，我们可以假想一个在 head 之前的虚拟节点，慢指针从虚拟节点移动一步到达 head，快指针从虚拟节点移动两步到达 head.next，这样我们就可以使用 while 循环了。</p>
+<p>当然，我们也可以使用 do-while 循环。此时，我们就可以把快慢指针的初始值都置为 head。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">puclic <span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascycle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head;</span><br><span class="line">        ListNode fast = head.next;</span><br><span class="line">        <span class="keyword">while</span>(slow!=fast)&#123;</span><br><span class="line">            <span class="keyword">if</span>(fast==<span class="keyword">null</span>||fast.next==<span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            fast = fast.next.next</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。</p>
+<p>当链表中不存在环时，快指针将先于慢指针到达链表尾部，链表中每个节点至多被访问两次。</p>
+<p>当链表中存在环时，每一轮移动后，快慢指针的距离将减小一。而初始距离为环的长度，因此至多移动 NN 轮。</p>
+<p>空间复杂度：O(1)O(1)。我们只使用了两个指针的额外空间</p>
+<h2 id="环形列表II"><a href="#环形列表II" class="headerlink" title="环形列表II"></a>环形列表II</h2><h3 id="题目说明-1"><a href="#题目说明-1" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。</p>
+<p>为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意，pos 仅仅是用于标识环的情况，并不会作为参数传递到函数中。</p>
+<p>说明：不允许修改给定的链表。</p>
+<p>进阶：</p>
+<p>你是否可以使用 O(1) 空间解决此题？</p>
+<p> 示例 1：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102706369.png" alt="image-20210114102706369"></p>
+<p>输入：head = [3,2,0,-4], pos = 1<br>输出：返回索引为 1 的链表节点<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102721841.png" alt="image-20210114102721841"></p>
+<p>输入：head = [1,2], pos = 0<br>输出：返回索引为 0 的链表节点<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
+<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102737481.png" alt="image-20210114102737481"></p>
+<p>输入：head = [1], pos = -1<br>输出：返回 null<br>解释：链表中没有环。</p>
+<p>提示：</p>
+<p>链表中节点的数目范围在范围 [0, 104] 内<br>-105 &lt;= Node.val &lt;= 105<br>pos 的值为 -1 或者链表中的一个有效索引</p>
+<h3 id="题解-1"><a href="#题解-1" class="headerlink" title="题解"></a>题解</h3><h4 id="方法一：哈希表"><a href="#方法一：哈希表" class="headerlink" title="方法一：哈希表"></a>方法一：哈希表</h4><p>一个非常直观的思路是：我们遍历链表中的每个节点，并将它记录下来；一旦遇到了此前遍历过的节点，就可以判定链表中存在环。借助哈希表可以很方便地实现。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        ListNode pos = head;</span><br><span class="line">        Set&lt;ListNode&gt; visited = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span> (pos != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (visited.contains(pos)) &#123;</span><br><span class="line">                <span class="keyword">return</span> pos;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                visited.add(pos);</span><br><span class="line">            &#125;</span><br><span class="line">            pos = pos.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析-1"><a href="#复杂度分析-1" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们恰好需要访问链表中的每一个节点。</p>
+<p>空间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们需要将链表中的每个节点都保存在哈希表当中。</p>
+<h4 id="方法二：双指针–快慢指针"><a href="#方法二：双指针–快慢指针" class="headerlink" title="方法二：双指针–快慢指针"></a>方法二：双指针–快慢指针</h4><p>我们使用两个指针，\textit{fast}fast 与 \textit{slow}slow。它们起始都位于链表的头部。随后，\textit{slow}slow 指针每次向后移动一个位置，而 \textit{fast}fast 指针向后移动两个位置。如果链表中存在环，则 \textit{fast}fast 指针最终将再次与 \textit{slow}slow 指针在环中相遇。</p>
+<p>如下图所示，设链表中环外部分的长度为 aa。\textit{slow}slow 指针进入环后，又走了 bb 的距离与 \textit{fast}fast 相遇。此时，\textit{fast}fast 指针已经走完了环的 nn 圈，因此它走过的总距离为 a+n(b+c)+b=a+(n+1)b+nca+n(b+c)+b=a+(n+1)b+nc</p>
+ <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114103031586.png" alt="image-20210114103031586" style="zoom:50%;">
+
+<p>根据题意，任意时刻，\textit{fast}fast 指针走过的距离都为 \textit{slow}slow 指针的 22 倍。因此，我们有</p>
+<p>a+(n+1)b+nc=2(a+b) \implies a=c+(n-1)(b+c)<br>a+(n+1)b+nc=2(a+b)⟹a=c+(n−1)(b+c)</p>
+<p>有了 a=c+(n-1)(b+c)a=c+(n−1)(b+c) 的等量关系，我们会发现：从相遇点到入环点的距离加上 n-1n−1 圈的环长，恰好等于从链表头部到入环点的距离。</p>
+<p>因此，当发现 \textit{slow}slow 与 \textit{fast}fast 相遇时，我们再额外使用一个指针 \textit{ptr}ptr。起始，它指向链表头部；随后，它和 \textit{slow}slow 每次向后移动一个位置。最终，它们会在入环点相遇。 </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head, fast = head;</span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="keyword">null</span>) &#123;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            <span class="keyword">if</span> (fast.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">                fast = fast.next.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (fast == slow) &#123;</span><br><span class="line">                ListNode ptr = head;</span><br><span class="line">                <span class="keyword">while</span> (ptr != slow) &#123;</span><br><span class="line">                    ptr = ptr.next;</span><br><span class="line">                    slow = slow.next;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> ptr;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>#####复杂度分析</p>
+<p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。在最初判断快慢指针是否相遇时，\textit{slow}slow 指针走过的距离不会超过链表的总长度；随后寻找入环点时，走过的距离也不会超过链表的总长度。因此，总的执行时间为 O(N)+O(N)=O(N)O(N)+O(N)=O(N)。</p>
+<p>空间复杂度：O(1)O(1)。我们只使用了 \textit{slow}, \textit{fast}, \textit{ptr}slow,fast,ptr 三个指针。</p>
+]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>链表</tag>
+        <tag>双指针</tag>
       </tags>
   </entry>
   <entry>
@@ -3057,81 +3132,6 @@
       </tags>
   </entry>
   <entry>
-    <title>双指针问题</title>
-    <url>/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<h2 id="环形列表I"><a href="#环形列表I" class="headerlink" title="环形列表I"></a>环形列表I</h2><h3 id="题目说明"><a href="#题目说明" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，判断链表中是否有环。</p>
-<p>如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。</p>
-<p>如果链表中存在环，则返回 true 。 否则，返回 false 。</p>
-<p> 进阶：</p>
-<p>你能用 O(1)（即，常量）内存解决此问题吗？</p>
-<p> 示例 1：</p>
-<p> <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100453506.png" alt="image-20210114100453506"></p>
-<p>输入：head = [3,2,0,-4], pos = 1<br>输出：true<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100714252.png" alt="image-20210114100714252"></p>
-<p>输入：head = [1,2], pos = 0<br>输出：true<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
-<img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114100749569.png" alt="image-20210114100749569" style="zoom:150%;">
-
-<p>输入：head = [1], pos = -1<br>输出：false<br>解释：链表中没有环。</p>
-<p>提示：</p>
-<p>链表中节点的数目范围是 [0, 104]<br>-105 &lt;= Node.val &lt;= 105<br>pos 为 -1 或者链表中的一个 有效索引 </p>
-<h3 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h3><p>####方法一：哈希表<br>思路及算法</p>
-<p>最容易想到的方法是遍历所有节点，每次遍历到一个节点时，判断该节点此前是否被访问过。</p>
-<p>具体地，我们可以使用哈希表来存储所有已经访问过的节点。每次我们到达一个节点，如果该节点已经存在于哈希表中，则说明该链表是环形链表，否则就将该节点加入哈希表中。重复这一过程，直到我们遍历完整个链表即可。</p>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">pulic <span class="class"><span class="keyword">class</span> <span class="title">solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascirle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        Set&lt;ListNOde&gt; seen = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span>( head !=<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!seen.add(head))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>#####复杂度分析</p>
-<p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。最坏情况下我们需要遍历每个节点一次。</p>
-<p>空间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。主要为哈希表的开销，最坏情况下我们需要将每个节点插入到哈希表中一次。</p>
-<h4 id="方式二；双指针–快慢指针"><a href="#方式二；双指针–快慢指针" class="headerlink" title="方式二；双指针–快慢指针"></a>方式二；双指针–快慢指针</h4><p>方法需要读者对「Floyd 判圈算法」（又称龟兔赛跑算法）有所了解。</p>
-<p>假想「乌龟」和「兔子」在链表上移动，「兔子」跑得快，「乌龟」跑得慢。当「乌龟」和「兔子」从链表上的同一个节点开始移动时，如果该链表中没有环，那么「兔子」将一直处于「乌龟」的前方；如果该链表中有环，那么「兔子」会先于「乌龟」进入环，并且一直在环内移动。等到「乌龟」进入环时，由于「兔子」的速度快，它一定会在某个时刻与乌龟相遇，即套了「乌龟」若干圈。</p>
-<p>我们可以根据上述思路来解决本题。具体地，我们定义两个指针，一快一满。慢指针每次只移动一步，而快指针每次移动两步。初始时，慢指针在位置 head，而快指针在位置 head.next。这样一来，如果在移动的过程中，快指针反过来追上慢指针，就说明该链表为环形链表。否则快指针将到达链表尾部，该链表不为环形链表。</p>
-<p> 为什么我们要规定初始时慢指针在位置 head，快指针在位置 head.next，而不是两个指针都在位置 head（即与「乌龟」和「兔子」中的叙述相同）？</p>
-<p>观察下面的代码，我们使用的是 while 循环，循环条件先于循环体。由于循环条件一定是判断快慢指针是否重合，如果我们将两个指针初始都置于 head，那么 while 循环就不会执行。因此，我们可以假想一个在 head 之前的虚拟节点，慢指针从虚拟节点移动一步到达 head，快指针从虚拟节点移动两步到达 head.next，这样我们就可以使用 while 循环了。</p>
-<p>当然，我们也可以使用 do-while 循环。此时，我们就可以把快慢指针的初始值都置为 head。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">puclic <span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> boolen <span class="title">hascycle</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head;</span><br><span class="line">        ListNode fast = head.next;</span><br><span class="line">        <span class="keyword">while</span>(slow!=fast)&#123;</span><br><span class="line">            <span class="keyword">if</span>(fast==<span class="keyword">null</span>||fast.next==<span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            fast = fast.next.next</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 是链表中的节点数。</p>
-<p>当链表中不存在环时，快指针将先于慢指针到达链表尾部，链表中每个节点至多被访问两次。</p>
-<p>当链表中存在环时，每一轮移动后，快慢指针的距离将减小一。而初始距离为环的长度，因此至多移动 NN 轮。</p>
-<p>空间复杂度：O(1)O(1)。我们只使用了两个指针的额外空间</p>
-<h2 id="环形列表II"><a href="#环形列表II" class="headerlink" title="环形列表II"></a>环形列表II</h2><h3 id="题目说明-1"><a href="#题目说明-1" class="headerlink" title="题目说明"></a>题目说明</h3><p>给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。</p>
-<p>为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意，pos 仅仅是用于标识环的情况，并不会作为参数传递到函数中。</p>
-<p>说明：不允许修改给定的链表。</p>
-<p>进阶：</p>
-<p>你是否可以使用 O(1) 空间解决此题？</p>
-<p> 示例 1：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102706369.png" alt="image-20210114102706369"></p>
-<p>输入：head = [3,2,0,-4], pos = 1<br>输出：返回索引为 1 的链表节点<br>解释：链表中有一个环，其尾部连接到第二个节点。<br>示例 2：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102721841.png" alt="image-20210114102721841"></p>
-<p>输入：head = [1,2], pos = 0<br>输出：返回索引为 0 的链表节点<br>解释：链表中有一个环，其尾部连接到第一个节点。<br>示例 3：</p>
-<p><img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114102737481.png" alt="image-20210114102737481"></p>
-<p>输入：head = [1], pos = -1<br>输出：返回 null<br>解释：链表中没有环。</p>
-<p>提示：</p>
-<p>链表中节点的数目范围在范围 [0, 104] 内<br>-105 &lt;= Node.val &lt;= 105<br>pos 的值为 -1 或者链表中的一个有效索引</p>
-<h3 id="题解-1"><a href="#题解-1" class="headerlink" title="题解"></a>题解</h3><h4 id="方法一：哈希表"><a href="#方法一：哈希表" class="headerlink" title="方法一：哈希表"></a>方法一：哈希表</h4><p>一个非常直观的思路是：我们遍历链表中的每个节点，并将它记录下来；一旦遇到了此前遍历过的节点，就可以判定链表中存在环。借助哈希表可以很方便地实现。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        ListNode pos = head;</span><br><span class="line">        Set&lt;ListNode&gt; visited = <span class="keyword">new</span> HashSet&lt;ListNode&gt;();</span><br><span class="line">        <span class="keyword">while</span> (pos != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (visited.contains(pos)) &#123;</span><br><span class="line">                <span class="keyword">return</span> pos;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                visited.add(pos);</span><br><span class="line">            &#125;</span><br><span class="line">            pos = pos.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析-1"><a href="#复杂度分析-1" class="headerlink" title="复杂度分析"></a>复杂度分析</h5><p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们恰好需要访问链表中的每一个节点。</p>
-<p>空间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。我们需要将链表中的每个节点都保存在哈希表当中。</p>
-<h4 id="方法二：双指针–快慢指针"><a href="#方法二：双指针–快慢指针" class="headerlink" title="方法二：双指针–快慢指针"></a>方法二：双指针–快慢指针</h4><p>我们使用两个指针，\textit{fast}fast 与 \textit{slow}slow。它们起始都位于链表的头部。随后，\textit{slow}slow 指针每次向后移动一个位置，而 \textit{fast}fast 指针向后移动两个位置。如果链表中存在环，则 \textit{fast}fast 指针最终将再次与 \textit{slow}slow 指针在环中相遇。</p>
-<p>如下图所示，设链表中环外部分的长度为 aa。\textit{slow}slow 指针进入环后，又走了 bb 的距离与 \textit{fast}fast 相遇。此时，\textit{fast}fast 指针已经走完了环的 nn 圈，因此它走过的总距离为 a+n(b+c)+b=a+(n+1)b+nca+n(b+c)+b=a+(n+1)b+nc</p>
- <img data-src="/2021/01/14/%E5%8F%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210114103031586.png" alt="image-20210114103031586" style="zoom:50%;">
-
-<p>根据题意，任意时刻，\textit{fast}fast 指针走过的距离都为 \textit{slow}slow 指针的 22 倍。因此，我们有</p>
-<p>a+(n+1)b+nc=2(a+b) \implies a=c+(n-1)(b+c)<br>a+(n+1)b+nc=2(a+b)⟹a=c+(n−1)(b+c)</p>
-<p>有了 a=c+(n-1)(b+c)a=c+(n−1)(b+c) 的等量关系，我们会发现：从相遇点到入环点的距离加上 n-1n−1 圈的环长，恰好等于从链表头部到入环点的距离。</p>
-<p>因此，当发现 \textit{slow}slow 与 \textit{fast}fast 相遇时，我们再额外使用一个指针 \textit{ptr}ptr。起始，它指向链表头部；随后，它和 \textit{slow}slow 每次向后移动一个位置。最终，它们会在入环点相遇。 </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">detectCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow = head, fast = head;</span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="keyword">null</span>) &#123;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            <span class="keyword">if</span> (fast.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">                fast = fast.next.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (fast == slow) &#123;</span><br><span class="line">                ListNode ptr = head;</span><br><span class="line">                <span class="keyword">while</span> (ptr != slow) &#123;</span><br><span class="line">                    ptr = ptr.next;</span><br><span class="line">                    slow = slow.next;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> ptr;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>#####复杂度分析</p>
-<p>时间复杂度：O(N)O(N)，其中 NN 为链表中节点的数目。在最初判断快慢指针是否相遇时，\textit{slow}slow 指针走过的距离不会超过链表的总长度；随后寻找入环点时，走过的距离也不会超过链表的总长度。因此，总的执行时间为 O(N)+O(N)=O(N)O(N)+O(N)=O(N)。</p>
-<p>空间复杂度：O(1)O(1)。我们只使用了 \textit{slow}, \textit{fast}, \textit{ptr}slow,fast,ptr 三个指针。</p>
-]]></content>
-      <categories>
-        <category>数据结构</category>
-      </categories>
-      <tags>
-        <tag>链表</tag>
-        <tag>双指针</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>哈希表easy篇总结</title>
     <url>/2021/03/11/%E5%93%88%E5%B8%8C%E8%A1%A8easy%E7%AF%87%E6%80%BB%E7%BB%93/</url>
     <content><![CDATA[<p>##哈希表刷题总结</p>
@@ -3206,6 +3206,11 @@
       <tags>
         <tag>哈希表</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>垃圾收集器与内存分配策略</title>
+    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>在Linux环境安装redis</title>
@@ -3291,11 +3296,6 @@
       <tags>
         <tag>环境部署</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>垃圾收集器与内存分配策略</title>
-    <url>/2021/02/05/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>封装Mybatis输出结果与模糊查询</title>
@@ -3536,6 +3536,17 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
+    <title>牛客网刷题-操作系统2</title>
+    <url>/2022/02/18/%E7%89%9B%E5%AE%A2%E7%BD%91%E5%88%B7%E9%A2%98-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F2/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>操作系统</category>
+      </categories>
+      <tags>
+        <tag>操作系统</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>消息队列产品与RabbitMQ的简介</title>
     <url>/2021/03/13/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E4%BA%A7%E5%93%81%E4%B8%8E%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%9E%8B/</url>
     <content><![CDATA[<h2 id="MQ常见产品"><a href="#MQ常见产品" class="headerlink" title="MQ常见产品"></a>MQ常见产品</h2><p>目前业界有很多的 MQ 产品，例如 RabbitMQ、RocketMQ、ActiveMQ、Kafka、ZeroMQ、MetaMq等，也有直接使用 Redis 充当消息队列的案例，而这些消息队列产品，各有侧重，在实际选型时，需要结合自身需求及 MQ 产品特征，综合考虑。</p>
@@ -3715,46 +3726,6 @@
       </tags>
   </entry>
   <entry>
-    <title>牛客网刷题-操作系统2</title>
-    <url>/2022/02/18/%E7%89%9B%E5%AE%A2%E7%BD%91%E5%88%B7%E9%A2%98-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F2/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>操作系统</category>
-      </categories>
-      <tags>
-        <tag>操作系统</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>类文件结构</title>
-    <url>/2021/01/16/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</url>
-    <content><![CDATA[<p>#类文件结构</p>
-<h2 id="虚拟机的无关性"><a href="#虚拟机的无关性" class="headerlink" title="虚拟机的无关性"></a>虚拟机的无关性</h2><p>Java的宣传口号是: <strong><em>WRITE ONCE , RUN ANYWHREE</em></strong></p>
-<p>java虚拟机力求实现的两种无关性：</p>
-<ol>
-<li><p>平台无关性</p>
-<p>各种不同平台的虚拟机与所有平台都统一使用的程序存储格式——–字节码（ByteCode）是构成平台无关性的基础，虚拟机可以载入同一种平台无关的字节码。</p>
-</li>
-<li><p>语言无关性：</p>
-<p><strong>举例</strong>：除了Java之外，Clojure、Groovy、JRuby、Jython、Scala都可以在Java虚拟机上运行</p>
-<p>实现语言无关性的基础是Java虚拟机不与任何语言绑定，只与**<em>“Class文件”这种特殊的二进制文件格式**</em>相关联，Class文件包含了Java虚拟机指令集和符号表以及若干其他辅助信息，在Class文件中使用了许多强制性的语法和结构化约束，任何一门语言都可以表示为被JAVA虚拟机锁接受的有效的Class文件。虚拟机只关心Class文件本身，而不关心Class文件的来源是哪种语言。</p>
-<p>在Class文件中，各种关键字、变量、和运算符号的语义都是有多条字节码命令组合而成的，字节码命令所能提供的语义描述能力必然要比java语言本身更为强大，所以Java虚拟机提供的支持远比java语言本身强大。</p>
-</li>
-</ol>
-<h2 id="Class类文件的结构"><a href="#Class类文件的结构" class="headerlink" title="Class类文件的结构"></a>Class类文件的结构</h2><p>Class文件是一组以8位字节为基础单位的二进制流，各个数据项目严格的按照顺序紧凑的排列在Class文件中，中间没有任何的分隔符，这使得整个Class文件中存储的内容几乎全是程序运行的必要数据，没有空隙存在。</p>
-<p>Class文件格式采用一种类似于C语言中struct的伪结构来进行存储数据：包括<strong>无符号数+表</strong></p>
-<p>1、无符号数：基本数据类型</p>
-<p>2、表：有多个无符号数或者其他表作为数据项构成的复合数据类型，习惯性的以__info结尾。表用于描述有层次关系的复合结构的数据。整个class文件本质上就是一张表。</p>
-<h3 id="magic-numer与class文件版本"><a href="#magic-numer与class文件版本" class="headerlink" title="magic numer与class文件版本"></a>magic numer与class文件版本</h3><h3 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h3><h3 id="访问标志"><a href="#访问标志" class="headerlink" title="访问标志"></a>访问标志</h3><h3 id="类索引、父类索引、接口索引集合"><a href="#类索引、父类索引、接口索引集合" class="headerlink" title="类索引、父类索引、接口索引集合"></a>类索引、父类索引、接口索引集合</h3><h3 id="字段表集合"><a href="#字段表集合" class="headerlink" title="字段表集合"></a>字段表集合</h3><h3 id="方法表集合"><a href="#方法表集合" class="headerlink" title="方法表集合"></a>方法表集合</h3><p>###属性表集合</p>
-]]></content>
-      <categories>
-        <category>JVM虚拟机</category>
-      </categories>
-      <tags>
-        <tag>JAVA</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>系统调用</title>
     <url>/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/</url>
     <content><![CDATA[<h2 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h2><h3 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h3><p>系统调用是内核与用户进程进行交互的一组接口，这些接口让应用程序受限制的访问硬件设备，提供了创建新进程并与已有进程进行交互通信的机制，也提供了申请操作系统其他资源的能力。</p>
@@ -3838,6 +3809,129 @@
       </categories>
       <tags>
         <tag>Linux系统内核设计</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>类文件结构</title>
+    <url>/2021/01/16/%E7%B1%BB%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</url>
+    <content><![CDATA[<p>#类文件结构</p>
+<h2 id="虚拟机的无关性"><a href="#虚拟机的无关性" class="headerlink" title="虚拟机的无关性"></a>虚拟机的无关性</h2><p>Java的宣传口号是: <strong><em>WRITE ONCE , RUN ANYWHREE</em></strong></p>
+<p>java虚拟机力求实现的两种无关性：</p>
+<ol>
+<li><p>平台无关性</p>
+<p>各种不同平台的虚拟机与所有平台都统一使用的程序存储格式——–字节码（ByteCode）是构成平台无关性的基础，虚拟机可以载入同一种平台无关的字节码。</p>
+</li>
+<li><p>语言无关性：</p>
+<p><strong>举例</strong>：除了Java之外，Clojure、Groovy、JRuby、Jython、Scala都可以在Java虚拟机上运行</p>
+<p>实现语言无关性的基础是Java虚拟机不与任何语言绑定，只与**<em>“Class文件”这种特殊的二进制文件格式**</em>相关联，Class文件包含了Java虚拟机指令集和符号表以及若干其他辅助信息，在Class文件中使用了许多强制性的语法和结构化约束，任何一门语言都可以表示为被JAVA虚拟机锁接受的有效的Class文件。虚拟机只关心Class文件本身，而不关心Class文件的来源是哪种语言。</p>
+<p>在Class文件中，各种关键字、变量、和运算符号的语义都是有多条字节码命令组合而成的，字节码命令所能提供的语义描述能力必然要比java语言本身更为强大，所以Java虚拟机提供的支持远比java语言本身强大。</p>
+</li>
+</ol>
+<h2 id="Class类文件的结构"><a href="#Class类文件的结构" class="headerlink" title="Class类文件的结构"></a>Class类文件的结构</h2><p>Class文件是一组以8位字节为基础单位的二进制流，各个数据项目严格的按照顺序紧凑的排列在Class文件中，中间没有任何的分隔符，这使得整个Class文件中存储的内容几乎全是程序运行的必要数据，没有空隙存在。</p>
+<p>Class文件格式采用一种类似于C语言中struct的伪结构来进行存储数据：包括<strong>无符号数+表</strong></p>
+<p>1、无符号数：基本数据类型</p>
+<p>2、表：有多个无符号数或者其他表作为数据项构成的复合数据类型，习惯性的以__info结尾。表用于描述有层次关系的复合结构的数据。整个class文件本质上就是一张表。</p>
+<h3 id="magic-numer与class文件版本"><a href="#magic-numer与class文件版本" class="headerlink" title="magic numer与class文件版本"></a>magic numer与class文件版本</h3><h3 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h3><h3 id="访问标志"><a href="#访问标志" class="headerlink" title="访问标志"></a>访问标志</h3><h3 id="类索引、父类索引、接口索引集合"><a href="#类索引、父类索引、接口索引集合" class="headerlink" title="类索引、父类索引、接口索引集合"></a>类索引、父类索引、接口索引集合</h3><h3 id="字段表集合"><a href="#字段表集合" class="headerlink" title="字段表集合"></a>字段表集合</h3><h3 id="方法表集合"><a href="#方法表集合" class="headerlink" title="方法表集合"></a>方法表集合</h3><p>###属性表集合</p>
+]]></content>
+      <categories>
+        <category>JVM虚拟机</category>
+      </categories>
+      <tags>
+        <tag>JAVA</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>红队攻防入门1</title>
+    <url>/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/</url>
+    <content><![CDATA[<h2 id="红队攻防入门1–初识红队"><a href="#红队攻防入门1–初识红队" class="headerlink" title="红队攻防入门1–初识红队"></a>红队攻防入门1–初识红队</h2><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F1.png" class>
+
+<p>###红队概念</p>
+<p><strong>红队（Red Team）即安全团队最大化模拟真实世界里面的入侵事件，采用入侵者的战术、技术、流程，以此来检验蓝队（Blue Team）的威胁检测和应急响应的机制和效率，最终帮助企业真正提高整个安全建设、安全运营、安全管理等能力。</strong></p>
+<p>####1.1红队VS渗透测试</p>
+<p>在企业内部的一般的渗透测试，很多就是点到为止，并不会被授予很多的权限。而红队整体来看，在合法合规的前提下，在充分沟通的前提下，授权范围会更加广泛，真实程度更加贴合实战。</p>
+<img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F2.jpg" class>
+
+<h4 id="1-2红队VS蓝队"><a href="#1-2红队VS蓝队" class="headerlink" title="1.2红队VS蓝队"></a>1.2红队VS蓝队</h4><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F3.jpg" class>
+
+<p>无论是Red Team 还是Blue Team,这些概念都来自真实的战争领域。</p>
+<blockquote>
+<p>作为红队，是以攻击方的方式做安全工作的，常见的技术概念有APT攻击、渗透测试、零日漏洞、武器开发。</p>
+</blockquote>
+<blockquote>
+<p>作为蓝队，则以防御方的方式做安全工作，是安全合规、安全运营、应急响应、态势感知、威胁情报等等。</p>
+</blockquote>
+<p>####1.3 红队常用模型框架</p>
+ <img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F4.jpg" class>
+
+
+
+<p>#####1.3.1渗透测试执行标准PTES</p>
+
+
+<p>PTES中文全名【渗透测试执行标准】，他是有2010年由业界网络安全专家共同发起并定义的规范，目标是希望为企业和安全服务商，指定整个渗透测试的标准流程，方便大家工作和沟通。</p>
+<p>PTES 包括 7 个标准步骤，即前期交互、情报收集、威胁建模、漏洞分析、渗透利用、报告输出等，一般的渗透测试工作，基本都绕不开这些步骤，可以看成一个标准的工作流。</p>
+<p><strong>① 前期交互</strong></p>
+<p>前期交互阶段，我们得先拿到客户的授权，并且了解授权范围多少？渗透目标是谁？期望目标是什么？</p>
+<p>这些都是前期交互阶段要沟通好的。</p>
+<p><strong>② 情报搜集</strong></p>
+<p>情报搜集阶段，即根据上面的授权、范围、目标等信息，开始进行一些情报搜集工作。</p>
+<p>无论是主动搜集还是被动搜集，我们得知道对方开了哪个端口、提供了什么服务、这些服务的软件版本是什么、这些软件是否曾经出现过漏洞？</p>
+<p><strong>③ 威胁建模</strong></p>
+<p>哪些信息是真正有价值的？哪个口子用什么攻击方法？哪条攻击路径是最大可能的？</p>
+<p>根据情报搜集的汇总，我们得制定出接下来的「作战计划」。</p>
+<p>这些就是在威胁建模阶段要分析出来的。</p>
+<p><strong>④ 漏洞分析</strong></p>
+<p>结合以上情报搜集和威胁建模阶段，此阶段我们要判断出哪些漏洞是最有可能拿到对方权限，打通攻击路径的。</p>
+<p>哪些漏洞的攻击效果最佳？</p>
+<p>哪些漏洞有最新的工具？</p>
+<p>哪些漏洞需要自研渗透代码？</p>
+<p><strong>⑤ 渗透利用</strong></p>
+<p>前面 4 个阶段都不算真正 Hack 进目标系统，而这个阶段则是真正对目标进行渗透攻击，通过漏洞对应的利用工具等，获取目标控制权。</p>
+<p><strong>⑥ 后渗透</strong></p>
+<p>在拿到控制权限之后，为了避免对方发现，还需要进行后渗透，实现更持久地控制，更深层次地执行任务。</p>
+<p>比如进程迁移、隧道建立、数据获取、擦除痕迹等。</p>
+<p><strong>⑦ 报告输出</strong></p>
+<p>最后阶段就是输出一份安全报告，即写明渗透测试工作中，企业 IT 基础系统所存在的漏洞和风险点。</p>
+<p>以上便是 PTES 渗透测试执行标准。</p>
+<h5 id="1-3-2网络杀伤链Cyber-Kill-Chain"><a href="#1-3-2网络杀伤链Cyber-Kill-Chain" class="headerlink" title="1.3.2网络杀伤链Cyber Kill Chain"></a>1.3.2网络杀伤链Cyber Kill Chain</h5><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F6.jpg" class>
+
+<p>网络杀伤链的英文全名是 Cyber Kill Chain，这是 2011 年洛克希德马丁公司提出的网络攻击模型。</p>
+<p>跟真实世界的入侵者，对一个目标系统进行攻击的每个阶段都是一一映射的。</p>
+<p>这里也分为 7 个步骤 =&gt;</p>
+<p><strong>第 1 步，目标侦察，</strong>跟前面 PTES 情报收集阶段是差不多的；</p>
+<p><strong>第 2 步，武器研制，</strong>编写各种工具/后门/病毒 Exp / Weapon / Malware；</p>
+<p><strong>第 3 步，载荷投递，</strong>通过水坑鱼叉等攻击方式将武器散播出去（<strong>投毒</strong>）；</p>
+<p><strong>第 4 步，渗透利用，</strong>通过<strong>漏洞利用</strong>获取对方控制器；</p>
+<p><strong>第 5 步，安装执行</strong>，在目标系统将<strong>后门木马</strong>跑起来；</p>
+<p><strong>第 6 步，命令控制，</strong>对目标来进行<strong>持久化控制</strong>；</p>
+<p><strong>第 7 步，任务执行，</strong>即开始执行<strong>窃取数据、破坏系统</strong>等。</p>
+<p>以上便是网络杀伤链，相比 PTES 更加贴合实战阶段。</p>
+<h5 id="1-3-3MITRE-ATT-amp-CK框架"><a href="#1-3-3MITRE-ATT-amp-CK框架" class="headerlink" title="1.3.3MITRE ATT&amp;CK框架"></a>1.3.3MITRE ATT&amp;CK框架</h5><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F7.jpg" class>
+
+<p>「<strong>ATT&amp;CK 框架</strong>」，由 MITRE 公司于 2013 年提出来的一个通用知识框架，中文名叫做「<strong>对抗战术、技术、常识</strong> 」 。</p>
+<p>ATT&amp;CK 框架是基于真实网络空间攻防案例及数据，采用军事战争中的 <strong>TTPs （Tactics, Techniques &amp; Procedures）</strong>方法论，重新编排的网络安全知识体系，目的是建立一套网络安全的通用语言。</p>
+<p>举例，大家经常听到的什么 APT 攻击、威胁情报、态势感知等等，无论个人还是企业，理解上不尽相同，总会有一些偏差的。</p>
+<p>有了 ATT&amp;CK 框架，大家不会存在太大的偏差，红队具体怎么去攻击的，蓝队具体到怎么去防御的，使用 ATT&amp;CK 矩阵可以将每个细节标记出来，攻击路线和防御过程都可以图形展现出来，攻防双方就有了一套通用语言了。</p>
+<p>网络安全行业的组织、机构、厂家，每年都会造各种 ”新词“，但 MITRE 这个组织推的这套框架，兼具实战和学术价值，具备广泛的应用场景，对安全行业的发展推动是实实在在的。</p>
+<p>我认为，在未来 5 年也好 10 年也好 ，它可能会成为一个事实上的标准。</p>
+<p>这里看一下左上角图片，它整体有三个部分，一个是 PRE ATT&amp;CK，一个是 ATT&amp;CK for Enterprise，一个是 ATT&amp;CK for Mobile，我们学习和研究时，核心放在 ATT&amp;CK forEnterprise 即可。</p>
+<p>大家可以看到，其实左边这里面，也有侦查、武器化、载荷传递、利用、控制、执行、维持等等阶段，是不是跟前面介绍的网络杀伤链是一样的呢？</p>
+<p>是的，你可以这么简单理解，其实 ATT&amp;CK 这个框架，刚开始就是在杀伤链的基础上，提供了更加具体的、更细颗粒度的战术、技术、文档、工具、描述等等。</p>
+<p>因此，如果要深入学习红队，平常可以多逛逛去 ATT&amp;CK 框架官网。</p>
+<img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F8.jpg" class>
+
+<p>接下来，我们来重点看一下 ATT&amp;CK for Enterprise。</p>
+<p>这张图里面，横轴代表是战术（Tactics），最新版本里横轴包括的战术有 12 个（原来是 10 个），纵轴代表的是技术（Techniques）有 156 个技术 272 个子技术。</p>
+<p>前面我们提到了，它是基于 TTPs 方法来描述的，所以非常标准和通用。</p>
+<p>在实际的红蓝对抗、威胁情报分析、安全差距评估等工作场景中，都可以用得上。</p>
+<p>另外补充一点，这 12 个战术从左到右，也是按照网络杀伤链的路径来编排的，包括初始访问、执行、持久化、权限提升、防御绕过、凭证访问、发现、横向移动、收集、命令控制、数据获取、影响。</p>
+<p>每一个战术下面包括很多技术，每个技术有详细的过程，包括独立的编号、描述、工具等。</p>
+]]></content>
+      <categories>
+        <category>网络安全</category>
+      </categories>
+      <tags>
+        <tag>红队攻防</tag>
       </tags>
   </entry>
   <entry>
@@ -3970,97 +4064,40 @@
       </tags>
   </entry>
   <entry>
-    <title>红队攻防入门1</title>
-    <url>/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/</url>
-    <content><![CDATA[<h2 id="红队攻防入门1–初识红队"><a href="#红队攻防入门1–初识红队" class="headerlink" title="红队攻防入门1–初识红队"></a>红队攻防入门1–初识红队</h2><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F1.png" class>
-
-<p>###红队概念</p>
-<p><strong>红队（Red Team）即安全团队最大化模拟真实世界里面的入侵事件，采用入侵者的战术、技术、流程，以此来检验蓝队（Blue Team）的威胁检测和应急响应的机制和效率，最终帮助企业真正提高整个安全建设、安全运营、安全管理等能力。</strong></p>
-<p>####1.1红队VS渗透测试</p>
-<p>在企业内部的一般的渗透测试，很多就是点到为止，并不会被授予很多的权限。而红队整体来看，在合法合规的前提下，在充分沟通的前提下，授权范围会更加广泛，真实程度更加贴合实战。</p>
-<img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F2.jpg" class>
-
-<h4 id="1-2红队VS蓝队"><a href="#1-2红队VS蓝队" class="headerlink" title="1.2红队VS蓝队"></a>1.2红队VS蓝队</h4><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F3.jpg" class>
-
-<p>无论是Red Team 还是Blue Team,这些概念都来自真实的战争领域。</p>
-<blockquote>
-<p>作为红队，是以攻击方的方式做安全工作的，常见的技术概念有APT攻击、渗透测试、零日漏洞、武器开发。</p>
-</blockquote>
-<blockquote>
-<p>作为蓝队，则以防御方的方式做安全工作，是安全合规、安全运营、应急响应、态势感知、威胁情报等等。</p>
-</blockquote>
-<p>####1.3 红队常用模型框架</p>
- <img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F4.jpg" class>
-
-
-
-<p>#####1.3.1渗透测试执行标准PTES</p>
-
-
-<p>PTES中文全名【渗透测试执行标准】，他是有2010年由业界网络安全专家共同发起并定义的规范，目标是希望为企业和安全服务商，指定整个渗透测试的标准流程，方便大家工作和沟通。</p>
-<p>PTES 包括 7 个标准步骤，即前期交互、情报收集、威胁建模、漏洞分析、渗透利用、报告输出等，一般的渗透测试工作，基本都绕不开这些步骤，可以看成一个标准的工作流。</p>
-<p><strong>① 前期交互</strong></p>
-<p>前期交互阶段，我们得先拿到客户的授权，并且了解授权范围多少？渗透目标是谁？期望目标是什么？</p>
-<p>这些都是前期交互阶段要沟通好的。</p>
-<p><strong>② 情报搜集</strong></p>
-<p>情报搜集阶段，即根据上面的授权、范围、目标等信息，开始进行一些情报搜集工作。</p>
-<p>无论是主动搜集还是被动搜集，我们得知道对方开了哪个端口、提供了什么服务、这些服务的软件版本是什么、这些软件是否曾经出现过漏洞？</p>
-<p><strong>③ 威胁建模</strong></p>
-<p>哪些信息是真正有价值的？哪个口子用什么攻击方法？哪条攻击路径是最大可能的？</p>
-<p>根据情报搜集的汇总，我们得制定出接下来的「作战计划」。</p>
-<p>这些就是在威胁建模阶段要分析出来的。</p>
-<p><strong>④ 漏洞分析</strong></p>
-<p>结合以上情报搜集和威胁建模阶段，此阶段我们要判断出哪些漏洞是最有可能拿到对方权限，打通攻击路径的。</p>
-<p>哪些漏洞的攻击效果最佳？</p>
-<p>哪些漏洞有最新的工具？</p>
-<p>哪些漏洞需要自研渗透代码？</p>
-<p><strong>⑤ 渗透利用</strong></p>
-<p>前面 4 个阶段都不算真正 Hack 进目标系统，而这个阶段则是真正对目标进行渗透攻击，通过漏洞对应的利用工具等，获取目标控制权。</p>
-<p><strong>⑥ 后渗透</strong></p>
-<p>在拿到控制权限之后，为了避免对方发现，还需要进行后渗透，实现更持久地控制，更深层次地执行任务。</p>
-<p>比如进程迁移、隧道建立、数据获取、擦除痕迹等。</p>
-<p><strong>⑦ 报告输出</strong></p>
-<p>最后阶段就是输出一份安全报告，即写明渗透测试工作中，企业 IT 基础系统所存在的漏洞和风险点。</p>
-<p>以上便是 PTES 渗透测试执行标准。</p>
-<h5 id="1-3-2网络杀伤链Cyber-Kill-Chain"><a href="#1-3-2网络杀伤链Cyber-Kill-Chain" class="headerlink" title="1.3.2网络杀伤链Cyber Kill Chain"></a>1.3.2网络杀伤链Cyber Kill Chain</h5><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F6.jpg" class>
-
-<p>网络杀伤链的英文全名是 Cyber Kill Chain，这是 2011 年洛克希德马丁公司提出的网络攻击模型。</p>
-<p>跟真实世界的入侵者，对一个目标系统进行攻击的每个阶段都是一一映射的。</p>
-<p>这里也分为 7 个步骤 =&gt;</p>
-<p><strong>第 1 步，目标侦察，</strong>跟前面 PTES 情报收集阶段是差不多的；</p>
-<p><strong>第 2 步，武器研制，</strong>编写各种工具/后门/病毒 Exp / Weapon / Malware；</p>
-<p><strong>第 3 步，载荷投递，</strong>通过水坑鱼叉等攻击方式将武器散播出去（<strong>投毒</strong>）；</p>
-<p><strong>第 4 步，渗透利用，</strong>通过<strong>漏洞利用</strong>获取对方控制器；</p>
-<p><strong>第 5 步，安装执行</strong>，在目标系统将<strong>后门木马</strong>跑起来；</p>
-<p><strong>第 6 步，命令控制，</strong>对目标来进行<strong>持久化控制</strong>；</p>
-<p><strong>第 7 步，任务执行，</strong>即开始执行<strong>窃取数据、破坏系统</strong>等。</p>
-<p>以上便是网络杀伤链，相比 PTES 更加贴合实战阶段。</p>
-<h5 id="1-3-3MITRE-ATT-amp-CK框架"><a href="#1-3-3MITRE-ATT-amp-CK框架" class="headerlink" title="1.3.3MITRE ATT&amp;CK框架"></a>1.3.3MITRE ATT&amp;CK框架</h5><img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F7.jpg" class>
-
-<p>「<strong>ATT&amp;CK 框架</strong>」，由 MITRE 公司于 2013 年提出来的一个通用知识框架，中文名叫做「<strong>对抗战术、技术、常识</strong> 」 。</p>
-<p>ATT&amp;CK 框架是基于真实网络空间攻防案例及数据，采用军事战争中的 <strong>TTPs （Tactics, Techniques &amp; Procedures）</strong>方法论，重新编排的网络安全知识体系，目的是建立一套网络安全的通用语言。</p>
-<p>举例，大家经常听到的什么 APT 攻击、威胁情报、态势感知等等，无论个人还是企业，理解上不尽相同，总会有一些偏差的。</p>
-<p>有了 ATT&amp;CK 框架，大家不会存在太大的偏差，红队具体怎么去攻击的，蓝队具体到怎么去防御的，使用 ATT&amp;CK 矩阵可以将每个细节标记出来，攻击路线和防御过程都可以图形展现出来，攻防双方就有了一套通用语言了。</p>
-<p>网络安全行业的组织、机构、厂家，每年都会造各种 ”新词“，但 MITRE 这个组织推的这套框架，兼具实战和学术价值，具备广泛的应用场景，对安全行业的发展推动是实实在在的。</p>
-<p>我认为，在未来 5 年也好 10 年也好 ，它可能会成为一个事实上的标准。</p>
-<p>这里看一下左上角图片，它整体有三个部分，一个是 PRE ATT&amp;CK，一个是 ATT&amp;CK for Enterprise，一个是 ATT&amp;CK for Mobile，我们学习和研究时，核心放在 ATT&amp;CK forEnterprise 即可。</p>
-<p>大家可以看到，其实左边这里面，也有侦查、武器化、载荷传递、利用、控制、执行、维持等等阶段，是不是跟前面介绍的网络杀伤链是一样的呢？</p>
-<p>是的，你可以这么简单理解，其实 ATT&amp;CK 这个框架，刚开始就是在杀伤链的基础上，提供了更加具体的、更细颗粒度的战术、技术、文档、工具、描述等等。</p>
-<p>因此，如果要深入学习红队，平常可以多逛逛去 ATT&amp;CK 框架官网。</p>
-<img data-src="/2021/02/06/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2%E5%85%A5%E9%97%A81/%E7%BA%A2%E9%98%9F8.jpg" class>
-
-<p>接下来，我们来重点看一下 ATT&amp;CK for Enterprise。</p>
-<p>这张图里面，横轴代表是战术（Tactics），最新版本里横轴包括的战术有 12 个（原来是 10 个），纵轴代表的是技术（Techniques）有 156 个技术 272 个子技术。</p>
-<p>前面我们提到了，它是基于 TTPs 方法来描述的，所以非常标准和通用。</p>
-<p>在实际的红蓝对抗、威胁情报分析、安全差距评估等工作场景中，都可以用得上。</p>
-<p>另外补充一点，这 12 个战术从左到右，也是按照网络杀伤链的路径来编排的，包括初始访问、执行、持久化、权限提升、防御绕过、凭证访问、发现、横向移动、收集、命令控制、数据获取、影响。</p>
-<p>每一个战术下面包括很多技术，每个技术有详细的过程，包括独立的编号、描述、工具等。</p>
+    <title>网络服务性能指标</title>
+    <url>/2021/09/25/%E7%BD%91%E7%BB%9C%E6%9C%8D%E5%8A%A1%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87/</url>
+    <content><![CDATA[<h1 id="一、QPS，每秒查询"><a href="#一、QPS，每秒查询" class="headerlink" title="一、QPS，每秒查询"></a>一、QPS，每秒查询</h1><p>QPS：Queries Per Second意思是“每秒查询率”，是一台服务器每秒能够相应的查询次数，是对一个特定的查询服务器在规定时间内所处理流量多少的衡量标准。</p>
+<p>互联网中，作为域名系统服务器的机器的性能经常用每秒查询率来衡量。</p>
+<h1 id="二、TPS，每秒事务"><a href="#二、TPS，每秒事务" class="headerlink" title="二、TPS，每秒事务"></a>二、TPS，每秒事务</h1><p>TPS：是TransactionsPerSecond的缩写，也就是事务数/秒。它是软件测试结果的测量单位。一个事务是指一个客户机向服务器发送请求然后服务器做出反应的过程。客户机在发送请求时开始计时，收到服务器响应后结束计时，以此来计算使用的时间和完成的事务个数。</p>
+<p>QPS vs TPS：QPS基本类似于TPS，但是不同的是，对于一个页面的一次访问，形成一个TPS；但一次页面请求，可能产生多次对服务器的请求，服务器对这些请求，就可计入“QPS”之中。如，访问一个页面会请求服务器2次，一次访问，产生一个“T”，产生2个“Q”。</p>
+<h1 id="三、RT，响应时间"><a href="#三、RT，响应时间" class="headerlink" title="三、RT，响应时间"></a>三、RT，响应时间</h1><p>响应时间：执行一个请求从开始到最后收到响应数据所花费的总体时间,即从客户端发起请求到收到服务器响应结果的时间。</p>
+<p>响应时间RT(Response-time)，是一个系统最重要的指标之一，它的数值大小直接反应了系统的快慢。</p>
+<h1 id="四、并发数"><a href="#四、并发数" class="headerlink" title="四、并发数"></a>四、并发数</h1><p>并发数是指系统同时能处理的请求数量，这个也是反应了系统的负载能力。</p>
+<h1 id="五、吞吐量"><a href="#五、吞吐量" class="headerlink" title="五、吞吐量"></a>五、吞吐量</h1><p>系统的吞吐量（承压能力）与request对CPU的消耗、外部接口、IO等等紧密关联。单个request 对CPU消耗越高，外部系统接口、IO速度越慢，系统吞吐能力越低，反之越高。</p>
+<p>系统吞吐量几个重要参数：QPS（TPS）、并发数、响应时间。</p>
+<ol>
+<li>QPS（TPS）：（Query Per Second）每秒钟request/事务 数量</li>
+<li>并发数： 系统同时处理的request/事务数</li>
+<li>响应时间： 一般取平均响应时间</li>
+</ol>
+<p>理解了上面三个要素的意义之后，就能推算出它们之间的关系：</p>
+<ul>
+<li><strong>QPS（TPS）= 并发数/平均响应时间</strong></li>
+<li><strong>并发数 = QPS*平均响应时间</strong></li>
+</ul>
+<h1 id="六、实际举例"><a href="#六、实际举例" class="headerlink" title="六、实际举例"></a>六、实际举例</h1><p>我们通过一个实例来把上面几个概念串起来理解。按二八定律来看，如果每天 80% 的访问集中在 20% 的时间里，这 20% 时间就叫做峰值时间。</p>
+<ul>
+<li>公式：( 总PV数 * 80% ) / ( 每天秒数 * 20% ) = 峰值时间每秒请求数(QPS)</li>
+<li>机器：峰值时间每秒QPS / 单台机器的QPS = 需要的机器</li>
+</ul>
+<p><strong>1、每天300w PV 的在单台机器上，这台机器需要多少QPS？</strong><br>( 3000000 * 0.8 ) / (86400 * 0.2 ) = 139 (QPS)</p>
+<p><strong>2、如果一台机器的QPS是58，需要几台机器来支持？</strong><br>139 / 58 = 3</p>
 ]]></content>
       <categories>
-        <category>网络安全</category>
+        <category>计算机网络</category>
       </categories>
       <tags>
-        <tag>红队攻防</tag>
+        <tag>高并发网络性能指标</tag>
       </tags>
   </entry>
   <entry>
@@ -4156,74 +4193,6 @@
       </tags>
   </entry>
   <entry>
-    <title>网络服务性能指标</title>
-    <url>/2021/09/25/%E7%BD%91%E7%BB%9C%E6%9C%8D%E5%8A%A1%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87/</url>
-    <content><![CDATA[<h1 id="一、QPS，每秒查询"><a href="#一、QPS，每秒查询" class="headerlink" title="一、QPS，每秒查询"></a>一、QPS，每秒查询</h1><p>QPS：Queries Per Second意思是“每秒查询率”，是一台服务器每秒能够相应的查询次数，是对一个特定的查询服务器在规定时间内所处理流量多少的衡量标准。</p>
-<p>互联网中，作为域名系统服务器的机器的性能经常用每秒查询率来衡量。</p>
-<h1 id="二、TPS，每秒事务"><a href="#二、TPS，每秒事务" class="headerlink" title="二、TPS，每秒事务"></a>二、TPS，每秒事务</h1><p>TPS：是TransactionsPerSecond的缩写，也就是事务数/秒。它是软件测试结果的测量单位。一个事务是指一个客户机向服务器发送请求然后服务器做出反应的过程。客户机在发送请求时开始计时，收到服务器响应后结束计时，以此来计算使用的时间和完成的事务个数。</p>
-<p>QPS vs TPS：QPS基本类似于TPS，但是不同的是，对于一个页面的一次访问，形成一个TPS；但一次页面请求，可能产生多次对服务器的请求，服务器对这些请求，就可计入“QPS”之中。如，访问一个页面会请求服务器2次，一次访问，产生一个“T”，产生2个“Q”。</p>
-<h1 id="三、RT，响应时间"><a href="#三、RT，响应时间" class="headerlink" title="三、RT，响应时间"></a>三、RT，响应时间</h1><p>响应时间：执行一个请求从开始到最后收到响应数据所花费的总体时间,即从客户端发起请求到收到服务器响应结果的时间。</p>
-<p>响应时间RT(Response-time)，是一个系统最重要的指标之一，它的数值大小直接反应了系统的快慢。</p>
-<h1 id="四、并发数"><a href="#四、并发数" class="headerlink" title="四、并发数"></a>四、并发数</h1><p>并发数是指系统同时能处理的请求数量，这个也是反应了系统的负载能力。</p>
-<h1 id="五、吞吐量"><a href="#五、吞吐量" class="headerlink" title="五、吞吐量"></a>五、吞吐量</h1><p>系统的吞吐量（承压能力）与request对CPU的消耗、外部接口、IO等等紧密关联。单个request 对CPU消耗越高，外部系统接口、IO速度越慢，系统吞吐能力越低，反之越高。</p>
-<p>系统吞吐量几个重要参数：QPS（TPS）、并发数、响应时间。</p>
-<ol>
-<li>QPS（TPS）：（Query Per Second）每秒钟request/事务 数量</li>
-<li>并发数： 系统同时处理的request/事务数</li>
-<li>响应时间： 一般取平均响应时间</li>
-</ol>
-<p>理解了上面三个要素的意义之后，就能推算出它们之间的关系：</p>
-<ul>
-<li><strong>QPS（TPS）= 并发数/平均响应时间</strong></li>
-<li><strong>并发数 = QPS*平均响应时间</strong></li>
-</ul>
-<h1 id="六、实际举例"><a href="#六、实际举例" class="headerlink" title="六、实际举例"></a>六、实际举例</h1><p>我们通过一个实例来把上面几个概念串起来理解。按二八定律来看，如果每天 80% 的访问集中在 20% 的时间里，这 20% 时间就叫做峰值时间。</p>
-<ul>
-<li>公式：( 总PV数 * 80% ) / ( 每天秒数 * 20% ) = 峰值时间每秒请求数(QPS)</li>
-<li>机器：峰值时间每秒QPS / 单台机器的QPS = 需要的机器</li>
-</ul>
-<p><strong>1、每天300w PV 的在单台机器上，这台机器需要多少QPS？</strong><br>( 3000000 * 0.8 ) / (86400 * 0.2 ) = 139 (QPS)</p>
-<p><strong>2、如果一台机器的QPS是58，需要几台机器来支持？</strong><br>139 / 58 = 3</p>
-]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>高并发网络性能指标</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>计算机网络/应用层</title>
-    <url>/2022/02/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E5%BA%94%E7%94%A8%E5%B1%82/</url>
-    <content><![CDATA[<h1 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h1><p>研发网络应用程序的核心是写出能够运行在**<em>不同的端系统**</em>和通过网络彼此通信的程序。</p>
-<img data-src="/2022/02/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E5%BA%94%E7%94%A8%E5%B1%82/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220223121648233.png" alt="image-20220223121648233" style="zoom:50%;">
-
-<h2 id="网络应用体系结构（network-application-architecture）"><a href="#网络应用体系结构（network-application-architecture）" class="headerlink" title="网络应用体系结构（network application architecture）"></a>网络应用体系结构（network application architecture）</h2><h3 id="客户端-服务器体系结构（client-server-architecture）"><a href="#客户端-服务器体系结构（client-server-architecture）" class="headerlink" title="客户端-服务器体系结构（client-server architecture）"></a>客户端-服务器体系结构（client-server architecture）</h3><p>特征：</p>
-<blockquote>
-<p>有一个总是打开的主机成为服务器，服务于来自许多客户端的请求</p>
-</blockquote>
-<blockquote>
-<p>服务器具有固定的、周知的地址，成为IP地址</p>
-</blockquote>
-<p><img data-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg2020.cnblogs.com%2Fblog%2F1725642%2F202003%2F1725642-20200329223925870-559284185.png&refer=http%3A%2F%2Fimg2020.cnblogs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1648189567&t=9fa0bc55891c197654d45ebacade79eb" alt="img"></p>
-<h3 id="P2P体系结构（P2P-architecture）"><a href="#P2P体系结构（P2P-architecture）" class="headerlink" title="P2P体系结构（P2P architecture）"></a>P2P体系结构（P2P architecture）</h3><p> <img data-src="/2022/02/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E5%BA%94%E7%94%A8%E5%B1%82/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220223143338617.png" alt="image-20220223143338617"></p>
-<p><img data-src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/P2P-network.svg/200px-P2P-network.svg.png" alt="img"></p>
-<h2 id="进程通信"><a href="#进程通信" class="headerlink" title="进程通信"></a>进程通信</h2><p>多数应用程序是由通信进程对组成，每对中的两个进程五相发送报文。进程向另一个进程发送的报文必须通过下面的网络 。进程通过一个称为**<em>套接字 (socket)**</em>的软件接口向网络发送报文和从网络接收报文 </p>
-<img data-src="/2022/02/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E5%BA%94%E7%94%A8%E5%B1%82/BLOG\source\_posts\计算机网络-应用层\image01.png" style="zoom:200%;">
-
-<h2 id="应用层协议"><a href="#应用层协议" class="headerlink" title="应用层协议"></a>应用层协议</h2><h3 id="HTTP"><a href="#HTTP" class="headerlink" title="HTTP"></a>HTTP</h3><p>Web 的应用层协议是超文本传输协议 (HyperText Transfer Protocol , HTTP) ，它是 Web</p>
-<p>的核心。客户程序和服务器程序运行在不同的端系统中，通过交换HTTP 报文进行会话。 HTTP 定义了这些报文的结构以及客户和服务器进行报文交换的方式。</p>
-<p>HTTP 使用 TCP 作为它的支撑运输协议，(而不是在 UDP 上运行)  。HTTP 客户首先发起一个与服务器的 TCP 连接 一旦连接建立，该浏览器和 服务器进程就可以通过套接字接口访问 TCP。</p>
-<p><strong><em>HTTP 个无状态协议 (stateless protocol)</em></strong></p>
-]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>计算机网络</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>设计模式--之六大原则</title>
     <url>/2021/05/21/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E4%B9%8B%E5%85%AD%E5%A4%A7%E5%8E%9F%E5%88%99/</url>
     <content><![CDATA[<h1 id="六大设计原则其三：依赖倒置原则"><a href="#六大设计原则其三：依赖倒置原则" class="headerlink" title="六大设计原则其三：依赖倒置原则"></a>六大设计原则其三：依赖倒置原则</h1><h2 id="依赖倒置原则的定义"><a href="#依赖倒置原则的定义" class="headerlink" title="依赖倒置原则的定义"></a>依赖倒置原则的定义</h2><p>涉及到三个概念：</p>
@@ -4289,6 +4258,37 @@
       </categories>
       <tags>
         <tag>设计模式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>计算机网络/应用层</title>
+    <url>/2022/02/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E5%BA%94%E7%94%A8%E5%B1%82/</url>
+    <content><![CDATA[<h1 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h1><p>研发网络应用程序的核心是写出能够运行在**<em>不同的端系统**</em>和通过网络彼此通信的程序。</p>
+<img data-src="/2022/02/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E5%BA%94%E7%94%A8%E5%B1%82/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220223121648233.png" alt="image-20220223121648233" style="zoom:50%;">
+
+<h2 id="网络应用体系结构（network-application-architecture）"><a href="#网络应用体系结构（network-application-architecture）" class="headerlink" title="网络应用体系结构（network application architecture）"></a>网络应用体系结构（network application architecture）</h2><h3 id="客户端-服务器体系结构（client-server-architecture）"><a href="#客户端-服务器体系结构（client-server-architecture）" class="headerlink" title="客户端-服务器体系结构（client-server architecture）"></a>客户端-服务器体系结构（client-server architecture）</h3><p>特征：</p>
+<blockquote>
+<p>有一个总是打开的主机成为服务器，服务于来自许多客户端的请求</p>
+</blockquote>
+<blockquote>
+<p>服务器具有固定的、周知的地址，成为IP地址</p>
+</blockquote>
+<p><img data-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg2020.cnblogs.com%2Fblog%2F1725642%2F202003%2F1725642-20200329223925870-559284185.png&refer=http%3A%2F%2Fimg2020.cnblogs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1648189567&t=9fa0bc55891c197654d45ebacade79eb" alt="img"></p>
+<h3 id="P2P体系结构（P2P-architecture）"><a href="#P2P体系结构（P2P-architecture）" class="headerlink" title="P2P体系结构（P2P architecture）"></a>P2P体系结构（P2P architecture）</h3><p> <img data-src="/2022/02/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E5%BA%94%E7%94%A8%E5%B1%82/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20220223143338617.png" alt="image-20220223143338617"></p>
+<p><img data-src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/P2P-network.svg/200px-P2P-network.svg.png" alt="img"></p>
+<h2 id="进程通信"><a href="#进程通信" class="headerlink" title="进程通信"></a>进程通信</h2><p>多数应用程序是由通信进程对组成，每对中的两个进程五相发送报文。进程向另一个进程发送的报文必须通过下面的网络 。进程通过一个称为**<em>套接字 (socket)**</em>的软件接口向网络发送报文和从网络接收报文 </p>
+<img data-src="/2022/02/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E5%BA%94%E7%94%A8%E5%B1%82/BLOG\source\_posts\计算机网络-应用层\image01.png" style="zoom:200%;">
+
+<h2 id="应用层协议"><a href="#应用层协议" class="headerlink" title="应用层协议"></a>应用层协议</h2><h3 id="HTTP"><a href="#HTTP" class="headerlink" title="HTTP"></a>HTTP</h3><p>Web 的应用层协议是超文本传输协议 (HyperText Transfer Protocol , HTTP) ，它是 Web</p>
+<p>的核心。客户程序和服务器程序运行在不同的端系统中，通过交换HTTP 报文进行会话。 HTTP 定义了这些报文的结构以及客户和服务器进行报文交换的方式。</p>
+<p>HTTP 使用 TCP 作为它的支撑运输协议，(而不是在 UDP 上运行)  。HTTP 客户首先发起一个与服务器的 TCP 连接 一旦连接建立，该浏览器和 服务器进程就可以通过套接字接口访问 TCP。</p>
+<p><strong><em>HTTP 个无状态协议 (stateless protocol)</em></strong></p>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>计算机网络</tag>
       </tags>
   </entry>
   <entry>
@@ -4417,6 +4417,61 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
+    <title>链表刷题总结（easy篇）</title>
+    <url>/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<h1 id="链表知识刷题总结（easy篇）"><a href="#链表知识刷题总结（easy篇）" class="headerlink" title="链表知识刷题总结（easy篇）"></a>链表知识刷题总结（easy篇）</h1><p>###1.返回链表的倒数第k个结点</p>
+<p>###题目描述：</p>
+<p>实现一种算法，找出单向链表中倒数第 k 个节点。返回该节点的值。</p>
+<p>注意：本题相对原题稍作改动</p>
+<p>示例：</p>
+<p>输入： 1-&gt;2-&gt;3-&gt;4-&gt;5 和 k = 2<br>输出： 4<br>说明：</p>
+<p>给定的 k 保证是有效的。</p>
+<h3 id="题解："><a href="#题解：" class="headerlink" title="题解："></a>题解：</h3><h4 id="题解一-双指针"><a href="#题解一-双指针" class="headerlink" title="题解一:双指针"></a>题解一:双指针</h4><p> 这题要求链表的倒数第k个节点，最简单的方式就是使用两个指针，第一个指针先移动k步，然后第二个指针再从头开始，这个时候这两个指针同时移动，当第一个指针到链表的末尾的时候，返回第二个指针即可</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">kthToLast</span><span class="params">(ListNode head, <span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">        ListNode first = head;</span><br><span class="line">    	ListNode second = head;</span><br><span class="line">    </span><br><span class="line">    	<span class="keyword">while</span>(k-- &gt;<span class="number">0</span>)&#123;</span><br><span class="line">            first = first.next;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="keyword">while</span>(first!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            first =  first.next;</span><br><span class="line">            second = second.next;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="keyword">return</span> second.val;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>####题解二：使用栈求解(一看到倒数某某元素，要先想到栈)</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">kthTolast</span><span class="params">(ListNode head , <span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">        Stack&lt;ListNode&gt; stack = <span class="keyword">new</span> stack&lt;&gt;();</span><br><span class="line">        <span class="comment">//链表结点压栈处理</span></span><br><span class="line">        <span class="keyword">while</span>(head!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            stack.push(head);</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//出栈串成新的链表</span></span><br><span class="line">        ListNode firstnode = stack.pop();</span><br><span class="line">        <span class="keyword">while</span>(--k&gt;<span class="number">0</span>)&#123;</span><br><span class="line">            ListNode temp = stack.pop();</span><br><span class="line">            temp.next = firstNode;     <span class="comment">//这一步是不必要的，除非要求返回最后一个到倒数第k个结点链表，需要从新连接构建</span></span><br><span class="line">            firstNode = temp;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> firstnode.val;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="2-删除中间结点"><a href="#2-删除中间结点" class="headerlink" title="2.删除中间结点"></a>2.删除中间结点</h3><h4 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h4><h4 id="题解：-1"><a href="#题解：-1" class="headerlink" title="题解："></a>题解：</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="3-合并两个有序列表"><a href="#3-合并两个有序列表" class="headerlink" title="3.合并两个有序列表"></a>3.合并两个有序列表</h3><h4 id="题目描述：-1"><a href="#题目描述：-1" class="headerlink" title="题目描述："></a>题目描述：</h4><p>将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。 </p>
+<p>示例 1：</p>
+<p><img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120112941925.png" alt="image-20210120112941925"></p>
+<p>输入：l1 = [1,2,4], l2 = [1,3,4]<br>输出：[1,1,2,3,4,4]<br>示例 2：</p>
+<p>输入：l1 = [], l2 = []<br>输出：[]<br>示例 3：</p>
+<p>输入：l1 = [], l2 = [0]<br>输出：[0]</p>
+<h4 id="题解：-2"><a href="#题解：-2" class="headerlink" title="题解："></a>题解：</h4><h5 id="题解一：递归"><a href="#题解一：递归" class="headerlink" title="题解一：递归"></a>题解一：递归</h5><p>思路</p>
+<p>我们可以如下递归地定义两个链表里的 merge 操作（忽略边界情况，比如空链表等）：<br>    <img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120113648210.png" alt="image-20210120113648210"></p>
+<p>也就是说，两个链表头部值较小的一个节点与剩下元素的 merge 操作结果合并。</p>
+<p>算法</p>
+<p>我们直接将以上递归过程建模，同时需要考虑边界情况。</p>
+<p>如果 l1 或者 l2 一开始就是空链表 ，那么没有任何操作需要合并，所以我们只需要返回非空链表。否则，我们要判断 l1 和 l2 哪一个链表的头节点的值更小，然后递归地决定下一个添加到结果里的节点。如果两个链表有一个为空，递归结束</p>
+ <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">mergeTwoLists</span><span class="params">(ListNode l1, ListNode l2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (l1 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> l2;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (l2 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> l1;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (l1.val &lt; l2.val) &#123;</span><br><span class="line">            l1.next = mergeTwoLists(l1.next, l2);</span><br><span class="line">            <span class="keyword">return</span> l1;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            l2.next = mergeTwoLists(l1, l2.next);</span><br><span class="line">            <span class="keyword">return</span> l2;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析："><a href="#复杂度分析：" class="headerlink" title="复杂度分析："></a>复杂度分析：</h5><h3 id="4-回文链表"><a href="#4-回文链表" class="headerlink" title="4.回文链表"></a>4.回文链表</h3><p>####题目描述</p>
+<h4 id="题解：-3"><a href="#题解：-3" class="headerlink" title="题解："></a>题解：</h4><p>#####题解一：将链表中的值复制到数组中在用双指针</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isPalindrome</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        List&lt;Interger&gt; vals = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//将链表中的值赋值到数组中</span></span><br><span class="line">        ListNode currentNode = head;</span><br><span class="line">        <span class="keyword">while</span>(currentNode != <span class="keyword">null</span>)&#123;</span><br><span class="line">            vals.add(currentNode.val);        <span class="comment">//复制的是currentNode的值，而不是其本身</span></span><br><span class="line">            currentNode = currentNode.next;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//使用双指针判断回文</span></span><br><span class="line">        <span class="keyword">int</span> front=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> back = vals.size()-<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(front&lt;back)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!vals.get(front).equals(vals.get(back)))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            front++;</span><br><span class="line">            back--;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="复杂度分析：-1"><a href="#复杂度分析：-1" class="headerlink" title="复杂度分析："></a>复杂度分析：</h5><p><img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120205633023.png" alt="image-20210120205633023"></p>
+<h5 id="题解二：递归"><a href="#题解二：递归" class="headerlink" title="题解二：递归"></a>题解二：递归</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>链表</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>链表</title>
     <url>/2021/01/13/%E9%93%BE%E8%A1%A8/</url>
     <content><![CDATA[<h2 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h2><h3 id="单链表"><a href="#单链表" class="headerlink" title="单链表"></a>单链表</h3><p>单链表中的每个结点不仅包含值，还包含链接到下一个结点的引用字段。通过这种方式，单链表将所有结点按顺序组织起来。习惯于用头节点来代表整个单链表。</p>
@@ -4485,61 +4540,6 @@
 <p>时间复杂度：<br>addAtHead，addAtTail： \mathcal{O}(1)O(1)<br>get，addAtIndex，delete：\mathcal{O}(\min(k, N - k))O(min(k,N−k))，其中 kk 指的是元素的索引。<br>空间复杂度：所有的操作都是 \mathcal{O}(1)O(1)。</p>
 <p> <strong>说明</strong>:不论是单链表还是双链表，在进行遍历时，如果想要通过index来get某一结点元素，for循环中的终止条件是<strong>i&lt;index+1</strong></p>
 <p>如果是删除或者添加，for循环中的终止条件是**i&lt;index</p>
-]]></content>
-      <categories>
-        <category>数据结构</category>
-      </categories>
-      <tags>
-        <tag>链表</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>链表刷题总结（easy篇）</title>
-    <url>/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/</url>
-    <content><![CDATA[<h1 id="链表知识刷题总结（easy篇）"><a href="#链表知识刷题总结（easy篇）" class="headerlink" title="链表知识刷题总结（easy篇）"></a>链表知识刷题总结（easy篇）</h1><p>###1.返回链表的倒数第k个结点</p>
-<p>###题目描述：</p>
-<p>实现一种算法，找出单向链表中倒数第 k 个节点。返回该节点的值。</p>
-<p>注意：本题相对原题稍作改动</p>
-<p>示例：</p>
-<p>输入： 1-&gt;2-&gt;3-&gt;4-&gt;5 和 k = 2<br>输出： 4<br>说明：</p>
-<p>给定的 k 保证是有效的。</p>
-<h3 id="题解："><a href="#题解：" class="headerlink" title="题解："></a>题解：</h3><h4 id="题解一-双指针"><a href="#题解一-双指针" class="headerlink" title="题解一:双指针"></a>题解一:双指针</h4><p> 这题要求链表的倒数第k个节点，最简单的方式就是使用两个指针，第一个指针先移动k步，然后第二个指针再从头开始，这个时候这两个指针同时移动，当第一个指针到链表的末尾的时候，返回第二个指针即可</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">kthToLast</span><span class="params">(ListNode head, <span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">        ListNode first = head;</span><br><span class="line">    	ListNode second = head;</span><br><span class="line">    </span><br><span class="line">    	<span class="keyword">while</span>(k-- &gt;<span class="number">0</span>)&#123;</span><br><span class="line">            first = first.next;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="keyword">while</span>(first!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            first =  first.next;</span><br><span class="line">            second = second.next;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="keyword">return</span> second.val;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<p>####题解二：使用栈求解(一看到倒数某某元素，要先想到栈)</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">kthTolast</span><span class="params">(ListNode head , <span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">        Stack&lt;ListNode&gt; stack = <span class="keyword">new</span> stack&lt;&gt;();</span><br><span class="line">        <span class="comment">//链表结点压栈处理</span></span><br><span class="line">        <span class="keyword">while</span>(head!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            stack.push(head);</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//出栈串成新的链表</span></span><br><span class="line">        ListNode firstnode = stack.pop();</span><br><span class="line">        <span class="keyword">while</span>(--k&gt;<span class="number">0</span>)&#123;</span><br><span class="line">            ListNode temp = stack.pop();</span><br><span class="line">            temp.next = firstNode;     <span class="comment">//这一步是不必要的，除非要求返回最后一个到倒数第k个结点链表，需要从新连接构建</span></span><br><span class="line">            firstNode = temp;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> firstnode.val;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="2-删除中间结点"><a href="#2-删除中间结点" class="headerlink" title="2.删除中间结点"></a>2.删除中间结点</h3><h4 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h4><h4 id="题解：-1"><a href="#题解：-1" class="headerlink" title="题解："></a>题解：</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="3-合并两个有序列表"><a href="#3-合并两个有序列表" class="headerlink" title="3.合并两个有序列表"></a>3.合并两个有序列表</h3><h4 id="题目描述：-1"><a href="#题目描述：-1" class="headerlink" title="题目描述："></a>题目描述：</h4><p>将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。 </p>
-<p>示例 1：</p>
-<p><img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120112941925.png" alt="image-20210120112941925"></p>
-<p>输入：l1 = [1,2,4], l2 = [1,3,4]<br>输出：[1,1,2,3,4,4]<br>示例 2：</p>
-<p>输入：l1 = [], l2 = []<br>输出：[]<br>示例 3：</p>
-<p>输入：l1 = [], l2 = [0]<br>输出：[0]</p>
-<h4 id="题解：-2"><a href="#题解：-2" class="headerlink" title="题解："></a>题解：</h4><h5 id="题解一：递归"><a href="#题解一：递归" class="headerlink" title="题解一：递归"></a>题解一：递归</h5><p>思路</p>
-<p>我们可以如下递归地定义两个链表里的 merge 操作（忽略边界情况，比如空链表等）：<br>    <img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120113648210.png" alt="image-20210120113648210"></p>
-<p>也就是说，两个链表头部值较小的一个节点与剩下元素的 merge 操作结果合并。</p>
-<p>算法</p>
-<p>我们直接将以上递归过程建模，同时需要考虑边界情况。</p>
-<p>如果 l1 或者 l2 一开始就是空链表 ，那么没有任何操作需要合并，所以我们只需要返回非空链表。否则，我们要判断 l1 和 l2 哪一个链表的头节点的值更小，然后递归地决定下一个添加到结果里的节点。如果两个链表有一个为空，递归结束</p>
- <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">mergeTwoLists</span><span class="params">(ListNode l1, ListNode l2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (l1 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> l2;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (l2 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> l1;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (l1.val &lt; l2.val) &#123;</span><br><span class="line">            l1.next = mergeTwoLists(l1.next, l2);</span><br><span class="line">            <span class="keyword">return</span> l1;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            l2.next = mergeTwoLists(l1, l2.next);</span><br><span class="line">            <span class="keyword">return</span> l2;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析："><a href="#复杂度分析：" class="headerlink" title="复杂度分析："></a>复杂度分析：</h5><h3 id="4-回文链表"><a href="#4-回文链表" class="headerlink" title="4.回文链表"></a>4.回文链表</h3><p>####题目描述</p>
-<h4 id="题解：-3"><a href="#题解：-3" class="headerlink" title="题解："></a>题解：</h4><p>#####题解一：将链表中的值复制到数组中在用双指针</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isPalindrome</span><span class="params">(ListNode head)</span></span>&#123;</span><br><span class="line">        List&lt;Interger&gt; vals = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//将链表中的值赋值到数组中</span></span><br><span class="line">        ListNode currentNode = head;</span><br><span class="line">        <span class="keyword">while</span>(currentNode != <span class="keyword">null</span>)&#123;</span><br><span class="line">            vals.add(currentNode.val);        <span class="comment">//复制的是currentNode的值，而不是其本身</span></span><br><span class="line">            currentNode = currentNode.next;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//使用双指针判断回文</span></span><br><span class="line">        <span class="keyword">int</span> front=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> back = vals.size()-<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(front&lt;back)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!vals.get(front).equals(vals.get(back)))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            front++;</span><br><span class="line">            back--;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="复杂度分析：-1"><a href="#复杂度分析：-1" class="headerlink" title="复杂度分析："></a>复杂度分析：</h5><p><img data-src="/2021/01/20/%E9%93%BE%E8%A1%A8%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/Users\flower\AppData\Roaming\Typora\typora-user-images\image-20210120205633023.png" alt="image-20210120205633023"></p>
-<h5 id="题解二：递归"><a href="#题解二：递归" class="headerlink" title="题解二：递归"></a>题解二：递归</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
 ]]></content>
       <categories>
         <category>数据结构</category>
