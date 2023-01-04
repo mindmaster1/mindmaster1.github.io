@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"mindmaster.top","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="What are Smart Contracts">
+<meta property="og:type" content="article">
+<meta property="og:title" content="智能合约">
+<meta property="og:url" content="https://mindmaster.top/2023/01/05/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/index.html">
+<meta property="og:site_name" content="一只小码农">
+<meta property="og:description" content="What are Smart Contracts">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mindmaster.top/2023/01/05/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/1.png">
+<meta property="og:image" content="https://mindmaster.top/2023/01/05/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/2.png">
+<meta property="og:image" content="https://mindmaster.top/2023/01/05/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/3.png">
+<meta property="og:image" content="https://mindmaster.top/2023/01/05/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/4.png">
+<meta property="og:image" content="https://mindmaster.top/2023/01/05/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/5.png">
+<meta property="og:image" content="https://mindmaster.top/2023/01/05/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/6.png">
+<meta property="article:published_time" content="2023-01-04T21:27:39.000Z">
+<meta property="article:modified_time" content="2023-01-04T13:32:34.867Z">
+<meta property="article:author" content="邢浩东">
+<meta property="article:tag" content="区块链&amp;以太坊&amp;智能合约">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mindmaster.top/2023/01/05/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/1.png">
+
+<link rel="canonical" href="https://mindmaster.top/2023/01/05/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>智能合约 | 一只小码农</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">一只小码农</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">每天进步一点点</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-stethoscope fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">46</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-braille fa-fw"></i>分类<span class="badge">24</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">80</span></a>
+
+  </li>
+        <li class="menu-item menu-item-movies">
+
+    <a href="/movies/" rel="section"><i class="fa fa-film fa-fw"></i>电影</a>
+
+  </li>
+        <li class="menu-item menu-item-book">
+
+    <a href="/book/" rel="section"><i class="fa fa-book fa-fw"></i>书籍</a>
+
+  </li>
+        <li class="menu-item menu-item-view">
+
+    <a href="/view/" rel="section"><i class="fa fa-blind fa-fw"></i>生活见闻--杂谈</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml/" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/mindmaster1" class="github-corner" title="Fork me on GitHub" aria-label="Fork me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mindmaster.top/2023/01/05/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/OIP.jfif">
+      <meta itemprop="name" content="邢浩东">
+      <meta itemprop="description" content="The world favors the underdog,and I would be the bad guy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一只小码农">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          智能合约
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-01-04 21:27:39 / 修改时间：13:32:34" itemprop="dateCreated datePublished" datetime="2023-01-04T21:27:39Z">2023-01-04</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%8C%BA%E5%9D%97%E9%93%BE-%E4%BB%A5%E5%A4%AA%E5%9D%8A-%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/" itemprop="url" rel="index"><span itemprop="name">区块链&以太坊&智能合约</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/01/05/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/01/05/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>9.7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>9 分钟</span>
+            </span>
+            <div class="post-description">What are Smart Contracts</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="What-are-Smart-Contracts"><a href="#What-are-Smart-Contracts" class="headerlink" title="What are Smart Contracts"></a>What are Smart Contracts</h1><blockquote>
+<p><strong>SMART CONTRACT DEFINITION</strong></p>
+<p>智能合约是一种防篡改程序，当满足某些预定义条件时，它在区块链网络上运行。</p>
+</blockquote>
+<h2 id="What-is-a-Smart-Contract"><a href="#What-is-a-Smart-Contract" class="headerlink" title="What is a Smart Contract"></a>What is a Smart Contract</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Smart contracts are computer programs that are hosted and executed on a blockchain network. Each smart contract consists of code specifying predetermined conditions that, when met, trigger outcomes. By running on a decentralized blockchain instead of a centralized server, smart contracts allow multiple parties to come to a shared result in an accurate, timely, and tamper-proof manner. </span></span><br></pre></td></tr></table></figure>
+<p>智能合约是在区块链网络上托管和执行的计算机程序。每个智能合约都包含指定预定条件的代码，这些条件在满足时会触发结果。通过在去中心化区块链而不是集中化服务器上运行，智能合约允许多方以准确、及时和防篡改的方式达成共享结果。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Smart contracts are a powerful infrastructure for automation because they are not controlled by a central administrator and are not vulnerable to single points of attack by malicious entities. When applied to multi-party digital agreements, smart contract applications can reduce counterparty risk, increase efficiency, lower costs, and provide new levels of transparency into processes.</span></span><br></pre></td></tr></table></figure>
+<p>智能合约是一种强大的自动化基础设施，因为它们不受中央管理员的控制，不易受到恶意实体的单点攻击。当应用于多方数字协议时，智能合约应用程序可以降低交易对手风险、提高效率、降低成本，并为流程提供新的透明度。</p>
+<h2 id="History-of-Smart-Contracts"><a href="#History-of-Smart-Contracts" class="headerlink" title="History of Smart Contracts"></a>History of Smart Contracts</h2><p>智能合约最早由美国计算机科学家尼克·沙博于1994年创造。在他的开创性著作中，他给出了一个宽泛的智能合约定义：“执行合约条款的计算机化交易协议”，其总体目标是“满足共同的合同条件，最大限度地减少恶意和意外的异常，并最大限度地降低对可信中介的需求”</p>
+<p>虽然智能合约的一般概念可以在自动售货机等系统中看到（例如，特定代码导致预期的零食），但区块链形成了数字、防篡改和无许可的智能合约的基础。2009年比特币区块链的引入支持了第一个协议智能合约，该合约建立了一组必须满足的条件，才能在网络上的用户之间传输比特币。这些条件包括用户使用与其公共地址匹配的正确私钥（类似于链接到特定帐户的密码）签署交易，以及用户拥有足够的资金来支付交易。</p>
+<p>2012年，比特币区块链演变为提供另一种主要类型的智能合约，称为多签名交易。多重签名交易需要定义数量的人（公钥）使用其私钥签署交易，然后才被认为有效。这通过减少单点故障（如被盗或丢失的私钥）来提高用户资金的安全性。</p>
+ <img data-src="/2023/01/05/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/1.png" class>
+
+<p>在接下来的几年中，区块链开始尝试添加新的编程条件（称为操作码opcodes）。然而，2013年Vitalik Buterin发布了以太坊白皮书，这是智能合约的下一个重大飞跃。2015年，以太坊作为可编程智能合约的新型区块链推出。以太坊智能合约区块链提供了一台可以同时运行多个独立智能合约的“世界计算机”，而不是区块链作为单个智能合约应用程序或提供一些有限的操作码。</p>
+<h2 id="How-Smart-Contracts-Work"><a href="#How-Smart-Contracts-Work" class="headerlink" title="How Smart Contracts Work"></a>How Smart Contracts Work</h2><p>智能合约是区块链上的防篡改程序，具有以下逻辑：“如果/当x事件发生时，执行y操作。”一个智能合约可以有多个不同的条件，一个应用程序可以有多种不同的智能合约，以支持一组相互连接的流程。还有多种用于编程的智能合约语言，以太坊的Solidity是最受欢迎的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Any developer can create a smart contract and deploy it on a public blockchain for their own purposes, e.g., a personal yield aggregator that automatically shifts their funds to the highest-earning application. However, many smart contracts involve multiple independent parties that may or may not know one another and don’t necessarily trust one another. The smart contract defines exactly how users can interact with it, involving who can interact with the smart contract, at what times, and what inputs result in what outputs.  The result is multi-party digital agreements that evolve from today’s probabilistic state, where they will probably execute as desired, to a new deterministic state where they are guaranteed to execute according to their code. </span></span><br></pre></td></tr></table></figure>
+<p>任何开发者都可以创建一个智能合约，并将其部署在公共区块链上，用于他们自己的目的，例如，一个个人收益聚合器，自动将他们的资金转移到最高收益的应用程序。然而，许多智能合约涉及多个独立方，这些独立方可能相互了解，也可能不相互信任。智能合约准确定义了用户如何与智能合约交互，包括谁可以与智能合约进行交互，在什么时间，以及什么输入导致什么输出。结果是多方数字协议，从今天的概率状态演变而来，他们可能会按需执行，到一个新的确定性状态，在该状态下它们保证根据它们的代码执行。</p>
+<h2 id="Smart-Contract-Examples"><a href="#Smart-Contract-Examples" class="headerlink" title="Smart Contract Examples"></a>Smart Contract Examples</h2><ol>
+<li><blockquote>
+<p>智能合约的一个目的是在不同的实体组之间自动化特定的业务流程。这些实体共同就所有智能合约的条款达成一致，如支付、流程和争议解决。一个简单的全球贸易智能合约示例可能包含以下条款:</p>
+</blockquote>
+</li>
+</ol>
+<ul>
+<li><strong>Term 1:</strong> If the goods arrive on time, then execute a payment from the retailer(零售商) to the supplier(供货商) in full amount.</li>
+<li><strong>Term 2:</strong> If the goods arrive one day late, then execute a payment from the retailer to the supplier for 98% of the full amount.</li>
+</ul>
+<ol start="2">
+<li><blockquote>
+<p>智能合约另外支持公共去中心化应用程序（dApps），任何人都可以在不需要任何权限的情况下与之交互。公共dApps通常是开源的，so anyone in the world can inspect exactly how they function before deciding whether or not to interact with them。公共dApp的一个例子是去中心化借贷市场【<strong>decentralized lending/borrowing market</strong>】，可能有以下条款：</p>
+</blockquote>
+</li>
+</ol>
+<ul>
+<li><strong>Term 1:</strong> If the user deposits collateral into the specific smart contract, they can receive a loan that’s up to 50% of the value of their collateral (i.e., $100 deposit can borrow up to a $50 loan). –100美元存款最多可借50美元贷款</li>
+<li><strong>Term 2:</strong> If the user’s collateralization ratio (collateral/outstanding loan value) drops below 200%, then the user’s collateral is automatically liquidated and transferred to the lenders to ensure they don’t lose money.—抵押比率（抵押物/未偿贷款价值),保证lenders权益</li>
+<li><strong>Term 3:</strong> Lenders can deposit funds into a specific contract that other users can borrow from at predefined collateralization ratios, while the lender receives a claim to a portion of the interest rate payments. </li>
+</ul>
+<h2 id="Smart-Contract-Benefits"><a href="#Smart-Contract-Benefits" class="headerlink" title="Smart Contract Benefits"></a>Smart Contract Benefits</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Most traditional digital agreements involve two parties that don’t know each other, introducing risk that either participant won’t uphold their commitments. To resolve counterparty risk, digital agreements are often hosted and executed by larger, centralized institutions like a bank that can enforce the contract’s terms. These digital contracts can be directly between a user and a large company or involve a large company acting as a trusted intermediary between two users. While this dynamic allows many contracts to exist that otherwise wouldn’t take on such risk, it also creates a situation where the larger, centralized institutions exert asymmetrical influence over the contracts.</span></span><br></pre></td></tr></table></figure>
+ <img data-src="/2023/01/05/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/2.png" class>
+
+<blockquote>
+<p>The difference in how user funds are handled when making a payment through a blockchain vs. the banking system</p>
+</blockquote>
+<p>智能合约在数字协议的基础上提供了一些优势。</p>
+<ul>
+<li><strong>Security</strong>【<strong>安全性</strong>】 – Running the contract on decentralized blockchain infrastructure ensures there is no central point of failure to attack, no centralized intermediary to bribe【贿赂中间机构】, and no mechanism for either party or a central admin to use to tamper with the outcome.</li>
+<li><strong>Reliability【可靠性】 –</strong> Having the contract logic redundantly processed and verified by a decentralized network of nodes provides strong tamper-proof, uptime, and correctness guarantees that the contract will execute on time according to its terms.</li>
+<li><strong>Equitable【公平性】</strong> – Using a decentralized network to host and enforce the terms of the agreement reduces the ability of a for-profit middleman to use their position of privilege to rent-seek and siphon off value.</li>
+<li><strong>Efficiency</strong>【<strong>高效性</strong>】 – Automating the backend processes of the agreement—escrow, maintenance, execution, and/or settlement—means neither party has to wait for manual data to be entered, the counterparty to fulfill their obligations, or a middleman to process the transaction.</li>
+</ul>
+<h2 id="Smart-Contract-Use-Cases【智能合约的用例】"><a href="#Smart-Contract-Use-Cases【智能合约的用例】" class="headerlink" title="Smart Contract Use Cases【智能合约的用例】"></a>Smart Contract Use Cases【智能合约的用例】</h2><ul>
+<li><h3 id="Rights-Management-Tokens-–-权限管理（令牌）"><a href="#Rights-Management-Tokens-–-权限管理（令牌）" class="headerlink" title="Rights Management (Tokens) – 权限管理（令牌）"></a>Rights Management (Tokens) – 权限管理（令牌）</h3><p>Token smart contracts are used to create, track, and assign ownership rights to specific digital tokens existing on blockchain networks. The token contract programs functionalities into the tokens it issues, providing holders features like utility/insurance in a dApp (utility token), voting weight in a protocol (governance token), equity in a company (security token), ownership claim to a unique real-world or digital asset (non-fungible token), and more. For example, the FIL token is used to pay for Filecoin’s decentralized storage services and the COMP token allows users to participate in the governance of Compound protocol.</p>
+</li>
+<li><h3 id="Financial-Products-DeFi-（去中心化金融）"><a href="#Financial-Products-DeFi-（去中心化金融）" class="headerlink" title="Financial Products (DeFi) （去中心化金融）"></a>Financial Products (DeFi) （去中心化金融）</h3><p><a target="_blank" rel="noopener" href="https://chain.link/education/defi">Decentralized finance (DeFi) </a>consists of applications that use smart contracts to recreate traditional financial products and services such as money markets, options, stablecoins, exchanges, and asset management, as well as combine multiple services to create new financial primitives via <a target="_blank" rel="noopener" href="https://blog.chain.link/defis-permissionless-composability-is-supercharging-innovation/?_ga=2.98385304.621989367.1672829537-779844993.1672715174">permissionless composability</a>. The smart contract can hold user’s funds in escrow and distribute them between users based on predefined conditions. For example, BarnBridge uses smart contracts to automate trades for users wanting fixed asset exposure to a price pair (e.g., 45% token A, 55% token B), and Aave uses smart contracts to facilitate lending and borrowing in a permissionless and decentralized manner.</p>
+<img data-src="/2023/01/05/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/3.png" class>
+
+</li>
+</ul>
+<blockquote>
+<p>Aave supports decentralized lending markets by using asset prices to determine a user’s borrowing borrower and to see if loans are undercollateralized and subject to liquidation</p>
+</blockquote>
+<ul>
+<li><h3 id="Gaming-and-NFTs"><a href="#Gaming-and-NFTs" class="headerlink" title="Gaming and NFTs"></a>Gaming and NFTs</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Blockchain-based games use smart contracts for tamper-proof execution of in-game actions. One example is [PoolTogether](https://medium.com/pooltogether/improving-pooltogether-with-chainlink-vrf-dcf1a3d6ea), a no-loss savings game where users stake their funds in a shared pool that is then routed into a money market where it earns interest. After a predefined time period, the game ends and a winner is randomly awarded all the accrued interest while everyone else can withdraw their original deposit. Similarly, limited-edition NFTs can have fair distribution models and RPGs can support unpredictable loot drops using randomness, helping to ensure all users have a fair shot at getting rare digital assets. Many projects access randomness using [Chainlink Verifiable Random Function (VRF)](https://blog.chain.link/chainlink-vrf-now-live-on-ethereum-mainnet/)—a random number generator (RNG) that uses cryptography to prove it&#x27;s tamper-proof, meaning the RNG process is publicly auditable.</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<p>游戏和NFT基于区块链的游戏使用智能合约来防止游戏内动作的执行。一个例子是Pool Together，这是一个无损失的储蓄游戏，用户将他们的资金存入共享池，然后将其转入货币市场，在那里赚取利息。在预定义的时间段后，游戏结束，获胜者将随机获得所有应计利息，而其他人可以提取他们的原始存款。类似地，限量版NFT可以有公平的分配模型，RPG可以使用随机性支持不可预测的战利品掉落，有助于确保所有用户都有机会获得稀有的数字资产。许多项目使用Chainlink可验证随机函数（VRF）访问随机性，这是一种随机数生成器（RNG），使用密码学来证明其不可篡改，这意味着RNG过程是可公开审核的。</p>
+ <img data-src="/2023/01/05/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/4.png" class> 
+
+<blockquote>
+<p>MLB baseball player Trey Mancini did an NFT drop to raise money for cancer patient support, where Chainlink VRF was used to randomly assign additional utility to some NFTs</p>
+</blockquote>
+<ul>
+<li><h3 id="Insurance"><a href="#Insurance" class="headerlink" title="Insurance"></a><strong>Insurance</strong></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Parametric insurance is a type of insurance where a payout is tied directly to a specific predefined event. Smart contracts provide tamper-proof infrastructure for creating parametric insurance contracts that trigger based on data inputs. For example, crop insurance can be created using smart contracts, where a user purchases a policy based on specific weather information like seasonal rainfall in a geographic location. At the end of the policy, the smart contract will automatically issue a payout if the amount of rainfall in the specific location exceeds the original stated amount. Not only do end-users receive timely payouts with less overhead, but the supply side of insurance can become open to the public via smart contracts. The smart contract allows users to deposit funds into a pool and then distributes collected premiums to pool participants based on the percentage of their contribution to the pool.</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<p>保险参数保险是一种支付直接与特定预定义事件相关的保险类型。智能合约为创建基于数据输入触发的参数保险合约提供了防篡改基础设施。例如，可以使用智能合约创建作物保险，用户根据特定天气信息（如地理位置的季节性降雨）购买保单。在保单结束时，如果特定地点的降雨量超过了最初规定的降雨量，智能合约将自动支付。不仅最终用户能够以更少的开销及时获得付款，而且保险的供应端也可以通过智能合约向公众开放。智能合约允许用户将资金存入池中，然后根据池中参与者的贡献百分比将收取的保费分配给池参与者</p>
+  <img data-src="/2023/01/05/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/5.png" class>
+
+<blockquote>
+<p>Arbol uses Ethereum smart contracts and Chainlink oracles to enable parametric insurance based on weather data in a particular geographic region</p>
+</blockquote>
+<h2 id="Smart-Contract-Limitations"><a href="#Smart-Contract-Limitations" class="headerlink" title="Smart Contract Limitations"></a>Smart Contract Limitations</h2><p>智能合约的一个固有限制是，它们运行的底层区块链是孤立的网络，这意味着区块链没有与外部世界的内置连接。没有外部连接，智能合约无法与外部系统通信以确认真实世界事件的发生，也无法访问成本高效的计算资源。与没有互联网的计算机类似，如果没有真实世界的连接，智能合约是极其有限的。例如，他们无法在执行交易前了解资产的价格，无法在支付作物保险索赔前检查月平均降雨量，也无法在与供应商结算前核实货物是否已到达。</p>
+<p>‍因此，区块链行业正在进行的主要演变是可编程智能合约，它与区块链之外的真实世界数据和传统系统连接，扩展了智能合约逻辑中使用的输入和输出。这些混合智能合约使用称为oracle的安全中间件，将链上代码与链下基础设施相结合，例如，使用外部数据触发智能合约，或在传统支付轨道上结算链下合同。</p>
+ <img data-src="/2023/01/05/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/6.png" class>
+
+<blockquote>
+<p>Oracles connect inputs and outputs to blockchains to create hybrid smart contracts</p>
+</blockquote>
+<p>与互联网对计算机的影响类似，oracles是将新兴区块链网络与当今遗留系统连接起来的关键，以实现互连、高效和隐私保护的智能合约，从而保持底层区块链网络的安全性和可靠性。通过启用混合智能合约，oracles极大地扩展和增强了区块链的宝贵属性，从而在更多行业和用例中基于加密真实性达成了卓越的数字协议。</p>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">相关文章推荐</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\01\04\BTCBasic\" rel="bookmark">BTCBasic</a></div>
+        <div class="popular-posts-excerpt"><p>区块链基础知识(BTC密码学原理&数据结构)</p></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\01\04\BTCBasic4\" rel="bookmark">BTCBasic4</a></div>
+        <div class="popular-posts-excerpt"><p>BTC匿名性（零知识证明）</p></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\01\04\BTCBasic5\" rel="bookmark">BTCBasic5</a></div>
+        <div class="popular-posts-excerpt"><p>BTC常见疑问解答总结</p></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\01\04\BTCBasic2\" rel="bookmark">BTCBasic2</a></div>
+        <div class="popular-posts-excerpt"><p>区块链基础知识(BTC共识协议&BTC具体实现&BTC网络)</p></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\01\04\BTCBasic3\" rel="bookmark">BTCBasic3</a></div>
+        <div class="popular-posts-excerpt"><p>BTC挖矿&BTC脚本&BTC分叉</p></div>
+    </li>
+  </ul>
+
+        <div class="reward-container">
+  <div>谢谢你的支持哦，继续加油.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="邢浩东 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="邢浩东 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>邢浩东
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://mindmaster.top/2023/01/05/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/" title="智能合约">https://mindmaster.top/2023/01/05/智能合约/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-%E9%82%A2%E6%B5%A9%E4%B8%9C/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-邢浩东</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE-%E4%BB%A5%E5%A4%AA%E5%9D%8A-%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/" rel="tag"># 区块链&以太坊&智能合约</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/01/04/BTCBasic5/" rel="prev" title="BTCBasic5">
+      <i class="fa fa-chevron-left"></i> BTCBasic5
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#What-are-Smart-Contracts"><span class="nav-number">1.</span> <span class="nav-text">What are Smart Contracts</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#What-is-a-Smart-Contract"><span class="nav-number">1.1.</span> <span class="nav-text">What is a Smart Contract</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#History-of-Smart-Contracts"><span class="nav-number">1.2.</span> <span class="nav-text">History of Smart Contracts</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-Smart-Contracts-Work"><span class="nav-number">1.3.</span> <span class="nav-text">How Smart Contracts Work</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Smart-Contract-Examples"><span class="nav-number">1.4.</span> <span class="nav-text">Smart Contract Examples</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Smart-Contract-Benefits"><span class="nav-number">1.5.</span> <span class="nav-text">Smart Contract Benefits</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Smart-Contract-Use-Cases%E3%80%90%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E7%9A%84%E7%94%A8%E4%BE%8B%E3%80%91"><span class="nav-number">1.6.</span> <span class="nav-text">Smart Contract Use Cases【智能合约的用例】</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Rights-Management-Tokens-%E2%80%93-%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86%EF%BC%88%E4%BB%A4%E7%89%8C%EF%BC%89"><span class="nav-number">1.6.1.</span> <span class="nav-text">Rights Management (Tokens) – 权限管理（令牌）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Financial-Products-DeFi-%EF%BC%88%E5%8E%BB%E4%B8%AD%E5%BF%83%E5%8C%96%E9%87%91%E8%9E%8D%EF%BC%89"><span class="nav-number">1.6.2.</span> <span class="nav-text">Financial Products (DeFi) （去中心化金融）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gaming-and-NFTs"><span class="nav-number">1.6.3.</span> <span class="nav-text">Gaming and NFTs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Insurance"><span class="nav-number">1.6.4.</span> <span class="nav-text">Insurance</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Smart-Contract-Limitations"><span class="nav-number">1.7.</span> <span class="nav-text">Smart Contract Limitations</span></a></li></ol></li></ol></div>
+
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="邢浩东"
+      src="/images/OIP.jfif">
+  <p class="site-author-name" itemprop="name">邢浩东</p>
+  <div class="site-description" itemprop="description">The world favors the underdog,and I would be the bad guy</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">46</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/mindmaster1" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;mindmaster1" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/yourname" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;yourname" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>StackOverflow</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.csdn.net/" title="CSDN → https:&#x2F;&#x2F;www.csdn.net" rel="noopener" target="_blank"><i class="fab fa-apple fa-fw"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://juejin.cn/user/1706074845232983" title="掘金 → https:&#x2F;&#x2F;juejin.cn&#x2F;user&#x2F;1706074845232983" rel="noopener" target="_blank"><i class="fa fa-binoculars fa-fw"></i>掘金</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Leetcode刷题
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://leetcode-cn.com/" title="https:&#x2F;&#x2F;leetcode-cn.com&#x2F;" rel="noopener" target="_blank">通向快乐</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+ <div>
+    <svg>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-1"></text>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-2"></text>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-3"></text>
+        <text id="time" text-anchor="middle" x="36%" y="80%" class="words words-4"></text>
+    </svg>
+</div>
+<script>
+function showtime(){
+    var noatime = new Date();
+    var h = noatime.getHours(),
+        m = noatime.getMinutes(),
+        s = noatime.getSeconds();
+    h=checktime(h);
+    m=checktime(m);
+    s=checktime(s);
+  return h+":"+m+":"+s;
+}
+function checktime(x){
+  if(x<10){
+    x="0"+x;
+  }
+  return x;
+}
+var div1=document.getElementsByTagName("text");
+setInterval(function(){
+  for (var i in div1){
+      div1[i].innerHTML=showtime();
+  }
+},1000);
+</script>	   
+
+<script type="text/javascript" src="//rf.revolvermaps.com/0/0/1.js?i=57fnj853bkq&amp;s=220&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+ 
+    
+  </ul>
+    </div>
+	
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+	
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">邢浩东</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">350k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">5:18</span>
+</div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'dOLOPmQA1yPidXhJmndTryVE-gzGzoHsz',
+      appKey     : 'tDnfIUMcS9cpj4Rqgxu4mUxG',
+      placeholder: "欢迎大家畅所欲言# Comment box placeholder",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+ 
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
+</html>
