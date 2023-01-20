@@ -3883,92 +3883,6 @@
       </tags>
   </entry>
   <entry>
-    <title>系统调用</title>
-    <url>/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/</url>
-    <content><![CDATA[<h2 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h2><h3 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h3><p>系统调用是内核与用户进程进行交互的一组接口，这些接口让应用程序受限制的访问硬件设备，提供了创建新进程并与已有进程进行交互通信的机制，也提供了申请操作系统其他资源的能力。</p>
-<p>系统调用在Linux系统中的地位如下图所示：</p>
-<img data-src="/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/OIP1.jpg" class>
-
-<h3 id="2-与内核通信"><a href="#2-与内核通信" class="headerlink" title="2.与内核通信"></a>2.与内核通信</h3><p>系统调用在用户空间进程和硬件设备之间添加了一个中间层。这样的中间层有如下作用：</p>
-<blockquote>
-<p>1.为用户空间提供了一种硬件的抽象接口。</p>
-</blockquote>
-<blockquote>
-<p>2.系统调用确保了系统的稳定与安全。内核可以作为硬件设备与用户空间之间的中间人，基于权限、用户类型和一些其他的规则对需要进行的访问做出裁决。</p>
-</blockquote>
-<blockquote>
-<p>3.避免用户空间的应用程序对硬件资源随意访问而内核一无所知，这样既无法实现多任务和虚拟内存，也不能确保良好的稳定性和安全性。</p>
-</blockquote>
-<p><strong>Linux中：系统调用是用户空间访问内核的唯一手段—-除了异常和陷入外，它们是内核唯一的合法入口</strong></p>
-<h3 id="3-API、POSIX、C库"><a href="#3-API、POSIX、C库" class="headerlink" title="3.API、POSIX、C库"></a>3.API、POSIX、C库</h3><p>应用程序通过在用户空间实现的应用编程接口（API）而不是直接通过系统调用。</p>
-<blockquote>
-<p>1.API实际上并不需要与内核提供的系统调用一一对应，程序员只跟API打交道。</p>
-<p>2.内核只跟系统调用打交道，库函数以及应用程序如何使用系统调用不是内核所关心的。</p>
-<p>3.API可以实现成一个系统调用，也可以实现多个系统调用，甚至也可以不实现系统调用。</p>
-</blockquote>
-<p>在UNIX中，最流行的应用编程接口是基于POSIX标准的。</p>
-<p>Linux系统调用作为C库的一部分提供。C库实现了Unix系统的主要API，包括标准C库函数和系统调用接口，此外，C库提供了POSIX的绝大部分API。</p>
-<h3 id="4-系统调用-syscall"><a href="#4-系统调用-syscall" class="headerlink" title="4.系统调用(syscall)"></a>4.系统调用(syscall)</h3><p><strong>通过在C库中定义的函数调用来执行</strong></p>
-<p>系统调用在出现错误的时候C库会将错误码写入errno全局变量。通过调用perror()库函数，可以把该变量翻译成用户可以理解的错误字符串。</p>
-<p>为了保证32为操作系统和64位操作系统的兼容，系统调用在用户空间和内核空间有着不同的返回值类型。用户空间为int，内核空间为long。系统调用在内核中前面会加上sys_。例如：返回当前进程PID的系统调用get_pid（）在内核中被定义为sys_getpid()。</p>
-<h4 id="4-1系统调用号"><a href="#4-1系统调用号" class="headerlink" title="4.1系统调用号"></a>4.1系统调用号</h4><p>在Linux中，每个系统调用都会被赋予一个系统调用号（独一无二的）。进程在执行系统调用时，不需要提及系统调用的名称，只需要使用系统调用号即可。</p>
-<p><strong>系统调用号相当重要，一旦分配好就不能再更改，因为会导致之前编译好的应用程序崩溃。</strong>即使这个系统调用被删除，它所占用的系统调用号也不允许被回收利用。</p>
-<p>内核记录了系统调用表中的所有已经注册过的系统调用的列表，存储在sys_call_table中，这个表为每一个有效的</p>
-<p>系统调用指定了唯一的系统调用号。</p>
-<h4 id="4-2系统调用的性能"><a href="#4-2系统调用的性能" class="headerlink" title="4.2系统调用的性能"></a>4.2系统调用的性能</h4><p>Linux系统调用比其他许多的操作系统执行要快。原因如下：</p>
-<blockquote>
-<p>1.Linux很短的上下文切换时间，进出内核都被优化的极为高效。</p>
-<p>2.系统调用处理程序和每个系统调用本身非常简洁。</p>
-</blockquote>
-<h3 id="5-系统调用处理程序"><a href="#5-系统调用处理程序" class="headerlink" title="5.系统调用处理程序"></a>5.系统调用处理程序</h3><p>应用程序通过<strong>软中断</strong>的方式来告诉内核自己期望执行一个系统调用，希望系统当前可以从用户态切换到内核态，这样内核就可以代表应用程序在内核空间中执行系统调用。</p>
-<p><strong>软中断</strong>：通过引起一个异常来促使系统切换到内核态前去执行异常处理程序。此时的异常处理程序其实就是<strong>系统调用处理程序</strong>。</p>
-<p>在X86系统中预定义的软中断是中断号128，通过int $0x80来触发中断。这条指令会触发一个异常导致系统切换到内核态并执行128号异常处理程序（系统调用处理程序）。</p>
-<h4 id="5-1指定恰当的系统调用"><a href="#5-1指定恰当的系统调用" class="headerlink" title="5.1指定恰当的系统调用"></a>5.1指定恰当的系统调用</h4><p>在陷入内核空间时，要将系统调用号传给内核空间。X86系统，系统调用号是通过eax寄存器传递给内核的。system_call()函数通过将给定的系统调用号与NR_syscalls做比较来检查其有效性。大于或者等于NR_syscalls，函数就返回-ENOSYS,否则，执行相应的系统调用。</p>
-<p>系统调用表中的表项是以64位类型存放的，所以内核需要将给定的系统调用号乘4，然后用所得结果在表中查询位置。</p>
-<h4 id="5-2参数传递"><a href="#5-2参数传递" class="headerlink" title="5.2参数传递"></a>5.2参数传递</h4><p>部分系统调用除了系统调用号之外，还需要传入一些外部参数，在发生陷入的时候，一并传给内核，同样是放在寄存器中。<strong>给用户空间的返回值同样是通过寄存器来传递的</strong></p>
-<h3 id="6-系统调用的实现"><a href="#6-系统调用的实现" class="headerlink" title="6.系统调用的实现"></a>6.系统调用的实现</h3><h4 id="6-1实现系统调用"><a href="#6-1实现系统调用" class="headerlink" title="6.1实现系统调用"></a>6.1实现系统调用</h4><p>要求：</p>
-<ul>
-<li>Linux中不提倡采用多用途的系统调用（一个系统调用通过传递不同的参数值来完成选择的工作）</li>
-<li>系统调用的接口应该力求简洁，参数尽量少。提供标志参数以确保向前兼容。</li>
-<li>系统调用的设计越通用越好。</li>
-</ul>
-<h4 id="6-2参数验证"><a href="#6-2参数验证" class="headerlink" title="6.2参数验证"></a>6.2参数验证</h4><p>系统调用必须检查参数是否合法有效。系统调用在内核空间中执行，任由用户将不合法的输入传递给内核，系统大的安全和稳定性将面临考验。进程不能让内核访问那些他没有权限访问的数据。</p>
-<ul>
-<li>与文件IO有关的系统调用需要检查文件描述符是否有效，与进程有关的函数必须检查提供的PID是否有效。</li>
-<li>检查用户提供的指针是否有效<ul>
-<li>指针指向的内存区域只能属于用户空间，进程不能告诉内核去读内核空间中的数据。</li>
-<li>指针指向的内存区域在自己的进程中，不能让内核去读其他进程中的数据。</li>
-<li>进程不能越过内存访问限制（可读、可写、可执行）</li>
-</ul>
-</li>
-<li>检查是否有合法权限</li>
-</ul>
-<p>内核提供了两个方法来完成必须的检查和内核空间与用户空间之间的数据来回拷贝</p>
-<ul>
-<li>写入：copy_to_user()</li>
-<li>读取：copy_from_user()</li>
-</ul>
-<p>这两个方法可能会引起阻塞。当包含用户数据的页被换出到硬盘上而不是在物理内存上的时候，进程会休眠，直到缺页处理程序将该页从硬盘从新换回物理内存。</p>
-<h3 id="7-系统调用上下文"><a href="#7-系统调用上下文" class="headerlink" title="7.系统调用上下文"></a>7.系统调用上下文</h3><p>在进程调用系统调用时，会有进程上下文。既可以被抢占也可以休眠。</p>
-<p>可以休眠说明系统调用可以利用内核提供的绝大部分功能。可以被抢占说明该系统调用时可重入的（新的进程同样可以使用相同的系统调用）。</p>
-<p>系统调用返回时，控制权仍然在system_call()中，它最终会负责切换到内核工作空间，并让用户进程继续执行下去。</p>
-<h4 id="7-1绑定一个系统调用的最后步骤"><a href="#7-1绑定一个系统调用的最后步骤" class="headerlink" title="7.1绑定一个系统调用的最后步骤"></a>7.1绑定一个系统调用的最后步骤</h4><blockquote>
-<p>1.在系统调用表中的最后加入一个表项。从0开始算起，系统调用在表中的位置就是他的系统调用号。</p>
-</blockquote>
-<blockquote>
-<p>2.系统调用必须被编译进内核映像（不能被编译成模块）</p>
-</blockquote>
-<h4 id="7-2从用户空间访问系统调用"><a href="#7-2从用户空间访问系统调用" class="headerlink" title="7.2从用户空间访问系统调用"></a>7.2从用户空间访问系统调用</h4><p>系统调用靠的时C库的支持，用户程序通过包含标准头文件并和C库链接，就可以使用系统调用。</p>
-<p><strong>Linux新系统调用增添频率很低，说明Linux系统是一个相对较为稳定并且功能已经较为完善的操作系统</strong></p>
-]]></content>
-      <categories>
-        <category>Linux系统内核相关</category>
-      </categories>
-      <tags>
-        <tag>Linux系统内核设计</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>红队常用行话总结一</title>
     <url>/2021/03/02/%E7%BA%A2%E9%98%9F%E5%B8%B8%E7%94%A8%E8%A1%8C%E8%AF%9D/</url>
     <content><![CDATA[<h2 id="漏洞利用术语解读"><a href="#漏洞利用术语解读" class="headerlink" title="漏洞利用术语解读"></a>漏洞利用术语解读</h2><blockquote>
@@ -4095,6 +4009,92 @@
       </categories>
       <tags>
         <tag>红队攻防</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>系统调用</title>
+    <url>/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/</url>
+    <content><![CDATA[<h2 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h2><h3 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h3><p>系统调用是内核与用户进程进行交互的一组接口，这些接口让应用程序受限制的访问硬件设备，提供了创建新进程并与已有进程进行交互通信的机制，也提供了申请操作系统其他资源的能力。</p>
+<p>系统调用在Linux系统中的地位如下图所示：</p>
+<img data-src="/2021/02/01/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/OIP1.jpg" class>
+
+<h3 id="2-与内核通信"><a href="#2-与内核通信" class="headerlink" title="2.与内核通信"></a>2.与内核通信</h3><p>系统调用在用户空间进程和硬件设备之间添加了一个中间层。这样的中间层有如下作用：</p>
+<blockquote>
+<p>1.为用户空间提供了一种硬件的抽象接口。</p>
+</blockquote>
+<blockquote>
+<p>2.系统调用确保了系统的稳定与安全。内核可以作为硬件设备与用户空间之间的中间人，基于权限、用户类型和一些其他的规则对需要进行的访问做出裁决。</p>
+</blockquote>
+<blockquote>
+<p>3.避免用户空间的应用程序对硬件资源随意访问而内核一无所知，这样既无法实现多任务和虚拟内存，也不能确保良好的稳定性和安全性。</p>
+</blockquote>
+<p><strong>Linux中：系统调用是用户空间访问内核的唯一手段—-除了异常和陷入外，它们是内核唯一的合法入口</strong></p>
+<h3 id="3-API、POSIX、C库"><a href="#3-API、POSIX、C库" class="headerlink" title="3.API、POSIX、C库"></a>3.API、POSIX、C库</h3><p>应用程序通过在用户空间实现的应用编程接口（API）而不是直接通过系统调用。</p>
+<blockquote>
+<p>1.API实际上并不需要与内核提供的系统调用一一对应，程序员只跟API打交道。</p>
+<p>2.内核只跟系统调用打交道，库函数以及应用程序如何使用系统调用不是内核所关心的。</p>
+<p>3.API可以实现成一个系统调用，也可以实现多个系统调用，甚至也可以不实现系统调用。</p>
+</blockquote>
+<p>在UNIX中，最流行的应用编程接口是基于POSIX标准的。</p>
+<p>Linux系统调用作为C库的一部分提供。C库实现了Unix系统的主要API，包括标准C库函数和系统调用接口，此外，C库提供了POSIX的绝大部分API。</p>
+<h3 id="4-系统调用-syscall"><a href="#4-系统调用-syscall" class="headerlink" title="4.系统调用(syscall)"></a>4.系统调用(syscall)</h3><p><strong>通过在C库中定义的函数调用来执行</strong></p>
+<p>系统调用在出现错误的时候C库会将错误码写入errno全局变量。通过调用perror()库函数，可以把该变量翻译成用户可以理解的错误字符串。</p>
+<p>为了保证32为操作系统和64位操作系统的兼容，系统调用在用户空间和内核空间有着不同的返回值类型。用户空间为int，内核空间为long。系统调用在内核中前面会加上sys_。例如：返回当前进程PID的系统调用get_pid（）在内核中被定义为sys_getpid()。</p>
+<h4 id="4-1系统调用号"><a href="#4-1系统调用号" class="headerlink" title="4.1系统调用号"></a>4.1系统调用号</h4><p>在Linux中，每个系统调用都会被赋予一个系统调用号（独一无二的）。进程在执行系统调用时，不需要提及系统调用的名称，只需要使用系统调用号即可。</p>
+<p><strong>系统调用号相当重要，一旦分配好就不能再更改，因为会导致之前编译好的应用程序崩溃。</strong>即使这个系统调用被删除，它所占用的系统调用号也不允许被回收利用。</p>
+<p>内核记录了系统调用表中的所有已经注册过的系统调用的列表，存储在sys_call_table中，这个表为每一个有效的</p>
+<p>系统调用指定了唯一的系统调用号。</p>
+<h4 id="4-2系统调用的性能"><a href="#4-2系统调用的性能" class="headerlink" title="4.2系统调用的性能"></a>4.2系统调用的性能</h4><p>Linux系统调用比其他许多的操作系统执行要快。原因如下：</p>
+<blockquote>
+<p>1.Linux很短的上下文切换时间，进出内核都被优化的极为高效。</p>
+<p>2.系统调用处理程序和每个系统调用本身非常简洁。</p>
+</blockquote>
+<h3 id="5-系统调用处理程序"><a href="#5-系统调用处理程序" class="headerlink" title="5.系统调用处理程序"></a>5.系统调用处理程序</h3><p>应用程序通过<strong>软中断</strong>的方式来告诉内核自己期望执行一个系统调用，希望系统当前可以从用户态切换到内核态，这样内核就可以代表应用程序在内核空间中执行系统调用。</p>
+<p><strong>软中断</strong>：通过引起一个异常来促使系统切换到内核态前去执行异常处理程序。此时的异常处理程序其实就是<strong>系统调用处理程序</strong>。</p>
+<p>在X86系统中预定义的软中断是中断号128，通过int $0x80来触发中断。这条指令会触发一个异常导致系统切换到内核态并执行128号异常处理程序（系统调用处理程序）。</p>
+<h4 id="5-1指定恰当的系统调用"><a href="#5-1指定恰当的系统调用" class="headerlink" title="5.1指定恰当的系统调用"></a>5.1指定恰当的系统调用</h4><p>在陷入内核空间时，要将系统调用号传给内核空间。X86系统，系统调用号是通过eax寄存器传递给内核的。system_call()函数通过将给定的系统调用号与NR_syscalls做比较来检查其有效性。大于或者等于NR_syscalls，函数就返回-ENOSYS,否则，执行相应的系统调用。</p>
+<p>系统调用表中的表项是以64位类型存放的，所以内核需要将给定的系统调用号乘4，然后用所得结果在表中查询位置。</p>
+<h4 id="5-2参数传递"><a href="#5-2参数传递" class="headerlink" title="5.2参数传递"></a>5.2参数传递</h4><p>部分系统调用除了系统调用号之外，还需要传入一些外部参数，在发生陷入的时候，一并传给内核，同样是放在寄存器中。<strong>给用户空间的返回值同样是通过寄存器来传递的</strong></p>
+<h3 id="6-系统调用的实现"><a href="#6-系统调用的实现" class="headerlink" title="6.系统调用的实现"></a>6.系统调用的实现</h3><h4 id="6-1实现系统调用"><a href="#6-1实现系统调用" class="headerlink" title="6.1实现系统调用"></a>6.1实现系统调用</h4><p>要求：</p>
+<ul>
+<li>Linux中不提倡采用多用途的系统调用（一个系统调用通过传递不同的参数值来完成选择的工作）</li>
+<li>系统调用的接口应该力求简洁，参数尽量少。提供标志参数以确保向前兼容。</li>
+<li>系统调用的设计越通用越好。</li>
+</ul>
+<h4 id="6-2参数验证"><a href="#6-2参数验证" class="headerlink" title="6.2参数验证"></a>6.2参数验证</h4><p>系统调用必须检查参数是否合法有效。系统调用在内核空间中执行，任由用户将不合法的输入传递给内核，系统大的安全和稳定性将面临考验。进程不能让内核访问那些他没有权限访问的数据。</p>
+<ul>
+<li>与文件IO有关的系统调用需要检查文件描述符是否有效，与进程有关的函数必须检查提供的PID是否有效。</li>
+<li>检查用户提供的指针是否有效<ul>
+<li>指针指向的内存区域只能属于用户空间，进程不能告诉内核去读内核空间中的数据。</li>
+<li>指针指向的内存区域在自己的进程中，不能让内核去读其他进程中的数据。</li>
+<li>进程不能越过内存访问限制（可读、可写、可执行）</li>
+</ul>
+</li>
+<li>检查是否有合法权限</li>
+</ul>
+<p>内核提供了两个方法来完成必须的检查和内核空间与用户空间之间的数据来回拷贝</p>
+<ul>
+<li>写入：copy_to_user()</li>
+<li>读取：copy_from_user()</li>
+</ul>
+<p>这两个方法可能会引起阻塞。当包含用户数据的页被换出到硬盘上而不是在物理内存上的时候，进程会休眠，直到缺页处理程序将该页从硬盘从新换回物理内存。</p>
+<h3 id="7-系统调用上下文"><a href="#7-系统调用上下文" class="headerlink" title="7.系统调用上下文"></a>7.系统调用上下文</h3><p>在进程调用系统调用时，会有进程上下文。既可以被抢占也可以休眠。</p>
+<p>可以休眠说明系统调用可以利用内核提供的绝大部分功能。可以被抢占说明该系统调用时可重入的（新的进程同样可以使用相同的系统调用）。</p>
+<p>系统调用返回时，控制权仍然在system_call()中，它最终会负责切换到内核工作空间，并让用户进程继续执行下去。</p>
+<h4 id="7-1绑定一个系统调用的最后步骤"><a href="#7-1绑定一个系统调用的最后步骤" class="headerlink" title="7.1绑定一个系统调用的最后步骤"></a>7.1绑定一个系统调用的最后步骤</h4><blockquote>
+<p>1.在系统调用表中的最后加入一个表项。从0开始算起，系统调用在表中的位置就是他的系统调用号。</p>
+</blockquote>
+<blockquote>
+<p>2.系统调用必须被编译进内核映像（不能被编译成模块）</p>
+</blockquote>
+<h4 id="7-2从用户空间访问系统调用"><a href="#7-2从用户空间访问系统调用" class="headerlink" title="7.2从用户空间访问系统调用"></a>7.2从用户空间访问系统调用</h4><p>系统调用靠的时C库的支持，用户程序通过包含标准头文件并和C库链接，就可以使用系统调用。</p>
+<p><strong>Linux新系统调用增添频率很低，说明Linux系统是一个相对较为稳定并且功能已经较为完善的操作系统</strong></p>
+]]></content>
+      <categories>
+        <category>Linux系统内核相关</category>
+      </categories>
+      <tags>
+        <tag>Linux系统内核设计</tag>
       </tags>
   </entry>
   <entry>
@@ -4674,6 +4674,160 @@
       </categories>
       <tags>
         <tag>链表</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>阿里云ECS部署服务器</title>
+    <url>/2021/01/22/%E9%98%BF%E9%87%8C%E4%BA%91ECS%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
+    <content><![CDATA[<h2 id="阿里云ECS部署Tomcat、Nginx服务器"><a href="#阿里云ECS部署Tomcat、Nginx服务器" class="headerlink" title="阿里云ECS部署Tomcat、Nginx服务器"></a>阿里云ECS部署Tomcat、Nginx服务器</h2><h3 id="Nginx服务器"><a href="#Nginx服务器" class="headerlink" title="Nginx服务器"></a>Nginx服务器</h3><p>####一、简介</p>
+<p>Nginx是一款轻量级的网页服务器、反向代理服务器。相较于Apache、lighttpd具有占有内存少，稳定性高等优势。它最常的用途是提供反向代理服务。</p>
+<h4 id="二、安装"><a href="#二、安装" class="headerlink" title="二、安装"></a>二、安装</h4><h2 id="1、准备工作"><a href="#1、准备工作" class="headerlink" title="1、准备工作"></a>1、准备工作</h2><p>Nginx的安装依赖于以下三个包，意思就是在安装Nginx之前首先必须安装一下的三个包，注意安装顺序如下：</p>
+<p>　　1 SSL功能需要openssl库，直接通过yum安装: #yum install openssl</p>
+<p>　　2 gzip模块需要zlib库，直接通过yum安装: #yum install zlib</p>
+<p>　　3 rewrite模块需要pcre库，直接通过yum安装: #yum install pcre</p>
+<h2 id="2、安装Nginx依赖项和Nginx"><a href="#2、安装Nginx依赖项和Nginx" class="headerlink" title="2、安装Nginx依赖项和Nginx"></a>2、安装Nginx依赖项和Nginx</h2><p>1 、使用yum安装nginx需要包括Nginx的库，安装Nginx的库</p>
+<p>rpm -Uvh <a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm">http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm</a></p>
+<p>2 、使用下面命令安装nginx</p>
+<p> yum install nginx</p>
+<p>3、 启动Nginx</p>
+<p>service nginx start（Centos 6.0）,如果是Centos7.0以上，使用systemctl start nginx启动。</p>
+<p>4、直接浏览器访问localhost就会出现Nginx的欢迎界面表示你安装成功了，否则就是安装失败了</p>
+<p>　　默认80端口加入防火墙访问白名单中：firewall-cmd –permanent –zone=public –add-port=80/tcp</p>
+<p>　　使用firewall-cmd –reload命令使其生效</p>
+<p>5、配置Nginx</p>
+<p>CentOS安装Nginx后，安装在了 /etc/nginx/目录下，你可以打开/etc/nginx/conf.d/default/conf查看里面的配置，包括监听端口，域名和nginx访问的根目录</p>
+<p><strong>如果出现nginx启动之后，通过自己服务器的公网IP地址无法访问，是服务器端口没有开放访问权限的缘故，可以参考博客：<a href="https://blog.csdn.net/inite/article/details/73658214">https://blog.csdn.net/inite/article/details/73658214</a></strong></p>
+<p>####三、配置</p>
+<p>以上安装方法nginx的配置文件位于</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;usr&#x2F;local&#x2F;nginx&#x2F;conf&#x2F;nginx.conf</span><br></pre></td></tr></table></figure>
+<p>Nginx配置文件常见结构的从外到内依次是「http」「server」「location」等等，缺省的继承关系是从外到内，也就是说内层块会自动获取外层块的值作为缺省值。</p>
+<h5 id="Server"><a href="#Server" class="headerlink" title="Server"></a>Server</h5><p>接收请求的服务器需要将不同的请求按规则转发到不同的后端服务器上，在 nginx 中我们可以通过构建虚拟主机（server）的概念来将这些不同的服务配置隔离。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  localhost;</span><br><span class="line">root   html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>例如我们笔戈玩下的两个子项目 passport 和 wan 就可以通过在 nginx 的配置文件中配置两个 server，servername 分别为 passport.bigertech.com 和 wan.bigertech.com。这样的话不同的 url 请求就会对应到 nginx 相应的设置，转发到不同的后端服务器上。</p>
+<p>这里的 listen 指监听端口，server_name 用来指定IP或域名，多个域名对应统一规则可以空格分开，index 用于设定访问的默认首页地址，root 指令用于指定虚拟主机的网页跟目录，这个地方可以是相对地址也可以是绝对地址。</p>
+<p>通常情况下我们可以在 nginx.conf 中配置多个server，对不同的请求进行设置。就像这样：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  host1;</span><br><span class="line">root   html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  host2;</span><br><span class="line">root   &#x2F;data&#x2F;www&#x2F;html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是当 server 超过2个时，建议将不同对虚拟主机的配置放在另一个文件中，然后通过在主配置文件 nginx.conf 加上 include 指令包含进来。更便于管理。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">include vhosts&#x2F;*.conf;</span><br></pre></td></tr></table></figure>
+<p>就可以把vhosts的文件都包含进去啦。</p>
+<p>#####Localtion</p>
+<p>每个 url 请求都会对应的一个服务，nginx 进行处理转发或者是本地的一个文件路径，或者是其他服务器的一个服务路径。而这个路径的匹配是通过 location 来进行的。我们可以将 server 当做对应一个域名进行的配置，而 location 是在一个域名下对更精细的路径进行配置。</p>
+<p>以上面的例子，可以将root和index指令放到一个location中，那么只有在匹配到这个location时才会访问root后的内容：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> location &#x2F; &#123;</span><br><span class="line">      root   &#x2F;data&#x2F;www&#x2F;host2;</span><br><span class="line">      index  index.html index.htm;</span><br><span class="line">  &#125;</span><br><span class="line">location 匹配规则</span><br><span class="line"></span><br><span class="line">~      波浪线表示执行一个正则匹配，区分大小写</span><br><span class="line">~*    表示执行一个正则匹配，不区分大小写</span><br><span class="line">^~    ^~表示普通字符匹配，如果该选项匹配，只匹配该选项，不匹配别的选项，一般用来匹配目录</span><br><span class="line">&#x3D;      进行普通字符精确匹配</span><br><span class="line">匹配例子：</span><br><span class="line"></span><br><span class="line">  location  &#x3D; &#x2F; &#123;</span><br><span class="line"># 只匹配&quot;&#x2F;&quot;.</span><br><span class="line">[ configuration A ] </span><br><span class="line">  &#125;</span><br><span class="line">location  &#x2F; &#123;</span><br><span class="line"># 匹配任何请求，因为所有请求都是以&quot;&#x2F;&quot;开始</span><br><span class="line"># 但是更长字符匹配或者正则表达式匹配会优先匹配</span><br><span class="line">[ configuration B ] </span><br><span class="line">&#125;</span><br><span class="line">location ^~ &#x2F;images&#x2F; &#123;</span><br><span class="line"> #匹配任何以 &#x2F;images&#x2F; 开始的请求，并停止匹配 其它location</span><br><span class="line">[ configuration C ] </span><br><span class="line">&#125;</span><br><span class="line">location ~* \.(gif|jpg|jpeg)$ &#123;</span><br><span class="line"># 匹配以 gif, jpg, or jpeg结尾的请求. </span><br><span class="line"># 但是所有 &#x2F;images&#x2F; 目录的请求将由 [Configuration C]处理.   </span><br><span class="line">[ configuration D ] </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">请求:</span><br><span class="line">&#x2F; -&gt; 符合configuration A</span><br><span class="line">&#x2F;documents&#x2F;document.html -&gt; 符合configuration B</span><br><span class="line">&#x2F;images&#x2F;1.gif -&gt; 符合configuration C</span><br><span class="line">&#x2F;documents&#x2F;1.jpg -&gt;符合 configuration D</span><br></pre></td></tr></table></figure>
+<p>#####静态文件映射</p>
+<p>访问文件的配置主要有 root 和 aliasp’s 两个指令。这两个指令的区别容易弄混：</p>
+<p>alias<br>alias后跟的指定目录是准确的，并且末尾必须加 /。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F;c&#x2F; &#123;</span><br><span class="line">    alias &#x2F;a&#x2F;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果访问站点<a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://location/c">http://location/c</a>访问的就是/a/目录下的站点信息。</p>
+<p>#####root</p>
+<p>root后跟的指定目录是上级目录，并且该上级目录下要含有和location后指定名称的同名目录才行。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F;c&#x2F; &#123;</span><br><span class="line">    root &#x2F;a&#x2F;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这时访问站点<a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://location/c">http://location/c</a>访问的就是/a/c目录下的站点信息。</p>
+<p>如果你需要将这个目录展开，在这个location的末尾加上「autoindex on; 」就可以了</p>
+<p>#####转发</p>
+<p>配置起来很简单比如我要将所有的请求到转移到真正提供服务的一台机器的 8001 端口，只要这样：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">proxy_pass 172.16.1.1:8001;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样访问host时，就都被转发到 172.16.1.1的8001端口去了。</p>
+<p>#####负载均衡</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">upstream myserver; &#123;</span><br><span class="line">ip_hash;    </span><br><span class="line">server 172.16.1.1:8001;</span><br><span class="line">server 172.16.1.2:8002;</span><br><span class="line">server 172.16.1.3;</span><br><span class="line">server 172.16.1.4;</span><br><span class="line">&#125;</span><br><span class="line">location &#x2F; &#123;</span><br><span class="line">proxy_pass http:&#x2F;&#x2F;myserver;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们在 upstream 中指定了一组机器，并将这个组命名为 myserver，这样在 proxypass 中只要将请求转移到 myserver 这个 upstream 中我们就实现了在四台机器的反向代理加负载均衡。其中的 ip_hash 指明了我们均衡的方式是按照用户的 ip 地址进行分配。另外还有轮询、指定权重轮询、fair、url_hash几种调度算法。</p>
+<p>###Tomcat服务器</p>
+<h4 id="一、下载Tomcat"><a href="#一、下载Tomcat" class="headerlink" title="一、下载Tomcat"></a>一、下载Tomcat</h4>]]></content>
+      <categories>
+        <category>阿里云ECS</category>
+      </categories>
+      <tags>
+        <tag>阿里云ECS部署</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>项目开发一:实现固定大小的cache</title>
+    <url>/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/</url>
+    <content><![CDATA[<h1 id="项目开发一：实现固定大小的cache"><a href="#项目开发一：实现固定大小的cache" class="headerlink" title="项目开发一：实现固定大小的cache"></a>项目开发一：实现固定大小的cache</h1><h3 id="cache的发展"><a href="#cache的发展" class="headerlink" title="cache的发展"></a>cache的发展</h3><ul>
+<li><strong>HashMap</strong></li>
+</ul>
+<p>当我们应用有一定流量之后或者查询数据库特别频繁，这个时候就可以祭出我们的java中自带的HashMap或者ConcurrentHashMap。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//在java代码中的表现 </span></span><br><span class="line"><span class="keyword">public</span> clasas CustomerService&#123;</span><br><span class="line">    <span class="keyword">private</span> HashMap&lt;String,String&gt; hashMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    <span class="keyword">private</span> CustomerMapper customerMapper;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getCustomer</span><span class="params">(String name)</span></span>&#123;</span><br><span class="line">        String customer = hashMap.get(name);</span><br><span class="line">        <span class="keyword">if</span>(customer == <span class="keyword">null</span>)&#123;</span><br><span class="line">            customer = customerMapper.get(name);</span><br><span class="line">            hashMap.put(name,customer);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> customer;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><ul>
+<li>实现的功能：通过HashMap实现了数据的添加和查找—作为缓存。</li>
+<li>存在的问题：HashMap无法进行数据淘汰，内存会无限制的增长。</li>
+</ul>
+</li>
+<li><p><strong>LRUHashMap</strong></p>
+</li>
+</ul>
+<p>在HashMap的基础上，增加了数据淘汰，下面为几种常见的数据淘汰算法</p>
+<ul>
+<li><ul>
+<li>FIFO</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">先进先出，在这种淘汰算法中，先进入缓存的会先被淘汰。这种可谓是最简单的了，但是会导致我们命中率很低。</span><br><span class="line"></span><br><span class="line">试想一下我们如果有个访问频率很高的数据是所有数据第一个访问的，而那些不是很高的是后面再访问的，那这样就会把我们的首个数据但是他的访问频率很高给挤出。</span><br></pre></td></tr></table></figure>
+<ul>
+<li><ul>
+<li>LRU</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">最近最少使用算法。</span><br><span class="line"></span><br><span class="line">在这种算法中避免了上面的问题，每次访问数据都会将其放在我们的队尾，如果需要淘汰数据，就只需要淘汰队首即可。</span><br><span class="line"></span><br><span class="line">但是这个依然有个问题，如果有个数据在1个小时的前59分钟访问了1万次(可见这是个热点数据),再后一分钟没有访问这个数据，但是有其他的数据访问，就导致了我们这个热点数据被淘汰。</span><br></pre></td></tr></table></figure>
+<ul>
+<li><ul>
+<li>LFU</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">最近最少频率使用。</span><br><span class="line"></span><br><span class="line">在这种算法中又对上面进行了优化，利用额外的空间记录每个数据的使用频率，然后选出频率最低进行淘汰。这样就避免了LRU不能处理时间段的问题。</span><br></pre></td></tr></table></figure>
+<p>上面列举了三种淘汰策略，对于这三种，<strong>实现成本是一个比一个高</strong>，同样的命中率也是一个比一个好。而我们一般来说选择的方案居中即可，即实现成本不是太高，而命中率也还行的<strong>LRU</strong>,如何实现一个LRUMap呢？</p>
+<p>我们可以<strong>通过继承 LinkedHashMap</strong>，<strong>重写 removeEldestEntry</strong> 方法，即可完成一个简单的 LRUMap。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LRUMap</span> <span class="keyword">extends</span> <span class="title">LinkedHashMap</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> max;</span><br><span class="line">    <span class="keyword">private</span> Object lock;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LRUMap</span><span class="params">(<span class="keyword">int</span> max, Object lock)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//无需扩容</span></span><br><span class="line">        <span class="keyword">super</span>((<span class="keyword">int</span>) (max * <span class="number">1.4f</span>), <span class="number">0.75f</span>, <span class="keyword">true</span>);</span><br><span class="line">        <span class="keyword">this</span>.max = max;</span><br><span class="line">        <span class="keyword">this</span>.lock = lock;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 重写LinkedHashMap的removeEldestEntry方法即可</span></span><br><span class="line"><span class="comment">     * 在Put的时候判断，如果为true，就会删除最老的</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> eldest</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">removeEldestEntry</span><span class="params">(Map.Entry eldest)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> size() &gt; max;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getValue</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (lock) &#123;</span><br><span class="line">            <span class="keyword">return</span> get(key);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">putValue</span><span class="params">(Object key, Object value)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (lock) &#123;</span><br><span class="line">            put(key, value);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">removeValue</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (lock) &#123;</span><br><span class="line">            <span class="keyword">return</span> remove(key) != <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">removeAll</span><span class="params">()</span></span>&#123;</span><br><span class="line">        clear();</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; 。</span><br></pre></td></tr></table></figure>
+<p>在LinkedHashMap中维护了一个entry(用来放key和value的对象)链表。在每一次get或者put的时候都会把插入的新entry，或查询到的老entry放在我们<strong>链表末尾</strong>。</p>
+<p>可以注意到我们在构造方法中，设置的大小特意设置到max*1.4，</p>
+<p>在下面的removeEldestEntry方法中只需要size&gt;max就淘汰，这样我们这个map永远也走不到扩容的逻辑了，</p>
+<p>通过重写LinkedHashMap，几个简单的方法我们实现了我们的LruMap。</p>
+<ul>
+<li><ul>
+<li><strong>存在问题：</strong></li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>锁竞争严重，可以看见我的代码中，<strong>Lock是全局锁，在方法级别上面的</strong>，当调用量较大时，性能必然会比较低。</li>
+<li>不支持过期时间</li>
+<li>不支持自动刷新</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Guava cache</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//谷歌的缓存</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ExecutionException </span>&#123;</span><br><span class="line">    LoadingCache&lt;String, String&gt; cache = CacheBuilder.newBuilder()</span><br><span class="line">            .maximumSize(<span class="number">100</span>)</span><br><span class="line">            <span class="comment">//写之后30ms过期</span></span><br><span class="line">            .expireAfterWrite(<span class="number">30L</span>, TimeUnit.MILLISECONDS)</span><br><span class="line">            <span class="comment">//访问之后30ms过期</span></span><br><span class="line">            .expireAfterAccess(<span class="number">30L</span>, TimeUnit.MILLISECONDS)</span><br><span class="line">            <span class="comment">//20ms之后刷新</span></span><br><span class="line">            .refreshAfterWrite(<span class="number">20L</span>, TimeUnit.MILLISECONDS)</span><br><span class="line">            <span class="comment">//开启weakKey key 当启动垃圾回收时，该缓存也被回收</span></span><br><span class="line">            .weakKeys()</span><br><span class="line">            .build(createCacheLoader());</span><br><span class="line">    System.out.println(cache.get(<span class="string">&quot;hello&quot;</span>));</span><br><span class="line">    cache.put(<span class="string">&quot;hello1&quot;</span>, <span class="string">&quot;我是hello1&quot;</span>);</span><br><span class="line">    System.out.println(cache.get(<span class="string">&quot;hello1&quot;</span>));</span><br><span class="line">    cache.put(<span class="string">&quot;hello1&quot;</span>, <span class="string">&quot;我是hello2&quot;</span>);</span><br><span class="line">    System.out.println(cache.get(<span class="string">&quot;hello1&quot;</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> com.google.common.cache.<span class="function">CacheLoader&lt;String, String&gt; <span class="title">createCacheLoader</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> com.google.common.cache.CacheLoader&lt;String, String&gt;() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">load</span><span class="params">(String key)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> key;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="本项目实现"><a href="#本项目实现" class="headerlink" title="本项目实现"></a>本项目实现</h3><h4 id="接口定义"><a href="#接口定义" class="headerlink" title="接口定义"></a>接口定义</h4><p>为了兼容 Map，我们定义缓存接口继承自 Map 接口。</p>
+<img data-src="/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/1.png" class>
+
+<img data-src="/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/2.png" class>
+
+<p>为了实现一个固定大小的cache,Cache中对Map接口方法进行重写</p>
+<h4 id="put时的实现"><a href="#put时的实现" class="headerlink" title="put时的实现"></a>put时的实现</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">   <span class="meta">@CacheInterceptor(aof = true, evict = true)</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> V <span class="title">put</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">       <span class="comment">//1.1 尝试驱除</span></span><br><span class="line">       CacheEvictContext&lt;K,V&gt; context = <span class="keyword">new</span> CacheEvictContext&lt;&gt;();</span><br><span class="line">       context.key(key).size(sizeLimit).cache(<span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line">       ICacheEntry&lt;K,V&gt; evictEntry = evict.evict(context);</span><br><span class="line"></span><br><span class="line">       <span class="comment">// 添加拦截器调用</span></span><br><span class="line">       <span class="keyword">if</span>(ObjectUtil.isNotNull(evictEntry)) &#123;</span><br><span class="line">           <span class="comment">// 执行淘汰监听器</span></span><br><span class="line">           ICacheRemoveListenerContext&lt;K,V&gt; removeListenerContext = CacheRemoveListenerContext.&lt;K,V&gt;newInstance().key(evictEntry.key())</span><br><span class="line">                   .value(evictEntry.value())</span><br><span class="line">                   .type(CacheRemoveType.EVICT.code());</span><br><span class="line">           <span class="keyword">for</span>(ICacheRemoveListener&lt;K,V&gt; listener : context.cache().removeListeners()) &#123;</span><br><span class="line">               listener.listen(removeListenerContext);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="comment">//2. 判断驱除后的信息</span></span><br><span class="line">       <span class="keyword">if</span>(isSizeLimit()) &#123;</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> CacheRuntimeException(<span class="string">&quot;当前队列已满，数据添加失败！&quot;</span>);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="comment">//3. 执行添加</span></span><br><span class="line">       <span class="keyword">return</span> map.put(key, value);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+ <img data-src="/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/3.png" class>
+
+<h4 id="淘汰策略"><a href="#淘汰策略" class="headerlink" title="淘汰策略"></a>淘汰策略</h4><p>淘汰策略可以有多种，比如 LRU/LFU/FIFO 等等，我们此处实现一个最基本的 FIFO。所有实现<strong>以接口的方式实现，便于后期灵活替换</strong>。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CacheEvictFifo</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">AbstractCacheEvict</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * queue 信息</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Queue&lt;K&gt; queue = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CacheEntry&lt;K,V&gt; <span class="title">doEvict</span><span class="params">(ICacheEvictContext&lt;K, V&gt; context)</span> </span>&#123;</span><br><span class="line">        CacheEntry&lt;K,V&gt; result = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> ICache&lt;K,V&gt; cache = context.cache();</span><br><span class="line">        <span class="comment">// 超过限制，执行移除</span></span><br><span class="line">        <span class="keyword">if</span>(cache.size() &gt;= context.size()) &#123;</span><br><span class="line">            K evictKey = queue.remove();</span><br><span class="line">            <span class="comment">// 移除最开始的元素</span></span><br><span class="line">            V evictValue = cache.remove(evictKey);</span><br><span class="line">            result = <span class="keyword">new</span> CacheEntry&lt;&gt;(evictKey, evictValue);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 将新加的元素放入队尾</span></span><br><span class="line">        <span class="keyword">final</span> K key = context.key();</span><br><span class="line">        queue.add(key);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>除了FIFO策略的实现，还内置了其他几种实现策略</p>
+ <img data-src="/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/4.png" class>
+
+ <img data-src="/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/5.png" class>
+
+<h4 id="引导类"><a href="#引导类" class="headerlink" title="引导类"></a>引导类</h4><p>为了便于用户使用，我们实现类似于 guava 的引导类。所有参数都提供默认值，使用 fluent 流式写法，提升用户体验</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">CacheBs</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">CacheBs</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 创建对象实例</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> &lt;K&gt; key</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> &lt;V&gt; value</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> this</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;K,V&gt; <span class="function">CacheBs&lt;K,V&gt; <span class="title">newInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> CacheBs&lt;&gt;();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * map 实现</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Map&lt;K,V&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 大小限制</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> size = Integer.MAX_VALUE;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 驱除策略</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> ICacheEvict&lt;K,V&gt; evict = CacheEvicts.fifo();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 删除监听类</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.6</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> List&lt;ICacheRemoveListener&lt;K,V&gt;&gt; removeListeners = CacheRemoveListeners.defaults();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 慢操作监听类</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.9</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> List&lt;ICacheSlowListener&gt; slowListeners = CacheSlowListeners.none();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 加载策略</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.7</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> ICacheLoad&lt;K,V&gt; load = CacheLoads.none();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 持久化实现策略</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.8</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> ICachePersist&lt;K,V&gt; persist = CachePersists.none();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * map 实现</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> map map</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> this</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CacheBs&lt;K, V&gt; <span class="title">map</span><span class="params">(Map&lt;K, V&gt; map)</span> </span>&#123;</span><br><span class="line">        ArgUtil.notNull(map, <span class="string">&quot;map&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.map = map;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 设置 size 信息</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> size size</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> this</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CacheBs&lt;K, V&gt; <span class="title">size</span><span class="params">(<span class="keyword">int</span> size)</span> </span>&#123;</span><br><span class="line">        ArgUtil.notNegative(size, <span class="string">&quot;size&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.size = size;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 设置驱除策略</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> evict 驱除策略</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> this</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CacheBs&lt;K, V&gt; <span class="title">evict</span><span class="params">(ICacheEvict&lt;K, V&gt; evict)</span> </span>&#123;</span><br><span class="line">        ArgUtil.notNull(evict, <span class="string">&quot;evict&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.evict = evict;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 设置加载</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> load 加载</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> this</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.7</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CacheBs&lt;K, V&gt; <span class="title">load</span><span class="params">(ICacheLoad&lt;K, V&gt; load)</span> </span>&#123;</span><br><span class="line">        ArgUtil.notNull(load, <span class="string">&quot;load&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.load = load;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 添加删除监听器</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> removeListener 监听器</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> this</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.6</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CacheBs&lt;K, V&gt; <span class="title">addRemoveListener</span><span class="params">(ICacheRemoveListener&lt;K,V&gt; removeListener)</span> </span>&#123;</span><br><span class="line">        ArgUtil.notNull(removeListener, <span class="string">&quot;removeListener&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.removeListeners.add(removeListener);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 添加慢日志监听器</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> slowListener 监听器</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> this</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.9</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CacheBs&lt;K, V&gt; <span class="title">addSlowListener</span><span class="params">(ICacheSlowListener slowListener)</span> </span>&#123;</span><br><span class="line">        ArgUtil.notNull(slowListener, <span class="string">&quot;slowListener&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.slowListeners.add(slowListener);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 设置持久化策略</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> persist 持久化</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> this</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.8</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CacheBs&lt;K, V&gt; <span class="title">persist</span><span class="params">(ICachePersist&lt;K, V&gt; persist)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.persist = persist;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 构建缓存信息</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 缓存信息</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ICache&lt;K,V&gt; <span class="title">build</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Cache&lt;K,V&gt; cache = <span class="keyword">new</span> Cache&lt;&gt;();</span><br><span class="line">        cache.map(map);</span><br><span class="line">        cache.evict(evict);</span><br><span class="line">        cache.sizeLimit(size);</span><br><span class="line">        cache.removeListeners(removeListeners);</span><br><span class="line">        cache.load(load);</span><br><span class="line">        cache.persist(persist);</span><br><span class="line">        cache.slowListeners(slowListeners);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 初始化</span></span><br><span class="line">        cache.init();</span><br><span class="line">        <span class="keyword">return</span> CacheProxy.getProxy(cache);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Base-Cache缓存</category>
+      </categories>
+      <tags>
+        <tag>KV缓存第三讲</tag>
       </tags>
   </entry>
   <entry>
@@ -5468,70 +5622,6 @@
       </tags>
   </entry>
   <entry>
-    <title>阿里云ECS部署服务器</title>
-    <url>/2021/01/22/%E9%98%BF%E9%87%8C%E4%BA%91ECS%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
-    <content><![CDATA[<h2 id="阿里云ECS部署Tomcat、Nginx服务器"><a href="#阿里云ECS部署Tomcat、Nginx服务器" class="headerlink" title="阿里云ECS部署Tomcat、Nginx服务器"></a>阿里云ECS部署Tomcat、Nginx服务器</h2><h3 id="Nginx服务器"><a href="#Nginx服务器" class="headerlink" title="Nginx服务器"></a>Nginx服务器</h3><p>####一、简介</p>
-<p>Nginx是一款轻量级的网页服务器、反向代理服务器。相较于Apache、lighttpd具有占有内存少，稳定性高等优势。它最常的用途是提供反向代理服务。</p>
-<h4 id="二、安装"><a href="#二、安装" class="headerlink" title="二、安装"></a>二、安装</h4><h2 id="1、准备工作"><a href="#1、准备工作" class="headerlink" title="1、准备工作"></a>1、准备工作</h2><p>Nginx的安装依赖于以下三个包，意思就是在安装Nginx之前首先必须安装一下的三个包，注意安装顺序如下：</p>
-<p>　　1 SSL功能需要openssl库，直接通过yum安装: #yum install openssl</p>
-<p>　　2 gzip模块需要zlib库，直接通过yum安装: #yum install zlib</p>
-<p>　　3 rewrite模块需要pcre库，直接通过yum安装: #yum install pcre</p>
-<h2 id="2、安装Nginx依赖项和Nginx"><a href="#2、安装Nginx依赖项和Nginx" class="headerlink" title="2、安装Nginx依赖项和Nginx"></a>2、安装Nginx依赖项和Nginx</h2><p>1 、使用yum安装nginx需要包括Nginx的库，安装Nginx的库</p>
-<p>rpm -Uvh <a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm">http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm</a></p>
-<p>2 、使用下面命令安装nginx</p>
-<p> yum install nginx</p>
-<p>3、 启动Nginx</p>
-<p>service nginx start（Centos 6.0）,如果是Centos7.0以上，使用systemctl start nginx启动。</p>
-<p>4、直接浏览器访问localhost就会出现Nginx的欢迎界面表示你安装成功了，否则就是安装失败了</p>
-<p>　　默认80端口加入防火墙访问白名单中：firewall-cmd –permanent –zone=public –add-port=80/tcp</p>
-<p>　　使用firewall-cmd –reload命令使其生效</p>
-<p>5、配置Nginx</p>
-<p>CentOS安装Nginx后，安装在了 /etc/nginx/目录下，你可以打开/etc/nginx/conf.d/default/conf查看里面的配置，包括监听端口，域名和nginx访问的根目录</p>
-<p><strong>如果出现nginx启动之后，通过自己服务器的公网IP地址无法访问，是服务器端口没有开放访问权限的缘故，可以参考博客：<a href="https://blog.csdn.net/inite/article/details/73658214">https://blog.csdn.net/inite/article/details/73658214</a></strong></p>
-<p>####三、配置</p>
-<p>以上安装方法nginx的配置文件位于</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;usr&#x2F;local&#x2F;nginx&#x2F;conf&#x2F;nginx.conf</span><br></pre></td></tr></table></figure>
-<p>Nginx配置文件常见结构的从外到内依次是「http」「server」「location」等等，缺省的继承关系是从外到内，也就是说内层块会自动获取外层块的值作为缺省值。</p>
-<h5 id="Server"><a href="#Server" class="headerlink" title="Server"></a>Server</h5><p>接收请求的服务器需要将不同的请求按规则转发到不同的后端服务器上，在 nginx 中我们可以通过构建虚拟主机（server）的概念来将这些不同的服务配置隔离。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  localhost;</span><br><span class="line">root   html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>例如我们笔戈玩下的两个子项目 passport 和 wan 就可以通过在 nginx 的配置文件中配置两个 server，servername 分别为 passport.bigertech.com 和 wan.bigertech.com。这样的话不同的 url 请求就会对应到 nginx 相应的设置，转发到不同的后端服务器上。</p>
-<p>这里的 listen 指监听端口，server_name 用来指定IP或域名，多个域名对应统一规则可以空格分开，index 用于设定访问的默认首页地址，root 指令用于指定虚拟主机的网页跟目录，这个地方可以是相对地址也可以是绝对地址。</p>
-<p>通常情况下我们可以在 nginx.conf 中配置多个server，对不同的请求进行设置。就像这样：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  host1;</span><br><span class="line">root   html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">listen       80;</span><br><span class="line">server_name  host2;</span><br><span class="line">root   &#x2F;data&#x2F;www&#x2F;html;</span><br><span class="line">index  index.html index.htm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>但是当 server 超过2个时，建议将不同对虚拟主机的配置放在另一个文件中，然后通过在主配置文件 nginx.conf 加上 include 指令包含进来。更便于管理。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">include vhosts&#x2F;*.conf;</span><br></pre></td></tr></table></figure>
-<p>就可以把vhosts的文件都包含进去啦。</p>
-<p>#####Localtion</p>
-<p>每个 url 请求都会对应的一个服务，nginx 进行处理转发或者是本地的一个文件路径，或者是其他服务器的一个服务路径。而这个路径的匹配是通过 location 来进行的。我们可以将 server 当做对应一个域名进行的配置，而 location 是在一个域名下对更精细的路径进行配置。</p>
-<p>以上面的例子，可以将root和index指令放到一个location中，那么只有在匹配到这个location时才会访问root后的内容：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> location &#x2F; &#123;</span><br><span class="line">      root   &#x2F;data&#x2F;www&#x2F;host2;</span><br><span class="line">      index  index.html index.htm;</span><br><span class="line">  &#125;</span><br><span class="line">location 匹配规则</span><br><span class="line"></span><br><span class="line">~      波浪线表示执行一个正则匹配，区分大小写</span><br><span class="line">~*    表示执行一个正则匹配，不区分大小写</span><br><span class="line">^~    ^~表示普通字符匹配，如果该选项匹配，只匹配该选项，不匹配别的选项，一般用来匹配目录</span><br><span class="line">&#x3D;      进行普通字符精确匹配</span><br><span class="line">匹配例子：</span><br><span class="line"></span><br><span class="line">  location  &#x3D; &#x2F; &#123;</span><br><span class="line"># 只匹配&quot;&#x2F;&quot;.</span><br><span class="line">[ configuration A ] </span><br><span class="line">  &#125;</span><br><span class="line">location  &#x2F; &#123;</span><br><span class="line"># 匹配任何请求，因为所有请求都是以&quot;&#x2F;&quot;开始</span><br><span class="line"># 但是更长字符匹配或者正则表达式匹配会优先匹配</span><br><span class="line">[ configuration B ] </span><br><span class="line">&#125;</span><br><span class="line">location ^~ &#x2F;images&#x2F; &#123;</span><br><span class="line"> #匹配任何以 &#x2F;images&#x2F; 开始的请求，并停止匹配 其它location</span><br><span class="line">[ configuration C ] </span><br><span class="line">&#125;</span><br><span class="line">location ~* \.(gif|jpg|jpeg)$ &#123;</span><br><span class="line"># 匹配以 gif, jpg, or jpeg结尾的请求. </span><br><span class="line"># 但是所有 &#x2F;images&#x2F; 目录的请求将由 [Configuration C]处理.   </span><br><span class="line">[ configuration D ] </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">请求:</span><br><span class="line">&#x2F; -&gt; 符合configuration A</span><br><span class="line">&#x2F;documents&#x2F;document.html -&gt; 符合configuration B</span><br><span class="line">&#x2F;images&#x2F;1.gif -&gt; 符合configuration C</span><br><span class="line">&#x2F;documents&#x2F;1.jpg -&gt;符合 configuration D</span><br></pre></td></tr></table></figure>
-<p>#####静态文件映射</p>
-<p>访问文件的配置主要有 root 和 aliasp’s 两个指令。这两个指令的区别容易弄混：</p>
-<p>alias<br>alias后跟的指定目录是准确的，并且末尾必须加 /。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F;c&#x2F; &#123;</span><br><span class="line">    alias &#x2F;a&#x2F;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果访问站点<a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://location/c">http://location/c</a>访问的就是/a/目录下的站点信息。</p>
-<p>#####root</p>
-<p>root后跟的指定目录是上级目录，并且该上级目录下要含有和location后指定名称的同名目录才行。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F;c&#x2F; &#123;</span><br><span class="line">    root &#x2F;a&#x2F;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这时访问站点<a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http://location/c">http://location/c</a>访问的就是/a/c目录下的站点信息。</p>
-<p>如果你需要将这个目录展开，在这个location的末尾加上「autoindex on; 」就可以了</p>
-<p>#####转发</p>
-<p>配置起来很简单比如我要将所有的请求到转移到真正提供服务的一台机器的 8001 端口，只要这样：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">proxy_pass 172.16.1.1:8001;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这样访问host时，就都被转发到 172.16.1.1的8001端口去了。</p>
-<p>#####负载均衡</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">upstream myserver; &#123;</span><br><span class="line">ip_hash;    </span><br><span class="line">server 172.16.1.1:8001;</span><br><span class="line">server 172.16.1.2:8002;</span><br><span class="line">server 172.16.1.3;</span><br><span class="line">server 172.16.1.4;</span><br><span class="line">&#125;</span><br><span class="line">location &#x2F; &#123;</span><br><span class="line">proxy_pass http:&#x2F;&#x2F;myserver;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们在 upstream 中指定了一组机器，并将这个组命名为 myserver，这样在 proxypass 中只要将请求转移到 myserver 这个 upstream 中我们就实现了在四台机器的反向代理加负载均衡。其中的 ip_hash 指明了我们均衡的方式是按照用户的 ip 地址进行分配。另外还有轮询、指定权重轮询、fair、url_hash几种调度算法。</p>
-<p>###Tomcat服务器</p>
-<h4 id="一、下载Tomcat"><a href="#一、下载Tomcat" class="headerlink" title="一、下载Tomcat"></a>一、下载Tomcat</h4>]]></content>
-      <categories>
-        <category>阿里云ECS</category>
-      </categories>
-      <tags>
-        <tag>阿里云ECS部署</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Leetcode树刷题总结</title>
     <url>/2021/03/23/Leetcode%E6%A0%91%E5%88%B7%E9%A2%98%E6%80%BB%E7%BB%93/</url>
     <content><![CDATA[<h2 id="最小高度树"><a href="#最小高度树" class="headerlink" title="最小高度树"></a>最小高度树</h2><h3 id="题目说明："><a href="#题目说明：" class="headerlink" title="题目说明："></a>题目说明：</h3><p>给定一个有序整数数组，元素各不相同且按升序排列，编写一个算法，创建一棵高度最小的二叉搜索树。</p>
@@ -5635,96 +5725,6 @@
       </categories>
       <tags>
         <tag>数据结构</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>项目开发一:实现固定大小的cache</title>
-    <url>/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/</url>
-    <content><![CDATA[<h1 id="项目开发一：实现固定大小的cache"><a href="#项目开发一：实现固定大小的cache" class="headerlink" title="项目开发一：实现固定大小的cache"></a>项目开发一：实现固定大小的cache</h1><h3 id="cache的发展"><a href="#cache的发展" class="headerlink" title="cache的发展"></a>cache的发展</h3><ul>
-<li><strong>HashMap</strong></li>
-</ul>
-<p>当我们应用有一定流量之后或者查询数据库特别频繁，这个时候就可以祭出我们的java中自带的HashMap或者ConcurrentHashMap。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//在java代码中的表现 </span></span><br><span class="line"><span class="keyword">public</span> clasas CustomerService&#123;</span><br><span class="line">    <span class="keyword">private</span> HashMap&lt;String,String&gt; hashMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    <span class="keyword">private</span> CustomerMapper customerMapper;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getCustomer</span><span class="params">(String name)</span></span>&#123;</span><br><span class="line">        String customer = hashMap.get(name);</span><br><span class="line">        <span class="keyword">if</span>(customer == <span class="keyword">null</span>)&#123;</span><br><span class="line">            customer = customerMapper.get(name);</span><br><span class="line">            hashMap.put(name,customer);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> customer;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><ul>
-<li>实现的功能：通过HashMap实现了数据的添加和查找—作为缓存。</li>
-<li>存在的问题：HashMap无法进行数据淘汰，内存会无限制的增长。</li>
-</ul>
-</li>
-<li><p><strong>LRUHashMap</strong></p>
-</li>
-</ul>
-<p>在HashMap的基础上，增加了数据淘汰，下面为几种常见的数据淘汰算法</p>
-<ul>
-<li><ul>
-<li>FIFO</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">先进先出，在这种淘汰算法中，先进入缓存的会先被淘汰。这种可谓是最简单的了，但是会导致我们命中率很低。</span><br><span class="line"></span><br><span class="line">试想一下我们如果有个访问频率很高的数据是所有数据第一个访问的，而那些不是很高的是后面再访问的，那这样就会把我们的首个数据但是他的访问频率很高给挤出。</span><br></pre></td></tr></table></figure>
-<ul>
-<li><ul>
-<li>LRU</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">最近最少使用算法。</span><br><span class="line"></span><br><span class="line">在这种算法中避免了上面的问题，每次访问数据都会将其放在我们的队尾，如果需要淘汰数据，就只需要淘汰队首即可。</span><br><span class="line"></span><br><span class="line">但是这个依然有个问题，如果有个数据在1个小时的前59分钟访问了1万次(可见这是个热点数据),再后一分钟没有访问这个数据，但是有其他的数据访问，就导致了我们这个热点数据被淘汰。</span><br></pre></td></tr></table></figure>
-<ul>
-<li><ul>
-<li>LFU</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">最近最少频率使用。</span><br><span class="line"></span><br><span class="line">在这种算法中又对上面进行了优化，利用额外的空间记录每个数据的使用频率，然后选出频率最低进行淘汰。这样就避免了LRU不能处理时间段的问题。</span><br></pre></td></tr></table></figure>
-<p>上面列举了三种淘汰策略，对于这三种，<strong>实现成本是一个比一个高</strong>，同样的命中率也是一个比一个好。而我们一般来说选择的方案居中即可，即实现成本不是太高，而命中率也还行的<strong>LRU</strong>,如何实现一个LRUMap呢？</p>
-<p>我们可以<strong>通过继承 LinkedHashMap</strong>，<strong>重写 removeEldestEntry</strong> 方法，即可完成一个简单的 LRUMap。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LRUMap</span> <span class="keyword">extends</span> <span class="title">LinkedHashMap</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> max;</span><br><span class="line">    <span class="keyword">private</span> Object lock;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LRUMap</span><span class="params">(<span class="keyword">int</span> max, Object lock)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//无需扩容</span></span><br><span class="line">        <span class="keyword">super</span>((<span class="keyword">int</span>) (max * <span class="number">1.4f</span>), <span class="number">0.75f</span>, <span class="keyword">true</span>);</span><br><span class="line">        <span class="keyword">this</span>.max = max;</span><br><span class="line">        <span class="keyword">this</span>.lock = lock;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 重写LinkedHashMap的removeEldestEntry方法即可</span></span><br><span class="line"><span class="comment">     * 在Put的时候判断，如果为true，就会删除最老的</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> eldest</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">removeEldestEntry</span><span class="params">(Map.Entry eldest)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> size() &gt; max;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getValue</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (lock) &#123;</span><br><span class="line">            <span class="keyword">return</span> get(key);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">putValue</span><span class="params">(Object key, Object value)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (lock) &#123;</span><br><span class="line">            put(key, value);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">removeValue</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (lock) &#123;</span><br><span class="line">            <span class="keyword">return</span> remove(key) != <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">removeAll</span><span class="params">()</span></span>&#123;</span><br><span class="line">        clear();</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; 。</span><br></pre></td></tr></table></figure>
-<p>在LinkedHashMap中维护了一个entry(用来放key和value的对象)链表。在每一次get或者put的时候都会把插入的新entry，或查询到的老entry放在我们<strong>链表末尾</strong>。</p>
-<p>可以注意到我们在构造方法中，设置的大小特意设置到max*1.4，</p>
-<p>在下面的removeEldestEntry方法中只需要size&gt;max就淘汰，这样我们这个map永远也走不到扩容的逻辑了，</p>
-<p>通过重写LinkedHashMap，几个简单的方法我们实现了我们的LruMap。</p>
-<ul>
-<li><ul>
-<li><strong>存在问题：</strong></li>
-</ul>
-</li>
-<li><ul>
-<li><ul>
-<li>锁竞争严重，可以看见我的代码中，<strong>Lock是全局锁，在方法级别上面的</strong>，当调用量较大时，性能必然会比较低。</li>
-<li>不支持过期时间</li>
-<li>不支持自动刷新</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>Guava cache</p>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//谷歌的缓存</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ExecutionException </span>&#123;</span><br><span class="line">    LoadingCache&lt;String, String&gt; cache = CacheBuilder.newBuilder()</span><br><span class="line">            .maximumSize(<span class="number">100</span>)</span><br><span class="line">            <span class="comment">//写之后30ms过期</span></span><br><span class="line">            .expireAfterWrite(<span class="number">30L</span>, TimeUnit.MILLISECONDS)</span><br><span class="line">            <span class="comment">//访问之后30ms过期</span></span><br><span class="line">            .expireAfterAccess(<span class="number">30L</span>, TimeUnit.MILLISECONDS)</span><br><span class="line">            <span class="comment">//20ms之后刷新</span></span><br><span class="line">            .refreshAfterWrite(<span class="number">20L</span>, TimeUnit.MILLISECONDS)</span><br><span class="line">            <span class="comment">//开启weakKey key 当启动垃圾回收时，该缓存也被回收</span></span><br><span class="line">            .weakKeys()</span><br><span class="line">            .build(createCacheLoader());</span><br><span class="line">    System.out.println(cache.get(<span class="string">&quot;hello&quot;</span>));</span><br><span class="line">    cache.put(<span class="string">&quot;hello1&quot;</span>, <span class="string">&quot;我是hello1&quot;</span>);</span><br><span class="line">    System.out.println(cache.get(<span class="string">&quot;hello1&quot;</span>));</span><br><span class="line">    cache.put(<span class="string">&quot;hello1&quot;</span>, <span class="string">&quot;我是hello2&quot;</span>);</span><br><span class="line">    System.out.println(cache.get(<span class="string">&quot;hello1&quot;</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> com.google.common.cache.<span class="function">CacheLoader&lt;String, String&gt; <span class="title">createCacheLoader</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> com.google.common.cache.CacheLoader&lt;String, String&gt;() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">load</span><span class="params">(String key)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> key;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="本项目实现"><a href="#本项目实现" class="headerlink" title="本项目实现"></a>本项目实现</h3><h4 id="接口定义"><a href="#接口定义" class="headerlink" title="接口定义"></a>接口定义</h4><p>为了兼容 Map，我们定义缓存接口继承自 Map 接口。</p>
-<img data-src="/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/1.png" class>
-
-<img data-src="/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/2.png" class>
-
-<p>为了实现一个固定大小的cache,Cache中对Map接口方法进行重写</p>
-<h4 id="put时的实现"><a href="#put时的实现" class="headerlink" title="put时的实现"></a>put时的实现</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">   <span class="meta">@CacheInterceptor(aof = true, evict = true)</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> V <span class="title">put</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">       <span class="comment">//1.1 尝试驱除</span></span><br><span class="line">       CacheEvictContext&lt;K,V&gt; context = <span class="keyword">new</span> CacheEvictContext&lt;&gt;();</span><br><span class="line">       context.key(key).size(sizeLimit).cache(<span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line">       ICacheEntry&lt;K,V&gt; evictEntry = evict.evict(context);</span><br><span class="line"></span><br><span class="line">       <span class="comment">// 添加拦截器调用</span></span><br><span class="line">       <span class="keyword">if</span>(ObjectUtil.isNotNull(evictEntry)) &#123;</span><br><span class="line">           <span class="comment">// 执行淘汰监听器</span></span><br><span class="line">           ICacheRemoveListenerContext&lt;K,V&gt; removeListenerContext = CacheRemoveListenerContext.&lt;K,V&gt;newInstance().key(evictEntry.key())</span><br><span class="line">                   .value(evictEntry.value())</span><br><span class="line">                   .type(CacheRemoveType.EVICT.code());</span><br><span class="line">           <span class="keyword">for</span>(ICacheRemoveListener&lt;K,V&gt; listener : context.cache().removeListeners()) &#123;</span><br><span class="line">               listener.listen(removeListenerContext);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="comment">//2. 判断驱除后的信息</span></span><br><span class="line">       <span class="keyword">if</span>(isSizeLimit()) &#123;</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> CacheRuntimeException(<span class="string">&quot;当前队列已满，数据添加失败！&quot;</span>);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="comment">//3. 执行添加</span></span><br><span class="line">       <span class="keyword">return</span> map.put(key, value);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
- <img data-src="/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/3.png" class>
-
-<h4 id="淘汰策略"><a href="#淘汰策略" class="headerlink" title="淘汰策略"></a>淘汰策略</h4><p>淘汰策略可以有多种，比如 LRU/LFU/FIFO 等等，我们此处实现一个最基本的 FIFO。所有实现<strong>以接口的方式实现，便于后期灵活替换</strong>。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CacheEvictFifo</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">AbstractCacheEvict</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * queue 信息</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Queue&lt;K&gt; queue = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CacheEntry&lt;K,V&gt; <span class="title">doEvict</span><span class="params">(ICacheEvictContext&lt;K, V&gt; context)</span> </span>&#123;</span><br><span class="line">        CacheEntry&lt;K,V&gt; result = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> ICache&lt;K,V&gt; cache = context.cache();</span><br><span class="line">        <span class="comment">// 超过限制，执行移除</span></span><br><span class="line">        <span class="keyword">if</span>(cache.size() &gt;= context.size()) &#123;</span><br><span class="line">            K evictKey = queue.remove();</span><br><span class="line">            <span class="comment">// 移除最开始的元素</span></span><br><span class="line">            V evictValue = cache.remove(evictKey);</span><br><span class="line">            result = <span class="keyword">new</span> CacheEntry&lt;&gt;(evictKey, evictValue);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 将新加的元素放入队尾</span></span><br><span class="line">        <span class="keyword">final</span> K key = context.key();</span><br><span class="line">        queue.add(key);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>除了FIFO策略的实现，还内置了其他几种实现策略</p>
- <img data-src="/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/4.png" class>
-
- <img data-src="/2022/08/06/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%80-%E5%AE%9E%E7%8E%B0%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84cache/5.png" class>
-
-<h4 id="引导类"><a href="#引导类" class="headerlink" title="引导类"></a>引导类</h4><p>为了便于用户使用，我们实现类似于 guava 的引导类。所有参数都提供默认值，使用 fluent 流式写法，提升用户体验</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">CacheBs</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">CacheBs</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 创建对象实例</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> &lt;K&gt; key</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> &lt;V&gt; value</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> this</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;K,V&gt; <span class="function">CacheBs&lt;K,V&gt; <span class="title">newInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> CacheBs&lt;&gt;();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * map 实现</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Map&lt;K,V&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 大小限制</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> size = Integer.MAX_VALUE;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 驱除策略</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> ICacheEvict&lt;K,V&gt; evict = CacheEvicts.fifo();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 删除监听类</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.6</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> List&lt;ICacheRemoveListener&lt;K,V&gt;&gt; removeListeners = CacheRemoveListeners.defaults();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 慢操作监听类</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.9</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> List&lt;ICacheSlowListener&gt; slowListeners = CacheSlowListeners.none();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 加载策略</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.7</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> ICacheLoad&lt;K,V&gt; load = CacheLoads.none();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 持久化实现策略</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.8</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> ICachePersist&lt;K,V&gt; persist = CachePersists.none();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * map 实现</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> map map</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> this</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CacheBs&lt;K, V&gt; <span class="title">map</span><span class="params">(Map&lt;K, V&gt; map)</span> </span>&#123;</span><br><span class="line">        ArgUtil.notNull(map, <span class="string">&quot;map&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.map = map;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 设置 size 信息</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> size size</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> this</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CacheBs&lt;K, V&gt; <span class="title">size</span><span class="params">(<span class="keyword">int</span> size)</span> </span>&#123;</span><br><span class="line">        ArgUtil.notNegative(size, <span class="string">&quot;size&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.size = size;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 设置驱除策略</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> evict 驱除策略</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> this</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CacheBs&lt;K, V&gt; <span class="title">evict</span><span class="params">(ICacheEvict&lt;K, V&gt; evict)</span> </span>&#123;</span><br><span class="line">        ArgUtil.notNull(evict, <span class="string">&quot;evict&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.evict = evict;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 设置加载</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> load 加载</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> this</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.7</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CacheBs&lt;K, V&gt; <span class="title">load</span><span class="params">(ICacheLoad&lt;K, V&gt; load)</span> </span>&#123;</span><br><span class="line">        ArgUtil.notNull(load, <span class="string">&quot;load&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.load = load;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 添加删除监听器</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> removeListener 监听器</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> this</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.6</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CacheBs&lt;K, V&gt; <span class="title">addRemoveListener</span><span class="params">(ICacheRemoveListener&lt;K,V&gt; removeListener)</span> </span>&#123;</span><br><span class="line">        ArgUtil.notNull(removeListener, <span class="string">&quot;removeListener&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.removeListeners.add(removeListener);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 添加慢日志监听器</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> slowListener 监听器</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> this</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.9</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CacheBs&lt;K, V&gt; <span class="title">addSlowListener</span><span class="params">(ICacheSlowListener slowListener)</span> </span>&#123;</span><br><span class="line">        ArgUtil.notNull(slowListener, <span class="string">&quot;slowListener&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.slowListeners.add(slowListener);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 设置持久化策略</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> persist 持久化</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> this</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.8</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CacheBs&lt;K, V&gt; <span class="title">persist</span><span class="params">(ICachePersist&lt;K, V&gt; persist)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.persist = persist;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 构建缓存信息</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 缓存信息</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 0.0.2</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ICache&lt;K,V&gt; <span class="title">build</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Cache&lt;K,V&gt; cache = <span class="keyword">new</span> Cache&lt;&gt;();</span><br><span class="line">        cache.map(map);</span><br><span class="line">        cache.evict(evict);</span><br><span class="line">        cache.sizeLimit(size);</span><br><span class="line">        cache.removeListeners(removeListeners);</span><br><span class="line">        cache.load(load);</span><br><span class="line">        cache.persist(persist);</span><br><span class="line">        cache.slowListeners(slowListeners);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 初始化</span></span><br><span class="line">        cache.init();</span><br><span class="line">        <span class="keyword">return</span> CacheProxy.getProxy(cache);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Base-Cache缓存</category>
-      </categories>
-      <tags>
-        <tag>KV缓存第三讲</tag>
       </tags>
   </entry>
   <entry>

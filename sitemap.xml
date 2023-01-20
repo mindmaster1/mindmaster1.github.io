@@ -851,14 +851,14 @@
   </url>
   
   <url>
-    <loc>https://mindmaster.top/tags/Linux%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1/</loc>
+    <loc>https://mindmaster.top/tags/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2/</loc>
     <lastmod>2023-01-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://mindmaster.top/tags/%E7%BA%A2%E9%98%9F%E6%94%BB%E9%98%B2/</loc>
+    <loc>https://mindmaster.top/tags/Linux%E7%B3%BB%E7%BB%9F%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1/</loc>
     <lastmod>2023-01-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -893,6 +893,20 @@
   </url>
   
   <url>
+    <loc>https://mindmaster.top/tags/%E9%98%BF%E9%87%8C%E4%BA%91ECS%E9%83%A8%E7%BD%B2/</loc>
+    <lastmod>2023-01-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mindmaster.top/tags/KV%E7%BC%93%E5%AD%98%E7%AC%AC%E4%B8%89%E8%AE%B2/</loc>
+    <lastmod>2023-01-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://mindmaster.top/tags/chainlink/</loc>
     <lastmod>2023-01-20</lastmod>
     <changefreq>daily</changefreq>
@@ -907,21 +921,7 @@
   </url>
   
   <url>
-    <loc>https://mindmaster.top/tags/%E9%98%BF%E9%87%8C%E4%BA%91ECS%E9%83%A8%E7%BD%B2/</loc>
-    <lastmod>2023-01-20</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://mindmaster.top/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</loc>
-    <lastmod>2023-01-20</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://mindmaster.top/tags/KV%E7%BC%93%E5%AD%98%E7%AC%AC%E4%B8%89%E8%AE%B2/</loc>
     <lastmod>2023-01-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1119,6 +1119,13 @@
   </url>
   
   <url>
+    <loc>https://mindmaster.top/categories/%E9%98%BF%E9%87%8C%E4%BA%91ECS/</loc>
+    <lastmod>2023-01-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://mindmaster.top/categories/chainlink/</loc>
     <lastmod>2023-01-20</lastmod>
     <changefreq>daily</changefreq>
@@ -1127,13 +1134,6 @@
   
   <url>
     <loc>https://mindmaster.top/categories/Docker/</loc>
-    <lastmod>2023-01-20</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://mindmaster.top/categories/%E9%98%BF%E9%87%8C%E4%BA%91ECS/</loc>
     <lastmod>2023-01-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
